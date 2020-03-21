@@ -1,13 +1,19 @@
 #pragma once
 
+using Solution = std::vector<Coordinate>;
+using ListSolutions = std::list<Solution>;
 
-using GameBoard = std::vector<std::vector<int>>;
+const int Rows = 5;
+const int Cols = 5;
+
+using GameBoard = std::array<std::array<int, Cols>, Rows>;
 
 class KnightProblemSolver {
 
 public:
     KnightProblemSolver();
     KnightProblemSolver(int rows, int cols);
+    KnightProblemSolver(KnightProblemSolver* parent);  //  TODO: Evtl. geht auch Referenz oder copy c'tor
 
 public:
     // getter/setter
@@ -20,27 +26,32 @@ public:
 
     // public interface
     void findMovesSequential();
+    void findMovesParallel();
 
 private:
     // internal helper methods
-    void verifyCoordinate(size_t col, size_t row) const;
-    int& at(size_t row, size_t col);
-    const int& at(size_t row, size_t col) const;
-
-    void findMovesSequential(const Coordinate& coord);
+    void clearBoard();
+    void verifyCoordinate(const Coordinate& coord) const;
+    int& at(const Coordinate& coord);
+    const int& at(const Coordinate& coord) const;
     void setKnightMoveAt(const Coordinate& coord);
     void unsetKnightMoveAt(const Coordinate& coord);
-    bool inRange(int row, int col);
-    bool canMoveTo(int row, int col);
+    bool inRange(const Coordinate& coord);
+    bool canMoveTo(const Coordinate& coord);
     bool isSolution();
-    std::vector<Coordinate> NextKnightMoves(const Coordinate& coord);
+    std::vector<Coordinate> nextKnightMoves(const Coordinate& coord);
+
+    void findMovesSequential(const Coordinate& coord);
+    void findMovesParallel(const Coordinate& coord);
 
 private:
-    size_t         m_height;      // height of board
-    size_t         m_width;       // width of board
-    GameBoard      m_board;       // chess board
-    ListSolutions  m_solutions;   // list of found solutions
-    Solution       m_current;     // solution being in construction
-    int            m_moveNumber;  // number of last knight's move
-};
+    int                 m_height;      // height of board
+    int                 m_width;       // width of board
+    GameBoard           m_board;       // chess board
+    ListSolutions       m_solutions;   // list of found solutions
+    Solution            m_current;     // solution being in construction
+    int                 m_moveNumber;  // number of last knight's move
 
+    // threading utils
+    static std::mutex   m_mutex;        // concurrent access protection
+};

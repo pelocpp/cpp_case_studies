@@ -11,7 +11,9 @@
 
 #include <iostream>
 #include <vector>
+#include <array>
 #include <list>
+#include <mutex>
 
 #include "Coordinate.h"
 #include "KnightProblemSolver.h"
@@ -58,7 +60,31 @@ void test_01_springer_problem() {
     std::cout << coord << std::endl;
 }
 
+void test_02_springer_problem() {
+
+    //[Value] Elapsed time in milliseconds = 149[microsecs]
+    //    Found: 32
+
+    KnightProblemSolver solver(5, 4);
+    solver.findMovesSequential();
+    ListSolutions solutions = solver.getSolutions();
+
+    //int counter = 0;
+    //for (Solution s : solutions) {
+    //    std::cout << counter << ":" << std::endl;
+
+    //    for (Coordinate coord : s) {
+    //        std::cout << coord << " ";
+    //    }
+    //}
+
+    std::cout << "Found: " << solutions.size() << std::endl;
+}
+
 void test_09_springer_problem() {
+
+    //[Value] Elapsed time in milliseconds = 7152[microsecs]
+//Found: 304
 
     KnightProblemSolver solver(5, 5);
     solver.findMovesSequential();
@@ -76,20 +102,37 @@ void test_09_springer_problem() {
     std::cout << "Found: " << solutions.size() <<  std::endl;
 }
 
-// =====================================================================================
+void test_10_springer_problem() {
 
-//[Value] Elapsed time in milliseconds = 7152[microsecs]
-//Found: 304
+
+
+    KnightProblemSolver solver(5, 4);
+    solver.findMovesParallel();
+    ListSolutions solutions = solver.getSolutions();
+
+    //int counter = 0;
+    //for (Solution s : solutions) {
+    //    std::cout << counter << ":" << std::endl;
+
+    //    for (Coordinate coord : s) {
+    //        std::cout << coord << " ";
+    //    }
+    //}
+
+    std::cout << "Found: " << solutions.size() << std::endl;
+}
+
+// =====================================================================================
 
 int main()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
     // test_01_springer_problem();
-    test_09_springer_problem();
+    // test_09_springer_problem();
+    test_10_springer_problem();
 
     return 0;
 }
 
 // =====================================================================================
-
