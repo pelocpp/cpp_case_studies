@@ -1,3 +1,5 @@
+#pragma once
+
 class TetrisCell {
 private:
     CellState m_state;
@@ -13,5 +15,4 @@ public:
     void setState(CellState state);
     CellColor getColor();
     void setColor(CellColor color);
-
 };

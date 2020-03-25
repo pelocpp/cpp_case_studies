@@ -12,12 +12,20 @@
 //c'tors
 TetrisBoard::TetrisBoard(int rows, int cols) : m_numRows(rows), m_numCols(cols) {}
 
-// properties
+// getter/setter
+int TetrisBoard::getNumRows() {
+    return m_numRows;
+}
+
+int TetrisBoard::getNumColumns() {
+    return m_numCols;
+}
+
 TetrisCell TetrisBoard::getCell(int row, int col) {
     return m_board[row][col];
 }
 
-void TetrisBoard::setCell(int row, int col, TetrisCell cell) {
+void TetrisBoard::setCell(int row, int col, const TetrisCell& cell) {
     m_board[row][col] = cell;
 }
 

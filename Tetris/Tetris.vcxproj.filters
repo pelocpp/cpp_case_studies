@@ -51,6 +51,15 @@
     <ClCompile Include="TetrisGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Tetrimino.cpp">
+      <Filter>Source Files\Tetrimino</Filter>
+    </ClCompile>
+    <ClCompile Include="CellPoint.cpp">
+      <Filter>Source Files\Board</Filter>
+    </ClCompile>
+    <ClCompile Include="Tetrimino_L.cpp">
+      <Filter>Source Files\Tetrimino</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ITetrimino.h">
@@ -74,9 +83,6 @@
     <ClInclude Include="IUISubsystem.h">
       <Filter>Source Files\UI</Filter>
     </ClInclude>
-    <ClInclude Include="ITetris.h">
-      <Filter>Source Files\Model</Filter>
-    </ClInclude>
     <ClInclude Include="TetrisModel.h">
       <Filter>Source Files\Model</Filter>
     </ClInclude>
@@ -85,6 +91,24 @@
     </ClInclude>
     <ClInclude Include="Direction.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ITetrisModel.h">
+      <Filter>Source Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="RotationAngle.h">
+      <Filter>Source Files\Tetrimino</Filter>
+    </ClInclude>
+    <ClInclude Include="Tetrimino.h">
+      <Filter>Source Files\Tetrimino</Filter>
+    </ClInclude>
+    <ClInclude Include="CellPoint.h">
+      <Filter>Source Files\Board</Filter>
+    </ClInclude>
+    <ClInclude Include="Tetrimino_L.h">
+      <Filter>Source Files\Tetrimino</Filter>
+    </ClInclude>
+    <ClInclude Include="TetrisState.h">
+      <Filter>Source Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

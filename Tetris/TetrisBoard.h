@@ -6,9 +6,11 @@ public:
     //c'tors
     TetrisBoard(int rows, int cols);
 
-    // properties
+    // getter/setter
+    int getNumRows() override;
+    int getNumColumns() override;
     TetrisCell getCell(int row, int col) override;
-    void setCell(int row, int col, TetrisCell cell) override;
+    void setCell(int row, int col, const TetrisCell& cell) override;
 
     // public interface
     void clear() override;

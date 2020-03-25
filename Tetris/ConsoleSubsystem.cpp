@@ -12,7 +12,7 @@ ConsoleSubsystem::ConsoleSubsystem(int width, int height)
     m_hStdout = (HANDLE)0;
 
     // snake stuff ?!=?!?!?!
-    m_lastVirtualKey =0;    // TBD: Das ist sinvoller nil wert !?!?!?!
+    m_lastVirtualKey =0;    // TODO: Das ist sinvoller nil wert !?!?!?!
     m_lastValidArrow = Direction::None;
     m_isEscapeHit = false;
 }
