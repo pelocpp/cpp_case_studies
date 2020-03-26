@@ -1,6 +1,6 @@
 #pragma once
 
-class ITetrisBoard {
+class ITetrisBoard : public ITetrisBoardListener {
 
 public:
     // getter/setter
@@ -13,12 +13,8 @@ public:
     // public interface
     virtual void clear() = 0;
 
-    //void PostChanges(ViewCellList list);
+    //virtual void postChanges(const ViewCellList& list) = 0;
+
     //bool IsBottomRowComplete();
     //void MoveNonEmptyRowsDown();
-
-
-    // observer 
-    // virtual  void attach(Observer observer) = 0;
-    // virtual  void detach(Observer observer) = 0;
 };

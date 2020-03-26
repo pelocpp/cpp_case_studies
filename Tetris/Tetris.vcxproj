@@ -151,12 +151,16 @@
     <ClCompile Include="TetrisCell.cpp" />
     <ClCompile Include="TetrisGame.cpp" />
     <ClCompile Include="TetrisModel.cpp" />
+    <ClCompile Include="ViewCell.cpp" />
+    <ClCompile Include="ViewCellList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CellPoint.h" />
     <ClInclude Include="ConsoleSubsystem.h" />
     <ClInclude Include="Direction.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="ITetrisBoardListener.h" />
+    <ClInclude Include="ITetrisBoardObserver.h" />
     <ClInclude Include="ITetrisModel.h" />
     <ClInclude Include="IUISubsystem.h" />
     <ClInclude Include="RotationAngle.h" />
@@ -169,6 +173,8 @@
     <ClInclude Include="TetrisGame.h" />
     <ClInclude Include="TetrisModel.h" />
     <ClInclude Include="TetrisState.h" />
+    <ClInclude Include="ViewCell.h" />
+    <ClInclude Include="ViewCellList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

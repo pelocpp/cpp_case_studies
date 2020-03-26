@@ -18,4 +18,5 @@ protected:
     bool isCoordinateWithin(int row, int col) override;
 
     void update(CellState state) override;
+    void updateCellList(ViewCellList&, const CellColor&) override;
 };

@@ -60,6 +60,12 @@
     <ClCompile Include="Tetrimino_L.cpp">
       <Filter>Source Files\Tetrimino</Filter>
     </ClCompile>
+    <ClCompile Include="ViewCellList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewCell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ITetrimino.h">
@@ -109,6 +115,18 @@
     </ClInclude>
     <ClInclude Include="TetrisState.h">
       <Filter>Source Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewCellList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewCell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ITetrisBoardListener.h">
+      <Filter>Source Files\Board</Filter>
+    </ClInclude>
+    <ClInclude Include="ITetrisBoardObserver.h">
+      <Filter>Source Files\Board</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

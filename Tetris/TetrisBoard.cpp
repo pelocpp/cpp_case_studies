@@ -1,11 +1,20 @@
 #include <iostream>
 #include <array>
+#include <vector>
+#include <list>
 
 #include "Globals.h"
 
 #include "CellColor.h"
+#include "CellPoint.h"
 #include "CellState.h"
+#include "ViewCell.h"
+#include "ViewCellList.h"
 #include "TetrisCell.h"
+
+#include "ITetrisBoardObserver.h"
+#include "ITetrisBoardListener.h"
+
 #include "ITetrisBoard.h"
 #include "TetrisBoard.h"
 
@@ -38,5 +47,38 @@ void TetrisBoard::clear() {
             m_board[i][j].setState(CellState::Free);
         }
     }
+
+    // update view
+    ViewCellList list;
+
+    // TODO: mit Iteratoren schreiben !!!
+
+    // TODO: Klasse CellColor: DA MÜSSEN SINGLETONS HIN !!!!!
+    // TODO: Beachten: Die Klasse sollte dann immutable sein 
+
+    for (int i = 0; i < m_numRows; i++) {
+        for (int j = 0; j < m_numCols; j++) {
+            ViewCell cell (CellColor::LightGray, CellPoint(j, i));
+            list.add(cell);
+        }
+    }
+
+    notifyAll(list);
 }
 
+
+// implementation of interface 'ITetrisBoardListener'
+void TetrisBoard::attach(ITetrisBoardObserver* observer) {
+    m_observer.push_back(observer);
+}
+
+void TetrisBoard::detach(ITetrisBoardObserver* observer) {
+    // TODO: Wie war das mit erase und remove
+    m_observer.remove(observer);
+}
+
+void TetrisBoard::notifyAll(const ViewCellList& list) {
+    for (auto observer : m_observer) {
+        observer->update(list);
+    }
+}

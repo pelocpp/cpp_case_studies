@@ -10,12 +10,17 @@
 #include "RotationAngle.h"
 
 #include "CellColor.h"
-#include "CellState.h"
 #include "CellPoint.h"
+#include "CellState.h"
+#include "ViewCell.h"
+#include "ViewCellList.h"
 #include "TetrisCell.h"
 
 #include "IUISubsystem.h"
 #include "ConsoleSubsystem.h"
+
+#include "ITetrisBoardObserver.h"
+#include "ITetrisBoardListener.h"
 
 #include "ITetrisBoard.h"
 #include "TetrisBoard.h"
@@ -29,27 +34,26 @@
 
 #include "TetrisGame.h"
 
-Tetrimino::Tetrimino(ITetrisBoard* board, CellColor color) : m_board(board) {
+Tetrimino::Tetrimino(ITetrisBoard* board, CellColor color) : m_board(board), m_color(color) {
 
-    m_rotation= RotationAngle::Degrees_0;
-    m_color = CellColor::LightGray;
+    m_rotation = RotationAngle::Degrees_0;
 }
 
 // public interface (movement specific methods)
 void Tetrimino::setToTop() {
     set();
     
-    // WEITER !!!
- /*   ViewCellList list = new ViewCellList();
-    this.UpdateModifiedCellList(list, this.color);
-    this.board.PostChanges(list);*/
+    ViewCellList list;
+
+   // this.UpdateModifiedCellList(list, this.color);
+   m_board->notifyAll(list);
 }
 
-void Tetrimino::MoveLeft() {}
+void Tetrimino::moveLeft() {}
 
-void Tetrimino::MoveRight() {}
+void Tetrimino::moveRight() {}
 
-bool Tetrimino::MoveDown() { return false;  }
+bool Tetrimino::moveDown() { return true;  }
 
 void Tetrimino::Rotate() {}
 

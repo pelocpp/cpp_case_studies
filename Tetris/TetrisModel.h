@@ -18,7 +18,8 @@ public:
     int getNumCols() override;
 
     void start() override;
-    bool play() override;   // TODO: Der Name ist auch im Game vorhanden !?!?!?!
+    bool run() override; 
+    void join() override;
     void stop() override;
 
     void setState(TetrisState state) override;
@@ -32,4 +33,9 @@ public:
     void doActionMoveDown();
     void doActionAtBottom();
     void doActionGameOver();
+
+    // implementation of interface 'ITetrisBoardListener'
+    void attach(ITetrisBoardObserver* observer) override;
+    void detach(ITetrisBoardObserver* observer) override;
+    void notifyAll(const ViewCellList& list) override;
 };

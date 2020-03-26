@@ -12,10 +12,15 @@
 #include "CellColor.h"
 #include "CellState.h"
 #include "CellPoint.h"
+#include "ViewCell.h"
+#include "ViewCellList.h"
 #include "TetrisCell.h"
 
 #include "IUISubsystem.h"
 #include "ConsoleSubsystem.h"
+
+#include "ITetrisBoardObserver.h"
+#include "ITetrisBoardListener.h"
 
 #include "ITetrisBoard.h"
 #include "TetrisBoard.h"
@@ -38,7 +43,11 @@
 int main()
 {
     TetrisGame game;
-    game.play();
+
+    // TODO: start und init KANN man zusammenlegen ...
+    game.init();
+    game.start();
+    game.join();
     std::cout << "Done.";
     return 0;
 }

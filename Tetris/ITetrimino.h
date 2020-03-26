@@ -5,7 +5,7 @@ class ITetrimino {
 public:
     // TODO : was muss hier public -- was kann protected sein ?!?!
 
-    // TODO : Alle Methoden mit Kleinbúchstaben am Anfang !!!
+    // TODO : Alle Methoden mit Kleinbuchstaben am Anfang !!!
 
     // predicates
     virtual bool canSetToTop() = 0;
@@ -17,9 +17,9 @@ public:
 
     // movement specific methods
     virtual void setToTop() = 0;
-    virtual void MoveLeft() = 0;
-    virtual void MoveRight() = 0;
-    virtual bool MoveDown() = 0;
+    virtual void moveLeft() = 0;
+    virtual void moveRight() = 0;
+    virtual bool moveDown() = 0;
     virtual void Rotate() = 0;
 
     // board specific methods
@@ -27,4 +27,5 @@ public:
     virtual void release() = 0;
 
     virtual void update(CellState state) = 0;
+    virtual void updateCellList(ViewCellList&, const CellColor&) = 0;
 };

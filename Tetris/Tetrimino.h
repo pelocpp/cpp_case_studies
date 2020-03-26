@@ -1,6 +1,7 @@
 #pragma once
 
 class Tetrimino : public ITetrimino {
+
 public:
     Tetrimino(ITetrisBoard* board, CellColor color);
 
@@ -21,9 +22,9 @@ protected:
 public:
     // public interface (movement specific methods)
     void setToTop() override;
-    void MoveLeft() override;
-    void MoveRight() override;
-    bool MoveDown() override;
+    void moveLeft() override;
+    void moveRight() override;
+    bool moveDown() override;
     void Rotate() override;
 
     // board specific methods

@@ -11,12 +11,17 @@
 #include "RotationAngle.h"
 
 #include "CellColor.h"
-#include "CellState.h"
 #include "CellPoint.h"
+#include "CellState.h"
+#include "ViewCell.h"
+#include "ViewCellList.h"
 #include "TetrisCell.h"
 
 #include "IUISubsystem.h"
 #include "ConsoleSubsystem.h"
+
+#include "ITetrisBoardObserver.h"
+#include "ITetrisBoardListener.h"
 
 #include "ITetrisBoard.h"
 #include "TetrisBoard.h"
@@ -55,16 +60,18 @@ void TetrisModel::start() {
     setState(TetrisState::AtTop);
 
     m_futureGameLoop = std::async(std::launch::async, [this] () -> bool {
-            return play();
+            return run();
         }
     );
+
+    ::OutputDebugString("(9) nach std::async\n");
 }
 
-bool TetrisModel::play() {
+bool TetrisModel::run() {
 
     while (true) {
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        ::OutputDebugString("(1) TetrisModel::play\n");
 
         TetrisState state = getState();
 
@@ -89,12 +96,21 @@ bool TetrisModel::play() {
 
         default:
             // Log.i(Globals.LogTag, "Internal ERROR: Should never be reached");
+            ::OutputDebugString("(99) Internal ERROR : Should never be reached\n");
             break;
         }
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
     return true; // TODO: oder false
 }
+
+void TetrisModel::join() {
+
+    m_futureGameLoop.get();
+}
+
 
 void TetrisModel::stop() {
 
@@ -122,6 +138,9 @@ void TetrisModel::detachTetrimino() {
 }
 
 void TetrisModel::doActionSetToTop() {
+
+    ::OutputDebugString("(2) doActionSetToTop\n");
+
     assert(getState() == TetrisState::AtTop);
 
     // create new tetrimino
@@ -137,10 +156,36 @@ void TetrisModel::doActionSetToTop() {
 }
 
 void TetrisModel::doActionMoveDown() {
+
+    ::OutputDebugString("(3) doActionMoveDown\n");
+
+    assert(getState() == TetrisState::Normal || getState() == TetrisState::Accelerated);
+
+    if (m_curr->canMoveDown()) {
+        m_curr->moveDown();
+    }
+    else {
+        setState(TetrisState::AtBottom);
+    }
 }
 
 void TetrisModel::doActionAtBottom() {
 }
 
 void TetrisModel::doActionGameOver() {
+}
+
+void TetrisModel::attach(ITetrisBoardObserver* observer) {
+    m_board->attach(observer);
+}
+
+void TetrisModel::detach(ITetrisBoardObserver* observer) {
+    // TODO: Wie war das mit erase und remove
+    m_board->detach(observer);
+}
+
+void TetrisModel::notifyAll(const ViewCellList& list) {
+    // Hmmm - das brauche ich hier nicht ????
+    // TODO: Wie gehe ich damit um ???
+    ::OutputDebugString("DO I NEED THIS: NOOOOOOOOOOOOO\n");
 }

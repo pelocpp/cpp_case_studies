@@ -1,6 +1,6 @@
 #pragma once
 
-class ITetrisModel {
+class ITetrisModel : public ITetrisBoardListener {
 public:
     // properties
     virtual int getNumRows() = 0;
@@ -8,7 +8,8 @@ public:
 
     // game commands
     virtual void start() = 0;
-    virtual bool play() = 0;
+    virtual bool run() = 0;
+    virtual void join() = 0;
     virtual void stop() = 0;
 
     virtual void setState(TetrisState state) = 0;

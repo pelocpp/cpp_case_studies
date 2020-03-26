@@ -19,5 +19,9 @@ public:
     // TODO: muss der überschrieben weden ?? Value type
      //   public boolean equals(Object obj) {
 
+    // operators
+    friend bool operator== (const CellPoint&, const CellPoint&);
+
+    // public interface
     std::string tostring();
 };
