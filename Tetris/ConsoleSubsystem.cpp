@@ -33,7 +33,12 @@ void ConsoleSubsystem::initConsole() {
     ::SetConsoleTitle("Tetris (Version 0.01)");
     ::SetConsoleTextAttribute(
         m_hStdout,
-        FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
+        FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY | BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED);
+
+//#define BACKGROUND_BLUE      0x0010 // background color contains blue.
+//#define BACKGROUND_GREEN     0x0020 // background color contains green.
+//#define BACKGROUND_RED   
+
 
     // EncodingName: "IBM PC Code Page", CodePage: 437
     UINT codePageID = 437;
@@ -79,11 +84,23 @@ bool ConsoleSubsystem::isEscapeHit() {
     return false;
 }
 
-
 void ConsoleSubsystem::writeAt(char ch, COORD coord)
 {
     if (!::SetConsoleCursorPosition(m_hStdout, coord))
         return;
+
+    char buf[1];
+    buf[0] = ch;
+    DWORD numCharsWritten;
+    ::WriteConsole(m_hStdout, buf, 1, &numCharsWritten, (void*)0);
+}
+
+void ConsoleSubsystem::writeAt(char ch, unsigned int color, COORD coord)
+{
+    if (!::SetConsoleCursorPosition(m_hStdout, coord))
+        return;
+
+    ::SetConsoleTextAttribute(m_hStdout, color);
 
     char buf[1];
     buf[0] = ch;
@@ -131,3 +148,18 @@ void ConsoleSubsystem::drawBorder()
         writeAt(Box_Horiz, coord);
     }
 }
+
+void ConsoleSubsystem::writeAtTest(unsigned int color, char ch, COORD coord) {
+
+   ::SetConsoleTextAttribute(m_hStdout, color);
+
+    if (!::SetConsoleCursorPosition(m_hStdout, coord))
+        return;
+
+    char buf[1];
+    buf[0] = ch;
+    DWORD numCharsWritten;
+    ::WriteConsole(m_hStdout, buf, 1, &numCharsWritten, (void*)0);
+
+}
+

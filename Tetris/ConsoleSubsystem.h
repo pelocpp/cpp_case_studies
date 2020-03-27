@@ -40,7 +40,9 @@ public:
     bool isInputAvailable() override;
     bool isEscapeHit() override;
 
-private:
-    void writeAt(char ch, COORD coord);
+public:
     void drawBorder();
+    void writeAt(char ch, COORD coord) override;
+    void writeAt(char ch, unsigned int color, COORD coord) override;
+    void writeAtTest(unsigned int color, char ch, COORD coord) override;
 };

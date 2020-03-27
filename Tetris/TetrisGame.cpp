@@ -74,4 +74,35 @@ void TetrisGame::update(const ViewCellList& list) {
     char szBuf[128];
     wsprintf(szBuf, "Yeahhhhhhhhhh TetrisGame::update ==> Length of List: %d\n", list.size());
     ::OutputDebugString(szBuf);
+
+    // TODO: die list mit einem Iterator durchlaufen ...
+    for (int i = 0; i < list.size(); i++) {
+
+        ViewCell cell = list.at(i);
+
+        CellColor color = cell.getColor();
+        CellPoint point = cell.getPoint();
+
+        unsigned int win32Col = toWin32Color(color);
+        COORD coord{ static_cast<short>(point.getX()), static_cast<short>(point.getY()) };
+
+        // char ch, unsigned int color, COORD coord
+        m_subsystem->writeAt(' ', win32Col, coord);
+    }
+}
+
+// TODO: static machen ....
+unsigned int TetrisGame::toWin32Color(CellColor color) {
+
+    unsigned int win32Color =
+        (color == CellColor::LightGray) ? ConsoleBackground::GRAY :
+        (color == CellColor::Cyan) ? ConsoleBackground::CYAN :
+        (color == CellColor::Blue) ? ConsoleBackground::BLUE :
+        (color == CellColor::Ocker) ? ConsoleBackground::BLACK :
+        (color == CellColor::Yellow) ? ConsoleBackground::YELLOW :
+        (color == CellColor::Green) ? ConsoleBackground::GREEN :
+        (color == CellColor::Magenta) ? ConsoleBackground::MAGENTA :
+        ConsoleBackground::RED;
+
+    return win32Color;
 }

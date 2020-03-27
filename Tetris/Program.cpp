@@ -40,8 +40,10 @@
 
 // TODO : Alle Methoden mit Kleinbúchstaben am Anfang !!!
 
-int main()
-{
+// TODO: Bei CellPoint und diesen vielen kleinen Klassen: inline ergänzen !!!
+
+
+void doGame() {
     TetrisGame game;
 
     // TODO: start und init KANN man zusammenlegen ...
@@ -49,7 +51,48 @@ int main()
     game.start();
     game.join();
     std::cout << "Done.";
-    return 0;
+}
+
+
+void doTestOutput() {
+
+    //ConsoleSubsystem subsystem (100, 30);
+    //subsystem.initConsole();
+    //subsystem.showConsole();
+
+    //unsigned char block = 32;     // 218
+    //int col = 2;
+
+    //::COORD coord{ col, col };
+    //subsystem.writeAtTest(ConsoleBackground::DARKBLUE, block, coord);
+
+    //coord.Y++;
+    //subsystem.writeAtTest(ConsoleBackground::DARKBLUE, block, coord);
+
+    //coord.Y++;
+    //subsystem.writeAtTest(ConsoleBackground::DARKBLUE, block, coord);
+
+    //coord.X++;
+    //subsystem.writeAtTest(ConsoleBackground::DARKBLUE, block, coord);
+
+    //coord = {20, 2};
+    //subsystem.writeAtTest(ConsoleBackground::DARKBLUE, block, coord);
+
+    //coord.X++;
+    //subsystem.writeAtTest(ConsoleBackground::DARKBLUE, block, coord);
+
+    //coord.X++;
+    //subsystem.writeAtTest(ConsoleBackground::DARKBLUE, block, coord);
+
+    //coord.Y++;
+    //subsystem.writeAtTest(ConsoleBackground::DARKBLUE, block, coord);
+}
+
+int main()
+{
+    doGame();
+    char ch;
+    std::cin >> ch;
 }
 
 

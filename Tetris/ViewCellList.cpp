@@ -39,8 +39,11 @@ void ViewCellList::add(ViewCell cell) {
             return;
         }
     }
+
+    // cell not found, just add it
+    m_cells.push_back(cell);
 }
 
-ViewCell ViewCellList::at(int index) {
+ViewCell ViewCellList::at(int index) const {
     return m_cells.at(index);
 }

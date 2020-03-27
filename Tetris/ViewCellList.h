@@ -13,7 +13,7 @@ public:
     // TODO: std::find_if !!!! in der Implementierung
     void add(ViewCell cell);
 
-    ViewCell at(int index);
+    ViewCell at(int index) const;
 
     // TODO: implement // add iterator interface !!!
 

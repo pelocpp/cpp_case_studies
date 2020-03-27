@@ -1,3 +1,14 @@
+//
+//// TODO: Diese drei Methoden ergänzen:
+//void moveLeft();
+//void moveRight();
+//void moveDown();
+//
+//// Damit werden diese drei von der Klasse Tetrimino effizienter !!!!
+//void moveAnchorLeft();
+//void moveAnchorRight();
+//void moveAnchorDown();
+
 class CellPoint {
 
 private:

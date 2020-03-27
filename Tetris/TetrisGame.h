@@ -15,4 +15,8 @@ private:
 
     // implementation of interface 'ITetrisBoardObserver'
     void update(const ViewCellList&) override;
+
+public:
+    // TODO DAS GEHÖRT in das Win32 Subsystem !!!!
+    unsigned int toWin32Color(CellColor);
 };

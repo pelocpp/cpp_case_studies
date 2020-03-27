@@ -112,22 +112,22 @@ void Tetrimino_L::updateCellList(ViewCellList& list, const CellColor& color) {
         list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() + 1)));
         list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY() + 1)));
     }
-    //else if (m_rotation == RotationAngle::Degrees_90) {
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX() - 1, this.anchorPoint.getY())));
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX(), this.anchorPoint.getY())));
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX() + 1, this.anchorPoint.getY())));
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX() - 1, this.anchorPoint.getY() + 1)));
-    //}
-    //else if (m_rotation == RotationAngle::Degrees_180) {
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX() - 1, this.anchorPoint.getY() - 1)));
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX(), this.anchorPoint.getY() - 1)));
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX(), this.anchorPoint.getY())));
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX(), this.anchorPoint.getY() + 1)));
-    //}
-    //else if (m_rotation == RotationAngle::Degrees_270) {
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX() - 1, this.anchorPoint.getY())));
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX(), this.anchorPoint.getY())));
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX() + 1, this.anchorPoint.getY())));
-    //    list.Add(new ViewCell(color, new CellPoint(this.anchorPoint.getX() + 1, this.anchorPoint.getY() - 1)));
-    //}
+    else if (m_rotation == RotationAngle::Degrees_90) {
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY())));
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY())));
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY())));
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY() + 1)));
+    }
+    else if (m_rotation == RotationAngle::Degrees_180) {
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY() - 1)));
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() - 1)));
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY())));
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() + 1)));
+    }
+    else if (m_rotation == RotationAngle::Degrees_270) {
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY())));
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY())));
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY())));
+        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY() - 1)));
+    }
 }
