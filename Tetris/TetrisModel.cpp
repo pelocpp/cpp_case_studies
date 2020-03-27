@@ -57,6 +57,7 @@ int TetrisModel::getNumCols() {
 // game commands
 void TetrisModel::start() {
 
+    m_board->clear();
     setState(TetrisState::AtTop);
 
     m_futureGameLoop = std::async(std::launch::async, [this] () -> bool {
@@ -113,6 +114,8 @@ void TetrisModel::join() {
 
 
 void TetrisModel::stop() {
+
+    // TODO: Hier muss irgendwie der Thread gestoppt werden ?!"?
 
 }
 
@@ -185,7 +188,7 @@ void TetrisModel::detach(ITetrisBoardObserver* observer) {
 }
 
 void TetrisModel::notifyAll(const ViewCellList& list) {
-    // Hmmm - das brauche ich hier nicht ????
-    // TODO: Wie gehe ich damit um ???
-    ::OutputDebugString("DO I NEED THIS: NOOOOOOOOOOOOO\n");
+    // should never be called
+    ::OutputDebugString("Internal Error: TetrisModel::notifyAll\n");
+    assert(list.size() == 999999);
 }

@@ -6,10 +6,10 @@ public:
     Tetrimino(ITetrisBoard* board, CellColor color);
 
 protected:
-    ITetrisBoard* m_board;
     CellPoint m_anchorPoint;
     RotationAngle m_rotation;
     CellColor m_color;
+    ITetrisBoard* m_board;
 
     // predicates
     //virtual bool canSetToTop() = 0;

@@ -68,6 +68,12 @@ void ConsoleSubsystem::showConsole() {
     coord.Y = m_height + 2;
     b = ::SetConsoleScreenBufferSize(m_hStdout, coord);
 
+    // hide cursor in Windows console
+    CONSOLE_CURSOR_INFO curInfo;
+    ::GetConsoleCursorInfo(m_hStdout, &curInfo);
+    curInfo.bVisible = FALSE;
+    ::SetConsoleCursorInfo(m_hStdout, &curInfo);
+
     drawBorder();
 }
 

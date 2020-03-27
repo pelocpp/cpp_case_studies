@@ -1,3 +1,5 @@
+#pragma once
+
 class TetrisGame : public ITetrisBoardObserver {
 public:
     // c'tor(s)/d'tor

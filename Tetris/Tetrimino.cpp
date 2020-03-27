@@ -34,32 +34,28 @@
 
 #include "TetrisGame.h"
 
-Tetrimino::Tetrimino(ITetrisBoard* board, CellColor color) : m_board(board), m_color(color) {
+Tetrimino::Tetrimino(ITetrisBoard* board, CellColor color) : m_board(board), m_color(color), m_anchorPoint{ 5, 2 } {
 
     m_rotation = RotationAngle::Degrees_0;
 }
 
 void Tetrimino::moveAnchorLeft() {
-    m_anchorPoint.setX(m_anchorPoint.getX() - 1);
+    m_anchorPoint.moveLeft();
 }
 
 void Tetrimino::moveAnchorRight() {
-    m_anchorPoint.setX(m_anchorPoint.getX() + 1);
+    m_anchorPoint.moveRight();
 }
 
 void Tetrimino::moveAnchorDown() {
-    m_anchorPoint.setY(m_anchorPoint.getY() + 1);
+    m_anchorPoint.moveDown();
 }
-
-
 
 
 // public interface (movement specific methods)
 void Tetrimino::setToTop() {
     set();
-    
     ViewCellList list;
-
     updateCellList(list, m_color);
     m_board->notifyAll(list);
 }

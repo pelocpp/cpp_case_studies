@@ -1,3 +1,5 @@
+#pragma once
+
 class ITetrisBoardObserver {
 public:
     // TODO: Wird der auch aufgerufen ?!?!?

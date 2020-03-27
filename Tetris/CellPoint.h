@@ -1,13 +1,4 @@
-//
-//// TODO: Diese drei Methoden ergänzen:
-//void moveLeft();
-//void moveRight();
-//void moveDown();
-//
-//// Damit werden diese drei von der Klasse Tetrimino effizienter !!!!
-//void moveAnchorLeft();
-//void moveAnchorRight();
-//void moveAnchorDown();
+#pragma once
 
 class CellPoint {
 
@@ -20,19 +11,16 @@ public:
     CellPoint();
     CellPoint(int x, int y);
 
-    // getter/setter
+    // getter
     int getX();
     int getY();
-    void setX(int);
-    void setY(int);
-
-    // operators
-    // TODO: muss der überschrieben weden ?? Value type
-     //   public boolean equals(Object obj) {
 
     // operators
     friend bool operator== (const CellPoint&, const CellPoint&);
 
     // public interface
-    std::string tostring();
+    void moveLeft() noexcept;
+    void moveRight() noexcept;
+    void moveDown() noexcept;
+    std::string toString();
 };

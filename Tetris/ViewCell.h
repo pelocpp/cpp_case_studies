@@ -1,17 +1,17 @@
 class ViewCell {
 
 private:
-    CellColor m_color;
     CellPoint m_point;
+    CellColor m_color;
 
 public:
     // c'tors
      ViewCell();
-     ViewCell(CellColor color, CellPoint point);
+     ViewCell(CellPoint point, CellColor color);
 
     // getter/setter
-    CellColor getColor();
-    void setColor(CellColor color);
-    CellPoint getPoint();
-    void setPoint(CellPoint point);
+    CellColor getColor() noexcept;
+    void setColor(CellColor color) noexcept;
+    CellPoint getPoint() noexcept;
+    void setPoint(CellPoint point) noexcept;
 };

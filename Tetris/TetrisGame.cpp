@@ -98,7 +98,8 @@ unsigned int TetrisGame::toWin32Color(CellColor color) {
         (color == CellColor::LightGray) ? ConsoleBackground::GRAY :
         (color == CellColor::Cyan) ? ConsoleBackground::CYAN :
         (color == CellColor::Blue) ? ConsoleBackground::BLUE :
-        (color == CellColor::Ocker) ? ConsoleBackground::BLACK :
+       // (color == CellColor::Ocker) ? ConsoleBackground::BLACK :
+        (color == CellColor::Ocker) ? ConsoleBackground::RED :
         (color == CellColor::Yellow) ? ConsoleBackground::YELLOW :
         (color == CellColor::Green) ? ConsoleBackground::GREEN :
         (color == CellColor::Magenta) ? ConsoleBackground::MAGENTA :

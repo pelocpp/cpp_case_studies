@@ -35,12 +35,7 @@
 
 #include "TetrisGame.h"
 
-Tetrimino_L::Tetrimino_L(ITetrisBoard* board) : Tetrimino(board, CellColor::Ocker) {
-
-    // m_anchorPoint = CellPoint(5, 2);
-    m_anchorPoint.setX(5);
-    m_anchorPoint.setY(2);
-}
+Tetrimino_L::Tetrimino_L(ITetrisBoard* board) : Tetrimino(board, CellColor::Ocker) {}
 
 // predicates
 bool Tetrimino_L::canSetToTop() { return true; }
@@ -61,19 +56,8 @@ void Tetrimino_L::update(CellState state) {
 
     TetrisCell cell (state, color);
 
-    ::OutputDebugString("(4a) >> update\n");
-
     // update model
     if (m_rotation == RotationAngle::Degrees_0) {
-
-        // TODO: Fehler gefunden -- das kann wieder weg ...
-
-        //int xxx = m_anchorPoint.getY() - 1;
-        //int yyy = m_anchorPoint.getX();
-
-        //char szBuf[128];
-        //wsprintf(szBuf, "X = %d, Y = %d\n", xxx, yyy);
-        //::OutputDebugString(szBuf);
 
         m_board->setCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX(), cell);
         m_board->setCell(m_anchorPoint.getY(), m_anchorPoint.getX(), cell);
@@ -98,36 +82,33 @@ void Tetrimino_L::update(CellState state) {
         m_board->setCell(m_anchorPoint.getY(), m_anchorPoint.getX() + 1, cell);
         m_board->setCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX() + 1, cell);
     }
-
-    ::OutputDebugString("(4b) << update\n");
 }
-
 
 void Tetrimino_L::updateCellList(ViewCellList& list, const CellColor& color) {
 
     // update cell list
     if (m_rotation == RotationAngle::Degrees_0) {
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() - 1)));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY())));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() + 1)));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY() + 1)));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() - 1), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY()), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() + 1), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY() + 1), color));
     }
     else if (m_rotation == RotationAngle::Degrees_90) {
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY())));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY())));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY())));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY() + 1)));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY()), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY()), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY()), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY() + 1), color));
     }
     else if (m_rotation == RotationAngle::Degrees_180) {
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY() - 1)));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() - 1)));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY())));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() + 1)));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY() - 1), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() - 1), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY()), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY() + 1), color));
     }
     else if (m_rotation == RotationAngle::Degrees_270) {
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY())));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY())));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY())));
-        list.add(ViewCell(color, CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY() - 1)));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX() - 1, m_anchorPoint.getY()), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX(), m_anchorPoint.getY()), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY()), color));
+        list.add(ViewCell(CellPoint(m_anchorPoint.getX() + 1, m_anchorPoint.getY() - 1), color));
     }
 }
