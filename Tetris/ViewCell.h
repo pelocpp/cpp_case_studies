@@ -10,8 +10,8 @@ public:
      ViewCell(CellPoint point, CellColor color);
 
     // getter/setter
-    CellColor getColor() noexcept;
+    CellColor getColor() const noexcept;
     void setColor(CellColor color) noexcept;
-    CellPoint getPoint() noexcept;
+    CellPoint getPoint() const noexcept;
     void setPoint(CellPoint point) noexcept;
 };

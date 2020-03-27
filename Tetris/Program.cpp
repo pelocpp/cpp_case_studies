@@ -88,8 +88,37 @@ void doTestOutput() {
     //subsystem.writeAtTest(ConsoleBackground::DARKBLUE, block, coord);
 }
 
+// Handler function will be called on separate thread!
+static BOOL WINAPI console_ctrl_handler(DWORD dwCtrlType)
+{
+    switch (dwCtrlType)
+    {
+    case CTRL_C_EVENT: // Ctrl+C
+        ::OutputDebugString("CTRL_C_EVENT\n");
+        break;
+    case CTRL_BREAK_EVENT: // Ctrl+Break
+        ::OutputDebugString("CTRL_BREAK_EVENT\n");
+        break;
+    case CTRL_CLOSE_EVENT: // Closing the console window
+        ::OutputDebugString("CTRL_CLOSE_EVENT\n");
+        break;
+    case CTRL_LOGOFF_EVENT: // User logs off. Passed only to services!
+        ::OutputDebugString("CTRL_LOGOFF_EVENT\n");
+        break;
+    case CTRL_SHUTDOWN_EVENT: // System is shutting down. Passed only to services!
+        ::OutputDebugString("CTRL_SHUTDOWN_EVENT\n");
+        break;
+    }
+
+    // Return TRUE if handled this message, further handler functions won't be called.
+    // Return FALSE to pass this message to further handlers until default handler calls ExitProcess().
+    return FALSE;
+}
+
 int main()
 {
+    ::SetConsoleCtrlHandler(console_ctrl_handler, TRUE);
+
     doGame();
     char ch;
     std::cin >> ch;

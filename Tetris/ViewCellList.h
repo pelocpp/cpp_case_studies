@@ -1,7 +1,8 @@
 class ViewCellList {
 
-private:
-    std::vector<ViewCell> m_cells;
+public:
+    using cells_vector = std::vector<ViewCell>;
+    using const_iterator = cells_vector::const_iterator;
 
 public:
      // c'tors
@@ -15,8 +16,11 @@ public:
 
     ViewCell at(int index) const;
 
-    // TODO: implement // add iterator interface !!!
-
     // TODO: implement operator[] ...
-};
 
+    const_iterator begin() const { return m_cells.begin(); }
+    const_iterator end() const { return m_cells.end(); }
+
+private:
+    std::vector<ViewCell> m_cells;
+};
