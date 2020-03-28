@@ -1,6 +1,14 @@
 #include <windows.h>
+#include <future>
+#include <list>
+#include <chrono>
+#include <queue>
 
+#include "Globals.h"
 #include "Direction.h"
+
+#include "IKeyboardObserver.h"
+#include "IKeyboardListener.h"
 #include "IUISubsystem.h"
 #include "ConsoleSubsystem.h"
 
@@ -78,12 +86,40 @@ void ConsoleSubsystem::showConsole() {
 }
 
 void ConsoleSubsystem::closeConsole() {
-
+    ::CloseHandle(m_hStdin);
+    ::CloseHandle(m_hStdout);
 }
 
 // getter
 bool ConsoleSubsystem::isInputAvailable() {
-    return false;
+
+    DWORD dwNumEvents;
+    ::GetNumberOfConsoleInputEvents(m_hStdin, &dwNumEvents);
+    if (dwNumEvents == 0)
+        return false;
+
+    // retrieve last pressed key
+    WORD lastVirtualKey = 0;
+    for (unsigned int i = 0; i < dwNumEvents; i++)
+    {
+        INPUT_RECORD evt;
+        DWORD dwEventsRead;
+
+        // read a single event from the console's input buffer
+        // and remove it from the buffer
+        ::ReadConsoleInput(m_hStdin, &evt, 1, &dwEventsRead);
+
+        // store key code, if a key was pressed
+        if (evt.EventType == KEY_EVENT && evt.Event.KeyEvent.bKeyDown == TRUE)
+            lastVirtualKey = evt.Event.KeyEvent.wVirtualKeyCode;
+    }
+
+    // simple error handling, should never be reached
+    if (lastVirtualKey == 0)
+        return false;
+
+    m_lastVirtualKey = lastVirtualKey;
+    return true;
 }
 
 bool ConsoleSubsystem::isEscapeHit() {
@@ -169,3 +205,101 @@ void ConsoleSubsystem::writeAtTest(unsigned int color, char ch, COORD coord) {
 
 }
 
+
+bool ConsoleSubsystem::checkInputAvailable() {
+
+    std::queue<unsigned short> keys;
+
+    while (m_enableKeyboardLogging) {
+
+        ::OutputDebugString("Check keys ...\n");
+
+        keys = {};  // clear keys queue
+
+        DWORD dwNumEvents;
+        ::GetNumberOfConsoleInputEvents(m_hStdin, &dwNumEvents);
+        if (dwNumEvents > 0) {
+
+            // retrieve last pressed keys
+            WORD lastVirtualKey = 0;
+            for (unsigned int i = 0; i < dwNumEvents; i++)
+            {
+                INPUT_RECORD evt;
+                DWORD dwEventsRead;
+
+                // read a single event from the console's input buffer
+                // and remove it from the buffer
+                ::ReadConsoleInput(m_hStdin, &evt, 1, &dwEventsRead);
+
+                // store key code, if a key was pressed
+                if (evt.EventType == KEY_EVENT && evt.Event.KeyEvent.bKeyDown == TRUE) {
+
+                    lastVirtualKey = evt.Event.KeyEvent.wVirtualKeyCode;
+
+                    if (isValidKey(lastVirtualKey)) {
+
+                        char szText[128];
+                        ::wsprintf(szText, "> Key: %d\n", lastVirtualKey);
+                        ::OutputDebugString(szText);
+
+                        keys.push(lastVirtualKey);
+                    }
+                }
+            }
+
+            if (!keys.empty()) {
+                notifyAll(keys);
+            }
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(InputLoggerSleep));
+    }
+
+    ::OutputDebugString("Done KeyboardLogging\n");
+    return true;
+}
+
+bool ConsoleSubsystem::isValidKey(unsigned short key) { 
+
+    if (key == VK_LEFT || key == VK_UP || key == VK_RIGHT || key == VK_DOWN || key == VK_ESCAPE) {
+        return true;
+    }
+
+    return false;
+}
+
+void ConsoleSubsystem::startKeyboardLogging() {
+
+    m_enableKeyboardLogging = true;
+
+    // STL Algo mem_fn  std::mem_fn
+
+    futureKeyboardLogger = std::async(std::launch::async, [this]() -> bool {
+        return checkInputAvailable();
+        }
+    );
+}
+
+void ConsoleSubsystem::stopKeyboardLogging() {
+
+    m_enableKeyboardLogging = false;
+
+    // wait until logging thread has terminated
+    futureKeyboardLogger.get();
+}
+
+// implementation of interface 'IKeyboardListener'
+void ConsoleSubsystem::attach(IKeyboardObserver* observer) {
+    m_observer.push_back(observer);
+}
+
+void ConsoleSubsystem::detach(IKeyboardObserver* observer) {
+    // TODO: Wie war das mit erase und remove
+    m_observer.remove(observer);
+}
+
+void ConsoleSubsystem::notifyAll(std::queue<unsigned short> keys) {
+    for (auto observer : m_observer) {
+        observer->update(keys);
+    }
+}

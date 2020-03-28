@@ -3,30 +3,30 @@
 class TetrisModel : public ITetrisModel { 
 
 private:
-    ITetrisBoard* m_board;   // tetris game area
-    ITetrimino* m_curr;      // current tetrimino
-    TetrisState m_state;     // current state of model
+    ITetrisBoard*                m_board;      // tetris game area
+    std::unique_ptr<ITetrimino>  m_tetromino;  // current tetromino
+    std::future<bool>            m_gameLoop;   // internal game loop
 
-    // ERSTE ANSÄTZE FÜR EINEN WORKER THREAD
-    std::future<bool>        m_futureGameLoop;
+   // TetrisState m_state;     // current state of model
+
+    std::queue<TetrisActionEx>   m_actions;   // internal game loop
 
 public:
     TetrisModel();
     ~TetrisModel();
 
+    // properties
     int getNumRows() override;
     int getNumCols() override;
 
-    void start() override;
-    bool run() override; 
-    void join() override;
-    void stop() override;
+    //void setState(TetrisState state) override;
+    //TetrisState getState() override;
 
-    void setState(TetrisState state) override;
-    TetrisState getState() override;
+    void pushAction(TetrisActionEx) override;
+    TetrisActionEx popAction() override;
 
-    ITetrimino* attachTetrimino() override;
-    void detachTetrimino() override;
+    // tetrimino management
+    void createNextTetrimino() override;
 
     // action requests (internally and externally initiated)
     void doActionSetToTop();
@@ -38,4 +38,10 @@ public:
     void attach(ITetrisBoardObserver* observer) override;
     void detach(ITetrisBoardObserver* observer) override;
     void notifyAll(const ViewCellList& list) override;
+
+private:
+    // internal helper methods
+    void start() override;
+    bool run() override;
+    void join() override;
 };

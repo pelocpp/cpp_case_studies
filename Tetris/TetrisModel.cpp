@@ -1,10 +1,12 @@
 #include <windows.h>
 #include <iostream>
 #include <array> 
+#include <queue> 
 #include <thread> 
 #include <chrono>
 #include <future>
 #include <cassert>
+#include <memory>
 
 #include "Globals.h"
 #include "Direction.h"
@@ -17,9 +19,6 @@
 #include "ViewCellList.h"
 #include "TetrisCell.h"
 
-#include "IUISubsystem.h"
-#include "ConsoleSubsystem.h"
-
 #include "ITetrisBoardObserver.h"
 #include "ITetrisBoardListener.h"
 
@@ -30,16 +29,16 @@
 #include "Tetrimino.h"
 #include "Tetrimino_L.h"
 
-#include "TetrisState.h"
+#include "TetrisAction.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 
-#include "TetrisGame.h"
-
 TetrisModel::TetrisModel() {
     m_board = new TetrisBoard(Rows, Cols);
-    m_state = TetrisState::None;
-    m_curr = nullptr; // TODO: Smart Ptr !!!
+
+ //   m_state = TetrisState::None;
+
+    m_tetromino = nullptr; // TODO: Smart Ptr !!!
 }
 
 TetrisModel::~TetrisModel() {
@@ -58,9 +57,11 @@ int TetrisModel::getNumCols() {
 void TetrisModel::start() {
 
     m_board->clear();
-    setState(TetrisState::AtTop);
 
-    m_futureGameLoop = std::async(std::launch::async, [this] () -> bool {
+    pushAction(TetrisActionEx::AtTop);
+   // setState(TetrisState::AtTop);
+
+    m_gameLoop = std::async(std::launch::async, [this] () -> bool {
             return run();
         }
     );
@@ -70,28 +71,31 @@ void TetrisModel::start() {
 
 bool TetrisModel::run() {
 
-    while (true) {
+   // TetrisState state = getState();
 
-        ::OutputDebugString("(1) TetrisModel::play\n");
+    TetrisActionEx action = TetrisActionEx::None;
 
-        TetrisState state = getState();
 
-        switch (state) {
+    while (action != TetrisActionEx::GameOver) {
 
-        case TetrisState::AtTop:
+        action = popAction();
+
+        switch (action) {
+
+        case TetrisActionEx::AtTop:
             doActionSetToTop();
             break;
 
-        case TetrisState::Normal:
-        case TetrisState::Accelerated:
+        case TetrisActionEx::WayDown:
+     //   case TetrisActionEx::Accelerated:
             doActionMoveDown();
             break;
 
-        case TetrisState::AtBottom:
+        case TetrisActionEx::AtBottom:
             doActionAtBottom();
             break;
 
-        case TetrisState::GameOver:
+        case TetrisActionEx::GameOver:
             doActionGameOver();
             break;
 
@@ -101,7 +105,7 @@ bool TetrisModel::run() {
             break;
         }
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(ModelSleep));
     }
 
     return true; // TODO: oder false
@@ -109,35 +113,49 @@ bool TetrisModel::run() {
 
 void TetrisModel::join() {
 
-    m_futureGameLoop.get();
-}
-
-
-void TetrisModel::stop() {
-
-    // TODO: Hier muss irgendwie der Thread gestoppt werden ?!"?
-
+    m_gameLoop.get();
 }
 
 // getter/setter
-TetrisState TetrisModel::getState() {
-    return m_state;
+//TetrisState TetrisModel::getState() {
+//    return m_state;
+//}
+//
+//void TetrisModel::setState(TetrisState state) {
+//    m_state = state;
+//}
+
+
+
+// TODO TODO: DIe müssen möglicherweise THREAD SAFE gemacht werden !!!!!!!!!!!!!!!!
+
+void TetrisModel::pushAction(TetrisActionEx action) {
+    m_actions.push(action);
 }
 
-void TetrisModel::setState(TetrisState state) {
-    m_state = state;
+TetrisActionEx TetrisModel::popAction() {
+    TetrisActionEx tmp = m_actions.front();
+    m_actions.pop();
+    return tmp;
 }
 
-ITetrimino* TetrisModel::attachTetrimino() {
-    m_curr = new Tetrimino_L(m_board);
+// TODO TODO: DIe müssen möglicherweise THREAD SAFE gemacht werden !!!!!!!!!!!!!!!!
 
-    // TODO: Warum muss AttachTetrimino einen Wert zurückliefern ????
 
-    return m_curr;
-}
 
-void TetrisModel::detachTetrimino() {
-    delete m_curr;
+
+//void TetrisModel::attachTetrimino() {
+//   // m_curr = new Tetrimino_L(m_board);
+//
+//    m_curr = std::make_unique<Tetrimino_L>(m_board);
+//}
+//
+//void TetrisModel::detachTetrimino() {
+//   // delete m_curr;
+//}
+
+void TetrisModel::createNextTetrimino() {
+    m_tetromino = std::make_unique<Tetrimino_L>(m_board);
 }
 
 void TetrisModel::doActionSetToTop() {
@@ -146,11 +164,10 @@ void TetrisModel::doActionSetToTop() {
 
     assert(getState() == TetrisState::AtTop);
 
-    // create new tetrimino
-    m_curr = attachTetrimino();
+    createNextTetrimino();
 
-    if (m_curr->canSetToTop()) {
-        m_curr->setToTop();
+    if (m_tetromino->canSetToTop()) {
+        m_tetromino->setToTop();
         setState(TetrisState::Normal);
     }
     else {
@@ -160,12 +177,12 @@ void TetrisModel::doActionSetToTop() {
 
 void TetrisModel::doActionMoveDown() {
 
-    ::OutputDebugString("(3) doActionMoveDown\n");
+    ::OutputDebugString("=> doActionMoveDown\n");
 
     assert(getState() == TetrisState::Normal || getState() == TetrisState::Accelerated);
 
-    if (m_curr->canMoveDown()) {
-        m_curr->moveDown();
+    if (m_tetromino->canMoveDown()) {
+        m_tetromino->moveDown();
     }
     else {
         setState(TetrisState::AtBottom);
@@ -173,6 +190,16 @@ void TetrisModel::doActionMoveDown() {
 }
 
 void TetrisModel::doActionAtBottom() {
+
+    ::OutputDebugString("=> doActionAtBottom\n");
+
+    // rearrange field, if possible
+    //while (this.board.IsBottomRowComplete()) {
+    //    this.board.MoveNonEmptyRowsDown();
+    //}
+
+    // schedule next tetrimino
+    setState(TetrisState::AtTop);
 }
 
 void TetrisModel::doActionGameOver() {

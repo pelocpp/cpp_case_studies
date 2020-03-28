@@ -11,14 +11,6 @@ protected:
     CellColor m_color;
     ITetrisBoard* m_board;
 
-    // predicates
-    //virtual bool canSetToTop() = 0;
-    //virtual bool canMoveLeft() = 0;
-    //virtual bool canMoveRight() = 0;
-    //virtual bool canMoveDown() = 0;
-    //virtual bool canRotate() = 0;
-    //virtual bool isCoordinateWithin(int row, int col) = 0;
-
 protected:
     // protected interface (anchor movement methods)
     void moveAnchorLeft();

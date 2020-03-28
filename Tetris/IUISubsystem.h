@@ -1,6 +1,6 @@
 #pragma once
 
-class IUISubsystem {
+class IUISubsystem : public IKeyboardListener {
 
 public:
     // properties
@@ -11,6 +11,9 @@ public:
     virtual void initConsole() = 0;
     virtual void showConsole() = 0;
     virtual void closeConsole() = 0;
+
+    virtual void startKeyboardLogging() = 0;
+    virtual void stopKeyboardLogging() = 0;
 
     virtual void writeAt(char ch, COORD coord) = 0;
     virtual void writeAt(char ch, unsigned int color, COORD coord) = 0;

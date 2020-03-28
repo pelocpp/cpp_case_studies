@@ -1,6 +1,18 @@
+#define _CRTDBG_MAP_ALLOC
+#include <cstdlib>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
+
 #include <windows.h>
 #include <iostream>
 #include <array> 
+#include <queue> 
 #include <thread> 
 #include <chrono>
 #include <future>
@@ -16,6 +28,8 @@
 #include "ViewCellList.h"
 #include "TetrisCell.h"
 
+#include "IKeyboardObserver.h"
+#include "IKeyboardListener.h"
 #include "IUISubsystem.h"
 #include "ConsoleSubsystem.h"
 
@@ -28,30 +42,51 @@
 #include "ITetrimino.h"
 #include "Tetrimino.h"
 
-#include "TetrisState.h"
+#include "TetrisAction.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 
 #include "TetrisGame.h"
 
+// TODO: Tetromino    RENAME
+
 // TODO: Allgemein : Da wird viel mit Zeigern gearbeitet ====>  Unique_Ptr !!!!!!!!!!!
 
 // TODO: Allgemein : Da wird viel mit Zeigern gearbeitet ====>  Oder Referenzen bei der Parameter Übergabe
 
-// TODO : Alle Methoden mit Kleinbúchstaben am Anfang !!!
+// TODO : Alle Methoden mit Kleinbuchstaben am Anfang !!!
 
 // TODO: Bei CellPoint und diesen vielen kleinen Klassen: inline ergänzen !!!
 
+// TODO: Das Programm soll sich am Ende selbst beenden ===> Alle Destruktoren sollten korrekt aufräumen !!!!
 
-void doGame() {
+
+int main()
+{
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
     TetrisGame game;
-
     // TODO: start und init KANN man zusammenlegen ...
     game.init();
     game.start();
     game.join();
-    std::cout << "Done.";
+
+    ::OutputDebugString("BBBBBBBBBBBB\n");
+
+    game.stop();
+
+
+    ::OutputDebugString("CCCCCCCCCCC\n");
+
+    //char ch;
+    //std::cin >> ch;
+    //std::cout << "Done.";
 }
+
+
+//WEITER https://docs.microsoft.com/en-us/windows/console/reading-input-buffer-events
+//
+//WEITER https://docs.microsoft.com/en-us/windows/console/low-level-console-input-functions
 
 
 void doTestOutput() {
@@ -87,44 +122,3 @@ void doTestOutput() {
     //coord.Y++;
     //subsystem.writeAtTest(ConsoleBackground::DARKBLUE, block, coord);
 }
-
-// Handler function will be called on separate thread!
-static BOOL WINAPI console_ctrl_handler(DWORD dwCtrlType)
-{
-    switch (dwCtrlType)
-    {
-    case CTRL_C_EVENT: // Ctrl+C
-        ::OutputDebugString("CTRL_C_EVENT\n");
-        break;
-    case CTRL_BREAK_EVENT: // Ctrl+Break
-        ::OutputDebugString("CTRL_BREAK_EVENT\n");
-        break;
-    case CTRL_CLOSE_EVENT: // Closing the console window
-        ::OutputDebugString("CTRL_CLOSE_EVENT\n");
-        break;
-    case CTRL_LOGOFF_EVENT: // User logs off. Passed only to services!
-        ::OutputDebugString("CTRL_LOGOFF_EVENT\n");
-        break;
-    case CTRL_SHUTDOWN_EVENT: // System is shutting down. Passed only to services!
-        ::OutputDebugString("CTRL_SHUTDOWN_EVENT\n");
-        break;
-    }
-
-    // Return TRUE if handled this message, further handler functions won't be called.
-    // Return FALSE to pass this message to further handlers until default handler calls ExitProcess().
-    return FALSE;
-}
-
-int main()
-{
-    ::SetConsoleCtrlHandler(console_ctrl_handler, TRUE);
-
-    doGame();
-    char ch;
-    std::cin >> ch;
-}
-
-
-//WEITER https://docs.microsoft.com/en-us/windows/console/reading-input-buffer-events
-//
-//WEITER https://docs.microsoft.com/en-us/windows/console/low-level-console-input-functions

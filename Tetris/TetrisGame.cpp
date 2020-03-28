@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <iostream>
 #include <array> 
+#include <queue> 
 #include <thread> 
 #include <chrono>
 #include <future>
@@ -17,6 +18,8 @@
 #include "ViewCellList.h"
 #include "TetrisCell.h"
 
+#include "IKeyboardObserver.h"
+#include "IKeyboardListener.h"
 #include "IUISubsystem.h"
 #include "ConsoleSubsystem.h"
 
@@ -29,7 +32,7 @@
 #include "ITetrimino.h"
 #include "Tetrimino.h"
 
-#include "TetrisState.h"
+#include "TetrisAction.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 
@@ -50,11 +53,13 @@ TetrisGame::~TetrisGame() {
 
 void TetrisGame::init() {
 
+    // TODO: Wo ist das detach ????
+    m_subsystem->attach(this);
+    m_subsystem->startKeyboardLogging();
+
     // TODO: Komme nicht direkt an das BOARD heran ... also ein Umweg ?!?!
     // TODO: In einer Redesign-Phase klären, ob das so bleibt ?!?!?!
-
     m_model->attach(this);
-    
     // TODO: Wo ist das detach ????
 }
 
@@ -66,13 +71,23 @@ void TetrisGame::start() {
 void TetrisGame::join() {
 
     m_model->join();
+
+    ::OutputDebugString("AAAAAAAAAAA\n");
+}
+
+void TetrisGame::stop() {
+
+    ::OutputDebugString("Stopping Game\n");
+    m_subsystem->stopKeyboardLogging();
+
+    m_subsystem->closeConsole();
 }
 
 void TetrisGame::update(const ViewCellList& list) {
 
-    char szBuf[128];
-    wsprintf(szBuf, "Yeahhhhhhhhhh TetrisGame::update ==> Length of List: %d\n", list.size());
-    ::OutputDebugString(szBuf);
+    //char szBuf[128];
+    //wsprintf(szBuf, "Yeahhhhhhhhhh TetrisGame::update ==> Length of List: %d\n", list.size());
+    //::OutputDebugString(szBuf);
 
     // second approach
     std::for_each(std::begin(list), std::end(list), [=] (const ViewCell& cell) {
@@ -86,6 +101,13 @@ void TetrisGame::update(const ViewCellList& list) {
         // char ch, unsigned int color, COORD coord
         m_subsystem->writeAt(' ', win32Col, coord);
     });
+}
+
+void TetrisGame::update(std::queue<unsigned short> keys) {
+
+    char szBuf[128];
+    wsprintf(szBuf, "Ooopsie==> Length of List: %d\n", keys.size());
+    ::OutputDebugString(szBuf);
 }
 
 unsigned int TetrisGame::toWin32Color(CellColor color) {

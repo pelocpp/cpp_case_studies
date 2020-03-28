@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <iostream>
 #include <array> 
+#include <queue> 
 #include <thread> 
 #include <chrono>
 #include <future>
@@ -16,9 +17,6 @@
 #include "ViewCellList.h"
 #include "TetrisCell.h"
 
-#include "IUISubsystem.h"
-#include "ConsoleSubsystem.h"
-
 #include "ITetrisBoardObserver.h"
 #include "ITetrisBoardListener.h"
 
@@ -28,11 +26,9 @@
 #include "ITetrimino.h"
 #include "Tetrimino.h"
 
-#include "TetrisState.h"
+#include "TetrisAction.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
-
-#include "TetrisGame.h"
 
 Tetrimino::Tetrimino(ITetrisBoard* board, CellColor color) : m_board(board), m_color(color), m_anchorPoint{ 5, 2 } {
 

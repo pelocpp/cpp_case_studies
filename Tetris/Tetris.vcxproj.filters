@@ -113,9 +113,6 @@
     <ClInclude Include="Tetrimino_L.h">
       <Filter>Source Files\Tetrimino</Filter>
     </ClInclude>
-    <ClInclude Include="TetrisState.h">
-      <Filter>Source Files\Model</Filter>
-    </ClInclude>
     <ClInclude Include="ViewCellList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -127,6 +124,15 @@
     </ClInclude>
     <ClInclude Include="ITetrisBoardObserver.h">
       <Filter>Source Files\Board</Filter>
+    </ClInclude>
+    <ClInclude Include="IKeyboardListener.h">
+      <Filter>Source Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="IKeyboardObserver.h">
+      <Filter>Source Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TetrisAction.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

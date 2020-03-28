@@ -1,9 +1,11 @@
 #include <windows.h>
 #include <iostream>
 #include <array> 
+#include <queue> 
 #include <thread> 
 #include <chrono>
 #include <future>
+#include <cassert>
 
 #include "Globals.h"
 #include "Direction.h"
@@ -16,9 +18,6 @@
 #include "ViewCellList.h"
 #include "TetrisCell.h"
 
-#include "IUISubsystem.h"
-#include "ConsoleSubsystem.h"
-
 #include "ITetrisBoardObserver.h"
 #include "ITetrisBoardListener.h"
 
@@ -29,22 +28,70 @@
 #include "Tetrimino.h"
 #include "Tetrimino_L.h"
 
-#include "TetrisState.h"
+#include "TetrisAction.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
-
-#include "TetrisGame.h"
 
 Tetrimino_L::Tetrimino_L(ITetrisBoard* board) : Tetrimino(board, CellColor::Ocker) {}
 
 // predicates
-bool Tetrimino_L::canSetToTop() { return true; }
+bool Tetrimino_L::canSetToTop() {
+    
+    assert(m_rotation == RotationAngle::Degrees_0);
+
+    return !(m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX()).getState() == CellState::Used ||
+        m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX()).getState() == CellState::Used ||
+        m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX()).getState() == CellState::Used ||
+        m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() + 1).getState() == CellState::Used);
+}
 
 bool Tetrimino_L::canMoveLeft() { return true; }
 
 bool Tetrimino_L::canMoveRight() { return true; }
 
-bool Tetrimino_L::canMoveDown() { return true; }
+bool Tetrimino_L::canMoveDown() { 
+
+    RotationAngle rotation = m_rotation;
+
+    switch (rotation) {
+    case RotationAngle::Degrees_0:
+        if (m_anchorPoint.getY() >= m_board->getNumRows() - 2)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() + 2, m_anchorPoint.getX()).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 2, m_anchorPoint.getX() + 1).getState() == CellState::Used)
+            return false;
+        break;
+
+
+    case RotationAngle::Degrees_90:
+        if (m_anchorPoint.getY() >= m_board->getNumRows() - 2)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() + 2, m_anchorPoint.getX() - 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX()).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() + 1).getState() == CellState::Used)
+            return false;
+        break;
+
+    case RotationAngle::Degrees_180:
+        if (m_anchorPoint.getY() >= m_board->getNumRows() - 2)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() - 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 2, m_anchorPoint.getX()).getState() == CellState::Used)
+            return false;
+        break;
+
+    case RotationAngle::Degrees_270:
+        if (m_anchorPoint.getY() >= m_board->getNumRows() - 1)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() - 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX()).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() + 1).getState() == CellState::Used)
+            return false;
+        break;
+    }
+
+    return true;
+}
 
 bool Tetrimino_L::canRotate() { return true; }
 
@@ -53,7 +100,6 @@ bool Tetrimino_L::isCoordinateWithin(int row, int col) { return true; }
 void Tetrimino_L::update(CellState state) {
 
     CellColor color = (state == CellState::Free) ? CellColor::LightGray : m_color;
-
     TetrisCell cell (state, color);
 
     // update model
