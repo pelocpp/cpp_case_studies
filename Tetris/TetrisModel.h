@@ -9,7 +9,7 @@ private:
 
    // TetrisState m_state;     // current state of model
 
-    std::queue<TetrisActionEx>   m_actions;   // internal game loop
+    std::deque<TetrisActionEx>   m_actions;   // internal game loop
 
 public:
     TetrisModel();
@@ -23,16 +23,19 @@ public:
     //TetrisState getState() override;
 
     void pushAction(TetrisActionEx) override;
+    void addActions(const std::deque<TetrisActionEx>&) override;
     TetrisActionEx popAction() override;
 
     // tetrimino management
     void createNextTetrimino() override;
 
     // action requests (internally and externally initiated)
-    void doActionSetToTop();
-    void doActionMoveDown();
-    void doActionAtBottom();
-    void doActionGameOver();
+    void doActionSetToTop() override;
+    void doActionMoveRight() override;
+    void doActionMoveLeft() override;
+    void doActionMoveDown() override;
+    void doActionAtBottom() override;
+    void doActionGameOver() override;
 
     // implementation of interface 'ITetrisBoardListener'
     void attach(ITetrisBoardObserver* observer) override;

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <array> 
 #include <queue> 
+#include <deque> 
 #include <thread> 
 #include <chrono>
 #include <future>
@@ -103,11 +104,53 @@ void TetrisGame::update(const ViewCellList& list) {
     });
 }
 
-void TetrisGame::update(std::queue<unsigned short> keys) {
+void TetrisGame::update(std::deque<unsigned short> keys) {
 
     char szBuf[128];
-    wsprintf(szBuf, "Ooopsie==> Length of List: %d\n", keys.size());
+    wsprintf(szBuf, "Ooopsie==> Length of Input List: %d\n", keys.size());
     ::OutputDebugString(szBuf);
+
+    // transform UI subsystem based list into model conform list
+
+    std::deque<TetrisActionEx> actions;
+    
+    std::transform(
+        keys.begin(),
+        keys.end(), 
+        std::back_inserter(actions),
+        [](unsigned short key) -> TetrisActionEx {
+            TetrisActionEx result;
+            switch (key)
+            {
+            case VK_LEFT:
+                result = TetrisActionEx::DoLeft;
+                break;
+            case VK_UP:
+                result = TetrisActionEx::DoRotate;
+                break;
+            case VK_RIGHT:
+                result = TetrisActionEx::DoRight;
+                break;
+            case VK_DOWN:
+                result = TetrisActionEx::AllWayDown;
+                break;
+            case VK_ESCAPE:
+                // TODO: Das NONE passt hier nicht !!!!
+                result = TetrisActionEx::None;
+                break;
+            default:
+                // TODO: Das NONE passt hier nicht !!!!
+                result = TetrisActionEx::None;
+                break;
+            }
+            return result;
+        }
+    );
+
+    wsprintf(szBuf, "Ooopsie==> Length of Output List: %d\n", actions.size());
+    ::OutputDebugString(szBuf);
+
+    m_model->addActions(actions);
 }
 
 unsigned int TetrisGame::toWin32Color(CellColor color) {

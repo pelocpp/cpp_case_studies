@@ -45,9 +45,89 @@ bool Tetrimino_L::canSetToTop() {
         m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() + 1).getState() == CellState::Used);
 }
 
-bool Tetrimino_L::canMoveLeft() { return true; }
+bool Tetrimino_L::canMoveLeft() {
+    // check fields to the left of the tetrimino
+    switch (m_rotation) {
+    case RotationAngle::Degrees_0:
+        if (m_anchorPoint.getX() == 0)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX() - 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() - 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() - 1).getState() == CellState::Used)
+            return false;
+        break;
 
-bool Tetrimino_L::canMoveRight() { return true; }
+    case RotationAngle::Degrees_90:
+        if (m_anchorPoint.getX() == 1)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() - 2).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() - 2).getState() == CellState::Used)
+            return false;
+        break;
+
+    case RotationAngle::Degrees_180:
+        if (m_anchorPoint.getX() == 1)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX() - 2).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() - 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() - 1).getState() == CellState::Used)
+            return false;
+        break;
+
+    case RotationAngle::Degrees_270:
+        if (m_anchorPoint.getX() == 1)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX()).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() - 2).getState() == CellState::Used)
+            return false;
+        break;
+    }
+
+    return true;
+}
+
+bool Tetrimino_L::canMoveRight() { 
+
+    // check fields to the right of the tetrimino
+    switch (m_rotation) {
+    case RotationAngle::Degrees_0:
+        if (m_anchorPoint.getX() == m_board->getNumColumns() - 2)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX() + 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() + 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() + 2).getState() == CellState::Used)
+            return false;
+        break;
+
+    case RotationAngle::Degrees_90:
+        if (m_anchorPoint.getX() == m_board->getNumColumns() - 2)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() + 2).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX()).getState() == CellState::Used)
+            return false;
+        break;
+
+    case RotationAngle::Degrees_180:
+        if (m_anchorPoint.getX() == m_board->getNumColumns() - 1)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX() + 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() + 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() + 1).getState() == CellState::Used)
+            return false;
+        break;
+
+    case RotationAngle::Degrees_270:
+        if (m_anchorPoint.getX() == m_board->getNumColumns() - 2)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX() + 2).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() + 2).getState() == CellState::Used)
+            return false;
+        break;
+    }
+
+    return true;
+
+}
 
 bool Tetrimino_L::canMoveDown() { 
 
@@ -93,7 +173,51 @@ bool Tetrimino_L::canMoveDown() {
     return true;
 }
 
-bool Tetrimino_L::canRotate() { return true; }
+bool Tetrimino_L::canRotate() { 
+
+    if (m_anchorPoint.getX() == 0 || m_anchorPoint.getX() == m_board->getNumColumns() - 1)
+        return false;
+
+    switch (m_rotation) {
+    case RotationAngle::Degrees_0:
+        if (m_anchorPoint.getY() >= m_board->getNumRows() - 2)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() - 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() + 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() - 1).getState() == CellState::Used)
+            return false;
+        break;
+
+    case RotationAngle::Degrees_90:
+        if (m_anchorPoint.getY() >= m_board->getNumRows() - 2)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX() - 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX()).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX()).getState() == CellState::Used)
+            return false;
+        break;
+
+    case RotationAngle::Degrees_180:
+        if (m_anchorPoint.getY() >= m_board->getNumRows() - 2)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX() + 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() - 1).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() + 1).getState() == CellState::Used)
+            return false;
+        break;
+
+    case RotationAngle::Degrees_270:
+        if (m_anchorPoint.getY() >= m_board->getNumRows() - 1)
+            return false;
+        if (m_board->getCell(m_anchorPoint.getY() - 1, m_anchorPoint.getX()).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX()).getState() == CellState::Used ||
+            m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() + 1).getState() == CellState::Used)
+            return false;
+        break;
+    }
+
+    return true;
+}
 
 bool Tetrimino_L::isCoordinateWithin(int row, int col) { return true; }
 

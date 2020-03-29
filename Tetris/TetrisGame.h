@@ -23,7 +23,7 @@ private:
     void update(const ViewCellList&) override;
 
     // implementation of interface 'IKeyboardObserver'
-    void update(std::queue<unsigned short>) override;
+    void update(std::deque<unsigned short>) override;
 
 public:
     static unsigned int toWin32Color(CellColor);

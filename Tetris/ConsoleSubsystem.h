@@ -53,7 +53,7 @@ public:
     // implementation of interface 'ITetrisBoardListener'
     void attach(IKeyboardObserver* observer) override;
     void detach(IKeyboardObserver* observer) override;
-    void notifyAll(std::queue<unsigned short>) override;
+    void notifyAll(std::deque<unsigned short>) override;
 
 public:
     void drawBorder();

@@ -56,13 +56,29 @@ void Tetrimino::setToTop() {
     m_board->notifyAll(list);
 }
 
-void Tetrimino::moveLeft() {}
+void Tetrimino::moveRight() {
 
-void Tetrimino::moveRight() {}
+    ViewCellList list;
+    release();
+    updateCellList(list, CellColor::LightGray);
+    moveAnchorRight();
+    set();
+    updateCellList(list, m_color);
+    m_board->notifyAll(list);
+}
 
-bool Tetrimino::moveDown() {
-    if (!canMoveDown())
-        return false;
+void Tetrimino::moveLeft() {
+
+    ViewCellList list;
+    release();
+    updateCellList(list, CellColor::LightGray);
+    moveAnchorLeft();
+    set();
+    updateCellList(list, m_color);
+    m_board->notifyAll(list);
+}
+
+void Tetrimino::moveDown() {
 
     ViewCellList list;
     release();
@@ -71,8 +87,6 @@ bool Tetrimino::moveDown() {
     set();
     updateCellList(list, m_color);
     m_board->notifyAll(list);
-
-    return true;
 }
 
 void Tetrimino::Rotate() {}

@@ -13,6 +13,7 @@
 #include <iostream>
 #include <array> 
 #include <queue> 
+#include <deque> 
 #include <thread> 
 #include <chrono>
 #include <future>

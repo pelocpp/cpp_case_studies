@@ -19,7 +19,7 @@ public:
     virtual void setToTop() = 0;
     virtual void moveLeft() = 0;
     virtual void moveRight() = 0;
-    virtual bool moveDown() = 0;
+    virtual void moveDown() = 0;
     virtual void Rotate() = 0;
 
     // board specific methods

@@ -2,7 +2,7 @@
 #include <future>
 #include <list>
 #include <chrono>
-#include <queue>
+#include <deque>
 
 #include "Globals.h"
 #include "Direction.h"
@@ -208,7 +208,7 @@ void ConsoleSubsystem::writeAtTest(unsigned int color, char ch, COORD coord) {
 
 bool ConsoleSubsystem::checkInputAvailable() {
 
-    std::queue<unsigned short> keys;
+    std::deque<unsigned short> keys;
 
     while (m_enableKeyboardLogging) {
 
@@ -242,7 +242,7 @@ bool ConsoleSubsystem::checkInputAvailable() {
                         ::wsprintf(szText, "> Key: %d\n", lastVirtualKey);
                         ::OutputDebugString(szText);
 
-                        keys.push(lastVirtualKey);
+                        keys.push_back(lastVirtualKey);
                     }
                 }
             }
@@ -298,7 +298,7 @@ void ConsoleSubsystem::detach(IKeyboardObserver* observer) {
     m_observer.remove(observer);
 }
 
-void ConsoleSubsystem::notifyAll(std::queue<unsigned short> keys) {
+void ConsoleSubsystem::notifyAll(std::deque<unsigned short> keys) {
     for (auto observer : m_observer) {
         observer->update(keys);
     }

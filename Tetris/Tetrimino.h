@@ -13,16 +13,16 @@ protected:
 
 protected:
     // protected interface (anchor movement methods)
-    void moveAnchorLeft();
     void moveAnchorRight();
+    void moveAnchorLeft();
     void moveAnchorDown();
 
 public:
     // public interface (movement specific methods)
     void setToTop() override;
-    void moveLeft() override;
     void moveRight() override;
-    bool moveDown() override;
+    void moveLeft() override;
+    void moveDown() override;
     void Rotate() override;
 
     // board specific methods

@@ -75,7 +75,6 @@ bool TetrisModel::run() {
 
     TetrisActionEx action = TetrisActionEx::None;
 
-
     while (action != TetrisActionEx::GameOver) {
 
         action = popAction();
@@ -89,6 +88,14 @@ bool TetrisModel::run() {
         case TetrisActionEx::WayDown:
      //   case TetrisActionEx::Accelerated:
             doActionMoveDown();
+            break;
+
+        case TetrisActionEx::DoRight:
+            doActionMoveRight();
+            break;
+
+        case TetrisActionEx::DoLeft:
+            doActionMoveLeft();
             break;
 
         case TetrisActionEx::AtBottom:
@@ -130,29 +137,23 @@ void TetrisModel::join() {
 // TODO TODO: DIe müssen möglicherweise THREAD SAFE gemacht werden !!!!!!!!!!!!!!!!
 
 void TetrisModel::pushAction(TetrisActionEx action) {
-    m_actions.push(action);
+    m_actions.push_back(action);
+}
+
+void TetrisModel::addActions(const std::deque<TetrisActionEx>& actions) {
+
+    std::deque<TetrisActionEx>::iterator it = m_actions.begin();
+    m_actions.insert(it, actions.begin(), actions.end());
 }
 
 TetrisActionEx TetrisModel::popAction() {
     TetrisActionEx tmp = m_actions.front();
-    m_actions.pop();
+    m_actions.pop_front();
     return tmp;
 }
 
 // TODO TODO: DIe müssen möglicherweise THREAD SAFE gemacht werden !!!!!!!!!!!!!!!!
 
-
-
-
-//void TetrisModel::attachTetrimino() {
-//   // m_curr = new Tetrimino_L(m_board);
-//
-//    m_curr = std::make_unique<Tetrimino_L>(m_board);
-//}
-//
-//void TetrisModel::detachTetrimino() {
-//   // delete m_curr;
-//}
 
 void TetrisModel::createNextTetrimino() {
     m_tetromino = std::make_unique<Tetrimino_L>(m_board);
@@ -160,32 +161,45 @@ void TetrisModel::createNextTetrimino() {
 
 void TetrisModel::doActionSetToTop() {
 
-    ::OutputDebugString("(2) doActionSetToTop\n");
-
-    assert(getState() == TetrisState::AtTop);
+    ::OutputDebugString("> doActionSetToTop\n");
 
     createNextTetrimino();
 
     if (m_tetromino->canSetToTop()) {
         m_tetromino->setToTop();
-        setState(TetrisState::Normal);
+        // setState(TetrisState::Normal);
+        pushAction(TetrisActionEx::WayDown);
     }
     else {
-        setState(TetrisState::GameOver);
+        // setState(TetrisState::GameOver);
+        pushAction(TetrisActionEx::GameOver);
     }
+}
+
+void TetrisModel::doActionMoveRight() {
+
+    if (m_tetromino->canMoveRight())
+        m_tetromino->moveRight();
+}
+
+void TetrisModel::doActionMoveLeft() {
+
+
+    if (m_tetromino->canMoveLeft())
+        m_tetromino->moveLeft();
 }
 
 void TetrisModel::doActionMoveDown() {
 
     ::OutputDebugString("=> doActionMoveDown\n");
 
-    assert(getState() == TetrisState::Normal || getState() == TetrisState::Accelerated);
-
     if (m_tetromino->canMoveDown()) {
         m_tetromino->moveDown();
+        pushAction(TetrisActionEx::WayDown);
     }
     else {
-        setState(TetrisState::AtBottom);
+       // setState(TetrisState::AtBottom);
+        pushAction(TetrisActionEx::AtBottom);
     }
 }
 
@@ -199,7 +213,8 @@ void TetrisModel::doActionAtBottom() {
     //}
 
     // schedule next tetrimino
-    setState(TetrisState::AtTop);
+    // setState(TetrisState::AtTop);
+    pushAction(TetrisActionEx::AtTop);
 }
 
 void TetrisModel::doActionGameOver() {

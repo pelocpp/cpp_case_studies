@@ -8,5 +8,5 @@ public:
 
     virtual void attach(IKeyboardObserver* observer) = 0;
     virtual void detach(IKeyboardObserver* observer) = 0;
-    virtual void notifyAll(std::queue<unsigned short>) = 0;
+    virtual void notifyAll(std::deque<unsigned short>) = 0;
 };
