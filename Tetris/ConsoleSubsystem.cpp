@@ -211,7 +211,7 @@ bool ConsoleSubsystem::checkInputAvailable() {
 
     while (m_enableKeyboardLogging) {
 
-        ::OutputDebugString("Check keys ...\n");
+        // ::OutputDebugString("Check keys ...\n");
 
         keys = {};  // clear keys queue
 

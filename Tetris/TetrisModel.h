@@ -9,7 +9,11 @@ private:
 
    // TetrisState m_state;     // current state of model
 
-    std::deque<TetrisAction>   m_actions;    // queue of pending actions 
+   // std::deque<TetrisAction>   m_actions;    // queue of pending actions 
+
+    std::priority_queue<TetrisActionPair>   m_actionsPQ;    // priority queue of pending actions 
+
+    // TODO: Den Comparer schreiben !!! so dass die Prio stimmt !!!!!!
 
 public:
     TetrisModel();
@@ -22,7 +26,8 @@ public:
     //void setState(TetrisState state) override;
     //TetrisState getState() override;
 
-    void pushAction(TetrisAction) override;
+    // void pushAction(TetrisAction) override;
+    void pushAction(const TetrisActionPair&) override;
     void addActions(const std::deque<TetrisAction>&) override;
     TetrisAction popAction() override;
 

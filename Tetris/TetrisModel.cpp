@@ -58,7 +58,7 @@ void TetrisModel::start() {
 
     m_board->clear();
 
-    pushAction(TetrisAction::AtTop);
+    pushAction(std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtTop));
    // setState(TetrisState::AtTop);
 
     m_gameLoop = std::async(std::launch::async, [this] () -> bool {
@@ -136,20 +136,43 @@ void TetrisModel::join() {
 
 // TODO TODO: DIe müssen möglicherweise THREAD SAFE gemacht werden !!!!!!!!!!!!!!!!
 
-void TetrisModel::pushAction(TetrisAction action) {
-    m_actions.push_back(action);
+//void TetrisModel::pushAction(TetrisAction action) {
+//    m_actions.push_back(action);
+//}
+//
+//void TetrisModel::addActions(const std::deque<TetrisAction>& actions) {
+//
+//    std::deque<TetrisAction>::iterator it = m_actions.begin();
+//    m_actions.insert(it, actions.begin(), actions.end());
+//}
+//
+//TetrisAction TetrisModel::popAction() {
+//    TetrisAction tmp = m_actions.front();
+//    m_actions.pop_front();
+//    return tmp;
+//}
+
+void TetrisModel::pushAction(const TetrisActionPair& pair) {
+    m_actionsPQ.push(pair);
 }
 
 void TetrisModel::addActions(const std::deque<TetrisAction>& actions) {
-
-    std::deque<TetrisAction>::iterator it = m_actions.begin();
-    m_actions.insert(it, actions.begin(), actions.end());
+    std::for_each(std::begin(actions), std::end(actions), [this](TetrisAction action) {
+        TetrisActionPair pair = std::make_pair(TetrisActionPrio::High, action);
+        m_actionsPQ.push(pair);
+        }
+    );
 }
 
 TetrisAction TetrisModel::popAction() {
-    TetrisAction tmp = m_actions.front();
-    m_actions.pop_front();
-    return tmp;
+    //TetrisAction tmp = m_actions.front();
+    //m_actions.pop_front();
+    //return tmp;
+
+    auto [prio, action] = m_actionsPQ.top();
+    traceAction<false>(action);
+    m_actionsPQ.pop();
+    return action;
 }
 
 // TODO TODO: DIe müssen möglicherweise THREAD SAFE gemacht werden !!!!!!!!!!!!!!!!
@@ -168,11 +191,11 @@ void TetrisModel::doActionSetToTop() {
     if (m_tetromino->canSetToTop()) {
         m_tetromino->setToTop();
         // setState(TetrisState::Normal);
-        pushAction(TetrisAction::WayDown);
+        pushAction(std::make_pair(TetrisActionPrio::Normal, TetrisAction::WayDown));
     }
     else {
         // setState(TetrisState::GameOver);
-        pushAction(TetrisAction::GameOver);
+        pushAction(std::make_pair(TetrisActionPrio::High, TetrisAction::GameOver));
     }
 }
 
@@ -195,11 +218,11 @@ void TetrisModel::doActionMoveDown() {
 
     if (m_tetromino->canMoveDown()) {
         m_tetromino->moveDown();
-        pushAction(TetrisAction::WayDown);
+        pushAction(std::make_pair(TetrisActionPrio::Normal, TetrisAction::WayDown));
     }
     else {
        // setState(TetrisState::AtBottom);
-        pushAction(TetrisAction::AtBottom);
+        pushAction(std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtBottom));
     }
 }
 
@@ -214,7 +237,7 @@ void TetrisModel::doActionAtBottom() {
 
     // schedule next tetromino
     // setState(TetrisState::AtTop);
-    pushAction(TetrisAction::AtTop);
+    pushAction(std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtTop));
 }
 
 void TetrisModel::doActionGameOver() {
