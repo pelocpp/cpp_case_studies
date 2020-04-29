@@ -1,6 +1,6 @@
 #pragma once
 
-class ITetrimino {
+class ITetromino {
 
 public:
     // TODO : was muss hier public -- was kann protected sein ?!?!

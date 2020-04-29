@@ -51,14 +51,8 @@
     <ClCompile Include="TetrisGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Tetrimino.cpp">
-      <Filter>Source Files\Tetrimino</Filter>
-    </ClCompile>
     <ClCompile Include="CellPoint.cpp">
       <Filter>Source Files\Board</Filter>
-    </ClCompile>
-    <ClCompile Include="Tetrimino_L.cpp">
-      <Filter>Source Files\Tetrimino</Filter>
     </ClCompile>
     <ClCompile Include="ViewCellList.cpp">
       <Filter>Source Files</Filter>
@@ -66,11 +60,14 @@
     <ClCompile Include="ViewCell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Tetromino_L.cpp">
+      <Filter>Source Files\Tetrimino</Filter>
+    </ClCompile>
+    <ClCompile Include="Tetromino.cpp">
+      <Filter>Source Files\Tetrimino</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ITetrimino.h">
-      <Filter>Source Files\Tetrimino</Filter>
-    </ClInclude>
     <ClInclude Include="ITetrisBoard.h">
       <Filter>Source Files\Board</Filter>
     </ClInclude>
@@ -104,14 +101,8 @@
     <ClInclude Include="RotationAngle.h">
       <Filter>Source Files\Tetrimino</Filter>
     </ClInclude>
-    <ClInclude Include="Tetrimino.h">
-      <Filter>Source Files\Tetrimino</Filter>
-    </ClInclude>
     <ClInclude Include="CellPoint.h">
       <Filter>Source Files\Board</Filter>
-    </ClInclude>
-    <ClInclude Include="Tetrimino_L.h">
-      <Filter>Source Files\Tetrimino</Filter>
     </ClInclude>
     <ClInclude Include="ViewCellList.h">
       <Filter>Header Files</Filter>
@@ -133,6 +124,15 @@
     </ClInclude>
     <ClInclude Include="TetrisAction.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tetromino.h">
+      <Filter>Source Files\Tetrimino</Filter>
+    </ClInclude>
+    <ClInclude Include="Tetromino_L.h">
+      <Filter>Source Files\Tetrimino</Filter>
+    </ClInclude>
+    <ClInclude Include="ITetromino.h">
+      <Filter>Source Files\Tetrimino</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

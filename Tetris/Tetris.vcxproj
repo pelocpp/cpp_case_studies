@@ -145,8 +145,8 @@
     <ClCompile Include="CellState.h" />
     <ClCompile Include="ConsoleSubsystem.cpp" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Tetrimino.cpp" />
-    <ClCompile Include="Tetrimino_L.cpp" />
+    <ClCompile Include="Tetromino.cpp" />
+    <ClCompile Include="Tetromino_L.cpp" />
     <ClCompile Include="TetrisBoard.cpp" />
     <ClCompile Include="TetrisCell.cpp" />
     <ClCompile Include="TetrisGame.cpp" />
@@ -166,11 +166,11 @@
     <ClInclude Include="ITetrisModel.h" />
     <ClInclude Include="IUISubsystem.h" />
     <ClInclude Include="RotationAngle.h" />
-    <ClInclude Include="Tetrimino.h" />
-    <ClInclude Include="Tetrimino_L.h" />
+    <ClInclude Include="Tetromino.h" />
+    <ClInclude Include="Tetromino_L.h" />
     <ClInclude Include="TetrisAction.h" />
     <ClInclude Include="TetrisBoard.h" />
-    <ClInclude Include="ITetrimino.h" />
+    <ClInclude Include="ITetromino.h" />
     <ClInclude Include="ITetrisBoard.h" />
     <ClInclude Include="TetrisCell.h" />
     <ClInclude Include="TetrisGame.h" />

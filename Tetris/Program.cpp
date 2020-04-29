@@ -40,8 +40,8 @@
 #include "ITetrisBoard.h"
 #include "TetrisBoard.h"
 
-#include "ITetrimino.h"
-#include "Tetrimino.h"
+#include "ITetromino.h"
+#include "Tetromino.h"
 
 #include "TetrisAction.h"
 #include "ITetrisModel.h"

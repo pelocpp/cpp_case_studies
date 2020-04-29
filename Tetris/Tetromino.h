@@ -1,9 +1,9 @@
 #pragma once
 
-class Tetrimino : public ITetrimino {
+class Tetromino : public ITetromino {
 
 public:
-    Tetrimino(ITetrisBoard* board, CellColor color);
+    Tetromino(ITetrisBoard* board, CellColor color);
 
 protected:
     CellPoint m_anchorPoint;

@@ -205,7 +205,6 @@ void ConsoleSubsystem::writeAtTest(unsigned int color, char ch, COORD coord) {
 
 }
 
-
 bool ConsoleSubsystem::checkInputAvailable() {
 
     std::deque<unsigned short> keys;

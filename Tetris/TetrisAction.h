@@ -1,13 +1,5 @@
 #pragma once
 
-
-// TODO: Das sind zu viele ZUSTÄNDE ?!?!?!?!?!?!?!
-
-enum class TetrisAction { None, Left, Right, Rotate, BeginAllWayDown };
-
-enum class TetrisState { None, Normal, Accelerated, AtTop, AtBottom, Idle, GameOver };
-
-// TODO: Die TetrisAction OBEN LÖSCHEN, wenn es geht !!!
 enum class TetrisActionEx {
     None,          //
     AtTop,         // set next tetromino at top

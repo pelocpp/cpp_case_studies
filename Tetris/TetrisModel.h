@@ -4,12 +4,12 @@ class TetrisModel : public ITetrisModel {
 
 private:
     ITetrisBoard*                m_board;      // tetris game area
-    std::unique_ptr<ITetrimino>  m_tetromino;  // current tetromino
+    std::unique_ptr<ITetromino>  m_tetromino;  // current tetromino
     std::future<bool>            m_gameLoop;   // internal game loop
 
    // TetrisState m_state;     // current state of model
 
-    std::deque<TetrisActionEx>   m_actions;   // internal game loop
+    std::deque<TetrisActionEx>   m_actions;    // queue of pending actions 
 
 public:
     TetrisModel();
@@ -26,8 +26,8 @@ public:
     void addActions(const std::deque<TetrisActionEx>&) override;
     TetrisActionEx popAction() override;
 
-    // tetrimino management
-    void createNextTetrimino() override;
+    // tetromino management
+    void createNextTetromino() override;
 
     // action requests (internally and externally initiated)
     void doActionSetToTop() override;

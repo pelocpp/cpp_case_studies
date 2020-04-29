@@ -30,8 +30,8 @@
 #include "ITetrisBoard.h"
 #include "TetrisBoard.h"
 
-#include "ITetrimino.h"
-#include "Tetrimino.h"
+#include "ITetromino.h"
+#include "Tetromino.h"
 
 #include "TetrisAction.h"
 #include "ITetrisModel.h"
@@ -110,7 +110,7 @@ void TetrisGame::update(std::deque<unsigned short> keys) {
     wsprintf(szBuf, "Ooopsie==> Length of Input List: %d\n", keys.size());
     ::OutputDebugString(szBuf);
 
-    // transform UI subsystem based list into model conform list
+    // transform UI subsystem based data into model conform data
 
     std::deque<TetrisActionEx> actions;
     

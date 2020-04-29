@@ -23,40 +23,40 @@
 #include "ITetrisBoard.h"
 #include "TetrisBoard.h"
 
-#include "ITetrimino.h"
-#include "Tetrimino.h"
+#include "ITetromino.h"
+#include "Tetromino.h"
 
 #include "TetrisAction.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 
-Tetrimino::Tetrimino(ITetrisBoard* board, CellColor color) : m_board(board), m_color(color), m_anchorPoint{ 5, 2 } {
+Tetromino::Tetromino(ITetrisBoard* board, CellColor color) : m_board(board), m_color(color), m_anchorPoint{ 5, 2 } {
 
     m_rotation = RotationAngle::Degrees_0;
 }
 
-void Tetrimino::moveAnchorLeft() {
+void Tetromino::moveAnchorLeft() {
     m_anchorPoint.moveLeft();
 }
 
-void Tetrimino::moveAnchorRight() {
+void Tetromino::moveAnchorRight() {
     m_anchorPoint.moveRight();
 }
 
-void Tetrimino::moveAnchorDown() {
+void Tetromino::moveAnchorDown() {
     m_anchorPoint.moveDown();
 }
 
 
 // public interface (movement specific methods)
-void Tetrimino::setToTop() {
+void Tetromino::setToTop() {
     set();
     ViewCellList list;
     updateCellList(list, m_color);
     m_board->notifyAll(list);
 }
 
-void Tetrimino::moveRight() {
+void Tetromino::moveRight() {
 
     ViewCellList list;
     release();
@@ -67,7 +67,7 @@ void Tetrimino::moveRight() {
     m_board->notifyAll(list);
 }
 
-void Tetrimino::moveLeft() {
+void Tetromino::moveLeft() {
 
     ViewCellList list;
     release();
@@ -78,7 +78,7 @@ void Tetrimino::moveLeft() {
     m_board->notifyAll(list);
 }
 
-void Tetrimino::moveDown() {
+void Tetromino::moveDown() {
 
     ViewCellList list;
     release();
@@ -89,14 +89,14 @@ void Tetrimino::moveDown() {
     m_board->notifyAll(list);
 }
 
-void Tetrimino::Rotate() {}
+void Tetromino::Rotate() {}
 
 
 // board specific methods
-void Tetrimino::set() {
+void Tetromino::set() {
     update(CellState::Used);
 }
 
-void Tetrimino::release() {
+void Tetromino::release() {
     update(CellState::Free);
 }

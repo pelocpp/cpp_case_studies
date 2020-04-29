@@ -1,9 +1,9 @@
 #pragma once
 
-class Tetrimino_L : public Tetrimino {
+class Tetromino_L : public Tetromino {
 
 public:
-    Tetrimino_L(ITetrisBoard* board);
+    Tetromino_L(ITetrisBoard* board);
 
     // predicates
     bool canSetToTop() override;

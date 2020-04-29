@@ -26,6 +26,6 @@ public:
     virtual void doActionAtBottom() = 0;
     virtual void doActionGameOver() = 0;
 
-    // tetrimino management
-    virtual void createNextTetrimino() = 0;
+    // tetromino management
+    virtual void createNextTetromino() = 0;
 };

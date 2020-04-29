@@ -25,9 +25,9 @@
 #include "ITetrisBoard.h"
 #include "TetrisBoard.h"
 
-#include "ITetrimino.h"
-#include "Tetrimino.h"
-#include "Tetrimino_L.h"
+#include "ITetromino.h"
+#include "Tetromino.h"
+#include "Tetromino_L.h"
 
 #include "TetrisAction.h"
 #include "ITetrisModel.h"
@@ -155,15 +155,15 @@ TetrisActionEx TetrisModel::popAction() {
 // TODO TODO: DIe müssen möglicherweise THREAD SAFE gemacht werden !!!!!!!!!!!!!!!!
 
 
-void TetrisModel::createNextTetrimino() {
-    m_tetromino = std::make_unique<Tetrimino_L>(m_board);
+void TetrisModel::createNextTetromino() {
+    m_tetromino = std::make_unique<Tetromino_L>(m_board);
 }
 
 void TetrisModel::doActionSetToTop() {
 
     ::OutputDebugString("> doActionSetToTop\n");
 
-    createNextTetrimino();
+    createNextTetromino();
 
     if (m_tetromino->canSetToTop()) {
         m_tetromino->setToTop();
@@ -212,7 +212,7 @@ void TetrisModel::doActionAtBottom() {
     //    this.board.MoveNonEmptyRowsDown();
     //}
 
-    // schedule next tetrimino
+    // schedule next tetromino
     // setState(TetrisState::AtTop);
     pushAction(TetrisActionEx::AtTop);
 }

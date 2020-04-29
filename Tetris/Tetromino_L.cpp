@@ -24,18 +24,18 @@
 #include "ITetrisBoard.h"
 #include "TetrisBoard.h"
 
-#include "ITetrimino.h"
-#include "Tetrimino.h"
-#include "Tetrimino_L.h"
+#include "ITetromino.h"
+#include "Tetromino.h"
+#include "Tetromino_L.h"
 
 #include "TetrisAction.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 
-Tetrimino_L::Tetrimino_L(ITetrisBoard* board) : Tetrimino(board, CellColor::Ocker) {}
+Tetromino_L::Tetromino_L(ITetrisBoard* board) : Tetromino(board, CellColor::Ocker) {}
 
 // predicates
-bool Tetrimino_L::canSetToTop() {
+bool Tetromino_L::canSetToTop() {
     
     assert(m_rotation == RotationAngle::Degrees_0);
 
@@ -45,8 +45,8 @@ bool Tetrimino_L::canSetToTop() {
         m_board->getCell(m_anchorPoint.getY() + 1, m_anchorPoint.getX() + 1).getState() == CellState::Used);
 }
 
-bool Tetrimino_L::canMoveLeft() {
-    // check fields to the left of the tetrimino
+bool Tetromino_L::canMoveLeft() {
+    // check fields to the left of the tetromino
     switch (m_rotation) {
     case RotationAngle::Degrees_0:
         if (m_anchorPoint.getX() == 0)
@@ -86,9 +86,9 @@ bool Tetrimino_L::canMoveLeft() {
     return true;
 }
 
-bool Tetrimino_L::canMoveRight() { 
+bool Tetromino_L::canMoveRight() { 
 
-    // check fields to the right of the tetrimino
+    // check fields to the right of the tetromino
     switch (m_rotation) {
     case RotationAngle::Degrees_0:
         if (m_anchorPoint.getX() == m_board->getNumColumns() - 2)
@@ -129,7 +129,7 @@ bool Tetrimino_L::canMoveRight() {
 
 }
 
-bool Tetrimino_L::canMoveDown() { 
+bool Tetromino_L::canMoveDown() { 
 
     RotationAngle rotation = m_rotation;
 
@@ -173,7 +173,7 @@ bool Tetrimino_L::canMoveDown() {
     return true;
 }
 
-bool Tetrimino_L::canRotate() { 
+bool Tetromino_L::canRotate() { 
 
     if (m_anchorPoint.getX() == 0 || m_anchorPoint.getX() == m_board->getNumColumns() - 1)
         return false;
@@ -219,9 +219,9 @@ bool Tetrimino_L::canRotate() {
     return true;
 }
 
-bool Tetrimino_L::isCoordinateWithin(int row, int col) { return true; }
+bool Tetromino_L::isCoordinateWithin(int row, int col) { return true; }
 
-void Tetrimino_L::update(CellState state) {
+void Tetromino_L::update(CellState state) {
 
     CellColor color = (state == CellState::Free) ? CellColor::LightGray : m_color;
     TetrisCell cell (state, color);
@@ -254,7 +254,7 @@ void Tetrimino_L::update(CellState state) {
     }
 }
 
-void Tetrimino_L::updateCellList(ViewCellList& list, const CellColor& color) {
+void Tetromino_L::updateCellList(ViewCellList& list, const CellColor& color) {
 
     // update cell list
     if (m_rotation == RotationAngle::Degrees_0) {
