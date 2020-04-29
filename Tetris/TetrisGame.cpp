@@ -112,35 +112,35 @@ void TetrisGame::update(std::deque<unsigned short> keys) {
 
     // transform UI subsystem based data into model conform data
 
-    std::deque<TetrisActionEx> actions;
+    std::deque<TetrisAction> actions;
     
     std::transform(
         keys.begin(),
         keys.end(), 
         std::back_inserter(actions),
-        [](unsigned short key) -> TetrisActionEx {
-            TetrisActionEx result;
+        [](unsigned short key) -> TetrisAction {
+            TetrisAction result;
             switch (key)
             {
             case VK_LEFT:
-                result = TetrisActionEx::DoLeft;
+                result = TetrisAction::DoLeft;
                 break;
             case VK_UP:
-                result = TetrisActionEx::DoRotate;
+                result = TetrisAction::DoRotate;
                 break;
             case VK_RIGHT:
-                result = TetrisActionEx::DoRight;
+                result = TetrisAction::DoRight;
                 break;
             case VK_DOWN:
-                result = TetrisActionEx::AllWayDown;
+                result = TetrisAction::AllWayDown;
                 break;
             case VK_ESCAPE:
                 // TODO: Das NONE passt hier nicht !!!!
-                result = TetrisActionEx::None;
+                result = TetrisAction::None;
                 break;
             default:
                 // TODO: Das NONE passt hier nicht !!!!
-                result = TetrisActionEx::None;
+                result = TetrisAction::None;
                 break;
             }
             return result;

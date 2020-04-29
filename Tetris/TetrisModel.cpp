@@ -58,7 +58,7 @@ void TetrisModel::start() {
 
     m_board->clear();
 
-    pushAction(TetrisActionEx::AtTop);
+    pushAction(TetrisAction::AtTop);
    // setState(TetrisState::AtTop);
 
     m_gameLoop = std::async(std::launch::async, [this] () -> bool {
@@ -73,36 +73,36 @@ bool TetrisModel::run() {
 
    // TetrisState state = getState();
 
-    TetrisActionEx action = TetrisActionEx::None;
+    TetrisAction action = TetrisAction::None;
 
-    while (action != TetrisActionEx::GameOver) {
+    while (action != TetrisAction::GameOver) {
 
         action = popAction();
 
         switch (action) {
 
-        case TetrisActionEx::AtTop:
+        case TetrisAction::AtTop:
             doActionSetToTop();
             break;
 
-        case TetrisActionEx::WayDown:
-     //   case TetrisActionEx::Accelerated:
+        case TetrisAction::WayDown:
+     //   case TetrisAction::Accelerated:
             doActionMoveDown();
             break;
 
-        case TetrisActionEx::DoRight:
+        case TetrisAction::DoRight:
             doActionMoveRight();
             break;
 
-        case TetrisActionEx::DoLeft:
+        case TetrisAction::DoLeft:
             doActionMoveLeft();
             break;
 
-        case TetrisActionEx::AtBottom:
+        case TetrisAction::AtBottom:
             doActionAtBottom();
             break;
 
-        case TetrisActionEx::GameOver:
+        case TetrisAction::GameOver:
             doActionGameOver();
             break;
 
@@ -136,18 +136,18 @@ void TetrisModel::join() {
 
 // TODO TODO: DIe müssen möglicherweise THREAD SAFE gemacht werden !!!!!!!!!!!!!!!!
 
-void TetrisModel::pushAction(TetrisActionEx action) {
+void TetrisModel::pushAction(TetrisAction action) {
     m_actions.push_back(action);
 }
 
-void TetrisModel::addActions(const std::deque<TetrisActionEx>& actions) {
+void TetrisModel::addActions(const std::deque<TetrisAction>& actions) {
 
-    std::deque<TetrisActionEx>::iterator it = m_actions.begin();
+    std::deque<TetrisAction>::iterator it = m_actions.begin();
     m_actions.insert(it, actions.begin(), actions.end());
 }
 
-TetrisActionEx TetrisModel::popAction() {
-    TetrisActionEx tmp = m_actions.front();
+TetrisAction TetrisModel::popAction() {
+    TetrisAction tmp = m_actions.front();
     m_actions.pop_front();
     return tmp;
 }
@@ -168,11 +168,11 @@ void TetrisModel::doActionSetToTop() {
     if (m_tetromino->canSetToTop()) {
         m_tetromino->setToTop();
         // setState(TetrisState::Normal);
-        pushAction(TetrisActionEx::WayDown);
+        pushAction(TetrisAction::WayDown);
     }
     else {
         // setState(TetrisState::GameOver);
-        pushAction(TetrisActionEx::GameOver);
+        pushAction(TetrisAction::GameOver);
     }
 }
 
@@ -195,11 +195,11 @@ void TetrisModel::doActionMoveDown() {
 
     if (m_tetromino->canMoveDown()) {
         m_tetromino->moveDown();
-        pushAction(TetrisActionEx::WayDown);
+        pushAction(TetrisAction::WayDown);
     }
     else {
        // setState(TetrisState::AtBottom);
-        pushAction(TetrisActionEx::AtBottom);
+        pushAction(TetrisAction::AtBottom);
     }
 }
 
@@ -214,7 +214,7 @@ void TetrisModel::doActionAtBottom() {
 
     // schedule next tetromino
     // setState(TetrisState::AtTop);
-    pushAction(TetrisActionEx::AtTop);
+    pushAction(TetrisAction::AtTop);
 }
 
 void TetrisModel::doActionGameOver() {

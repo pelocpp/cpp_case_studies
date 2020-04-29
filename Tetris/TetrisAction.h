@@ -1,6 +1,6 @@
 #pragma once
 
-enum class TetrisActionEx {
+enum class TetrisAction {
     None,          //
     AtTop,         // set next tetromino at top
     WayDown,       // move tetromino down
@@ -11,3 +11,7 @@ enum class TetrisActionEx {
     AtBottom,      // (( tetromino has reached bottom, TODO: do we need this state ?? ))
     GameOver       // game is over
 };
+
+//enum class TetrisActionPrio {
+//
+//};

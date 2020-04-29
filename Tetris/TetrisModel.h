@@ -9,7 +9,7 @@ private:
 
    // TetrisState m_state;     // current state of model
 
-    std::deque<TetrisActionEx>   m_actions;    // queue of pending actions 
+    std::deque<TetrisAction>   m_actions;    // queue of pending actions 
 
 public:
     TetrisModel();
@@ -22,9 +22,9 @@ public:
     //void setState(TetrisState state) override;
     //TetrisState getState() override;
 
-    void pushAction(TetrisActionEx) override;
-    void addActions(const std::deque<TetrisActionEx>&) override;
-    TetrisActionEx popAction() override;
+    void pushAction(TetrisAction) override;
+    void addActions(const std::deque<TetrisAction>&) override;
+    TetrisAction popAction() override;
 
     // tetromino management
     void createNextTetromino() override;
