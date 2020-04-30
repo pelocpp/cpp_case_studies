@@ -11,12 +11,15 @@
 
 #include <windows.h>
 #include <iostream>
-#include <array> 
+#include <array>
+#include <vector> 
+#include <map> 
 #include <queue> 
 #include <deque> 
 #include <thread> 
 #include <chrono>
 #include <future>
+#include <functional>
 
 #include "Globals.h"
 #include "Direction.h"
@@ -44,6 +47,7 @@
 #include "Tetromino.h"
 
 #include "TetrisAction.h"
+#include "TetrisQueue.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 

@@ -1,12 +1,15 @@
 #include <windows.h>
 #include <iostream>
 #include <array> 
+#include <vector> 
+#include <map> 
 #include <queue> 
 #include <deque> 
 #include <thread> 
 #include <chrono>
 #include <future>
 #include <algorithm>
+#include <functional>
 
 #include "Globals.h"
 #include "Direction.h"
@@ -34,6 +37,7 @@
 #include "Tetromino.h"
 
 #include "TetrisAction.h"
+#include "TetrisQueue.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 
@@ -106,9 +110,9 @@ void TetrisGame::update(const ViewCellList& list) {
 
 void TetrisGame::update(std::deque<unsigned short> keys) {
 
-    char szBuf[128];
-    wsprintf(szBuf, "Ooopsie==> Length of Input List: %d\n", keys.size());
-    ::OutputDebugString(szBuf);
+    //char szBuf[128];
+    //wsprintf(szBuf, "Ooopsie==> Length of Input List: %d\n", keys.size());
+    //::OutputDebugString(szBuf);
 
     // transform UI subsystem based data into model conform data
 
@@ -135,21 +139,24 @@ void TetrisGame::update(std::deque<unsigned short> keys) {
                 result = TetrisAction::AllWayDown;
                 break;
             case VK_ESCAPE:
+                throw std::exception("Internal Error: TetrisGame::update [Unexpected key event]");
                 // TODO: Das NONE passt hier nicht !!!!
-                result = TetrisAction::None;
-                break;
+                //result = TetrisAction::None;
+                //break;
             default:
+                throw std::exception("Internal Error: TetrisGame::update [Unexpected key event]");
                 // TODO: Das NONE passt hier nicht !!!!
-                result = TetrisAction::None;
-                break;
+                //result = TetrisAction::None;
+                //break;
             }
             return result;
         }
     );
 
-    wsprintf(szBuf, "Ooopsie==> Length of Output List: %d\n", actions.size());
-    ::OutputDebugString(szBuf);
+    //wsprintf(szBuf, "Ooopsie==> Length of Output List: %d\n", actions.size());
+    //::OutputDebugString(szBuf);
 
+    // TODO: WIRD die REIHENFOLGE derEvents bei der Abarbeitung beachtet !?!?!?!?!?!
     m_model->addActions(actions);
 }
 

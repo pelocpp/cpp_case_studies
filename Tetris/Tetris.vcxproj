@@ -145,6 +145,7 @@
     <ClCompile Include="CellState.h" />
     <ClCompile Include="ConsoleSubsystem.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="TetrisAction.cpp" />
     <ClCompile Include="Tetromino.cpp" />
     <ClCompile Include="Tetromino_L.cpp" />
     <ClCompile Include="TetrisBoard.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="TetrisModel.h" />
     <ClInclude Include="ViewCell.h" />
     <ClInclude Include="ViewCellList.h" />
+    <ClInclude Include="TetrisQueue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

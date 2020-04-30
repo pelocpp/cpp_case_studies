@@ -11,7 +11,12 @@ private:
 
    // std::deque<TetrisAction>   m_actions;    // queue of pending actions 
 
-    std::priority_queue<TetrisActionPair>   m_actionsPQ;    // priority queue of pending actions 
+ //   std::priority_queue<TetrisActionPair> m_actionsPQ;    // priority queue of pending actions 
+
+
+    TetrisQueue<TetrisActionPair> m_actionsPQ2;    // priority queue of pending actions
+    std::mutex m_mutex;  // protect priority queue against concurrent access
+
 
     // TODO: Den Comparer schreiben !!! so dass die Prio stimmt !!!!!!
 

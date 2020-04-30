@@ -213,7 +213,7 @@ bool ConsoleSubsystem::checkInputAvailable() {
 
         // ::OutputDebugString("Check keys ...\n");
 
-        keys = {};  // clear keys queue
+        keys = {};  // empty keys queue
 
         DWORD dwNumEvents;
         ::GetNumberOfConsoleInputEvents(m_hStdin, &dwNumEvents);
@@ -271,7 +271,7 @@ void ConsoleSubsystem::startKeyboardLogging() {
 
     m_enableKeyboardLogging = true;
 
-    // STL Algo mem_fn  std::mem_fn
+    // TODO STL Algo mem_fn  std::mem_fn
 
     futureKeyboardLogger = std::async(std::launch::async, [this]() -> bool {
         return checkInputAvailable();

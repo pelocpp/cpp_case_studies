@@ -1,13 +1,20 @@
+// =====================================================================================
+// TetrisAction: enums and miscellaneous functions
+// =====================================================================================
+
 #pragma once
+
+// =====================================================================================
+// tetris actions: internal and external (keyboard)
 
 enum class TetrisAction {
     None,          //
     AtTop,         // set next tetromino at top
     WayDown,       // move tetromino down
-    DoLeft,        // move tetromino right
-    DoRight,       // move tetromino left
-    DoRotate,      // rotate tetromino
-    AllWayDown,    // move tetromino all rows down
+    DoLeft,        // move tetromino right (external action)
+    DoRight,       // move tetromino left  (external action)
+    DoRotate,      // rotate tetromino (external action)
+    AllWayDown,    // move tetromino all rows down (external action)
     AtBottom,      // (( tetromino has reached bottom, TODO: do we need this state ?? ))
     GameOver       // game is over
 };
@@ -20,23 +27,48 @@ enum class TetrisActionPrio {
 
 using TetrisActionPair = std::pair<TetrisActionPrio, TetrisAction>;
 
+extern std::ostream& operator<< (std::ostream&, const TetrisActionPair&); 
+extern bool operator== (const TetrisActionPair&, const TetrisActionPair&);
+
+// =====================================================================================
+// central location to provide priority to tetris actions
+
 template <TetrisAction action>
 TetrisActionPair makeAction() {
-
-    if constexpr (action == TetrisAction::AllWayDown) {
-        return std::make_pair(TetrisActionPrio::Normal, TetrisAction::AllWayDown);
+    if constexpr (action == TetrisAction::AtTop) {
+        return std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtTop);
     }
-
+    if constexpr (action == TetrisAction::WayDown) {
+        return std::make_pair(TetrisActionPrio::Normal, TetrisAction::WayDown);
+    }
+    if constexpr (action == TetrisAction::DoLeft) {
+        return std::make_pair(TetrisActionPrio::High, TetrisAction::DoLeft);
+    }
+    if constexpr (action == TetrisAction::DoRight) {
+        return std::make_pair(TetrisActionPrio::High, TetrisAction::DoRight);
+    }
+    if constexpr (action == TetrisAction::DoRotate) {
+        return std::make_pair(TetrisActionPrio::High, TetrisAction::DoRotate);
+    }
     if constexpr (action == TetrisAction::AllWayDown) {
-        return std::make_pair(TetrisActionPrio::Normal, TetrisAction::AllWayDown);
+        return std::make_pair(TetrisActionPrio::High, TetrisAction::AllWayDown);
+    }
+    if constexpr (action == TetrisAction::AtBottom) {
+        return std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtBottom);
+    }
+    if constexpr (action == TetrisAction::GameOver) {
+        return std::make_pair(TetrisActionPrio::High, TetrisAction::GameOver);
     }
 }
 
+// =====================================================================================
+// tracing actions
+
 template <bool>
-void traceAction(TetrisAction action);
+inline void traceAction(TetrisAction action);
 
 template <>
-void traceAction<true>(TetrisAction action) {
+inline void traceAction<true>(TetrisAction action) {
 
     if (action == TetrisAction::AtTop) {
         ::OutputDebugString("=> next action => AtTop\n");
@@ -68,4 +100,8 @@ void traceAction<true>(TetrisAction action) {
 }
 
 template <>
-void traceAction<false>(TetrisAction action) {}
+inline void traceAction<false>(TetrisAction action) {}
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================

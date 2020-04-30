@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Model">
       <UniqueIdentifier>{c04fffd5-78bd-485f-a180-0a5c3a06108f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Actions">
+      <UniqueIdentifier>{820e05f5-4aed-466f-b0be-010450fe4169}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -65,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="Tetromino.cpp">
       <Filter>Source Files\Tetrimino</Filter>
+    </ClCompile>
+    <ClCompile Include="TetrisAction.cpp">
+      <Filter>Source Files\Actions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="ITetromino.h">
       <Filter>Source Files\Tetrimino</Filter>
+    </ClInclude>
+    <ClInclude Include="TetrisQueue.h">
+      <Filter>Source Files\Model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

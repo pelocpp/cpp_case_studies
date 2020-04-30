@@ -1,11 +1,14 @@
 #include <windows.h>
 #include <iostream>
 #include <array> 
+#include <vector> 
+#include <map> 
 #include <queue> 
 #include <thread> 
 #include <chrono>
 #include <future>
 #include <cassert>
+#include <functional>
 
 #include "Globals.h"
 #include "Direction.h"
@@ -29,6 +32,7 @@
 #include "Tetromino_L.h"
 
 #include "TetrisAction.h"
+#include "TetrisQueue.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 
