@@ -122,7 +122,11 @@ bool TetrisModel::run() {
             break;
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(ModelSleep));
+    //    std::this_thread::sleep_for(std::chrono::milliseconds(::ModelSleepTime));
+
+        if (! m_actionsPQ2.anyHighPrioAction() ) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(::ModelSleepTime));
+        }
     }
 
     return true; // TODO: oder false

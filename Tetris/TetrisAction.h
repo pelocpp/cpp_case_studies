@@ -59,6 +59,31 @@ TetrisActionPair makeAction() {
     if constexpr (action == TetrisAction::GameOver) {
         return std::make_pair(TetrisActionPrio::High, TetrisAction::GameOver);
     }
+
+    //if constexpr (action == TetrisAction::AtTop) {
+    //    return std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtTop);
+    //}
+    //if constexpr (action == TetrisAction::WayDown) {
+    //    return std::make_pair(TetrisActionPrio::Normal, TetrisAction::WayDown);
+    //}
+    //if constexpr (action == TetrisAction::DoLeft) {
+    //    return std::make_pair(TetrisActionPrio::Low, TetrisAction::DoLeft);
+    //}
+    //if constexpr (action == TetrisAction::DoRight) {
+    //    return std::make_pair(TetrisActionPrio::Low, TetrisAction::DoRight);
+    //}
+    //if constexpr (action == TetrisAction::DoRotate) {
+    //    return std::make_pair(TetrisActionPrio::Low, TetrisAction::DoRotate);
+    //}
+    //if constexpr (action == TetrisAction::AllWayDown) {
+    //    return std::make_pair(TetrisActionPrio::Low, TetrisAction::AllWayDown);
+    //}
+    //if constexpr (action == TetrisAction::AtBottom) {
+    //    return std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtBottom);
+    //}
+    //if constexpr (action == TetrisAction::GameOver) {
+    //    return std::make_pair(TetrisActionPrio::High, TetrisAction::GameOver);
+    //}
 }
 
 // =====================================================================================

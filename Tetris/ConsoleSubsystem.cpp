@@ -251,7 +251,7 @@ bool ConsoleSubsystem::checkInputAvailable() {
             }
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(InputLoggerSleep));
+        std::this_thread::sleep_for(std::chrono::milliseconds(::InputSleepTime));
     }
 
     ::OutputDebugString("Done KeyboardLogging\n");

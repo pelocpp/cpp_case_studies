@@ -21,6 +21,8 @@ public:
     bool contains(const T&);
     void dump();
     int count();
+    bool anyHighPrioAction();
+    bool anyLowPrioAction();
 };
 
 // =====================================================================================
@@ -37,21 +39,46 @@ typename TetrisQueue<T, Container, Compare>::const_iterator TetrisQueue<T, Conta
 }
 
 template <typename T, typename Container, typename Compare>
+bool TetrisQueue<T, Container, Compare>::contains(const T& elem) {
+    auto first = this->c.cbegin();
+    auto last = this->c.cend();
+    while (first != last) {
+        if (*first == elem) {
+            return true;
+        }
+        ++first;
+    }
+
+    return false;
+}
+
+template <typename T, typename Container, typename Compare>
 int TetrisQueue<T, Container, Compare>::count() {
     return this->c.size();
 }
 
 template <typename T, typename Container, typename Compare>
-bool TetrisQueue<T, Container, Compare>::contains(const T& elem) {
-
+bool TetrisQueue<T, Container, Compare>::anyHighPrioAction() {
     auto first = this->c.cbegin();
     auto last = this->c.cend();
-
     while (first != last) {
-        if (*first == elem) {
+        auto [prio, action] = *first;
+        if (prio == TetrisActionPrio::High)
             return true;
-        }
+        ++first;
+    }
 
+    return false;
+}
+
+template <typename T, typename Container, typename Compare>
+bool TetrisQueue<T, Container, Compare>::anyLowPrioAction() {
+    auto first = this->c.cbegin();
+    auto last = this->c.cend();
+    while (first != last) {
+        auto [prio, action] = *first;
+        if (prio == TetrisActionPrio::Normal || prio == TetrisActionPrio::Low)
+            return true;
         ++first;
     }
 
