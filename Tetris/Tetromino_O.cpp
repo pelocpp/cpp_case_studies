@@ -36,7 +36,6 @@
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 
-
 Tetromino_O::Tetromino_O(ITetrisBoard* board) : Tetromino(board, CellColor::Yellow) {}
 
 // predicates

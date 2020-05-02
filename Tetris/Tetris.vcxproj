@@ -147,6 +147,7 @@
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="TetrisAction.cpp" />
     <ClCompile Include="Tetromino.cpp" />
+    <ClCompile Include="Tetromino_I.cpp" />
     <ClCompile Include="Tetromino_L.cpp" />
     <ClCompile Include="TetrisBoard.cpp" />
     <ClCompile Include="TetrisCell.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="IUISubsystem.h" />
     <ClInclude Include="RotationAngle.h" />
     <ClInclude Include="Tetromino.h" />
+    <ClInclude Include="Tetromino_I.h" />
     <ClInclude Include="Tetromino_L.h" />
     <ClInclude Include="TetrisAction.h" />
     <ClInclude Include="TetrisBoard.h" />
