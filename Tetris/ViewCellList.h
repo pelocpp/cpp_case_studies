@@ -12,7 +12,7 @@ public:
     int size() const;
 
     // TODO: std::find_if !!!! in der Implementierung
-    void add(ViewCell cell);
+    void add(const ViewCell& cell);
 
     ViewCell at(int index) const;
 

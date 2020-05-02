@@ -13,7 +13,7 @@ public:
     virtual bool canMoveRight() = 0;
     virtual bool canMoveDown() = 0;
     virtual bool canRotate() = 0;
-    virtual bool isCoordinateWithin(int row, int col) = 0;
+    virtual bool isCoordinateWithin(int row, int col) = 0;   // TODO: Diese Routine ist bei Android nicht dabei !!!!
 
     // movement specific methods
     virtual void setToTop() = 0;

@@ -152,6 +152,7 @@
     <ClCompile Include="TetrisCell.cpp" />
     <ClCompile Include="TetrisGame.cpp" />
     <ClCompile Include="TetrisModel.cpp" />
+    <ClCompile Include="Tetromino_O.cpp" />
     <ClCompile Include="ViewCell.cpp" />
     <ClCompile Include="ViewCellList.cpp" />
   </ItemGroup>
@@ -176,6 +177,7 @@
     <ClInclude Include="TetrisCell.h" />
     <ClInclude Include="TetrisGame.h" />
     <ClInclude Include="TetrisModel.h" />
+    <ClInclude Include="Tetromino_O.h" />
     <ClInclude Include="ViewCell.h" />
     <ClInclude Include="ViewCellList.h" />
     <ClInclude Include="TetrisQueue.h" />

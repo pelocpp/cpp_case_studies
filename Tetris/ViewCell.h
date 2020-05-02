@@ -9,7 +9,7 @@ private:
 public:
     // c'tors
      ViewCell();
-     ViewCell(CellPoint point, CellColor color);
+     ViewCell(const CellPoint point, const CellColor color);
 
     // getter/setter
     CellColor getColor() const noexcept;

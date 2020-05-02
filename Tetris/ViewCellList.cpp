@@ -16,14 +16,13 @@ int ViewCellList::size() const {
     return m_cells.size();
 }
 
-void ViewCellList::add(ViewCell cell) {
+void ViewCellList::add(const ViewCell& cell) {
 
     std::vector<ViewCell>::const_iterator result = std::find_if(
         std::begin(m_cells),
-        std::end(m_cells), [cell](ViewCell& elem) {
-
+        std::end(m_cells), 
+        [cell](ViewCell& elem) {
             if (elem.getPoint() == cell.getPoint()) {
-
                 // replace this point with new cell (old one is obsolete)
                 elem = cell;
                 return true;

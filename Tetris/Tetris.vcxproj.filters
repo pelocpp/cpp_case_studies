@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Tetrimino">
-      <UniqueIdentifier>{03c719d6-c88d-477d-918c-ac96cd68d8ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Board">
       <UniqueIdentifier>{57ef088b-8434-4bc3-9923-0394693a88b4}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="Source Files\Actions">
       <UniqueIdentifier>{820e05f5-4aed-466f-b0be-010450fe4169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tetromino">
+      <UniqueIdentifier>{03c719d6-c88d-477d-918c-ac96cd68d8ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -64,13 +64,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Tetromino_L.cpp">
-      <Filter>Source Files\Tetrimino</Filter>
+      <Filter>Source Files\Tetromino</Filter>
     </ClCompile>
     <ClCompile Include="Tetromino.cpp">
-      <Filter>Source Files\Tetrimino</Filter>
+      <Filter>Source Files\Tetromino</Filter>
     </ClCompile>
     <ClCompile Include="TetrisAction.cpp">
       <Filter>Source Files\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Tetromino_O.cpp">
+      <Filter>Source Files\Tetromino</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,7 +108,7 @@
       <Filter>Source Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="RotationAngle.h">
-      <Filter>Source Files\Tetrimino</Filter>
+      <Filter>Source Files\Tetromino</Filter>
     </ClInclude>
     <ClInclude Include="CellPoint.h">
       <Filter>Source Files\Board</Filter>
@@ -132,16 +135,19 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tetromino.h">
-      <Filter>Source Files\Tetrimino</Filter>
+      <Filter>Source Files\Tetromino</Filter>
     </ClInclude>
     <ClInclude Include="Tetromino_L.h">
-      <Filter>Source Files\Tetrimino</Filter>
+      <Filter>Source Files\Tetromino</Filter>
     </ClInclude>
     <ClInclude Include="ITetromino.h">
-      <Filter>Source Files\Tetrimino</Filter>
+      <Filter>Source Files\Tetromino</Filter>
     </ClInclude>
     <ClInclude Include="TetrisQueue.h">
       <Filter>Source Files\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Tetromino_O.h">
+      <Filter>Source Files\Tetromino</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -130,7 +130,6 @@ bool Tetromino_L::canMoveRight() {
     }
 
     return true;
-
 }
 
 bool Tetromino_L::canMoveDown() { 
