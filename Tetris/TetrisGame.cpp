@@ -36,6 +36,7 @@
 #include "ITetromino.h"
 #include "Tetromino.h"
 
+#include "TetrisState.h"
 #include "TetrisAction.h"
 #include "TetrisQueue.h"
 #include "ITetrisModel.h"
@@ -136,7 +137,7 @@ void TetrisGame::update(std::deque<unsigned short> keys) {
                 result = TetrisAction::DoRight;
                 break;
             case VK_DOWN:
-                result = TetrisAction::AllWayDown;
+                result = TetrisAction::DoAllWayDown;
                 break;
             case VK_ESCAPE:
                 throw std::exception("Internal Error: TetrisGame::update [Unexpected key event]");

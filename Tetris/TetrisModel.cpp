@@ -40,6 +40,7 @@
 #include "Tetromino_I.h"
 #include "Tetromino_O.h"
 
+#include "TetrisState.h"
 #include "TetrisAction.h"
 #include "TetrisQueue.h"
 #include "ITetrisModel.h"
@@ -47,9 +48,7 @@
 
 TetrisModel::TetrisModel() {
     m_board = new TetrisBoard(Rows, Cols);
-
     m_state = TetrisState::None;
-
     m_tetromino = nullptr; // TODO: Smart Ptr !!!
 }
 
@@ -81,16 +80,13 @@ void TetrisModel::start() {
 
     setState(TetrisState::State_AtTop);
 
-    // pushAction(makeAction<TetrisAction::AtTop>());
-   // setState(TetrisState::AtTop);
-
     m_gameLoop = std::async(std::launch::async, [this] () -> bool {
-            return runRevised();
+            return run();
         }
     );
 }
 
-bool TetrisModel::runRevised() {
+bool TetrisModel::run() {
 
     bool gameOver = false;
 
@@ -105,14 +101,12 @@ bool TetrisModel::runRevised() {
         switch (state) {
 
         case TetrisState::State_AtTop:
-            doActionSetToTopEx();
+            doActionSetToTop();
             break;
 
         case TetrisState::State_WayDown:
-            //   case TetrisAction::Accelerated:
 
             latestActions = getActions();
-
             while (latestActions.size() > 0) {
 
                 TetrisAction action = latestActions.back();
@@ -125,6 +119,12 @@ bool TetrisModel::runRevised() {
                 case TetrisAction::DoLeft:
                     doActionMoveLeft();
                     break;
+                case TetrisAction::DoRotate:
+                    doActionRotate();
+                    break;
+                case TetrisAction::DoAllWayDown:
+                    setState(TetrisState::State_AllWayDown);
+                    break;
                 default:
                     // Log.i(Globals.LogTag, "Internal ERROR: Should never be reached");
                     ::OutputDebugString("(99) Internal ERROR : Should never be reached\n");
@@ -132,19 +132,20 @@ bool TetrisModel::runRevised() {
                 }
             }
 
-            doActionMoveDownEx();
+            doActionMoveDown();
             break;
 
-        //case TetrisState::State_AllWayDown:
-        //    doActionMoveDownEx();
-        //    break;
+        case TetrisState::State_AllWayDown:
+            // TODO: Hier könnte man die Sleep Zeit verkürzen
+            doActionMoveDown();
+            break;
 
         case TetrisState::State_AtBottom:
-            doActionAtBottomEx();
+            doActionAtBottom();
             break;
 
         case TetrisState::State_GameOver:
-            doActionGameOverEx();
+            doActionGameOver();
             gameOver = true;
             break;
 
@@ -160,58 +161,7 @@ bool TetrisModel::runRevised() {
     return true; // TODO: oder false
 }
 
-bool TetrisModel::run() {
 
-   //// TetrisState state = getState();
-
-   // TetrisAction action = TetrisAction::None;
-
-   // while (action != TetrisAction::GameOver) {
-
-   //     action = popAction();
-
-   //     switch (action) {
-
-   //     case TetrisAction::AtTop:
-   //         doActionSetToTop();
-   //         break;
-
-   //     case TetrisAction::WayDown:
-   //  //   case TetrisAction::Accelerated:
-   //         doActionMoveDown();
-   //         break;
-
-   //     case TetrisAction::DoRight:
-   //         doActionMoveRight();
-   //         break;
-
-   //     case TetrisAction::DoLeft:
-   //         doActionMoveLeft();
-   //         break;
-
-   //     case TetrisAction::AtBottom:
-   //         doActionAtBottom();
-   //         break;
-
-   //     case TetrisAction::GameOver:
-   //         doActionGameOver();
-   //         break;
-
-   //     default:
-   //         // Log.i(Globals.LogTag, "Internal ERROR: Should never be reached");
-   //         ::OutputDebugString("(99) Internal ERROR : Should never be reached\n");
-   //         break;
-   //     }
-
-   // //    std::this_thread::sleep_for(std::chrono::milliseconds(::ModelSleepTime));
-
-   //     if (! m_actionsPQ2.anyHighPrioAction() ) {
-   //         std::this_thread::sleep_for(std::chrono::milliseconds(::ModelSleepTime));
-   //     }
-   // }
-
-    return true; // TODO: oder false
-}
 
 void TetrisModel::join() {
 
@@ -219,55 +169,36 @@ void TetrisModel::join() {
 }
 
 void TetrisModel::createNextTetromino() {
-    m_tetromino = std::make_unique<Tetromino_L>(m_board);
+   //  m_tetromino = std::make_unique<Tetromino_L>(m_board);
 
-    //constexpr int MaxTetriminos = 3;
-    //static int next = 0;
+    constexpr int MaxTetriminos = 3;
+    static int next = 0;
 
-    //if (next % MaxTetriminos == 0)
-    //    m_tetromino = std::make_unique<Tetromino_L>(m_board);
-    //else if (next % MaxTetriminos == 1)
-    //    m_tetromino = std::make_unique<Tetromino_O>(m_board);
-    //else if (next % MaxTetriminos == 2)
-    //    m_tetromino = std::make_unique<Tetromino_I>(m_board);
+    if (next % MaxTetriminos == 0)
+        m_tetromino = std::make_unique<Tetromino_L>(m_board);
+    else if (next % MaxTetriminos == 1)
+        m_tetromino = std::make_unique<Tetromino_O>(m_board);
+    else if (next % MaxTetriminos == 2)
+        m_tetromino = std::make_unique<Tetromino_I>(m_board);
 
-    //next++;
-    //if (next == MaxTetriminos) {
-    //    next = 0;
-    //}
+    next++;
+    if (next == MaxTetriminos) {
+        next = 0;
+    }
 }
 
 void TetrisModel::doActionSetToTop() {
 
-    ::OutputDebugString("> doActionSetToTop\n");
-
     createNextTetromino();
 
-    if (m_tetromino->canSetToTop()) {
-        m_tetromino->setToTop();
-        // setState(TetrisState::Normal);
-        pushAction(makeAction<TetrisAction::WayDown>());
-    }
-    else {
-        // setState(TetrisState::GameOver);
-        pushAction(makeAction<TetrisAction::GameOver>());
-    } 
-}
-
-void TetrisModel::doActionSetToTopEx() {
-
-    ::OutputDebugString("> doActionSetToTopEx\n");
-
-    createNextTetromino();
+    clearActions();
 
     if (m_tetromino->canSetToTop()) {
         m_tetromino->setToTop();
         setState(TetrisState::State_WayDown);
-        // pushAction(makeAction<TetrisAction::WayDown>());
     }
     else {
         setState(TetrisState::State_GameOver);
-        // pushAction(makeAction<TetrisAction::GameOver>());
     }
 }
 
@@ -283,19 +214,13 @@ void TetrisModel::doActionMoveLeft() {
     }
 }
 
-void TetrisModel::doActionMoveDown() {
-
-    if (m_tetromino->canMoveDown()) {
-        m_tetromino->moveDown();
-        pushAction(makeAction<TetrisAction::WayDown>());
-    }
-    else {
-       // setState(TetrisState::AtBottom);
-        pushAction(makeAction<TetrisAction::AtBottom>());
+void TetrisModel::doActionRotate() {
+    if (m_tetromino->canRotate()) {
+        m_tetromino->rotate();
     }
 }
 
-void TetrisModel::doActionMoveDownEx() {
+void TetrisModel::doActionMoveDown() {
 
     if (m_tetromino->canMoveDown()) {
         m_tetromino->moveDown();
@@ -307,20 +232,6 @@ void TetrisModel::doActionMoveDownEx() {
 
 void TetrisModel::doActionAtBottom() {
 
-    ::OutputDebugString("=> doActionAtBottom\n");
-
-    // rearrange field, if possible
-    //while (this.board.IsBottomRowComplete()) {
-    //    this.board.MoveNonEmptyRowsDown();
-    //}
-
-    // schedule next tetromino
-    // setState(TetrisState::AtTop);
-    pushAction(makeAction<TetrisAction::AtTop>());
-}
-
-void TetrisModel::doActionAtBottomEx() {
-
     // rearrange field, if possible
     //while (this.board.IsBottomRowComplete()) {
     //    this.board.MoveNonEmptyRowsDown();
@@ -331,9 +242,6 @@ void TetrisModel::doActionAtBottomEx() {
 }
 
 void TetrisModel::doActionGameOver() {
-}
-
-void TetrisModel::doActionGameOverEx() {
 }
 
 // =====================================================================================
@@ -357,19 +265,19 @@ void TetrisModel::notifyAll(const ViewCellList& list) {
 // =====================================================================================
 // tetris model queue actions
 
-void TetrisModel::pushAction(const TetrisActionPair& pair) {
-    {
-        // RAII
-        std::scoped_lock<std::mutex> lock(m_mutex);
-
-        // don't add same action twice
-        //if (m_actions.contains(pair)) {
-        //    return;
-        //}
-
-        m_actions.push_back(pair.second);
-    }
-}
+//void TetrisModel::pushAction(const TetrisActionPair& pair) {
+//    {
+//        // RAII
+//        std::scoped_lock<std::mutex> lock(m_mutex);
+//
+//        // don't add same action twice
+//        //if (m_actions.contains(pair)) {
+//        //    return;
+//        //}
+//
+//        m_actions.push_back(pair.second);
+//    }
+//}
 
 
 void TetrisModel::addActions(const std::deque<TetrisAction>& actions) {
@@ -380,6 +288,14 @@ void TetrisModel::addActions(const std::deque<TetrisAction>& actions) {
         //    m_actions.push_back(action);
         //});
         std::copy(std::begin(actions), std::end(actions), back_inserter(m_actions));
+    }
+}
+
+void TetrisModel::clearActions() {
+    {
+        // RAII
+        std::scoped_lock<std::mutex> lock(m_mutex);
+        m_actions.clear();  // clear common queue
     }
 }
 

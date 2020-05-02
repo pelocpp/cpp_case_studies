@@ -155,5 +155,8 @@
     <ClInclude Include="Tetromino_I.h">
       <Filter>Source Files\Tetromino</Filter>
     </ClInclude>
+    <ClInclude Include="TetrisState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

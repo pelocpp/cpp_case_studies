@@ -29,16 +29,18 @@
 #include "ITetromino.h"
 #include "Tetromino.h"
 
+#include "TetrisState.h"
 #include "TetrisAction.h"
 #include "TetrisQueue.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 
+// c'tor
 Tetromino::Tetromino(ITetrisBoard* board, CellColor color) : m_board(board), m_color(color), m_anchorPoint{ 5, 2 } {
-
     m_rotation = RotationAngle::Degrees_0;
 }
 
+// protected interface
 void Tetromino::moveAnchorLeft() {
     m_anchorPoint.moveLeft();
 }
@@ -51,6 +53,20 @@ void Tetromino::moveAnchorDown() {
     m_anchorPoint.moveDown();
 }
 
+void Tetromino::rotateAnchor() {
+    if (m_rotation == RotationAngle::Degrees_0) {
+        m_rotation = RotationAngle::Degrees_90;
+    }
+    else if (m_rotation == RotationAngle::Degrees_90) {
+        m_rotation = RotationAngle::Degrees_180;
+    }
+    else if (m_rotation == RotationAngle::Degrees_180) {
+        m_rotation = RotationAngle::Degrees_270;
+    }
+    else if (m_rotation == RotationAngle::Degrees_270) {
+        m_rotation = RotationAngle::Degrees_0;
+    }
+}
 
 // public interface (movement specific methods)
 void Tetromino::setToTop() {
@@ -93,7 +109,17 @@ void Tetromino::moveDown() {
     m_board->notifyAll(list);
 }
 
-void Tetromino::Rotate() {}
+void Tetromino::rotate() {
+
+    ViewCellList list;
+    release();
+    updateCellList(list, CellColor::LightGray);
+    rotateAnchor();
+    set();
+    updateCellList(list, m_color);
+    m_board->notifyAll(list);
+
+}
 
 
 // board specific methods

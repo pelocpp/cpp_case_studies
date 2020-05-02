@@ -9,7 +9,6 @@ public:
     // game commands
     virtual void start() = 0;
     virtual bool run() = 0;
-    virtual bool runRevised() = 0;
     virtual void join() = 0;
 
     virtual void setState(TetrisState state) = 0;
@@ -19,15 +18,17 @@ public:
     //virtual void addActions(const std::deque<TetrisAction>&) = 0;
     //virtual TetrisAction popAction() = 0;
 
-    virtual void pushAction(const TetrisActionPair&) = 0;
+    //virtual void pushAction(const TetrisActionPair&) = 0;
     virtual void addActions(const std::deque<TetrisAction>&) = 0;
     virtual std::deque<TetrisAction> getActions() = 0;
   //  virtual TetrisAction popAction() = 0;
+    virtual void clearActions() = 0;
 
     // action requests (internally and externally initiated)
     virtual void doActionSetToTop() = 0;
     virtual void doActionMoveRight() = 0;
     virtual void doActionMoveLeft() = 0;
+    virtual void doActionRotate() = 0;
     virtual void doActionMoveDown() = 0;
     virtual void doActionAtBottom() = 0;
     virtual void doActionGameOver() = 0;

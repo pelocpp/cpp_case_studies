@@ -16,6 +16,7 @@ protected:
     void moveAnchorRight();
     void moveAnchorLeft();
     void moveAnchorDown();
+    void rotateAnchor();
 
 public:
     // public interface (movement specific methods)
@@ -23,7 +24,7 @@ public:
     void moveRight() override;
     void moveLeft() override;
     void moveDown() override;
-    void Rotate() override;
+    void rotate() override;
 
     // board specific methods
     void set() override;

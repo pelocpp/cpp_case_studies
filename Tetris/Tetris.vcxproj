@@ -169,6 +169,7 @@
     <ClInclude Include="ITetrisModel.h" />
     <ClInclude Include="IUISubsystem.h" />
     <ClInclude Include="RotationAngle.h" />
+    <ClInclude Include="TetrisState.h" />
     <ClInclude Include="Tetromino.h" />
     <ClInclude Include="Tetromino_I.h" />
     <ClInclude Include="Tetromino_L.h" />

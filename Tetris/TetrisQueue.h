@@ -73,49 +73,49 @@ int TetrisQueue<T, Container, Compare>::count() {
     return this->c.size();
 }
 
-template <typename T, typename Container, typename Compare>
-bool TetrisQueue<T, Container, Compare>::anyHighPrioAction() {
-    auto first = this->c.cbegin();
-    auto last = this->c.cend();
-    while (first != last) {
-        auto [prio, action] = *first;
-        if (prio == TetrisActionPrio::High)
-            return true;
-        ++first;
-    }
+//template <typename T, typename Container, typename Compare>
+//bool TetrisQueue<T, Container, Compare>::anyHighPrioAction() {
+//    auto first = this->c.cbegin();
+//    auto last = this->c.cend();
+//    while (first != last) {
+//        auto [prio, action] = *first;
+//        if (prio == TetrisActionPrio::High)
+//            return true;
+//        ++first;
+//    }
+//
+//    return false;
+//}
 
-    return false;
-}
+//template <typename T, typename Container, typename Compare>
+//bool TetrisQueue<T, Container, Compare>::anyLowPrioAction() {
+//    auto first = this->c.cbegin();
+//    auto last = this->c.cend();
+//    while (first != last) {
+//        auto [prio, action] = *first;
+//        if (prio == TetrisActionPrio::Normal || prio == TetrisActionPrio::Low)
+//            return true;
+//        ++first;
+//    }
+//
+//    return false;
+//}
 
-template <typename T, typename Container, typename Compare>
-bool TetrisQueue<T, Container, Compare>::anyLowPrioAction() {
-    auto first = this->c.cbegin();
-    auto last = this->c.cend();
-    while (first != last) {
-        auto [prio, action] = *first;
-        if (prio == TetrisActionPrio::Normal || prio == TetrisActionPrio::Low)
-            return true;
-        ++first;
-    }
-
-    return false;
-}
-
-template <typename T, typename Container, typename Compare>
-void TetrisQueue<T, Container, Compare>::dump() {
-    std::ostringstream oss;
-    oss << "=========================================\n";
-    oss << "Tetris Actions Queue [" << this->c.size() << "]:\n";
-    std::for_each(
-        std::begin(this->c),
-        std::end(this->c),
-        [&](const TetrisActionPair& pair) {
-            oss << pair << '\n';
-        }
-    );
-    oss << "-----------------------------------------\n";
-    ::OutputDebugString(oss.str().data());
-}
+//template <typename T, typename Container, typename Compare>
+//void TetrisQueue<T, Container, Compare>::dump() {
+//    std::ostringstream oss;
+//    oss << "=========================================\n";
+//    oss << "Tetris Actions Queue [" << this->c.size() << "]:\n";
+//    std::for_each(
+//        std::begin(this->c),
+//        std::end(this->c),
+//        [&](const TetrisActionPair& pair) {
+//            oss << pair << '\n';
+//        }
+//    );
+//    oss << "-----------------------------------------\n";
+//    ::OutputDebugString(oss.str().data());
+//}
 
 // =====================================================================================
 // End-of-File

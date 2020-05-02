@@ -41,34 +41,34 @@
 // =====================================================================================
 // maps just for dumping tetris actions
 
-std::map<TetrisAction, std::string> tetrisActionIdentifiers{
-    {  TetrisAction::None,       "None"       },
-    {  TetrisAction::AtTop,      "AtTop"      },
-    {  TetrisAction::WayDown,    "WayDown"    },
-    {  TetrisAction::DoLeft,     "DoLeft"     },
-    {  TetrisAction::DoRight,    "DoRight"    },
-    {  TetrisAction::DoRotate,   "DoRotate"   },
-    {  TetrisAction::AllWayDown, "AllWayDown" },
-    {  TetrisAction::AtBottom,   "AtBottom"   },
-    {  TetrisAction::GameOver,   "GameOver"   }
-};
-
-std::map<TetrisActionPrio, std::string> tetrisActionPrioIdentifiers{
-    {  TetrisActionPrio::Low,    "Low"    },
-    {  TetrisActionPrio::Normal, "Normal" },
-    {  TetrisActionPrio::High,    "High"  }
-};
-
-bool operator== (const TetrisActionPair& lhs, const TetrisActionPair& rhs) {
-    return lhs.first == rhs.first && lhs.second == rhs.second;
-}
-
-std::ostream& operator<< (std::ostream& os, const TetrisActionPair& pair) {
-    os 
-        << "Prio: " << tetrisActionPrioIdentifiers[pair.first] 
-        << ", Action: " << tetrisActionIdentifiers[pair.second];
-    return os;
-}
+//std::map<TetrisAction, std::string> tetrisActionIdentifiers{
+//    {  TetrisAction::None,       "None"       },
+//    {  TetrisAction::AtTop,      "AtTop"      },
+//    {  TetrisAction::WayDown,    "WayDown"    },
+//    {  TetrisAction::DoLeft,     "DoLeft"     },
+//    {  TetrisAction::DoRight,    "DoRight"    },
+//    {  TetrisAction::DoRotate,   "DoRotate"   },
+//    {  TetrisAction::AllWayDown, "AllWayDown" },
+//    {  TetrisAction::AtBottom,   "AtBottom"   },
+//    {  TetrisAction::GameOver,   "GameOver"   }
+//};
+//
+//std::map<TetrisActionPrio, std::string> tetrisActionPrioIdentifiers{
+//    {  TetrisActionPrio::Low,    "Low"    },
+//    {  TetrisActionPrio::Normal, "Normal" },
+//    {  TetrisActionPrio::High,   "High"   }
+//};
+//
+//bool operator== (const TetrisActionPair& lhs, const TetrisActionPair& rhs) {
+//    return lhs.first == rhs.first && lhs.second == rhs.second;
+//}
+//
+//std::ostream& operator<< (std::ostream& os, const TetrisActionPair& pair) {
+//    os 
+//        << "Prio: " << tetrisActionPrioIdentifiers[pair.first] 
+//        << ", Action: " << tetrisActionIdentifiers[pair.second];
+//    return os;
+//}
 
 // =====================================================================================
 // End-of-File
