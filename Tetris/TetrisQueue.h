@@ -1,4 +1,20 @@
 // =====================================================================================
+// Tetris Priority Queue Ex
+// =====================================================================================
+
+template <typename T, typename Allocator = std::allocator<T>>
+class TetrisQueueEx : public std::deque<T, Allocator>
+{
+public:
+    int count();
+};
+
+template <typename T, typename Allocator>
+int TetrisQueueEx<T, Allocator>::count() {
+    return std::deque<T, Allocator>::size();
+}
+
+// =====================================================================================
 // Tetris Priority Queue
 // =====================================================================================
 

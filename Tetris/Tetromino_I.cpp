@@ -42,7 +42,6 @@ Tetromino_I::Tetromino_I(ITetrisBoard* board) : Tetromino(board, CellColor::Cyan
 bool Tetromino_I::canSetToTop() {
     assert(m_rotation == RotationAngle::Degrees_0);
 
-
     return !(m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() - 1).getState() == CellState::Used ||
         m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX()).getState() == CellState::Used ||
         m_board->getCell(m_anchorPoint.getY(), m_anchorPoint.getX() + 1).getState() == CellState::Used ||

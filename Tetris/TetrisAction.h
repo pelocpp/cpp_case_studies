@@ -4,6 +4,16 @@
 
 #pragma once
 
+// TODO: das muss natürlich in ein separates File
+enum class TetrisState {
+    None,          //
+    State_AtTop,         // set next tetromino at top
+    State_WayDown,       // move tetromino down
+    State_AllWayDown,    // move tetromino all rows down (external action)
+    State_AtBottom,      // (( tetromino has reached bottom, TODO: do we need this state ?? ))
+    State_GameOver       // game is over
+};
+
 // =====================================================================================
 // tetris actions: internal and external (keyboard)
 

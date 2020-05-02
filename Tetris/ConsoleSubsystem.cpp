@@ -237,9 +237,9 @@ bool ConsoleSubsystem::checkInputAvailable() {
 
                     if (isValidKey(lastVirtualKey)) {
 
-                        char szText[128];
-                        ::wsprintf(szText, "> Key: %d\n", lastVirtualKey);
-                        ::OutputDebugString(szText);
+                        //char szText[128];
+                        //::wsprintf(szText, "> Key: %d\n", lastVirtualKey);
+                        //::OutputDebugString(szText);
 
                         keys.push_back(lastVirtualKey);
                     }
@@ -247,6 +247,12 @@ bool ConsoleSubsystem::checkInputAvailable() {
             }
 
             if (!keys.empty()) {
+
+                // TRACE 
+                char szText[128];
+                ::wsprintf(szText, "> Count Keys: %d\n", keys.size());
+                ::OutputDebugString(szText);
+
                 notifyAll(keys);
             }
         }

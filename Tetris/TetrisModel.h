@@ -9,9 +9,11 @@ private:
 
    // TetrisState m_state;     // current state of model
 
-   // std::deque<TetrisAction>   m_actions;    // queue of pending actions 
+    std::deque<TetrisAction>    m_actions;    // queue of pending actions 
 
  //   std::priority_queue<TetrisActionPair> m_actionsPQ;    // priority queue of pending actions 
+
+    TetrisState m_state;
 
 
     TetrisQueue<TetrisActionPair> m_actionsPQ2;    // priority queue of pending actions
@@ -28,24 +30,31 @@ public:
     int getNumRows() override;
     int getNumCols() override;
 
-    //void setState(TetrisState state) override;
-    //TetrisState getState() override;
+    void setState(TetrisState state) override;
+    TetrisState getState() override;
 
     // void pushAction(TetrisAction) override;
     void pushAction(const TetrisActionPair&) override;
     void addActions(const std::deque<TetrisAction>&) override;
-    TetrisAction popAction() override;
+    std::deque<TetrisAction> getActions() override;
+   // TetrisAction popAction() override;
 
     // tetromino management
     void createNextTetromino() override;
 
     // action requests (internally and externally initiated)
     void doActionSetToTop() override;
+
     void doActionMoveRight() override;
     void doActionMoveLeft() override;
     void doActionMoveDown() override;
     void doActionAtBottom() override;
     void doActionGameOver() override;
+
+    void doActionSetToTopEx();
+    void doActionMoveDownEx();
+    void doActionAtBottomEx();
+    void doActionGameOverEx();
 
     // implementation of interface 'ITetrisBoardListener'
     void attach(ITetrisBoardObserver* observer) override;
@@ -56,5 +65,7 @@ private:
     // internal helper methods
     void start() override;
     bool run() override;
+    bool runRevised() override;
+
     void join() override;
 };
