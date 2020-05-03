@@ -71,6 +71,30 @@ void TetrisBoard::clear() {
     notifyAll(list);
 }
 
+bool TetrisBoard::isBottomRowComplete() {
+    bool isComplete = true;
+    for (int j = 0; j < m_numCols; j++) {
+        if (m_board[m_numRows - 1][j].getState() != CellState::Used) {
+            isComplete = false;
+            break;
+        }
+    }
+
+    return isComplete;
+}
+
+void TetrisBoard::moveNonEmptyRowsDown() {
+    int startRow = m_numRows - 1;
+    while (!isRowEmpty(startRow))
+        startRow--;
+
+    ViewCellList list;
+    for (int i = m_numRows - 2; i >= startRow; i--) {
+        copySingleRow(list, i);
+    }
+
+    notifyAll(list);
+}
 
 // implementation of interface 'ITetrisBoardListener'
 void TetrisBoard::attach(ITetrisBoardObserver* observer) {
@@ -85,5 +109,34 @@ void TetrisBoard::detach(ITetrisBoardObserver* observer) {
 void TetrisBoard::notifyAll(const ViewCellList& list) {
     for (auto observer : m_observer) {
         observer->update(list);
+    }
+}
+
+// private helper methods
+bool TetrisBoard::isRowEmpty(int i) {
+    bool isEmpty = true;
+    for (int j = 0; j < m_numCols; j++) {
+        if (m_board[i][j].getState() == CellState::Used) {
+            isEmpty = false;
+            break;
+        }
+    }
+
+    return isEmpty;
+}
+
+void TetrisBoard::copySingleRow(ViewCellList& list, int row) {
+
+    for (int j = 0; j < m_numCols; j++) {
+        // create cell to update any view
+        CellColor color{ m_board[row][j].getColor() };
+        CellPoint point{ j, row + 1 };
+        ViewCell cell{ point, color };
+        list.add(cell);
+
+        // Finally copy block one row down ...
+        // Note: TetrisCell is a 'value type', so '=' works fine ---
+        // in case of a reference type: clone needed (deep copy) !!!
+        m_board[row + 1][j] = m_board[row][j];
     }
 }

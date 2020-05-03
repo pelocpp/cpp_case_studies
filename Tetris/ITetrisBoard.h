@@ -12,9 +12,10 @@ public:
     
     // public interface
     virtual void clear() = 0;
+    virtual bool isBottomRowComplete() = 0;
+    virtual void moveNonEmptyRowsDown() = 0;
 
-    //virtual void postChanges(const ViewCellList& list) = 0;
 
-    //bool IsBottomRowComplete();
-    //void MoveNonEmptyRowsDown();
+    // TODO: Parameter vom Typ Referenz oder per Value ?!?!?!?!
+    // virtual void postChanges(const ViewCellList& list) = 0;
 };

@@ -1,7 +1,7 @@
 #pragma once
 
-constexpr int Cols = 40;
+constexpr int Cols = 10;
 constexpr int Rows = 20;
 
 constexpr int ModelSleepTime = 300;
-constexpr int InputSleepTime = 200;
+constexpr int InputSleepTime = 100;

@@ -208,13 +208,9 @@ void ConsoleSubsystem::writeAtTest(unsigned int color, char ch, COORD coord) {
 bool ConsoleSubsystem::checkInputAvailable() {
 
     std::deque<unsigned short> keys;
-
     while (m_enableKeyboardLogging) {
 
-        // ::OutputDebugString("Check keys ...\n");
-
-        keys = {};  // empty keys queue
-
+        keys = {};  // clear keys queue
         DWORD dwNumEvents;
         ::GetNumberOfConsoleInputEvents(m_hStdin, &dwNumEvents);
         if (dwNumEvents > 0) {
@@ -232,25 +228,17 @@ bool ConsoleSubsystem::checkInputAvailable() {
 
                 // store key code, if a key was pressed
                 if (evt.EventType == KEY_EVENT && evt.Event.KeyEvent.bKeyDown == TRUE) {
-
                     lastVirtualKey = evt.Event.KeyEvent.wVirtualKeyCode;
-
                     if (isValidKey(lastVirtualKey)) {
-
-                        //char szText[128];
-                        //::wsprintf(szText, "> Key: %d\n", lastVirtualKey);
-                        //::OutputDebugString(szText);
-
                         keys.push_back(lastVirtualKey);
                     }
                 }
             }
 
             if (!keys.empty()) {
-
-                // TRACE 
+                // trace 
                 char szText[128];
-                ::wsprintf(szText, "> Count Keys: %d\n", keys.size());
+                ::wsprintf(szText, "> got keys: %d\n", keys.size());
                 ::OutputDebugString(szText);
 
                 notifyAll(keys);

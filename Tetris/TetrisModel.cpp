@@ -233,9 +233,9 @@ void TetrisModel::doActionMoveDown() {
 void TetrisModel::doActionAtBottom() {
 
     // rearrange field, if possible
-    //while (this.board.IsBottomRowComplete()) {
-    //    this.board.MoveNonEmptyRowsDown();
-    //}
+    while (m_board->isBottomRowComplete()) {
+        m_board->moveNonEmptyRowsDown();
+    }
 
     // schedule next tetromino
     setState(TetrisState::State_AtTop);
@@ -284,10 +284,14 @@ void TetrisModel::addActions(const std::deque<TetrisAction>& actions) {
     {
         // RAII
         std::scoped_lock<std::mutex> lock(m_mutex);
-        //std::for_each(std::begin(actions), std::end(actions), [this](TetrisAction action) {
-        //    m_actions.push_back(action);
-        //});
+
+        // TODO: Hmmm, hier werden doppelte Keys aufgenommen !
+
         std::copy(std::begin(actions), std::end(actions), back_inserter(m_actions));
+
+        char szText[128];
+        ::wsprintf(szText, "> #actions now %d\n", m_actions.size());
+        ::OutputDebugString(szText);
     }
 }
 
