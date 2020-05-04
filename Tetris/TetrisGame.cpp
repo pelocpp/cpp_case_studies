@@ -137,7 +137,7 @@ void TetrisGame::update(std::deque<unsigned short> keys) {
                 result = TetrisAction::DoRight;
                 break;
             case VK_DOWN:
-                result = TetrisAction::DoAllWayDown;
+                result = TetrisAction::DoDown;
                 break;
             case VK_ESCAPE:
                 result = TetrisAction::DoExitGame;

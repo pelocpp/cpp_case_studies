@@ -30,6 +30,7 @@ public:
     //void pushAction(const TetrisActionPair&) override;
     void pushActions(const std::deque<TetrisAction>&) override;
     std::deque<TetrisAction> getActions() override;
+    std::deque<TetrisAction> getActionsNoOwnership();
     void clearActions() override;
    // TetrisAction popAction() override;
     void waitForAction() override;
@@ -37,15 +38,17 @@ public:
     // tetromino management
     void createNextTetromino() override;
 
-    // action requests (internally and externally initiated)
+    // action requests (internally initiated)
     void doActionSetToTop() override;
+    void doActionWayDown()  override;
+    void doActionAtBottom() override;
+    void doActionGameOver()  override;
 
+    // action requests (externally initiated)
     void doActionMoveRight() override;
     void doActionMoveLeft() override;
     void doActionRotate() override;
     void doActionMoveDown() override;
-    void doActionAtBottom() override;
-    void doActionGameOver() override;
 
     // implementation of interface 'ITetrisBoardListener'
     void attach(ITetrisBoardObserver* observer) override;

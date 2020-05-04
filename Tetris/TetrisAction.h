@@ -14,7 +14,8 @@ enum class TetrisAction {
     DoLeft,        // move tetromino right (external action)
     DoRight,       // move tetromino left  (external action)
     DoRotate,      // rotate tetromino (external action)
-    DoAllWayDown,    // move tetromino all rows down (external action)
+    DoDown,        // move tetromino one row down (external action)
+    // DoAllWayDown,    // move tetromino all rows down (external action)
     // AtBottom,      // (( tetromino has reached bottom, TODO: do we need this state ?? ))
     DoExitGame      // force 'exit game'
 };
@@ -103,8 +104,8 @@ inline void traceAction<true>(TetrisAction action) {
     else if (action == TetrisAction::DoRotate) {
         ::OutputDebugString("=> next action => DoRotate\n");
     }
-    else if (action == TetrisAction::DoAllWayDown) {
-        ::OutputDebugString("=> next action => DoAllWayDown\n");
+    else if (action == TetrisAction::DoDown) {
+        ::OutputDebugString("=> next action => DoDown\n");
     }
     else {
         ::OutputDebugString("=> unknown action => Internal Error!\n");

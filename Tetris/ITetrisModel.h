@@ -25,14 +25,17 @@ public:
     virtual void clearActions() = 0;
     virtual void waitForAction() = 0;
 
-    // action requests (internally and externally initiated)
+    // action requests (internally initiated)
     virtual void doActionSetToTop() = 0;
+    virtual void doActionWayDown() = 0;
+    virtual void doActionAtBottom() = 0;
+    virtual void doActionGameOver() = 0;
+
+    // action requests (externally initiated)
     virtual void doActionMoveRight() = 0;
     virtual void doActionMoveLeft() = 0;
     virtual void doActionRotate() = 0;
     virtual void doActionMoveDown() = 0;
-    virtual void doActionAtBottom() = 0;
-    virtual void doActionGameOver() = 0;
 
     // tetromino management
     virtual void createNextTetromino() = 0;
