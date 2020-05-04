@@ -48,7 +48,7 @@ void TetrisBoard::clear() {
     std::for_each(
         std::begin(m_board), 
         std::end(m_board),
-        [=] (std::array<TetrisCell, Cols> row) {
+        [=] (std::array<TetrisCell, TetrisGlobals::Cols> row) {
             row.fill(empty);
         }
     );

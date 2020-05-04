@@ -19,10 +19,11 @@ public:
     //virtual TetrisAction popAction() = 0;
 
     //virtual void pushAction(const TetrisActionPair&) = 0;
-    virtual void addActions(const std::deque<TetrisAction>&) = 0;
+    virtual void pushActions(const std::deque<TetrisAction>&) = 0;
     virtual std::deque<TetrisAction> getActions() = 0;
   //  virtual TetrisAction popAction() = 0;
     virtual void clearActions() = 0;
+    virtual void waitForAction() = 0;
 
     // action requests (internally and externally initiated)
     virtual void doActionSetToTop() = 0;

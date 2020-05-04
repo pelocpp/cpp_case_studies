@@ -118,7 +118,6 @@ void Tetromino::rotate() {
     set();
     updateCellList(list, m_color);
     m_board->notifyAll(list);
-
 }
 
 

@@ -6,7 +6,7 @@ private:
     int m_numRows;
     int m_numCols;
 
-    std::array<std::array<TetrisCell, Cols>, Rows> m_board;
+    std::array<std::array<TetrisCell, TetrisGlobals::Cols>, TetrisGlobals::Rows> m_board;
 
     // TODO: Wie sieht das mit SMART POINTER AUS ??????
     std::list<ITetrisBoardObserver*> m_observer;

@@ -10,6 +10,10 @@ private:
     TetrisState                  m_state;      // current state of model
     std::deque<TetrisAction>     m_actions;    // queue of pending actions 
     std::mutex                   m_mutex;      // protect queue against concurrent access
+    std::condition_variable      m_condition;  // handle condition 'external event'
+
+    int                          m_sleepTime;  // regular sleep time between two steps
+    bool                         m_exitGame;   // user request 'exit game'
 
 public:
     TetrisModel();
@@ -24,10 +28,11 @@ public:
 
     // void pushAction(TetrisAction) override;
     //void pushAction(const TetrisActionPair&) override;
-    void addActions(const std::deque<TetrisAction>&) override;
+    void pushActions(const std::deque<TetrisAction>&) override;
     std::deque<TetrisAction> getActions() override;
     void clearActions() override;
    // TetrisAction popAction() override;
+    void waitForAction() override;
 
     // tetromino management
     void createNextTetromino() override;
@@ -52,4 +57,6 @@ private:
     void start() override;
     bool run() override;
     void join() override;
+
+
 };

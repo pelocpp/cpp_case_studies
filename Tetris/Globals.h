@@ -1,7 +1,9 @@
 #pragma once
 
-constexpr int Cols = 10;
-constexpr int Rows = 20;
+namespace TetrisGlobals {
+    constexpr int Cols = 40;
+    constexpr int Rows = 20;
 
-constexpr int ModelSleepTime = 300;
-constexpr int InputSleepTime = 100;
+    constexpr int ModelSleepTime = 500;
+    constexpr int InputSleepTime = 30;
+}

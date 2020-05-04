@@ -45,7 +45,7 @@
 #include "TetrisGame.h"
 
 TetrisGame::TetrisGame() {
-    m_subsystem = new ConsoleSubsystem(Cols, Rows);
+    m_subsystem = new ConsoleSubsystem(TetrisGlobals::Cols, TetrisGlobals::Rows);
     m_subsystem->initConsole();
     m_subsystem->showConsole();
 
@@ -140,10 +140,8 @@ void TetrisGame::update(std::deque<unsigned short> keys) {
                 result = TetrisAction::DoAllWayDown;
                 break;
             case VK_ESCAPE:
-                throw std::exception("Internal Error: TetrisGame::update [Unexpected key event]");
-                // TODO: Das NONE passt hier nicht !!!!
-                //result = TetrisAction::None;
-                //break;
+                result = TetrisAction::DoExitGame;
+                break;
             default:
                 throw std::exception("Internal Error: TetrisGame::update [Unexpected key event]");
                 // TODO: Das NONE passt hier nicht !!!!
@@ -158,7 +156,7 @@ void TetrisGame::update(std::deque<unsigned short> keys) {
     //::OutputDebugString(szBuf);
 
     // TODO: WIRD die REIHENFOLGE derEvents bei der Abarbeitung beachtet !?!?!?!?!?!
-    m_model->addActions(actions);
+    m_model->pushActions(actions);
 }
 
 unsigned int TetrisGame::toWin32Color(CellColor color) {

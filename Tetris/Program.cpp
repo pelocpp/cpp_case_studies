@@ -67,6 +67,10 @@
 // TODO: Das Programm soll sich am Ende selbst beenden ===> Alle Destruktoren sollten korrekt aufräumen !!!!
 
 
+// TODO: Gute Anleitung
+// https://www.freetetris.org/game.php
+
+
 int main()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);

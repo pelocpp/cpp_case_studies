@@ -10,6 +10,7 @@
 #include <map> 
 #include <queue> 
 #include <thread>
+#include <condition_variable>
 #include <mutex>
 #include <chrono>
 #include <future>
@@ -47,9 +48,12 @@
 #include "TetrisModel.h"
 
 TetrisModel::TetrisModel() {
-    m_board = new TetrisBoard(Rows, Cols);
+    m_board = new TetrisBoard(TetrisGlobals::Rows, TetrisGlobals::Cols);
     m_state = TetrisState::None;
     m_tetromino = nullptr; // TODO: Smart Ptr !!!
+
+    m_sleepTime = TetrisGlobals::ModelSleepTime;
+    m_exitGame = false;
 }
 
 TetrisModel::~TetrisModel() {
@@ -58,11 +62,11 @@ TetrisModel::~TetrisModel() {
 
 // getter/setter
 int TetrisModel::getNumRows() {
-    return Rows;
+    return TetrisGlobals::Rows;
 }
 
 int TetrisModel::getNumCols() {
-    return Cols;
+    return TetrisGlobals::Cols;
 }
 
 TetrisState TetrisModel::getState() {
@@ -94,7 +98,7 @@ bool TetrisModel::run() {
 
     std::deque<TetrisAction> latestActions;
 
-    while (! gameOver) {
+    while (!gameOver && !m_exitGame) {
 
         state = getState();
 
@@ -155,13 +159,12 @@ bool TetrisModel::run() {
             break;
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(::ModelSleepTime));
+        // std::this_thread::sleep_for(std::chrono::milliseconds(m_sleepTime));
+        waitForAction();
     }
 
     return true; // TODO: oder false
 }
-
-
 
 void TetrisModel::join() {
 
@@ -280,19 +283,35 @@ void TetrisModel::notifyAll(const ViewCellList& list) {
 //}
 
 
-void TetrisModel::addActions(const std::deque<TetrisAction>& actions) {
+void TetrisModel::pushActions(const std::deque<TetrisAction>& actions) {
     {
         // RAII
         std::scoped_lock<std::mutex> lock(m_mutex);
+
+        // special case: 'exit game' requested?
+        auto ret = std::find_if(std::begin(actions), std::end(actions), [this](const TetrisAction action) {
+
+            if (action == TetrisAction::DoExitGame) {
+                m_exitGame = true;
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
 
         // TODO: Hmmm, hier werden doppelte Keys aufgenommen !
 
         std::copy(std::begin(actions), std::end(actions), back_inserter(m_actions));
 
-        char szText[128];
-        ::wsprintf(szText, "> #actions now %d\n", m_actions.size());
-        ::OutputDebugString(szText);
+        // wakeup game loop
+        m_condition.notify_one();
     }
+
+    // after 'critical section'
+    //char szText[128];
+    //::wsprintf(szText, "> #actions now %d\n", m_actions.size());
+    //::OutputDebugString(szText);
 }
 
 void TetrisModel::clearActions() {
@@ -313,6 +332,21 @@ std::deque<TetrisAction> TetrisModel::getActions() {
     }
 
     return actions;
+}
+
+void TetrisModel::waitForAction() {
+    {
+        // RAII
+        std::unique_lock guard(m_mutex);
+        m_condition.wait_for(guard, std::chrono::milliseconds(m_sleepTime), [this]() {
+            if (m_actions.size() > 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+    }
 }
 
 //TetrisAction TetrisModel::popAction() {

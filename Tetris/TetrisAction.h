@@ -16,7 +16,7 @@ enum class TetrisAction {
     DoRotate,      // rotate tetromino (external action)
     DoAllWayDown,    // move tetromino all rows down (external action)
     // AtBottom,      // (( tetromino has reached bottom, TODO: do we need this state ?? ))
-    // GameOver       // game is over
+    DoExitGame      // force 'exit game'
 };
 
 //enum class TetrisActionPrio {

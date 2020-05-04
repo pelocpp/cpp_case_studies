@@ -245,7 +245,7 @@ bool ConsoleSubsystem::checkInputAvailable() {
             }
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(::InputSleepTime));
+        std::this_thread::sleep_for(std::chrono::milliseconds(TetrisGlobals::InputSleepTime));
     }
 
     ::OutputDebugString("Done KeyboardLogging\n");
