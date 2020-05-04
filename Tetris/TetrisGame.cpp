@@ -38,13 +38,15 @@
 
 #include "TetrisState.h"
 #include "TetrisAction.h"
-#include "TetrisQueue.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 
 #include "TetrisGame.h"
 
 TetrisGame::TetrisGame() {
+
+    // TODO: Das ist uneinheitlich: Wenn Cols und Rows global sind, dann brauche ich kein new ?!?!?
+
     m_subsystem = new ConsoleSubsystem(TetrisGlobals::Cols, TetrisGlobals::Rows);
     m_subsystem->initConsole();
     m_subsystem->showConsole();

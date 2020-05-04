@@ -48,7 +48,6 @@
 
 #include "TetrisState.h"
 #include "TetrisAction.h"
-#include "TetrisQueue.h"
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 

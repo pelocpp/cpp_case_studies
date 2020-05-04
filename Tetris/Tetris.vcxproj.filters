@@ -22,9 +22,6 @@
     <Filter Include="Source Files\Model">
       <UniqueIdentifier>{c04fffd5-78bd-485f-a180-0a5c3a06108f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Actions">
-      <UniqueIdentifier>{820e05f5-4aed-466f-b0be-010450fe4169}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Tetromino">
       <UniqueIdentifier>{03c719d6-c88d-477d-918c-ac96cd68d8ee}</UniqueIdentifier>
     </Filter>
@@ -69,14 +66,14 @@
     <ClCompile Include="Tetromino.cpp">
       <Filter>Source Files\Tetromino</Filter>
     </ClCompile>
-    <ClCompile Include="TetrisAction.cpp">
-      <Filter>Source Files\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="Tetromino_O.cpp">
       <Filter>Source Files\Tetromino</Filter>
     </ClCompile>
     <ClCompile Include="Tetromino_I.cpp">
       <Filter>Source Files\Tetromino</Filter>
+    </ClCompile>
+    <ClCompile Include="Reste.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +142,6 @@
     </ClInclude>
     <ClInclude Include="ITetromino.h">
       <Filter>Source Files\Tetromino</Filter>
-    </ClInclude>
-    <ClInclude Include="TetrisQueue.h">
-      <Filter>Source Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Tetromino_O.h">
       <Filter>Source Files\Tetromino</Filter>

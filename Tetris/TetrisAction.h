@@ -9,86 +9,15 @@
 
 enum class TetrisAction {
     None,          //
-    // AtTop,         // set next tetromino at top
-    // WayDown,       // move tetromino down
     DoLeft,        // move tetromino right (external action)
     DoRight,       // move tetromino left  (external action)
     DoRotate,      // rotate tetromino (external action)
     DoDown,        // move tetromino one row down (external action)
-    // DoAllWayDown,    // move tetromino all rows down (external action)
-    // AtBottom,      // (( tetromino has reached bottom, TODO: do we need this state ?? ))
-    DoExitGame      // force 'exit game'
+    DoExitGame     // force 'exit game'
 };
 
-//enum class TetrisActionPrio {
-//    Low,
-//    Normal,
-//    High
-//};
-//
-//using TetrisActionPair = std::pair<TetrisActionPrio, TetrisAction>;
-//
-//extern std::ostream& operator<< (std::ostream&, const TetrisActionPair&); 
-//extern bool operator== (const TetrisActionPair&, const TetrisActionPair&);
-
 // =====================================================================================
-// central location to provide priority to tetris actions
-
-//template <TetrisAction action>
-//TetrisActionPair makeAction() {
-//    if constexpr (action == TetrisAction::AtTop) {
-//        return std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtTop);
-//    }
-//    if constexpr (action == TetrisAction::WayDown) {
-//        return std::make_pair(TetrisActionPrio::Normal, TetrisAction::WayDown);
-//    }
-//    if constexpr (action == TetrisAction::DoLeft) {
-//        return std::make_pair(TetrisActionPrio::High, TetrisAction::DoLeft);
-//    }
-//    if constexpr (action == TetrisAction::DoRight) {
-//        return std::make_pair(TetrisActionPrio::High, TetrisAction::DoRight);
-//    }
-//    if constexpr (action == TetrisAction::DoRotate) {
-//        return std::make_pair(TetrisActionPrio::High, TetrisAction::DoRotate);
-//    }
-//    if constexpr (action == TetrisAction::AllWayDown) {
-//        return std::make_pair(TetrisActionPrio::High, TetrisAction::AllWayDown);
-//    }
-//    if constexpr (action == TetrisAction::AtBottom) {
-//        return std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtBottom);
-//    }
-//    if constexpr (action == TetrisAction::GameOver) {
-//        return std::make_pair(TetrisActionPrio::High, TetrisAction::GameOver);
-//    }
-
-    //if constexpr (action == TetrisAction::AtTop) {
-    //    return std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtTop);
-    //}
-    //if constexpr (action == TetrisAction::WayDown) {
-    //    return std::make_pair(TetrisActionPrio::Normal, TetrisAction::WayDown);
-    //}
-    //if constexpr (action == TetrisAction::DoLeft) {
-    //    return std::make_pair(TetrisActionPrio::Low, TetrisAction::DoLeft);
-    //}
-    //if constexpr (action == TetrisAction::DoRight) {
-    //    return std::make_pair(TetrisActionPrio::Low, TetrisAction::DoRight);
-    //}
-    //if constexpr (action == TetrisAction::DoRotate) {
-    //    return std::make_pair(TetrisActionPrio::Low, TetrisAction::DoRotate);
-    //}
-    //if constexpr (action == TetrisAction::AllWayDown) {
-    //    return std::make_pair(TetrisActionPrio::Low, TetrisAction::AllWayDown);
-    //}
-    //if constexpr (action == TetrisAction::AtBottom) {
-    //    return std::make_pair(TetrisActionPrio::Normal, TetrisAction::AtBottom);
-    //}
-    //if constexpr (action == TetrisAction::GameOver) {
-    //    return std::make_pair(TetrisActionPrio::High, TetrisAction::GameOver);
-    //}
-//}
-
-// =====================================================================================
-// tracing actions
+// tracing utility funtions
 
 template <bool>
 inline void traceAction(TetrisAction action);
@@ -96,19 +25,22 @@ inline void traceAction(TetrisAction action);
 template <>
 inline void traceAction<true>(TetrisAction action) {
     if (action == TetrisAction::DoLeft) {
-        ::OutputDebugString("=> next action => DoLeft\n");
+        ::OutputDebugString("=> TetrisAction::DoLeft\n");
     }
     else if (action == TetrisAction::DoRight) {
-        ::OutputDebugString("=> next action => DoRight\n");
+        ::OutputDebugString("=> TetrisAction::DoRight\n");
     }
     else if (action == TetrisAction::DoRotate) {
-        ::OutputDebugString("=> next action => DoRotate\n");
+        ::OutputDebugString("=> TetrisAction::DoRotate\n");
     }
     else if (action == TetrisAction::DoDown) {
-        ::OutputDebugString("=> next action => DoDown\n");
+        ::OutputDebugString("=> TetrisAction::DoDown\n");
+    }
+    else if (action == TetrisAction::DoExitGame) {
+        ::OutputDebugString("=> TetrisAction::DoExitGame\n");
     }
     else {
-        ::OutputDebugString("=> unknown action => Internal Error!\n");
+        ::OutputDebugString("=> Unknown TetrisAction - Internal Error!\n");
     }
 }
 

@@ -32,8 +32,7 @@
 #include "Tetromino_O.h"
 
 #include "TetrisState.h"
-#include "TetrisAction.h"
-#include "TetrisQueue.h"
+#include "TetrisAction.h" 
 #include "ITetrisModel.h"
 #include "TetrisModel.h"
 

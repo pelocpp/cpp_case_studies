@@ -5,23 +5,17 @@ public:
     // properties
     virtual int getNumRows() = 0;
     virtual int getNumCols() = 0;
+    virtual void setState(TetrisState state) = 0;
+    virtual TetrisState getState() = 0;
 
     // game commands
     virtual void start() = 0;
     virtual bool run() = 0;
     virtual void join() = 0;
 
-    virtual void setState(TetrisState state) = 0;
-    virtual TetrisState getState() = 0;
-
-    //virtual void pushAction(TetrisAction) = 0;
-    //virtual void addActions(const std::deque<TetrisAction>&) = 0;
-    //virtual TetrisAction popAction() = 0;
-
-    //virtual void pushAction(const TetrisActionPair&) = 0;
+    // manage incoming requests (keyboard)
     virtual void pushActions(const std::deque<TetrisAction>&) = 0;
-    virtual std::deque<TetrisAction> getActions() = 0;
-  //  virtual TetrisAction popAction() = 0;
+    virtual std::deque<TetrisAction> getActionsNoOwnership() = 0;
     virtual void clearActions() = 0;
     virtual void waitForAction() = 0;
 
@@ -37,6 +31,7 @@ public:
     virtual void doActionRotate() = 0;
     virtual void doActionMoveDown() = 0;
 
+private:
     // tetromino management
     virtual void createNextTetromino() = 0;
 };
