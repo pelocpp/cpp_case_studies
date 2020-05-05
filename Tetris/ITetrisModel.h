@@ -13,8 +13,12 @@ public:
     virtual bool run() = 0;
     virtual void join() = 0;
 
-    // manage incoming requests (keyboard)
+
+    // queue related functions (keyboard initiated actions)
+public:
     virtual void pushActions(const std::deque<TetrisAction>&) = 0;
+
+private:
     virtual std::deque<TetrisAction> getActionsNoOwnership() = 0;
     virtual void clearActions() = 0;
     virtual void waitForAction() = 0;
@@ -31,7 +35,6 @@ public:
     virtual void doActionRotate() = 0;
     virtual void doActionMoveDown() = 0;
 
-private:
     // tetromino management
     virtual void createNextTetromino() = 0;
 };

@@ -90,96 +90,12 @@ void TetrisModel::start() {
     );
 }
 
-// DIESE GEHT ... ich versuche jetzt, die actions raus zu ziehen ?!?!?!
-//bool TetrisModel::run() {
-//
-//    bool gameOver = false;
-//
-//    TetrisState state = TetrisState::None;
-//
-//    std::deque<TetrisAction> latestActions;
-//
-//    while (!gameOver && !m_exitGame) {
-//
-//        state = getState();
-//
-//        switch (state) {
-//
-//        case TetrisState::State_AtTop:
-//            doActionSetToTop();
-//            break;
-//
-//        case TetrisState::State_WayDown:
-//
-//            latestActions = getActions();
-//            while (latestActions.size() > 0) {
-//
-//                TetrisAction action = latestActions.back();
-//                latestActions.pop_back();
-//
-//                switch (action) {
-//                case TetrisAction::DoRight:
-//                    doActionMoveRight();
-//                    break;
-//                case TetrisAction::DoLeft:
-//                    doActionMoveLeft();
-//                    break;
-//                case TetrisAction::DoRotate:
-//                    doActionRotate();
-//                    break;
-//                case TetrisAction::DoAllWayDown:
-//                    setState(TetrisState::State_AllWayDown);
-//                    break;
-//                default:
-//                    // Log.i(Globals.LogTag, "Internal ERROR: Should never be reached");
-//                    ::OutputDebugString("(99) Internal ERROR : Should never be reached\n");
-//                    break;
-//                }
-//            }
-//
-//            doActionMoveDown();
-//            break;
-//
-//        case TetrisState::State_AllWayDown:
-//            // TODO: Hier könnte man die Sleep Zeit verkürzen
-//            doActionMoveDown();
-//            break;
-//
-//        case TetrisState::State_AtBottom:
-//            doActionAtBottom();
-//            break;
-//
-//        case TetrisState::State_GameOver:
-//            doActionGameOver();
-//            gameOver = true;
-//            break;
-//
-//        default:
-//            // Log.i(Globals.LogTag, "Internal ERROR: Should never be reached");
-//            ::OutputDebugString("(99) Internal ERROR : Should never be reached\n");
-//            break;
-//        }
-//
-//        // std::this_thread::sleep_for(std::chrono::milliseconds(m_sleepTime));
-//        waitForAction();
-//    }
-//
-//    return true; // TODO: oder false
-//}
-
-
 bool TetrisModel::run() {
 
     bool gameOver = false;
-
-    TetrisState state = TetrisState::None;
-
-    std::deque<TetrisAction> latestActions;
-
     while (!gameOver && !m_exitGame) {
 
-        state = getState();
-
+        TetrisState state = getState();
         switch (state) {
 
         case TetrisState::State_AtTop:
@@ -205,8 +121,7 @@ bool TetrisModel::run() {
             break;
         }
 
-        // std::this_thread::sleep_for(std::chrono::milliseconds(m_sleepTime));
-        waitForAction();
+        waitForAction();  // Der Name dieser Methode passt nicht 
     }
 
     return true; // TODO: oder false
@@ -335,22 +250,7 @@ void TetrisModel::notifyAll(const ViewCellList& list) {
 }
 
 // =====================================================================================
-// tetris model queue actions
-
-//void TetrisModel::pushAction(const TetrisActionPair& pair) {
-//    {
-//        // RAII
-//        std::scoped_lock<std::mutex> lock(m_mutex);
-//
-//        // don't add same action twice
-//        //if (m_actions.contains(pair)) {
-//        //    return;
-//        //}
-//
-//        m_actions.push_back(pair.second);
-//    }
-//}
-
+// queue related functions
 
 void TetrisModel::pushActions(const std::deque<TetrisAction>& actions) {
     {
@@ -390,8 +290,6 @@ void TetrisModel::clearActions() {
         m_actions.clear();  // clear common queue
     }
 }
-
-
 
 std::deque<TetrisAction> TetrisModel::getActionsNoOwnership() {
 
@@ -436,10 +334,6 @@ void TetrisModel::waitForAction() {
         });
     }
 }
-
-
-
-
 
 // =====================================================================================
 // End-of-File

@@ -87,7 +87,6 @@ void TetrisGame::stop() {
 
     ::OutputDebugString("Stopping Game\n");
     m_subsystem->stopKeyboardLogging();
-
     m_subsystem->closeConsole();
 }
 
@@ -145,17 +144,13 @@ void TetrisGame::update(std::deque<unsigned short> keys) {
                 result = TetrisAction::DoExitGame;
                 break;
             default:
-                throw std::exception("Internal Error: TetrisGame::update [Unexpected key event]");
-                // TODO: Das NONE passt hier nicht !!!!
-                //result = TetrisAction::None;
-                //break;
+                ::OutputDebugString("Internal Error: TetrisGame::update [Unexpected key event]\n");
+                result = TetrisAction::None;
+                break;
             }
             return result;
         }
     );
-
-    //wsprintf(szBuf, "Ooopsie==> Length of Output List: %d\n", actions.size());
-    //::OutputDebugString(szBuf);
 
     // TODO: WIRD die REIHENFOLGE derEvents bei der Abarbeitung beachtet !?!?!?!?!?!
     m_model->pushActions(actions);

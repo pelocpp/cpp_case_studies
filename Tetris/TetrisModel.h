@@ -34,8 +34,11 @@ public:
     bool run() override;
     void join() override;
 
-    // manage incoming requests (keyboard)
+public:
+    // queue related functions (keyboard initiated actions)
     void pushActions(const std::deque<TetrisAction>&) override;
+
+private:
     std::deque<TetrisAction> getActionsNoOwnership() override;
     void clearActions() override;
     void waitForAction() override;
@@ -57,7 +60,6 @@ public:
     void detach(ITetrisBoardObserver* observer) override;
     void notifyAll(const ViewCellList& list) override;
 
-private:
     // internal helper methods
     void createNextTetromino() override;
 };
