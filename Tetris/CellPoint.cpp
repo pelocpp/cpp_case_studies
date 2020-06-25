@@ -33,7 +33,7 @@ void CellPoint::moveDown() noexcept {
 }
 
 std::string CellPoint::toString() {
-    std::stringstream ss;
+    std::ostringstream ss;
     ss << "X=" << m_x << ", Y=" << m_y;
     return ss.str();
 }

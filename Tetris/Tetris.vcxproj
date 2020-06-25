@@ -140,9 +140,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CellColor.h" />
+    <ClInclude Include="CellColor.h" />
     <ClCompile Include="CellPoint.cpp" />
-    <ClCompile Include="CellState.h" />
+    <ClInclude Include="CellState.h" />
     <ClCompile Include="ConsoleSubsystem.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Reste.cpp" />
