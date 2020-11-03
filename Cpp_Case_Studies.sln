@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Polynom", "Polynom\Polynom.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Spreadsheet", "Spreadsheet\Spreadsheet.vcxproj", "{3FDCA742-FBDA-4374-A43D-3D385C1958BC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiningPhilosophers", "DiningPhilosophers\DiningPhilosophers.vcxproj", "{88946773-CBFD-4C28-BE47-8128F129B8BB}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KnightProblem", "SpringerProblem\SpringerProblem.vcxproj", "{B270B794-4390-43BB-BADA-0C9A1D1DA2A6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Anagram", "Anagram\Anagram.vcxproj", "{B0B88286-E607-406F-AC2A-6CD1E78DB658}"
@@ -49,14 +47,6 @@ Global
 		{3FDCA742-FBDA-4374-A43D-3D385C1958BC}.Release|x64.Build.0 = Release|x64
 		{3FDCA742-FBDA-4374-A43D-3D385C1958BC}.Release|x86.ActiveCfg = Release|Win32
 		{3FDCA742-FBDA-4374-A43D-3D385C1958BC}.Release|x86.Build.0 = Release|Win32
-		{88946773-CBFD-4C28-BE47-8128F129B8BB}.Debug|x64.ActiveCfg = Debug|x64
-		{88946773-CBFD-4C28-BE47-8128F129B8BB}.Debug|x64.Build.0 = Debug|x64
-		{88946773-CBFD-4C28-BE47-8128F129B8BB}.Debug|x86.ActiveCfg = Debug|Win32
-		{88946773-CBFD-4C28-BE47-8128F129B8BB}.Debug|x86.Build.0 = Debug|Win32
-		{88946773-CBFD-4C28-BE47-8128F129B8BB}.Release|x64.ActiveCfg = Release|x64
-		{88946773-CBFD-4C28-BE47-8128F129B8BB}.Release|x64.Build.0 = Release|x64
-		{88946773-CBFD-4C28-BE47-8128F129B8BB}.Release|x86.ActiveCfg = Release|Win32
-		{88946773-CBFD-4C28-BE47-8128F129B8BB}.Release|x86.Build.0 = Release|Win32
 		{B270B794-4390-43BB-BADA-0C9A1D1DA2A6}.Debug|x64.ActiveCfg = Debug|x64
 		{B270B794-4390-43BB-BADA-0C9A1D1DA2A6}.Debug|x64.Build.0 = Debug|x64
 		{B270B794-4390-43BB-BADA-0C9A1D1DA2A6}.Debug|x86.ActiveCfg = Debug|Win32
