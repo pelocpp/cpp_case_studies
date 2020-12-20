@@ -21,21 +21,15 @@
     <ClCompile Include="Coordinate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KnightProblemSolver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="KnightProblemBoard.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="KnightProblemSolver.hpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coordinate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KnightProblemSolver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KnightProblemBoard.h">
+    <ClInclude Include="KnightProblemBoard.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

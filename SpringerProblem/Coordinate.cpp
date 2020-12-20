@@ -1,8 +1,8 @@
+// =====================================================================================
+// Coordinate.cpp
+// =====================================================================================
+
 #include <iostream>
-#include <string>
-#include <vector>
-#include <array>
-#include <list>
 
 #include "Coordinate.h"
 
@@ -19,3 +19,7 @@ std::ostream& operator<< (std::ostream& os, const Coordinate& coordinate) {
     os << "(" << coordinate.m_row << "," << coordinate.m_col << ")";
     return os;
 }
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================

@@ -148,14 +148,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Coordinate.cpp" />
-    <ClCompile Include="KnightProblemBoard.cpp" />
-    <ClCompile Include="KnightProblemSolver.cpp" />
+    <ClCompile Include="KnightProblemSolver.hpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coordinate.h" />
-    <ClInclude Include="KnightProblemBoard.h" />
-    <ClInclude Include="KnightProblemSolver.h" />
+    <ClInclude Include="KnightProblemBoard.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.md" />

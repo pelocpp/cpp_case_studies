@@ -1,3 +1,7 @@
+// =====================================================================================
+// Program.cpp
+// =====================================================================================
+
 #define _CRTDBG_MAP_ALLOC
 #include <cstdlib>
 #include <crtdbg.h>
@@ -10,15 +14,22 @@
 #endif  // _DEBUG
 
 #include <iostream>
-#include <vector>
+#include <string>
 #include <array>
+#include <vector>
 #include <list>
+#include <deque>
 #include <mutex>
+#include <future>
+#include <chrono>
+#include <sstream>
+#include <memory>
 #include <algorithm>
 
 #include "Coordinate.h"
-#include "KnightProblemBoard.h"
-#include "KnightProblemSolver.h"
+#include "KnightProblemBoard.hpp"
+#include "KnightProblemSolver.hpp"
+
 
 // PeLo TODO:   Das Future sollte mit return die Anzahl der Lösungen zurückliefern !!!!
 
@@ -80,7 +91,7 @@ void test_02_springer_problem() {
     //[Value] Elapsed time in milliseconds = 149[microsecs]
     //    Found: 32
 
-    KnightProblemSolver solver(5, 4);
+    KnightProblemSolver<5, 4> solver;
     solver.findMovesSequential();
     ListSolutions solutions = solver.getSolutions();
 
@@ -101,7 +112,7 @@ void test_09_springer_problem() {
     //[Value] Elapsed time in milliseconds = 7152[microsecs]
 //Found: 304
 
-    KnightProblemSolver solver(5, 6);
+    KnightProblemSolver<4, 5> solver;
     solver.findMovesSequential();
     ListSolutions solutions = solver.getSolutions();
 
@@ -121,7 +132,7 @@ void test_09_springer_problem() {
 
 void test_10_springer_problem() {
 
-    KnightProblemSolver solver(5, 4);
+    KnightProblemSolver<5, 4> solver;
     solver.findMovesParallel();
     ListSolutions solutions = solver.getSolutions();
 
@@ -141,8 +152,8 @@ void test_10_springer_problem() {
 
 void test_20_springer_problem() {
 
-    KnightProblemSolver solver(5, 6);
-    int count = solver.findMovesParallel(4);
+    KnightProblemSolver<4, 6> solver;
+    int count = solver.findMovesParallel(2);
     ListSolutions solutions = solver.getSolutions();
 
     //int counter = 0;
@@ -160,7 +171,7 @@ void test_20_springer_problem() {
     std::cout << "Found: " << count << std::endl;
 }
 
-// =====================================================================================
+// ==== ================================================================================
 
 int main()
 {
@@ -175,4 +186,7 @@ int main()
     return 0;
 }
 
+
+// =====================================================================================
+// End-of-File
 // =====================================================================================
