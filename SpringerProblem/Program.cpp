@@ -14,9 +14,24 @@
 #include <array>
 #include <list>
 #include <mutex>
+#include <algorithm>
 
 #include "Coordinate.h"
+#include "KnightProblemBoard.h"
 #include "KnightProblemSolver.h"
+
+// PeLo TODO:   Das Future sollte mit return die Anzahl der Lösungen zurückliefern !!!!
+
+
+
+
+
+
+
+
+
+
+
 
 // =====================================================================================
 // http://peterloos.de/index.php/m-multithreading/m-multithreading-tpl/58-a-mt-knights-problem
@@ -69,14 +84,14 @@ void test_02_springer_problem() {
     solver.findMovesSequential();
     ListSolutions solutions = solver.getSolutions();
 
-    //int counter = 0;
-    //for (Solution s : solutions) {
-    //    std::cout << counter << ":" << std::endl;
+    int counter = 0;
+    for (Solution s : solutions) {
+        std::cout << counter << ":" << std::endl;
 
-    //    for (Coordinate coord : s) {
-    //        std::cout << coord << " ";
-    //    }
-    //}
+        for (Coordinate coord : s) {
+            std::cout << coord << " ";
+        }
+    }
 
     std::cout << "Found: " << solutions.size() << std::endl;
 }
@@ -86,17 +101,19 @@ void test_09_springer_problem() {
     //[Value] Elapsed time in milliseconds = 7152[microsecs]
 //Found: 304
 
-    KnightProblemSolver solver(5, 5);
+    KnightProblemSolver solver(5, 6);
     solver.findMovesSequential();
     ListSolutions solutions = solver.getSolutions();
 
     //int counter = 0;
     //for (Solution s : solutions) {
-    //    std::cout << counter << ":" << std::endl;
+    //    std::cout << counter << ": ";
 
     //    for (Coordinate coord : s) {
     //        std::cout << coord << " ";
     //    }
+    //    counter++;
+    //    std::cout << std::endl;
     //}
 
     std::cout << "Found: " << solutions.size() <<  std::endl;
@@ -104,22 +121,43 @@ void test_09_springer_problem() {
 
 void test_10_springer_problem() {
 
-
-
     KnightProblemSolver solver(5, 4);
     solver.findMovesParallel();
     ListSolutions solutions = solver.getSolutions();
 
     //int counter = 0;
     //for (Solution s : solutions) {
-    //    std::cout << counter << ":" << std::endl;
+    //    std::cout << counter << ": ";
 
     //    for (Coordinate coord : s) {
     //        std::cout << coord << " ";
     //    }
+    //    counter++;
+    //    std::cout << std::endl;
     //}
 
     std::cout << "Found: " << solutions.size() << std::endl;
+}
+
+void test_20_springer_problem() {
+
+    KnightProblemSolver solver(5, 6);
+    int count = solver.findMovesParallel(4);
+    ListSolutions solutions = solver.getSolutions();
+
+    //int counter = 0;
+    //for (Solution s : solutions) {
+    //    std::cout << counter << ": ";
+
+    //    for (Coordinate coord : s) {
+    //        std::cout << coord << " ";
+    //    }
+    //    counter++;
+    //    std::cout << std::endl;
+    //}
+
+    // std::cout << "Found: " << solutions.size() << std::endl;
+    std::cout << "Found: " << count << std::endl;
 }
 
 // =====================================================================================
@@ -128,9 +166,11 @@ int main()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    // test_01_springer_problem();
-    // test_09_springer_problem();
-    test_10_springer_problem();
+    //test_02_springer_problem();
+   //test_09_springer_problem();
+   //test_10_springer_problem();
+
+   test_20_springer_problem();
 
     return 0;
 }
