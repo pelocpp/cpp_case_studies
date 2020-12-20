@@ -30,53 +30,15 @@
 #include "KnightProblemBoard.hpp"
 #include "KnightProblemSolver.hpp"
 
-
-// PeLo TODO:   Das Future sollte mit return die Anzahl der Lösungen zurückliefern !!!!
-
-
-
-
-
-
-
-
-
-
-
-
 // =====================================================================================
 // http://peterloos.de/index.php/m-multithreading/m-multithreading-tpl/58-a-mt-knights-problem
 // =====================================================================================
 
-// TODO: Die Methoden sollte man alle klein schreiben !!!
-
-// TODO: Das mit dem GameBoard und dem int sollte man templatizieren .....
+// PeLo TODO:   Das Future sollte mit return die Anzahl der Lösungen zurückliefern !!!!
 
 // TODO: Die Lösungen als Event // mit Lambdas ausgeben ...
 
-// typedefs
-
-//class Coordinate;
-//using GameBoard = std::vector<std::vector<int>>;
-//using Solution = std::vector<Coordinate>;
-//using ListSolutions = std::list<Solution>;
-
-// =====================================================================================
-
-// TODO 1: Der Name ist blöd -- ChessField -- siehe auch Marc Gregoire
-
-// TODO 2: m_row und m_col mit getter und setter schützen !!!
-
-
-
-
-// =====================================================================================
-
-// TODO 2: Den Solver als Schablone machen: int , short und long sind mögliche Kandidaten für die Suche ....
-
 // TODO: Da werden viele Koordinaten by Value übergeben ... geht das auch per Referenz
-
-
 
 // =====================================================================================
 
@@ -110,7 +72,7 @@ void test_02_springer_problem() {
 void test_09_springer_problem() {
 
     //[Value] Elapsed time in milliseconds = 7152[microsecs]
-//Found: 304
+    //Found: 304
 
     KnightProblemSolver<4, 5> solver;
     solver.findMovesSequential();
@@ -152,8 +114,8 @@ void test_10_springer_problem() {
 
 void test_20_springer_problem() {
 
-    KnightProblemSolver<4, 6> solver;
-    int count = solver.findMovesParallel(2);
+    KnightProblemSolver<5, 5> solver;
+    int count = solver.findMovesParallel(3);
     ListSolutions solutions = solver.getSolutions();
 
     //int counter = 0;
