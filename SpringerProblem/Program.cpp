@@ -57,8 +57,8 @@
 
 // =====================================================================================
 
-constexpr int Rows = 6;
-constexpr int Cols = 5;
+constexpr int Rows = 9;
+constexpr int Cols = 4;
 
 // =====================================================================================
 
@@ -124,6 +124,17 @@ void test_05_springer_problem() {
     log(std::cout, "Found (sizeof List): ", solutions.size());
 }
 
+void test_06_springer_problem() {
+
+    log(std::cout, "Main: ", "findMovesParallel(5):");
+    KnightProblemSolver<Rows, Cols> solver;
+    int count = solver.findMovesParallel(5);
+    ListSolutions solutions = solver.getSolutions();
+
+    log(std::cout, "Found (int):         ", count);
+    log(std::cout, "Found (sizeof List): ", solutions.size());
+}
+
 // ==== ================================================================================
 
 int main()
@@ -133,12 +144,12 @@ int main()
     //test_01_springer_problem();
     //test_02_springer_problem();
     //test_03_springer_problem();
-    test_04_springer_problem();
+    //test_04_springer_problem();
     // test_05_springer_problem();
+    test_06_springer_problem();
 
     return 0;
 }
-
 
 // =====================================================================================
 // End-of-File

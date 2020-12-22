@@ -75,8 +75,6 @@ private:
     ListSolutions                     m_solutions;    // list of found solutions
     Solution                          m_current;      // solution being in construction
     int                               m_moveNumber;   // number of last knight's move
-
-    static std::mutex                 s_mutex;
 };
 
 // ================================================================================
@@ -119,7 +117,6 @@ int KnightProblemSolver<HEIGHT, WIDTH>::findMovesSequential() {
     log(std::cout, "Elapsed time = ", duration, " [msecs]");
 
      return static_cast<int> (m_solutions.size());
-    //return count;
 }
 
 template <int HEIGHT, int WIDTH>
@@ -144,8 +141,7 @@ int KnightProblemSolver<HEIGHT, WIDTH>::findMovesParallel(int maxDepth)
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
     log(std::cout, "Elapsed time = ", duration, " [msecs]");
 
-    // return static_cast<int> (m_solutions.size());
-    return count;
+    return static_cast<int> (m_solutions.size());
 }
 
 // ================================================================================
@@ -195,27 +191,6 @@ int KnightProblemSolver<HEIGHT, WIDTH>::findMovesParallel(const Coordinate& coor
 
     int result{};
 
-    //for (unsigned int i = 0; i < nextMoves.size(); i++) {
-
-    //    Coordinate nextCoord = nextMoves.at(i);
-
-    //    // make a copy of the solver including the current board
-    //    KnightProblemSolver slaveSolver = *this;
-
-    //    if (maxDepth > 0) {
-
-    //        std::future<int> future = std::async(std::launch::async, std::move(slaveSolver), nextCoord, maxDepth - 1);
-    //        futures.push_back(std::move(future));
-
-    //    }
-    //    else {
-
-
-    //        slaveSolver.findMovesSequential(nextCoord);
-    //        result += slaveSolver.countSolutions();
-    //    }
-    //}
-
     log(std::cout, "   ... next possible moves: ", nextMoves.size(), " [", this, "]");
 
     for (Coordinate move : nextMoves) {
@@ -237,20 +212,12 @@ int KnightProblemSolver<HEIGHT, WIDTH>::findMovesParallel(const Coordinate& coor
             slaveSolver.findMovesSequential(move);
             result += slaveSolver.countSolutions();
 
-            // need to copy all found solutions from other solver to the current solver
+            // need to copy all found solutions from slave solver to current solver
             ListSolutions solutions = slaveSolver.getSolutions();
             log(std::cout, "   ...   calculated solutions FROM ", move, " => ", solutions.size(), " [", &slaveSolver, "]");
 
-            //log(std::cout, "   ...       vorher  (copy): ", m_solutions.size());
-            //// std::copy(std::begin(solutions), std::end(solutions), std::back_inserter(m_solutions));
-            //m_solutions.insert(std::end(m_solutions), std::begin(solutions), std::end(solutions));
-            //log(std::cout, "   ...       nachher (copy): ", m_solutions.size());
-
-            {
-                // RAII
-               // std::scoped_lock<std::mutex> lock(s_mutex);
-                // m_solutions.insert(std::end(m_solutions), std::begin(solutions), std::end(solutions));
-                std::copy(std::begin(solutions), std::end(solutions), std::back_inserter(m_solutions));
+            if (solutions.size() != 0) {
+                m_solutions.insert(std::end(m_solutions), std::begin(solutions), std::end(solutions));
             }
         }
     }
@@ -259,54 +226,31 @@ int KnightProblemSolver<HEIGHT, WIDTH>::findMovesParallel(const Coordinate& coor
     // (just use references to access non-copyable objects)
     for (std::future<ListSolutions>& future : futures)
     {
-        ListSolutions partialResult = future.get();
-        log(std::cout, "   ...   RETRIEVED from future: List of length ", partialResult.size());
+        ListSolutions partialSolutions = future.get();
+        log(std::cout, "   ...   RETRIEVED from future: List of length ", partialSolutions.size());
 
-        // copying result into own solutions vector // PeLo TODO: Dieser Kommentar text ist schlecht !!!
-        std::copy(std::begin(partialResult), std::end(partialResult), std::back_inserter(m_solutions));
-
-        result += static_cast<int> (partialResult.size());
+        if (partialSolutions.size() != 0) {
+            m_solutions.insert(std::end(m_solutions), std::begin(partialSolutions), std::end(partialSolutions));
+            result += static_cast<int> (partialSolutions.size());
+        }
     }
-
-    //int count = static_cast<int>(futures.size());
-    //for (int i = 0; i < count; i++)
-    //{
-    //    std::future<ListSolutions> future = std::move(futures.front());
-    //    futures.pop_front();
-
-    //    ListSolutions partialResult = future.get();
-    //    log(std::cout, "   ...   RETRIEVED from future: ", partialResult.size());
-
-    //    result += static_cast<int> (partialResult.size());
-    //}
 
     unsetKnightMoveAt(coord);
     m_current.pop_back();
 
-    // std::cout << "     parallel ===>  " << result << std::endl;
-    return result;
+    return static_cast<int> (m_solutions.size());
+    // return result;
 }
 
 // =========================================================================================
 
 // functor notation - needed for std::async
-//template <int HEIGHT, int WIDTH>
-//int KnightProblemSolver<HEIGHT, WIDTH>::operator()(const Coordinate& coord, int maxDepth) {
-//
-//    log(std::cout, "   operator() ... launching par solver at ", coord, ", maxDepth = ", maxDepth);
-//
-//    int count = findMovesParallel(coord, maxDepth);
-//    return count;
-//}
-
 template <int HEIGHT, int WIDTH>
 ListSolutions KnightProblemSolver<HEIGHT, WIDTH>::operator()(const Coordinate& coord, int maxDepth) {
 
     log(std::cout, "   operator() ... launching par solver at ", coord, ", maxDepth = ", maxDepth);
 
-    // int count = findMovesParallel(coord, maxDepth);
     findMovesParallel(coord, maxDepth);
-
     log(std::cout, "   operator() ... return list with ", m_solutions.size(), " solutions !!!");
 
     return m_solutions;
@@ -396,9 +340,6 @@ std::vector<Coordinate> KnightProblemSolver<HEIGHT, WIDTH>::nextKnightMoves(cons
 
     return result;
 }
-
-template <int HEIGHT, int WIDTH>
-std::mutex KnightProblemSolver<HEIGHT, WIDTH>::s_mutex;
 
 // =====================================================================================
 // End-of-File
