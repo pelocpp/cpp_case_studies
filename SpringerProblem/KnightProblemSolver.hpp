@@ -33,10 +33,6 @@ static void log(std::ostream& os, Args ...args)
 
 // =========================================================================================
 
-
-
-
-
 using Solution = std::vector<Coordinate>;
 using ListSolutions = std::list<Solution>;
 
@@ -52,6 +48,7 @@ public:
     int getWidth() const { return WIDTH; }
 
     ListSolutions getSolutions();
+    void clearSolutions();
 
     // public interface
     int findMovesSequential();
@@ -59,7 +56,7 @@ public:
     int countSolutions();
 
     // needed for std::async
-    int operator()(const Coordinate& coord, int maxDepth);
+    ListSolutions operator()(const Coordinate& coord, int maxDepth);
 
 private:
     // internal helper methods
@@ -92,6 +89,11 @@ template <int HEIGHT, int WIDTH>
 ListSolutions KnightProblemSolver<HEIGHT, WIDTH>::getSolutions() {
     // return m_solutions;
     return { m_solutions };
+}
+
+template <int HEIGHT, int WIDTH>
+void KnightProblemSolver<HEIGHT, WIDTH>::clearSolutions() {
+    m_solutions.clear();
 }
 
 template <int HEIGHT, int WIDTH>
@@ -189,7 +191,7 @@ int KnightProblemSolver<HEIGHT, WIDTH>::findMovesParallel(const Coordinate& coor
 
     // determine list of possible next moves
     std::vector<Coordinate> nextMoves = nextKnightMoves(coord);
-    std::deque<std::future<int>> futures;
+    std::deque<std::future<ListSolutions>> futures;
 
     int result{};
 
@@ -214,14 +216,19 @@ int KnightProblemSolver<HEIGHT, WIDTH>::findMovesParallel(const Coordinate& coor
     //    }
     //}
 
+    log(std::cout, "   ... next possible moves: ", nextMoves.size(), " [", this, "]");
+
     for (Coordinate move : nextMoves) {
 
         // make a copy of the solver including the current board
         KnightProblemSolver slaveSolver = *this;
 
+        // DON'T REUSE SOLUTINS ... DAS IST SHITTY
+        slaveSolver.clearSolutions();
+
         if (maxDepth > 0) {
             // do next moves parallel or ...
-            std::future<int> future = std::async(std::launch::async, std::move(slaveSolver), move, maxDepth - 1);
+            std::future<ListSolutions> future = std::async(std::launch::async, std::move(slaveSolver), move, maxDepth - 1);
             futures.push_back(std::move(future));
         }
         else {
@@ -232,41 +239,45 @@ int KnightProblemSolver<HEIGHT, WIDTH>::findMovesParallel(const Coordinate& coor
 
             // need to copy all found solutions from other solver to the current solver
             ListSolutions solutions = slaveSolver.getSolutions();
-            log(std::cout, "   ...   calculated solutions FROM ", move, " => ", solutions.size());
+            log(std::cout, "   ...   calculated solutions FROM ", move, " => ", solutions.size(), " [", &slaveSolver, "]");
 
             //log(std::cout, "   ...       vorher  (copy): ", m_solutions.size());
             //// std::copy(std::begin(solutions), std::end(solutions), std::back_inserter(m_solutions));
             //m_solutions.insert(std::end(m_solutions), std::begin(solutions), std::end(solutions));
             //log(std::cout, "   ...       nachher (copy): ", m_solutions.size());
 
-            //{
-            //    // RAII
-            //    std::scoped_lock<std::mutex> lock(s_mutex);
-            //    m_solutions.insert(std::end(m_solutions), std::begin(solutions), std::end(solutions));
-            //}
+            {
+                // RAII
+               // std::scoped_lock<std::mutex> lock(s_mutex);
+                // m_solutions.insert(std::end(m_solutions), std::begin(solutions), std::end(solutions));
+                std::copy(std::begin(solutions), std::end(solutions), std::back_inserter(m_solutions));
+            }
         }
     }
 
     // block async tasks, if any, now and compute final result
     // (just use references to access non-copyable objects)
-    for (std::future<int>& future : futures)
+    for (std::future<ListSolutions>& future : futures)
     {
-        int partialResult = future.get();
-        log(std::cout, "   ...   RETRIEVED from future: ", partialResult);
+        ListSolutions partialResult = future.get();
+        log(std::cout, "   ...   RETRIEVED from future: List of length ", partialResult.size());
 
-        result += partialResult;
+        // copying result into own solutions vector // PeLo TODO: Dieser Kommentar text ist schlecht !!!
+        std::copy(std::begin(partialResult), std::end(partialResult), std::back_inserter(m_solutions));
+
+        result += static_cast<int> (partialResult.size());
     }
 
     //int count = static_cast<int>(futures.size());
     //for (int i = 0; i < count; i++)
     //{
-    //    std::future<int> future = std::move(futures.front());
+    //    std::future<ListSolutions> future = std::move(futures.front());
     //    futures.pop_front();
 
-    //    int partialResult = future.get();
-    //    log(std::cout, "   ...   RETRIEVED from future: ", partialResult);
+    //    ListSolutions partialResult = future.get();
+    //    log(std::cout, "   ...   RETRIEVED from future: ", partialResult.size());
 
-    //    result += partialResult;
+    //    result += static_cast<int> (partialResult.size());
     //}
 
     unsetKnightMoveAt(coord);
@@ -279,13 +290,26 @@ int KnightProblemSolver<HEIGHT, WIDTH>::findMovesParallel(const Coordinate& coor
 // =========================================================================================
 
 // functor notation - needed for std::async
+//template <int HEIGHT, int WIDTH>
+//int KnightProblemSolver<HEIGHT, WIDTH>::operator()(const Coordinate& coord, int maxDepth) {
+//
+//    log(std::cout, "   operator() ... launching par solver at ", coord, ", maxDepth = ", maxDepth);
+//
+//    int count = findMovesParallel(coord, maxDepth);
+//    return count;
+//}
+
 template <int HEIGHT, int WIDTH>
-int KnightProblemSolver<HEIGHT, WIDTH>::operator()(const Coordinate& coord, int maxDepth) {
+ListSolutions KnightProblemSolver<HEIGHT, WIDTH>::operator()(const Coordinate& coord, int maxDepth) {
 
     log(std::cout, "   operator() ... launching par solver at ", coord, ", maxDepth = ", maxDepth);
 
-    int count = findMovesParallel(coord, maxDepth);
-    return count;
+    // int count = findMovesParallel(coord, maxDepth);
+    findMovesParallel(coord, maxDepth);
+
+    log(std::cout, "   operator() ... return list with ", m_solutions.size(), " solutions !!!");
+
+    return m_solutions;
 }
 
 // =========================================================================================

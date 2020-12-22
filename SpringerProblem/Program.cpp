@@ -57,8 +57,8 @@
 
 // =====================================================================================
 
-constexpr int Rows = 5;
-constexpr int Cols = 4;
+constexpr int Rows = 6;
+constexpr int Cols = 5;
 
 // =====================================================================================
 
@@ -131,9 +131,9 @@ int main()
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
     //test_01_springer_problem();
-    test_02_springer_problem();
+    //test_02_springer_problem();
     //test_03_springer_problem();
-    //test_04_springer_problem();
+    test_04_springer_problem();
     // test_05_springer_problem();
 
     return 0;
