@@ -1,5 +1,5 @@
 // =====================================================================================
-// KnightProblemBoard.cpp
+// KnightProblemBoard.h
 // =====================================================================================
 
 #pragma once
@@ -8,8 +8,6 @@
 #include <string>
 #include <array>
 #include <algorithm>
-
-constexpr bool DoRangeCheck = true;
 
 template <int ROWS, int COLS>
 class KnightProblemBoard
@@ -49,11 +47,10 @@ public:
         std::for_each(m_board.begin(), m_board.end(), [](Row& row) {
             std::for_each(row.begin(), row.end(), [](auto& element) {
                 element = 0;
+                });
             });
-        });
     }
 };
-
 
 // =====================================================================================
 // End-of-File
