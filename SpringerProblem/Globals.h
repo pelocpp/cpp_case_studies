@@ -4,10 +4,10 @@
 
 #pragma once
 
-constexpr bool DoRangeCheck = true;
+constexpr bool DoRangeCheck = false;
 
-constexpr int  Rows = 5;
-constexpr int  Cols = 4;
+constexpr int  Rows = 6;
+constexpr int  Cols = 5;
 
 // =====================================================================================
 // End-of-File

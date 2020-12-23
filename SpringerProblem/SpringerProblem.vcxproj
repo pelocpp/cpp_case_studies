@@ -148,13 +148,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Coordinate.cpp" />
+    <ClCompile Include="Examples.cpp" />
+    <ClCompile Include="ExamplesEx.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coordinate.h" />
+    <ClInclude Include="CoordinateEx.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="KnightProblemBoard.h" />
+    <ClInclude Include="KnightProblemBoardEx.h" />
     <ClInclude Include="KnightProblemSolver.h" />
+    <ClInclude Include="KnightProblemSolverEx.h" />
     <ClInclude Include="Log.h" />
   </ItemGroup>
   <ItemGroup>

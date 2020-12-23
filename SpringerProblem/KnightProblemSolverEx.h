@@ -1,5 +1,5 @@
 // =====================================================================================
-// KnightProblemSolver.h
+// KnightProblemSolverEx.h
 // =====================================================================================
 
 #pragma once
@@ -32,7 +32,7 @@ std::ostream& operator<< (std::ostream& os, const ListSolutions& solutions) {
 // defining 'KnightProblemSolver' template using 'inclusion model'
 
 template <int HEIGHT, int WIDTH>
-class KnightProblemSolver 
+class KnightProblemSolver
 {
 private:
     KnightProblemBoard<HEIGHT, WIDTH> m_board;        // chess board
@@ -158,7 +158,7 @@ private:
 
         return static_cast<int> (m_solutions.size());
     }
-    
+
     // private helper - algorithm to solve the Knight's Tour problem in parallel
     int findMovesParallel(const Coordinate& coord, int maxDepth) {
 
@@ -238,35 +238,35 @@ private:
     std::vector<Coordinate> nextKnightMoves(const Coordinate& coord) {
         std::vector<Coordinate> result;
 
-        if (Coordinate tmp{ coord.fromOffset(2, 1) }; canMoveTo(tmp))
+        if (Coordinate tmp{ fromOffset(coord, 2, 1) }; canMoveTo(tmp))
         {
             result.push_back(tmp);
         }
-        if (Coordinate tmp{ coord.fromOffset(1, 2) }; canMoveTo(tmp))
+        if (Coordinate tmp{ fromOffset(coord, 1, 2) }; canMoveTo(tmp))
         {
             result.push_back(tmp);
         }
-        if (Coordinate tmp{ coord.fromOffset(-2, 1) }; canMoveTo(tmp))
+        if (Coordinate tmp{ fromOffset(coord, -2, 1) }; canMoveTo(tmp))
         {
             result.push_back(tmp);
         }
-        if (Coordinate tmp{ coord.fromOffset(-1, 2) }; canMoveTo(tmp))
+        if (Coordinate tmp{ fromOffset(coord, -1, 2) }; canMoveTo(tmp))
         {
             result.push_back(tmp);
         }
-        if (Coordinate tmp{ coord.fromOffset(2, -1) }; canMoveTo(tmp))
+        if (Coordinate tmp{ fromOffset(coord, 2, -1) }; canMoveTo(tmp))
         {
             result.push_back(tmp);
         }
-        if (Coordinate tmp{ coord.fromOffset(1, -2) }; canMoveTo(tmp))
+        if (Coordinate tmp{ fromOffset(coord, 1, -2) }; canMoveTo(tmp))
         {
             result.push_back(tmp);
         }
-        if (Coordinate tmp{ coord.fromOffset(-2, -1) }; canMoveTo(tmp))
+        if (Coordinate tmp{ fromOffset(coord, -2, -1) }; canMoveTo(tmp))
         {
             result.push_back(tmp);
         }
-        if (Coordinate tmp{ coord.fromOffset(-1, -2) }; canMoveTo(tmp))
+        if (Coordinate tmp{ fromOffset(coord, -1, -2) }; canMoveTo(tmp))
         {
             result.push_back(tmp);
         }
@@ -277,8 +277,8 @@ private:
     // checks, whether coordinate does exist on the chess board
     bool inRange(const Coordinate& coord) {
         return
-            (coord.getRow() >= 0) && (coord.getRow() < HEIGHT) && 
-            (coord.getCol() >= 0) && (coord.getCol() < WIDTH);
+            (getRow(coord) >= 0) && (getRow(coord) < HEIGHT) &&
+            (getCol(coord) >= 0) && (getCol(coord) < WIDTH);
     }
 
     // checks, whether coordinate is valid and is still not taken

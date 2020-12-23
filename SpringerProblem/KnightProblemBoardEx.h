@@ -1,5 +1,5 @@
 // =====================================================================================
-// KnightProblemBoard.h
+// KnightProblemBoardEx.h
 // =====================================================================================
 
 #pragma once
@@ -24,7 +24,7 @@ private:
     void verifyCoordinate(const Coordinate& coord) const {
 
         if constexpr (DoRangeCheck) {
-            if (coord.getRow() >= ROWS || coord.getCol() >= COLS) {
+            if (getRow(coord) >= ROWS || getCol(coord) >= COLS) {
                 throw std::range_error("verifyCoordinate failed !!! ");
             }
         }
@@ -33,12 +33,12 @@ private:
 public:
     int& at(const Coordinate& coord) {
         verifyCoordinate(coord);
-        return m_board[coord.getRow()][coord.getCol()];
+        return m_board[getRow(coord)][getCol(coord)];
     }
 
     const int& at(const Coordinate& coord) const {
         verifyCoordinate(coord);
-        return m_board[coord.getRow()][coord.getCol()];
+        return m_board[getRow(coord)][getCol(coord)];
     }
 
     void clearBoard() {
