@@ -4,10 +4,18 @@
 
 #pragma once
 
+// =====================================================================================
+// defining common constants
+
 constexpr bool DoRangeCheck = false;
 
-constexpr int  Rows = 6;
-constexpr int  Cols = 5;
+constexpr int  Rows = 4;
+constexpr int  Cols = 3;
+
+// =====================================================================================
+// defining common types
+
+using Scalar = int;
 
 // =====================================================================================
 // End-of-File

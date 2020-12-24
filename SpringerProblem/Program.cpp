@@ -24,15 +24,12 @@
 // =====================================================================================
 
 void test_examples();
-void test_examples_ex();
 
 int main()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
     test_examples();
-    test_examples_ex();
-
     return 0;
 }
 

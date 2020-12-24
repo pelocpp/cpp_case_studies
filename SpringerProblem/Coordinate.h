@@ -5,32 +5,33 @@
 #pragma once
 
 #include <iostream>
-
+template <typename T>
 class Coordinate {
 
-    friend std::ostream& operator<< (std::ostream&, const Coordinate&);
-
 public:
-    Coordinate();
-    Coordinate(int, int);
-    Coordinate(const Coordinate&) = default;  //TODO: ?????????
-
-    // move semantics
-    //Coordinate(Coordinate&&) = default; //TODO: ?????????
-    //Coordinate& operator= (Coordinate&&) = default; //TODO: ?????????
+    Coordinate() : Coordinate(T{}, T{}) {};
+    Coordinate(T row, T col) : m_row{ row }, m_col{ col } {}
 
 public:
     // getter/setter
-    inline int getRow() const { return m_row; }
-    inline int getCol() const { return m_col; }
+    inline T getRow() const noexcept { return m_row; }
+    inline T getCol() const noexcept { return m_col; }
 
     // public interface
-    Coordinate fromOffset(int rowOfs, int colOfs) const;
+    Coordinate<T> fromOffset(T rowOfs, T colOfs) const noexcept {
+        return { m_row + rowOfs, m_col + colOfs };
+    }
 
 private:
-    int m_row;
-    int m_col;
+    T m_row;
+    T m_col;
 };
+
+template <typename T>
+inline std::ostream& operator<< (std::ostream& os, const Coordinate<T>& coordinate) {
+    os << "(" << coordinate.getRow() << "," << coordinate.getCol() << ")";
+    return os;
+}
 
 // =====================================================================================
 // End-of-File

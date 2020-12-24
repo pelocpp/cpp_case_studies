@@ -7,7 +7,7 @@
 // =====================================================================================
 // defining board of knight problem
 
-template <int ROWS, int COLS>
+template <typename T, int ROWS, int COLS>
 class KnightProblemBoard
 {
     using Row = std::array<int, COLS>;
@@ -21,7 +21,7 @@ private:
     std::array<Row, ROWS> m_board;
 
 private:
-    void verifyCoordinate(const Coordinate& coord) const {
+    void verifyCoordinate(const Coordinate<T>& coord) const {
 
         if constexpr (DoRangeCheck) {
             if (coord.getRow() >= ROWS || coord.getCol() >= COLS) {
@@ -31,12 +31,12 @@ private:
     }
 
 public:
-    int& at(const Coordinate& coord) {
+    int& at(const Coordinate<T>& coord) {
         verifyCoordinate(coord);
         return m_board[coord.getRow()][coord.getCol()];
     }
 
-    const int& at(const Coordinate& coord) const {
+    const int& at(const Coordinate<T>& coord) const {
         verifyCoordinate(coord);
         return m_board[coord.getRow()][coord.getCol()];
     }
