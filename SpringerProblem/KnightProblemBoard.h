@@ -23,7 +23,7 @@ private:
 private:
     void verifyCoordinate(const Coordinate<T>& coord) const {
 
-        if constexpr (DoRangeCheck) {
+        if constexpr (RangeCheck) {
             if (coord.getRow() >= ROWS || coord.getCol() >= COLS) {
                 throw std::range_error("verifyCoordinate failed !!! ");
             }

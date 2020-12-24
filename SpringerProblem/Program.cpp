@@ -13,14 +13,8 @@
 #endif
 #endif  // _DEBUG
 
-
 // =====================================================================================
 // http://peterloos.de/index.php/m-multithreading/m-multithreading-tpl/58-a-mt-knights-problem
-// =====================================================================================
-
-// TODO: Die Lösungen als Event // mit Lambdas ausgeben ...
-// TODO: Da werden viele Koordinaten by Value übergeben ... geht das auch per Referenz
-
 // =====================================================================================
 
 void test_examples();
@@ -28,7 +22,6 @@ void test_examples();
 int main()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
     test_examples();
     return 0;
 }

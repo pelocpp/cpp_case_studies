@@ -1,5 +1,5 @@
 // =====================================================================================
-// Gloabls.h
+// Common.h
 // =====================================================================================
 
 #pragma once
@@ -7,7 +7,9 @@
 // =====================================================================================
 // defining common constants
 
-constexpr bool DoRangeCheck = false;
+constexpr bool Verbose = true;
+
+constexpr bool RangeCheck = false;
 
 constexpr int  Rows = 4;
 constexpr int  Cols = 3;

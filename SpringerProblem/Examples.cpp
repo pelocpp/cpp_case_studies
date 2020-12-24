@@ -1,17 +1,6 @@
 // =====================================================================================
-// Program.cpp
+// Examples.cpp
 // =====================================================================================
-
-#define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
-#include <crtdbg.h>
-
-#ifdef _DEBUG
-#ifndef DBG_NEW
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#define new DBG_NEW
-#endif
-#endif  // _DEBUG
 
 #include <iostream>
 #include <iomanip>
@@ -26,7 +15,7 @@
 #include <algorithm>
 #include <assert.h>
 
-#include "Globals.h"
+#include "Common.h"
 #include "Log.h"
 #include "Coordinate.h"
 #include "KnightProblemBoard.h"
@@ -49,7 +38,7 @@ namespace SpringerProblem {
 
     void test_01_springer_problem() {
 
-        log(std::cout, "Main: ", "findMovesSequential():");
+        std::cout << "Main: findMovesSequential():" << std::endl;
         KnightProblemSolver<Scalar, Rows, Cols> solver;
         int count = solver.findMovesSequential();
         ListSolutions solutions = solver.getSolutions();
@@ -61,7 +50,7 @@ namespace SpringerProblem {
 
     void test_02_springer_problem() {
 
-        log(std::cout, "Main: ", "findMovesParallel():");
+        std::cout << "Main: findMovesParallel():" << std::endl;
         KnightProblemSolver<Scalar, Rows, Cols> solver;
         int count = solver.findMovesParallel();
         ListSolutions solutions = solver.getSolutions();
@@ -73,7 +62,7 @@ namespace SpringerProblem {
 
     void test_03_springer_problem() {
 
-        log(std::cout, "Main: ", "findMovesParallel(0):");
+        std::cout << "Main: findMovesParallel(0):" << std::endl;
         KnightProblemSolver<Scalar, Rows, Cols> solver;
         int count = solver.findMovesParallel(0);
         ListSolutions solutions = solver.getSolutions();
@@ -85,7 +74,7 @@ namespace SpringerProblem {
 
     void test_04_springer_problem() {
 
-        log(std::cout, "Main: ", "findMovesParallel(2):");
+        std::cout << "Main: findMovesParallel(2):" << std::endl;
         KnightProblemSolver<Scalar, Rows, Cols> solver;
         int count = solver.findMovesParallel(2);
         ListSolutions solutions = solver.getSolutions();
@@ -97,7 +86,7 @@ namespace SpringerProblem {
 
     void test_05_springer_problem() {
 
-        log(std::cout, "Main: ", "findMovesParallel(3):");
+        std::cout << "Main: findMovesParallel(3):" << std::endl;
         KnightProblemSolver<Scalar, Rows, Cols> solver;
         int count = solver.findMovesParallel(3);
         ListSolutions solutions = solver.getSolutions();
@@ -109,7 +98,7 @@ namespace SpringerProblem {
 
     void test_06_springer_problem() {
 
-        log(std::cout, "Main: ", "findMovesParallel(5):");
+        std::cout << "Main: findMovesParallel(5):" << std::endl;
         KnightProblemSolver<Scalar, Rows, Cols> solver;
         int count = solver.findMovesParallel(5);
         ListSolutions solutions = solver.getSolutions();
