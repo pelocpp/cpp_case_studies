@@ -77,13 +77,13 @@ public:
 
         // start at lower left corner            
         Coordinate<T> start{ HEIGHT - T{ 1 }, T{} };
-        log(Verbose, std::cout, "   ... starting seq solver at ", start);
+        Logger<Verbose>::log(std::cout, "   ... starting seq solver at ", start);
         int count = findMovesSequential(start);
 
         // stopwatch
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-        log(Verbose, std::cout, "Elapsed time = ", duration, " [msecs]");
+        Logger<Verbose>::log(std::cout, "Elapsed time = ", duration, " [msecs]");
 
         assert(count == m_solutions.size());
         return static_cast<int> (m_solutions.size());
@@ -103,13 +103,13 @@ public:
 
         // start at lower left corner            
         Coordinate<T> start{ HEIGHT - T{ 1 }, T{} };
-        log(Verbose, std::cout, "   ... starting par solver at ", start);
+        Logger<Verbose>::log(std::cout, "   ... starting par solver at ", start);
         int count = findMovesParallel(start, maxDepth);
 
         // stopwatch
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-        log(Verbose, std::cout, "Elapsed time = ", duration, " [msecs]");
+        Logger<Verbose>::log(std::cout, "Elapsed time = ", duration, " [msecs]");
 
         assert(count == m_solutions.size());
         return static_cast<int> (m_solutions.size());
@@ -122,10 +122,10 @@ public:
     // functor notation needed for std::async
     ListSolutions operator()(const Coordinate<T> coord, int maxDepth) {
 
-        log(Verbose, std::cout, "   operator() ... launching parallel solver at ", coord, ", maxDepth = ", maxDepth);
+        Logger<Verbose>::log(std::cout, "   operator() ... launching parallel solver at ", coord, ", maxDepth = ", maxDepth);
 
         int count = findMovesParallel(coord, maxDepth);
-        log(Verbose, std::cout, "   operator() ... return list with ", m_solutions.size(), " solutions !!!");
+        Logger<Verbose>::log(std::cout, "   operator() ... return list with ", m_solutions.size(), " solutions !!!");
 
         assert(count == m_solutions.size());
         return m_solutions;
@@ -174,7 +174,7 @@ private:
 
         int count{};
 
-        log(Verbose, std::cout, "   ... next possible moves: ", nextMoves.size());
+        Logger<Verbose>::log(std::cout, "   ... next possible moves: ", nextMoves.size());
 
         for (const Coordinate<T>& move : nextMoves) {
 
@@ -188,13 +188,13 @@ private:
             }
             else {
                 // ... do next moves sequential
-                log(Verbose, std::cout, "   ... launching sequential solver at ", move);
+                Logger<Verbose>::log(std::cout, "   ... launching sequential solver at ", move);
                 slaveSolver.findMovesSequential(move);
                 count += slaveSolver.countSolutions();
 
                 // need to copy all found solutions from slave solver to current solver
                 ListSolutions solutions = slaveSolver.getSolutions();
-                log(Verbose, std::cout, "   ...  calculated solutions from ", move, " => ", solutions.size());
+                Logger<Verbose>::log(std::cout, "   ...  calculated solutions from ", move, " => ", solutions.size());
 
                 if (solutions.size() != 0) {
                     m_solutions.insert(std::end(m_solutions), std::begin(solutions), std::end(solutions));
@@ -207,7 +207,7 @@ private:
         for (std::future<ListSolutions>& future : futures) {
 
             ListSolutions partialSolutions = future.get();
-            log(Verbose, std::cout, "   ... retrieved from future: List of length ", partialSolutions.size());
+            Logger<Verbose>::log(std::cout, "   ... retrieved from future: List of length ", partialSolutions.size());
 
             if (partialSolutions.size() != 0) {
                 m_solutions.insert(std::end(m_solutions), std::begin(partialSolutions), std::end(partialSolutions));

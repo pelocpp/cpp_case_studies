@@ -155,7 +155,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="KnightProblemBoard.h" />
     <ClInclude Include="KnightProblemSolver.h" />
-    <ClInclude Include="Log.h" />
+    <ClInclude Include="Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.md" />

@@ -16,7 +16,7 @@
 #include <assert.h>
 
 #include "Common.h"
-#include "Log.h"
+#include "Logger.h"
 #include "Coordinate.h"
 #include "KnightProblemBoard.h"
 #include "KnightProblemSolver.h"
