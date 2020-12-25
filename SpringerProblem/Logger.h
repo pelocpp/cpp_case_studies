@@ -24,6 +24,13 @@ public:
         (ss << ... << args) << std::endl;
         os << ss.str();
     }
+
+    static inline void logTID(std::ostream& os) {
+        std::stringstream ss;
+        std::thread::id currentThreadId = std::this_thread::get_id();
+        ss << "[" << std::setw(5) << std::right << currentThreadId << "]: " << std::endl;
+        os << ss.str();
+    }
 };
 
 template<>
@@ -32,6 +39,7 @@ class Logger<false>
 public:
     template<typename ... Args>
     static inline void log(std::ostream& os, Args ... args) {}
+    static inline void logTID(std::ostream& os) {}
 };
 
 // =====================================================================================

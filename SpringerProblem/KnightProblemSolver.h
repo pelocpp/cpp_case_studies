@@ -77,7 +77,7 @@ public:
 
         // start at lower left corner            
         Coordinate<T> start{ HEIGHT - T{ 1 }, T{} };
-        Logger<Verbose>::log(std::cout, "   ... starting seq solver at ", start);
+        Logger<VerboseSolver>::log(std::cout, "   ... Starting sequential solver at ", start);
         int count = findMovesSequential(start);
 
         // stopwatch
@@ -103,7 +103,7 @@ public:
 
         // start at lower left corner            
         Coordinate<T> start{ HEIGHT - T{ 1 }, T{} };
-        Logger<Verbose>::log(std::cout, "   ... starting par solver at ", start);
+        Logger<VerboseSolver>::log(std::cout, "   ... Starting parallel solver at ", start);
         int count = findMovesParallel(start, maxDepth);
 
         // stopwatch
@@ -122,10 +122,11 @@ public:
     // functor notation needed for std::async
     ListSolutions operator()(const Coordinate<T> coord, int maxDepth) {
 
-        Logger<Verbose>::log(std::cout, "   operator() ... launching parallel solver at ", coord, ", maxDepth = ", maxDepth);
+        Logger<VerboseSolver>::log(std::cout, "   ### Launching parallel solver at ", coord, ", maxDepth = ", maxDepth);
+        Logger<Verbose>::logTID(std::cout);
 
         int count = findMovesParallel(coord, maxDepth);
-        Logger<Verbose>::log(std::cout, "   operator() ... return list with ", m_solutions.size(), " solutions !!!");
+        Logger<VerboseSolver>::log(std::cout, "   ### calculated  ", m_solutions.size(), " solutions !!!");
 
         assert(count == m_solutions.size());
         return m_solutions;
@@ -137,16 +138,15 @@ private:
 
     // private helper - algorithm to solve the Knight's Tour problem sequentially
     int findMovesSequential(const Coordinate<T> coord) {
+
         setKnightMoveAt(coord);
         m_current.push_back(coord);
 
         if (isSolution()) {
-
             // add found solution to the list of all solutions
             m_solutions.push_back(m_current);
         }
         else {
-
             // determine list of possible next moves
             std::vector<Coordinate<T>> nextMoves = nextKnightMoves(coord);
 
@@ -173,9 +173,6 @@ private:
         std::deque<std::future<ListSolutions>> futures;
 
         int count{};
-
-        Logger<Verbose>::log(std::cout, "   ... next possible moves: ", nextMoves.size());
-
         for (const Coordinate<T>& move : nextMoves) {
 
             KnightProblemSolver slaveSolver = *this;  // make a copy of the solver including the current board
@@ -188,13 +185,13 @@ private:
             }
             else {
                 // ... do next moves sequential
-                Logger<Verbose>::log(std::cout, "   ... launching sequential solver at ", move);
+                Logger<VerboseSolver>::log(std::cout, "   ... Launching sequential solver at ", move);
                 slaveSolver.findMovesSequential(move);
                 count += slaveSolver.countSolutions();
 
                 // need to copy all found solutions from slave solver to current solver
                 ListSolutions solutions = slaveSolver.getSolutions();
-                Logger<Verbose>::log(std::cout, "   ...  calculated solutions from ", move, " => ", solutions.size());
+                Logger<VerboseSolver>::log(std::cout, "   ... Calculated solutions from ", move, " => ", solutions.size());
 
                 if (solutions.size() != 0) {
                     m_solutions.insert(std::end(m_solutions), std::begin(solutions), std::end(solutions));
@@ -202,12 +199,12 @@ private:
             }
         }
 
-        // block async tasks, if any, now and compute final result
-        // (just use references to access non-copyable objects)
+        // block async tasks, if any, and compute final result
+        // (just use 'std::future' references to access non-copyable objects)
         for (std::future<ListSolutions>& future : futures) {
 
             ListSolutions partialSolutions = future.get();
-            Logger<Verbose>::log(std::cout, "   ... retrieved from future: List of length ", partialSolutions.size());
+            Logger<VerboseSolver>::log(std::cout, "   ... retrieved from Future: ", partialSolutions.size(), " solutions");
 
             if (partialSolutions.size() != 0) {
                 m_solutions.insert(std::end(m_solutions), std::begin(partialSolutions), std::end(partialSolutions));

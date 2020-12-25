@@ -7,12 +7,12 @@
 // =====================================================================================
 // defining common constants
 
-constexpr bool Verbose = false;
+constexpr int  Rows = 5;
+constexpr int  Cols = 5;
 
+constexpr bool Verbose = true;
+constexpr bool VerboseSolver = false;
 constexpr bool RangeCheck = false;
-
-constexpr int  Rows = 4;
-constexpr int  Cols = 3;
 
 // =====================================================================================
 // defining common types

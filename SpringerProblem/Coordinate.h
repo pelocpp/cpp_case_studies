@@ -19,7 +19,7 @@ public:
 
     // public interface
     Coordinate<T> fromOffset(T rowOfs, T colOfs) const noexcept {
-        return { m_row + rowOfs, m_col + colOfs };
+        return { static_cast<T>(m_row + rowOfs), static_cast<T>(m_col + colOfs) };
     }
 
 private:

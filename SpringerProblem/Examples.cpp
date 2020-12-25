@@ -45,7 +45,7 @@ namespace SpringerProblem {
         std::stringstream ss;
         ss << solutions;
         std::cout << ss.str();
-        std::cout << "Found : " << count << std::endl;
+        std::cout << "Found :  " << count << std::endl;
     }
 
     void test_02_springer_problem() {
@@ -57,7 +57,7 @@ namespace SpringerProblem {
         std::stringstream ss;
         ss << solutions;
         std::cout << ss.str();
-        std::cout << "Found : " << count << std::endl;
+        std::cout << "Found :  " << count << std::endl;
     }
 
     void test_03_springer_problem() {
@@ -69,7 +69,7 @@ namespace SpringerProblem {
         std::stringstream ss;
         ss << solutions;
         std::cout << ss.str();
-        std::cout << "Found : " << count << std::endl;
+        std::cout << "Found :  " << count << std::endl;
     }
 
     void test_04_springer_problem() {
@@ -78,10 +78,10 @@ namespace SpringerProblem {
         KnightProblemSolver<Scalar, Rows, Cols> solver;
         int count = solver.findMovesParallel(2);
         ListSolutions solutions = solver.getSolutions();
-        std::stringstream ss;
-        ss << solutions;
-        std::cout << ss.str();
-        std::cout << "Found : " << count << std::endl;
+        //std::stringstream ss;
+        //ss << solutions;
+        //std::cout << ss.str();
+        std::cout << "Found :  " << count << std::endl;
     }
 
     void test_05_springer_problem() {
@@ -93,7 +93,7 @@ namespace SpringerProblem {
         std::stringstream ss;
         ss << solutions;
         std::cout << ss.str();
-        std::cout << "Found : " << count << std::endl;
+        std::cout << "Found :  " << count << std::endl;
     }
 
     void test_06_springer_problem() {
@@ -105,7 +105,7 @@ namespace SpringerProblem {
         std::stringstream ss;
         ss << solutions;
         std::cout << ss.str();
-        std::cout << "Found : " << count << std::endl;
+        std::cout << "Found :  " << count << std::endl;
     }
 }
 
@@ -113,10 +113,10 @@ void test_examples () {
 
     using namespace SpringerProblem;
 
-    test_01_springer_problem();
-    test_02_springer_problem();
-    test_03_springer_problem();
-    //test_04_springer_problem();
+    //test_01_springer_problem();
+    //test_02_springer_problem();
+    //test_03_springer_problem();
+    test_04_springer_problem();
     // test_05_springer_problem();
     // test_06_springer_problem();
 }
