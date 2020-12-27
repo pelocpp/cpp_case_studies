@@ -29,12 +29,10 @@ Wir erläutern eine Lösungsstrategie für das Springerproblem am Beispiel eines
 [caption="Abbildung {counter:figure}: ", title="Ausgangssituation „1“: Springer wird im linken unteren Feld platziert."]
 image::knight_moves_001.png[width=200]
 
-
 Anhand der Ausgangsposition des Springers bestimmen wir nun eine Liste seiner möglichen Züge, die er von der aktuellen Position aus bestreiten kann. Sitzt der Springer auf dem Feld (2,0), so hat er in diesem Fall die Wahl zwischen zwei Zielfeldern (0,1) und (1,2), um weiter voran zu schreiten. Sie finden diese Felder in Abbildung 5 grau hinterlegt vor. Wir entscheiden uns für das erste Feld aus der Liste, auf dem Schachbrett nehmen wir durch die „2“ eine entsprechende Nummerierung vor:
 
 [caption="Abbildung {counter:figure}: ", title="Spielsituation „2“: Springer zieht von Feld (2,0) nach Feld (0,1)."]
 image::knight_moves_002.png[width=450]
-
 
 Von der aktuellen Springerposition ausgehend bestimmen wir wieder alle möglichen Felder, auf die der Springer nun springen kann. Es ist wieder eine Liste mit zufälligerweise zwei Positionen, dieses Mal sind es die Felder (1,3) und (2,2), siehe Abbildung 6. Wir wählen wieder das erste Element aus der Liste aus und setzen die Figur auf das Feld (1,3):
 
@@ -46,7 +44,6 @@ Es wurden bei weitem noch nicht alle Felder des Schachbretts besucht. Von der Sp
 
 [caption="Abbildung {counter:figure}: ", title="Spielsituation „3“: Springer zieht von Feld (0,1) nach Feld (1,3)."]
 image::knight_moves_004.png[width=450]
-
 
 Und noch einmal gilt es diese Runde zu drehen. Dieses Mal können wir zwei Felder (0,0) und (0,2) als mögliche nächste Kandidaten ausmachen. Wir entscheiden uns in Abbildung 8 für das Feld (0,0):
 
@@ -79,7 +76,7 @@ image::knight_moves_solution_tree.png[width=600]
 
 In der programmiersprachlichen Umsetzung müssen wir den Lösungsbaum nicht explizit erzeugen. Backtracking-Verfahren lassen sich typischerweise am einfachsten rekursiv beschreiben, die Möglichkeit eines rekursiven Methodenaufrufs nimmt einem diese Arbeit quasi ab, oder noch verwirrender: Der Lösungsbaum wird auf dem Methodenaufrufstapel implizit, quasi versteckt aufgespannt.
 
-In unserem konkreten Beispiel lässt sich nun zusammenfassend das Lösungsverfahren durch die in Abbildung 13 skizzierte, rekursive Methode FindMoves darstellen:
+In unserem konkreten Beispiel lässt sich nun zusammenfassend das Lösungsverfahren durch die in Abbildung 13 skizzierte, rekursive Methode `FindMoves` darstellen:
 
 [caption="Abbildung {counter:figure}: ", title="Grobskizze einer rekursiven Methode FindMoves zur Bestimmung aller Zugfolgen."]
 image::KnightsProblem_PseudoCode_01.png[width=450]
