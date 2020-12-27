@@ -30,12 +30,6 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CellColor.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CellState.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="TetrisBoard.cpp">
       <Filter>Source Files\Board</Filter>
     </ClCompile>
@@ -150,6 +144,12 @@
       <Filter>Source Files\Tetromino</Filter>
     </ClInclude>
     <ClInclude Include="TetrisState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CellColor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CellState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
