@@ -1,31 +1,32 @@
 #include <iostream>
-using namespace std;
+#include <string>
+#include <vector>
 
 #include "Permutation.h"
 #include "PermutationArray.h"
 #include "PermutationCalculator.h"
 
 // c'tor
-PermutationCalculator::PermutationCalculator() : m_array(0), m_perm()
+PermutationCalculator::PermutationCalculator() : m_p{}
 {
-    m_index = -1;
+    // m_index = -1;
 }
 
 // getter/setter
 void PermutationCalculator::SetPermutation(const Permutation& p)
 {
-    m_perm = p;
+    m_p = p;
 }
 
 Permutation PermutationCalculator::GetPermutation()
 {
-    return m_perm;
+    return m_p;
 }
 
 // public interface
 void PermutationCalculator::Calculate()
 {
-    m_array = Calculate(m_perm);
+    m_array = Calculate(m_p);
 }
 
 PermutationArray PermutationCalculator::Calculate(const Permutation& p)
@@ -38,8 +39,10 @@ PermutationArray PermutationCalculator::Calculate(const Permutation& p)
     }
     else
     {
+        int d1 = Faculty(p.Grade());
         PermutationArray result(Faculty(p.Grade()));
 
+        int d2 = p.Grade();
         for (int i = 0; i < p.Grade(); i++)
         {
             // create permutation without i.-th element of current permutation
@@ -52,7 +55,7 @@ PermutationArray PermutationCalculator::Calculate(const Permutation& p)
             tmp.InsertAll(p[i]);
 
             // append calculated permutations
-            for (int m = 0; m < tmp.Size(); m++)
+            for (int m = 0; m < tmp.count(); m++)
                 result.Insert(tmp[m]);
         }
 
@@ -61,29 +64,29 @@ PermutationArray PermutationCalculator::Calculate(const Permutation& p)
 }
 
 // enumerator interface
-void PermutationCalculator::Reset()
-{
-    m_index = -1;
-}
-
-bool PermutationCalculator::MoveNext()
-{
-    m_index++;
-    if (m_index < m_array.Size())
-    {
-        return true;
-    }
-    else
-    {
-        Reset();
-        return false;
-    }
-}
-
-Permutation PermutationCalculator::Current()
-{
-    return m_array[m_index];
-}
+//void PermutationCalculator::Reset()
+//{
+//    m_index = -1;
+//}
+//
+//bool PermutationCalculator::MoveNext()
+//{
+//    m_index++;
+//    if (m_index < m_array.Size())
+//    {
+//        return true;
+//    }
+//    else
+//    {
+//        Reset();
+//        return false;
+//    }
+//}
+//
+//Permutation PermutationCalculator::Current()
+//{
+//    return m_array[m_index];
+//}
 
 int PermutationCalculator::Faculty(int n) const
 {

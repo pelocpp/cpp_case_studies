@@ -1,5 +1,23 @@
 #include <iostream>
-using namespace std;
+#include <string>
+#include <vector>
+
+// TODO: Permutation sollte eine Schablone sein 
+// mit elementaren Datentypen .... is_integral_type oder ´so ähnlich ....
+
+// TODO: Permutation: std::deque ist besser 
+
+// TODO: std  initializer list ... zur Initialisierung einer Permutation ....
+
+// TODO: Lässt sich da  ein emplace_back anwenden !?!?! bei den Kontruktoren der Permutationen bei dem internen Vektor 
+
+// TODO: Umbenennen in count:     int Size() const { return static_cast<int>(m_array.size()); }
+
+// TODO: noexcept
+
+// TODO: inline
+
+// TODO: Methoden in klein umbenennen
 
 #include "Permutation.h"
 #include "PermutationArray.h"
@@ -10,77 +28,78 @@ void Test02_PermutationArray();
 void Test03_PermutationCalculator();
 void Test04_PermutationEnumeration();
 
-void main()
-{
-    Test01_Permutation();
-    Test02_PermutationArray();
-    Test03_PermutationCalculator();
-    Test04_PermutationEnumeration();
-
-    getchar();
-}
-
 void Test01_Permutation()
 {
-    cout << "Testing c'tor: " << endl;
-    Permutation p1("ABC", 3);
-    cout << p1 << endl;
+    std::cout << "Testing c'tor: " << std::endl;
+    Permutation p1("ABC");
+    std::cout << p1 << std::endl;
 
-    cout << "Testing Insert: " << endl;
+    std::cout << "Testing Insert: " << std::endl;
     p1.Insert('Z');
-    cout << p1 << endl;
+    std::cout << p1 << std::endl;
 
-    Permutation p2("12345", 5);
-    cout << p2 << " [Number of Elements: " << p2.Grade() << ']' << endl;
+    Permutation p2("12345");
+    std::cout << p2 << " [Number of Elements: " << p2.Grade() << ']' << std::endl;
 
-    cout << "Testing []-Operator: " << endl;
+    std::cout << "Testing []-Operator: " << std::endl;
     for (int i = 0; i < p2.Grade(); i++)
     {
         char c = p2[i];
-        cout << i << ": " << c << endl;
+        std::cout << i << ": " << c << std::endl;
     }
 
     Permutation p3 = p2;
-    cout << "Testing Remove: " << p3 << endl;
+    std::cout << "Testing Remove: " << p3 << std::endl;
     for (int i = 0; i < p2.Grade(); i++)
     {
         p3 = p3.Remove(0);
-        cout << i << ": " << p3 << endl;
+        std::cout << i << ": " << p3 << std::endl;
     }
 }
 
 void Test02_PermutationArray()
 {
-    Permutation p("ABC", 3);
-    cout << p << endl;
-    Permutation q("CBA", 3);
-    cout << q << endl << endl;
+    Permutation p("ABC");
+    std::cout << p << std::endl;
+    Permutation q("CBA");
+    std::cout << q << std::endl << std::endl;
 
     PermutationArray array(5);
     array.Insert(p);
     array.Insert(q);
-    cout << array << endl;
+    std::cout << array << std::endl;
 }
 
 void Test03_PermutationCalculator()
 {
-    Permutation p("XYZ", 3);
+    Permutation p("ABCD");
     PermutationCalculator calc;
     PermutationArray result = calc.Calculate(p);
-    cout << result << endl;
+    std::cout << result << std::endl;
 }
 
 void Test04_PermutationEnumeration()
 {
-    Permutation p("ABCD", 4);
-    PermutationCalculator calc;
-    calc.SetPermutation(p);
-    calc.Calculate();
+    //Permutation p("ABCD");
+    //PermutationCalculator calc;
+    //calc.SetPermutation(p);
+    //calc.Calculate();
 
-    calc.Reset();
-    while (calc.MoveNext())
-    {
-        Permutation q = calc.Current();
-        cout << "Next Permutation: " << q << endl;
-    }
+    //calc.Reset();
+    //while (calc.MoveNext())
+    //{
+    //    Permutation q = calc.Current();
+    //    std::cout << "Next Permutation: " << q << std::endl;
+    //}
+}
+
+
+int main()
+{
+    //Test01_Permutation();
+    //Test02_PermutationArray();
+    Test03_PermutationCalculator();
+   // Test04_PermutationEnumeration();
+
+    return 0;
 }

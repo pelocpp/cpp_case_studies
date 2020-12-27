@@ -1,28 +1,33 @@
 class PermutationArray
 {
 private:
-    int m_size;
-    int m_top;
-    Permutation* m_array;
+    //int m_size;
+    //int m_top;
+    //Permutation* m_array;
+    std::vector<Permutation> m_array;
 
 public:
     // c'tors/d'tor
-    PermutationArray();
-    PermutationArray(int count);
-    PermutationArray(const PermutationArray&);
-    ~PermutationArray();
+    PermutationArray() = default;
+    PermutationArray(int);
+    //PermutationArray(const PermutationArray&);
+    //~PermutationArray();
 
-    // getter
-    int Size() { return m_size; }
+    // getter/setter
+    int count() const { return static_cast<int>(m_array.size()); }
+
+    // TODO: Really needed ????
+    void setCapacity(int size);
+    int getCapacity() const;
 
     // public interface
-    bool Insert(const Permutation& p);
-    void InsertAll(char c);
+    void Insert(const Permutation&);
+    void InsertAll(char);
 
     // operators
-    PermutationArray& operator= (const PermutationArray& p);
+  //  PermutationArray& operator= (const PermutationArray& p);
     Permutation operator[] (int i) const;
 
     // output
-    friend ostream& operator<< (ostream& os, const PermutationArray& a);
+    friend std::ostream& operator<< (std::ostream& os, const PermutationArray& a);
 };

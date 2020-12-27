@@ -1,8 +1,8 @@
 class PermutationCalculator
 {
 private:
-    int m_index;
-    Permutation m_perm;
+   // int m_index;
+    Permutation m_p;
     PermutationArray m_array;
 
 public:
@@ -18,9 +18,9 @@ public:
     void Calculate();
 
     // enumerator interface
-    void Reset();
-    bool MoveNext();
-    Permutation Current();
+    //void Reset();
+    //bool MoveNext();
+    //Permutation Current();
 
 private:
     int Faculty(int n) const;
