@@ -161,6 +161,18 @@
     <None Include="Readme.md" />
     <None Include="Resources\Readme.adoc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\knight_moves_001.png" />
+    <Image Include="Resources\knight_moves_002.png" />
+    <Image Include="Resources\knight_moves_003.png" />
+    <Image Include="Resources\knight_moves_004.png" />
+    <Image Include="Resources\knight_moves_005.png" />
+    <Image Include="Resources\knight_moves_006.png" />
+    <Image Include="Resources\knight_moves_007.png" />
+    <Image Include="Resources\knight_moves_008.png" />
+    <Image Include="Resources\Knight_Moves_Solutions.png" />
+    <Image Include="Resources\Knight_Problem_Single_Solution.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
