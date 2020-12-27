@@ -162,6 +162,7 @@
     <None Include="Resources\Readme.adoc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Resources\KnightsProblem_PseudoCode_01.png" />
     <Image Include="Resources\knight_moves_001.png" />
     <Image Include="Resources\knight_moves_002.png" />
     <Image Include="Resources\knight_moves_003.png" />
@@ -171,6 +172,7 @@
     <Image Include="Resources\knight_moves_007.png" />
     <Image Include="Resources\knight_moves_008.png" />
     <Image Include="Resources\Knight_Moves_Solutions.png" />
+    <Image Include="Resources\knight_moves_solution_tree.png" />
     <Image Include="Resources\Knight_Problem_Single_Solution.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
