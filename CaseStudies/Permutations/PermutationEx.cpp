@@ -1,12 +1,12 @@
 // =====================================================================================
-// Permutation.cpp
+// PermutationEx.cpp
 // =====================================================================================
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "Permutation.h"
+#include "PermutationEx.h"
 
 // c'tors
 Permutation::Permutation(const std::vector<char> values) : m_values{ values }{}

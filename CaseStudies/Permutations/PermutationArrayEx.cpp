@@ -1,13 +1,13 @@
 // =====================================================================================
-// PermutationArray.cpp
+// PermutationArrayEx.cpp
 // =====================================================================================
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "Permutation.h"
-#include "PermutationArray.h"
+#include "PermutationEx.h"
+#include "PermutationArrayEx.h"
 
 // c'tors
 PermutationArray::PermutationArray(int size)

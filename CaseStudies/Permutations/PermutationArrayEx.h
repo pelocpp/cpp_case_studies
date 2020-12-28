@@ -1,30 +1,29 @@
 // =====================================================================================
-// Permutation.h
+// PermutationArrayEx.h
 // =====================================================================================
 
-class Permutation
+class PermutationArrayEx
 {
 private:
-    std::vector<char> m_values;
+    std::vector<Permutation> m_array;
 
 public:
-    // c'tors
-    Permutation() = default;
-    Permutation(const std::vector<char>);
-    Permutation(const std::string_view s);
+    // c'tors/d'tor
+    PermutationArray() = default;
+    PermutationArray(int);
 
     // getter
-    int grade() const { return static_cast<int>(m_values.size()); }
+    int count() const { return static_cast<int>(m_array.size()); }
 
     // public interface
-    void insertAtFront(char c);
-    Permutation removeAt(int i) const;
+    void insert(const Permutation&);
+    void insertAll(char);
 
     // operator(s)
-    char operator[] (int i) const;
+    Permutation operator[] (int) const;
 
     // output
-    friend std::ostream& operator<< (std::ostream&, const Permutation&);
+    friend std::ostream& operator<< (std::ostream&, const PermutationArray&);
 };
 
 // =====================================================================================

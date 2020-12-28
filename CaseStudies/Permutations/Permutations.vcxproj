@@ -143,13 +143,19 @@
   <ItemGroup>
     <ClCompile Include="Permutation.cpp" />
     <ClCompile Include="PermutationArray.cpp" />
+    <ClCompile Include="PermutationArrayEx.cpp" />
     <ClCompile Include="PermutationCalculator.cpp" />
+    <ClCompile Include="PermutationCalculatorEx.cpp" />
+    <ClCompile Include="PermutationEx.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Permutation.h" />
     <ClInclude Include="PermutationArray.h" />
+    <ClInclude Include="PermutationArrayEx.h" />
     <ClInclude Include="PermutationCalculator.h" />
+    <ClInclude Include="PermutationCalculatorEx.h" />
+    <ClInclude Include="PermutationEx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

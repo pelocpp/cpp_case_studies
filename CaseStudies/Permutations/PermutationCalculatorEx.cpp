@@ -1,14 +1,14 @@
 // =====================================================================================
-// PermutationCalculator.cpp
+// PermutationCalculatorEx.cpp
 // =====================================================================================
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "Permutation.h"
-#include "PermutationArray.h"
-#include "PermutationCalculator.h"
+#include "PermutationEx.h"
+#include "PermutationArrayEx.h"
+#include "PermutationCalculatorEx.h"
 
 // c'tor
 PermutationCalculator::PermutationCalculator() : m_p{} {}

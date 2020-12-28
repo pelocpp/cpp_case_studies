@@ -1,3 +1,7 @@
+// =====================================================================================
+// Permutation.cpp
+// =====================================================================================
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -34,25 +38,25 @@ void Test01_Permutation()
     Permutation p1("ABC");
     std::cout << p1 << std::endl;
 
-    std::cout << "Testing Insert: " << std::endl;
-    p1.Insert('Z');
+    std::cout << "Testing insertAtFront: " << std::endl;
+    p1.insertAtFront('Z');
     std::cout << p1 << std::endl;
 
     Permutation p2("12345");
-    std::cout << p2 << " [Number of Elements: " << p2.Grade() << ']' << std::endl;
+    std::cout << p2 << " [Number of Elements: " << p2.grade() << ']' << std::endl;
 
     std::cout << "Testing []-Operator: " << std::endl;
-    for (int i = 0; i < p2.Grade(); i++)
+    for (int i = 0; i < p2.grade(); i++)
     {
         char c = p2[i];
         std::cout << i << ": " << c << std::endl;
     }
 
     Permutation p3 = p2;
-    std::cout << "Testing Remove: " << p3 << std::endl;
-    for (int i = 0; i < p2.Grade(); i++)
+    std::cout << "Testing removeAt: " << p3 << std::endl;
+    for (int i = 0; i < p2.grade(); i++)
     {
-        p3 = p3.Remove(0);
+        p3 = p3.removeAt(0);
         std::cout << i << ": " << p3 << std::endl;
     }
 }
@@ -65,8 +69,8 @@ void Test02_PermutationArray()
     std::cout << q << std::endl << std::endl;
 
     PermutationArray array(5);
-    array.Insert(p);
-    array.Insert(q);
+    array.insert(p);
+    array.insert(q);
     std::cout << array << std::endl;
 }
 
@@ -74,7 +78,7 @@ void Test03_PermutationCalculator()
 {
     Permutation p("ABCD");
     PermutationCalculator calc;
-    PermutationArray result = calc.Calculate(p);
+    PermutationArray result = calc.calculate(p);
     std::cout << result << std::endl;
 }
 
@@ -96,10 +100,14 @@ void Test04_PermutationEnumeration()
 
 int main()
 {
-    //Test01_Permutation();
-    //Test02_PermutationArray();
+    Test01_Permutation();
+    Test02_PermutationArray();
     Test03_PermutationCalculator();
-   // Test04_PermutationEnumeration();
+    Test04_PermutationEnumeration();
 
     return 0;
 }
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================

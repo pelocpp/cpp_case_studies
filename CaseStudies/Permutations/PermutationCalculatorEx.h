@@ -1,8 +1,8 @@
 // =====================================================================================
-// PermutationCalculator.h
+// PermutationCalculatorEx.h
 // =====================================================================================
 
-class PermutationCalculator
+class PermutationCalculatorEx
 {
 private:
     Permutation m_p;
