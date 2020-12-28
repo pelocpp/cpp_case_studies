@@ -141,6 +141,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Examples01.cpp" />
+    <ClCompile Include="Examples02.cpp" />
     <ClCompile Include="Permutation.cpp" />
     <ClCompile Include="PermutationArray.cpp" />
     <ClCompile Include="PermutationArrayEx.cpp" />
