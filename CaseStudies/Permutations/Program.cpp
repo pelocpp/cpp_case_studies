@@ -42,10 +42,10 @@ void Test04_PermutationEnumeration_Ex();
 
 int main()
 {
-    Test01_Permutation_Script();
+    // Test01_Permutation_Script();
 
     //Test01_Permutation();
-    //Test02_PermutationArray();
+    Test02_PermutationArray();
     //Test03_PermutationCalculator();
     //Test04_PermutationEnumeration();
 

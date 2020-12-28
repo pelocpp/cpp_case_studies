@@ -47,7 +47,7 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\Readme.adoc">
-      <Filter>Resources</Filter>
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

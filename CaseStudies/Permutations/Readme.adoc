@@ -1,3 +1,7 @@
+:xrefstyle: short
+:listing-caption: Listing
+:table-caption: Tabelle
+
 = Permutationen
 
 == Beschreibung
@@ -15,6 +19,7 @@ Die Klasse `Permutation` benötigen wir, um eine einzelne Permutation darzustell
 Die Details zur Schnittstelle der Klasse `Permutation` sind in Tabelle 1 zusammengestellt:
 
 .Wesentliche Elemente der Klasse `Permutation`.
+[[id_table_permutation]]
 [%autowidth]
 |===
 |Element |Beschreibung
@@ -110,7 +115,7 @@ std::cout << p << " (Anzahl der Elemente: " << p.grade() << ')' << std::endl;
 _Ausgabe_:
 
 ....
-[1,2,3,4,5] (Anzahl der Elemente: 5)    
+[1,2,3,4,5] (Anzahl der Elemente: 5)
 ....
 
 Ein Beispiel zur `grade`-Methode und dem `[]`-Operator könnte so aussehen:
@@ -150,5 +155,111 @@ _Ausgabe_:
 
 == Klasse `PermutationArray`
 
-To be done
+Zum Abspeichern mehrerer Permutation-Objekte konzipieren wir eine Klasse `PermutationArray`.
+`PermutationArray`-Objekte sind vor allem dann hilfreich, wenn während der Berechnung der Permutationen bereits eine (unvollständige) Menge an Permutation-Objekten vorliegt.
+Die Anzahl der Permutationen, die in einem `PermutationArray`-Objekt abzulegen sind, steht immer im vornehinein fest.
+Diese Eigenschaft können wir dazu verwenden, dass zu Grunde liegende STL-Container-Objekt geeignet vorzubelegen.
+
+Die Klasse `PermutationArray` besitzt eine Reihe von Methoden, die speziell für den Algorithmus zur Berechnung von Permutationen ausgelegt sind:
+
+
+.Wesentliche Elemente der Klasse `PermutationArray`.
+[[id_table_permutationarray]]
+[%autowidth]
+|===
+|Element |Beschreibung
+
+| Konstruktor
+a| Der Standardkonstruktor initialisiert ein leeres `PermutationArray`-Objekt.
+
+[source,c++]
+----
+PermutationArray() = default;
+----
+| Benutzerdefinierter Konstruktor
+a| Initialisiert ein `PermutationArray`-Objekt so, dass das zu Grunde liegende STL-Container-Objekt
+für die Aufnahme von `capacity` Permutationen-Objekten vorbereitet ist.
+
+[source,c++]
+----
+PermutationArray(int capacity);
+----
+| _getter_
+a| Liefert die Anzahl der `Permutation`-Elemente zurück, die im Objekt abgelegt sind.
+
+[source,c++]
+----
+int grade();
+----
+| Methode `insert`
+a| Fügt ein `Permutation`-Objekt in das `PermutationArray`-Objekt ein.
+
+[source,c++]
+----
+void insert(const Permutation&);
+----
+| Methode `insertAll`
+a| Ruft die Methode `insert` an allen `Permutation`-Objekten im vorliegenden `PermutationArray`-Objekt mit dem Parameter `ch` auf.
+
+[source,c++]
+----
+void insertAll(char ch);
+----
+| Operator `[]`
+a| Liefert das _i_.-te `Permutation`-Objekt aus dem zu Grunde liegenden `PermutationArray`-Objekt zurück.
+
+[source,c++]
+----
+Permutation operator[] (int) const;
+----
+| Operator `<<`
+a| Gibt ein `PermutationArray`-Objekt auf der Konsole aus: Es sind alle im Array ablegten Permutationen auf der Konsole untereinander auszugeben.
+
+[source,c++]
+----
+friend std::ostream& operator<< (std::ostream& os, const PermutationArray& p);
+----
+|===
+
+Ein Beispiel zur `PermutationArray`-Klasse könnte so aussehen:
+
+....
+Permutation p("ABC");
+Permutation q("CBA");
+PermutationArray array(2);
+array.insert(p);
+array.insert(q);
+std::cout << array << std::endl;
+....
+
+_Ausgabe_:
+
+....
+[A,B,C]
+[C,B,A]
+[2 permutations]
+....
+
+== Algorithmus zur Berechnung von Permutationen
+
+Nun fehlt nur noch ein Algorithmus, um zu einer gegebenen Menge von Elementen alle Permutationen zu berechnen. Ein sehr einfacher – rekursiver – Algorithmus lässt sich in Worten so beschreiben, wenn n die Anzahl der Elemente ist:
+
+Erster Fall: _n_ = 1
+
+Die Menge hat nur ein Element, nennen wir es a~1~. Es existiert in diesem Fall nur eine einzige Permutation, bestehend aus dem Element a~1~ selbst.
+
+Zweiter Fall: _n_ > 1
+
+Wir bezeichnen die Elemente mit a~1~, a~2~, a~3~, ... , a~_n_-1~, a~_n_~: Nun ist der Reihe nach jedes einzelne Element a~_i_~ (i = 1,2, ..., n)
+vorrübergehend aus der vorliegenden Menge von _n_ Zeichen zu entfernen. Die zurückbleibenden _n_-1 Elemente werden nun mit diesem Algorithmus (rekursiv) permutiert.
+Der rekursive Methodenaufruf liefert als Ergebnis eine Menge von Permutationen zurück, die alle den Grad _n_-1 besitzen.
+Das entfernte Zeichen ist nun in diese Permutationen wieder einzufügen. Die Einfügeposition spielt dabei keine Rolle, wir entscheiden uns für den Anfang, siehe dazu auch die `insert`-Methode aus Tabelle 1.
+
+Mit Hilfe der Vorarbeiten der zwei Klassen `Permutation` und `PermutationArray` (<<id_table_permutation>> und <<id_table_permutationarray>>) 
+können wir den vorgestellten Algorithmus etwas präziser formulieren: In Abbildung 3 finden Sie Pseudo-Code für eine Methode `calculate` vor:
+
+[caption="Abbildung {counter:figure}: ", title="Pseudo-Code der Methode Calculate."]
+image::PermutationPseudeCode.png[width=450]
+
+und hier gehts weiter ...
 

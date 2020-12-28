@@ -69,10 +69,7 @@ void Test01_Permutation()
 void Test02_PermutationArray()
 {
     Permutation p("ABC");
-    std::cout << p << std::endl;
     Permutation q("CBA");
-    std::cout << q << std::endl << std::endl;
-
     PermutationArray array(2);
     array.insert(p);
     array.insert(q);
