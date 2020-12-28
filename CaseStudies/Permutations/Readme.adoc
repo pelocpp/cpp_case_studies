@@ -1,0 +1,154 @@
+= Permutationen
+
+== Beschreibung
+
+Ist eine Menge von _n_ Elementen gegeben, so bezeichnet man die möglichen Anordnungen aller dieser _n_ Elemente als Permutationen (lat. permutare: vertauschen). Die Berechnung der Permutationen einer beliebigen Menge von Elementen steht im Mittelpunkt dieser Aufgabe. Als Elemente verwenden wir Zeichen, also `char`-Variablen.
+
+Für zwei Zeichen `A` und `B` gibt es nur die zwei Permutationen `AB` und `BA`. Drei Zeichen, angenommen `A`, `B` und `C`, können hingegen in sechs verschiedenen Permutationen dargestellt werden: `ABC`, `ACB`, `BAC`, `BCA`, `CAB` und `CBA`. Sind alle _n_ Elemente voneinander verschieden, was wir in dieser Aufgabe zu Grunde legen, so gibt es dafür _n_! Anordnungen (_n_-Fakultät).
+
+Bevor wir auf den Algorithmus zur Berechnung von Permutationen eingehen, entwickeln wir zwei Hilfsklassen `Permutation` und `PermutationVector`.
+
+== Klasse `Permutation`
+
+Die Klasse `Permutation` benötigen wir, um eine einzelne Permutation darzustellen.
+Überlegen Sie, welcher Container der STL dafür geeignet sein könnte?
+Die Details zur Schnittstelle der Klasse `Permutation` sind in Tabelle 1 zusammengestellt:
+
+.Wesentliche Elemente der Klasse `Permutation`.
+[%autowidth]
+|===
+|Element |Beschreibung
+
+| Konstruktor
+a| Der Standardkonstruktor initialisiert ein leeres `Permutation`-Objekt: Es enthält keine Zeichen und die Anzahl der Zeichen ist dementsprechend 0.
+
+[source,c++]
+----
+Permutation() = default;
+----
+| Benutzerdefinierter Konstruktor
+a| Der Konstruktor initialisiert ein `Permutation`-Objekt an Hand der Elemente eines `std::vector<char>`-Objekts.
+Sinnvollerweise sollten die Zeichen in dem Vektor `vec` alle voneinander verschieden sein. Sie brauchen das in Ihrer Implementierung aber nicht zu überprüfen.
+
+[source,c++]
+----
+Permutation(const std::vector<char> vec);
+----
+| Benutzerdefinierter Konstruktor
+a| Der Konstruktor initialisiert ein `Permutation`-Objekt an Hand der Elemente eines `std::string_view`-Objekts.
+Wiederum sollten die Zeichen des Parameters `sv` alle voneinander verschieden sein, Sie brauchen das in Ihrer Implementierung aber nicht zu überprüfen.
+
+[source,c++]
+----
+Permutation(const std::string_view sv);
+----
+| _getter_
+a| Liefert die Anzahl der `char`-Elemente zurück, die im Objekt abgelegt sind. Man spricht auch von der _Länge_ bzw. vom _Grad_ der Permutation.
+
+[source,c++]
+----
+int grade();
+----
+| Methode `insertAtFront`
+a| Die `insertAtFront`-Methode verändert die aktuelle Permutation wie folgt: Das übergebene Zeichen `ch` wird in der vorliegenden Permutation am Anfang eingefügt.
+Inbesondere wird der Grad der Permutation damit um Eins größer.
+
+_Hinweis_: Die `insertAtFront`-Methode benötigen wir für den Algorithmus zur Berechnung von Permutationen!
+
+[source,c++]
+----
+void insertAtFront(char ch);
+----
+| Methode `removeAt`
+a| Die `removeAt`-Methode erzeugt eine neue Permutation, die aus der aktuellen Permutation durch Entfernen des _i_.-ten Zeichens entsteht.
+Die vorliegende Permutation bleibt unverändert. Der Grad der neuen Permutation ist folglich um Eins kleiner als der Grad der aktuellen Permutation.
+
+_Hinweis_: Die `insertAtFront`-Methode benötigen wir für den Algorithmus zur Berechnung von Permutationen!
+
+[source,c++]
+----
+Permutation removeAt(int i) const;
+----
+| Operator `[]`
+a| Liefert das _i_.-te Zeichen der Permutation zurück.
+
+[source,c++]
+----
+char operator[] (int i) const;
+----
+| Operator `<<`
+a| Gibt ein `Permutation`-Objekt auf der Konsole aus. Die einzelnen Zeichen der Permutation sind durch Komma voneinander zu trennen,
+die Permutation selbst ist in eckige Klammern `[` und `]` zu setzen.
+
+[source,c++]
+----
+friend std::ostream& operator<< (std::ostream& os, const Permutation& p);
+----
+|===
+
+Es folgen einige Beispiele, um die Arbeitsweise der Klasse `Permutation` zu verdeutlichen.
+Eine Permutation mit den drei Zeichen `'A'`, `'B'` und `'C'` wird so angelegt:
+
+....
+Permutation p("ABC");
+std::cout << p << std::endl;
+....
+
+_Ausgabe_:
+
+....
+[A,B,C]
+....
+
+Noch ein ähnliches Beispiel mit einer Permutation der fünf Zeichen bzw. Ziffern `'1'`, `'2'`, `'3'`, `'4'` und `'5'`:
+
+....
+Permutation p("12345");
+std::cout << p << " (Anzahl der Elemente: " << p.grade() << ')' << std::endl;
+....
+
+_Ausgabe_:
+
+....
+[1,2,3,4,5] (Anzahl der Elemente: 5)    
+....
+
+Ein Beispiel zur `grade`-Methode und dem `[]`-Operator könnte so aussehen:
+
+....
+Permutation p("ABC");
+for (int i = 0; i < p.grade(); i++)
+{
+    char ch = p[i];
+    std::cout << i << ": " << ch << std::endl;
+}
+....
+
+_Ausgabe_:
+
+....
+0: A
+1: B
+2: C
+....
+
+Wir schließen mit einem Beispiel zur `insertAtFront`-Methode ab:
+
+....
+Permutation p("ABC");
+std::cout << p << " (Grad: " << p.grade() << ')' << std::endl;
+p.insertAtFront('D');
+std::cout << p << " (Grad: " << p.grade() << ')' << std::endl;
+....
+
+_Ausgabe_:
+
+....
+[A,B,C] (Grad: 3)
+[D,A,B,C] (Grad: 4)
+....
+
+== Klasse `PermutationArray`
+
+To be done
+

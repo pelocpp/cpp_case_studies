@@ -10,10 +10,32 @@
 #include "PermutationArray.h"
 #include "PermutationCalculator.h"
 
+void Test01_Permutation_Script();
 void Test01_Permutation();
 void Test02_PermutationArray();
 void Test03_PermutationCalculator();
 void Test04_PermutationEnumeration();
+
+void Test01_Permutation_Script()
+{
+    Permutation p1("ABC");
+    std::cout << p1 << std::endl;
+
+    Permutation p2("12345");
+    std::cout << p2 << " (Anzahl der Elemente: " << p2.grade() << ')' << std::endl;
+
+    Permutation p3("ABC");
+    for (int i = 0; i < p3.grade(); i++)
+    {
+        char ch = p3[i];
+        std::cout << i << ": " << ch << std::endl;
+    }
+
+    Permutation p4("ABC");
+    std::cout << p4 << " (Grad: " << p4.grade() << ')' << std::endl;
+    p4.insertAtFront('D');
+    std::cout << p4 << " (Grad: " << p4.grade() << ')' << std::endl;
+}
 
 void Test01_Permutation()
 {

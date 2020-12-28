@@ -11,7 +11,7 @@ public:
     // c'tors
     Permutation() = default;
     Permutation(const std::vector<char>);
-    Permutation(const std::string_view s);
+    Permutation(const std::string_view);
 
     // getter
     int grade() const { return static_cast<int>(m_values.size()); }
