@@ -36,9 +36,6 @@ public:
     T operator[] (int i) const {
         return m_values[i];
     }
-
-    // output
-   // friend std::ostream& operator<< (std::ostream&, const Permutation<T>&);
 };
 
 template <typename T>

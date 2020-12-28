@@ -11,7 +11,7 @@
 #include "PermutationCalculator.h"
 
 // c'tor
-PermutationCalculator::PermutationCalculator() : m_p{} {}
+PermutationCalculator::PermutationCalculator() : m_p{}, m_array{} {}
 
 // getter/setter
 void PermutationCalculator::setPermutation(const Permutation& p)
@@ -40,10 +40,8 @@ PermutationArray PermutationCalculator::calculate(const Permutation& p)
     }
     else
     {
-        int d1 = faculty(p.grade());
         PermutationArray result(faculty(p.grade()));
 
-        int d2 = p.grade();
         for (int i = 0; i < p.grade(); i++)
         {
             // create permutation without i.-th element of current permutation

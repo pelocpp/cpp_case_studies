@@ -145,10 +145,7 @@
     <ClCompile Include="Examples02.cpp" />
     <ClCompile Include="Permutation.cpp" />
     <ClCompile Include="PermutationArray.cpp" />
-    <ClCompile Include="PermutationArrayEx.cpp" />
     <ClCompile Include="PermutationCalculator.cpp" />
-    <ClCompile Include="PermutationCalculatorEx.cpp" />
-    <ClCompile Include="PermutationEx.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -51,7 +51,7 @@ void Test02_PermutationArray()
     Permutation q("CBA");
     std::cout << q << std::endl << std::endl;
 
-    PermutationArray array(5);
+    PermutationArray array(2);
     array.insert(p);
     array.insert(q);
     std::cout << array << std::endl;

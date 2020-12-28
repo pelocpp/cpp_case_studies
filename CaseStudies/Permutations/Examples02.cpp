@@ -7,8 +7,8 @@
 #include <vector>
 
 #include "PermutationEx.h"
-//#include "PermutationArrayEx.h"
-//#include "PermutationCalculatorEx.h"
+#include "PermutationArrayEx.h"
+#include "PermutationCalculatorEx.h"
 
 void Test01_Permutation_Ex_01();
 void Test02_PermutationArray_Ex();
@@ -72,23 +72,31 @@ void Test01_Permutation_Ex_02()
 
 void Test02_PermutationArray_Ex()
 {
-    //Permutation p("ABC");
-    //std::cout << p << std::endl;
-    //Permutation q("CBA");
-    //std::cout << q << std::endl << std::endl;
+    PermutationEx<int> p({ 1, 2, 3, 4 });
+    std::cout << p << std::endl;
+    PermutationEx<int> q({ 4, 3, 2, 1 });
+    std::cout << q << std::endl << std::endl;
 
-    //PermutationArray array(5);
-    //array.insert(p);
-    //array.insert(q);
-    //std::cout << array << std::endl;
+    PermutationArrayEx<int> array(2);
+    array.insert(p);
+    array.insert(q);
+    std::cout << array << std::endl;
 }
 
-void Test03_PermutationCalculator_Ex()
+void Test03_PermutationCalculator_Ex_01()
 {
-    //Permutation p("ABCD");
-    //PermutationCalculator calc;
-    //PermutationArray result = calc.calculate(p);
-    //std::cout << result << std::endl;
+    PermutationEx<char> p("ABC");
+    PermutationCalculatorEx<char> calc;
+    PermutationArrayEx<char> result = calc.calculate(p);
+    std::cout << result << std::endl;
+}
+
+void Test03_PermutationCalculator_Ex_02()
+{
+    PermutationEx<int> p({ 1, 2, 3, 4 });
+    PermutationCalculatorEx<int> calc;
+    PermutationArrayEx<int> result = calc.calculate(p);
+    std::cout << result << std::endl;
 }
 
 void Test04_PermutationEnumeration_Ex()
