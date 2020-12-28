@@ -158,7 +158,6 @@
     <ClInclude Include="Logger.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Readme.md" />
     <None Include="Resources\Readme.adoc" />
   </ItemGroup>
   <ItemGroup>

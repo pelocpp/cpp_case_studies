@@ -261,6 +261,9 @@ können wir den vorgestellten Algorithmus etwas präziser formulieren: In Abbild
 [caption="Abbildung {counter:figure}: ", title="Pseudo-Code der Methode Calculate."]
 image::PermutationPseudeCode.png[width=450]
 
-und hier gehts weiter ...
+== Klasse `PermutationCalculator`
 
-und hier gehts weiter ...
+WEITER WEITER 
+
+Wir sind fast am Ziel angekommen: Die im letzen Abschnitt beschriebe Methode `calculate` ordnen wir der Klasse PermutationCalculator zu.
+Die Definition in Tabelle 3 stellt im Prinzip nur eine Wiederholung dar:

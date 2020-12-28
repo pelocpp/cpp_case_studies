@@ -43,9 +43,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Readme.md">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\Readme.adoc">
       <Filter>Resource Files</Filter>
     </None>
