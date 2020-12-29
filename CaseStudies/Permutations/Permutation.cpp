@@ -9,12 +9,18 @@
 #include "Permutation.h"
 
 // c'tors
-Permutation::Permutation(const std::vector<char>& values) : m_values{ values }{}
+Permutation::Permutation(const std::initializer_list<char>& list) : m_values{ list } {
+    std::cout << "c'tor (const std::initializer_list)" << std::endl;
+}
 
 Permutation::Permutation(const std::string_view s)
 {
     std::cout << "c'tor (const std::string_view)" << std::endl;
     m_values = std::vector<char> (s.begin(), s.end());
+}
+
+Permutation::Permutation(const std::vector<char>& values) : m_values{ values } {
+    std::cout << "c'tor (const std::vector)" << std::endl;
 }
 
 // public interface

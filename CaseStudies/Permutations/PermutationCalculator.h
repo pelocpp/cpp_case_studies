@@ -20,6 +20,8 @@ public:
     PermutationArray calculate(const Permutation&);
     void calculate();
 
+    PermutationArray calculateEx(const Permutation&);
+
     // enumerator interface
     //void Reset();
     //bool MoveNext();

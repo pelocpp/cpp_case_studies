@@ -12,7 +12,8 @@
 
 void Test01_Permutation_Ex_01();
 void Test02_PermutationArray_Ex();
-void Test03_PermutationCalculator_Ex();
+void Test03_PermutationCalculator_Ex_01();
+void Test03_PermutationCalculator_Ex_02();
 void Test04_PermutationEnumeration_Ex();
 
 void Test01_Permutation_Ex_01()
@@ -25,19 +26,22 @@ void Test01_Permutation_Ex_01()
     p1.insertAtFront('Z');
     std::cout << p1 << std::endl;
 
-    PermutationEx<char> p2("12345");
+    PermutationEx<char> p2({ '1', '2', '3', '4', '5' });
     std::cout << p2 << " [Number of Elements: " << p2.grade() << ']' << std::endl;
 
+    PermutationEx<int> p3({ 1, 2, 3, 4, 5 });
+    std::cout << p3 << " [Number of Elements: " << p3.grade() << ']' << std::endl;
+
     std::cout << "Testing []-Operator: " << std::endl;
-    for (int i = 0; i < p2.grade(); i++)
+    for (int i = 0; i < p3.grade(); i++)
     {
-        char c = p2[i];
-        std::cout << i << ": " << c << std::endl;
+        int n = p3[i];
+        std::cout << i << ": " << n << std::endl;
     }
 
-    PermutationEx<char> p3 = p2;
-    std::cout << "Testing removeAt: " << p3 << std::endl;
-    for (int i = 0; i < p2.grade(); i++)
+    PermutationEx<int> p4 = p3;
+    std::cout << "Testing removeAt: " << p4 << std::endl;
+    for (int i = 0; i < p4.grade(); i++)
     {
         p3 = p3.removeAt(0);
         std::cout << i << ": " << p3 << std::endl;

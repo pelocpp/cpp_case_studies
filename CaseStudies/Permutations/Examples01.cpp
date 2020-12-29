@@ -10,47 +10,22 @@
 #include "PermutationArray.h"
 #include "PermutationCalculator.h"
 
-void Test01_Permutation_Script();
 void Test01_Permutation();
 void Test02_PermutationArray();
 void Test03_PermutationCalculator();
 void Test04_PermutationEnumeration();
 
-void Test01_Permutation_Script()
-{
-    Permutation p1{ "ABC" };
-    std::cout << p1 << std::endl;
-
-    Permutation p2({ '1', '2', '3' , '4' , '5' });
-    std::cout << p2 << " (Anzahl der Elemente: " << p2.grade() << ')' << std::endl;
-
-    Permutation p3{ "ABC" };
-    for (int i = 0; i < p3.grade(); i++)
-    {
-        char ch = p3[i];
-        std::cout << i << ": " << ch << std::endl;
-    }
-
-    Permutation p4{ "ABC" };
-    std::cout << p4 << " (Grad: " << p4.grade() << ')' << std::endl;
-    p4.insertAtFront('D');
-    std::cout << p4 << " (Grad: " << p4.grade() << ')' << std::endl;
-
-    Permutation p5({ '1', '2', '3', '4', '5' });
-    std::cout << p5 << std::endl;
-}
-
 void Test01_Permutation()
 {
     std::cout << "Testing c'tor: " << std::endl;
-    Permutation p1("ABC");
+    Permutation p1{ "ABC" };
     std::cout << p1 << std::endl;
 
     std::cout << "Testing insertAtFront: " << std::endl;
     p1.insertAtFront('Z');
     std::cout << p1 << std::endl;
 
-    Permutation p2({ '1', '2', '3' , '4' , '5' });
+    Permutation p2{ '1', '2', '3' , '4' , '5' };
     std::cout << p2 << " [Number of Elements: " << p2.grade() << ']' << std::endl;
 
     std::cout << "Testing []-Operator: " << std::endl;
@@ -95,6 +70,14 @@ void Test03_PermutationCalculator()
     Permutation p("ABC");
     PermutationCalculator calc;
     PermutationArray result = calc.calculate(p);
+    std::cout << result << std::endl;
+}
+
+void Test03_PermutationCalculator_02()
+{
+    Permutation p("ABC");
+    PermutationCalculator calc;
+    PermutationArray result = calc.calculateEx(p);
     std::cout << result << std::endl;
 }
 

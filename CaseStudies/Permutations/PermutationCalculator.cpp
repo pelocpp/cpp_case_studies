@@ -9,6 +9,7 @@
 #include "Permutation.h"
 #include "PermutationArray.h"
 #include "PermutationCalculator.h"
+#include <algorithm>
 
 // c'tor
 PermutationCalculator::PermutationCalculator() : m_p{}, m_array{} {}
@@ -60,6 +61,24 @@ PermutationArray PermutationCalculator::calculate(const Permutation& p)
 
         return result;
     }
+}
+
+PermutationArray PermutationCalculator::calculateEx(const Permutation& p)
+{
+    PermutationArray result(faculty(p.grade()));
+
+    // retrieve std::vector with values from permutation
+    std::vector<char> values = p.getValues();
+
+    // need to sort the values
+    std::sort(std::begin(values), std::end(values));
+
+    // keep calculating next permutation while there is a next permutation
+    do {
+        result.insert(values);
+    } while (std::next_permutation(std::begin(values), std::end(values)));
+
+    return result;
 }
 
 int PermutationCalculator::faculty(int n) const

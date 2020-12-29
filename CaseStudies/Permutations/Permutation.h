@@ -10,12 +10,15 @@ private:
 public:
     // c'tors
     Permutation() = default;
-    Permutation(const std::vector<char>&);
+    Permutation(const std::initializer_list<char>&);
     Permutation(const std::string_view);
+    Permutation(const std::vector<char>&);
     ~Permutation() { std::cout << "d'tor Permutation" << std::endl; };
 
+public:
     // getter
     int grade() const { return static_cast<int>(m_values.size()); }
+    std::vector<char> getValues() const { return m_values; }
 
     // public interface
     void insertAtFront(char c);

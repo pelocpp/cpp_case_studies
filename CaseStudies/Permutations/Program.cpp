@@ -26,12 +26,12 @@
 
 // TODO: Methoden in klein umbenennen
 
-void Test01_Permutation_Script();
 
 void Test01_Permutation();
 void Test02_PermutationArray();
 void Test02_PermutationArray_02();
 void Test03_PermutationCalculator();
+void Test03_PermutationCalculator_02();
 void Test04_PermutationEnumeration();
 
 void Test01_Permutation_Ex_01();
@@ -43,12 +43,11 @@ void Test04_PermutationEnumeration_Ex();
 
 int main()
 {
-    // Test01_Permutation_Script();
-
     //Test01_Permutation();
     //Test02_PermutationArray();
-    Test02_PermutationArray_02();
+    //Test02_PermutationArray_02();
     //Test03_PermutationCalculator();
+    Test03_PermutationCalculator_02();
     //Test04_PermutationEnumeration();
 
     //Test01_Permutation_Ex_01();

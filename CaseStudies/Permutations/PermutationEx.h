@@ -12,7 +12,7 @@ public:
     // c'tors
     PermutationEx() = default;
 
-    PermutationEx(const std::vector<T> values) : m_values{ values } {};
+    PermutationEx(const std::vector<T>& values) : m_values{ values } {};
 
     PermutationEx(const std::string_view s) {
         m_values = std::vector<char>(s.begin(), s.end());
