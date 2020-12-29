@@ -18,7 +18,6 @@ public:
     // public interface
     void insert(const Permutation&);
     void emplace(std::string_view&&) noexcept;
-    //void emplace(std::vector<char>&&) noexcept;   std::initializer_list<char>
     void emplace(std::initializer_list<char>&&) noexcept;
     void insertAll(char);
 

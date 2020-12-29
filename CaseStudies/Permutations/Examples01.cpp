@@ -75,7 +75,7 @@ void Test03_PermutationCalculator()
 
 void Test03_PermutationCalculator_02()
 {
-    Permutation p("ABC");
+    Permutation p("XYZ");
     PermutationCalculator calc;
     PermutationArray result = calc.calculateEx(p);
     std::cout << result << std::endl;

@@ -24,9 +24,13 @@ public:
         m_array.push_back(p);
     }
 
-    void insertAll(char ch) {
+    void emplace(std::initializer_list<char>&& list) noexcept {
+        m_array.emplace_back(list);
+    }
+
+    void insertAll(T elem) {
         for (PermutationEx<T>& p : m_array) {
-            p.insertAtFront(ch);
+            p.insertAtFront(elem);
         }
     }
 

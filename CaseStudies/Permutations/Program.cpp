@@ -39,6 +39,7 @@ void Test01_Permutation_Ex_02();
 void Test02_PermutationArray_Ex();
 void Test03_PermutationCalculator_Ex_01();
 void Test03_PermutationCalculator_Ex_02();
+void Test03_PermutationCalculator_Ex_03();
 void Test04_PermutationEnumeration_Ex();
 
 int main()
@@ -47,7 +48,7 @@ int main()
     //Test02_PermutationArray();
     //Test02_PermutationArray_02();
     //Test03_PermutationCalculator();
-    Test03_PermutationCalculator_02();
+    //Test03_PermutationCalculator_02();
     //Test04_PermutationEnumeration();
 
     //Test01_Permutation_Ex_01();
@@ -55,6 +56,7 @@ int main()
     //Test02_PermutationArray_Ex();
     //Test03_PermutationCalculator_Ex_01();
     //Test03_PermutationCalculator_Ex_02();
+    Test03_PermutationCalculator_Ex_03();
 
     //Test04_PermutationEnumeration_Ex();
 

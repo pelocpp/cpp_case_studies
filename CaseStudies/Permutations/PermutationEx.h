@@ -12,14 +12,16 @@ public:
     // c'tors
     PermutationEx() = default;
 
-    PermutationEx(const std::vector<T>& values) : m_values{ values } {};
+    PermutationEx(const std::initializer_list<T>& list) : m_values{ list } {}
 
-    PermutationEx(const std::string_view s) {
-        m_values = std::vector<char>(s.begin(), s.end());
-    }
+    PermutationEx(const std::vector<T>& values) : m_values{ values } {}
 
     // getter
-    int grade() const { return static_cast<int>(m_values.size()); }
+    int grade() const { 
+        return static_cast<int>(m_values.size()); 
+    }
+
+    std::vector<T> getValues() const { return m_values; }
 
     // public interface
     void insertAtFront(T ch) {

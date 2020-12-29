@@ -5,11 +5,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "Permutation.h"
 #include "PermutationArray.h"
 #include "PermutationCalculator.h"
-#include <algorithm>
 
 // c'tor
 PermutationCalculator::PermutationCalculator() : m_p{}, m_array{} {}

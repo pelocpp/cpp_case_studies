@@ -27,13 +27,6 @@ void PermutationArray::emplace(std::string_view&& s) noexcept
     std::cout << "emplace (1)" << std::endl;
     m_array.emplace_back(s);
 }
-//
-//void PermutationArray::emplace(std::vector<char>&& vec) noexcept
-//{
-//    std::cout << "emplace (2)" << std::endl;
-//    m_array.emplace_back(vec);
-//}
-
 
 void PermutationArray::emplace(std::initializer_list<char>&& list) noexcept
 {

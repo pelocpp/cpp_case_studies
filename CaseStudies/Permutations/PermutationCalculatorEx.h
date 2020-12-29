@@ -58,6 +58,24 @@ public:
         }
     }
 
+    PermutationArrayEx<T> calculateEx(const PermutationEx<T>& p) {
+
+        PermutationArrayEx<T> result(faculty(p.grade()));
+
+        // retrieve std::vector with values from permutation
+        std::vector<T> values = p.getValues();
+
+        // need to sort the values
+        std::sort(std::begin(values), std::end(values));
+
+        // keep calculating next permutation while there is a next permutation
+        do {
+            result.insert(values);
+        } while (std::next_permutation(std::begin(values), std::end(values)));
+
+        return result;
+    }
+
     // enumerator interface
     //void Reset();
     //bool MoveNext();
