@@ -10,7 +10,7 @@ Ist eine Menge von _n_ Elementen gegeben, so bezeichnet man die möglichen Anord
 
 Für zwei Zeichen `A` und `B` gibt es nur die zwei Permutationen `AB` und `BA`. Drei Zeichen, angenommen `A`, `B` und `C`, können hingegen in sechs verschiedenen Permutationen dargestellt werden: `ABC`, `ACB`, `BAC`, `BCA`, `CAB` und `CBA`. Sind alle _n_ Elemente voneinander verschieden, was wir in dieser Aufgabe zu Grunde legen, so gibt es dafür _n_! Anordnungen (_n_-Fakultät).
 
-Bevor wir auf den Algorithmus zur Berechnung von Permutationen eingehen, entwickeln wir zwei Hilfsklassen `Permutation` und `PermutationVector`.
+Bevor wir auf den Algorithmus zur Berechnung von Permutationen eingehen, entwickeln wir zwei Hilfsklassen `Permutation` und `PermutationArray`.
 
 == Klasse `Permutation`
 
@@ -52,7 +52,7 @@ a| Liefert die Anzahl der `char`-Elemente zurück, die im Objekt abgelegt sind. 
 
 [source,c++]
 ----
-int grade();
+int grade() const;
 ----
 | Methode `insertAtFront`
 a| Die `insertAtFront`-Methode verändert die aktuelle Permutation wie folgt: Das übergebene Zeichen `ch` wird in der vorliegenden Permutation am Anfang eingefügt.
@@ -94,10 +94,11 @@ friend std::ostream& operator<< (std::ostream& os, const Permutation& p);
 Es folgen einige Beispiele, um die Arbeitsweise der Klasse `Permutation` zu verdeutlichen.
 Eine Permutation mit den drei Zeichen `'A'`, `'B'` und `'C'` wird so angelegt:
 
-....
+[source,c++]
+----
 Permutation p("ABC");
 std::cout << p << std::endl;
-....
+----
 
 _Ausgabe_:
 
@@ -107,10 +108,11 @@ _Ausgabe_:
 
 Noch ein ähnliches Beispiel mit einer Permutation der fünf Zeichen bzw. Ziffern `'1'`, `'2'`, `'3'`, `'4'` und `'5'`:
 
-....
-Permutation p("12345");
+[source,c++]
+----
+Permutation p({ '1', '2', '3', '4', '5' });
 std::cout << p << " (Anzahl der Elemente: " << p.grade() << ')' << std::endl;
-....
+----
 
 _Ausgabe_:
 
@@ -120,14 +122,15 @@ _Ausgabe_:
 
 Ein Beispiel zur `grade`-Methode und dem `[]`-Operator könnte so aussehen:
 
-....
+[source,c++]
+----
 Permutation p("ABC");
 for (int i = 0; i < p.grade(); i++)
 {
     char ch = p[i];
     std::cout << i << ": " << ch << std::endl;
 }
-....
+----
 
 _Ausgabe_:
 
@@ -139,12 +142,13 @@ _Ausgabe_:
 
 Wir schließen mit einem Beispiel zur `insertAtFront`-Methode ab:
 
-....
+[source,c++]
+----
 Permutation p("ABC");
 std::cout << p << " (Grad: " << p.grade() << ')' << std::endl;
 p.insertAtFront('D');
 std::cout << p << " (Grad: " << p.grade() << ')' << std::endl;
-....
+----
 
 _Ausgabe_:
 
@@ -189,7 +193,7 @@ a| Liefert die Anzahl der `Permutation`-Elemente zurück, die im Objekt abgelegt
 
 [source,c++]
 ----
-int grade();
+int count() const;
 ----
 | Methode `insert`
 a| Fügt ein `Permutation`-Objekt in das `PermutationArray`-Objekt ein.
@@ -197,6 +201,20 @@ a| Fügt ein `Permutation`-Objekt in das `PermutationArray`-Objekt ein.
 [source,c++]
 ----
 void insert(const Permutation&);
+----
+| Methode `emplace`
+a| Fügt ein `Permutation`-Objekt in das `PermutationArray`-Objekt ein. Die Vorgehensweise soll in diesem Fall _in-place_ erfolgen.
+
+[source,c++]
+----
+void emplace(std::string_view&&) noexcept;
+----
+| Methode `emplace`
+a| Fügt ein `Permutation`-Objekt in das `PermutationArray`-Objekt ein. Die Vorgehensweise soll in diesem Fall _in-place_ erfolgen.
+
+[source,c++]
+----
+void emplace(std::vector<char>&&) noexcept;
 ----
 | Methode `insertAll`
 a| Ruft die Methode `insert` an allen `Permutation`-Objekten im vorliegenden `PermutationArray`-Objekt mit dem Parameter `ch` auf.
@@ -223,14 +241,15 @@ friend std::ostream& operator<< (std::ostream& os, const PermutationArray& p);
 
 Ein Beispiel zur `PermutationArray`-Klasse könnte so aussehen:
 
-....
+[source,c++]
+----
 Permutation p("ABC");
 Permutation q("CBA");
 PermutationArray array(2);
 array.insert(p);
 array.insert(q);
 std::cout << array << std::endl;
-....
+----
 
 _Ausgabe_:
 
@@ -242,7 +261,7 @@ _Ausgabe_:
 
 == Algorithmus zur Berechnung von Permutationen
 
-Nun fehlt nur noch ein Algorithmus, um zu einer gegebenen Menge von Elementen alle Permutationen zu berechnen. Ein sehr einfacher – rekursiver – Algorithmus lässt sich in Worten so beschreiben, wenn n die Anzahl der Elemente ist:
+Nun fehlt nur noch ein Algorithmus, um zu einer gegebenen Menge von Elementen alle Permutationen zu berechnen. Ein sehr einfacher – rekursiver – Algorithmus lässt sich in Worten so beschreiben, wenn _n_ die Anzahl der Elemente ist:
 
 Erster Fall: _n_ = 1
 
@@ -258,12 +277,146 @@ Das entfernte Zeichen ist nun in diese Permutationen wieder einzufügen. Die Ein
 Mit Hilfe der Vorarbeiten der zwei Klassen `Permutation` und `PermutationArray` (<<id_table_permutation>> und <<id_table_permutationarray>>) 
 können wir den vorgestellten Algorithmus etwas präziser formulieren: In Abbildung 3 finden Sie Pseudo-Code für eine Methode `calculate` vor:
 
-[caption="Abbildung {counter:figure}: ", title="Pseudo-Code der Methode Calculate."]
+[caption="Abbildung {counter:figure}: ", title="Pseudo-Code der Methode `calculate`."]
 image::PermutationPseudeCode.png[width=450]
 
 == Klasse `PermutationCalculator`
 
-WEITER WEITER 
-
-Wir sind fast am Ziel angekommen: Die im letzen Abschnitt beschriebe Methode `calculate` ordnen wir der Klasse PermutationCalculator zu.
+Wir sind fast am Ziel angekommen: Die im letzen Abschnitt beschriebe Methode `calculate` ordnen wir der Klasse `PermutationCalculator` zu.
 Die Definition in Tabelle 3 stellt im Prinzip nur eine Wiederholung dar:
+
+.Methode `calculate` der Klasse `PermutationCalculator`.
+[[id_table_permutationcalculator]]
+[%autowidth]
+|===
+|Methode |Beschreibung
+
+| `calculate`
+a| Berechnet alle Permutationen zu einer vorgegebenen Menge von Zeichen, die durch die Permutation `p` beschrieben werden.
+Das Ergebnis ist in einem Objekt des Typs `PermutationArray` abzulegen.
+
+[source,c++]
+----
+PermutationArray calculate(const Permutation& p);
+----
+|===
+
+Nachfolgend ein Beispiel, wie Sie die Klasse `PermutationCalculator` zur Berechnung von Permutationen einsetzen:
+
+[source,c++]
+----
+Permutation p("ABC");
+PermutationCalculator calc;
+PermutationArray result = calc.calculate(p);
+std::cout << result << std::endl;
+----
+
+_Ausgabe_:
+
+....
+[A,B,C]
+[A,C,B]
+[B,A,C]
+[B,C,A]
+[C,A,B]
+[C,B,A]
+[6 permutations]
+....
+
+
+## Aufzählung von Permutationen
+
+In Work
+
+## Lösung
+
+### Klasse `Permutation`
+
+Zur Realisierung der Klasse `Permutation` bietet sich für die Ablage der Zeichen der Permutation ein STL-Containerobjekt des Typs `std::vector<char>` an:
+
+[source,c++]
+----
+class Permutation
+{
+private:
+    std::vector<char> m_values;
+    ...
+----
+
+Dieser Vektor kann mit einem geeigneten Konstruktor und der so genannten &ldquo;Initialisierungsliste&rdquo; (engl. &ldquo;List Initialization&rdquo;, seit C++ 11)
+elegant vorbelegt werden. Eigentlich hat der in Frage kommende Konstruktor einen Parameter des Typs `std::vector<char>`.
+Wir müssen beim Anlegen eines `Permutation`-Objekts aber nicht zwingend vor dem Aufruf ein  `std::vector<char>`-Objekt explizit anlegen.
+Wir können stattdessen eine Menge von Zeichen in geschweifte Klammern setzen und an den Konstruktor übergeben:
+
+[source,c++]
+----
+Permutation::Permutation(const std::vector<char>& values) : m_values{ values }{}
+...
+Permutation p({ '1', '2', '3' , '4' , '5' });
+----
+
+Dieser Quellcode basiert auf der Tatsache, dass der Konstruktor der Klasse `std::vector<T>`, der ein `std::initializer_list<T>`-Objekt erwartet,
+nicht als `explicit` definiert ist. Damit kann der Übersetzter implizit eine Wandlung von einer Initialisierungsliste in ein `std::vector<T>`-Objekt durchführen.
+Im Rumpf des Konstruktors erhalten wir folglich - dank des Übersetzers - ein `std::vector<T>`-Objekt, das wir der `m_values`-Variablen zuweisen können.
+Diese Wertzuweisung habe ich syntaktisch im der Initialisierungsliste des Konstruktors vorgenommen,
+und dabei ist zu beachten, dass die geschweiften Klammern dieses Mal für das so genannten Feature der &ldquo;einheitlichen Initialisierung&rldquo;
+(engl. &ldquo;Uniform Initialization&rdquo;, seit C++ 11) stehen. Dieses Schreibweise bildet zusammen mit der Initialisierungsliste 
+den Ansatz von Modern C++, den Themenbereich der Initialisierung von Variablen und Objekten zu vereinheitlichen.
+
+
+Da wir aktuell Permutationen von Zeichen (`char`) betrachten, macht es Sinn, auch Zeichenketten zur Initialisierung zu verwenden.
+Die `std::string`-Klasse wäre ein erster Ansatz, ab C++ 17 besitzt diese Klasse einen _leichtgewichtigen_ Partner in Gestalt der Klasse `std::string_view`.
+Vereinfacht formuliert kann man sagen, dass `std::string_view`-Objekte eine unveränderbare Darstellung einer Zeichenkette sind.
+Zum Zwecke der Initialisierung kann man diese Klasse so einsetzen:
+
+[source,c++]
+----
+Permutation::Permutation(const std::string_view s) {
+    m_values = std::vector<char> (s.begin(), s.end());
+}
+...
+Permutation p1("12345");
+----
+
+Um die Instanzvariable `m_values` der Klasse `Permutation` mit einem `std::string_view`-Objekt vorzubelegen, gibt es 
+in der Klasse `std::vector` einen geeigneten Konstruktor, der zwei Iteratoren erwartet. Damit kann der (unveränderbare) Inhalt des Parameters `s`
+im Vektor abgelegt werden.
+
+Die beiden Methoden  `insertAtFront` und  `removeAt` und der `[]`-Operator lassen sich ohne nennenswerten Aufwand realisieren:
+
+[source,c++]
+----
+void Permutation::insertAtFront(char ch)
+{
+    m_values.insert(m_values.begin(), ch);
+}
+
+Permutation Permutation::removeAt(int i) const
+{
+    std::vector<char> tmp = m_values;
+    tmp.erase(tmp.begin() + i);
+    return Permutation(tmp);
+}
+
+char Permutation::operator[] (int i) const
+{
+    return m_values[i];
+}
+----
+
+### Klasse `PermutationArray`
+
+Kurz und bündig formuliert sind `PermutationArray`-Objekte Container für Permutationen. 
+Dies ließe sich einfach und unmittelbar mit einer STL-Containerklasse wie zum Beispiel `std::vector<T>` erzielen.
+Da der gleich folgendende Algorithmus zur Berechnung aller Permutationen diese sukzessive berechnet und dabei auch noch einige Hilfsmethoden
+erfordert, sind wir gut beraten, wenn wir um eine `std::vector<T>`-Objekt eine Hüllenklasse schreiben, die für die Belange des Algorithmus
+ausgelegt ist.
+
+Auf die Schnelle lassen sich `Permutation`-Objekte einfach in einem `PermutationArray`-Objekt ablegen.
+Wir implementieren eine insert-Methode, die wir auf eine push_back Methode umsetzen.
+
+Die einzige Stoperfalle, die es zu beachten gilt, ist, dass wir XX Objekte nicht call-by-valie, sondern by_ref durchreichen,
+um unnötihe Kopiene zhu vermeiden
+
+#### _We can do better_: _In-Place_ Konstruktion mit `emplace`
+

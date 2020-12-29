@@ -18,8 +18,22 @@ PermutationArray::PermutationArray(int size)
 // public interface
 void PermutationArray::insert(const Permutation& p)
 {
+    std::cout << "insert (1)" << std::endl;
     m_array.push_back(p);
 }
+
+void PermutationArray::emplace(std::string_view&& s) noexcept
+{
+    std::cout << "emplace (1)" << std::endl;
+    m_array.emplace_back(s);
+}
+
+void PermutationArray::emplace(std::vector<char>&& vec) noexcept
+{
+    std::cout << "emplace (2)" << std::endl;
+    m_array.emplace_back(vec);
+}
+
 
 void PermutationArray::insertAll(char ch)
 {

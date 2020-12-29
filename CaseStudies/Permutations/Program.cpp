@@ -30,6 +30,7 @@ void Test01_Permutation_Script();
 
 void Test01_Permutation();
 void Test02_PermutationArray();
+void Test02_PermutationArray_02();
 void Test03_PermutationCalculator();
 void Test04_PermutationEnumeration();
 
@@ -45,7 +46,8 @@ int main()
     // Test01_Permutation_Script();
 
     //Test01_Permutation();
-    Test02_PermutationArray();
+    //Test02_PermutationArray();
+    Test02_PermutationArray_02();
     //Test03_PermutationCalculator();
     //Test04_PermutationEnumeration();
 

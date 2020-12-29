@@ -18,23 +18,26 @@ void Test04_PermutationEnumeration();
 
 void Test01_Permutation_Script()
 {
-    Permutation p1("ABC");
+    Permutation p1{ "ABC" };
     std::cout << p1 << std::endl;
 
-    Permutation p2("12345");
+    Permutation p2({ '1', '2', '3' , '4' , '5' });
     std::cout << p2 << " (Anzahl der Elemente: " << p2.grade() << ')' << std::endl;
 
-    Permutation p3("ABC");
+    Permutation p3{ "ABC" };
     for (int i = 0; i < p3.grade(); i++)
     {
         char ch = p3[i];
         std::cout << i << ": " << ch << std::endl;
     }
 
-    Permutation p4("ABC");
+    Permutation p4{ "ABC" };
     std::cout << p4 << " (Grad: " << p4.grade() << ')' << std::endl;
     p4.insertAtFront('D');
     std::cout << p4 << " (Grad: " << p4.grade() << ')' << std::endl;
+
+    Permutation p5({ '1', '2', '3', '4', '5' });
+    std::cout << p5 << std::endl;
 }
 
 void Test01_Permutation()
@@ -47,7 +50,7 @@ void Test01_Permutation()
     p1.insertAtFront('Z');
     std::cout << p1 << std::endl;
 
-    Permutation p2("12345");
+    Permutation p2({ '1', '2', '3' , '4' , '5' });
     std::cout << p2 << " [Number of Elements: " << p2.grade() << ']' << std::endl;
 
     std::cout << "Testing []-Operator: " << std::endl;
@@ -68,17 +71,28 @@ void Test01_Permutation()
 
 void Test02_PermutationArray()
 {
-    Permutation p("ABC");
-    Permutation q("CBA");
+    Permutation p{ "ABC" };
+    Permutation q{ "CBA" };
     PermutationArray array(2);
     array.insert(p);
     array.insert(q);
     std::cout << array << std::endl;
 }
 
+void Test02_PermutationArray_02()
+{
+    PermutationArray array(4);
+    array.emplace({ "ABC" });
+    array.emplace({ "CBA" });
+    std::cout << array << std::endl;
+    array.emplace({ 'B', 'C', 'A' });
+    array.emplace({ 'B', 'A', 'C' });
+    std::cout << array << std::endl;
+}
+
 void Test03_PermutationCalculator()
 {
-    Permutation p("ABCD");
+    Permutation p("ABC");
     PermutationCalculator calc;
     PermutationArray result = calc.calculate(p);
     std::cout << result << std::endl;

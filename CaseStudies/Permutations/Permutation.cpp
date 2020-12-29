@@ -9,10 +9,11 @@
 #include "Permutation.h"
 
 // c'tors
-Permutation::Permutation(const std::vector<char> values) : m_values{ values }{}
+Permutation::Permutation(const std::vector<char>& values) : m_values{ values }{}
 
 Permutation::Permutation(const std::string_view s)
 {
+    std::cout << "c'tor (const std::string_view)" << std::endl;
     m_values = std::vector<char> (s.begin(), s.end());
 }
 
