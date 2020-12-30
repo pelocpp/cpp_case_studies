@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "Permutation.h"
+#include <sstream>
 
 // c'tors
 Permutation::Permutation(const std::initializer_list<char>& list) : m_values{ list } {
@@ -22,6 +23,50 @@ Permutation::Permutation(const std::string_view s)
 Permutation::Permutation(const std::vector<char>& values) : m_values{ values } {
     std::cout << "c'tor (const std::vector)" << std::endl;
 }
+
+//Permutation::Permutation(const std::initializer_list<char>& list) {
+//
+//    std::cout << "c'tor (const std::initializer_list)" << std::endl;
+//
+//    for (char ch : list) {
+//        if (std::find(std::begin(m_values), std::end(m_values), ch) != std::end(m_values)) {
+//            std::stringstream ss;
+//            ss << "Element " << ch << " already in Permutation!";
+//            throw std::invalid_argument(ss.str());
+//        }
+//
+//        m_values.push_back(ch);
+//    }
+//}
+//
+//Permutation::Permutation(const std::string_view sv)
+//{
+//    std::cout << "c'tor (const std::string_view)" << std::endl;
+//
+//    for (char ch : sv) {
+//        if (std::find(std::begin(m_values), std::end(m_values), ch) != std::end(m_values)) {
+//            std::stringstream ss;
+//            ss << "Element " << ch << " already in Permutation!";
+//            throw std::invalid_argument(ss.str());
+//        }
+//
+//        m_values.push_back(ch);
+//    }
+//}
+//
+//Permutation::Permutation(const std::vector<char>& values) {
+//    std::cout << "c'tor (const std::vector)" << std::endl;
+//
+//    for (char ch : values) {
+//        if (std::find(std::begin(m_values), std::end(m_values), ch) != std::end(m_values)) {
+//            std::stringstream ss;
+//            ss << "Element " << ch << " already in Permutation!";
+//            throw std::invalid_argument(ss.str());
+//        }
+//
+//        m_values.push_back(ch);
+//    }
+//}
 
 // public interface
 void Permutation::insertAtFront(char ch)

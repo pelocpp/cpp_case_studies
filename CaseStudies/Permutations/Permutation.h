@@ -4,6 +4,16 @@
 
 class Permutation
 {
+public:
+    //typedef T value_type;
+    //typedef value_type* iterator;
+    //typedef value_type const* const_iterator;
+
+    using value_type = char;
+    using iterator = value_type*;
+    using const_iterator = value_type const*;
+
+
 private:
     std::vector<char> m_values;
 

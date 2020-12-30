@@ -4,6 +4,18 @@
 
 = Permutationen
 
+== Lernziele
+
+* STL-Container (`std::vector<T>`, `std::string_view`)
+* STL-Algorithmen (`std::find`)
+* Einheitliche Initialisierung
+* Initialisierungslisten (`std::initializer_list<T>`)
+* `std::vector<T>`: _In-Place_-Konstruktion von Objekten mit 'emplace'
+
+To be done
+
+Range based Loop
+
 == Beschreibung
 
 Ist eine Menge von _n_ Elementen gegeben, so bezeichnet man die möglichen Anordnungen aller dieser _n_ Elemente als Permutationen (lat. permutare: vertauschen). Die Berechnung der Permutationen einer beliebigen Menge von Elementen steht im Mittelpunkt dieser Fallstudie. Als Elemente verwenden wir zunächst Zeichen, also `char`-Variablen.
@@ -111,7 +123,7 @@ Noch ein ähnliches Beispiel mit einer Permutation der fünf Zeichen bzw. Ziffer
 
 [source,c++]
 ----
-Permutation p{ '1', '2', '3' , '4' , '5' };
+Permutation p{ '1', '2', '3', '4', '5' };
 std::cout << p << " (Anzahl der Elemente: " << p.grade() << ')' << std::endl;
 ----
 
@@ -161,12 +173,10 @@ _Ausgabe_:
 == Klasse `PermutationArray`
 
 Zum Abspeichern mehrerer Permutation-Objekte konzipieren wir eine Klasse `PermutationArray`.
-`PermutationArray`-Objekte sind vor allem dann hilfreich, wenn während der Berechnung der Permutationen bereits eine (unvollständige) Menge an Permutation-Objekten vorliegt.
-Die Anzahl der Permutationen, die in einem `PermutationArray`-Objekt abzulegen sind, steht immer im vornehinein fest.
-Diese Eigenschaft können wir dazu verwenden, den Umfang des zu Grunde liegende STL-Container-Objekts geeignet vorzubelegen.
-
-Die Klasse `PermutationArray` besitzt eine Reihe von Methoden, die speziell für den Algorithmus zur Berechnung von Permutationen ausgelegt sind:
-
+Eigentlich ist diese Klasse sehr ähnlich zu einem `std::vector<Permutation>`-Objekt.
+Da der Algorithmus zur Berechnung aller Permutationen noch einige zusätzliche Hilfsmethoden benötigt,
+macht es Sinn, wenn wir für das `std::vector<Permutation>`-Objekt eine Hüllenklasse schreiben,
+die für die zusätzlichen Belange des Algorithmus ausgelegt ist. Damit werfen wir einen Blick auf <<id_table_permutationarray>>:
 
 .Wesentliche Elemente der Klasse `PermutationArray`.
 [[id_table_permutationarray]]
@@ -353,7 +363,7 @@ Wir können stattdessen eine Menge von Zeichen in geschweifte Klammern setzen un
 ----
 Permutation::Permutation(const std::vector<char>& values) : m_values{ values }{}
 ...
-Permutation p({ '1', '2', '3' , '4' , '5' });
+Permutation p({ '1', '2', '3', '4', '5' });
 ----
 
 Dieser Quellcode basiert auf der Tatsache, dass der Konstruktor der Klasse `std::vector<T>`, der ein `std::initializer_list<T>`-Objekt erwartet,
@@ -371,14 +381,14 @@ runde _und_ geschweifte Klammern nötig waren:
 
 [source,c++]
 ----
-Permutation p({ '1', '2', '3' , '4' , '5' });
+Permutation p({ '1', '2', '3', '4', '5' });
 ----
 
 Versuchshalber könnten wir ja versuchen, die runden oder geschreiften Klammern einfach wegzulassen. Eine Anweisung der Gestalt
 
 [source,c++]
 ----
-Permutation p('1', '2', '3' , '4' , '5');
+Permutation p('1', '2', '3', '4', '5');
 ----
 
 sieht irgendwie merkwürdig aus: Wir haben es - in diesem Beispiel - mit fünf Parametern zu tun, die logischerweise nicht zu einem der vorhandenen Konstruktoren
@@ -387,16 +397,42 @@ Damit ändern wir die runden Klammern einfach in geschweifte Klammern um:
 
 [source,c++]
 ----
-Permutation p{ '1', '2', '3' , '4' , '5' };
+Permutation p{ '1', '2', '3', '4', '5' };
 ----
 
-Der Compiler bildet dem Ausdruck `{ '1', '2', '3' , '4' , '5' }` auf eine Initialisierungsliste ab, kann diese aber nicht einem Konstruktor der Klasse `Permutation`
+Der Compiler bildet dem Ausdruck `{ '1', '2', '3', '4', '5' }` auf eine Initialisierungsliste ab, kann diese aber nicht einem Konstruktor der Klasse `Permutation`
 zuordnen: _&ldquo;'initializing': cannot convert from 'initializer list' to 'Permutation'&rdquo;_
 
-Ein gangbare Weg besteht nun darin, einen Konstruktor mit einem Parameter des Typs std::intializer_list<> zuergänzen:
+Ein gangbare Weg besteht nun darin, einen Konstruktor mit einem Parameter des Typs std::intializer_list<> zu ergänzen:
 
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Das ist irgendwie noch nicht fertig ...
 
+''''
+
+### There's more ...
+
+In <<id_table_permutation>> hatten wir angedeutet, dass es wenig Sinn ergibt, `Permutation`-Objekte zu erzeugen, die gleiche Werte enthalten.
+Wenn wir diese Anforderung umsetzen wollen, müssen wir die bisherige Realisierung der Konstruktoren neu konzipieren.
+Am einfachsten dürfte das Problem zu lösen sein, wenn wir die Elemente einer Permutation einzeln in das Objekt aufnehmen und pro neuem Element überprüfen,
+ob dieses bereits vorhanden ist. Mit der Klasse  'std::vector<T>' und dem STL-Algorithmus `std::find` kommen wir dem Ziel recht nahe:
+
+[source,c++]
+----
+Permutation::Permutation(const std::initializer_list<char>& list) {
+
+    for (char ch : list) {
+        if (std::find(std::begin(m_values), std::end(m_values), ch) != std::end(m_values)) {
+            std::stringstream ss;
+            ss << "Element " << ch << " already in Permutation!";
+            throw std::invalid_argument(ss.str());
+        }
+
+        m_values.push_back(ch);
+    }
+}
+----
+
+''''
 
 Da wir aktuell Permutationen von Zeichen (`char`) betrachten, macht es Sinn, auch Zeichenketten zur Initialisierung zu verwenden.
 Die `std::string`-Klasse wäre ein erster Ansatz, ab C++ 17 besitzt diese Klasse einen _leichtgewichtigen_ Partner in Gestalt der Klasse `std::string_view`.
@@ -440,17 +476,28 @@ char Permutation::operator[] (int i) const
 
 ### Klasse `PermutationArray`
 
-Kurz und bündig formuliert sind `PermutationArray`-Objekte nichts anderes als Container für Permutationen. 
-Mit einer STL-Containerklasse wie zum Beispiel einem `std::vector<T>`-Objekt hätten wir das Ziel bereits erreicht.
-Da der gleich folgende Algorithmus zur Berechnung aller Permutationen noch einige zusätzliche Hilfsmethoden erfordert,
-sind wir gut beraten, wenn wir für das `std::vector<T>`-Objekt eine Hüllenklasse schreiben, die für die Belange des Algorithmus
-ausgelegt ist.
+Einfach formuliert sind `PermutationArray`-Objekte nichts anderes als Container für Permutationen.
+Damit ist die Festlegung für eine Instanzvariable des Typs `std::vector<Permutation>` innerhalb dieser Klasse bereits gefallen:
 
-Auf die Schnelle lassen sich `Permutation`-Objekte einfach in einem `PermutationArray`-Objekt ablegen.
-Wir implementieren dazu eine `insert`-Methode, die wir in der Realisierung auf eine `push_back` Methode abbilden.
+[source,c++]
+----
+class PermutationArray
+{
+private:
+    std::vector<Permutation> m_array;
+    ...
+----
 
-Die einzige Stoperfalle, die es zu beachten gilt, ist, dass wir die `Permutation`-Objekte nicht _call-by-value_, also
-mit unnötigen Kopien durchreichen, sondern mit dem Parameterübergabemechanismus _call-by-reference_:
+Bei `std::vector<T>`-Instanzen sollten wir immer an den Umfang des benötigten Speicherplatzes denken, sofern dieser sich im Vorneherein bestimmen lässt.
+Im Falle der Berechnung von Permutationen haben wir hier ein einfaches Spiel: Besteht eine Permutation aus _n_ Zeichen,
+so ist die Anzahl aller Permutationen gleich _n_! ( _n_ Fakultät).
+Diese Information übertragen wir auf die `reserve`-Methode einer `std::vector<T>`-Instanz.
+Auf diese Weise vermeiden wir unnötige Speicherallokationen und -freigaben während der Ausführungszeit des Algorithmus.
+
+Relativ schnell und unkompliziert sind Methoden implementiert, die `Permutation`-Objekte in einem `PermutationArray`-Objekt ablegen.
+Eine  `insert`-Methode an der Klasse `PermutationArray` wird direkt auf die  `push_back`-Methode an der Klasse `std::vector<T>` abgebildet.
+Die einzige Stoperfalle, die es hier zu beachten gilt, ist, dass wir die `Permutation`-Objekte nicht _call-by-value_, also
+mit unnötigen Kopien durchreichen, sondern mit dem Parameterübergabemechanismus _call-by-reference_ transportieren:
 
 [source,c++]
 ----
@@ -475,16 +522,15 @@ Eines mit dem Namen `p` und ein zweites, das im `PermutationArray`-Container abg
 #### _Performance Optimizer can do better_: _In-Place_ Konstruktion mit `emplace`
 
 Es ist möglich, dass Einfügen von Objekten in STL-Containern so zu gestalten, dass das einzufügende Objekt
-gewissermaßen _In-Place_ im Container erfolgt. Wir vermeiden auf diese Weise eine zweite Kopie des Objekts,
+gewissermaßen _In-Place_ im Container erzeugt wird. Wir vermeiden auf diese Weise eine zweite Kopie des Objekts,
 die nur zum Zwecke des Einfügens angelegt wird und danach wieder verworfen wird.
-Wir benötigen dazu zwei Hilfsmittel:
+Dazu benötigen wir zwei Hilfsmittel:
 
-* Eine Methode an der `PermutationArray`-Klasse, die durch die geeignete Wahl ihrer Parameter alle Werte hat, um ein `Permutation`-Objekt erzeugen zu können.
-* Einen Aufruf der `emplace_back`-Methode am `std::vector<Permutation>`-Objekt (seit C++ 11)
+* Eine Methode an der `PermutationArray`-Klasse, die durch die geeignete Wahl ihrer Parameter in der Lage ist, damit ein `Permutation`-Objekt erzeugen zu können.
+* Einen Aufruf der `emplace_back`-Methode an einem `std::vector<Permutation>`-Objekt (seit C++ 11).
 
 Der Trick des _In-Place_-Konstruierens eines `Permutation`-Objekt liegt darin, dass die Klasse `std::vector<T>` ab C++ 11 zwei Methoden
 `emplace` und `emplace_back` besitzt, die das fragliche Objekt _in-place_ konstruieren können.
-
 In unserem Fall definieren wir zwei Methoden `emplace` wie folgt:
 
 [source,c++]
@@ -508,6 +554,11 @@ void PermutationArray::emplace(std::initializer_list<char>&& list) noexcept
     m_array.emplace_back(list);
 }
 ----
+
+Der Trick im Aufruf der Methode `emplace_back`-Methode besteht zunächst darin, dass diese auf ein Objekt des Typs `std::vector<Permutation>`
+angewendet wird. Damit kennt der Übersetzer den Typ des gewünschten Zielobjekts (hier: `Permutation`) und kann versuchen,
+zum Datentyp `std::string_view` (bzw. std::initializer_list<char>&) einen passenden Konstruktor in der Klasse `Permutation` aufzuspüren.
+So können wir nachvollziehen, wie  _in-place_  `Permutation`-Objekte in einem `std::vector<Permutation>`-Objekt konstruiert werden.
 
 Wenn wir das folgende Programmfragment, zum Beispiel mit dem Debugger oder mit Testausgaben in der Konsole, ausführen, können wir bestätigen,
 das die Permutationen-Objekte nur einmal angelegt werden:

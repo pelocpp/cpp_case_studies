@@ -10,10 +10,45 @@
 #include "PermutationArray.h"
 #include "PermutationCalculator.h"
 
+void Test01_Permutation_Errors();
 void Test01_Permutation();
 void Test02_PermutationArray();
 void Test03_PermutationCalculator();
 void Test04_PermutationEnumeration();
+
+void Test01_Permutation_Errors()
+{
+    try {
+        // permutation constructor throws an invalid_argument if
+        // initialized with a string containing multiple characters
+        Permutation p{ "ABA" };
+        std::cout <<p << std::endl;
+    }
+    catch (const std::invalid_argument& ia) {
+        std::cout << "Invalid argument: " << ia.what() << std::endl;
+    }
+
+    try {
+        // permutation constructor throws an invalid_argument if
+        // initialized with a list containing multiple characters
+        Permutation p{ '1', '2', '3', '4', '5' };
+        std::cout << p << std::endl;
+    }
+    catch (const std::invalid_argument& ia) {
+        std::cout << "Invalid argument: " << ia.what() << std::endl;
+    }
+
+    try {
+        // permutation constructor throws an invalid_argument if
+        // initialized with a list containing multiple characters
+        std::vector<char> chars = { 'X', 'Y', 'Z' };
+        Permutation p{ chars };
+        std::cout << p << std::endl;
+    }
+    catch (const std::invalid_argument& ia) {
+        std::cout << "Invalid argument: " << ia.what() << std::endl;
+    }
+}
 
 void Test01_Permutation()
 {
@@ -25,7 +60,7 @@ void Test01_Permutation()
     p1.insertAtFront('Z');
     std::cout << p1 << std::endl;
 
-    Permutation p2{ '1', '2', '3' , '4' , '5' };
+    Permutation p2{ '1', '2', '3', '4', '5' };
     std::cout << p2 << " [Number of Elements: " << p2.grade() << ']' << std::endl;
 
     std::cout << "Testing []-Operator: " << std::endl;
@@ -42,6 +77,18 @@ void Test01_Permutation()
         p3 = p3.removeAt(0);
         std::cout << i << ": " << p3 << std::endl;
     }
+}
+
+void Test01_Permutation_Iteration()
+{
+    // sortieren oder Range Based Loop
+
+    Permutation p{ "ABCDE" };
+
+    for (char ch : p) {
+        std::cout << ch << std::endl;
+    }
+
 }
 
 void Test02_PermutationArray()
