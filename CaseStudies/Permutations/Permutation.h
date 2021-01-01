@@ -4,14 +4,25 @@
 
 class Permutation
 {
+    friend class PermutationIterator;
+
 public:
     //typedef T value_type;
     //typedef value_type* iterator;
     //typedef value_type const* const_iterator;
 
+    //using value_type = char;
+    //using iterator = value_type*;
+    //using const_iterator = value_type const*;
+
+    using iterator_category = std::random_access_iterator_tag;
+
     using value_type = char;
-    using iterator = value_type*;
-    using const_iterator = value_type const*;
+   // using iterator = value_type*;
+    using difference_type = std::ptrdiff_t;
+    using pointer = char*;
+    using reference = char&;
+
 
 
 private:
@@ -36,6 +47,10 @@ public:
 
     // operator(s)
     char operator[] (int i) const;
+
+    // iterator support
+    class PermutationIterator begin() const;
+    class PermutationIterator end() const;
 
     // output
     friend std::ostream& operator<< (std::ostream&, const Permutation&);

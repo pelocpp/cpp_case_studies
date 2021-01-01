@@ -26,8 +26,14 @@
 
 // TODO: Methoden in klein umbenennen
 
+// TODO: Der Iterator ist nicht default - constructable .... ist das schlimm ???
+
+// SEHR GUTER TEXT
+// https://davidgorski.ca/posts/stl-iterators/
+
 void Test01_Permutation_Errors();
 void Test01_Permutation();
+void Test01_Permutation_Iteration();
 void Test02_PermutationArray();
 void Test02_PermutationArray_02();
 void Test03_PermutationCalculator();
@@ -44,9 +50,9 @@ void Test04_PermutationEnumeration_Ex();
 
 int main()
 {
-    Test01_Permutation_Errors();
-
+    // Test01_Permutation_Errors();
     //Test01_Permutation();
+    Test01_Permutation_Iteration();
     //Test02_PermutationArray();
     //Test02_PermutationArray_02();
     //Test03_PermutationCalculator();

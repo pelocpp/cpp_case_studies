@@ -10,6 +10,7 @@
 #include "Permutation.h"
 #include "PermutationArray.h"
 #include "PermutationCalculator.h"
+#include "PermutationIterator.h"
 
 // c'tor
 PermutationCalculator::PermutationCalculator() : m_p{}, m_array{} {}

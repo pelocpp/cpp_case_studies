@@ -8,6 +8,7 @@
 
 #include "Permutation.h"
 #include "PermutationArray.h"
+#include "PermutationIterator.h"
 
 // c'tors
 PermutationArray::PermutationArray(int size)

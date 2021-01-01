@@ -5,9 +5,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include "Permutation.h"
-#include <sstream>
+#include "PermutationIterator.h"
 
 // c'tors
 Permutation::Permutation(const std::initializer_list<char>& list) : m_values{ list } {
@@ -85,6 +86,24 @@ Permutation Permutation::removeAt(int i) const
 char Permutation::operator[] (int i) const
 {
     return m_values[i];
+}
+
+// iterator support
+//PermutationIterator Permutation::begin() const {
+//    return PermutationIterator{ 0 };
+//}
+//
+//PermutationIterator Permutation::end() const {
+//    return PermutationIterator{ static_cast<int>(m_values.size()) };
+//}
+
+PermutationIterator Permutation::begin() const {
+
+    return PermutationIterator (*this, 0);;
+}
+
+PermutationIterator Permutation::end() const {
+    return PermutationIterator( *this, static_cast<int>(m_values.size()) );
 }
 
 // output

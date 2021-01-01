@@ -146,6 +146,7 @@
     <ClCompile Include="Permutation.cpp" />
     <ClCompile Include="PermutationArray.cpp" />
     <ClCompile Include="PermutationCalculator.cpp" />
+    <ClCompile Include="PermutationIterator.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="PermutationCalculator.h" />
     <ClInclude Include="PermutationCalculatorEx.h" />
     <ClInclude Include="PermutationEx.h" />
+    <ClInclude Include="PermutationIterator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.adoc" />

@@ -5,10 +5,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <array>
 
 #include "Permutation.h"
 #include "PermutationArray.h"
 #include "PermutationCalculator.h"
+#include "PermutationIterator.h"
+#include <algorithm>
 
 void Test01_Permutation_Errors();
 void Test01_Permutation();
@@ -81,14 +84,57 @@ void Test01_Permutation()
 
 void Test01_Permutation_Iteration()
 {
-    // sortieren oder Range Based Loop
 
+    //std::vector<char> vec;
+
+    //using x = std::array<char, 5>::difference_type;
+
+    //x aha = 0;
+
+
+    // testing range based loop
     Permutation p{ "ABCDE" };
-
     for (char ch : p) {
         std::cout << ch << std::endl;
     }
 
+    // testing STL compliance ot iterator implementation
+    Permutation q{ '5', '4', '3', '2', '1' };
+    std::cout << q << std::endl;
+
+// https://stackoverflow.com/questions/55940777/custom-iterator-for-use-in-stdsort
+
+//https://www.walletfox.com/course/sortvectorofcustomobjects.php
+//
+//https://www.internalpointers.com/post/writing-custom-iterators-modern-cpp   // seeeeeeeehr gut
+//
+//https://www.fluentcpp.com/2018/05/08/std-iterator-deprecated/
+
+
+    std::sort(std::begin(q), std::end(q), [](auto a, auto b) -> bool { return true; });
+    std::cout << std::endl;
+
+    // =======================================
+
+    // https://www.geeksforgeeks.org/stdminmax-stdminmax_element-c-stl/
+
+   //  // declaring pair pointer to catch the return value 
+   // std::pair<PermutationIterator, PermutationIterator> mnmx;
+
+   //// std::pair<int, int> bounds = std::minmax(std::rand() % v.size(), std::rand() % v.size());
+
+   // mnmx =  std::minmax_element(std::begin(q), std::end(q));
+
+   // // printing position of minimum and maximum values. 
+   // std::cout << "The minimum value position obtained is : ";
+   // std::cout << mnmx.first - q.begin() << std::endl;
+
+   // std::cout << "The maximum value position obtained is : ";
+   // std::cout << mnmx.second - q.begin() << std::endl;
+
+
+
+    std::cout << q << std::endl;
 }
 
 void Test02_PermutationArray()
