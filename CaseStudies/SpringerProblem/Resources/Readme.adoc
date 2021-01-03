@@ -1,9 +1,15 @@
-= Das Springerproblem                             
-Peter Loos (c) 2021 peterloos.de                                     
-Version 0.1, 26.12.2020                                     
-                                                                  
+= Das Springerproblem                                                                
 :description: Example AsciiDoc document                             
-:keywords: AsciiDoc                                                 
+:keywords: AsciiDoc
+:xrefstyle: short
+:listing-caption: Listing
+:table-caption: Tabelle
+:source-language: c++
+:icons: font
+:source-highlighter: coderay
+
+Peter Loos (c) 2021 peterloos.de                                     
+Version 0.1, 26.12.2020  
                                                  
 Gegenstand dieser Fallstudie ist das klassische Springerproblem des Schachspiels. Die Springerfigur wird dazu auf ein beliebiges Feld eines _n_×_n_ Schachbretts gestellt.
 Das Problem besteht nun darin, eine Zugfolge zu finden, bei der der Springer, entsprechend seiner Bewegungsmöglichkeiten im Schach, nacheinander alle Felder des Schachbrettes besetzt – jedes Feld genau einmal! Prinzipiell ist von vorneherein nicht klar, ob es überhaupt eine Lösung gibt. Wenn ja, kann es auch sein, dass mehrere Zugfolgen existieren? Eine mögliche Lösung des Springerproblems auf einem realen Schachbrett (also mit 64 Feldern) finden Sie in Abbildung 1 vor:
