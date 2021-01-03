@@ -28,9 +28,6 @@
 
 // TODO: Der Iterator ist nicht default - constructable .... ist das schlimm ???
 
-// SEHR GUTER TEXT
-// https://davidgorski.ca/posts/stl-iterators/
-
 void Test01_Permutation_Errors();
 void Test01_Permutation();
 void Test01_Permutation_Iteration();

@@ -81,4 +81,25 @@ In unserem konkreten Beispiel lässt sich nun zusammenfassend das Lösungsverfah
 [caption="Abbildung {counter:figure}: ", title="Grobskizze einer rekursiven Methode FindMoves zur Bestimmung aller Zugfolgen."]
 image::KnightsProblem_PseudoCode_01.png[width=450]
 
+''''
+
+ab hier ist alles ein Test
+
+Wir schließen die theoretischen Vorarbeiten hiermit ab, es folgen Hinweise für eine Umsetzung des Lösungsverfahrens in einer C++-Anwendung.
+
+
+.app.rb 
+[#src-listing] 
+[source,ruby]
+----
+require 'sinatra' <1>
+
+get '/hi' do <2> <3>
+  "Hello World!"
+end
+----
+<1> Library import
+<2> URL mapping
+<3> Response block
+
 Wir schließen die theoretischen Vorarbeiten hiermit ab, es folgen Hinweise für eine Umsetzung des Lösungsverfahrens in einer C++-Anwendung.
