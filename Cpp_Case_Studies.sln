@@ -39,6 +39,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpringerProblem", "Springer
 		AsciiDoc\SpringerProblem\SpringerProblem.adoc = AsciiDoc\SpringerProblem\SpringerProblem.adoc
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CollatzSequence", "CaseStudies\CollatzSequence\CollatzSequence.vcxproj", "{0531CAA7-922B-45E3-8B83-AC82D2186EBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CollatzSequence", "CollatzSequence", "{9A6045C5-DA88-477B-809F-DF25A567C741}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -87,6 +91,14 @@ Global
 		{253E3080-9F17-410A-927E-F3EDCA507077}.Release|x64.Build.0 = Release|x64
 		{253E3080-9F17-410A-927E-F3EDCA507077}.Release|x86.ActiveCfg = Release|Win32
 		{253E3080-9F17-410A-927E-F3EDCA507077}.Release|x86.Build.0 = Release|Win32
+		{0531CAA7-922B-45E3-8B83-AC82D2186EBF}.Debug|x64.ActiveCfg = Debug|x64
+		{0531CAA7-922B-45E3-8B83-AC82D2186EBF}.Debug|x64.Build.0 = Debug|x64
+		{0531CAA7-922B-45E3-8B83-AC82D2186EBF}.Debug|x86.ActiveCfg = Debug|Win32
+		{0531CAA7-922B-45E3-8B83-AC82D2186EBF}.Debug|x86.Build.0 = Debug|Win32
+		{0531CAA7-922B-45E3-8B83-AC82D2186EBF}.Release|x64.ActiveCfg = Release|x64
+		{0531CAA7-922B-45E3-8B83-AC82D2186EBF}.Release|x64.Build.0 = Release|x64
+		{0531CAA7-922B-45E3-8B83-AC82D2186EBF}.Release|x86.ActiveCfg = Release|Win32
+		{0531CAA7-922B-45E3-8B83-AC82D2186EBF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +106,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{FE02D751-6BFA-4C45-8E1C-DB363360910C} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
 		{1BE26B8E-3A21-40D3-A0C6-2FF5EA62C8E4} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
+		{9A6045C5-DA88-477B-809F-DF25A567C741} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}
