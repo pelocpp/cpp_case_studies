@@ -158,12 +158,6 @@
     <ClInclude Include="PermutationEx.h" />
     <ClInclude Include="PermutationIterator.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Readme.adoc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="PermutationPseudeCode.png" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

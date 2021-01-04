@@ -9,13 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Resources">
-      <UniqueIdentifier>{7b2cf851-d646-40b0-8097-805e167685f7}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -41,48 +34,5 @@
     <ClInclude Include="Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Readme.adoc">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Resources\knight_moves_001.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\knight_moves_002.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\knight_moves_003.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\knight_moves_004.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\knight_moves_005.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\knight_moves_006.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\knight_moves_007.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\knight_moves_008.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\Knight_Moves_Solutions.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\Knight_Problem_Single_Solution.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\knight_moves_solution_tree.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\KnightsProblem_PseudoCode_01.png">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>
