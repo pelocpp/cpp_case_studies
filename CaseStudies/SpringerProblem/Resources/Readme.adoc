@@ -6,7 +6,7 @@
 :table-caption: Tabelle
 :source-language: c++
 :icons: font
-:source-highlighter: coderay
+:source-highlighter: highlightjs
 
 Peter Loos (c) 2021 peterloos.de                                     
 Version 0.1, 26.12.2020  
