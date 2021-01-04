@@ -78,12 +78,12 @@ void Test08_Collatz();
 void Test_Collatz()
 {
     //Test01_Collatz();
-//Test02_Collatz();
-    Test03_Collatz();
+    //Test02_Collatz();
+    //Test03_Collatz();
     //Test04_Collatz();
     //Test05_Collatz();
     //Test06_Collatz();
-    //Test07_Collatz();
+    Test07_Collatz();
     //Test08_Collatz();
 }
 
@@ -110,7 +110,7 @@ void Test_Collatz_Ex()
 
 int main()
 {   
-    Test_Collatz_Ex();
+    Test_Collatz();
 
     return 0;
 }

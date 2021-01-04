@@ -1,4 +1,3 @@
-= Das Springerproblem                                                                
 :description: Example AsciiDoc document                             
 :keywords: AsciiDoc
 :xrefstyle: short
@@ -8,6 +7,7 @@
 :icons: font
 :source-highlighter: highlightjs
 
+= Das Springerproblem                                                                
 Peter Loos (c) 2021 peterloos.de                                     
 Version 0.1, 26.12.2020  
                                                  

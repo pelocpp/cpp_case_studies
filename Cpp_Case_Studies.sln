@@ -42,6 +42,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CollatzSequence", "CaseStudies\CollatzSequence\CollatzSequence.vcxproj", "{0531CAA7-922B-45E3-8B83-AC82D2186EBF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CollatzSequence", "CollatzSequence", "{9A6045C5-DA88-477B-809F-DF25A567C741}"
+	ProjectSection(SolutionItems) = preProject
+		AsciiDoc\CollatzSequence\Iterator_Documentation.adoc = AsciiDoc\CollatzSequence\Iterator_Documentation.adoc
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,8 @@
 :xrefstyle: short
 :listing-caption: Listing
 :table-caption: Tabelle
+:icons: font
+:source-highlighter: coderay
 
 = Permutationen
 

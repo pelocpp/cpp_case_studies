@@ -50,7 +50,7 @@ void Test04_Collatz()
 
 void Test05_Collatz()
 {
-    std::vector<int> numbers{ 100 };
+    std::vector<int> numbers{};
     CollatzSequence seq{ 7 };
     std::copy(std::begin(seq), std::end(seq), std::back_inserter(numbers));
 
@@ -91,7 +91,7 @@ void Test07_Collatz()
 
 void Test08_Collatz()
 {
-    CollatzSequence seq{ 7 };
+    CollatzSequence seq{ 17 };
 
     //std::iterator_traits<CollatzIterator>::difference_type count 
     //    = std::distance(std::begin(seq), std::end(seq));

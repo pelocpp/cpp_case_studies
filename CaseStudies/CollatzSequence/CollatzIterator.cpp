@@ -12,8 +12,8 @@ CollatzIterator::CollatzIterator(int start) : m_start{ start }, m_current{ start
 // operator(s)
 int CollatzIterator::operator*() const { return m_current; }
 
-CollatzIterator& CollatzIterator::operator++() {
-
+CollatzIterator& CollatzIterator::operator++() 
+{
     m_last = m_current;
 
     m_current = (m_current % 2 == 0)
@@ -25,7 +25,6 @@ CollatzIterator& CollatzIterator::operator++() {
 
 bool CollatzIterator::operator!=(const CollatzIterator& seq) const
 { 
-    // return m_current != seq.m_current;
     return m_last != seq.m_current;
 }
 
