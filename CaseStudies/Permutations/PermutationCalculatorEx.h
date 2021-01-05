@@ -2,6 +2,8 @@
 // PermutationCalculatorEx.h
 // =====================================================================================
 
+#pragma once
+
 template <typename T>
 class PermutationCalculatorEx
 {

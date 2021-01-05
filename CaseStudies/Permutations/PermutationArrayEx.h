@@ -2,6 +2,8 @@
 // PermutationArrayEx.h
 // =====================================================================================
 
+#pragma once
+
 template <typename T>
 class PermutationArrayEx
 {

@@ -1,26 +1,23 @@
 // =====================================================================================
-// CollatzSequence.h
+// Program.cpp
 // =====================================================================================
 
-#pragma once
+#include <iostream>
+#include <string>
 
-// forward declaration of iterator class
-class CollatzIterator;
+// TODO: PeLo  das insert an der set könnte mit einem emplace back ergänzt werden !!!!!!
 
-class CollatzSequence
+void Test01_Partition();
+void Test02_PartitionSet_01();
+void Test02_PartitionSet_02();
+void Test03_PartitionCalculator();
+
+int main()
 {
-private:
-    int m_start{ 1 };
-
-public:
-    // c'tor(s)
-    CollatzSequence() = default;
-    CollatzSequence(int start);
-
-    // iterator support
-    CollatzIterator begin() const;
-    CollatzIterator end()   const;
-};
+    Test02_PartitionSet_02();
+    // Test02_PartitionCalculator();
+    return 0;
+}
 
 // =====================================================================================
 // End-of-File

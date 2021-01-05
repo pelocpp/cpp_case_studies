@@ -2,20 +2,26 @@
 // Partition.h
 // =====================================================================================
 
+#pragma once
+
 class Partition
 {
 private:
-    std::vector<int> m_numbers{ 0 };
+    std::multiset<int, std::greater<int>> m_numbers;
     int m_number{ 0 };
 
 public:
     // c'tor(s)
     Partition() = default;
     Partition(const std::initializer_list<int>&);
+    Partition(const std::vector<int>&);
 
     // properties
     int number() const { return m_number; }
-    int size() const { return static_cast<int> (m_numbers.size()); };
+    int size() const { return static_cast<int> (m_numbers.size()); }
+
+    // retrieve copy of the underlying vector
+ //   std::vector<int> numbers() const { return m_numbers; }
 
     // overrides
     std::string toString();
@@ -24,17 +30,17 @@ public:
 
     // TODO PeLo  : Hier müssen exception hin .... und damit müssen die Methoden in das cpp file ...
 
-    int& operator[] (int i) { return m_numbers[i]; }
-    const int& operator[] (int i ) const { return m_numbers[i]; };
+    //int& operator[] (int i) { return m_numbers[i]; }
+    //const int& operator[] (int i ) const { return m_numbers[i]; }
 
     //friend or not ??????
     friend bool operator==(const Partition&, const Partition&);
     friend bool operator!=(const Partition&, const Partition&);
 
-    bool operator<=(const Partition&) const;
-    bool operator>=(const Partition&) const;
-    bool operator<(const Partition&) const;
-    bool operator>(const Partition&) const;
+    friend bool operator<=(const Partition&, const Partition&);
+    friend bool operator>=(const Partition&, const Partition&);
+    friend bool operator<(const Partition&, const Partition&);
+    friend bool operator>(const Partition&, const Partition&);
 
     // output
     friend std::ostream& operator<< (std::ostream&, const Partition&);

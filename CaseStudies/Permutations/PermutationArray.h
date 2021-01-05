@@ -2,6 +2,8 @@
 // PermutationArray.h
 // =====================================================================================
 
+#pragma once
+
 class PermutationArray
 {
 private:

@@ -2,6 +2,8 @@
 // PermutationCalculator.h
 // =====================================================================================
 
+#pragma once
+
 class PermutationCalculator
 {
 private:

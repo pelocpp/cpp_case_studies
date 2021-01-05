@@ -1,25 +1,24 @@
 // =====================================================================================
-// CollatzSequence.h
+// PartitionCalculator.h
 // =====================================================================================
 
 #pragma once
 
-// forward declaration of iterator class
-class CollatzIterator;
-
-class CollatzSequence
+class PartitionCalculator
 {
 private:
-    int m_start{ 1 };
+    int m_number{ 0 };
 
 public:
-    // c'tor(s)
-    CollatzSequence() = default;
-    CollatzSequence(int start);
+    // c'tor
+    PartitionCalculator() = default;
 
-    // iterator support
-    CollatzIterator begin() const;
-    CollatzIterator end()   const;
+    // getter/setter
+    //void setPermutation(const Permutation&);
+    //Permutation getPermutation();
+
+    // public interface
+    static PartitionSet calculate(int n);
 };
 
 // =====================================================================================

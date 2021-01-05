@@ -141,10 +141,13 @@
   <ItemGroup>
     <ClCompile Include="Examples.cpp" />
     <ClCompile Include="Partition.cpp" />
+    <ClCompile Include="PartitionCalculator.cpp" />
     <ClCompile Include="PartitionSet.cpp" />
+    <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Partition.h" />
+    <ClInclude Include="PartitionCalculator.h" />
     <ClInclude Include="PartitionSet.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

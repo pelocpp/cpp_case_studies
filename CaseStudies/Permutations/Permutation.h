@@ -2,6 +2,8 @@
 // Permutation.h
 // =====================================================================================
 
+#pragma once
+
 class Permutation
 {
     friend class PermutationIterator;

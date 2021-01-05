@@ -2,6 +2,8 @@
 // CollatzSequenceEx.h
 // =====================================================================================
 
+#pragma once
+
 // forward declaration of iterator class
 template <typename T> 
 class CollatzIteratorEx;
