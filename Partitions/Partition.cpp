@@ -26,9 +26,17 @@ Partition::Partition(const std::vector<int>& numbers)
     m_number = std::accumulate(m_numbers.begin(), m_numbers.end(), 0);
 }
 
+std::vector<int> Partition::numbers() const {
+    std::vector<int> result;
+    result.assign(m_numbers.begin(), m_numbers.end());
+    return result;
+}
+
 // operators
 bool operator==(const Partition& p1, const Partition& p2)
 {
+    std::cout << "==" << std::endl;
+
     // partitions of different numbers can't be compared
     if (p1.number() != p2.number())
         throw std::invalid_argument(std::string("Partitions don't belong to same number!"));
@@ -41,18 +49,44 @@ bool operator==(const Partition& p1, const Partition& p2)
     return (p1.m_numbers == p2.m_numbers);
 }
 
+//bool operator<(const Partition& p1, const Partition& p2)
+//{
+//    // partitions of different numbers can't be compared
+//    if (p1.number() != p2.number())
+//        throw std::invalid_argument(std::string("Partitions don't belong to same number!"));
+//
+//    if (p1.m_numbers.size() < p2.m_numbers.size()) {
+//        return false;
+//    }
+//    else if (p1.m_numbers.size() > p2.m_numbers.size()) {
+//        return true;
+//    }
+//
+//    std::set<int>::iterator it1 = p1.m_numbers.begin();
+//    std::set<int>::iterator it2 = p2.m_numbers.begin();
+//
+//    while (it1 != p1.m_numbers.end() && it2 != p2.m_numbers.end()) {
+//
+//        if ((*it1) > (*it2))
+//            return false;
+//        if ((*it1) < (*it2))
+//            return true;
+//
+//        ++it1;
+//        ++it2;
+//    }
+//
+//    return true;
+//}
+
 bool operator<(const Partition& p1, const Partition& p2)
 {
     // partitions of different numbers can't be compared
     if (p1.number() != p2.number())
         throw std::invalid_argument(std::string("Partitions don't belong to same number!"));
 
-    if (p1.m_numbers.size() < p2.m_numbers.size()) {
-        return false;
-    }
-    else if (p1.m_numbers.size() > p2.m_numbers.size()) {
-        return true;
-    }
+    //if (p1.m_numbers == p2.m_numbers)
+    //    return false;
 
     std::set<int>::iterator it1 = p1.m_numbers.begin();
     std::set<int>::iterator it2 = p2.m_numbers.begin();

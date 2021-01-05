@@ -14,8 +14,8 @@ void Test03_PartitionCalculator();
 
 int main()
 {
-    Test02_PartitionSet_02();
-    // Test02_PartitionCalculator();
+    Test03_PartitionCalculator();
+
     return 0;
 }
 

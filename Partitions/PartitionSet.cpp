@@ -6,6 +6,7 @@
 #include <string>
 #include <set>
 #include <vector>
+#include <iomanip> 
 
 #include "Partition.h"
 #include "PartitionSet.h"
@@ -29,18 +30,12 @@ void PartitionSet::insert(const Partition& p) {
     m_partitions.insert(p);
 }
 
-bool PartitionSet::contains(const Partition& p) {
-
-    return false;
-}
-
 std::ostream& operator<< (std::ostream& os, const PartitionSet& set)
 {
-    //for (int i = 0; i < set.size(); i++)
-    //    os << set.m_partitions[i] << std::endl;
-
+    int n = 1;
     for (const Partition& p : set.m_partitions) {
-        os << p << std::endl;
+        os << std::setw(3) << n << ": " << p << std::endl;
+        ++n;
     }
 
     os << '[' << set.size() << " permutations]" << std::endl;

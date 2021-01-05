@@ -19,9 +19,9 @@ public:
     // properties
     int number() const { return m_number; }
     int size() const { return static_cast<int> (m_numbers.size()); }
+    std::vector<int> numbers() const;
 
-    // retrieve copy of the underlying vector
- //   std::vector<int> numbers() const { return m_numbers; }
+
 
     // overrides
     std::string toString();
@@ -37,8 +37,8 @@ public:
     friend bool operator==(const Partition&, const Partition&);
     friend bool operator!=(const Partition&, const Partition&);
 
-    friend bool operator<=(const Partition&, const Partition&);
-    friend bool operator>=(const Partition&, const Partition&);
+    //friend bool operator<=(const Partition&, const Partition&);
+    //friend bool operator>=(const Partition&, const Partition&);
     friend bool operator<(const Partition&, const Partition&);
     friend bool operator>(const Partition&, const Partition&);
 
