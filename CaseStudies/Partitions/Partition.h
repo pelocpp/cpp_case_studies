@@ -16,15 +16,11 @@ public:
     Partition(const std::initializer_list<int>&);
     Partition(const std::vector<int>&);
 
-    // properties
+    // getter
     int number() const { return m_number; }
     int size() const { return static_cast<int> (m_numbers.size()); }
     std::vector<int> numbers() const;
 
-
-
-    // overrides
-    std::string toString();
 
     // operators
 
@@ -33,12 +29,10 @@ public:
     //int& operator[] (int i) { return m_numbers[i]; }
     //const int& operator[] (int i ) const { return m_numbers[i]; }
 
-    //friend or not ??????
     friend bool operator==(const Partition&, const Partition&);
     friend bool operator!=(const Partition&, const Partition&);
-
-    //friend bool operator<=(const Partition&, const Partition&);
-    //friend bool operator>=(const Partition&, const Partition&);
+    friend bool operator<=(const Partition&, const Partition&);
+    friend bool operator>=(const Partition&, const Partition&);
     friend bool operator<(const Partition&, const Partition&);
     friend bool operator>(const Partition&, const Partition&);
 
