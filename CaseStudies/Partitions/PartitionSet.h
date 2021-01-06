@@ -8,7 +8,7 @@ class PartitionSet {
 
 private:
     std::set<Partition, std::greater<Partition>> m_partitions;
-    int m_number;
+    int m_number{ };
 
 public:
     // c'tors/d'tor
@@ -24,7 +24,19 @@ public:
 
     // public interface
     void insert(const Partition&);
-   // bool contains(const Partition&);
+
+    void emplace();
+
+    template <typename ... Args>
+    void emplace2(Args&& ... args) {
+
+        std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result 
+            = m_partitions.emplace( std::initializer_list<int> { std::forward<int> (args) ... });
+
+        std::cout << std::boolalpha <<  "Result: " << std::get<1>(result) << std::endl;
+    }
+
+    // bool contains(const Partition&);
     //void sortDescending();
     //void sortAscending();
 

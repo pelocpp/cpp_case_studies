@@ -26,23 +26,16 @@ void Test01_Partition()
     std::cout << p4 << std::endl;
     std::cout << std::boolalpha << (p3 == p4) << std::endl;
 
-    // TODO PeLo  DAS SOLLTE MIT for Each gehen
-    //Partition p5{ 2, 4, 6 };
-    //for (int i = 0; i < p5.size(); i++)
-    //    std::cout << p5[i] << ' ';
-    //std::cout << std::endl;
-
-    //Partition p6{ 6, 4, 2 };
-    //for (int i = 0; i < p6.size(); i++)
-    //    std::cout << p6[i] << ' ';
-    //std::cout << std::endl;
+    Partition p5{ 6, 5, 4, 3, 2, 1 };
+    for (auto& elem : p5) {
+        std::cout << elem << ' ';
+    }
+    std::cout << std::endl;
 }
 
 void Test02_PartitionSet_01()
 {
     PartitionSet set{ 3 };
-
-    // PeLo: Das muss mit einem EMPLACE gehen .. siehe Examples ....
 
     set.insert({ 3 });
     set.insert({ 1, 2 });
@@ -55,8 +48,6 @@ void Test02_PartitionSet_01()
 void Test02_PartitionSet_02()
 {
     PartitionSet set{ 7 };
-
-    // PeLo: Das muss mit einem EMPLACE gehen .. siehe Examples ....
 
     set.insert({ 7 });
     set.insert({ 6, 1 });
@@ -73,6 +64,30 @@ void Test02_PartitionSet_02()
     set.insert({ 2, 2, 1, 1, 1 });
     set.insert({ 2, 1, 1, 1, 1, 1 });
     set.insert({ 1, 1, 1, 1, 1, 1, 1 });
+
+    std::cout << "Partitions of " << set.number() << ": " << std::endl;
+    std::cout << set << std::endl;
+}
+
+void Test02_PartitionSet_03()
+{
+    PartitionSet set{ 7 };
+
+    set.emplace2( 7 );
+    set.emplace2( 6, 1 );
+    set.emplace2( 5, 2 );
+    set.emplace2( 5, 1, 1 );
+    set.emplace2( 4, 3 );
+    set.emplace2( 4, 2, 1 );
+    set.emplace2( 4, 1, 1, 1 );
+    set.emplace2( 3, 3, 1 );
+    set.emplace2( 3, 2, 2 );
+    set.emplace2( 3, 2, 1, 1 );
+    set.emplace2( 3, 1, 1, 1, 1 );
+    set.emplace2( 2, 2, 2, 1 );
+    set.emplace2( 2, 2, 1, 1, 1 );
+    set.emplace2( 2, 1, 1, 1, 1, 1 );
+    set.emplace2( 1, 1, 1, 1, 1, 1, 1 );
 
     std::cout << "Partitions of " << set.number() << ": " << std::endl;
     std::cout << set << std::endl;
