@@ -48,6 +48,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CollatzSequence", "CollatzS
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Partitions", "CaseStudies\Partitions\Partitions.vcxproj", "{9C865E9F-2A61-4034-AAEE-B037AD7FA37E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Partitions", "Partitions", "{3AEF1E44-3D6E-4702-9E13-7E889AF9E0B5}"
+	ProjectSection(SolutionItems) = preProject
+		AsciiDoc\Partitions\Partitions_Documentation.adoc = AsciiDoc\Partitions\Partitions_Documentation.adoc
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -120,6 +125,7 @@ Global
 		{FE02D751-6BFA-4C45-8E1C-DB363360910C} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
 		{1BE26B8E-3A21-40D3-A0C6-2FF5EA62C8E4} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
 		{9A6045C5-DA88-477B-809F-DF25A567C741} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
+		{3AEF1E44-3D6E-4702-9E13-7E889AF9E0B5} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}
