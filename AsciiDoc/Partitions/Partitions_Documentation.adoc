@@ -8,24 +8,193 @@
 :cpp: C++
 :cpp11: C++&ndash;11
 
-= Zahlenfolgen und {cpp}&ndash;Iteratoren
+= Partitionen einer natürlichen Zahl
 
 == Lernziele
 
-* {cpp} Iterator-Konzept
-* STL-Algorithmen (`std::distance`, `std::accumulate`, `std::copy`, `std::back_inserter`)
-* Bereichs-basierte `for`-Wiederholungsschleife (Range-Based For Loop)
+* STL-Klassen `std::set<T>` und `std::multiset<T>`
+* Container-Methoden `cbegin()` und `cend()`
+* Konstruktor-Erzeugung mit `delete` unterdrücken
+* In-Place Konstruktion von Objekten mit `emplace`
 
-== Beschreibung
+== Einführung
 
-Unter einer _Zahlenfolge_ (auch _Zahlenreihe_) verstehen wir in der Mathematik
-eine Auflistung von endlich (oder auch unendlich) vielen fortlaufend nummerierten Zahlen.
-Die Zahl mit der Nummer _i_ &ndash; man sagt hier auch: mit dem Index _i_ &ndash; wird _i_-tes Glied der Folge genannt.
+Wir beschäftigen uns in dieser Fallstudie mit der Fragestellung, auf wie viele Arten sich eine natürliche Zahl
+als Summe von natürlichen Zahlen &ndash; auch _Partition_ oder _Zerlegung_ genannt &ndash; schreiben lässt?
+Wir präzisieren die Fragestellung noch mit folgender Ergänzung: Zwei Zerlegungen, die sich nur in der Reihenfolge ihrer Summanden unterscheiden, gelten als gleich. Konkret: Die Zerlegungen der ersten fünf natürlichen Zahlen sehen so aus:
 
-Diese Fallstudie zeigt, wie sich die Berechnung der Elemente einer Zahlenfolge in einem {cpp}-Iterator einbetten lässt,
-um auf diese Weise mit Hilfe der STL-Algorithmen performante und elegant in das {cpp}-Programmiermodell integrierte Algorithmen zu erhalten.
+....
+1 = 1
 
-== Die &ldquo;teuflische Zahlenfolge&rdquo; oder auch das _Collatz_-Problem
+2 = 2
+2 = 1 + 1
+
+3 = 3
+3 = 2 + 1
+3 = 1 + 1 + 1
+
+4 = 4
+4 = 3 + 1
+4 = 2 + 2
+4 = 2 + 1 + 1
+
+4 = 1 + 1 + 1 + 1
+5 = 5
+5 = 4 + 1
+5 = 3 + 2
+5 = 3 + 1 + 1
+5 = 2 + 2 + 1
+5 = 2 + 1 + 1 + 1
+5 = 1 + 1 + 1 + 1 + 1
+....
+
+== Partitionen vergleichen
+
+Unterschiedliche Zerlegungen derselben natürlichen Zahl lassen sich vergleichen. Welche Operatoren sollten Sie zu diesem Zweck
+in der Klasse `Partition` implementieren? Erkennen Sie am folgenden Beispiel aller Zerlegungen der Zahl 7, wie der Vergleich zweier Partitionen definiert sein könnte?
+
+....
+7 = 7
+7 = 6 + 1
+7 = 5 + 2
+7 = 5 + 1 + 1
+7 = 4 + 3
+7 = 4 + 2 + 1
+7 = 4 + 1 + 1 + 1
+7 = 3 + 3 + 1
+7 = 3 + 2 + 2
+7 = 3 + 2 + 1 + 1
+7 = 3 + 1 + 1 + 1 + 1
+7 = 2 + 2 + 2 + 1
+7 = 2 + 2 + 1 + 1 + 1
+7 = 2 + 1 + 1 + 1 + 1 + 1
+7 = 1 + 1 + 1 + 1 + 1 + 1 + 1
+....
+
+== Die Klasse `Partition`
+
+Die algorithmische Bestimmung aller Partitionen einer natürlichen Zahl ist keineswegs trivial,
+wie man bei anfänglicher Betrachtung vielleicht glauben mag. Mit Hilfe des rekursiven Methodenaufrufs
+lässt sich das Problem am ehesten vergleichsweise einfach lösen. Zu diesem Zweck entwerfen wir zunächst
+eine Klasse `Partition`. Objekte dieser Klasse beschreiben eine einzelne Zerlegung einer natürlichen Zahl, also zum Beispiel
+
+....
+3 + 1 + 1
+....
+
+als eine mögliche Zerlegung der Zahl 5. Implementieren Sie die Klasse `Partition` an Hand der Spezifikation aus <<id_table_partition>>.
+Überlegen Sie, welcher STL-Conainer sich anbietet, um die einzelnen Summanden einer Partition zu verwalten.
+Bedenken Sie dabei, dass man `Partition`-Objekte miteinander vergleichen können muss und aus diesem Grund
+die Summanden eines solchen Objekts stets sortiert (z.B. in absteigender Reihenfolge) vorliegen sollten.
+
+.Wesentliche Elemente der Klasse `Partition`.
+[[id_table_partition]]
+[%autowidth]
+|===
+|Element |Beschreibung
+
+| Konstruktor
+a| Der Standardkonstruktor initialisiert ein leeres `Partition`-Objekt.
+
+[source,c++]
+----
+Partition() = default;
+----
+
+| Benutzerdefinierter Konstruktor
+a| Erzeugt ein `Partition`-Objekt auf Basis der Summanden der Initialisierungsliste `list`.
+
+[source,c++]
+----
+Partition(const std::initializer_list<int>& list);
+----
+
+| Benutzerdefinierter Konstruktor
+a| Erzeugt ein `Partition`-Objekt auf Basis der Summanden eines `std::vector<int>`-Objekts. Dieser
+Konstruktor spielt vor allem eine Rolle im Algorithmus zur Erzeugung von Partitionen.
+
+[source,c++]
+----
+Partition(const std::vector<int>& vec);
+----
+
+| _getter_
+a| Liefert die zur Partition gehörende natürliche Zahl zurück.
+
+[source,c++]
+----
+int number() const;
+----
+
+| _getter_
+a| Liefert die Anzahl der Summanden der Partition zurück.
+
+[source,c++]
+----
+int size() const;
+----
+
+| _getter_
+a| Liefert die einzelnen Summanden der Partition in einem `std::vector<int>`-Objekt zurück.
+
+[source,c++]
+----
+std::vector<int> numbers();
+----
+
+| Operator `==`
+a| Vergleicht zwei `Partition`-Objekte auf Gleichheit. Siehe dazu die Definition der Gleichheit zweier Zerlegungen in der Einführung.
+
+[source,c++]
+----
+friend bool operator==(const Partition&, const Partition&);
+----
+
+| Operator `<<`
+a| Gibt ein `Partition`-Objekt auf der Konsole aus. Die Darstellung einer Partition sollte folgendes Aussehen haben:
+
+....
+7 = 3 + 2 + 1 + 1
+....
+
+[source,c++]
+----
+friend std::ostream& operator<< (std::ostream& os, const Permutation& p);
+----
+|===
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Das _Collatz_-Problem, auch als &ldquo;3__n__ + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
 Problem und wird dem Mathematiker Lothar Collatz zugeschrieben. Bei dem Problem geht es um
