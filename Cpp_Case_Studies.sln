@@ -50,6 +50,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Partitions", "CaseStudies\P
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Partitions", "Partitions", "{3AEF1E44-3D6E-4702-9E13-7E889AF9E0B5}"
 	ProjectSection(SolutionItems) = preProject
+		AsciiDoc\Partitions\PartitionPseudeCode.png = AsciiDoc\Partitions\PartitionPseudeCode.png
 		AsciiDoc\Partitions\Partitions_Documentation.adoc = AsciiDoc\Partitions\Partitions_Documentation.adoc
 	EndProjectSection
 EndProject

@@ -16,27 +16,11 @@
 PartitionSet::PartitionSet(int number) : m_number{ number } {}
 
 // public interface
-// PeLo: Das muss mit einem EMPLACE gehen .. siehe Examples ....
-void PartitionSet::insert(const Partition& p) {
+bool PartitionSet::insert(const Partition& p) {
 
-    m_partitions.insert(p);
+    std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result = m_partitions.insert(p);
+    return std::get<1>(result);
 }
-
-// https://docs.w3cub.com/cpp/container/set/emplace
-
-void PartitionSet::emplace()
-{
-    m_partitions.emplace<Partition>({ 1, 2, 3 });
-}
-
-//template <typename ... Args>
-//void PartitionSet::emplace2(Args&& ... args)
-//{
-//    std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result = m_partitions.emplace(std::initializer_list<int> { args ... });
-//    std::cout << std::boolalpha << "Result: " << std::get<1>(result) << std::endl;
-//}
-//
-
 
 // output
 std::ostream& operator<< (std::ostream& os, const PartitionSet& set)

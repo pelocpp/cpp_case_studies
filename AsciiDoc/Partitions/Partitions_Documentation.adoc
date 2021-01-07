@@ -118,7 +118,7 @@ Konstruktor spielt vor allem eine Rolle im Algorithmus zur Erzeugung von Partiti
 Partition(const std::vector<int>& vec);
 ----
 
-| _getter_
+| _getter_ `number()`
 a| Liefert die zur Partition gehörende natürliche Zahl zurück.
 
 [source,c++]
@@ -126,7 +126,7 @@ a| Liefert die zur Partition gehörende natürliche Zahl zurück.
 int number() const;
 ----
 
-| _getter_
+| _getter_  `size()`
 a| Liefert die Anzahl der Summanden der Partition zurück.
 
 [source,c++]
@@ -134,7 +134,7 @@ a| Liefert die Anzahl der Summanden der Partition zurück.
 int size() const;
 ----
 
-| _getter_
+| _getter_ `numbers()`
 a| Liefert die einzelnen Summanden der Partition in einem `std::vector<int>`-Objekt zurück.
 
 [source,c++]
@@ -150,6 +150,16 @@ a| Vergleicht zwei `Partition`-Objekte auf Gleichheit. Siehe dazu die Definition
 friend bool operator==(const Partition&, const Partition&);
 ----
 
+| Operatoren `<` und `>`
+a| Vergleicht zwei `Partition`-Objekte auf &ldquo;kleiner&rdquo; oder &ldquo;größer&rdquo;.
+Die Art und Weise, wie Partitionen verglichen werden, wurde eingangs erläutert.
+
+[source,c++]
+----
+friend bool operator<(const Partition&, const Partition&);
+friend bool operator>(const Partition&, const Partition&);
+----
+
 | Operator `<<`
 a| Gibt ein `Partition`-Objekt auf der Konsole aus. Die Darstellung einer Partition sollte folgendes Aussehen haben:
 
@@ -163,497 +173,433 @@ friend std::ostream& operator<< (std::ostream& os, const Permutation& p);
 ----
 |===
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Das _Collatz_-Problem, auch als &ldquo;3__n__ + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
-Problem und wird dem Mathematiker Lothar Collatz zugeschrieben. Bei dem Problem geht es um
-Zahlenfolgen, die nach einem einfachen Bildungsgesetz konstruiert werden. Gegeben ist eine
-beliebige natürliche Startzahl _n_, aus der eine Folge von Zahlen nach den folgenden zwei Regeln gebildet wird:
-
-* Ist die Zahl _n_ gerade, so ist die nächste Zahl gleich der Hälfte der Zahl.
-* Ist die Zahl ungerade, so wird die Zahl mit 3 multipliziert und um 1 erhöht.
-
-Merkwürdigerweise erreicht diese Folge nach endlich vielen Schritten immer die Zahl 1. Man kann
-die Vermutung auch so betrachten: Jede Folge mündet in den Zyklus 4, 2, 1 – egal, mit welcher
-Startzahl man die Folge gestartet hat. Wählen wir zum Beispiel den Startwert 7, so lautet die Folge
-
-7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1.
-
-Bis heute konnte das Collatz-Problem mathematisch nicht bewiesen werden. Auch konnte man mit Hilfe von Computerprogrammen die Vermutung bis heute nur unterstützen,
-aber nicht widerlegen. Alle Startzahlen bis ca. 5,76 * 10^18^ untermauern die Vermutung (Stand Januar 2009).
-Obwohl das Problem so einfach zu formulieren ist, gilt es als extrem schwierig, die mit ihm verbundene Aussage mathematisch zu beweisen.
-Oder wie es Paul Erdös, einer der bedeutendsten Mathematiker des 20. Jahrhunderts, formulierte: &ldquo;absolut hoffnungslos&rdquo;.
-
-Natürlich wollen wir in dieser Fallstudie keinen Versuch unternehmen, das _Collatz_-Problem zu lösen.
-Kommen wir auf {cpp} und damit auf eine Umsetzung des Regelwerks in einen {cpp}-Algorithmus zu sprechen. 
-In einem ersten Ansatz würde man vielleicht eine Klasse `CollatzSolver` implementieren, die beispielsweise eine `next`- und eine `current`-Methode hat, und diese
-nach Bedarf aufrufen. Wir wollen aber einen Schritt weitergehen und {cpp}-Iteratoren ins Spiel bringen.
-
-Durch die Implementierung des _Collatz_-Problems in Form eines {cpp}-Iterators kann die Implementierung in Kombination mit der STL verwendet werden,
-wodurch nicht nur die Lesbarkeit des Codes verbessert wird. Es stehen insbesondere alle STL-Algorithmen nahtlos zur Verfügung, 
-um Ergebnisse in der Berechnung der &ldquo;teuflische Zahlenfolge&rdquo; weiterverarbeiten zu können.
-
-== {cpp}&ndash;Iteratoren und die bereichs-basierte `for`-Wiederholungsschleife
-
-Wir beginnen unsere Betrachtungen mit der Minimalversion eines {cpp}-Iterators und werfen dazu einen Blick auf die bereichs-basierte `for`-Wiederholungsschleife
-in {cpp}:
+Zur Überprüfung Ihrer Implementierung sollten die folgenden Codefragmente wie beschrieben ausführbar sein:
 
 [source,c++]
 ----
-for (auto elem : container) {
-    /* loop body */
-}
+Partition p1 { 2 };
+std::cout << p1 << std::endl;
+Partition p2{ 1, 1 };
+std::cout << p2 << std::endl;
+std::cout << std::boolalpha << (p1 == p2) << std::endl;
+std::cout << std::boolalpha << (p1 < p2) << std::endl;
+std::cout << std::boolalpha << (p1 > p2) << std::endl;
 ----
 
-Vereinfacht kann man &ndash; in einer pseudo-code ähnlichen Notation &ndash; sagen, dass diese Wiederholungsschleife
-durch den {cpp}&ndash;Compiler auf eine Anweisungsfolge der Gestalt
+_Ausgabe_:
+
+....
+2 = 2
+2 = 1 + 1
+false
+false
+true
+....
+
+Oder zum Beispiel:
 
 [source,c++]
 ----
-/* modified code from cppreference */
-auto it = container.begin();
-auto end  = container.end();
-
-for (; it != end; ++it) 
-{
-    auto elem { *it };
-    /* loop body */
-}
+Partition p3{ 1, 2, 3 };
+std::cout << p3 << std::endl;
+Partition p4{ 3, 2, 1 };
+std::cout << p4 << std::endl;
+std::cout << std::boolalpha << (p3 == p4) << std::endl;
+std::cout << std::boolalpha << (p3 < p4) << std::endl;
+std::cout << std::boolalpha << (p3 > p4) << std::endl;
 ----
 
-umgesetzt wird. Wenn man sich die exemplarische Darstellung der `for`&ndash;Schleife ansieht, ist es ziemlich offensichtlich, was implementiert werden muss.
-Dabei müssen wir zwischen zwei Arten von Objekten unterscheiden:
-Dem Container und damit dem iterierbaren Bereich auf der einen Seite (hier: `container`) und dem Iterator bzw. den Iteratoren andererseits (hier: `it` und `end`).
+_Ausgabe_:
 
-Der iterierbare Bereich (Container) muss zwei Funktionen `begin()` und `end()` implementieren.
-Diese Funktionen geben jeweils Iteratorobjekte zurück. Das von `begin()` zurückgelieferte Iteratorobjekt steht für das erste Element in der Auflistung,
-das von `end()` für das letzte Element der Auflistung. 
-Hierauf gehen wir später noch näher ein, da eben genau dieses &ldquo;letzte Element&rdquo; nicht immer von vorneherein bekannt ist.
+....
+6 = 3 + 2 + 1
+6 = 3 + 2 + 1
+true
+true
+false
+....
 
-Kommen wir jetzt auf die Iterator-Klasse zu sprechen. Vom obigen Code-Fragment können wir ableiten, dass die folgenden drei Operatoren vorhanden sein müssen:
-
-* `operator*` &ndash; Dient zum Dereferenzieren eines Iterator-Objekts (in Analogie zu einem C/{cpp}-Zeiger).
-* `operator++` (Präfix) &ndash; Inkrementiert das Iterator-Objekt, damit dieses auf das nächste Element im Container verweist (es genügt die Präfix-Version des Operators).
-* `operator!=` &ndash; Dient zum Überprüfen, ob die Wiederholungsschleife enden soll. Dies ist der Fall, wenn der Iterator dieselbe Position erreicht hat, die `end()` beschreibt.
-
-*Hinweis*:
-Mit diesen drei Operatoren lassen sich Iterator-Klassen implementieren, die sich im Kontext einer bereichs-basierten `for`-Wiederholungsschleife
-einsetzen lassen. Für andere STL-Algorithen, wie zum Beispiel `std::find` oder `std::copy`, um nur zwei von ihnen exemplarisch zu nennen,
-sind zusätzliche KLassenelemente notwendig. Wir werden an anderer Stelle darauf näher eingehen.
-
-Wie lassen sich nun eine Zahlenfolge und das Iteratorkonzept von {cpp} miteinander verbinden?
-In der Iteratorklasse ist die Realisierung in der Berechnung der Zahlenfolge unterzubringen.
-Der `++`&ndash;Operator ist diejenige Stelle, an der von einem Folgenglied zum nächsten weitergegangen wird.
-Mit dem `*`&ndash;Operator kann man das aktuelle Folgenglied bestimmen. Die Bestimung des Iterationsendes obliegt dem `!=`&ndash;Operator.
-
-Instanzen der Iteratorklasse werden in der Regel von einer zweiten Klasse zur Verfügung gestellt, eben dem Container.
-Diese Klasse nimmt typischerweise die Initialisierungswerte für die Zahlenfolge entgegen und belegt damit die Iteratorenobjekte vor.
-Diese zweite Klassen &ndash; wir bezeichen sie als _Bereichs_- oder _Sequenzklasse_  &ndash; besitzt zwei Methoden `begin()` und `end()`,
-die als Rückgabewert ein Iteratorobjekt für das erste Folgenglied bzw. das Ende der Auflistung repräsentieren.
-Die Initialisierungswerte der Bereichsklasse gehen mehr oder weniger in die Iteratorenobjekt für Start und Ende der Zahlenfolge ein.
-
-Genug der allgemeinen Theorie, lassen Sie uns einen Blick auf die Iteratorklasse zur Berechnung der teuflischen Folge werfen:
-
-.CollatzIterator.h
-[[src_listing_collatziterator_interface]]
-[source,c++]
-----
-class CollatzIterator
-{
-public:
-    using iterator_category = std::forward_iterator_tag; <3>
-    using value_type = int; <3>
-    using difference_type = int; <3>
-    using pointer = int*; <3>
-    using reference = int&; <3>
-
-private:
-    int m_start{ 1 }; <1> 
-    int m_current{ 1 }; <1> 
-    int m_last{ }; <1> 
-
-public:
-    // c'tors
-    CollatzIterator() = default; <2>
-    CollatzIterator(int start);
-
-    // operators
-    int operator*() const;
-    CollatzIterator& operator++();
-    bool operator!=(const CollatzIterator&) const;
-};
-----
-<1> Initialisierer für Instanzvariablen (ab {cpp} 11 verfügbar).
-<2> Kurzschreibweise für den Default-Konstruktor - die Instanzvariablen werden auf Basis ihrer Initialisierer vorbelegt.
-<3> Iterator Traits für die Integration des Iterators in die STL.
-
-<<src_listing_collatziterator_interface>> demonstriert einige Neuerungen von {cpp}. Da wären zum Beispiel Initialisierer für Instanzvariablen.
-Mit ihrer Hilfe sollte es nicht mehr passieren, dass Instanzvariablen von Klassen ohne Vorbelegungswerte auftreten.
-Dieses Feature hat zur Folge, dass man nicht mehr zwingend den Default-Konstruktor einer Klasse ausprogrammieren muss.
-Mit der Kurzschreibweise in Zeile XXX ist erreicht, dass die Klasse einen Default-Konstruktor besitzt und die Instanzvariablen
-auf Basis ihrer jeweiligen Initialisierer vorbelegt sind.
-Eine mögliche Realisierung der `CollatzIterator`-Klasse folgt in <<src_listing_collatziterator_implementation>>:
-
-.CollatzIterator.cpp
-[[src_listing_collatziterator_implementation]]
-[source,c++]
-----
-// c'tor
-CollatzIterator::CollatzIterator(int start) : m_start{ start }, m_current{ start } {}
-
-// operator(s)
-int CollatzIterator::operator*() const { return m_current; }
-
-CollatzIterator& CollatzIterator::operator++()
-{
-    m_current = (m_current % 2 == 0)
-        ? m_current = m_current / 2
-        : m_current = 3 * m_current + 1;
-
-    return *this;
-}
-
-bool CollatzIterator::operator!=(const CollatzIterator& seq) const
-{ 
-    return m_current != seq.m_current;
-}
-----
-
-Nun benötigen wir noch eine Klasse für die Zahlenfolge, also die Containerklasse. Im wesentlichen letgt sie nur den Startwert für die Folge fest
-und stellt zwei Iteratorobjekte für Start und Ende der Zahlenfolge zur Verfügung:
-
-.CollatzSequence.h
-[[src_listing_collatzsequence_interface]]
-[source,c++]
-----
-// forward declaration of iterator class
-class CollatzIterator;
-
-class CollatzSequence
-{
-private:
-    int m_start{ 1 };
-
-public:
-    // c'tor(s)
-    CollatzSequence() = default;
-    CollatzSequence(int start);
-
-    // iterator support
-    CollatzIterator begin() const;
-    CollatzIterator end()   const;
-};
-----
-
-Die Klassendefinition enthält keine Überraschungen bis auf eine Subtilität in Bezug auf die beiden Klassen `CollatzIterator` und `CollatzSequence`,
-die wir ansprechen müssen: Container- und Iteratorklassen sind &ndash; das liegt in der Natur der Sache  &ndash; normalerweise
-eng miteinander verknüpft:
-
-* Die Containerklasse muss die beiden Methoden `begin()` und `end()` implementieren. Diese beiden Methoden liefern Iteratorenobjekte zurück.
-* Ein Iteratorobjekt kennt in der Regel seine Containerklasse, folglich muss im Iteratorobjekt eine Referenz (bzw. eine Zeigervariable) auf den dazugehörigen Container vorhanden sein.
-
-Diese Art des gegenseitigen Referenzierens hat zur Folge, dass wir den Container vor dem Iterator definieren müssen und umgekehrt.
-Darüber hinaus benötigt der Iterator normalerweise Zugriff auf (private) Containermethoden und Datenelemente, um seine Arbeit erledigen zu können.
-Aus diesem Grund lautet das typische Muster zum Definieren von Container- und Iteratorklassen wie folgt:
-
-* Vorwärtsdeklaration der Iteratorklasse.
-* Definition (Implementierung) der Containerklasse.
-* Definition der Iteratorklasse als Freund (`friend`) in der Containerklasse.
-* Definition (Implementierung) der Iteratorklasse.
-
-In unserem Anwendungsfall &ndash; Realisierung von Zahlenfolgen mit {cpp}&ndash;Iteratoren &ndash; liegt der Iteration kein Container zugrunde.
-Alle Informationen zu den iterierenden Werten residieren in der Iteratorklasse, die Containerklasse muss also keine `friend`-Deklaration der Iteratorklasse haben.
-
-.CollatzIterator.cpp
-[[src_listing_collatzsequence_implementation]]
-[source,c++]
-----
-// c'tor(s)
-CollatzSequence::CollatzSequence(int start) : m_start{ start } {}
-
-// iterator support
-CollatzIterator CollatzSequence::begin() const { return { m_start }; } <1>
-CollatzIterator CollatzSequence::end()   const { return { 1 }; } <1>
-----
-<1> &ldquo;Uniform Initialization&rdquo; im Zusammenspiel mit der `return`-Anweisung.
-
-Das {cpp11} Sprachfeature der &ldquo;Uniform Initialization&rdquo; kann auch zusammen mit einer `return`-Anweisung auftreten.
-Betrachten Sie die beiden Zeilen XXX und XXX von <<src_listing_collatzsequence_implementation>>.
-Es steht auf Grund der Definition der Methoden begin() und end() fest, dass diese ein Objekt des Typs `CollatzIterator` zurückliefern müssen.
-Wozu aber
+Möchte man die einzelnen Zahlen einer Partition einzeln durchlaufen, zum Beispiel mit einer bereichs-basierten `for`-Schleife,
+dann muss die Klasse `Partition` noch um zwei Methoden begin() und end() erweitert werden,
+die auf die gleichnamigen Methoden des unterlagerten STL-Containers verschalten werden:
 
 [source,c++]
 ----
-return { CollatzIterator { 1 } };
-----
-
-schreiben, wenn die Information des Klassentyps `CollatzIterator` überflüssig ist bzw. diese dem Compiler ohnehin bekannt ist.
-
-Nun können wir unsere erste teuflische Folgen berechnen. Wir verzichten zunächst noch auf den Einsatz einer Containerklasse
-und greifen ausschließlich auf Iteratorobjekte zurück:
-
-[source,c++]
-----
-CollatzIterator iter{ 7 };
-CollatzIterator end{ 1 };
-
-while (iter != end) {
-    std::cout << *iter << ' ';
-    ++iter;
+Partition p5{ 1, 2, 3, 4, 5 };
+for (const auto elem : p5) {
+    std::cout << elem << ' ';
 }
 ----
 
 _Ausgabe_:
 
 ....
-7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2
+5 4 3 2 1
 ....
 
-Wenn Sie die Ausgabe genau betrachten, können Sie einen kleinen Schönheitsfehler erkennen: Richtig erkannt, 
-die Folge sollte den Wert 1 als letztes Element und nicht die 2 haben.
-Dies ist nicht ganz trival lösbar, aber wenn wir an zwei Stelle im Quellcode geschickt eingreifen, haben wir auch dieses Problem behoben:
 
-* Beobachtung 1: In der Festlegung des Ende-Iteratorobjekts sind wir ein wenig gekniffen: Der Wert 1 ist eigentlich der einzig mögliche Wert,
-  der sich hier anbietet. Da er aber das Ende der Zahlenfolge ist, wird er von der Iteration ausgenommen, was wir vermeinden wollen.
-* Beobachtung 2: Des Rätsels Lösung liegt an einer ganz anderen Stelle in der Iteratorklasse verborgen: Es ist der `operator!=`, den wir in einer ersten Version
-  seiner Realisierung etwas &ldquo;unterschätzt&rdquo; haben:  
-+
-[source,c++]
-----
-bool CollatzIterator::operator!=(const CollatzIterator& seq) const
-{ 
-    return m_current != seq.m_current;
-}
-----
-+
-Vergleichen wir den Wert von `m_current` mit dem Wert `seq.m_current` eines anderen Iteratorobjekts, ist es eigentlich schon zu spät:
-Das Ende-Iteratorobjekt wartet hier mit dem Wert 1 auf, wir können das Element 1 in der Zahlenfolge so nicht mehr als gültigen Wert erklären.
-Wollten wir den Wert 1 mit in die Zahlenfolge aufnehmen, dürfen wir beim Vergleich nicht den aktuellen Wert vergleichen,
-sondern müssen hier quasi auf den Vorgänger von `m_current` zurückgreifen. Damit benötigen wir neben `m_current` noch eine zweite Instanzvariable `m_last`,
-die den Vorgänger von `m_current` repräsentiert.
-* Beobachtung 3: Für die beiden Operatoren `++` und `!=` benötigen wir eine geringfüg modifizierte Realisierung:
-+
-[source,c++]
-----
-CollatzIterator& CollatzIterator::operator++()
-{
-    m_last = m_current;
+== Die Klasse `PartitionSet`
 
-    m_current = (m_current % 2 == 0)
-        ? m_current = m_current / 2
-        : m_current = 3 * m_current + 1;
+Die Menge aller Partitionen einer natürlichen Zahl wird in einem Objekt der Klasse `PartitionSet` zusammengefasst.
+Es ergibt keine Sinn, eine bestimmte Partition mehrfach in einem `PartitionSet`-Objekt abzulegen.
+Mit welchem STL-Container lässt sich diese Anforderung leicht realisieren? Weitere Details zur Klasse `PartitionSet` siehe <<id_table_partitionset>>:
 
-    return *this;
-}
+.Wesentliche Elemente der Klasse `PartitionSet`.
+[[id_table_partitionset]]
+[%autowidth]
+|===
+|Element |Beschreibung
 
-bool CollatzIterator::operator!=(const CollatzIterator& seq) const
-{ 
-    return m_last != seq.m_current;
-}
-----
-+
-Wenn Sie diese Änderungen in der Implementierung der `CollatzIterator`-Klassen einbringen, werden Sie in der Ausgabe die 1 als letztes Element der Zahlenfolge vorfinden!
-
-Jetzt können wir eigentlich aus dem vollen Schöpfen und unsere Container- samt Iteratorklasse gegen zahlreiche STL-Algorithmen testen.
-Wir fangen mit einer bereichs-basierten `for`-Wiederholungsschleife an. Diese benötigt die Container-Klasse unserer Realisierung (nicht die Iteratorklasse),
-die jeweiligen Iteratorobjekte werden &ndash; für uns nicht sichtbar &ndash; durch Anweisungen angefordert, die der Übersetzer generiert:
+| Konstruktor
+a| Der Standardkonstruktor initialisiert ein leeres `PartitionSet`-Objekt.
 
 [source,c++]
 ----
-CollatzSequence seq{ 17 };
-for (int n : seq) {
-    std::cout << n << ' ';
-}
+PartitionSet() = default;
+----
+
+| Benutzerdefinierter Konstruktor
+a| Erzeugt ein `PartitionSet`-Objekt zur natürlichen Zahl `number`. Die einzelnen `Partition`-Objekte, deren Berechnung noch aussteht,
+sind mit der `insert`-Methode in die Partitionenliste des aktuellen Objekts aufzunehmen, siehe dazu weiter unten.
+
+[source,c++]
+----
+PartitionSet(int number);
+----
+
+| _getter_ `number()`
+a| Liefert die natürliche Zahl zurück, deren Partitionen betrachtet werden.
+
+[source,c++]
+----
+int number() const;
+----
+
+| _getter_ `size()`
+a| Liefert die Anzahl der `Partition`-Objekte in der Partitionenmenge zurück.
+
+[source,c++]
+----
+int size() const;
+----
+
+| Methode `insert`
+a| Fügt die Partition `p` in die aktuelle Partitionenmenge ein. Zu beachten: Eine Partition darf in der Menge nicht mehrfach enthalten sein.
+`insert` liefert `true` zurück, wenn die Partition `p` bereits in der Partitionenliste des Objekts enthalten ist, andernfalls `false`.
+
+[source,c++]
+----
+bool insert(const Partition& p);
+----
+
+| Methode `emplace`
+a| Fügt eine Partition in die aktuelle Partitionenmenge an Hand einer so genannten _In-Place_ Konstruktion ein.
+Die `emplace`-Methode muss auf Grund dessen mit einer variablen Anzahl von `int`-Werten aufgerufen,
+für die der unterlagerte STL-Container mit einem geeigneten Konstruktor der  Partition-Klasse ein solches Objekt _in-place_ konstruiert.
+Dies setzt voraus, dass der gewählte STL-Container für die Partitionenmenge eine `emplace`-Methode besitzt.
+Der Rückgabewert spezifiziert, ob die Partition in der Partitionenmenge bereits enthalten war oder nicht.
+
+[source,c++]
+----
+template <typename ... Args>
+bool emplace(Args&& ... args);
+----
+
+| Operator `<<`
+a| Gibt ein `PartitionSet`-Objekt auf der Konsole aus. Die Ausgabe sollte – am Beispiel der Zahl 3 gezeigt – folgendes Aussehen haben:
+
+....
+1: 3 = 3
+2: 3 = 2 + 1
+3: 3 = 1 + 1 + 1
+....
+
+[source,c++]
+----
+friend std::ostream& operator<< (std::ostream&, const PartitionSet&);
+----
+|===
+
+Die Klasse `PartitionSet` aus <<id_table_partitionset>> ist noch nicht in der Lage, die Partitionen zu einer beliebigen natürlichen Zahl zu berechnen.
+Darauf kommen wir im folgenden Abschnitt zu sprechen. Die prinzipielle Funktionsweise der Klasse `PartitionSet` lässt sich aber schon mal &ldquo;manuell&rdquo; testen:
+
+[source,c++]
+----
+PartitionSet set{ 3 };
+set.insert({ 3 });
+set.insert({ 1, 2 });
+set.insert({ 1, 1, 1 });
+std::cout << "Partitions of " << set.number() << ": " << std::endl;
+std::cout << set << std::endl;
 ----
 
 _Ausgabe_:
 
 ....
-17 52 26 13 40 20 10 5 16 8 4 2 1
+Partitions of 3:
+1: 3 = 3
+2: 3 = 2 + 1
+3: 3 = 1 + 1 + 1
+[3 permutations]
 ....
 
-Die bereichs-basierte `for`-Wiederholungsschleife erwartet am Containerobjekt &ndash; hier: Klasse `CollatzSequence` &ndash; 
-eine Implementierung der beiden Methoden `begin()` und `end()`. An den zurückgelieferten Objekten wiederum müssen die
-drei Operatoren `operator++()`, `operator!=()` und `operator*()` vorhanden sein. Anderfalls wäre ein derartiges Code-Fragment nicht übersetzungsfähig.
+Wenn Sie in diesem Beispiel die Anzahl der Konstruktorenaufrufe der `Partition`-Objekte zählen,
+werden Sie feststellen, dass pro `insert`-Methodenaufruf an einem `PartitionSet`-Objekt zwei `Partition`-Objekte erzeugt werden:
 
-Für die nachfolgenden Code-Fragmente muss die Iteratorklasse noch weitere Auskünfte bereitstellen.
-Wir sind beim Themenkreis der so genannten &ldquo;Iterator Traits&rdquo; &ndash; zu deutsch etwa &ldquo;Iterator Spuren&rdquo; &ndash; angekommen.
-Die Anforderung lässt sich vergleichsweise einfach durch 5 `using`-Deklarationen erfüllen:
+* Ein erstes als Parameter des `insert`-Methodenaufruf.
+* Ein zweites beim Einfügen in den STL-Container.
 
-[source,c++]
-----
-using iterator_category = std::forward_iterator_tag;
-using value_type = int;
-using difference_type = int;
-using pointer = int*;
-using reference = int&;
-----
+Unter Verwendung der `emplace`-Methode, die von den meisten STL-Containerklassen bereits gestellt wird,
+erreicht man, dass ein  `Partition`-Objekt nur ein einziges Mal angelegt wird. 
+Das heißt zunächst einmal, dass die `insert`-Methode in ihrer bisherigen Form so nicht zum Zuge kommen kann.
+Genau dieses `Partition`-Objekt, dass als Parameter an `insert` übergeben wird, gilt es jetzt zu vermeiden.
+Dies wiederum hat zur Folge, dass eben alle Parameter, die man zur Erzeugung eines `Partition`-Objekts benötigt,
+gewissermaßen einzeln an eine entsprechende Methoden an der  `PartitionSet`-Klasse übergeben sind,
+wir benennen diese Methode sinnigerweise ebenfalls `emplace`.
 
-Wir stellen als Erstes eine Anwendung des `std::copy`-Algorithmus vor:
+Damit sind wir bei variadischen Templates angekommen, um mit ihrer Hilfe beliebig viele `int`-Werte (die Zahlen, aus denen eine Partition besteht) 
+an eine Methode übergeben können:
 
 [source,c++]
 ----
-CollatzSequence seq{ 17 };
-std::ostream_iterator<int> out{ std::cout, "  " };
-std::copy(std::begin(seq), std::end(seq), out);
+PartitionSet set{ 4 };
+set.emplace(4);
+set.emplace(3, 1);
+set.emplace(2, 2);
+set.emplace(2, 1, 1);
+set.emplace(1, 1, 1, 1);
+
+std::cout << "Partitions of " << set.number() << ": " << std::endl;
+std::cout << set << std::endl;
 ----
 
 _Ausgabe_:
 
 ....
-17  52  26  13  40  20  10  5  16  8  4  2  1
+Partitions of 4:
+1: 4 = 4
+2: 4 = 3 + 1
+3: 4 = 2 + 2
+4: 4 = 2 + 1 + 1
+5: 4 = 1 + 1 + 1 + 1
+[5 permutations]
 ....
 
-Wollten wir die Summe aller Folgenglieder bestimmen, kann man den Algorithmus `std::accumulate` anwenden. 
-Besitzt dieser keinen vierten Parameter und wird der dritte Parameter mit dem Wert 0 vorbelegt, erhalten wir die Summe
-der Elemente in der Aufzählung zurück:
+Erkennen Sie zwischen den Aufrufen der `emplace`- und der `insert`-Methode einen Unterschied?
+Richtig erkannt: Die  `insert`-Aufrufe nehmen ein `std::initializer_list<int>`-Objekt entgegen, deshalb müssen zwischen den runden Klammern
+noch geschweifte Klammern da sein. Die `emplace`-Aufruf sind als Methoden mit einer variablen Anzahl von Parametern konzipiert (genauer: Parameter Pack),
+hier sind geschweifte nicht notwendig und als solche syntaktisch auch gar nicht zulässig.
+
+Wir testen auch, dass dieselbe Partition nicht mehrfach in einem `PartitionSet`-Objekt hinzugefügt werden kann:
 
 [source,c++]
 ----
-CollatzSequence seq{ 17 };
-int sum = std::accumulate(std::begin(seq), std::end(seq), 0);
-std::cout << sum << std::endl;
+PartitionSet set{ 4 };
+bool b;
+
+b = set.insert({ 2, 1, 1 });
+std::cout << std::boolalpha << b << std::endl;
+b = set.insert({ 1, 2, 1 });
+std::cout << std::boolalpha << b << std::endl;
+b = set.insert({ 1, 1, 2 });
+std::cout << std::boolalpha << b << std::endl;
+
+std::cout << "Partitions of " << set.number() << ": " << std::endl;
+std::cout << set << std::endl;
 ----
 
 _Ausgabe_:
 
 ....
-214
+true
+false
+false
+Partitions of 4:
+1: 4 = 2 + 1 + 1
+[1 permutations]
 ....
 
-Ist nicht die Summe, sondern die Anzahl der Folgenglieder gesucht, erhalten wir die Anwort von dem Algorithmus `std::distance`:
+== Rekursive Berechnung aller Partitionen einer natürlichen Zahl
+
+Wir kommen nun auf das Kernstück der Aufgabe zu sprechen, die algorithmische Berechnung aller Partitionen zu einer vorgegebenen natürlichen Zahl.
+Ist _n_ die zu Grunde liegende natürliche Zahl, so gehen wir davon aus, dass mittels Rekursion die Menge aller Partitionen der Zahl _n_-1 bereits vorliegt.
+Da für _n_ = 1 diese Berechnung trivial ist, stellt diese Annahme keine Einschränkung dar!
+
+Haben wir alle Partitionen der Zahl _n_-1 vorliegen, so lassen sich wie folgt alle Partitionen der Zahl _n_ berechnen:
+Wir nehmen eine beliebige Partition der Zahl _n_-1 zur Hand. Ihre Anzahl der Summanden sei _m_.
+Wenn wir der Reihe nach zu jedem einzelnen dieser _m_ Summanden den Wert 1 addieren, erhalten wir auf einen Schlag _m_ Partitionen der Zahl _n_!
+Um es am folgenden Beispiel zu demonstrieren: Ist
+
+....
+4 + 2 + 2
+....
+
+eine Partition der Zahl 8, so erhalten wir sofort die drei Partitionen
+
+....
+(4+1) + 2 + 2 = 5 + 2 + 2
+4 + (2+1) + 2 = 4 + 3 + 2
+4 + 2 + (2+1) = 4 + 2 + 3 = 4 + 3 + 2
+....
+
+der natürlichen Zahl 9. Der einzige Nachteil dieses Ansatzes ist bereits erkennbar:
+Wir können auf diese Weise mehrfach dieselbe Partition erhalten, wie das Beispiel zeigt.
+Dies stellt aber kein echtes Problem dar. Wir müssen bei der Konstruktion der Partitionenmenge nur darauf achten,
+dass beim Einfügen neu berechneter Partitionen diese nicht schon in der vorliegenden Partitionenmenge enthalten sind.
+
+Man kann sich leicht überlegen, dass bei vorliegender Partitionenmenge einer Zahl _n_-1 auf diese Weise
+alle Partitionen der Zahl _n_ berechnet werden – mit einer Ausnahme: Die Partition
+
+....
+1 + 1 + ... + 1    // n Summanden
+....
+
+wird nicht konstruiert, da bei allen berechneten Partitionen mindestens ein Summand immer den Wert 2 besitzt.
+In der Tat ist die fehlende Partitionen einer Zahl _n_, die aus _n_ 1-en besteht, noch nachträglich in die Partitionenmenge aufzunehmen.
+
+In <<Abbildung 1>> finden Sie eine Beschreibung des Algorithmus in Gestalt von Pseudocode vor:
+
+[caption="Abbildung {counter:figure}: ", title="Pseudocode zur Berechnung aller Partitionen einer natürlichen Zahl."]
+image::PartitionPseudeCode.png[width=450]
+
+Implementieren Sie in diesem Abschnitt eine Methode `calculate` zur Berechnung aller Partitionen einer natürlichen Zahl
+und ordnen Sie diese einer separaten Klasse `PartitionsCalculator` zu (<<Abbildung 1>>):
+
+.Elemente der Klasse `PartitionsCalculator`.
+[[id_table_partitionscalculator]]
+[%autowidth]
+|===
+|Element |Beschreibung
+
+
+| Methode `calculate`
+a| Berechnet die Menge aller Partitionen der Zahl _n_ an Hand des in<<Abbildung 1>> beschriebenen Algorithmus.
+Das Ergebnis wird durch den Rückgabewert (Objekt vom Typ `PartitionSet`) zurückgeliefert.
 
 [source,c++]
 ----
-CollatzSequence seq{ 17 };
-int count = std::distance(std::begin(seq), std::end(seq));
-std::cout << count << std::endl;
+static PartitionSet calculate(int n);
+----
+
+|===
+
+Es folgt ein Beispielfragment zum Testen Ihrer Realisierung der Klasse `PartitionsCalculator`:
+
+[source,c++]
+----
+PartitionSet set = PartitionCalculator::calculate(6);
+std::cout << "Partitions of " << set.number() << ": " << std::endl;
+std::cout << set << std::endl;
 ----
 
 _Ausgabe_:
 
 ....
-13
+Partitions of 6:
+ 1: 6 = 6
+ 2: 6 = 5 + 1
+ 3: 6 = 4 + 2
+ 4: 6 = 4 + 1 + 1
+ 5: 6 = 3 + 3
+ 6: 6 = 3 + 2 + 1
+ 7: 6 = 3 + 1 + 1 + 1
+ 8: 6 = 2 + 2 + 2
+ 9: 6 = 2 + 2 + 1 + 1
+10: 6 = 2 + 1 + 1 + 1 + 1
+11: 6 = 1 + 1 + 1 + 1 + 1 + 1
+[11 permutations]
 ....
 
-Um einen Standard-Vektor (`std::vector<T>`) mit den Elementen der Zahlenfolge zu füllen, 
-bietet sich eine Kombination von `std::copy` mit `std::back_inserter` an:
+== Anzahl der Partitionen
+
+Die Anzahl der Partitionen einer natürlichen Zahl haben Sie mit Hilfe des letzten Teilschritts als Nebeneffekt berechnet.
+Es gibt aber auch eine alternative Möglichkeit mit Hilfe einer rekursiven Formel, also ohne die Partitionen selbst bestimmen zu müssen.
+Wir führen zu diesem Zweck die Bezeichnung _sum_(_n_) für die gesuchte Anzahl ein. Ferner sei _b_(_n_,_m_) die Anzahl der Zerlegungen von _n_,
+in denen der größte Summand gleich _m_ ist. Also an einem Beispiel erläutert: In der Menge aller Partitionen von 5
+
+....
+1: 5 = 5
+2: 5 = 4 + 1
+3: 5 = 3 + 2
+4: 5 = 3 + 1 + 1
+5: 5 = 2 + 2 + 1
+6: 5 = 2 + 1 + 1 + 1
+7: 5 = 1 + 1 + 1 + 1 + 1
+....
+
+finden wir insgesamt _sum_(5) = 7 Zerlegungen vor. Für die Anzahl der Zerlegungen von 5,
+in denen der größte Summand gleich _m_ (_m_ = 1, 2, 3, 4 und 5) ist, gilt hier
+
+....
+b(5,1) = 1
+b(5,2) = 2
+b(5,3) = 2
+b(5,4) = 1
+b(5,5) = 1
+....
+
+Offensichtlich gilt nun
+
+_sum_(_n_) = _b_(_n_,1) + _b_(_n_,2) + _b_(_n_,3) + .... + _b_(_n_,_n_-1) + _b_(_n_,_n_)
+
+Weiter muss man nicht gehen, denn _b_(_n_,_n_+1), _b_(_n_,_n_+2) sind ja alle 0.
+Bleibt noch die Frage nach der Berechnung von _b_(_n_,_m_). Hier gilt folgende rekursive Formel:
+
+_b_(_n_,_m_) = _b_(_n_-1,_m_-1) + _b_(_n_-_m_,_m_)
+
+Wenn Sie die folgenden Anfangsbedingungen berücksichtigen, von deren Korrektheit man sich leicht überzeugen kann,
+steht einer einfachen, direkten Umsetzung in eine rekursive {cpp}-Methode `numberOfPartitions` (<<Tabelle 4>>) nichts mehr im Weg:
+
+.Weitere Elemente der Klasse `PartitionsCalculator`.
+[[id_table_partitionscalculator]]
+[%autowidth]
+|===
+|Element |Beschreibung
+
+| Methode `numberOfPartitions`
+a| Berechnet die Anzahl aller Partitionen zur Zahl _n_, die einen maximalen Summanden _maxSummand_ besitzen.
 
 [source,c++]
 ----
-std::vector<int> numbers{ 100 };
-CollatzSequence seq{ 7 };
-std::copy(std::begin(seq), std::end(seq), std::back_inserter(numbers));
-
-for (int number : numbers) {
-    std::cout << number << std::endl;
-}
+static int numberOfPartitions(int n, int maxSummand);
 ----
 
-_Ausgabe_:
-
-....
-7
-22
-11
-34
-17
-52
-26
-13
-40
-20
-10
-5
-16
-8
-4
-2
-1
-....
-
-Die letzte Ausgabe können wir &ndash; im Kontext des `std::accumulate` Algorithmus &ndash; etwas umfangreicher gestalten.
-Sie erinnnern sich: Das erste Mal hatten wir `std::accumulate` eingesetzt, um die Folgenglieder zu addieren.
-Dieses Mal verwenden wir, um als Resultat eine Zeichenkette zu erzeugen, die die Folgenglieder nach gewissen Vorgaben weiterverarbeitet:
+| Methode `numberOfPartitions`
+a| Berechnet die Anzahl aller Partitionen zur Zahl _n_.
 
 [source,c++]
 ----
-CollatzSequence seq{ 7 };
-
-std::string s = std::accumulate(
-    std::begin(seq),
-    std::end(seq),
-    std::string(""), // first element
-    [counter = 0] (const std::string& first, const auto& next) mutable {
-        counter++;
-        std::ostringstream ss;
-        ss << "[" << std::setfill('0') << std::setw(2) << counter << "]"
-            << ": " << std::setfill(' ') << std::setw(5)
-            << std::right << next << std::endl;
-
-        return first + ss.str();
-    }
-);
-
-std::cout << s << std::endl;
+static int numberOfPartitions(int n);
 ----
 
-_Ausgabe_:
+|===
 
-....
-[01]:     7
-[02]:    22
-[03]:    11
-[04]:    34
-[05]:    17
-[06]:    52
-[07]:    26
-[08]:    13
-[09]:    40
-[10]:    20
-[11]:    10
-[12]:     5
-[13]:    16
-[14]:     8
-[15]:     4
-[16]:     2
-[17]:     1
-....
-
+''''
 
 == There is more
 
-In diesem Abschnitt bietet es sich an, eine Schwachstelle in der Definition der Iteratorklasse `CollatzIterator` zu beseitigen.
-Nicht jede Zahlenfolge muss Elemente des Typs `int` haben, `long`, `short`, `__int64` etc. wären auch geeignetete Kandidaten.
-Wir sind bei den Templates angekommen ......
+Das Thema &ldquo;Aufzählen&rdquo; &ndash; in unserem Fall &ldquo;Partitionen aufzählen&rdquo; tritt immer bei Klassen in Erscheinung,
+deren Gestalt gewisse Ähnlichkeiten mit einem Container haben. Ergänzen Sie Ihre Implementierung der Klasse `PartitionSet` entsprechend.
+
+_Beispielfragment_:
+
+[source,c++]
+----
+PartitionSet set = PartitionCalculator::calculate(5);
+for (const Partition& p : set) {
+    std::cout << p << std::endl;
+}
+----
+
+_Ausgabe_:
+
+....
+5 = 5
+5 = 4 + 1
+5 = 3 + 2
+5 = 3 + 1 + 1
+5 = 2 + 2 + 1
+5 = 2 + 1 + 1 + 1
+5 = 1 + 1 + 1 + 1 + 1
+....
+

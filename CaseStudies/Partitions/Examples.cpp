@@ -19,15 +19,19 @@ void Test01_Partition()
     Partition p2{ 1, 1 };
     std::cout << p2 << std::endl;
     std::cout << std::boolalpha << (p1 == p2) << std::endl;
+    std::cout << std::boolalpha << (p1 < p2) << std::endl;
+    std::cout << std::boolalpha << (p1 > p2) << std::endl;
 
     Partition p3{ 1, 2, 3 };
     std::cout << p3 << std::endl;
     Partition p4{ 3, 2, 1 };
     std::cout << p4 << std::endl;
     std::cout << std::boolalpha << (p3 == p4) << std::endl;
+    std::cout << std::boolalpha << (p3 < p4) << std::endl;
+    std::cout << std::boolalpha << (p3 > p4) << std::endl;
 
-    Partition p5{ 6, 5, 4, 3, 2, 1 };
-    for (auto& elem : p5) {
+    Partition p5{ 1, 2, 3, 4, 5 };
+    for (const auto elem : p5) {
         std::cout << elem << ' ';
     }
     std::cout << std::endl;
@@ -47,23 +51,12 @@ void Test02_PartitionSet_01()
 
 void Test02_PartitionSet_02()
 {
-    PartitionSet set{ 7 };
-
-    set.insert({ 7 });
-    set.insert({ 6, 1 });
-    set.insert({ 5, 2 });
-    set.insert({ 5, 1, 1 });
-    set.insert({ 4, 3 });
-    set.insert({ 4, 2, 1 });
-    set.insert({ 4, 1, 1, 1 });
-    set.insert({ 3, 3, 1 });
-    set.insert({ 3, 2, 2 });
-    set.insert({ 3, 2, 1, 1});
-    set.insert({ 3, 1, 1, 1, 1 });
-    set.insert({ 2, 2, 2, 1 });
-    set.insert({ 2, 2, 1, 1, 1 });
-    set.insert({ 2, 1, 1, 1, 1, 1 });
-    set.insert({ 1, 1, 1, 1, 1, 1, 1 });
+    PartitionSet set{ 4 };
+    set.emplace(4);
+    set.emplace(3, 1);
+    set.emplace(2, 2);
+    set.emplace(2, 1, 1);
+    set.emplace(1, 1, 1, 1);
 
     std::cout << "Partitions of " << set.number() << ": " << std::endl;
     std::cout << set << std::endl;
@@ -71,32 +64,72 @@ void Test02_PartitionSet_02()
 
 void Test02_PartitionSet_03()
 {
-    PartitionSet set{ 7 };
+    PartitionSet set{ 4 };
+    bool b;
 
-    set.emplace2( 7 );
-    set.emplace2( 6, 1 );
-    set.emplace2( 5, 2 );
-    set.emplace2( 5, 1, 1 );
-    set.emplace2( 4, 3 );
-    set.emplace2( 4, 2, 1 );
-    set.emplace2( 4, 1, 1, 1 );
-    set.emplace2( 3, 3, 1 );
-    set.emplace2( 3, 2, 2 );
-    set.emplace2( 3, 2, 1, 1 );
-    set.emplace2( 3, 1, 1, 1, 1 );
-    set.emplace2( 2, 2, 2, 1 );
-    set.emplace2( 2, 2, 1, 1, 1 );
-    set.emplace2( 2, 1, 1, 1, 1, 1 );
-    set.emplace2( 1, 1, 1, 1, 1, 1, 1 );
+    b = set.insert({ 2, 1, 1 });
+    std::cout << std::boolalpha << b << std::endl;
+    b = set.insert({ 1, 2, 1 });
+    std::cout << std::boolalpha << b << std::endl;
+    b = set.insert({ 1, 1, 2 });
+    std::cout << std::boolalpha << b << std::endl;
 
     std::cout << "Partitions of " << set.number() << ": " << std::endl;
     std::cout << set << std::endl;
 }
 
+void Test02_PartitionSet_04()
+{
+    PartitionSet set{ 4 };
+    bool b;
+
+    b = set.emplace(2, 1, 1);
+    std::cout << std::boolalpha << b << std::endl;
+    b = set.emplace(1, 2, 1);
+    std::cout << std::boolalpha << b << std::endl;
+    b = set.emplace(1, 1, 2);
+    std::cout << std::boolalpha << b << std::endl;
+
+    std::cout << "Partitions of " << set.number() << ": " << std::endl;
+    std::cout << set << std::endl;
+}
+
+void Test02_PartitionSet_05()
+{
+    PartitionSet set{ 7 };
+
+    set.emplace(7 );
+    set.emplace(6, 1 );
+    set.emplace(5, 2 );
+    set.emplace(5, 1, 1 );
+    set.emplace(4, 3 );
+    set.emplace(4, 2, 1 );
+    set.emplace(4, 1, 1, 1 );
+    set.emplace(3, 3, 1 );
+    set.emplace(3, 2, 2 );
+    set.emplace(3, 2, 1, 1 );
+    set.emplace(3, 1, 1, 1, 1 );
+    set.emplace(2, 2, 2, 1 );
+    set.emplace(2, 2, 1, 1, 1 );
+    set.emplace(2, 1, 1, 1, 1, 1 );
+    set.emplace(1, 1, 1, 1, 1, 1, 1 );
+
+    for (const Partition& p : set) {
+        std::cout << p << std::endl;
+    }
+}
+
+void Test02_PartitionSet_06()
+{
+    PartitionSet set = PartitionCalculator::calculate(5);
+    for (const Partition& p : set) {
+        std::cout << p << std::endl;
+    }
+}
+
 void Test03_PartitionCalculator()
 {
     PartitionSet set = PartitionCalculator::calculate(6);
-   // set.Sort();
     std::cout << "Partitions of " << set.number() << ": " << std::endl;
     std::cout << set << std::endl;
 }

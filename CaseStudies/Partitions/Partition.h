@@ -16,11 +16,6 @@ public:
     Partition(const std::initializer_list<int>&);
     Partition(const std::vector<int>&);
 
-    ~Partition() {
-        std::cout << "##############################################" << std::endl;
-    }
-
-
     // getter
     int number() const { return m_number; }
     int size() const { return static_cast<int> (m_numbers.size()); }

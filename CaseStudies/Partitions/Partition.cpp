@@ -64,7 +64,7 @@ bool operator<(const Partition& p1, const Partition& p2)
         ++it2;
     }
 
-    return true;
+    return true; // wird das erreicht ?????????????????
 }
 
 bool operator>(const Partition& p1, const Partition& p2)
