@@ -18,7 +18,7 @@ public:
 
     // getter
     int number() const { return m_number; }
-    int size() const { return static_cast<int> (m_numbers.size()); }
+    size_t size() const { return m_numbers.size(); }
     std::vector<int> numbers() const;
 
     // operators

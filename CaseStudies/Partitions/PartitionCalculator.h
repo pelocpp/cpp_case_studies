@@ -12,6 +12,8 @@ public:
 
     // public interface
     static PartitionSet calculate(int n);
+    static int numberPartitions(int number);
+    static int numberPartitions(int number, int maxSummand);
 };
 
 // =====================================================================================

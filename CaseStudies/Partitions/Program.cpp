@@ -5,13 +5,6 @@
 #include <iostream>
 #include <string>
 
-// Pelo Todo Stichwörter für den Text:
-// Multiset, set , cbegin cend, ...
-//     PartitionCalculator() = delete;
-// emplace funktioniert jetzt !!!!!!!!
-
-// TODO PeLo das passt bis jetzt zu einem Artikel über Set und Multiset .....
-
 // -----------------------
 
 // TODO: 
@@ -20,12 +13,6 @@
 
 // -----------------------
 
-// TODO: Frage Wird eigentlich überprüft wenn eine Partition zur Zahl 4 in eine Set einer anderen Zahl (3) eingefügt wird ....
-
-
-// -----------------------
-
-
 void Test01_Partition();
 void Test02_PartitionSet_01();
 void Test02_PartitionSet_02();
@@ -33,11 +20,24 @@ void Test02_PartitionSet_03();
 void Test02_PartitionSet_04();
 void Test02_PartitionSet_05();
 void Test02_PartitionSet_06();
-void Test03_PartitionCalculator();
+void Test02_PartitionSet_07();
+void Test03_PartitionCalculator_01();
+void Test03_PartitionCalculator_02();
+void Test03_PartitionCalculator_03();
 
 int main()
 {
-    Test02_PartitionSet_06();
+    //Test01_Partition();
+    //Test02_PartitionSet_01();
+    Test02_PartitionSet_02();
+    //Test02_PartitionSet_03();
+    //Test02_PartitionSet_04();
+    //Test02_PartitionSet_05();
+    //Test02_PartitionSet_06();
+    //Test02_PartitionSet_07();
+    //Test03_PartitionCalculator_01();
+    //Test03_PartitionCalculator_02();
+    //Test03_PartitionCalculator_03();
 
     return 0;
 }

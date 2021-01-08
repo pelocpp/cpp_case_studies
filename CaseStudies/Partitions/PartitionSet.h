@@ -12,12 +12,12 @@ private:
 
 public:
     // c'tors/d'tor
-    PartitionSet() = default;
+    PartitionSet() = delete;
     PartitionSet(int);
 
     // properties
     int number() const { return m_number; }
-    int size() const { return static_cast<int> (m_partitions.size()); };
+    size_t size() const { return m_partitions.size(); };
 
     // public interface
     bool insert(const Partition&);
@@ -25,27 +25,27 @@ public:
     template <typename ... Args>
     bool emplace(Args&& ... args) {
 
+        // error handling
+        std::initializer_list<int> list = std::initializer_list<int>{ std::forward<int>(args)... };
 
-        //auto result
-        //    = m_partitions.emplace(std::initializer_list<int { std::forward<int>(args) ... });
+        int number = std::accumulate(list.begin(), list.end(), 0);
+        if (number != m_number) {
+            throw std::invalid_argument("Number of partition doesn't match set!");
+        }
 
-        // oder auto
-
-        std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result 
-            = m_partitions.emplace( std::initializer_list<int> { std::forward<int> (args) ... });
-
+        //std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result
+        //    = m_partitions.emplace(list);
+        // or using auto
+        auto result = m_partitions.emplace(list);
         return std::get<1>(result);
     }
 
-
-
-    //void sortDescending();
-    //void sortAscending();
-
     // iterator support
-            // oder auto
-    std::set<Partition, std::greater<Partition>>::iterator begin() { return m_partitions.begin(); }
-    std::set<Partition, std::greater<Partition>>::iterator end() { return m_partitions.end(); }
+    //std::set<Partition, std::greater<Partition>>::iterator begin() { return m_partitions.begin(); }
+    //std::set<Partition, std::greater<Partition>>::iterator end() { return m_partitions.end(); }
+    // or using auto
+    auto begin() { return m_partitions.begin(); }
+    auto end() { return m_partitions.end(); }
 
     // output
     friend std::ostream& operator<< (std::ostream&, const PartitionSet&);

@@ -5,8 +5,9 @@
 #include <iostream>
 #include <string>
 #include <set>
-#include <functional>
+// #include <functional>
 #include <vector>
+#include <numeric>
 #include <iomanip> 
 
 #include "Partition.h"
@@ -17,6 +18,10 @@ PartitionSet::PartitionSet(int number) : m_number{ number } {}
 
 // public interface
 bool PartitionSet::insert(const Partition& p) {
+
+    if (p.number() != m_number) {
+        throw std::invalid_argument("Number of partition doesn't match set!");
+    }
 
     std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result = m_partitions.insert(p);
     return std::get<1>(result);

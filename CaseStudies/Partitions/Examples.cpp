@@ -6,7 +6,7 @@
 #include <string>
 #include <set>
 #include <vector>
-//#include <sstream>
+#include <numeric>
 
 #include "Partition.h"
 #include "PartitionSet.h"
@@ -96,6 +96,32 @@ void Test02_PartitionSet_04()
 
 void Test02_PartitionSet_05()
 {
+    PartitionSet set{ 4 };
+    try {
+        set.insert({ 2, 2, 1 });
+    }
+    catch (std::exception ex) {
+        std::cout << ex.what() << std::endl;
+    }
+}
+
+void Test02_PartitionSet_06()
+{
+    PartitionSet set{ 4 };
+    try {
+        set.emplace(2, 2, 1);
+    }
+    catch (std::exception ex) {
+        std::cout << ex.what() << std::endl;
+    }
+
+    for (const Partition& p : set) {
+        std::cout << p << std::endl;
+    }
+}
+
+void Test02_PartitionSet_07()
+{
     PartitionSet set{ 7 };
 
     set.emplace(7 );
@@ -119,7 +145,7 @@ void Test02_PartitionSet_05()
     }
 }
 
-void Test02_PartitionSet_06()
+void Test03_PartitionCalculator_01()
 {
     PartitionSet set = PartitionCalculator::calculate(5);
     for (const Partition& p : set) {
@@ -127,11 +153,21 @@ void Test02_PartitionSet_06()
     }
 }
 
-void Test03_PartitionCalculator()
+void Test03_PartitionCalculator_02()
 {
     PartitionSet set = PartitionCalculator::calculate(6);
     std::cout << "Partitions of " << set.number() << ": " << std::endl;
     std::cout << set << std::endl;
+}
+
+void Test03_PartitionCalculator_03()
+{
+    for (int i = 1; i <= 20; ++i) {
+        std::cout 
+            << "Number partitions of " << i
+            << ": " << PartitionCalculator::numberPartitions(i)
+            << std::endl;
+    }
 }
 
 // =====================================================================================

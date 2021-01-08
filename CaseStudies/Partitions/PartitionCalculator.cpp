@@ -7,6 +7,7 @@
 #include <set>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 
 #include "Partition.h"
 #include "PartitionSet.h"
@@ -26,10 +27,10 @@ PartitionSet PartitionCalculator::calculate(int number)
         for (const auto& p : setMinusOne) {
 
             std::vector<int> numbers = p.numbers();
-            for (int j = 0; j < numbers.size(); j++) {
+            for (size_t j = 0; j != numbers.size(); j++) {
                 numbers[j]++;
-                Partition p{ numbers };
-                result.insert(p);
+                Partition q{ numbers };
+                result.insert(q);
                 numbers[j]--;
             }
         }
@@ -42,6 +43,37 @@ PartitionSet PartitionCalculator::calculate(int number)
 
     return result;
 }
+
+int PartitionCalculator::numberPartitions(int number)
+{
+    if (number < 1)
+        return 0;
+
+    int total = 0;
+    for (int maxSummand = 1; maxSummand <= number; maxSummand++)
+        total += numberPartitions(number, maxSummand);
+
+    return total;
+}
+
+int PartitionCalculator::numberPartitions(int number, int maxSummand)
+{
+    if (maxSummand > number) {
+        return 0;
+    }
+    else if (maxSummand == 0) {
+        return 0;
+    }
+    else if (maxSummand == 1) {
+        return 1;
+    }
+    else {
+        return
+            numberPartitions(number - 1, maxSummand - 1) +
+            numberPartitions(number - maxSummand, maxSummand);
+    }
+}
+
 
 // =====================================================================================
 // End-of-File
