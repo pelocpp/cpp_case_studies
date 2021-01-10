@@ -15,7 +15,7 @@
 // Muss ich bei emplace wirklich mit std::forward arbeiten ???
 
 // TODO: 
-// Hmm, das emplace hätte man auch ohne variadic template machen können, aslo nur mit Init List ???
+// Hmm, das emplace hätte man auch ohne variadic template machen können, also nur mit Init List ???
 // Okay, dann braucht man beim Aufruf geschweifte Klammern ...
 
 // -----------------------
