@@ -26,26 +26,25 @@ public:
     bool emplace(Args&& ... args) {
 
         // error handling
-        std::initializer_list<int> list = std::initializer_list<int>{ std::forward<int>(args)... };
+        std::initializer_list<int> list = 
+            std::initializer_list<int>{ std::forward<int>(args)... };
 
         int number = std::accumulate(list.begin(), list.end(), 0);
         if (number != m_number) {
             throw std::invalid_argument("Number of partition doesn't match set!");
         }
 
-        //std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result
+        // std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result
         //    = m_partitions.emplace(list);
-        // or using auto
         auto result = m_partitions.emplace(list);
         return std::get<1>(result);
     }
 
     // iterator support
-    //std::set<Partition, std::greater<Partition>>::iterator begin() { return m_partitions.begin(); }
-    //std::set<Partition, std::greater<Partition>>::iterator end() { return m_partitions.end(); }
-    // or using auto
-    auto begin() { return m_partitions.begin(); }
-    auto end() { return m_partitions.end(); }
+    // std::set<Partition, std::greater<Partition>>::const_iterator begin() { return m_partitions.cbegin(); }
+    // std::set<Partition, std::greater<Partition>>::const_iterator end() { return m_partitions.cend(); }
+    auto begin() { return m_partitions.cbegin(); }
+    auto end() { return m_partitions.cend(); }
 
     // output
     friend std::ostream& operator<< (std::ostream&, const PartitionSet&);

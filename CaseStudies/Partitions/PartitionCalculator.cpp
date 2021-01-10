@@ -24,6 +24,7 @@ PartitionSet PartitionCalculator::calculate(int number)
     }
     else {
         PartitionSet setMinusOne = calculate(number - 1);
+
         for (const auto& p : setMinusOne) {
 
             std::vector<int> numbers = p.numbers();
@@ -37,7 +38,7 @@ PartitionSet PartitionCalculator::calculate(int number)
 
         // create missing partition (just consisting of '1's)
         std::vector<int> ones(number, 1);
-        Partition pOnes (ones);
+        Partition pOnes{ ones };
         result.insert(pOnes);
     }
 
@@ -73,7 +74,6 @@ int PartitionCalculator::numberPartitions(int number, int maxSummand)
             numberPartitions(number - maxSummand, maxSummand);
     }
 }
-
 
 // =====================================================================================
 // End-of-File

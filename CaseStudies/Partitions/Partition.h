@@ -27,8 +27,14 @@ public:
     friend bool operator>(const Partition&, const Partition&);
 
     // iterator support
-    std::multiset<int, std::greater<int>>::iterator begin() { return m_numbers.begin(); }
-    std::multiset<int, std::greater<int>>::iterator end() { return m_numbers.end(); }
+    //std::multiset<int, std::greater<int>>::const_iterator begin() {
+    //    return m_numbers.cbegin(); 
+    //}
+    //std::multiset<int, std::greater<int>>::const_iterator end() {
+    //    return m_numbers.cend(); 
+    //}
+    auto begin() { return m_numbers.cbegin(); }
+    auto end() { return m_numbers.cend(); }
 
     // output
     friend std::ostream& operator<< (std::ostream&, const Partition&);
