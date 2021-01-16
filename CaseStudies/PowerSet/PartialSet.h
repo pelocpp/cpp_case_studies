@@ -1,5 +1,5 @@
 // =====================================================================================
-// Partition.h
+// PartialSet.h
 // =====================================================================================
 
 #pragma once
@@ -8,35 +8,29 @@ class PartialSet
 {
 private:
     // member data
-    int* m_numbers;
-    int  m_size;
+    std::set<int> m_numbers;
 
 public:
     // c'tors / d'tor
-    PartialSet();
-    PartialSet(const PartialSet&);
-    PartialSet(int numbers[], int size);
-    ~PartialSet();
+    PartialSet() = default;
+    PartialSet(const std::initializer_list<int>&);
 
-    // getter/setter
-    int GetSize() { return m_size; }
-
-    // operators
-    PartialSet& operator= (const PartialSet&);
+    // getter
+    size_t size() const { return m_numbers.size(); }
 
     // public interface
-    bool IsEqual (const PartialSet&) const;
-    bool IsLessThan (const PartialSet&) const;
-    bool IsGreaterThan (const PartialSet&) const;
+    void add(int elem) { m_numbers.insert(elem); }
 
 	// public operators
 	friend bool operator== (const PartialSet&, const PartialSet&);
 	friend bool operator!= (const PartialSet&, const PartialSet&);
 	friend bool operator<= (const PartialSet&, const PartialSet&);
-	friend bool operator>= (const PartialSet&, const PartialSet&);
+	friend bool operator<  (const PartialSet&, const PartialSet&);
+    friend bool operator>= (const PartialSet&, const PartialSet&);
+    friend bool operator>  (const PartialSet&, const PartialSet&);
 
     // input/output
-    friend ostream& operator<< (ostream&, const PartialSet&);
+    friend std::ostream& operator<< (std::ostream&, const PartialSet&);
 };
 // =====================================================================================
 // End-of-File

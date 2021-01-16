@@ -50,8 +50,8 @@ bool operator<(const Partition& p1, const Partition& p2)
     if (p1.number() != p2.number())
         throw std::invalid_argument(std::string("Partitions don't belong to same number!"));
 
-    std::set<int>::iterator it1 = p1.m_numbers.cbegin();
-    std::set<int>::iterator it2 = p2.m_numbers.cbegin();
+    std::multiset<int>::iterator it1 = p1.m_numbers.cbegin();
+    std::multiset<int>::iterator it2 = p2.m_numbers.cbegin();
 
     while (it1 != p1.m_numbers.cend() && it2 != p2.m_numbers.cend()) {
 
@@ -77,16 +77,15 @@ std::ostream& operator<< (std::ostream& os, const Partition& p)
 {
     os << p.m_number << " = ";
 
-    std::set<int>::iterator it = p.m_numbers.cbegin();
-
     int k = 0;
+    std::multiset<int>::iterator it = p.m_numbers.cbegin();
     while (it != p.m_numbers.cend())
     {
         os << (*it);
         if (k < p.m_numbers.size() - 1)
             os << " + ";
 
-        ++it,  ++k;
+        ++it, ++k;
     }
 
     return os;

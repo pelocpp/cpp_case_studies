@@ -1,5 +1,5 @@
 // =====================================================================================
-// Partition.h
+// PowerSet.h
 // =====================================================================================
 
 #pragma once
@@ -8,44 +8,45 @@ class PowerSet
 {
 private:
     // member data
-    int m_elements;      // number of elements in base set
-    int m_cardinality;   // number of subsets
-    int m_index;         // enumeration index
-
-    PartialSet** m_sets; // array of power sets
+    int m_size;                        // number of elements in base set
+    int m_cardinality;                 // number of subsets
+    std::vector<PartialSet> m_sets;    // subsets
+    // Todo  PeLo Hmmm ... da sollten wir eine std::set mit Vergleichsoperator nehmen  ?!?!?!?!
 
 public:
     // c'tors / d'tor
-    PowerSet ();
-    PowerSet (const PowerSet&);
-    PowerSet (int elements);
-    ~PowerSet ();
+    PowerSet() : m_size{ 0 }, m_cardinality{ 1 }, m_sets{ PartialSet {} } {}
+
+    // PowerSet (int size) : m_size{ size }, m_cardinality{ 1 }, m_sets{ PartialSet {} }{}
+
+    PowerSet(int size);
 
     // getter/setter
-    int GetCardinality() { return m_cardinality; }
-    int GetSize() { return m_elements; }
+    int cardinality() { return m_cardinality; }
+    int size() { return m_size; }
 
     // public interface
-    void Sort();
+    void sort();
 
-    int  PartialSetsBySize(int cardinality);
-    void PartialSetsBySize(int cardinality, PartialSet buf[], int len);
+    int  partialSetsBySize(int cardinality);
+    void partialSetsBySize(int cardinality, PartialSet buf[], int len);
 
     // operators
     PowerSet& operator= (const PowerSet&);
     PartialSet operator[] (int index);
 
     // enumerator interface
-    void Reset();
-    bool MoveNext();
-    PartialSet Current();
+    //void Reset();
+    //bool MoveNext();
+    //PartialSet Current();
 
     // input/output
-    friend ostream& operator<< (ostream&, const PowerSet&);
+    friend std::ostream& operator<< (std::ostream&, const PowerSet&);
 
 private:
-    // private helper methods
-    static int PowerByTwo(int num);
+    void computePartialSets();
+
+    static int powerByTwo(int num);
 };
 
 // =====================================================================================

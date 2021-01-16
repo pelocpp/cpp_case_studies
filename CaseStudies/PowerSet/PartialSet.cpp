@@ -1,146 +1,149 @@
 // =====================================================================================
-// Partition.h
+// PartialSet.cpp
 // =====================================================================================
 
-#pragma once
-
 #include <iostream>
-using namespace std;
+#include <string>
+#include <set>
 
 #include "PartialSet.h"
-#include "PowerSet.h"
 
 // c'tors / d'tor
-PartialSet::PartialSet()
-{
-    m_size = 0;
-    m_numbers = (int*) 0;
-}
-
-PartialSet::PartialSet(const PartialSet& set)
-{
-    m_size = set.m_size;
-    m_numbers = new int[set.m_size];
-
-    for (int i = 0; i < m_size; i ++)
-        m_numbers[i] = set.m_numbers[i];
-}
+PartialSet::PartialSet(const std::initializer_list<int>& list)
+    : m_numbers{ list.begin(), list.end() } {}
    
-PartialSet::PartialSet(int numbers[], int size)
-{
-    m_size = size;
-    m_numbers = new int[m_size];
-
-    for (int i = 0; i < size; i ++)
-        m_numbers[i] = numbers[i];
-}
-
-PartialSet::~PartialSet()
-{
-    delete[] m_numbers;
-}
-
-// assignment operator
-PartialSet& PartialSet::operator= (const PartialSet& set)
-{
-    if (this == &set)
-        return *this;
-
-    m_size = set.m_size;
-
-    delete[] m_numbers;
-    m_numbers = new int[set.m_size];
-
-    for (int i = 0; i < m_size; i ++)
-        m_numbers[i] = set.m_numbers[i];
-
-    return *this;
-}
 
 // public interface
-bool PartialSet::IsEqual (const PartialSet& set) const
+//bool PartialSet::isEqual (const PartialSet& set) const
+//{
+//    //if (m_size != set.m_size)
+//    //    return false;
+//
+//    //for (int i = 0; i < m_size; i++)
+//    //{
+//    //    if (m_numbers[i] != set.m_numbers[i])
+//    //        return false;
+//    //}
+//
+//    //return true;
+//
+//    // partitions of different numbers can't be compared
+//    if (p1.number() != p2.number())
+//        throw std::invalid_argument(std::string("Partitions don't belong to same number!"));
+//
+//    // partitions with a different number of summands can't be equal
+//    if (p1.size() != p2.size())
+//        return false;
+//
+//    // compare all summands - sets are  sorted
+//    return (p1.m_numbers == p2.m_numbers);
+//}
+
+//bool PartialSet::IsLessThan (const PartialSet& set) const
+//{
+//    if (m_size < set.m_size)
+//    {
+//        return true;
+//    }
+//    else if (m_size > set.m_size)
+//    {
+//        return false;
+//    }
+//    else
+//    {
+//        for (int i = 0; i < m_size; i++)
+//        {
+//            if (m_numbers[i] < set.m_numbers[i])
+//                return true;
+//            else if (m_numbers[i] > set.m_numbers[i])
+//                return false;
+//            else
+//                continue;
+//        }
+//    }
+//
+//    return true;
+//}
+//
+//bool PartialSet::IsGreaterThan (const PartialSet& set) const
+//{
+//	if (this -> IsEqual (set))
+//		return true;
+//
+//	return ! this -> IsLessThan (set);
+//}
+
+// public operators
+bool operator== (const PartialSet& set1, const PartialSet& set2)
 {
-    if (m_size != set.m_size)
+    // partial sets with a different count of numbers can't be equal
+    if (set1.size() != set2.size())
         return false;
 
-    for (int i = 0; i < m_size; i++)
-    {
-        if (m_numbers[i] != set.m_numbers[i])
-            return false;
-    }
-
-    return true;
+    // compare all numbers - partial sets are sorted
+    return (set1.m_numbers == set2.m_numbers);
 }
 
-bool PartialSet::IsLessThan (const PartialSet& set) const
+bool operator!= (const PartialSet& s1, const PartialSet& s2)
 {
-    if (m_size < set.m_size)
+	return ! (s1 == s2);
+}
+
+bool operator<= (const PartialSet& set1, const PartialSet& set2)
+{
+    if (set1.m_numbers.size() < set2.m_numbers.size())
     {
         return true;
     }
-    else if (m_size > set.m_size)
+    else if (set1.m_numbers.size() > set2.m_numbers.size())
     {
         return false;
     }
     else
     {
-        for (int i = 0; i < m_size; i++)
-        {
-            if (m_numbers[i] < set.m_numbers[i])
-                return true;
-            else if (m_numbers[i] > set.m_numbers[i])
-                return false;
-            else
-                continue;
-        }
+
+        // TODO: das muss doch gehen, oder ??
+        return set1.m_numbers <= set2.m_numbers;
+
+        //for (int i = 0; i < m_size; i++)
+        //{
+        //    if (m_numbers[i] < set.m_numbers[i])
+        //        return true;
+        //    else if (m_numbers[i] > set.m_numbers[i])
+        //        return false;
+        //    else
+        //        continue;
+        //}
     }
-
-    return true;
-}
-
-bool PartialSet::IsGreaterThan (const PartialSet& set) const
-{
-	if (this -> IsEqual (set))
-		return true;
-
-	return ! this -> IsLessThan (set);
-}
-
-// public operators
-bool operator== (const PartialSet& set1, const PartialSet& set2)
-{
-	return set1.IsEqual (set2);
-}
-
-bool operator!= (const PartialSet& set1, const PartialSet& set2)
-{
-	return ! (set1 == set2);
-}
-
-bool operator<= (const PartialSet& set1, const PartialSet& set2)
-{
-	return set1.IsLessThan (set2);
 }
 
 bool operator>= (const PartialSet& set1, const PartialSet& set2)
 {
-	return set1.IsGreaterThan (set2);
+	// return set1.IsGreaterThan (set2);
+
+    return true;
 }
 
 // input/output
-ostream& operator<< (ostream& os, const PartialSet& set)
+std::ostream& operator<< (std::ostream& os, const PartialSet& set)
 {
     os << "{ ";
-    for (int i = 0; i < set.m_size; i++)
+
+    int k = 0;
+    std::set<int>::iterator it = set.m_numbers.cbegin();
+    while (it != set.m_numbers.cend())
     {
-        os << set.m_numbers[i];
-        if (i < set.m_size - 1)
+        os << (*it);
+        if (k < set.m_numbers.size() - 1)
             os << ", ";
+
+        ++it, ++k;
     }
 
     os << " }";
     return os;
 }
+
 // =====================================================================================
 // End-of-File
 // =====================================================================================
