@@ -26,7 +26,7 @@ public:
     bool emplace(Args&& ... args) {
 
         // error handling
-        std::initializer_list<int> list = 
+        std::initializer_list<int> list =
             std::initializer_list<int>{ std::forward<int>(args)... };
 
         int number = std::accumulate(list.begin(), list.end(), 0);
@@ -36,7 +36,9 @@ public:
 
         // std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result
         //    = m_partitions.emplace(list);
-        auto result = m_partitions.emplace(list);
+
+        auto result = m_partitions.emplace(Partition{ args ... });
+
         return std::get<1>(result);
     }
 
