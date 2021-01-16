@@ -10,6 +10,8 @@ private:
     // member data
     int m_size;                        // number of elements in base set
     int m_cardinality;                 // number of subsets
+
+    // Todo PeLo: AUS SET UMSTELLEN !!!!
     std::vector<PartialSet> m_sets;    // subsets
     // Todo  PeLo Hmmm ... da sollten wir eine std::set mit Vergleichsoperator nehmen  ?!?!?!?!
 

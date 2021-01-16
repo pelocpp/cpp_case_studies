@@ -74,55 +74,55 @@ PartialSet::PartialSet(const std::initializer_list<int>& list)
 //}
 
 // public operators
-bool operator== (const PartialSet& set1, const PartialSet& set2)
-{
-    // partial sets with a different count of numbers can't be equal
-    if (set1.size() != set2.size())
-        return false;
-
-    // compare all numbers - partial sets are sorted
-    return (set1.m_numbers == set2.m_numbers);
-}
-
-bool operator!= (const PartialSet& s1, const PartialSet& s2)
-{
-	return ! (s1 == s2);
-}
-
-bool operator<= (const PartialSet& set1, const PartialSet& set2)
-{
-    if (set1.m_numbers.size() < set2.m_numbers.size())
-    {
-        return true;
-    }
-    else if (set1.m_numbers.size() > set2.m_numbers.size())
-    {
-        return false;
-    }
-    else
-    {
-
-        // TODO: das muss doch gehen, oder ??
-        return set1.m_numbers <= set2.m_numbers;
-
-        //for (int i = 0; i < m_size; i++)
-        //{
-        //    if (m_numbers[i] < set.m_numbers[i])
-        //        return true;
-        //    else if (m_numbers[i] > set.m_numbers[i])
-        //        return false;
-        //    else
-        //        continue;
-        //}
-    }
-}
-
-bool operator>= (const PartialSet& set1, const PartialSet& set2)
-{
-	// return set1.IsGreaterThan (set2);
-
-    return true;
-}
+//bool operator== (const PartialSet& set1, const PartialSet& set2)
+//{
+//    // partial sets with a different count of numbers can't be equal
+//    if (set1.size() != set2.size())
+//        return false;
+//
+//    // compare all numbers - partial sets are sorted
+//    return (set1.m_numbers == set2.m_numbers);
+//}
+//
+//bool operator!= (const PartialSet& s1, const PartialSet& s2)
+//{
+//	return !(s1 == s2);
+//}
+//
+//bool operator<= (const PartialSet& set1, const PartialSet& set2)
+//{
+//    if (set1.m_numbers.size() < set2.m_numbers.size())
+//    {
+//        return true;
+//    }
+//    else if (set1.m_numbers.size() > set2.m_numbers.size())
+//    {
+//        return false;
+//    }
+//    else
+//    {
+//
+//        // TODO: das muss doch gehen, oder ??
+//        return set1.m_numbers <= set2.m_numbers;
+//
+//        //for (int i = 0; i < m_size; i++)
+//        //{
+//        //    if (m_numbers[i] < set.m_numbers[i])
+//        //        return true;
+//        //    else if (m_numbers[i] > set.m_numbers[i])
+//        //        return false;
+//        //    else
+//        //        continue;
+//        //}
+//    }
+//}
+//
+//bool operator>= (const PartialSet& set1, const PartialSet& set2)
+//{
+//	// return set1.IsGreaterThan (set2);
+//
+//    return true;
+//}
 
 // input/output
 std::ostream& operator<< (std::ostream& os, const PartialSet& set)

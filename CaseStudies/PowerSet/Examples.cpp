@@ -35,9 +35,9 @@ void Test01_PartialSet()
     PartialSet set3({ 1, 2 });
     std::cout << set3 << std::endl;
 
-    std::cout << "IsLessThan: " << (set2 == set3) << std::endl;
-    std::cout << "IsEqual: " << (set2 == set3) << std::endl;
-    std::cout << "IsGreaterThan: " << (set2 >= set3) << std::endl;
+    //std::cout << "IsLessThan: " << (set2 == set3) << std::endl;
+    //std::cout << "IsEqual: " << (set2 == set3) << std::endl;
+    //std::cout << "IsGreaterThan: " << (set2 >= set3) << std::endl;
 }
 
 void Test02_PowerSet_01()

@@ -19,6 +19,11 @@ void Test01_PartialSet();
 void Test02_PowerSet_01();
 void Test02_PowerSet_02();
 
+// TODO: PeLo  Ausprobieren: Die set ist sorted ... aber ist es kleiner oder kleiner-gleich, der das dann
+// Also welche Operatoren sind dafür notwendig !!!
+
+// TODO: Vielleicht eine PartialPowerSet implementieren ... für die PartialSetsBySize
+
 
 int main()
 {
