@@ -8,7 +8,7 @@ class PartialSet
 {
 private:
     // member data
-    std::set<int> m_numbers;
+    std::set<size_t> m_numbers;
 
 public:
     // c'tors / d'tor
@@ -23,7 +23,6 @@ public:
 
 	// public operators
 	friend bool operator== (const PartialSet&, const PartialSet&);
-	friend bool operator!= (const PartialSet&, const PartialSet&);
 	friend bool operator<  (const PartialSet&, const PartialSet&);
 
     // input/output

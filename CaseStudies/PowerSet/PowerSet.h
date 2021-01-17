@@ -8,32 +8,26 @@ class PowerSet
 {
 private:
     // member data
-    int m_size;                   // number of elements in base set
-    int m_cardinality;            // number of subsets
+    size_t m_size;                // number of elements in base set
+    size_t m_cardinality;         // number of subsets
     std::set<PartialSet> m_sets;  // subsets
 
 public:
     // c'tors / d'tor
-    PowerSet() : m_size{ 0 }, m_cardinality{ 1 }, m_sets{ PartialSet {} } {}
-    PowerSet(int size);
+    PowerSet();
+    PowerSet(size_t size);
 
     // getter/setter
-    int cardinality() { return m_cardinality; }
-    int size() { return m_size; }
+    size_t cardinality() const { return m_cardinality; }
+    size_t size() const { return m_size; }
 
     // public interface
-    //void sort();
+    // int  partialSetsBySize(int cardinality);
+    PowerSet partialSetsBySize(size_t size);
 
-    int  partialSetsBySize(int cardinality);
-    void partialSetsBySize(int cardinality, PartialSet buf[], int len);
-
-    // operators
-    // PartialSet operator[] (int index);
-
-    // enumerator interface
-    //void Reset();
-    //bool MoveNext();
-    //PartialSet Current();
+    // iterator support
+    std::set<PartialSet>::const_iterator begin();
+    std::set<PartialSet>::const_iterator end();
 
     // input/output
     friend std::ostream& operator<< (std::ostream&, const PowerSet&);
@@ -41,7 +35,7 @@ public:
 private:
     void computePartialSets();
 
-    static int powerByTwo(int num);
+    static size_t powerByTwo(size_t num);
 };
 
 // =====================================================================================

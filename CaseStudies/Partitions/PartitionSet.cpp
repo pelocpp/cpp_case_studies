@@ -35,7 +35,7 @@ std::ostream& operator<< (std::ostream& os, const PartitionSet& set)
         ++n;
     }
 
-    os << '[' << set.size() << " permutations]" << std::endl;
+    os << '[' << set.size() << " partitions]" << std::endl;
 
     return os;
 }

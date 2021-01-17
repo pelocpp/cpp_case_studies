@@ -173,7 +173,7 @@ a| Gibt ein `Partition`-Objekt auf der Konsole aus. Die Darstellung einer Partit
 
 [source,c++]
 ----
-friend std::ostream& operator<< (std::ostream& os, const Permutation& p);
+friend std::ostream& operator<< (std::ostream& os, const Partition& p);
 ----
 |===
 
@@ -336,7 +336,7 @@ Partitions of 3:
 1: 3 = 3
 2: 3 = 2 + 1
 3: 3 = 1 + 1 + 1
-[3 permutations]
+[3 partitions]
 ....
 
 Wenn Sie in diesem Beispiel die Anzahl der Konstruktorenaufrufe der `Partition`-Objekte zählen,
@@ -379,7 +379,7 @@ Partitions of 4:
 3: 4 = 2 + 2
 4: 4 = 2 + 1 + 1
 5: 4 = 1 + 1 + 1 + 1
-[5 permutations]
+[5 partitions]
 ....
 
 Erkennen Sie zwischen den Aufrufen der `emplace`- und der `insert`-Methode einen Unterschied?
@@ -412,7 +412,7 @@ false
 false
 Partitions of 4:
 1: 4 = 2 + 1 + 1
-[1 permutations]
+[1 partitions]
 ....
 
 == Rekursive Berechnung aller Partitionen einer natürlichen Zahl
@@ -501,7 +501,7 @@ Partitions of 6:
  9: 6 = 2 + 2 + 1 + 1
 10: 6 = 2 + 1 + 1 + 1 + 1
 11: 6 = 1 + 1 + 1 + 1 + 1 + 1
-[11 permutations]
+[11 partitions]
 ....
 
 == Anzahl der Partitionen
@@ -857,7 +857,7 @@ Implementierung der Klasse `PartitionSet`:
 22:         ++n;
 23:     }
 24: 
-25:     os << '[' << set.size() << " permutations]" << std::endl;
+25:     os << '[' << set.size() << " partitions]" << std::endl;
 26:     return os;
 27: }
 ----
