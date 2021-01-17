@@ -22,12 +22,9 @@ public:
     void add(int elem) { m_numbers.insert(elem); }
 
 	// public operators
-	//friend bool operator== (const PartialSet&, const PartialSet&);
-	//friend bool operator!= (const PartialSet&, const PartialSet&);
-	//friend bool operator<= (const PartialSet&, const PartialSet&);
-	//friend bool operator<  (const PartialSet&, const PartialSet&);
- //   friend bool operator>= (const PartialSet&, const PartialSet&);
- //   friend bool operator>  (const PartialSet&, const PartialSet&);
+	friend bool operator== (const PartialSet&, const PartialSet&);
+	friend bool operator!= (const PartialSet&, const PartialSet&);
+	friend bool operator<  (const PartialSet&, const PartialSet&);
 
     // input/output
     friend std::ostream& operator<< (std::ostream&, const PartialSet&);

@@ -6,43 +6,38 @@
 #include <string>
 #include <set>
 #include <vector>
+#include <algorithm>
 
 #include "PartialSet.h"
 #include "PowerSet.h"
 
 
-//
-//// c'tors / d'tor
-//PowerSet::PowerSet ()
-//{
-//    m_cardinality = 1;
-//    m_sets = new PartialSet*[1];
-//    m_sets[0] = new PartialSet;
-//}
-//
-//PowerSet::PowerSet (const PowerSet& ps)
-//{
-//    m_elements = ps.m_elements;
-//    m_cardinality = ps.m_cardinality;
-//    m_index = -1;
-//
-//    m_sets = new PartialSet*[m_cardinality];
-//    for (int i = 0; i < m_cardinality; i++)
-//    {
-//        m_sets[i] = new PartialSet(*ps.m_sets[i]);
-//    }
-//}
-//
-
-
-
+// c'tors / d'tor
 PowerSet::PowerSet(int size) : m_size{ size }, m_cardinality{ powerByTwo(size) }
 {
     computePartialSets();
 }
 
-
 void PowerSet::computePartialSets() {
+
+    // m_sets.resize(m_cardinality);
+
+    //std::generate(
+    //    std::begin(m_sets), 
+    //    std::end(m_sets), 
+    //    [this, i = 0] () mutable { 
+
+    //        PartialSet set{ };
+    //        for (int j = 0; j < m_size; j++) {
+    //            int mask = 1 << j;
+    //            if ((mask & i) != 0) {
+    //                set.add(j + 1);
+    //            }
+    //        }
+
+    //        ++i;
+    //        return set;
+    //    });
 
     for (int i = 0; i < m_cardinality; i++) {
 
@@ -55,65 +50,16 @@ void PowerSet::computePartialSets() {
             }
         }
 
-        m_sets.push_back(set);
+        m_sets.insert(set);
     }
 }
 
 
-//PowerSet::PowerSet (int elements)
-//{
-//    m_cardinality = PowerSet::PowerByTwo (elements);
-//
-//    m_sets = new PartialSet*[m_cardinality];
-//
-//    for (int i = 0; i < m_cardinality; i++)
-//    {
-//        // calculate number of elements in i.th partial set
-//        int num = 0;
-//        for (int j = i; j != 0; j = j / 2)
-//        {
-//            if (j % 2 == 1)
-//                num ++;
-//        }
-//
-//        // compute i.th partial set
-//        int* set = new int[num];
-//        int index = 0;
-//        for (int j = 0; j < elements; j ++)
-//        {
-//            int mask = 1 << j;
-//            if ((mask & i) != 0)
-//            {
-//                set[index] = j + 1;
-//                index++;
-//            }
-//        }
-//
-//        PartialSet* ps = new PartialSet(set, num);
-//        delete[] set;
-//
-//        m_sets[i] = ps;
-//    }
-//}
 
 
-//
-//// public interface
-//void PowerSet::Sort ()
-//{
-//    for (int i = m_cardinality - 1; i >= 0; i --)
-//    {
-//        for (int j = 0; j < i; j ++)
-//        {
-//            if (*m_sets[j+1] <= *m_sets[j])
-//            {
-//                PartialSet* tmp = m_sets[j+1];
-//                m_sets[j+1] = m_sets[j];
-//                m_sets[j] = tmp;
-//            }
-//        }
-//    }
-//}
+
+// public interface
+
 //
 //int PowerSet::PartialSetsBySize (int size)
 //{
@@ -186,12 +132,12 @@ void PowerSet::computePartialSets() {
 // input/output
 std::ostream& operator<< (std::ostream& os, const PowerSet& ps)
 {
-    for (int i = 0; i < ps.m_cardinality; i++)
-        os << ps.m_sets[i] << "\n";
- 
+    for (const auto& set : ps.m_sets) {
+        os << set << std::endl;
+    }
+
     return os;
 }
-
 
 // private helper methods
 int PowerSet::powerByTwo(int num)

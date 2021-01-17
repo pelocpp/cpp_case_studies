@@ -19,6 +19,8 @@ void Test01_PartialSet();
 void Test02_PowerSet_01();
 void Test02_PowerSet_02();
 
+void Test03_PowerSet_01();
+
 // TODO: PeLo  Ausprobieren: Die set ist sorted ... aber ist es kleiner oder kleiner-gleich, der das dann
 // Also welche Operatoren sind dafür notwendig !!!
 
@@ -29,8 +31,10 @@ int main()
 {
     //Test01_PowerSet();
    // Test01_PartialSet();
-  Test02_PowerSet_01();
+ // Test02_PowerSet_01();
    Test02_PowerSet_02();
+
+   //Test03_PowerSet_01();
 
     return 0;
 }

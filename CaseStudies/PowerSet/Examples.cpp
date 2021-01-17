@@ -56,7 +56,12 @@ void Test02_PowerSet_02()
     }
 }
 
-
+void Test03_PowerSet_01()
+{
+    PowerSet set{ 4 };
+    std::cout << "Size: " << set.size() << ", Cardinality: " << set.cardinality() << std::endl;
+    std::cout << set << std::endl << std::endl;
+}
 
 // =====================================================================================
 // End-of-File

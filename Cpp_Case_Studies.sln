@@ -51,12 +51,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Partitions", "Partitions", "{3AEF1E44-3D6E-4702-9E13-7E889AF9E0B5}"
 	ProjectSection(SolutionItems) = preProject
 		AsciiDoc\Partitions\PartitionPseudeCode.png = AsciiDoc\Partitions\PartitionPseudeCode.png
-		AsciiDoc\Partitions\Partitions_Documentation.adoc = AsciiDoc\Partitions\Partitions_Documentation.adoc
+		AsciiDoc\Partitions\Partitions.adoc = AsciiDoc\Partitions\Partitions.adoc
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeConverter", "CaseStudies\CodeConverter\CodeConverter.vcxproj", "{8D3E05BA-9DF0-441A-88A7-09DA95C4BDE4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PowerSet", "CaseStudies\PowerSet\PowerSet.vcxproj", "{2C948318-3FFE-419C-A63F-E6FE674DF8E9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerSet", "PowerSet", "{66556638-3412-4C70-901C-C7B86679A2CD}"
+	ProjectSection(SolutionItems) = preProject
+		AsciiDoc\PowerSet\PowerSet.adoc = AsciiDoc\PowerSet\PowerSet.adoc
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +152,7 @@ Global
 		{1BE26B8E-3A21-40D3-A0C6-2FF5EA62C8E4} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
 		{9A6045C5-DA88-477B-809F-DF25A567C741} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
 		{3AEF1E44-3D6E-4702-9E13-7E889AF9E0B5} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
+		{66556638-3412-4C70-901C-C7B86679A2CD} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}

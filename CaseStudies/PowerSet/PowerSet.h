@@ -8,19 +8,13 @@ class PowerSet
 {
 private:
     // member data
-    int m_size;                        // number of elements in base set
-    int m_cardinality;                 // number of subsets
-
-    // Todo PeLo: AUS SET UMSTELLEN !!!!
-    std::vector<PartialSet> m_sets;    // subsets
-    // Todo  PeLo Hmmm ... da sollten wir eine std::set mit Vergleichsoperator nehmen  ?!?!?!?!
+    int m_size;                   // number of elements in base set
+    int m_cardinality;            // number of subsets
+    std::set<PartialSet> m_sets;  // subsets
 
 public:
     // c'tors / d'tor
     PowerSet() : m_size{ 0 }, m_cardinality{ 1 }, m_sets{ PartialSet {} } {}
-
-    // PowerSet (int size) : m_size{ size }, m_cardinality{ 1 }, m_sets{ PartialSet {} }{}
-
     PowerSet(int size);
 
     // getter/setter
@@ -28,14 +22,13 @@ public:
     int size() { return m_size; }
 
     // public interface
-    void sort();
+    //void sort();
 
     int  partialSetsBySize(int cardinality);
     void partialSetsBySize(int cardinality, PartialSet buf[], int len);
 
     // operators
-    PowerSet& operator= (const PowerSet&);
-    PartialSet operator[] (int index);
+    // PartialSet operator[] (int index);
 
     // enumerator interface
     //void Reset();
