@@ -13,13 +13,13 @@ private:
 public:
     // c'tors / d'tor
     PartialSet() = default;
-    PartialSet(const std::initializer_list<int>&);
+    PartialSet(const std::initializer_list<size_t>&);
 
     // getter
     size_t size() const { return m_numbers.size(); }
 
     // public interface
-    void add(int elem) { m_numbers.insert(elem); }
+    void add(size_t elem) { m_numbers.insert(elem); }
 
 	// public operators
 	friend bool operator== (const PartialSet&, const PartialSet&);

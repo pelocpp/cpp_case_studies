@@ -162,7 +162,7 @@ void Test03_PartitionCalculator_02()
 
 void Test03_PartitionCalculator_03()
 {
-    for (int i = 1; i <= 20; ++i) {
+    for (size_t i = 1; i != 21; ++i) {
         std::cout 
             << "Number partitions of " << i
             << ": " << PartitionCalculator::numberPartitions(i)

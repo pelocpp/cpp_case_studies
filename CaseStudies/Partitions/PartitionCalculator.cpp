@@ -14,7 +14,7 @@
 #include "PartitionCalculator.h"
 
 // public interface
-PartitionSet PartitionCalculator::calculate(int number)
+PartitionSet PartitionCalculator::calculate(size_t number)
 {
     PartitionSet result{ number };
 
@@ -27,7 +27,7 @@ PartitionSet PartitionCalculator::calculate(int number)
 
         for (const auto& p : setMinusOne) {
 
-            std::vector<int> numbers = p.numbers();
+            std::vector<size_t> numbers = p.numbers();
             for (size_t j = 0; j != numbers.size(); j++) {
                 numbers[j]++;
                 Partition q{ numbers };
@@ -37,7 +37,7 @@ PartitionSet PartitionCalculator::calculate(int number)
         }
 
         // create missing partition (just consisting of '1's)
-        std::vector<int> ones(number, 1);
+        std::vector<size_t> ones(number, 1);
         Partition pOnes{ ones };
         result.insert(pOnes);
     }
@@ -45,19 +45,19 @@ PartitionSet PartitionCalculator::calculate(int number)
     return result;
 }
 
-int PartitionCalculator::numberPartitions(int number)
+size_t PartitionCalculator::numberPartitions(size_t number)
 {
     if (number < 1)
         return 0;
 
-    int total = 0;
+    size_t total = 0;
     for (int maxSummand = 1; maxSummand <= number; maxSummand++)
         total += numberPartitions(number, maxSummand);
 
     return total;
 }
 
-int PartitionCalculator::numberPartitions(int number, int maxSummand)
+size_t PartitionCalculator::numberPartitions(size_t number, size_t maxSummand)
 {
     if (maxSummand > number) {
         return 0;

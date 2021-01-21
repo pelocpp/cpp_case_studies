@@ -11,9 +11,9 @@ public:
     PartitionCalculator() = delete;
 
     // public interface
-    static PartitionSet calculate(int n);
-    static int numberPartitions(int number);
-    static int numberPartitions(int number, int maxSummand);
+    static PartitionSet calculate(size_t n);
+    static size_t numberPartitions(size_t number);
+    static size_t numberPartitions(size_t number, size_t maxSummand);
 };
 
 // =====================================================================================

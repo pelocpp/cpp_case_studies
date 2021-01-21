@@ -7,19 +7,19 @@
 class Partition
 {
 private:
-    std::multiset<int, std::greater<int>> m_numbers;
-    int m_number{ };
+    std::multiset<size_t, std::greater<size_t>> m_numbers;
+    size_t m_number{ };
 
 public:
     // c'tor(s)
     Partition() = default;
-    Partition(const std::initializer_list<int>&);
-    Partition(const std::vector<int>&);
+    Partition(const std::initializer_list<size_t>&);
+    Partition(const std::vector<size_t>&);
 
     // getter
-    int number() const { return m_number; }
+    size_t number() const { return m_number; }
     size_t size() const { return m_numbers.size(); }
-    std::vector<int> numbers() const;
+    std::vector<size_t> numbers() const;
 
     // operators
     friend bool operator==(const Partition&, const Partition&);
@@ -27,14 +27,14 @@ public:
     friend bool operator>(const Partition&, const Partition&);
 
     // iterator support
-    //std::multiset<int, std::greater<int>>::const_iterator begin() {
-    //    return m_numbers.cbegin(); 
-    //}
-    //std::multiset<int, std::greater<int>>::const_iterator end() {
-    //    return m_numbers.cend(); 
-    //}
-    auto begin() { return m_numbers.cbegin(); }
-    auto end() { return m_numbers.cend(); }
+    std::multiset<size_t, std::greater<size_t>>::const_iterator begin() {
+        return m_numbers.cbegin(); 
+    }
+    std::multiset<size_t, std::greater<size_t>>::const_iterator end() {
+        return m_numbers.cend(); 
+    }
+    //auto begin() { return m_numbers.cbegin(); }
+    //auto end() { return m_numbers.cend(); }
 
     // output
     friend std::ostream& operator<< (std::ostream&, const Partition&);

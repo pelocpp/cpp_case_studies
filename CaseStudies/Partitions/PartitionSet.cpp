@@ -13,7 +13,7 @@
 #include "PartitionSet.h"
 
 // c'tors
-PartitionSet::PartitionSet(int number) : m_number{ number } {}
+PartitionSet::PartitionSet(size_t number) : m_number{ number } {}
 
 // public interface
 bool PartitionSet::insert(const Partition& p) {

@@ -10,7 +10,7 @@
 #include <algorithm>
 
 // c'tors / d'tor
-PartialSet::PartialSet(const std::initializer_list<int>& list)
+PartialSet::PartialSet(const std::initializer_list<size_t>& list)
     : m_numbers{ list.begin(), list.end() } {}
 
 // public operators
@@ -32,8 +32,6 @@ bool operator< (const PartialSet& set1, const PartialSet& set2)
         // use default function object std::less<int>
         return set1.m_numbers < set2.m_numbers;
     }
-
-    // return set1.m_numbers < set2.m_numbers;
 }
 
 // output

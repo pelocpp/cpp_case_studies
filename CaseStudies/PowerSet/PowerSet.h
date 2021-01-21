@@ -34,7 +34,6 @@ public:
 
 private:
     void computePartialSets();
-
     static size_t powerByTwo(size_t num);
 };
 

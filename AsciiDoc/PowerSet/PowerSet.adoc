@@ -12,16 +12,17 @@
 
 == Lernziele
 
-* Uniform Initialization
+* Einheitliche Initialisierung
+* Initialisierungsliste (`std::initializer_list<T>`)
 * STL-Klasse `std::set<T>`
 * Container-Methoden `cbegin()` und `cend()`
-* Schlüsselwort `auto` ???
+* C++ Iteratorkonzept
 
 == Einführung
 
 Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
 gegebenen Grundmenge. Besitzt die Grundmenge den Namen _S_, notiert man die Potenzmenge meist
-als _P_(_S_) von _S_. Für die 3-elementige Menge _S_ = { 1, 2, 3 } ergibt sich die Potenzmenge _P_({ 1, 2, 3 }):
+als _P_(_S_) von _S_. Für die 3-elementige Menge _S_ = { 1, 2, 3 } ergibt sich die Potenzmenge _P_({ 1, 2, 3 }) zu
 
 ....
 P({1,2,3}) =
@@ -33,20 +34,19 @@ P({1,2,3}) =
 }
 ....
 
-
 Die Größe einer Potenzmenge (also die Anzahl aller Teilmengen) ist immer 2^n^,
 wenn _n_ die Anzahl der Elemente der Grundmenge ist.
 Erstellen Sie eine Implementierung für zwei Klassen `PowerSet` (Potenzmenge) und `PartialSet`
 (Teilmenge, also ein Element einer Potenzmenge). Integrieren Sie dabei, soweit sinnvoll machbar, möglichst
-viele programmiersprachliche Sprachmittel von _Modern_ {cpp}!
+viele programmiersprachliche Konstrukte bzw. Sprachmittel von _Modern_ {cpp}!
 
 == Die Klasse `PartialSet`
 
 Bevor wir uns dem Algorithmus zur Konstruktion einer Potenzmenge (und damit der Klasse `PowerSet`) zuwenden,
-benötigen Sie als Fundament die Klasse `PartialSet`. Implementieren Sie
-ein Grundgerüst dieser Klasse an Hand der Vorgaben in <<id_table_partialset>>.
-Eine Instanz der Klasse `PartialSet` sollte Ihre Elemente immer aufsteigend sortierter Form ablegen.
-Auf diese Weise lassen sich Operationen wie zum das Vergleichen von `PartialSet`-Objekten leichter implementieren.
+benötigen Sie als Fundament die Klasse `PartialSet`. Implementieren Sie ein Grundgerüst dieser Klasse
+an Hand der Vorgaben in <<id_table_partialset>>.
+Eine Instanz der Klasse `PartialSet` sollte ihre Elemente immer in aufsteigend sortierter Form ablegen.
+Auf diese Weise lassen sich Operationen wie zum Beispiel das Vergleichen von `PartialSet`-Objekten leichter implementieren.
 
 .Wesentliche Elemente der Klasse `PartialSet`.
 [[id_table_partialset]]
@@ -68,7 +68,7 @@ die in der Teilmenge enthalten sind.
 
 [source,c++]
 ----
-PartialSet(const std::initializer_list<int>& list);
+PartialSet(const std::initializer_list<size_t>& list);
 ----
 
 | _getter_ `size()`
@@ -80,17 +80,15 @@ size_t size() const;
 ----
 
 | Methode `add()`
-a| Fügt ein Element in dieTeilmenge ein. Diese Methode wird zum algorithmischen Erzeugen einer Teilmenge benötigt.
+a| Fügt ein Element in die Teilmenge ein. Diese Methode wird zum algorithmischen Erzeugen einer Teilmenge benötigt.
 
 [source,c++]
 ----
-void add(int elem);
+void add(size_t elem);
 ----
 
 | Operator `==`
-a| Vergleicht zwei `PartialSet`-Objekte auf Gleichheit. Zwei Teilmengen sind genau dann gleich,
-wenn sie die gleiche Anzahl von Elementen haben, und jedes Element der ersten Teilmenge mit dem Element in der zweiten Teilmenge
-an derselben Position übereinstimmt.
+a| Vergleicht zwei `PartialSet`-Objekte auf Gleichheit. Zwei Teilmengen sind genau dann gleich, wenn sie die gleichen Elemente enthalten.
 
 [source,c++]
 ----
@@ -106,7 +104,7 @@ a| Gibt ein `PartialSet`-Objekt auf der Konsole aus. Die Darstellung einer Teilm
 
 [source,c++]
 ----
-friend std::ostream& operator<< (std::ostream& os, const Permutation& p);
+friend std::ostream& operator<< (std::ostream&, const Permutation&);
 ----
 |===
 
@@ -131,6 +129,8 @@ _Ausgabe_:
 { 1, 2, 3 }
 { 1, 2, 3 }
 ....
+
+Man erkennt an der Ausgabe, dass die Mengen in aufsteigend sortierter Form vorliegen bzw. ausgegeben werden.
 
 Test der `add`-Methode:
 
@@ -209,19 +209,19 @@ Am Beispiel einer Grundmenge mit den Elementen 1, 2 und 3 stellen wir diese Zuor
 jeweiligen Teilmenge noch einmal exemplarisch gegenüber:
 
 ....
-000 <-> {}
-001 <-> {1}
-010 <-> {2}
-011 <-> {1,2}
-100 <-> {3}
-101 <-> {1,3}
-110 <-> {2,3}
-111 <-> {1,2,3}
+000 <-> { }
+001 <-> { 1 }
+010 <-> { 2 }
+011 <-> { 1, 2 }
+100 <-> { 3 }
+101 <-> { 1, 3 }
+110 <-> { 2, 3 }
+111 <-> { 1, 2, 3 }
 ....
 
 Wir legen also die Menge aller Kombinationen der Ziffern 0 und 1 zu Grunde, deren Anzahl sich – in
 diesem Beispiel – zu 2^3^ berechnet.
-´
+
 == Die Klasse `PowerSet`
 
 Wir fahren mit einigen Hilfestellungen zur Implementierung der Klasse `PowerSet` in <<id_table_powerset>> fort:
@@ -270,7 +270,7 @@ a| Gibt ein `PowerSet`-Objekt auf der Konsole aus.
 
 [source,c++]
 ----
-friend std::ostream& operator<< (std::ostream& os, const PowerSet& p);
+friend std::ostream& operator<< (std::ostream&, const PowerSet&);
 ----
 |===
 
@@ -356,8 +356,8 @@ Size: 3, Cardinality: 8
 == Sortierung einer Potenzmenge
 
 In dieser Teilaufgabe betrachten wir die sortierte Ausgabe aller Teilmengen einer Potenzmenge.
-Im Prinzip geht es darum, ein Kriterium für den Vergleich zweier Teilmengen festzulgen.
-Wenn Sie Ihre bisherige Implementierung betrachten, sollten Sie bei der Berechnung der Potenzmenge zur Basismenge { 1, 2, 3, 4}
+Im Prinzip geht es darum, ein Kriterium für den Vergleich zweier Teilmengen festzulegen.
+Wenn Sie Ihre bisherige Implementierung betrachten, sollten Sie bei der Berechnung der Potenzmenge zur Basismenge { 1, 2, 3, 4 }
 die folgende Ausgabe erhalten:
 
 ....
@@ -380,7 +380,7 @@ Size: 4, Cardinality: 16
 { 4 }
 ....
 
-Wie müssen Sie einen Opertor `<` in der Klasse `PartialSet` definieren, um stattdessen die folgende Ausgabe zu erhalten:
+Wie müssten Sie einen Operator `<` in der Klasse `PartialSet` definieren, um die folgende Ausgabe zu erhalten:
 
 ....
 { }
@@ -406,13 +406,13 @@ Wie müssen Sie einen Opertor `<` in der Klasse `PartialSet` definieren, um stat
 [[id_table_partialset]]
 [%autowidth]
 |===
-|Element |Beschreibung
+|Operator |Beschreibung
 
 | Operator `<`
 a| Vergleicht zwei `PartialSet`-Objekte auf &ldquo;kleiner&rdquo;.
 Wir bezeichnen eine Teilmenge __S__1 &ldquo;kleiner&rdquo; als eine Teilmenge __S__2,
 wenn __S__1 entweder weniger Elemente als __S__2 enthält oder, falls __S__2 gleich viel Elemente enthält,
-das erste Element von __S__1 kleiner als das erste Element von __S__2 ist.
+das erste Element von __S__1 kleiner ist als das erste Element von __S__2.
 Stimmen beide Teilmengen im ersten Element überein, setzen wir den Vergleich mit dem zweiten, dritten, etc. Element solange fort,
 bis ein Unterschied vorhanden ist. Dabei wird vorausgesetzt,
 dass die Elemente beider Teilmengen in aufsteigender Reihenfolge vorliegen.
@@ -427,24 +427,24 @@ friend bool operator<(const PartialSet&, const PartialSet&);
 
 Bei Objekten, die den Charakter eines Containers besitzen (Menge aller Schriftarten auf einem Rechner, Menge aller laufenden Prozesse, etc.)
 gibt es die Möglichkeit, die einzelnen Elemente eines solchen Objekts der Reihe nach aufzuzählen (so genannte &ldquo;Traversierung der Menge&rdquo;).
-Am Beispiel der Potenzmenge ergänzen wir die Klasse `PowerSet` um die beiden Methoden `begin()` und `end()`, die die zum Iterieren  
-notwendigen Objekte für den Start und das Ende der Aufzählung bereitstellen:
+Auf das Beispiel der Potenzmenge angewendet ergänzen wir die Klasse `PowerSet` um die beiden Methoden `begin()` und `end()`, die die zum Iterieren
+notwendigen Objekte für den Start und das Ende einer Aufzählung bereitstellen:
 
 .Aufzählung einer Potenzmenge
 [[id_table_powersetset_iterator]]
 [%autowidth]
 |===
-|Element |Beschreibung
+|Methode |Beschreibung
 
-| Methode `begin()`
-a| Liefert ein Iterator-Objekt zurück, das auf das erste `PartialSet`-Objekt verweist (Ausnahme: leere Potenzmenge).
+| `begin()`
+a| Liefert ein Iterator-Objekt zurück, das auf das erste `PartialSet`-Objekt verweist.
 
 [source,c++]
 ----
 std::set<PartialSet>::const_iterator begin();
 ----
 
-| Methode `begin()`
+| `end()`
 a| Liefert ein Iterator-Objekt zurück, das hinter das letzte Element zeigt.
 
 [source,c++]
@@ -455,24 +455,45 @@ std::set<PartialSet>::const_iterator end();
 
 Studieren und testen Sie Ihre Funktionsweise der Iterator-Realisierung an einer bereichs-basierten Wiederholungsschleife:
 
-== Teilmengen einer Potenzmenge
+_Beispiel_ 4:
 
+[source,c++]
+----
+PowerSet powerSet{ 3 };
+for (const PartialSet& set : powerSet) {
+    std::cout << "Next Set: " << set << std::endl;
+}
+----
+
+_Ausgabe_:
+
+....
+Next Set: { }
+Next Set: { 1 }
+Next Set: { 2 }
+Next Set: { 3 }
+Next Set: { 1, 2 }
+Next Set: { 1, 3 }
+Next Set: { 2, 3 }
+Next Set: { 1, 2, 3 }
+....
+
+== Teilmengen einer Potenzmenge
 
 Von einer Potenzmenge lassen sich Teilmengen bilden. Zum Beispiel kann man alle Elemente einer
 Potenzmenge betrachten, die dieselbe Anzahl _k_ von Elementen besitzen. Dazu betrachten wir am
 besten ein Beispiel: Alle zwei-elementigen Teilmengen der Potenzmenge, deren Grundmenge aus
 den Elementen 0, 1, und 2 besteht, lauten {0, 1}, {0, 2} und {1, 2}.
-
 Ergänzen Sie Ihre Realisierung der Klasse `PowerSet` um eine Methode `partialSetsBySize`:
 
 .Teilmengen einer Potenzmenge
 [[id_table_powersetset_method_partialsetsbysize]]
 [%autowidth]
 |===
-|Element |Beschreibung
+|Methode |Beschreibung
 
-| Methode `partialSetsBySize()`
-a| Berechnet die Teilmengen einer Potenzmenge mit der Größe `size`.
+| `partialSetsBySize()`
+a| Berechnet alle Teilmengen einer Potenzmenge mit der Größe `size`.
 
 [source,c++]
 ----
@@ -485,39 +506,35 @@ Ein Beispiel:
 
 [source,c++]
 ----
-----
-
-_Ausgabe_:
-
-....
-....
-
-
-
-
-== There is more
-
-Das Thema &ldquo;Aufzählen&rdquo; &ndash; in unserem Fall &ldquo;Partitionen aufzählen&rdquo; tritt immer bei Klassen in Erscheinung,
-deren Gestalt gewisse Ähnlichkeiten mit einem Container haben. Ergänzen Sie Ihre Implementierung der Klasse `PartitionSet` entsprechend.
-
-_Beispielfragment_:
-
-[source,c++]
-----
-PartitionSet set = PartitionCalculator::calculate(5);
-for (const Partition& p : set) {
-    std::cout << p << std::endl;
+PowerSet powerSet{ 5 };
+size_t size = 3;
+PowerSet someSets = powerSet.partialSetsBySize(size);
+std::cout << "Partial set of size " << size << ':' << std::endl;
+for (const PartialSet& set : someSets) {
+    std::cout << set << std::endl;
 }
 ----
 
 _Ausgabe_:
 
 ....
-5 = 5
-5 = 4 + 1
-5 = 3 + 2
-5 = 3 + 1 + 1
-5 = 2 + 2 + 1
-5 = 2 + 1 + 1 + 1
-5 = 1 + 1 + 1 + 1 + 1
+Partial set of size 3:
+{ 1, 2, 3 }
+{ 1, 2, 4 }
+{ 1, 2, 5 }
+{ 1, 3, 4 }
+{ 1, 3, 5 }
+{ 1, 4, 5 }
+{ 2, 3, 4 }
+{ 2, 3, 5 }
+{ 2, 4, 5 }
+{ 3, 4, 5 }
 ....
+
+== There is more
+
+Unsere bisherigen Betrachtungen einer Potenzmenge haben sich ausschließlich auf Grundmengen mit ganzen Zahlen beschränkt.
+Für die Grundmenge kann man aber auch die Annahme treffen, dass deren integraler Datentyp (`int`, `short`, `long`, `size_t`, etc.) variabel sein sollte.
+Auch kann man sich eine Grundmenge aus Zeichen (`char`) vorstellen.
+Welche Änderungen sind an den beiden Klassen `PartialSet` und `PowerSet` vorzunehmen,
+um die Grundmenge mit unterschiedlichen integralen Datentypen definieren zu können?

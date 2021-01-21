@@ -102,74 +102,18 @@ void test_Iterator_01()
 
 void test_PartialSetsBySize_01()
 {
-    PowerSet powerSet{ 3 };
+    PowerSet powerSet{ 5 };
     std::cout << "PowerSet:" << std::endl;
     for (const PartialSet& set : powerSet) {
         std::cout << set << std::endl;
     }
 
-    PowerSet someSets = powerSet.partialSetsBySize(2);
-    std::cout << "Partial set of size 2:" << std::endl;
+    size_t size = 3;
+    PowerSet someSets = powerSet.partialSetsBySize(size);
+    std::cout << "Partial set of size " << size << ':' << std::endl;
     for (const PartialSet& set : someSets) {
         std::cout << set << std::endl;
     }
-}
-
-
-// ========================
-
-
-
-//
-//void Test01_PowerSet()
-//{
-//    for (int i = 0; i < 12; ++i) {
-//        std::cout << PowerSet::PowerByTwo(i) << std::endl;
-//        std::cout << PowerSet::PowerByTwo_Neu(i) << std::endl;
-//        std::cout << std::endl;
-//    }
-//}
-
-
-
-
-void Test01_PartialSet()
-{
-    PartialSet set1;
-    std::cout << set1 << std::endl;
-
-    PartialSet set2({ 1, 2, 3 });
-    std::cout << set2 << std::endl;
-
-    PartialSet set3({ 1, 2 });
-    std::cout << set3 << std::endl;
-
-    //std::cout << "IsLessThan: " << (set2 == set3) << std::endl;
-    //std::cout << "IsEqual: " << (set2 == set3) << std::endl;
-    //std::cout << "IsGreaterThan: " << (set2 >= set3) << std::endl;
-}
-
-void Test02_PowerSet_01()
-{
-    PowerSet set{ };
-    std::cout << "Size: " << set.size() << ", Cardinality: " << set.cardinality() << std::endl;
-    std::cout << set << std::endl << std::endl;
-}
-
-void Test02_PowerSet_02()
-{
-    for (size_t n = 0; n != 5; ++n) {
-        PowerSet set{ n };
-        std::cout << "Size: " << set.size() << ", Cardinality: " << set.cardinality() << std::endl;
-        std::cout << set << std::endl << std::endl;
-    }
-}
-
-void Test03_PowerSet_01()
-{
-    PowerSet set{ 4 };
-    std::cout << "Size: " << set.size() << ", Cardinality: " << set.cardinality() << std::endl;
-    std::cout << set << std::endl << std::endl;
 }
 
 // =====================================================================================

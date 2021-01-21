@@ -11,7 +11,7 @@
 * STL-Container (`std::vector<T>`, `std::string_view`)
 * STL-Algorithmen (`std::find`)
 * Einheitliche Initialisierung
-* Initialisierungslisten (`std::initializer_list<T>`)
+* Initialisierungsliste (`std::initializer_list<T>`)
 * `std::vector<T>`: _In-Place_-Konstruktion von Objekten mit 'emplace'
 
 To be done
