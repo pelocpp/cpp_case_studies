@@ -1,6 +1,7 @@
 :xrefstyle: short
 :listing-caption: Listing
 :table-caption: Tabelle
+:figure-caption: Abbildung
 :source-language: c++
 :icons: font
 :source-highlighter: highlightjs
@@ -460,7 +461,6 @@ wird nicht konstruiert, da bei allen berechneten Partitionen mindestens ein Summ
 In der Tat ist die fehlende Partition einer Zahl _n_, die aus _n_ 1-en besteht, noch nachträglich in die Partitionenmenge aufzunehmen.
 In <<img_pseudocode_partitions_calculator>> finden Sie eine Beschreibung des Algorithmus in Gestalt von Pseudocode vor:
 
-[caption="Abbildung {counter:figure}"]
 [[img_pseudocode_partitions_calculator]]
 .Pseudocode zur Berechnung aller Partitionen einer natürlichen Zahl.
 image::PartitionPseudeCode.png[width=450]
