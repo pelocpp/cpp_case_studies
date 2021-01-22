@@ -463,7 +463,7 @@ In <<img_pseudocode_partitions_calculator>> finden Sie eine Beschreibung des Alg
 
 [[img_pseudocode_partitions_calculator]]
 .Pseudocode zur Berechnung aller Partitionen einer natürlichen Zahl.
-image::PartitionPseudeCode.png[width=450]
+image::PartitionSet_PseudoCode.svg[width=450]
 
 
 Implementieren Sie in diesem Abschnitt eine Methode `calculate` zur Berechnung aller Partitionen einer natürlichen Zahl
