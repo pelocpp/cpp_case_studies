@@ -463,8 +463,7 @@ In <<img_pseudocode_partitions_calculator>> finden Sie eine Beschreibung des Alg
 
 [[img_pseudocode_partitions_calculator]]
 .Pseudocode zur Berechnung aller Partitionen einer natürlichen Zahl.
-image::PartitionSet_PseudoCode.svg[width=450]
-
+image::PartitionSet_PseudoCode.svg[width=650]
 
 Implementieren Sie in diesem Abschnitt eine Methode `calculate` zur Berechnung aller Partitionen einer natürlichen Zahl
 und ordnen Sie diese einer separaten Klasse `PartitionsCalculator` zu (<<id_table_partitionscalculator>>):
@@ -622,9 +621,38 @@ bietet sich als Container eine Instanz der Klasse `std::multiset` an. In der Aus
 sollten die Zahlen in absteigender Reihenfolge aufgelistet werden, für die Vergleichsfunktion greifen wir deshalb auf das 
 Funktionsobjekt `std::greater<size_t>` zurück. Eine Definition der `Partition`-Klasse sieht so aus:
 
-[source,c++]
+[source,c++,linenums]
 [[id_class_partition_decl]]
 ----
+class Partition
+{
+private:
+    std::multiset<size_t, std::greater<size_t>> m_numbers;
+    size_t m_number{ }; <1>
+
+public:
+    // c'tor(s)
+    Partition() = default;
+    Partition(const std::initializer_list<size_t>&);
+    Partition(const std::vector<size_t>&);
+
+    // getter
+    size_t number() const { return m_number; }
+    size_t size() const { return m_numbers.size(); }
+    std::vector<size_t> numbers() const;
+
+    // operators
+    friend bool operator==(const Partition&, const Partition&);
+    friend bool operator<(const Partition&, const Partition&);
+    friend bool operator>(const Partition&, const Partition&);
+
+    // iterator support
+    auto begin() { return m_numbers.cbegin(); }
+    auto end() { return m_numbers.cend(); }
+
+    // output
+    friend std::ostream& operator<< (std::ostream&, const Partition&);
+};
 ----
 <1> Initialisierer für Instanzvariable. In diesem Fall kann man den Default-Konstruktor mit `default` definieren.
 
