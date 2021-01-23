@@ -43,10 +43,14 @@ public:
     }
 
     // iterator support
-     //std::set<Partition, std::greater<Partition>>::const_iterator begin() { return m_partitions.cbegin(); }
-     //std::set<Partition, std::greater<Partition>>::const_iterator end() { return m_partitions.cend(); }
-    auto begin() { return m_partitions.cbegin(); }
-    auto end() { return m_partitions.cend(); }
+    std::set<Partition, std::greater<Partition>>::const_iterator begin() {
+        return m_partitions.cbegin(); 
+    }
+    std::set<Partition, std::greater<Partition>>::const_iterator end() {
+        return m_partitions.cend(); 
+    }
+    //auto begin() { return m_partitions.cbegin(); }
+    //auto end() { return m_partitions.cend(); }
 
     // output
     friend std::ostream& operator<< (std::ostream&, const PartitionSet&);

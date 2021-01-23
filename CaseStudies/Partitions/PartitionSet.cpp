@@ -11,6 +11,7 @@
 
 #include "Partition.h"
 #include "PartitionSet.h"
+#include <algorithm>
 
 // c'tors
 PartitionSet::PartitionSet(size_t number) : m_number{ number } {}
@@ -29,14 +30,15 @@ bool PartitionSet::insert(const Partition& p) {
 // output
 std::ostream& operator<< (std::ostream& os, const PartitionSet& set)
 {
-    int n = 1;
-    for (const Partition& p : set.m_partitions) {
-        os << std::setw(3) << n << ": " << p << std::endl;
-        ++n;
-    }
-
+    std::for_each(
+        std::begin(set.m_partitions), 
+        std::end(set.m_partitions),
+        [&, n = 1](const Partition& p) mutable {
+            os << std::setw(3) << n << ": " << p << std::endl;
+            ++n;
+        }
+    );
     os << '[' << set.size() << " partitions]" << std::endl;
-
     return os;
 }
 

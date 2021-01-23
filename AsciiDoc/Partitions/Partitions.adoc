@@ -621,38 +621,43 @@ bietet sich als Container eine Instanz der Klasse `std::multiset` an. In der Aus
 sollten die Zahlen in absteigender Reihenfolge aufgelistet werden, für die Vergleichsfunktion greifen wir deshalb auf das 
 Funktionsobjekt `std::greater<size_t>` zurück. Eine Definition der `Partition`-Klasse sieht so aus:
 
-[source,c++,linenums]
+.Klasse `Partition`: Definition
+[source,c++]
 [[id_class_partition_decl]]
 ----
-class Partition
-{
-private:
-    std::multiset<size_t, std::greater<size_t>> m_numbers;
-    size_t m_number{ }; <1>
-
-public:
-    // c'tor(s)
-    Partition() = default;
-    Partition(const std::initializer_list<size_t>&);
-    Partition(const std::vector<size_t>&);
-
-    // getter
-    size_t number() const { return m_number; }
-    size_t size() const { return m_numbers.size(); }
-    std::vector<size_t> numbers() const;
-
-    // operators
-    friend bool operator==(const Partition&, const Partition&);
-    friend bool operator<(const Partition&, const Partition&);
-    friend bool operator>(const Partition&, const Partition&);
-
-    // iterator support
-    auto begin() { return m_numbers.cbegin(); }
-    auto end() { return m_numbers.cend(); }
-
-    // output
-    friend std::ostream& operator<< (std::ostream&, const Partition&);
-};
+01: class Partition
+02: {
+03: private:
+04:     std::multiset<size_t, std::greater<size_t>> m_numbers;
+05:     size_t m_number{ }; <1>
+06: 
+07: public:
+08:     // c'tor(s)
+09:     Partition() = default;
+10:     Partition(const std::initializer_list<size_t>&);
+11:     Partition(const std::vector<size_t>&);
+12: 
+13:     // getter
+14:     size_t number() const { return m_number; }
+15:     size_t size() const { return m_numbers.size(); }
+16:     std::vector<size_t> numbers() const;
+17: 
+18:     // operators
+19:     friend bool operator==(const Partition&, const Partition&);
+20:     friend bool operator<(const Partition&, const Partition&);
+21:     friend bool operator>(const Partition&, const Partition&);
+22: 
+23:     // iterator support
+24:     std::multiset<size_t, std::greater<size_t>>::const_iterator begin() {
+25:         return m_numbers.cbegin(); 
+26:     }
+27:     std::multiset<size_t, std::greater<size_t>>::const_iterator end() {
+28:         return m_numbers.cend(); 
+29:     }
+30: 
+31:     // output
+32:     friend std::ostream& operator<< (std::ostream&, const Partition&);
+33: };
 ----
 <1> Initialisierer für Instanzvariable. In diesem Fall kann man den Default-Konstruktor mit `default` definieren.
 
@@ -660,7 +665,7 @@ In den Zeilen 24 und 27 von <<id_class_partition_decl>> werden eine `begin()` un
 Darunter verstehen wir, dass wir in einer bereichs-basierten `for`-Schleife die einzelnen Zahlen der Partition traversieren können.
 Eine Iterator-Unterstützung ist einfach zu realisieren, wenn wir die Iteratorimplementierung eines unterlagerten STL-Containers zur Verfügung stehen haben.
 In unserem Fall ist dies das `std::multiset<size_t, std::greater<size_t>>`-Objekt, dessen `begin()` und `end()`-Methode uns die gewünschten Iteratorobjekte zurückliefern.
-Die Definitionen in den Zeilen 24 und 27 hätte man auch kürzer, bzw. einfacher lesbar, gestalten können:
+Die Definitionen in den Zeilen 24 und 27 hätte man auch kürzer und damit einfacher lesbarer gestalten können:
 
 [source,c++]
 ----
@@ -674,9 +679,88 @@ also Objekte des Typs `std::multiset<size_t, std::greater<size_t>>::const_iterat
 nur ist die Lesbarkeit mit `auto` halt doch um ein Vielfaches angenehmer.
 Damit sind wir schon bei der Implementierung der Klasse `Partition` angekommen:
 
+.Klasse `Partition`: Implementierung
 [source,c++]
 [[id_class_partition_impl]]
 ----
+01: // c'tor(s)
+02: Partition::Partition(const std::initializer_list<size_t>& list)
+03:     : m_numbers{ list.begin(), list.end() }
+04: {
+05:     m_number = std::accumulate(m_numbers.cbegin(), m_numbers.cend(), static_cast<size_t>(0)); <1>
+06: }
+07: 
+08: Partition::Partition(const std::vector<size_t>& numbers)
+09:     : m_numbers{ numbers.cbegin(), numbers.cend() } 
+10: {
+11:     m_number = std::accumulate(m_numbers.cbegin(), m_numbers.cend(), static_cast<size_t>(0)); <1>
+12: }
+13: 
+14: // getter
+15: std::vector<size_t> Partition::numbers() const {
+16:     std::vector<size_t> result;
+17:     result.assign(m_numbers.begin(), m_numbers.end()); <2>
+18:     return result;
+19: }
+20: 
+21: // operators
+22: bool operator==(const Partition& p1, const Partition& p2)
+23: {
+24:     // partitions of different numbers can't be compared
+25:     if (p1.number() != p2.number())
+26:         throw std::invalid_argument(std::string("Partitions don't belong to same number!"));
+27: 
+28:     // partitions with a different number of summands can't be equal
+29:     if (p1.size() != p2.size())
+30:         return false;
+31: 
+32:     // compare all summands - sets are  sorted
+33:     return (p1.m_numbers == p2.m_numbers); <3>
+34: }
+35: 
+36: bool operator<(const Partition& p1, const Partition& p2)
+37: {
+38:     // partitions of different numbers can't be compared
+39:     if (p1.number() != p2.number())
+40:         throw std::invalid_argument(std::string("Partitions don't belong to same number!"));
+41: 
+42:     std::multiset<size_t>::iterator it1 = p1.m_numbers.cbegin();
+43:     std::multiset<size_t>::iterator it2 = p2.m_numbers.cbegin();
+44: 
+45:     while (it1 != p1.m_numbers.cend() && it2 != p2.m_numbers.cend()) {
+46: 
+47:         if ((*it1) > (*it2))
+48:             return false;
+49:         if ((*it1) < (*it2))
+50:             return true;
+51: 
+52:         ++it1;
+53:         ++it2;
+54:     }
+55: 
+56:     return true; // wird das erreicht ????????????
+57: }
+58: 
+59: bool operator>(const Partition& p1, const Partition& p2)
+60: {
+61:     return !(p1 < p2);
+62: }
+63: 
+64: // output
+65: std::ostream& operator<< (std::ostream& os, const Partition& p)
+66: {
+67:     os << p.m_number << " = ";
+68:     if (p.m_numbers.begin() != p.m_numbers.end()) {
+69: 
+70:         std::multiset<size_t>::const_iterator it = p.m_numbers.begin();
+71:         std::multiset<size_t>::const_iterator penultimate = std::prev(p.m_numbers.end());
+72:         for (it = p.m_numbers.begin(); it != penultimate; ++it) {
+73:             os << (*it) << " + ";
+74:         }
+75:         os << (*penultimate) << ' ';
+76:     }
+77:     return os;
+78: }
 ----
 <1> Der `std::accumulate`-Algorithmus liefert mit diesen Parametern die Summe aller Werte des Bereichs zurück.
 <2> Der Aufruf von `std::vector<size_t>::assign()` weist dem Vektor neue Elemente zu, indem die alten (sofern vorhanden) ersetzt werden.
@@ -685,37 +769,109 @@ jedes Element des ersten Vektors wird mit dem Element des zweiten Vektors an der
 
 Zur Verwaltung der `Partition`-Objekte gibt es die Klasse `PartitionSet`:
 
-
-Definition der Klasse `PartitionSet`:
-
+.Klasse `PartitionSet`: Definition
 [source,c++]
 [[id_class_partitionset_decl]]
 ----
+01: class PartitionSet {
+02: 
+03: private:
+04:     std::set<Partition, std::greater<Partition>> m_partitions;
+05:     size_t m_number{ };
+06: 
+07: public:
+08:     // c'tors/d'tor
+09:     PartitionSet() = delete; <1>
+10:     PartitionSet(size_t);
+11: 
+12:     // properties
+13:     size_t number() const { return m_number; }
+14:     size_t size() const { return m_partitions.size(); };
+15: 
+16:     // public interface
+17:     bool insert(const Partition&);
+18: 
+19:     template <typename ... Args>
+20:     bool emplace(Args&& ... args) { <2>
+21: 
+22:         // error handling
+23:         std::initializer_list<size_t> list =
+24:             std::initializer_list<size_t>{ static_cast<size_t>(args)... };
+25: 
+26:         size_t number = std::accumulate(list.begin(), list.end(), static_cast<size_t>(0));
+27:         if (number != m_number) {
+28:             throw std::invalid_argument("Number of partition doesn't match set!");
+29:         }
+30: 
+31:         auto result = m_partitions.emplace(Partition{ static_cast<size_t>(args) ... });
+32: 
+33:         return std::get<1>(result);
+34:     }
+35: 
+36:     // iterator support
+37:     std::set<Partition, std::greater<Partition>>::const_iterator begin() {
+38:         return m_partitions.cbegin(); 
+39:     }
+40:     std::set<Partition, std::greater<Partition>>::const_iterator end() {
+41:         return m_partitions.cend(); 
+42:     }
+43: 
+44:     // output
+45:     friend std::ostream& operator<< (std::ostream&, const PartitionSet&);
+46: };
 ----
 <1> Der Default-Konstruktor ergibt bei dieser Klasse wenig Sinn. Es sollte in Minimalfall immer die natürliche Zahl, um deren Zerlegungen es geht,
 bekannt sein.
 <2> Für die Realisierung der `emplace`-Methode kommt das Feature der &ldquo;template member function&rdquo; zum Einsatz. Ferner findet die Implementierung
 im Header-File statt, da dies bei Templates der einfachste Ansatz ist.
 
-In Zeile 23 von <<id_class_partitionset_decl>> findet die so genannte _Parameter Pack Expansion_ statt (`std::forward<size_t>(args)...`).
-Es handelt sich um die drei nachgestellten Punkte (`...`) nach dem Parameter `args`. Um etwaige Besonderheiten beim Aufruf (`const size_t`, `const size_t&`, etc.)
-nicht unterscheiden zu müssen, setzen wir das _Perfect Forwarding_ ein.  _Parameter Pack Expansion_ bedeutete, dass alle Parameter, die 
-an `emplace` übergeben werden, in einer komma-separierten Liste ausgerollt werden. Dies ist das geeignetet Format,
-um sie auf diese Weise in einem `std::initializer_list<size_t>`-Objekt zusammenzufassen. Dieses Objekt verwenden wir zuerst (Zeile 25),
-um die Summe der Parameter zu berechnen (mit `std::accumulate`) und diese mit `m_number` auf Übereinstimmung zu vergleichen.
-Danach können wir das `std::initializer_list<size_t>`-Objekt verwenden, um es zur _In-Place_-Konstruktion an die `emplace`-Methode
-des `std::multiset<size_t, std::greater<size_t>>`-Objekts durchzuschleusen.
+In Zeile 24 von <<id_class_partitionset_decl>> findet die so genannte _Parameter Pack Expansion_ statt (`static_cast<size_t>(args)...`).
+Es handelt sich um die drei nachgestellten Punkte (`...`) nach dem Parameter `args`.
+Wir wenden die  _Parameter Pack Expansion_ an, um alle Parameter in einem `std::initializer_list<size_t>`-Objekt zusammenzufassen.
+Dieses Objekt verwenden wir zur Fehlerüberprüfung (Zeile 26) und berechnen mit `std::accumulate` die Summe der Parameter.
+Den auf diese Weise erhaltenen Wert vegleichen wir in Zeile 27 mit `m_number` auf Übereinstimmung.
+Bei Nicht-Übereinstimmung werden wir ein `std::invalid_argument`-Objekt und verlassen die `emplace`-Methode vorzeitig.
+
+In Zeile 31 führen wir eine zweite _Parameter Pack Expansion_ aus, um damit _In-Place_-Konstruktion ein `Partition`-Objekt zu erzeugen,
+das wir an die `emplace`-Methode des `std::multiset<size_t, std::greater<size_t>>`-Objekts durchschleusen.
 
 Der Rückgabewert von `emplace` ist vom Typ `std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool>`.
 Hier interessiert uns nur der zweite Wert des Paares. Er gibt an, ob die Partition bereits in der Partitionenmenge vorhanden war oder nicht.
 Für Zugriff auf `std::pair<>`-Objekte gibt es die `std::get<>`-Methode, der Template Parameter muss vom Typ `int` sein.
 Für die Realisierung der `PartitionSet`-Klasse im _.cpp_-File bleiben nur noch ein Konstuktor, die `insert`-Methode und der Ausgabeoperator übrig:
 
-Implementierung der Klasse `PartitionSet`:
-
+.Klasse `PartitionSet`: Implementierung
 [source,c++]
 [[id_class_partitionset_impl]]
 ----
+01: // c'tors
+02: PartitionSet::PartitionSet(size_t number) : m_number{ number } {}
+03: 
+04: // public interface
+05: bool PartitionSet::insert(const Partition& p) {
+06: 
+07:     if (p.number() != m_number) {
+08:         throw std::invalid_argument("Number of partition doesn't match set!");
+09:     }
+10: 
+11:     std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result = m_partitions.insert(p);
+12:     return std::get<1>(result);
+13: }
+14: 
+15: // output
+16: std::ostream& operator<< (std::ostream& os, const PartitionSet& set)
+17: {
+18:     std::for_each(
+19:         std::begin(set.m_partitions), 
+20:         std::end(set.m_partitions),
+21:         [&, n = 1](const Partition& p) mutable {
+22:             os << std::setw(3) << n << ": " << p << std::endl;
+23:             ++n;
+24:         }
+25:     );
+26:     os << '[' << set.size() << " partitions]" << std::endl;
+27:     return os;
+28: }
 ----
 
 Die Implementierung der `insert`-Methode (Zeilen 5 bis 14) hätte man auch kürzer gestalten können. Es ging mir darum,
@@ -725,18 +881,89 @@ zum einen diese Methode mit einem Rückgabewert (Partition schon vorhanden oder 
 Die Methoden zum Berechnen aller Partitionen einer natürlichen Zahl sind vom Charakter her eher funktional ausgelegt,
 in der Klasse `PartitionCalculator` finden sich daher nur statische Klassenmethoden vor:
 
-Definition der Klasse `PartitionCalculator`:
-
+.Klasse `PartitionCalculator`: Definition
 [source,c++]
 [[id_class_partitioncalculator_decl]]
 ----
+01: class PartitionCalculator
+02: {
+03: public:
+04:     // c'tor
+05:     PartitionCalculator() = delete; <1>
+06: 
+07:     // public interface
+08:     static PartitionSet calculate(size_t n);
+09:     static size_t numberPartitions(size_t number);
+10:     static size_t numberPartitions(size_t number, size_t maxSummand);
+11: };
 ----
 <1> Hiermit soll sichergestellt werden, dass der Standard-Konstruktor der Klasse nicht aufgerufen werden kann.
 
-Implementierung der Klasse `PartitionCalculator`:
-
+.Klasse `PartitionCalculator`: Implementierung
 [source,c++]
+[[id_class_partitioncalculator_impl]]
 ----
+01: // public interface
+02: PartitionSet PartitionCalculator::calculate(size_t number)
+03: {
+04:     PartitionSet result{ number };
+05: 
+06:     if (number == 1) {
+07:         Partition p{ 1 };
+08:         result.insert(p);
+09:     }
+10:     else {
+11:         PartitionSet setMinusOne = calculate(number - 1);
+12: 
+13:         for (const auto& p : setMinusOne) {
+14: 
+15:             std::vector<size_t> numbers = p.numbers();
+16:             for (size_t j = 0; j != numbers.size(); j++) {
+17:                 numbers[j]++;
+18:                 Partition q{ numbers };
+19:                 result.insert(q);
+20:                 numbers[j]--;
+21:             }
+22:         }
+23: 
+24:         // create missing partition (just consisting of '1's)
+25:         std::vector<size_t> ones(number, 1); <1>
+26:         Partition pOnes{ ones };
+27:         result.insert(pOnes);
+28:     }
+29: 
+30:     return result;
+31: }
+32: 
+33: size_t PartitionCalculator::numberPartitions(size_t number)
+34: {
+35:     if (number < 1)
+36:         return 0;
+37: 
+38:     size_t total = 0;
+39:     for (int maxSummand = 1; maxSummand <= number; maxSummand++)
+40:         total += numberPartitions(number, maxSummand);
+41: 
+42:     return total;
+43: }
+44: 
+45: size_t PartitionCalculator::numberPartitions(size_t number, size_t maxSummand)
+46: {
+47:     if (maxSummand > number) {
+48:         return 0;
+49:     }
+50:     else if (maxSummand == 0) {
+51:         return 0;
+52:     }
+53:     else if (maxSummand == 1) {
+54:         return 1;
+55:     }
+56:     else {
+57:         return
+58:             numberPartitions(number - 1, maxSummand - 1) +
+59:             numberPartitions(number - maxSummand, maxSummand);
+60:     }
+61: }
 ----
 <1> Konstruiert das `std::vector<size_t>`-Objekt mit `number` Elementen vom Wert `1`.
 

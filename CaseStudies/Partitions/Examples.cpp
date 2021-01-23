@@ -122,27 +122,27 @@ void Test02_PartitionSet_06()
 
 void Test02_PartitionSet_07()
 {
-    //PartitionSet set{ 7 };
+    PartitionSet set{ 7 };
 
-    //set.emplace(7 );
-    //set.emplace(6, 1 );
-    //set.emplace(5, 2 );
-    //set.emplace(5, 1, 1 );
-    //set.emplace(4, 3 );
-    //set.emplace(4, 2, 1 );
-    //set.emplace(4, 1, 1, 1 );
-    //set.emplace(3, 3, 1 );
-    //set.emplace(3, 2, 2 );
-    //set.emplace(3, 2, 1, 1 );
-    //set.emplace(3, 1, 1, 1, 1 );
-    //set.emplace(2, 2, 2, 1 );
-    //set.emplace(2, 2, 1, 1, 1 );
-    //set.emplace(2, 1, 1, 1, 1, 1 );
-    //set.emplace(1, 1, 1, 1, 1, 1, 1 );
+    set.emplace(7 );
+    set.emplace(6, 1 );
+    set.emplace(5, 2 );
+    set.emplace(5, 1, 1 );
+    set.emplace(4, 3 );
+    set.emplace(4, 2, 1 );
+    set.emplace(4, 1, 1, 1 );
+    set.emplace(3, 3, 1 );
+    set.emplace(3, 2, 2 );
+    set.emplace(3, 2, 1, 1 );
+    set.emplace(3, 1, 1, 1, 1 );
+    set.emplace(2, 2, 2, 1 );
+    set.emplace(2, 2, 1, 1, 1 );
+    set.emplace(2, 1, 1, 1, 1, 1 );
+    set.emplace(1, 1, 1, 1, 1, 1, 1 );
 
-    //for (const Partition& p : set) {
-    //    std::cout << p << std::endl;
-    //}
+    for (const Partition& p : set) {
+        std::cout << p << std::endl;
+    }
 }
 
 void Test03_PartitionCalculator_01()

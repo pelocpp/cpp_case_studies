@@ -41,10 +41,10 @@ int main()
     //Test02_PartitionSet_04();
     //Test02_PartitionSet_05();
     //Test02_PartitionSet_06();
-    //Test02_PartitionSet_07();
+    Test02_PartitionSet_07();
     //Test03_PartitionCalculator_01();
     //Test03_PartitionCalculator_02();
-    Test03_PartitionCalculator_03();
+    //Test03_PartitionCalculator_03();
 
     return 0;
 }

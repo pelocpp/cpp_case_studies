@@ -10,6 +10,7 @@
 
 #include "Partition.h"
 
+// c'tor(s)
 Partition::Partition(const std::initializer_list<size_t>& list)
     : m_numbers{ list.begin(), list.end() }
 {
@@ -76,18 +77,6 @@ bool operator>(const Partition& p1, const Partition& p2)
 std::ostream& operator<< (std::ostream& os, const Partition& p)
 {
     os << p.m_number << " = ";
-
-    //int k = 0;
-    //std::multiset<int>::iterator it = p.m_numbers.cbegin();
-    //while (it != p.m_numbers.cend())
-    //{
-    //    os << (*it);
-    //    if (k < p.m_numbers.size() - 1)
-    //        os << " + ";
-
-    //    ++it, ++k;
-    //}
-
     if (p.m_numbers.begin() != p.m_numbers.end()) {
 
         std::multiset<size_t>::const_iterator it = p.m_numbers.begin();
@@ -97,7 +86,6 @@ std::ostream& operator<< (std::ostream& os, const Partition& p)
         }
         os << (*penultimate) << ' ';
     }
-    os << "}";
     return os;
 }
 
