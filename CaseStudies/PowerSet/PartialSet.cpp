@@ -5,9 +5,9 @@
 #include <iostream>
 #include <string>
 #include <set>
+#include <algorithm>
 
 #include "PartialSet.h"
-#include <algorithm>
 
 // c'tors / d'tor
 PartialSet::PartialSet(const std::initializer_list<size_t>& list)
@@ -16,7 +16,7 @@ PartialSet::PartialSet(const std::initializer_list<size_t>& list)
 // public operators
 bool operator== (const PartialSet& set1, const PartialSet& set2)
 {
-    // delegating comparison  to standard comparison of two std::set objects
+    // delegating comparison to standard comparison of two std::set objects
     return (set1.m_numbers == set2.m_numbers);
 }
 

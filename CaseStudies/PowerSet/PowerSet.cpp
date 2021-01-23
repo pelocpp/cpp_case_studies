@@ -11,8 +11,7 @@
 #include "PartialSet.h"
 #include "PowerSet.h"
 
-
-// c'tors / d'tor
+// c'tors
 PowerSet::PowerSet() : m_size{ 0 }, m_cardinality{ 1 }, m_sets{ PartialSet {} } {}
 
 PowerSet::PowerSet(size_t size) : m_size{ size }, m_cardinality{ powerByTwo(size) }
@@ -23,7 +22,7 @@ PowerSet::PowerSet(size_t size) : m_size{ size }, m_cardinality{ powerByTwo(size
 // public interface
 PowerSet PowerSet::partialSetsBySize(size_t size) {
 
-    PowerSet result;
+    PowerSet result{ };
     result.m_sets.clear();
     for (const PartialSet& set : m_sets) {
         if (set.size() == size) {
@@ -43,7 +42,7 @@ std::set<PartialSet>::const_iterator PowerSet::end() {
     return m_sets.cend(); 
 }
 
-// input/output
+// output
 std::ostream& operator<< (std::ostream& os, const PowerSet& ps)
 {
     for (const auto& set : ps.m_sets) {
@@ -56,10 +55,10 @@ std::ostream& operator<< (std::ostream& os, const PowerSet& ps)
 // private helper methods
 void PowerSet::computePartialSets() {
 
-    for (int i = 0; i < m_cardinality; i++) {
+    for (size_t i = 0; i != m_cardinality; i++) {
 
         PartialSet set{ };
-        for (int j = 0; j < m_size; j++) {
+        for (size_t j = 0; j != m_size; j++) {
 
             int mask = 1 << j;
             if ((mask & i) != 0) {

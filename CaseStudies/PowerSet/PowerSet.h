@@ -13,23 +13,22 @@ private:
     std::set<PartialSet> m_sets;  // subsets
 
 public:
-    // c'tors / d'tor
+    // c'tors
     PowerSet();
     PowerSet(size_t size);
 
-    // getter/setter
+    // getter
     size_t cardinality() const { return m_cardinality; }
     size_t size() const { return m_size; }
 
     // public interface
-    // int  partialSetsBySize(int cardinality);
     PowerSet partialSetsBySize(size_t size);
 
     // iterator support
     std::set<PartialSet>::const_iterator begin();
     std::set<PartialSet>::const_iterator end();
 
-    // input/output
+    // output
     friend std::ostream& operator<< (std::ostream&, const PowerSet&);
 
 private:
