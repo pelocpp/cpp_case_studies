@@ -61,6 +61,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerSet", "PowerSet", "{66556638-3412-4C70-901C-C7B86679A2CD}"
 	ProjectSection(SolutionItems) = preProject
 		AsciiDoc\PowerSet\PowerSet.adoc = AsciiDoc\PowerSet\PowerSet.adoc
+		AsciiDoc\PowerSet\PowerSet.md = AsciiDoc\PowerSet\PowerSet.md
 	EndProjectSection
 EndProject
 Global

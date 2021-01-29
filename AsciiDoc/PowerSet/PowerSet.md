@@ -1,16 +1,76 @@
-:xrefstyle: short
-:listing-caption: Listing
-:table-caption: Tabelle
-:source-language: c++
-:icons: font
-:source-highlighter: highlightjs
+# Potenzmenge
 
-:cpp: C++
-:cpp11: C++&ndash;11
+## Title
 
-= Potenzmenge
+### Place 1
 
-== Lernziele
+Hello, this is some text to fill in this, [here](#place-2), is a link to the second place.
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+<a  title="mehr Informationen">
+    Das href-Attribut
+</a>
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+
+Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
+### Place 2
+
+Place one has the fun times of linking here, but I can also link back [here](#place-1).
+
+### Place's 3: other example
+
+Place one has the fun times of linking here, but I can also link back [here](#places-3-other-example).
+
+
+
+
+
+
+## Lernziele
 
 * Einheitliche Initialisierung
 * Initialisierungsliste (`std::initializer_list<T>`)
@@ -18,13 +78,13 @@
 * Container-Methoden `cbegin()` und `cend()`
 * C++ Iteratorkonzept
 
-== Einführung
+## Einführung
 
 Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen _S_, notiert man die Potenzmenge meist
-als _P_(_S_) von _S_. Für die 3-elementige Menge _S_ = { 1, 2, 3 } ergibt sich die Potenzmenge _P_({ 1, 2, 3 }) zu
+gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
+als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
 
-....
+```
 P({1,2,3}) =
 {
   {},
@@ -32,15 +92,15 @@ P({1,2,3}) =
   {1,2}, {1,3}, {2,3},
   {1,2,3}
 }
-....
+```
 
-Die Größe einer Potenzmenge (also die Anzahl aller Teilmengen) ist immer 2^n^,
-wenn _n_ die Anzahl der Elemente der Grundmenge ist.
+Die Größe einer Potenzmenge (also die Anzahl aller Teilmengen) ist immer 2<sup>n</sup>,
+wenn *n* die Anzahl der Elemente der Grundmenge ist.
 Erstellen Sie eine Implementierung für zwei Klassen `PowerSet` (Potenzmenge) und `PartialSet`
 (Teilmenge, also ein Element einer Potenzmenge). Integrieren Sie dabei, soweit sinnvoll machbar, möglichst
 viele programmiersprachliche Konstrukte bzw. Sprachmittel von _Modern_ {cpp}!
 
-== Die Klasse `PartialSet`
+## Die Klasse `PartialSet`
 
 Bevor wir uns dem Algorithmus zur Konstruktion einer Potenzmenge (und damit der Klasse `PowerSet`) zuwenden,
 benötigen Sie als Fundament die Klasse `PartialSet`. Implementieren Sie ein Grundgerüst dieser Klasse
@@ -49,69 +109,22 @@ Eine Instanz der Klasse `PartialSet` sollte ihre Elemente immer in aufsteigend s
 Auf diese Weise lassen sich Operationen wie zum Beispiel das Vergleichen von `PartialSet`-Objekten leichter implementieren.
 
 .Wesentliche Elemente der Klasse `PartialSet`.
-[[id_table_partialset]]
-[%autowidth]
-|===
+[id_table_partialset]
 |Element |Beschreibung
+|:----|:----|
+| Konstruktor | Der Standardkonstruktor dient zum Erzeugen einer leeren Teilmenge.<br/>`PartialSet() = default;` |
+| Benutzerdefinierter Konstruktor | Der Konstruktor erzeugt eine Teilmenge. Mit `list` wird eine variabel lange Liste von Elementen übergeben, die in der Teilmenge enthalten sind.<br/> `PartialSet(const std::initializer_list<size_t>& list);` |
+| *getter* `size()` | Liefert die Anzahl der Elemente der Teilmenge zurück.<br/>`size_t size() const;` |
+| Methode `add()` | Fügt ein Element in die Teilmenge ein. Diese Methode wird zum algorithmischen Erzeugen einer Teilmenge benötigt.<br/>`void add(size_t elem);` |
+| Operator `==` | Vergleicht zwei `PartialSet`-Objekte auf Gleichheit. Zwei Teilmengen sind genau dann gleich, wenn sie die gleichen Elemente enthalten.<br/>`friend bool operator==(const PartialSet&, const PartialSet&);` |
+| Operator `<<` | Gibt ein `PartialSet`-Objekt auf der Konsole aus. Die Darstellung einer Teilmenge sollte folgendes Aussehen haben:<br/>`{ 1, 2, 3 }`<br/>`friend std::ostream& operator<< (std::ostream&, const Permutation&);` |
 
-| Konstruktor
-a| Der Standardkonstruktor dient zum Erzeugen einer leeren Teilmenge.
+Tabelle XXX: Wesentliche Elemente der Klasse `PartialSet`.
 
-[source,c++]
-----
-PartialSet() = default;
-----
-
-| Benutzerdefinierter Konstruktor
-a| Der Konstruktor erzeugt eine Teilmenge. Mit `list` wird eine variabel lange Liste von Elementen übergeben,
-die in der Teilmenge enthalten sind.
-
-[source,c++]
-----
-PartialSet(const std::initializer_list<size_t>& list);
-----
-
-| _getter_ `size()`
-a| Liefert die Anzahl der Elemente der Teilmenge zurück.
-
-[source,c++]
-----
-size_t size() const;
-----
-
-| Methode `add()`
-a| Fügt ein Element in die Teilmenge ein. Diese Methode wird zum algorithmischen Erzeugen einer Teilmenge benötigt.
-
-[source,c++]
-----
-void add(size_t elem);
-----
-
-| Operator `==`
-a| Vergleicht zwei `PartialSet`-Objekte auf Gleichheit. Zwei Teilmengen sind genau dann gleich, wenn sie die gleichen Elemente enthalten.
-
-[source,c++]
-----
-friend bool operator==(const PartialSet&, const PartialSet&);
-----
-
-| Operator `<<`
-a| Gibt ein `PartialSet`-Objekt auf der Konsole aus. Die Darstellung einer Teilmenge sollte folgendes Aussehen haben:
-
-....
-{ 1, 2, 3 }
-....
-
-[source,c++]
-----
-friend std::ostream& operator<< (std::ostream&, const Permutation&);
-----
-|===
 
 Wir betrachten einige Testbeispiele:
 
-[source,c++]
-----
+```cpp
 PartialSet set1{ };
 std::cout << set1 << std::endl;
 
@@ -120,40 +133,38 @@ std::cout << set2 << std::endl;
 
 PartialSet set3{ 3, 2, 1 };
 std::cout << set3 << std::endl;
-----
+```
 
-_Ausgabe_:
+*Ausgabe*:
 
-....
+```
 { }
 { 1, 2, 3 }
 { 1, 2, 3 }
-....
+```
 
 Man erkennt an der Ausgabe, dass die Mengen in aufsteigend sortierter Form vorliegen bzw. ausgegeben werden.
 
-Test der `add`-Methode:
+> Test der `add`-Methode:
 
-[source,c++]
-----
+```cpp
 PartialSet set{ };
 set.add(3);
 set.add(2);
 set.add(1);
 std::cout << set << std::endl;
-----
+```
 
-_Ausgabe_:
+*Ausgabe*:
 
-....
+```
 { 1, 2, 3 }
-....
+```
+
+> Test der Vergleichsoperatoren:
 
 
-Test der Vergleichsoperatoren:
-
-[source,c++]
-----
+```cpp
 PartialSet set1{ };
 std::cout << set1 << std::endl;
 
@@ -175,11 +186,11 @@ std::cout << std::boolalpha << (set3 == set3) << std::endl;
 std::cout << std::boolalpha << (set3 == set4) << std::endl;
 std::cout << std::boolalpha << (set3 < set4) << std::endl;
 std::cout << std::boolalpha << (set4 < set3) << std::endl;
-----
+```
 
-_Ausgabe_:
+*Ausgabe*:
 
-....
+```
 { }
 { 1 }
 { 1, 2 }
@@ -192,9 +203,9 @@ true
 false
 true
 false
-....
+```
 
-== Eine intuitive Konstruktionsvorschrift für Potenzmengen
+## Eine intuitive Konstruktionsvorschrift für Potenzmengen
 
 Für die algorithmische Berechnung einer Potenzmenge gibt es eine vergleichsweise einfache intuitive
 Konstruktionsvorschrift. Um beim Beispiel einer Grundmenge mit den drei Elementen 1, 2, und 3 zu
@@ -208,7 +219,7 @@ ist (_b_ = 1) oder nicht (_b_ = 0), so erhalten wir eine direkte Konstruktionsvo
 Am Beispiel einer Grundmenge mit den Elementen 1, 2 und 3 stellen wir diese Zuordnung zur
 jeweiligen Teilmenge noch einmal exemplarisch gegenüber:
 
-....
+```
 000 <-> { }
 001 <-> { 1 }
 010 <-> { 2 }
@@ -217,12 +228,12 @@ jeweiligen Teilmenge noch einmal exemplarisch gegenüber:
 101 <-> { 1, 3 }
 110 <-> { 2, 3 }
 111 <-> { 1, 2, 3 }
-....
+```
 
 Wir legen also die Menge aller Kombinationen der Ziffern 0 und 1 zu Grunde, deren Anzahl sich – in
-diesem Beispiel – zu 2^3^ berechnet.
+diesem Beispiel – zu 2<sup>3</sup> berechnet.
 
-== Die Klasse `PowerSet`
+## Die Klasse `PowerSet`
 
 Wir fahren mit einigen Hilfestellungen zur Implementierung der Klasse `PowerSet` in <<id_table_powerset>> fort:
 
@@ -233,45 +244,45 @@ Wir fahren mit einigen Hilfestellungen zur Implementierung der Klasse `PowerSet`
 |Element |Beschreibung
 
 | Konstruktor
-a| Es wird die ein-elementige Potenzmenge erzeugt (bestehend aus der leeren Menge `{ }`).
+| Es wird die ein-elementige Potenzmenge erzeugt (bestehend aus der leeren Menge `{ }`).
 
-[source,c++]
-----
+
+```cpp
 PowerSet();
-----
+```
 
 | Benutzerdefinierter Konstruktor
-a| Es wird die Potenzmenge zur Grundmenge { 1, 2, ..., _n_ } erzeugt.
+| Es wird die Potenzmenge zur Grundmenge { 1, 2, ..., *n* } erzeugt.
 
-[source,c++]
-----
+
+```cpp
 PowerSet(size_t n);
-----
+```
 
 | _getter_ `size()`
-a| Liefert die Anzahl der Elemente aus der Basismenge zurück.
+| Liefert die Anzahl der Elemente aus der Basismenge zurück.
 
-[source,c++]
-----
+
+```cpp
 size_t size() const;
-----
+```
 
 | _getter_ `cardinality()`
-a| Liefert die Anzahl der Elemente der Potenzmenge zurück. _Hinweis_:
-Besteht die Basismenge aus _n_ Elementen, so besitzt die Potenzmenge 2^_n_^ Teilmengen.
+| Liefert die Anzahl der Elemente der Potenzmenge zurück. _Hinweis_:
+Besteht die Basismenge aus *n* Elementen, so besitzt die Potenzmenge 2<sup>*n*</sup> Teilmengen.
 
-[source,c++]
-----
+
+```cpp
 size_t cardinality() const;
-----
+```
 
 | Operator `<<`
-a| Gibt ein `PowerSet`-Objekt auf der Konsole aus.
+| Gibt ein `PowerSet`-Objekt auf der Konsole aus.
 
-[source,c++]
-----
+
+```cpp
 friend std::ostream& operator<< (std::ostream&, const PowerSet&);
-----
+```
 |===
 
 Es folgen einige Beispiele zur Klasse `PowerSet`.
@@ -279,69 +290,68 @@ Studieren Sie diese sorgfältig und stimmen Sie Ihre Realisierung darauf ab:
 
 _Beispiel_ 1:
 
-[source,c++]
-----
+
+```cpp
 PowerSet set{ };
 std::cout << "Size: " << set.size() << ", Cardinality: " << set.cardinality() << std::endl;
 std::cout << set << std::endl;
-----
+```
 
-_Ausgabe_:
+*Ausgabe*:
 
-....
+```
 Size: 0, Cardinality: 1
 { }
-....
+```
 
 _Beispiel_ 2:
 
-[source,c++]
-----
+
+```cpp
 PowerSet set{ 1 };
 std::cout << "Size: " << set.size() << ", Cardinality: " << set.cardinality() << std::endl;
 std::cout << set << std::endl;
-----
+```
 
-_Ausgabe_:
+*Ausgabe*:
 
-....
-
+```
 Size: 1, Cardinality: 2
 { }
 { 1 }
-....
+```
 
 _Beispiel_ 3:
 
-[source,c++]
-----
+
+```cpp
 PowerSet set{ 2 };
 std::cout << "Size: " << set.size() << ", Cardinality: " << set.cardinality() << std::endl;
 std::cout << set << std::endl;
-----
+```
 
-_Ausgabe_:
+*Ausgabe*:
 
-....
+```
 Size: 2, Cardinality: 4
 { }
 { 1 }
 { 1, 2 }
 { 2 }
-....
+```
 
 _Beispiel_ 4:
 
-[source,c++]
-----
+
+```cpp
 PowerSet set{ 3 };
 std::cout << "Size: " << set.size() << ", Cardinality: " << set.cardinality() << std::endl;
 std::cout << set << std::endl;
-----
+```
 
-_Ausgabe_:
+*Ausgabe*:
 
-....
+```
 Size: 3, Cardinality: 8
 { }
 { 1 }
@@ -351,16 +361,16 @@ Size: 3, Cardinality: 8
 { 2 }
 { 2, 3 }
 { 3 }
-....
+```
 
-== Sortierung einer Potenzmenge
+## Sortierung einer Potenzmenge
 
 In dieser Teilaufgabe betrachten wir die sortierte Ausgabe aller Teilmengen einer Potenzmenge.
 Im Prinzip geht es darum, ein Kriterium für den Vergleich zweier Teilmengen festzulegen.
 Wenn Sie Ihre bisherige Implementierung betrachten, sollten Sie bei der Berechnung der Potenzmenge zur Basismenge { 1, 2, 3, 4 }
 die folgende Ausgabe erhalten:
 
-....
+```
 Size: 4, Cardinality: 16
 { }
 { 1 }
@@ -378,11 +388,11 @@ Size: 4, Cardinality: 16
 { 3 }
 { 3, 4 }
 { 4 }
-....
+```
 
 Wie müssten Sie einen Operator `<` in der Klasse `PartialSet` definieren, um die folgende Ausgabe zu erhalten:
 
-....
+```
 { }
 { 1 }
 { 2 }
@@ -399,7 +409,7 @@ Wie müssten Sie einen Operator `<` in der Klasse `PartialSet` definieren, um di
 { 1, 3, 4 }
 { 2, 3, 4 }
 { 1, 2, 3, 4 }
-....
+```
 
 
 .Definition des Operators `operator<` in der Klasse `PartialSet`.
@@ -409,21 +419,21 @@ Wie müssten Sie einen Operator `<` in der Klasse `PartialSet` definieren, um di
 |Operator |Beschreibung
 
 | Operator `<`
-a| Vergleicht zwei `PartialSet`-Objekte auf &ldquo;kleiner&rdquo;.
-Wir bezeichnen eine Teilmenge __S__1 &ldquo;kleiner&rdquo; als eine Teilmenge __S__2,
-wenn __S__1 entweder weniger Elemente als __S__2 enthält oder, falls __S__2 gleich viel Elemente enthält,
-das erste Element von __S__1 kleiner ist als das erste Element von __S__2.
+| Vergleicht zwei `PartialSet`-Objekte auf &ldquo;kleiner&rdquo;.
+Wir bezeichnen eine Teilmenge *S*1 &ldquo;kleiner&rdquo; als eine Teilmenge *S*2,
+wenn *S*1 entweder weniger Elemente als *S*2 enthält oder, falls *S*2 gleich viel Elemente enthält,
+das erste Element von *S*1 kleiner ist als das erste Element von *S*2.
 Stimmen beide Teilmengen im ersten Element überein, setzen wir den Vergleich mit dem zweiten, dritten, etc. Element solange fort,
 bis ein Unterschied vorhanden ist. Dabei wird vorausgesetzt,
 dass die Elemente beider Teilmengen in aufsteigender Reihenfolge vorliegen.
 
-[source,c++]
-----
+
+```cpp
 friend bool operator<(const PartialSet&, const PartialSet&);
-----
+```
 |===
 
-== Aufzählung einer Potenzmenge
+## Aufzählung einer Potenzmenge
 
 Bei Objekten, die den Charakter eines Containers besitzen (Menge aller Schriftarten auf einem Rechner, Menge aller laufenden Prozesse, etc.)
 gibt es die Möglichkeit, die einzelnen Elemente eines solchen Objekts der Reihe nach aufzuzählen (so genannte &ldquo;Traversierung der Menge&rdquo;).
@@ -437,37 +447,37 @@ notwendigen Objekte für den Start und das Ende einer Aufzählung bereitstellen:
 |Methode |Beschreibung
 
 | `begin()`
-a| Liefert ein Iterator-Objekt zurück, das auf das erste `PartialSet`-Objekt verweist.
+| Liefert ein Iterator-Objekt zurück, das auf das erste `PartialSet`-Objekt verweist.
 
-[source,c++]
-----
+
+```cpp
 std::set<PartialSet>::const_iterator begin();
-----
+```
 
 | `end()`
-a| Liefert ein Iterator-Objekt zurück, das hinter das letzte Element zeigt.
+| Liefert ein Iterator-Objekt zurück, das hinter das letzte Element zeigt.
 
-[source,c++]
-----
+
+```cpp
 std::set<PartialSet>::const_iterator end();
-----
+```
 |===
 
 Studieren und testen Sie Ihre Funktionsweise der Iterator-Realisierung an einer bereichs-basierten Wiederholungsschleife:
 
 _Beispiel_ 4:
 
-[source,c++]
-----
+
+```cpp
 PowerSet powerSet{ 3 };
 for (const PartialSet& set : powerSet) {
     std::cout << "Next Set: " << set << std::endl;
 }
-----
+```
 
-_Ausgabe_:
+*Ausgabe*:
 
-....
+```
 Next Set: { }
 Next Set: { 1 }
 Next Set: { 2 }
@@ -476,7 +486,7 @@ Next Set: { 1, 2 }
 Next Set: { 1, 3 }
 Next Set: { 2, 3 }
 Next Set: { 1, 2, 3 }
-....
+```
 
 == Teilmengen einer Potenzmenge
 
@@ -493,19 +503,19 @@ Ergänzen Sie Ihre Realisierung der Klasse `PowerSet` um eine Methode `partialSe
 |Methode |Beschreibung
 
 | `partialSetsBySize()`
-a| Berechnet alle Teilmengen einer Potenzmenge mit der Größe `size`.
+| Berechnet alle Teilmengen einer Potenzmenge mit der Größe `size`.
 
-[source,c++]
-----
+
+```cpp
 PowerSet partialSetsBySize(size_t size);
-----
+```
 
 |===
 
 Ein Beispiel:
 
-[source,c++]
-----
+
+```cpp
 PowerSet powerSet{ 5 };
 size_t size = 3;
 PowerSet someSets = powerSet.partialSetsBySize(size);
@@ -513,11 +523,11 @@ std::cout << "Partial set of size " << size << ':' << std::endl;
 for (const PartialSet& set : someSets) {
     std::cout << set << std::endl;
 }
-----
+```
 
-_Ausgabe_:
+*Ausgabe*:
 
-....
+```
 Partial set of size 3:
 { 1, 2, 3 }
 { 1, 2, 4 }
@@ -529,17 +539,17 @@ Partial set of size 3:
 { 2, 3, 5 }
 { 2, 4, 5 }
 { 3, 4, 5 }
-....
+```
 
-== Lösung
+## Lösung
 
 Wir stellen nachfolgend den Quellcode der beteiligten Klassen vor. Am Anfang stehen Teilmengen einer Potenzmenge und damit 
 die Klasse `PartialSet` (<<id_class_partialset_decl>> und <<id_class_partialset_impl>>)
 
 .Klasse `PartialSet`: Definition
-[source,c++]
+
 [[id_class_partialset_decl]]
-----
+```cpp
 01: class PartialSet
 02: {
 03: private:
@@ -563,12 +573,12 @@ die Klasse `PartialSet` (<<id_class_partialset_decl>> und <<id_class_partialset_
 21:     // input/output
 22:     friend std::ostream& operator<< (std::ostream&, const PartialSet&);
 23: };
-----
+```
 
 .Klasse `PartialSet`: Implementierung
-[source,c++]
+
 [[id_class_partialset_impl]]
-----
+```cpp
 01: // c'tors / d'tor
 02: PartialSet::PartialSet(const std::initializer_list<size_t>& list)
 03:     : m_numbers{ list.begin(), list.end() } {}
@@ -610,7 +620,7 @@ die Klasse `PartialSet` (<<id_class_partialset_decl>> und <<id_class_partialset_
 39:     os << "}";
 40:     return os;
 41: }
-----
+```
 
 In der Implementierung der Klasse `PartialSet` (<<id_class_partialset_impl>>) ist die Realisierung des `operator<<`
 möglicherweise etwas auffällig: Es geht schlicht und ergreifend darum, eine Teilmenge auf der Konsole im Format `{ 1, 2, 3 }` auszugeben,
@@ -627,9 +637,9 @@ nicht einsetzen, da der Bereich nicht vollständig durchlaufen wird.
 Damit sind wir bei der Klasse `PowerSet` angekommen (<<id_class_powerset_decl>> und <<id_class_powerset_impl>>):
 
 .Klasse `PowerSet`: Definition
-[source,c++]
+
 [[id_class_powerset_decl]]
-----
+```cpp
 01: class PowerSet
 02: {
 03: private:
@@ -661,12 +671,12 @@ Damit sind wir bei der Klasse `PowerSet` angekommen (<<id_class_powerset_decl>> 
 29:     void computePartialSets();
 30:     static size_t powerByTwo(size_t num);
 31: };
-----
+```
 
 .Klasse `PowerSet`: Implementierung
-[source,c++]
+
 [[id_class_powerset_impl]]
-----
+```cpp
 01: // c'tors
 02: PowerSet::PowerSet() : m_size{ 0 }, m_cardinality{ 1 }, m_sets{ PartialSet {} } {}
 03: 
@@ -734,7 +744,7 @@ Damit sind wir bei der Klasse `PowerSet` angekommen (<<id_class_powerset_decl>> 
 65: 
 66:     return base_2;
 67: }
-----
+```
 <1> Der Aufruf von `clear()` darf hier nicht fehlen, da im Standard-Konstruktors der Klasse `PowerSet` das Mengenobjekt `m_sets` _nicht_ leer ist,
 sondern mit der leeren Menge vorbelegt wird.
 <2> Die einheitliche Initialisierung veranlasst in diesem Fall den Aufruf das Standard-Konstruktors der Klasse `PartialSet`.
@@ -743,7 +753,7 @@ sondern mit der leeren Menge vorbelegt wird.
 Die Zeilen 45 bis 57 (<<id_class_powerset_impl>>) sind möglicheweise etwas kurz geraten, in jedem Fall implementieren sie die
 intuitive Konstruktionsvorschrift für Potenzmengen.
 
-== There is more
+## There is more
 
 Unsere bisherigen Betrachtungen einer Potenzmenge haben sich ausschließlich auf Grundmengen mit ganzen Zahlen beschränkt.
 Für die Grundmenge kann man aber auch die Annahme treffen, dass deren integraler Datentyp (`int`, `short`, `long`, `size_t`, etc.) variabel sein sollte.
