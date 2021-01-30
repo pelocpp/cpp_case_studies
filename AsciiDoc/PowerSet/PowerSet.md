@@ -1,6 +1,6 @@
-# Potenzmenge
+<!-- PowerSet.md -->
 
-## Lernziele
+# Lernziele
 
 * Einheitliche Initialisierung
 * Initialisierungsliste (`std::initializer_list<T>`)
@@ -8,7 +8,7 @@
 * Container-Methoden `cbegin()` und `cend()`
 * C++ Iteratorenkonzept
 
-## Einführung
+# Einführung
 
 Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
 gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
@@ -30,11 +30,11 @@ Erstellen Sie eine Implementierung für zwei Klassen `PowerSet` (Potenzmenge) un
 (Teilmenge, also ein Element einer Potenzmenge). Integrieren Sie dabei, soweit sinnvoll machbar, möglichst
 viele programmiersprachliche Konstrukte bzw. Sprachmittel von *Modern C++*!
 
-## Die Klasse `PartialSet`
+# Die Klasse `PartialSet`
 
 Bevor wir uns dem Algorithmus zur Konstruktion einer Potenzmenge (und damit der Klasse `PowerSet`) zuwenden,
 benötigen Sie als Fundament die Klasse `PartialSet`. Implementieren Sie ein Grundgerüst dieser Klasse
-an Hand der Vorgaben in [Tabelle 1]({{<relref "#tabelle_1_class_partialset" >}}).
+an Hand der Vorgaben in [Tabelle 1].
 
 Eine Instanz der Klasse `PartialSet` sollte ihre Elemente immer in aufsteigend sortierter Form ablegen.
 Auf diese Weise lassen sich Operationen wie zum Beispiel das Vergleichen von `PartialSet`-Objekten leichter implementieren.
@@ -134,7 +134,7 @@ true
 false
 ```
 
-## Eine intuitive Konstruktionsvorschrift für Potenzmengen
+# Eine intuitive Konstruktionsvorschrift für Potenzmengen
 
 Für die algorithmische Berechnung einer Potenzmenge gibt es eine vergleichsweise einfache intuitive
 Konstruktionsvorschrift. Um beim Beispiel einer Grundmenge mit den drei Elementen 1, 2, und 3 zu
@@ -162,9 +162,9 @@ jeweiligen Teilmenge noch einmal exemplarisch gegenüber:
 Wir legen also die Menge aller Kombinationen der Ziffern 0 und 1 zu Grunde, deren Anzahl sich – in
 diesem Beispiel – zu 2<sup>3</sup> berechnet.
 
-## Die Klasse `PowerSet`
+# Die Klasse `PowerSet`
 
-Wir fahren mit einigen Hilfestellungen zur Implementierung der Klasse `PowerSet` in [Tabelle 2]({{<relref "#tabelle_2_class_powerset" >}}) fort:
+Wir fahren mit einigen Hilfestellungen zur Implementierung der Klasse `PowerSet` in [Tabelle 2] fort:
 
 ###### {#tabelle_2_class_powerset}
 
@@ -251,11 +251,11 @@ Size: 3, Cardinality: 8
 { 3 }
 ```
 
-## Sortierung einer Potenzmenge
+# Sortierung einer Potenzmenge
 
 In dieser Teilaufgabe betrachten wir die sortierte Ausgabe aller Teilmengen einer Potenzmenge.
 Im Prinzip geht es darum, ein Kriterium für den Vergleich zweier Teilmengen festzulegen.
-Wenn Sie Ihre bisherige Implementierung betrachten, sollten Sie bei der Berechnung der Potenzmenge zur Basismenge { 1, 2, 3, 4 }
+Wenn Sie Ihre bisherige Implementierung betrachten, sollten Sie bei der Berechnung der Potenzmenge zur Basismenge `{ 1, 2, 3, 4 }`
 die folgende Ausgabe erhalten:
 
 ```
@@ -299,18 +299,22 @@ Wie müssten Sie einen Operator `<` in der Klasse `PartialSet` definieren, um di
 { 1, 2, 3, 4 }
 ```
 
+###### {#tabelle_3_class_partialset_operators}
+
 | Operator | Beschreibung |
 | :---- | :---- |
 | Operator `<` | `friend bool operator<(const PartialSet&, const PartialSet&);`<br/>Vergleicht zwei `PartialSet`-Objekte auf &ldquo;kleiner&rdquo;. Wir bezeichnen eine Teilmenge *S*1 &ldquo;kleiner&rdquo; als eine Teilmenge *S*2, wenn *S*1 entweder weniger Elemente als *S*2 enthält oder, falls *S*2 gleich viel Elemente enthält, das erste Element von *S*1 kleiner ist als das erste Element von *S*2. Stimmen beide Teilmengen im ersten Element überein, setzen wir den Vergleich mit dem zweiten, dritten, etc. Element solange fort, bis ein Unterschied vorhanden ist. Dabei wird vorausgesetzt, dass die Elemente beider Teilmengen in aufsteigender Reihenfolge vorliegen. |
 
 *Tabelle* 3: Definition des Operators `operator<` in der Klasse `PartialSet`.
 
-## Aufzählung einer Potenzmenge
+# Aufzählung einer Potenzmenge
 
 Bei Objekten, die den Charakter eines Containers besitzen (Menge aller Schriftarten auf einem Rechner, Menge aller laufenden Prozesse, etc.)
 gibt es die Möglichkeit, die einzelnen Elemente eines solchen Objekts der Reihe nach aufzuzählen (so genannte &ldquo;Traversierung der Menge&rdquo;).
 Auf das Beispiel der Potenzmenge angewendet ergänzen wir die Klasse `PowerSet` um die beiden Methoden `begin()` und `end()`, die die zum Iterieren
-notwendigen Objekte für den Start und das Ende einer Aufzählung bereitstellen:
+notwendigen Objekte für den Start und das Ende einer Aufzählung bereitstellen ([Tabelle 4]):
+
+###### {#tabelle_4_class_partialset_begin_end}
 
 | Methode | Beschreibung |
 | :---- | :---- |
@@ -343,13 +347,15 @@ Next Set: { 2, 3 }
 Next Set: { 1, 2, 3 }
 ```
 
-## Teilmengen einer Potenzmenge
+# Teilmengen einer Potenzmenge
 
 Von einer Potenzmenge lassen sich Teilmengen bilden. Zum Beispiel kann man alle Elemente einer
 Potenzmenge betrachten, die dieselbe Anzahl *k* von Elementen besitzen. Dazu betrachten wir am
 besten ein Beispiel: Alle zwei-elementigen Teilmengen der Potenzmenge, deren Grundmenge aus
-den Elementen 0, 1, und 2 besteht, lauten {0, 1}, {0, 2} und {1, 2}.
+den Elementen 0, 1, und 2 besteht, lauten `{0, 1}`, `{0, 2}` und `{1, 2}`.
 Ergänzen Sie Ihre Realisierung der Klasse `PowerSet` um eine Methode `partialSetsBySize`:
+
+###### {#tabelle_5_class_powerset_begin_partialsetsbysize}
 
 | Methode | Beschreibung |
 | :---- | :---- |
@@ -358,7 +364,6 @@ Ergänzen Sie Ihre Realisierung der Klasse `PowerSet` um eine Methode `partialSe
 *Tabelle* 5: Teilmengen einer Potenzmenge.
 
 Ein Beispiel:
-
 
 ```cpp
 PowerSet powerSet{ 5 };
@@ -386,10 +391,10 @@ Partial set of size 3:
 { 3, 4, 5 }
 ```
 
-## Lösung
+# Lösung
 
 Wir stellen nachfolgend den Quellcode der beteiligten Klassen vor. Am Anfang stehen Teilmengen einer Potenzmenge und damit 
-die Klasse `PartialSet` ([Listing 1]({{<relref "#listing_class_partialset_decl" >}}) und [Listing 2]({{<relref "#listing_class_partialset_impl" >}})):
+die Klasse `PartialSet` ([Listing 1] und [Listing 2]):
 
 ###### {#listing_class_partialset_decl}
 
@@ -469,7 +474,7 @@ die Klasse `PartialSet` ([Listing 1]({{<relref "#listing_class_partialset_decl" 
 
 *Listing* 2: Klasse `PartialSet`: Implementierung.
 
-In der Implementierung der Klasse `PartialSet` ([Listing 2]({{<relref "#listing_class_partialset_impl" >}})) ist die Realisierung des `operator<<`
+In der Implementierung der Klasse `PartialSet` ([Listing 2]) ist die Realisierung des Operators `<<`
 möglicherweise etwas auffällig: Es geht schlicht und ergreifend darum, eine Teilmenge auf der Konsole im Format `{ 1, 2, 3 }` auszugeben,
 um es an einem Beispiel festzumachen.
 Dies sieht beim ersten Betrachten recht trivial aus &ndash; mit einer Ausnahme: Nach der Zahl 3, also dem letzten Element der Teilmenge, wird kein Komma mehr ausgegeben.
@@ -478,9 +483,11 @@ Das Problem einer leeren Teilmenge ist in Zeile 30 abgehandelt: Nur wenn die bei
 kommt es nicht zur Ausführung des Rumpfes der Bedingungsanweisung. Jetzt können wir bei einer nicht-leeren Teilmenge das Problem des letzten Kommas angehen,
 die `std::prev`-Methode liefert immer ein gültiges Iterator-Objekt zurück (eben da die Teilmenge nicht leer ist).
 Die `for`-Wiederholungsschleife gibt alle Elemente der Teilmenge bist auf das letzte aus,
-diesem widmen wir uns in Zeile 37 separat. Elegante *Modern C++*-Anweisungen wie die bereichs-basierte Wiederholungsschleife können wir leider in diesem Beispiel
+diesem widmen wir uns in Zeile 37 separat.
+
+Elegante *Modern C++*-Anweisungen wie die bereichs-basierte Wiederholungsschleife können wir leider in diesem Beispiel
 nicht einsetzen, da der Bereich nicht vollständig durchlaufen wird. Damit sind wir bei der Klasse `PowerSet` angekommen
-([Listing 3]({{<relref "#listing_class_powerset_decl" >}}) und [Listing 4]({{<relref "#listing_class_powerset_impl" >}})):
+([Listing 3] und [Listing 4]):
 
 ###### {#listing_class_powerset_decl}
 
@@ -594,18 +601,31 @@ nicht einsetzen, da der Bereich nicht vollständig durchlaufen wird. Damit sind 
 
 *Listing* 4: Klasse `PowerSet`: Implementierung.
 
-Einige Anmerkungen zu [Listing 4]({{<relref "#listing_class_powerset_impl" >}}):
-In Zeile 13 darf der Aufruf von `clear()` hier nicht fehlen, da im Standard-Konstruktor der Klasse `PowerSet` das Mengenobjekt `m_sets` *nicht* leer ist,
+Einige Anmerkungen zu [Listing 4]: In Zeile 13 darf der Aufruf von `clear()` hier nicht fehlen, da im Standard-Konstruktor der Klasse `PowerSet` das Mengenobjekt `m_sets` *nicht* leer ist,
 sondern mit der leeren Menge vorbelegt wird. Die einheitliche Initialisierung veranlasst in Zeile 47 in diesem Fall den Aufruf des Standard-Konstruktors der Klasse `PartialSet`.
 Schließlich kann der Gebrauch des Links-Shift Operators (Zeile 63) kann zu besseren Laufzeiten führen als der Einsatz der `pow`-Funktion aus der `math`-Bibliothek.
-
-Die Zeilen 45 bis 57 ([Listing 4]({{<relref "#listing_class_powerset_impl" >}})) sind möglicherweise etwas kurz geraten, in jedem Fall implementieren sie die
+Die Zeilen 45 bis 57 ([Listing 4] sind möglicherweise etwas kurz geraten, in jedem Fall implementieren sie die
 intuitive Konstruktionsvorschrift für Potenzmengen.
 
-## There&lsquo;s more
+# There&lsquo;s more
 
 Unsere bisherigen Betrachtungen einer Potenzmenge haben sich ausschließlich auf Grundmengen mit ganzen Zahlen beschränkt.
 Für die Grundmenge kann man aber auch die Annahme treffen, dass deren integraler Datentyp (`int`, `short`, `long`, `size_t`, etc.) variabel sein sollte.
 Auch kann man sich eine Grundmenge aus Zeichen (`char`) vorstellen.
 Welche Änderungen sind an den beiden Klassen `PartialSet` und `PowerSet` vorzunehmen,
 um die Grundmenge mit unterschiedlichen integralen Datentypen definieren zu können?
+
+<!-- Links Definitions -->
+
+[Tabelle 1]: #tabelle_1_class_partialset
+[Tabelle 2]: #tabelle_2_class_powerset
+[Tabelle 3]: #tabelle_3_class_partialset_operators
+[Tabelle 4]: #tabelle_4_class_partialset_begin_end
+[Tabelle 5]: #tabelle_5_class_powerset_begin_partialsetsbysize
+
+[Listing 1]: #listing_class_partialset_decl
+[Listing 2]: #listing_class_partialset_impl
+[Listing 3]: #listing_class_powerset_decl
+[Listing 4]: #listing_class_powerset_impl
+
+<!-- End-of-File -->
