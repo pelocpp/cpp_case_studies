@@ -393,6 +393,8 @@ Partial set of size 3:
 
 # Lösung
 
+> Quellcode: Siehe auch [Github](https://github.com/peterloos/Cpp_HouseOfSantaClaus.git).
+
 Wir stellen nachfolgend den Quellcode der beteiligten Klassen vor. Am Anfang stehen Teilmengen einer Potenzmenge und damit 
 die Klasse `PartialSet` ([Listing 1] und [Listing 2]):
 
