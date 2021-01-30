@@ -1,75 +1,5 @@
 # Potenzmenge
 
-## Title
-
-### Place 1
-
-Hello, this is some text to fill in this, [here](#place-2), is a link to the second place.
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-<a  title="mehr Informationen">
-    Das href-Attribut
-</a>
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-
-Als Potenzmenge bezeichnet man in der Mengenlehre die Menge aller Teilmengen zu einer
-gegebenen Grundmenge. Besitzt die Grundmenge den Namen *S*, notiert man die Potenzmenge meist
-als *P*(*S*) von *S*. Für die 3-elementige Menge *S* = { 1, 2, 3 } ergibt sich die Potenzmenge *P*({ 1, 2, 3 }) zu
-### Place 2
-
-Place one has the fun times of linking here, but I can also link back [here](#place-1).
-
-### Place's 3: other example
-
-Place one has the fun times of linking here, but I can also link back [here](#places-3-other-example).
-
-
-
-
-
-
 ## Lernziele
 
 * Einheitliche Initialisierung
@@ -104,7 +34,7 @@ viele programmiersprachliche Konstrukte bzw. Sprachmittel von _Modern_ {cpp}!
 
 Bevor wir uns dem Algorithmus zur Konstruktion einer Potenzmenge (und damit der Klasse `PowerSet`) zuwenden,
 benötigen Sie als Fundament die Klasse `PartialSet`. Implementieren Sie ein Grundgerüst dieser Klasse
-an Hand der Vorgaben in <<id_table_partialset>>.
+an Hand der Vorgaben in [Tabelle 1]({{<relref "#tabelle_1_class_partialset" >}}).
 Eine Instanz der Klasse `PartialSet` sollte ihre Elemente immer in aufsteigend sortierter Form ablegen.
 Auf diese Weise lassen sich Operationen wie zum Beispiel das Vergleichen von `PartialSet`-Objekten leichter implementieren.
 
@@ -119,7 +49,7 @@ Auf diese Weise lassen sich Operationen wie zum Beispiel das Vergleichen von `Pa
 | Operator `==` | Vergleicht zwei `PartialSet`-Objekte auf Gleichheit. Zwei Teilmengen sind genau dann gleich, wenn sie die gleichen Elemente enthalten.<br/>`friend bool operator==(const PartialSet&, const PartialSet&);` |
 | Operator `<<` | Gibt ein `PartialSet`-Objekt auf der Konsole aus. Die Darstellung einer Teilmenge sollte folgendes Aussehen haben:<br/>`{ 1, 2, 3 }`<br/>`friend std::ostream& operator<< (std::ostream&, const Permutation&);` |
 
-Tabelle XXX: Wesentliche Elemente der Klasse `PartialSet`.
+###### Tabelle 1: Wesentliche Elemente der Klasse `PartialSet`.{tabelle_1_class_partialset}
 
 
 Wir betrachten einige Testbeispiele:
@@ -285,6 +215,9 @@ friend std::ostream& operator<< (std::ostream&, const PowerSet&);
 ```
 |===
 
+###### Tabelle 2: Wesentliche Elemente der Klasse `PowerSet`.{tabelle_2_class_powerset}
+
+
 Es folgen einige Beispiele zur Klasse `PowerSet`.
 Studieren Sie diese sorgfältig und stimmen Sie Ihre Realisierung darauf ab:
 
@@ -433,6 +366,8 @@ friend bool operator<(const PartialSet&, const PartialSet&);
 ```
 |===
 
+###### Tabelle 3: Definition des Operators `operator<` in der Klasse `PartialSet`.{tabelle_2_class_powerset}
+
 ## Aufzählung einer Potenzmenge
 
 Bei Objekten, die den Charakter eines Containers besitzen (Menge aller Schriftarten auf einem Rechner, Menge aller laufenden Prozesse, etc.)
@@ -546,6 +481,13 @@ Partial set of size 3:
 Wir stellen nachfolgend den Quellcode der beteiligten Klassen vor. Am Anfang stehen Teilmengen einer Potenzmenge und damit 
 die Klasse `PartialSet` (<<id_class_partialset_decl>> und <<id_class_partialset_impl>>)
 
+Wir stellen nachfolgend den Quellcode der beteiligten Klassen vor. Am Anfang stehen Teilmengen einer Potenzmenge und damit 
+die Klasse `PartialSet` ([Tabelle 1]({{<relref "#listing_class_partialset_decl" >}}) und [Tabelle 1]({{<relref "#listing_class_partialset_impl" >}}))
+
+
+
+
+
 .Klasse `PartialSet`: Definition
 
 [[id_class_partialset_decl]]
@@ -574,6 +516,9 @@ die Klasse `PartialSet` (<<id_class_partialset_decl>> und <<id_class_partialset_
 22:     friend std::ostream& operator<< (std::ostream&, const PartialSet&);
 23: };
 ```
+
+###### Listing 1: Definition des Operators `operator<` in der Klasse `PartialSet`.{listing_class_partialset_decl}
+
 
 .Klasse `PartialSet`: Implementierung
 
@@ -621,6 +566,9 @@ die Klasse `PartialSet` (<<id_class_partialset_decl>> und <<id_class_partialset_
 40:     return os;
 41: }
 ```
+
+###### Listing 2: Klasse `PartialSet`: Implementierung.{listing_class_partialset_impl}
+
 
 In der Implementierung der Klasse `PartialSet` (<<id_class_partialset_impl>>) ist die Realisierung des `operator<<`
 möglicherweise etwas auffällig: Es geht schlicht und ergreifend darum, eine Teilmenge auf der Konsole im Format `{ 1, 2, 3 }` auszugeben,
