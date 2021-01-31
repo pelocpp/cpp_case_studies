@@ -1,7 +1,5 @@
 <!-- Partitions.md -->
 
-Fronmatter: Partitionen einer natürlichen Zahl
-
 In der Zahlentheorie oder der Kombinatorik ist eine *Partition* einer natürlichen Zahl *n* eine Möglichkeit, *n* als Summe natürlicher Zahlen zu schreiben. Zwei Summen, die sich nur in der Reihenfolge ihrer Summanden unterscheiden, werden als dieselbe Partition aufgefasst. Zum Beispiel kann die natürliche Zahl 4 auf fünf verschiedene Arten aufgeteilt werden:
 
 ```
@@ -311,7 +309,7 @@ wird nicht konstruiert, da bei allen berechneten Partitionen mindestens ein Summ
 
 ###### {#abbildung_1_imgage_pseudocode_partitions_calculator}
 
-{{ figure src = "img/partitions/PartitionSet_PseudoCode.svg" width=650 alt="Pseudocode Partitions Calculator" }}
+{{< figure src="/img/partitions/PartitionSet_PseudoCode.svg" width="90%" alt="Pseudocode Partitions Calculator" >}}
 
 *Abbildung* 1: Pseudocode zur Berechnung aller Partitionen einer natürlichen Zahl.
 
