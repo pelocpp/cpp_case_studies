@@ -52,6 +52,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Partitions", "Partitions", 
 	ProjectSection(SolutionItems) = preProject
 		AsciiDoc\Partitions\PartitionPseudeCode.png = AsciiDoc\Partitions\PartitionPseudeCode.png
 		AsciiDoc\Partitions\Partitions.adoc = AsciiDoc\Partitions\Partitions.adoc
+		AsciiDoc\Partitions\Partitions.md = AsciiDoc\Partitions\Partitions.md
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeConverter", "CaseStudies\CodeConverter\CodeConverter.vcxproj", "{8D3E05BA-9DF0-441A-88A7-09DA95C4BDE4}"
