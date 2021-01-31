@@ -305,13 +305,42 @@ Man kann sich leicht überlegen, dass bei vorliegender Partitionenmenge einer Za
 1 + 1 + ... + 1    // n Summanden
 ```
 
-wird nicht konstruiert, da bei allen berechneten Partitionen mindestens ein Summand immer den Wert 2 besitzt. In der Tat ist die fehlende Partition einer Zahl _n_, die aus _n_ 1-en besteht, noch nachträglich in die Partitionenmenge aufzunehmen. In [Abbildung 1] finden Sie eine Beschreibung des Algorithmus in Gestalt von Pseudocode vor:
+wird nicht konstruiert, da bei allen berechneten Partitionen mindestens ein Summand immer den Wert 2 besitzt. In der Tat ist die fehlende Partition einer Zahl _n_, die aus _n_ 1-en besteht, noch nachträglich in die Partitionenmenge aufzunehmen. In [Listing 1] finden Sie eine Beschreibung des Algorithmus in Gestalt von Pseudocode vor:
 
-###### {#abbildung_1_imgage_pseudocode_partitions_calculator}
+###### {#pseudocode_listing_algorithm}
 
-{{< figure src="/img/partitions/PartitionSet_PseudoCode.svg" width="90%" alt="Pseudocode Partitions Calculator" >}}
+**Methode**: `Calculate`
+**Input**: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zahl *n*
+**Output**: &nbsp;&nbsp;`PartitionSet`-Objekt mit allen Partitionen der Zahl *n*
 
-*Abbildung* 1: Pseudocode zur Berechnung aller Partitionen einer natürlichen Zahl.
+**if** *n* = 1 **then**
+
+> **return** `PartitionSet`-Objekt mit Zerlegung `{ 1 }`
+
+**else**
+
+> Berechne rekursiv `PartitionSet`-Objekt *P*<sub>*n* - 1</sub> zur Zahl *n* - 1:
+> PartitionSet *P*<sub>*n* - 1</sub> = calculate (*n* - 1)
+
+> *P*<sub>result</sub> = leeres `PartitionSet`-Objekt
+
+> **for all** p &#x2208; *P*<sub>*n* - 1</sub> **do**
+
+> > Berechne *m* Kandidaten für eine Partition von *n* (*m* Anzahl der Summanden von *p*) durch sukzessive Addition von 1 auf die einzelnen Summanden
+
+> > Füge Kandidaten in *P*<sub>result</sub> ein ,wenn dieser noch nicht in *P*<sub>result</sub> enthalten ist
+
+> **endfor**
+
+> Erzeuge Partition *P*<sub>1</sub> der Länge *n* (Summanden alle gleich 1)
+
+> Füge Partition *P*<sub>1</sub> in *P*<sub>result</sub> ein
+
+> **return** *P*<sub>result</sub>
+
+**endif**
+
+*Listing* 1: Pseudocode zur Berechnung aller Partitionen einer natürlichen Zahl.
 
 Implementieren Sie in diesem Abschnitt eine Methode `calculate` zur Berechnung aller Partitionen einer natürlichen Zahl
 und ordnen Sie diese einer separaten Klasse `PartitionsCalculator` zu ([Tabelle 3]):
@@ -472,9 +501,9 @@ bietet sich als Container eine Instanz der Klasse `std::multiset` an. In der Aus
 33: };
 ```
 
-*Listing* 1: Klasse `Partition`: Definition.
+*Listing* 2: Klasse `Partition`: Definition.
 
-In Zeile 5 von [Listing 1] finden wir einen Initialisierer für eine Instanzvariable vor. In diesem Fall kann man dann den Default-Konstruktor mit `default` definieren.
+In Zeile 5 von [Listing 2] finden wir einen Initialisierer für eine Instanzvariable vor. In diesem Fall kann man dann den Default-Konstruktor mit `default` definieren.
 
 In den Zeilen 24 und 27 werden eine `begin()` und `end()`-Methode definiert, um `Partition`-Objekte iterieren zu können. Darunter verstehen wir, dass wir in einer bereichs-basierten `for`-Schleife die einzelnen Zahlen der Partition traversieren können. Eine Iterator-Unterstützung ist einfach zu realisieren, wenn wir die Iteratorimplementierung eines unterlagerten STL-Containers zur Verfügung stehen haben. In unserem Fall ist dies das `std::multiset<size_t, std::greater<size_t>>`-Objekt, dessen `begin()` und `end()`-Methode uns die gewünschten Iteratorobjekte zurückliefern. Die Definitionen in den Zeilen 24 und 27 hätte man auch kürzer und damit einfacher lesbarer gestalten können:
 
@@ -568,7 +597,7 @@ Wenn wir den Typ einer Variable oder wie in unserem Fall, den Rückgabetyp einer
 78: }
 ```
 
-*Listing* 2: Klasse `Partition`: Implementierung.
+*Listing* 3: Klasse `Partition`: Implementierung.
 
 Der `std::accumulate`-Algorithmus in den Zeilen 5 und 11 liefert mit den jeweiligen Parametern die Summe aller Werte des Bereichs zurück. Der Aufruf von `std::vector<size_t>::assign()` (Zeile 17) weist dem Vektor neue Elemente zu, indem die alten (sofern vorhanden) ersetzt werden. In Zeile 33 wird der Inhalt zweier `std::vector<size_t>`-Objekte auf Gleichheit überprüft, sprich sie müssen die gleiche Anzahl von Elementen haben und jedes Element des ersten Vektors wird mit dem Element des zweiten Vektors an derselben Position verglichen.
 
@@ -625,12 +654,12 @@ Zur Verwaltung der `Partition`-Objekte gibt es die Klasse `PartitionSet`:
 46: };
 ```
 
-*Listing* 3: Klasse `PartitionSet`: Definition.
+*Listing* 4: Klasse `PartitionSet`: Definition.
 
-Der Default-Konstruktor ergibt bei dieser Klasse wenig Sinn. Es sollte in Minimalfall immer die natürliche Zahl, um deren Zerlegungen es geht, bekannt sein. Deshalb wird in Zeile 9 ([Listing 3]) der Default-Konstruktor mit dem Schlüsselwort `delete` markiert, die Klasse besitzt folglich *keinen* Standard-Konstruktor. Für die Realisierung der `emplace`-Methode (Zeile 20) kommt das Feature der &ldquo;template member function&rdquo; zum Einsatz. Ferner findet die Implementierung
+Der Default-Konstruktor ergibt bei dieser Klasse wenig Sinn. Es sollte in Minimalfall immer die natürliche Zahl, um deren Zerlegungen es geht, bekannt sein. Deshalb wird in Zeile 9 ([Listing 4]) der Default-Konstruktor mit dem Schlüsselwort `delete` markiert, die Klasse besitzt folglich *keinen* Standard-Konstruktor. Für die Realisierung der `emplace`-Methode (Zeile 20) kommt das Feature der &ldquo;template member function&rdquo; zum Einsatz. Ferner findet die Implementierung
 im Header-File statt, da dies bei Templates der einfachste Ansatz ist.
 
-In Zeile 24 von [Listing 3] findet die so genannte _Parameter Pack Expansion_ statt (`static_cast<size_t>(args)...`). Es handelt sich um die drei nachgestellten Punkte (`...`) nach dem Parameter `args`. Wir wenden die  _Parameter Pack Expansion_ an, um alle Parameter in einem `std::initializer_list<size_t>`-Objekt zusammenzufassen. Dieses Objekt verwenden wir zur Fehlerüberprüfung (Zeile 26) und berechnen mit `std::accumulate` die Summe der Parameter. Den auf diese Weise erhaltenen Wert vegleichen wir in Zeile 27 mit `m_number` auf Übereinstimmung. Bei Nicht-Übereinstimmung werden wir ein `std::invalid_argument`-Objekt und verlassen die `emplace`-Methode vorzeitig.
+In Zeile 24 von [Listing 4] findet die so genannte _Parameter Pack Expansion_ statt (`static_cast<size_t>(args)...`). Es handelt sich um die drei nachgestellten Punkte (`...`) nach dem Parameter `args`. Wir wenden die  _Parameter Pack Expansion_ an, um alle Parameter in einem `std::initializer_list<size_t>`-Objekt zusammenzufassen. Dieses Objekt verwenden wir zur Fehlerüberprüfung (Zeile 26) und berechnen mit `std::accumulate` die Summe der Parameter. Den auf diese Weise erhaltenen Wert vegleichen wir in Zeile 27 mit `m_number` auf Übereinstimmung. Bei Nicht-Übereinstimmung werden wir ein `std::invalid_argument`-Objekt und verlassen die `emplace`-Methode vorzeitig.
 
 In Zeile 31 führen wir eine zweite _Parameter Pack Expansion_ aus, um damit _In-Place_-Konstruktion ein `Partition`-Objekt zu erzeugen, das wir an die `emplace`-Methode des `std::multiset<size_t, std::greater<size_t>>`-Objekts durchschleusen. Der Rückgabewert von `emplace` ist vom Typ `std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool>`. Hier interessiert uns nur der zweite Wert des Paares. Er gibt an, ob die Partition bereits in der Partitionenmenge vorhanden war oder nicht. Für Zugriff auf `std::pair<>`-Objekte gibt es die `std::get<>`-Methode, der Template Parameter muss vom Typ `int` sein. Für die Realisierung der `PartitionSet`-Klasse im _.cpp_-File bleiben nur noch ein Konstuktor, die `insert`-Methode und der Ausgabeoperator übrig:
 
@@ -667,7 +696,7 @@ In Zeile 31 führen wir eine zweite _Parameter Pack Expansion_ aus, um damit _In
 28: }
 ```
 
-*Listing* 4: Klasse `PartitionSet`: Implementierung.
+*Listing* 5: Klasse `PartitionSet`: Implementierung.
 
 Die Implementierung der `insert`-Methode (Zeilen 5 bis 14) hätte man auch kürzer gestalten können. Es ging mir darum, zum einen diese Methode mit einem Rückgabewert (Partition schon vorhanden oder nicht) und mit einer Fehlerüberprüfung (Partition und Partitionenmenge passen zusammen oder nicht) auszustatten.
 
@@ -689,7 +718,7 @@ Die Methoden zum Berechnen aller Partitionen einer natürlichen Zahl sind vom Ch
 11: };
 ```
 
-*Listing* 5: Klasse `PartitionCalculator`: Definition.
+*Listing* 6: Klasse `PartitionCalculator`: Definition.
 
 Mit dem `delete`-Schlüsselwort in Zeile 5 stellen wir sicher, dass die `PartitionCalculator`-Klasse keinen Standard-Konstruktor besitzt. Da sie auch keine anderen Konstruktoren hat, lassen sich also keine `PartitionCalculator`-Objekte erzeugen, was unser Entwurfsziel war.
 
@@ -759,7 +788,7 @@ Mit dem `delete`-Schlüsselwort in Zeile 5 stellen wir sicher, dass die `Partiti
 61: }
 ```
 
-*Listing* 6: Klasse `PartitionCalculator`: Implementierung.
+*Listing* 7: Klasse `PartitionCalculator`: Implementierung.
 
 Die Aufruf von Konstruktoren der Klasse `std::vector<T>` kann manchmal leicht verwirrend sein. In Zeile 25 wird ein `std::vector<size_t>`-Objekt mit `number` Elementen vom Wert `1` erzeugt.
 
@@ -795,12 +824,14 @@ _Ausgabe_:
 [Tabelle 3]: #tabelle_3_class_partitionscalculator
 [Tabelle 4]: #tabelle_4_class_partitionscalculator_02
 
-[Listing 1]: #listing_class_partition_decl
-[Listing 2]: #listing_class_partition_impl
-[Listing 3]: #listing_class_partitionset_decl
-[Listing 4]: #listing_class_partitionset_impl
-[Listing 5]: #listing_class_partitioncalculator_decl
-[Listing 6]: #listing_class_partitioncalculator_impl
+[Listing 1]: #pseudocode_listing_algorithm
+
+[Listing 2]: #listing_class_partition_decl
+[Listing 3]: #listing_class_partition_impl
+[Listing 4]: #listing_class_partitionset_decl
+[Listing 5]: #listing_class_partitionset_impl
+[Listing 6]: #listing_class_partitioncalculator_decl
+[Listing 7]: #listing_class_partitioncalculator_impl
 
 [Abbildung 1]: #abbildung_1_imgage_pseudocode_partitions_calculator
 
