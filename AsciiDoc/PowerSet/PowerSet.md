@@ -1,5 +1,11 @@
 <!-- PowerSet.md -->
 
+Unter der Potenzmenge *P*(*S*) versteht man die Menge aller möglichen Teilmengen von *S*. 
+Mit Hilfe zweier Klassen  `PowerSet` und `PartialSet` sowie einem recht einfachen
+Algorithmus zur Bestimmung der Potenzmenge betrachten wir diese in *Modern C++*.
+
+<!--more--> 
+
 # Lernziele
 
 * Einheitliche Initialisierung
