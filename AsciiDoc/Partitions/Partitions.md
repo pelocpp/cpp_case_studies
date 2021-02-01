@@ -27,10 +27,7 @@ Wir beschäftigen uns in dieser Fallstudie mit der Fragestellung, auf wie viele 
 
 # Einführung
 
-Wir beschäftigen uns in dieser Fallstudie mit der Fragestellung, auf wie viele Arten sich eine natürliche Zahl
-als Summe von natürlichen Zahlen &ndash; auch _Partition_ oder _Zerlegung_ genannt &ndash; schreiben lässt?
-Wir präzisieren die Fragestellung noch mit folgender Ergänzung: Zwei Zerlegungen, die sich nur in der Reihenfolge ihrer Summanden unterscheiden, gelten als gleich.
-Konkret: Die Zerlegungen der ersten fünf natürlichen Zahlen sehen so aus:
+Wir beschäftigen uns in dieser Fallstudie mit der Fragestellung, auf wie viele Arten sich eine natürliche Zahl als Summe von natürlichen Zahlen &ndash; auch _Partition_ oder _Zerlegung_ genannt &ndash; schreiben lässt? Wir präzisieren die Fragestellung noch mit folgender Ergänzung: Zwei Zerlegungen, die sich nur in der Reihenfolge ihrer Summanden unterscheiden, gelten als gleich. Konkret: Die Zerlegungen der ersten fünf natürlichen Zahlen sehen so aus:
 
 ```
 1 = 1
@@ -320,22 +317,18 @@ wird nicht konstruiert, da bei allen berechneten Partitionen mindestens ein Summ
 **else**
 
 > Berechne rekursiv `PartitionSet`-Objekt *P*<sub>*n* - 1</sub> zur Zahl *n* - 1:
-> PartitionSet *P*<sub>*n* - 1</sub> = calculate (*n* - 1)
-
+> `PartitionSet` *P*<sub>*n* - 1</sub> = `calculate` (*n* - 1)
 > *P*<sub>result</sub> = leeres `PartitionSet`-Objekt
 
-> **for all** p &#x2208; *P*<sub>*n* - 1</sub> **do**
+> **for all** p &#x2208; *P*<sub>*n* - 1</sub> **do**<br/>
 
 > > Berechne *m* Kandidaten für eine Partition von *n* (*m* Anzahl der Summanden von *p*) durch sukzessive Addition von 1 auf die einzelnen Summanden
-
-> > Füge Kandidaten in *P*<sub>result</sub> ein ,wenn dieser noch nicht in *P*<sub>result</sub> enthalten ist
+> > Füge Kandidaten in *P*<sub>result</sub> ein, wenn dieser noch nicht in *P*<sub>result</sub> enthalten ist
 
 > **endfor**
 
 > Erzeuge Partition *P*<sub>1</sub> der Länge *n* (Summanden alle gleich 1)
-
 > Füge Partition *P*<sub>1</sub> in *P*<sub>result</sub> ein
-
 > **return** *P*<sub>result</sub>
 
 **endif**

@@ -31,12 +31,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpringerProblem", "Springer
 		AsciiDoc\SpringerProblem\knight_moves_006.png = AsciiDoc\SpringerProblem\knight_moves_006.png
 		AsciiDoc\SpringerProblem\knight_moves_007.png = AsciiDoc\SpringerProblem\knight_moves_007.png
 		AsciiDoc\SpringerProblem\knight_moves_008.png = AsciiDoc\SpringerProblem\knight_moves_008.png
+		AsciiDoc\SpringerProblem\knight_moves_01.svg = AsciiDoc\SpringerProblem\knight_moves_01.svg
+		AsciiDoc\SpringerProblem\knight_moves_02.svg = AsciiDoc\SpringerProblem\knight_moves_02.svg
+		AsciiDoc\SpringerProblem\knight_moves_03.svg = AsciiDoc\SpringerProblem\knight_moves_03.svg
+		AsciiDoc\SpringerProblem\knight_moves_04.svg = AsciiDoc\SpringerProblem\knight_moves_04.svg
+		AsciiDoc\SpringerProblem\knight_moves_05.svg = AsciiDoc\SpringerProblem\knight_moves_05.svg
+		AsciiDoc\SpringerProblem\knight_moves_06.svg = AsciiDoc\SpringerProblem\knight_moves_06.svg
+		AsciiDoc\SpringerProblem\knight_moves_07.svg = AsciiDoc\SpringerProblem\knight_moves_07.svg
 		AsciiDoc\SpringerProblem\knight_moves_possible_moves.png = AsciiDoc\SpringerProblem\knight_moves_possible_moves.png
+		AsciiDoc\SpringerProblem\knight_moves_possible_moves.svg = AsciiDoc\SpringerProblem\knight_moves_possible_moves.svg
 		AsciiDoc\SpringerProblem\knight_moves_solution_tree.png = AsciiDoc\SpringerProblem\knight_moves_solution_tree.png
 		AsciiDoc\SpringerProblem\Knight_Moves_Solutions.png = AsciiDoc\SpringerProblem\Knight_Moves_Solutions.png
+		AsciiDoc\SpringerProblem\knight_moves_start.svg = AsciiDoc\SpringerProblem\knight_moves_start.svg
 		AsciiDoc\SpringerProblem\Knight_Problem_Single_Solution.png = AsciiDoc\SpringerProblem\Knight_Problem_Single_Solution.png
 		AsciiDoc\SpringerProblem\KnightsProblem_PseudoCode_01.png = AsciiDoc\SpringerProblem\KnightsProblem_PseudoCode_01.png
 		AsciiDoc\SpringerProblem\SpringerProblem.adoc = AsciiDoc\SpringerProblem\SpringerProblem.adoc
+		AsciiDoc\SpringerProblem\SpringerProblem.md = AsciiDoc\SpringerProblem\SpringerProblem.md
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CollatzSequence", "CaseStudies\CollatzSequence\CollatzSequence.vcxproj", "{0531CAA7-922B-45E3-8B83-AC82D2186EBF}"
