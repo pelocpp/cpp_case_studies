@@ -38,6 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpringerProblem", "Springer
 		AsciiDoc\SpringerProblem\knight_moves_05.svg = AsciiDoc\SpringerProblem\knight_moves_05.svg
 		AsciiDoc\SpringerProblem\knight_moves_06.svg = AsciiDoc\SpringerProblem\knight_moves_06.svg
 		AsciiDoc\SpringerProblem\knight_moves_07.svg = AsciiDoc\SpringerProblem\knight_moves_07.svg
+		AsciiDoc\SpringerProblem\knight_moves_board_example.svg = AsciiDoc\SpringerProblem\knight_moves_board_example.svg
 		AsciiDoc\SpringerProblem\knight_moves_possible_moves.png = AsciiDoc\SpringerProblem\knight_moves_possible_moves.png
 		AsciiDoc\SpringerProblem\knight_moves_possible_moves.svg = AsciiDoc\SpringerProblem\knight_moves_possible_moves.svg
 		AsciiDoc\SpringerProblem\knight_moves_solution_tree.png = AsciiDoc\SpringerProblem\knight_moves_solution_tree.png

@@ -46,7 +46,8 @@ public:
             std::for_each(row.begin(), row.end(), [](auto& element) {
                 element = 0;
                 });
-            });
+            }
+        );
     }
 };
 

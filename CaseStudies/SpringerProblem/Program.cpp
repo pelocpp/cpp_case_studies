@@ -6,6 +6,11 @@
 // http://peterloos.de/index.php/m-multithreading/m-multithreading-tpl/58-a-mt-knights-problem
 // =====================================================================================
 
+
+// TODO a) : mit size_t und int für das Template ausprobieren ....
+
+// TODO b) : Wieso ist using Row = std::array<int, COLS>; nicht vom Typ T .... da steht ein int drinne ????
+
 void test_examples();
 
 int main()

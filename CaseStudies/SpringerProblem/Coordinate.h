@@ -9,7 +9,7 @@ template <typename T>
 class Coordinate {
 
 public:
-    Coordinate() : Coordinate(T{}, T{}) {};
+    Coordinate() = default;
     Coordinate(T row, T col) : m_row{ row }, m_col{ col } {}
 
 public:
@@ -23,8 +23,8 @@ public:
     }
 
 private:
-    T m_row;
-    T m_col;
+    T m_row{};
+    T m_col{};
 };
 
 template <typename T>
