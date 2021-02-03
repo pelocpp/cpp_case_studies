@@ -1,12 +1,25 @@
 <!-- Das Springerproblem -->
 
-Das Springerproblem (Schachspiel) ist auf den Schweizer Mathematiker *Leonhard Euler* (1707 &ndash; 1783) zurückzuführen. Dieser stellte sich vor über 200 Jahren, genauer im Jahre 1758, die folgende Frage: &ldquo;Gegeben sei ein leeres Schachbrett. Gibt es eine Zugfolge, mit der der Springer alle (schwarzen und weißen) Felder des Bretts genau einmal besucht?&rdquo;. Dabei legen wir zugrunde, dass der Springer auf dem Schachbrett in der Ecke unten links startet.
+Das *Springerproblem* ist auf den Schweizer Mathematiker *Leonhard Euler* (1707 &ndash; 1783) zurückzuführen. Dieser stellte sich vor über 200 Jahren, genauer gesagt im Jahre 1758, die folgende Frage: &ldquo;Gegeben sei ein leeres Schachbrett. Gibt es eine Zugfolge, mit der der Springer alle (schwarzen und weißen) Felder des Bretts genau einmal besucht?&rdquo;. Dabei legen wir zugrunde, dass der Springer auf dem Schachbrett in der Ecke unten links startet.
 
-Hmmm, eine gute Frage, wird sich der geneigte Leser jetzt sagen. Möglicherweise kann man sie innerhalb von wenigen Minuten selbst lösen, schließlich ist ein Schachbrett mit seinen 8&#x00D7;8 Feldern nicht so wirklich groß.
+Hmmm, eine gute Frage, wird sich der geneigte Leser jetzt sagen. Möglicherweise kann man sie innerhalb von wenigen Minuten selbst lösen, schließlich ist ein Schachbrett mit seinen 8&#x00D7;8 Feldern nicht so wirklich groß. Stellt man nach einer ersten Phase euphorischen Suchens ernüchternd fest, dass das Problem doch nicht so einfach zu lösen ist, kommt man vielleicht auf den revolutionären Gedanken, dem Problem mit Hilfe eines Softwareprogramms auf den Leib zu rücken. Dies ist natürlich möglich, wie wir in dieser Fallstudie am Beispiel von C++ zeigen werden.
 
-Stellt man nach einer ersten Phase euphorischen Suchens ernüchternd fest, dass das Problem vielleicht doch nicht so einfach zu lösen ist, kommt man vielleicht auf den revolutionären Gedanken, dem Problem mit Hilfe eine Softwareprogramms auf den Leib zu rücken. Dies ist natürlich möglich, wie wir in dieser Fallstudie am Beispiel von C++ zeigen werden.
+Neben der Implementierung einer *Backtracking*-Strategie betrachten wir auch Überlegungen, wie sich das Suchen von Zugfolgen parallelisieren lässt. Die Methode `std::async` und Objekte, die es &ldquo;erst in der Zukunft gibt&rdquo; (`std::future<T>`), kommen zum Einsatz.
 
 <!--more-->
+
+# Lernziele
+
+* Einheitliche Initialisierung und Default-Initialisierung
+* Einheitliche Initialisierung mit redundanten Typnamen
+* STL-Containerklassen `std::list<T>`, `std::vector<T>`, `std::array<T>` und `std::deque<T>`
+* STL-Algorithmus `std::for_each`
+* `if`-Anweisung mit Variablen-Initialisierung
+* Parallelverarbeitung mit `std::future<T>` und `std::async`
+* Schlüsselwort `auto`
+* Datentyp `size_t`
+
+# Einführung
 
 Der Standardalgorithmus für die Lösung solcher Probleme ist das sogenannte *Backtracking*. Die Idee hierbei ist, die Figur solange zu setzen, bis entweder eine Lösung gefunden wurde, oder man sie nicht mehr weitersetzen kann. In diesem Fall geht man dann einen Zug zurück und versucht, eine Lösung über einen alternativen Weg zu finden. Auf diese Weise findet das Verfahren immer eine oder mehrere Lösungen &ndash; wenn es sie denn gibt.
 
@@ -26,8 +39,7 @@ Prinzipiell ist von vorneherein nicht klar, ob es überhaupt eine Lösung gibt. 
 
 *Abbildung* 1: Eine Lösung des Springerproblems.
 
-Mit den Rechnern der aktuellen Generation wird es sehr schwer sein, für ein 8×8 Schachbrett alle Lösungen zu bestimmen.
-Wir konzentrieren uns deshalb in der Aufgabe auf kleinere Bretter. Die Anzahl realistisch ermittelbarer Lösungen für kleinere Schachbretter können Sie [Abbildung 2] entnehmen:
+Mit den Rechnern der aktuellen Generation wird es sehr schwer sein, für ein 8×8 Schachbrett alle Lösungen zu bestimmen. Wir konzentrieren uns deshalb in der Aufgabe auf kleinere Bretter. Die Anzahl realistisch ermittelbarer Lösungen für kleinere Schachbretter können Sie [Abbildung 2] entnehmen:
 
 ###### {#abbildung_2_springer_problem_number_of_solutions}
 
@@ -35,7 +47,7 @@ Wir konzentrieren uns deshalb in der Aufgabe auf kleinere Bretter. Die Anzahl re
 
 *Abbildung* 2: Einige Resultate des Springerproblems.
 
-Die Zugregel für einen Springer kann man so beschreiben: Von seinem Ausgangsfeld kann er zuerst zwei Felder in eine beliebige Richtung gehen (keine Diagonale) und dann noch ein Feld zur Seite treten. Befindet er sich in einem der mittleren Felder des Spielfeldes, so gibt es 8 Zielfelder, die er betreten kann (siehe dazu auch [Abbildung 3]). Steht er hingegen mehr in der Nähe des Schachbrettrands, so verringert sich die Anzahl der Sprungmöglichkeiten entsprechend.
+Damit kommen wir jetzt auf die Details des Springerproblems zu sprechen. Die Zugregel für einen Springer kann man so beschreiben: Von einem Ausgangsfeld kann dieser zuerst zwei Felder in eine beliebige Richtung gehen (keine Diagonale) und dann noch ein Feld zur Seite treten. Befindet er sich in einem der mittleren Felder des Spielfeldes, so gibt es 8 Zielfelder, die er betreten kann (siehe dazu auch [Abbildung 3]). Steht er hingegen mehr in der Nähe des Schachbrettrands, so verringert sich die Anzahl der Sprungmöglichkeiten entsprechend.
 
 ###### {#abbildung_3_springer_problem_possible_moves_of_knight}
 
@@ -45,8 +57,7 @@ Die Zugregel für einen Springer kann man so beschreiben: Von seinem Ausgangsfel
 
 # Lösungsstrategie &ldquo;Trial and Error&rdquo;
 
-Wir erläutern eine Lösungsstrategie für das Springerproblem am Beispiel eines 3&#x00D7;4-Schachbretts und erklären in einzelnen Schritten den Ablauf. Exemplarisch legen wir für den Springer die Startposition in der linken unteren Ecke fest, also das Feld mit den Koordinaten (2,0), wobei wir den Ursprung des Bretts in der linken, oberen Ecke zu Grunde legen. Es wäre aber auch jedes andere Feld zur Erörterung der Lösungsstrategie geeignet [Abbildung 4]. Die &ldquo;1&rdquo; symbolisiert, dass es sich um den ersten Zug des Springers handelt:
-
+Wir erläutern eine Lösungsstrategie für das Springerproblem am Beispiel eines 3&#x00D7;4-Schachbretts und erklären in einzelnen Schritten den Ablauf. Exemplarisch legen wir für den Springer die Startposition in der linken unteren Ecke fest, also das Feld mit den Koordinaten (2,0), wobei wir den Ursprung des Bretts in der linken, oberen Ecke zu Grunde legen ( [Abbildung 4]). Es wäre aber auch jedes andere Feld zur Erörterung der Lösungsstrategie geeignet. Die &ldquo;1&rdquo; symbolisiert, dass es sich um den ersten Zug des Springers handelt:
 
 ###### {#abbildung_4_springer_problem_knight_moves_01}
 {{< figure src="/img/springer_problem/knight_moves_start.svg" width="25%" >}}
@@ -110,16 +121,15 @@ In unserem konkreten Beispiel lässt sich nun zusammenfassend das Lösungsverfah
 
 TO BE DONE
 
-###### {#abbildung_13_springer_problem_pseudo_code}
+###### {#abbildung_13_springer_problem_pseudo_code_01}
 {{< figure src="/img/springer_problem/KnightsProblem_PseudoCode_01.png" width="90%" >}}
 *Abbildung* 13: Grobskizze einer rekursiven Methode FindMoves zur Bestimmung aller Zugfolgen.
 
-Wir schließen die theoretischen Vorarbeiten hiermit ab, es folgen Hinweise für eine Umsetzung des Lösungsverfahrens in einer *Modern C++*-Anwendung.
+Wir schließen die theoretischen Vorarbeiten hiermit ab, es folgen Hinweise für eine Umsetzung des Lösungsverfahrens in eine *Modern C++*-Anwendung.
 
 # Klasse `Coordinate`
 
-Für die Koordinaten des Schachbretts verwenden wir eine Klasse `Coordinate`, um zwei ganzzahlige Werte *x* und *y*, die eine Position auf dem Schachbrett beschreiben, zu kapseln. Dafür gäbe es natürlich in C++ mehrere Möglichkeiten, eine von ihnen wäre der Einsatz der STL-Klasse `std::pair<T>`.
-Ich habe mich für eine rudimentäre C++-Klasse `Coordinate` entschieden, deren Definition Sie [Tabelle 1] entnehmen können:
+Für die Koordinaten des Schachbretts verwenden wir eine Klasse `Coordinate`, um zwei ganzzahlige Werte *x* und *y*, die eine Position auf dem Schachbrett beschreiben, zu kapseln. Dafür gäbe es natürlich in C++ mehrere Möglichkeiten, eine von ihnen wäre der Einsatz der STL-Klasse `std::pair<T>`. Ich habe mich für eine rudimentäre C++-Klasse `Coordinate` entschieden, deren Definition Sie [Tabelle 1] entnehmen können:
 
 ###### {#tabelle_1_class_coordinate}
 
@@ -136,8 +146,7 @@ Ich habe mich für eine rudimentäre C++-Klasse `Coordinate` entschieden, deren 
 
 # Klasse `KnightProblemBoard`
 
-Für das Schachbrett selbst definieren wir eine Klasse `KnightProblemBoard`. Im Großen und Ganzen kann man sagen, dass diese Klasse eine zwei-dimensionale
-Ausprägung eines Objekts des Typs `std::array<>` kapselt. Mit seiner Hilfe lässt sich die Implementierung der noch ausstehenden Klasse `KnightProblemSolver` vereinfachen.
+Für das Schachbrett selbst definieren wir eine Klasse `KnightProblemBoard`. Im Großen und Ganzen kann man sagen, dass diese Klasse eine zwei-dimensionale Ausprägung eines Objekts des Typs `std::array<>` kapselt. Mit seiner Hilfe lässt sich die Implementierung der noch ausstehenden Klasse `KnightProblemSolver` vereinfachen.
 
 Ein Wert 0 im `std::array<>`-Objekt besagt, dass das korrespondierende Feld noch nicht vom Springer besucht wurde. Ganzzahlige Werte größer Null besagen, dass der Springer schon auf dem Feld war. Der Wert selbst gibt an, beim wievielten Zug das Feld betreten wurde:
 
@@ -160,43 +169,34 @@ Die Momentaufnahme des Beispiels aus [Abbildung 14] besagt, dass auf dem Schachb
 
 *Tabelle* 2: Wesentliche Elemente der Klasse `KnightProblemBoard`.
 
-<!-- ########################################################################################### -->
-
 # Klasse `KnightProblemSolver`
 
-Wir kommen auf das Kernstück der Aufgabe zu sprechen. In der Klasse `KnightProblemSolver` wird auf Basis der Backtracking-Lösungsstrategie die Menge aller Springerproblemlösungen zu einer bestimmten Schachbrettgröße berechnet. Zunächst stellen wir in [Tabelle 3] den Konstruktor und die Eigenschaften der `KnightProblemSolver`-Klasse vor:
+Wir kommen auf das Kernstück der Aufgabe zu sprechen. In der Klasse `KnightProblemSolver` wird auf Basis der Backtracking-Lösungsstrategie die Menge aller Springerproblemlösungen zu einer bestimmten Schachbrettgröße berechnet. Zunächst stellen wir in [Tabelle 3] die *getter*-Methoden der `KnightProblemSolver`-Klasse vor:
 
 ###### {#tabelle_3_class_knightproblemsolver_getters}
 
-| Element | Beschreibung |
+| *getter*-Methode | Beschreibung |
 | :---- | :---- |
 | *getter* `getRows()` | `int getRows();`<br/>Liefert die Anzahl der Reihen des Schachbretts zurück. |
 | *getter* `getCols()` | `int getCols();`<br/>Liefert die Anzahl der Spalten des Schachbretts zurück. |
-| *getter* `getSolutions()` | `std::list<std::vector<Coordinate<int>>> getSolutions();`<br/>Liefert die Liste aller ermittelten Lösungen des Springerzug-Problems zurück. Im Falle des Beispiels aus [Abbildung 11] sieht die Liste am Ende des Programms so aus:<br/>`{`<br/>&nbsp;&nbsp;`{`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{2,0}, {1,2}, {0,0}, {2,1}, {1,3}, {0,1},`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{2,2}, {0,3}, {1,1}, {2,3}, {0,2}, {1,0}`<br/>&nbsp;&nbsp;`},`<br/>&nbsp;&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{2,0}, {1,2}, {0,0}, {2,1}, {1,3}, {0,1},`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{2,2}, {1,0}, {0,2}, {2,3}, {1,1}, {0,3}`<br/>&nbsp;&nbsp;`}`<br/>`}`<br/> |
-| Operator `<<` | `friend std::ostream& operator<< (std::ostream&, const KnightProblemSolver&);`<br/>Gibt ein `KnightProblemSolver`-Objekt auf der Konsole aus ???. |
+| *getter* `getSolutions()` | `std::list<std::vector<Coordinate> getSolutions();`<br/>Liefert die Liste aller ermittelten Lösungen des Springerzug-Problems zurück. Im Falle des Beispiels aus [Abbildung 11] sieht die Liste am Ende des Programms so aus:<br/>`0: {2,0} {1,2} {0,0} {2,1} {1,3} {0,1} {2,2} {0,3} {1,1} {2,3} {0,2} {1,0}`<br/>`1: {2,0} {1,2} {0,0} {2,1} {1,3} {0,1} {2,2} {1,0} {0,2} {2,3} {1,1} {0,3}`<br/>`Found: 2`<br/> |
 
 *Tabelle* 3: *getter*-Methoden der Klasse `KnightProblemSolver`.
 
-Weiter geht es mit den Instanzvariablen eines `KnightProblemSolver`-Objekts.
-Im Mittelpunkt steht hier offensichtlich ein Objekt des Typs `KnightProblemBoard`, siehe [Tabelle 2].
-Weitere, wichtige Instanzvariablen der `KnightProblemSolver`-Klasse, sofern sie durch die *getter*-Methoden aus [Tabelle 3] nicht schon abgehandelt wurden, entnehmen Sie bitte [Tabelle 4]:
-
-<!-- ??????????????????????????????????????????????????????????????????????  -->
+Weiter geht es mit den Instanzvariablen eines `KnightProblemSolver`-Objekts. Im Mittelpunkt steht hier offensichtlich ein Objekt des Typs `KnightProblemBoard`, siehe [Tabelle 2]. Weitere, wichtige Instanzvariablen der `KnightProblemSolver`-Klasse, sofern sie durch die *getter*-Methoden aus [Tabelle 3] nicht schon abgehandelt wurden, entnehmen Sie bitte [Tabelle 4]:
 
 ###### {#tabelle_4_class_knightproblemsolver_members}
 
 | Instanzvariable | Beschreibung |
 | :---- | :---- |
 | `m_board` | `KnightProblemBoard m_board;`<br/>Repräsentiert das Schachbrett, das durch ein `KnightProblemSolver`-Objekt verwaltet wird. |
-| `m_current` | `std::vector<Coordinate<int>> m_current;`<br/>Liste von `Coordinate`-Objekten zur Ablage eines Springerzugs. Zu Beginn der Suche ist das `m_current`-Objekt logischerweise leer. Dem Springerzug aus [Abbildung 14] entspricht das Listenobjekt<br/>`{ {2,0}, {1,2}, {0,0}, {2,1} }`. |
-| `m_solutions` | `std::list<std::vector<Coordinate<int>>> m_solutions;`<br/>Liste der zu einem bestimmten Zeitpunkt während der Ausführung des  *Backtracking*-Algorithmus gefundenen Lösungen. |
+| `m_current` | `std::vector<Coordinate> m_current;`<br/>Liste von `Coordinate`-Objekten zur Ablage eines Springerzugs. Zu Beginn der Suche ist das `m_current`-Objekt logischerweise leer. Dem Springerzug aus [Abbildung 14] entspricht das Listenobjekt<br/>`{ {2,0}, {1,2}, {0,0}, {2,1} }`. |
+| `m_solutions` | `std::list<std::vector<Coordinate>> m_solutions;`<br/>Liste der zu einem bestimmten Zeitpunkt während der Ausführung des  *Backtracking*-Algorithmus bislang gefundenen Lösungen. |
 | `m_moveNumber` | `int m_moveNumber;`<br/>Zähler für den Sprung im aktuellen Springerzug. Die Variable nimmt Werte zwischen 1 (Ausgangsposition) und Zeilenanzahl &#x00D7; Spaltenanzahl (letzter Zug eines Lösungszugs) an. |
 
 *Tabelle* 4: Zentrale Instanzvariablen der Klasse `KnightProblemSolver`.
 
-Wie findet man nun eine Folge von Springerzügen auf dem Schachbrett? Die Grobskizze der Methode `findMoves` aus [Abbildung 13] gilt es nun zu verfeinern. Hierzu betrachten wir in [Tabelle 4] zuerst alle Hilfsmethoden der Klasse `KnightProblemSolver`, die zur Realisierung der `findMoves`-Methode beitragen:
-
-<!-- OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  -->
+Wie findet man nun eine Folge von Springerzügen auf dem Schachbrett? Die Grobskizze der Methode `findMoves` aus [Abbildung 13] gilt es nun zu verfeinern. Hierzu betrachten wir in [Tabelle 5] zuerst alle Hilfsmethoden der Klasse `KnightProblemSolver`, die zur Realisierung der `findMoves`-Methode beitragen:
 
 ###### {#tabelle_5_class_knightproblemsolver_helpers}
 
@@ -206,12 +206,12 @@ Wie findet man nun eine Folge von Springerzügen auf dem Schachbrett? Die Grobsk
 | `unsetKnightMoveAt` | `void unsetKnightMoveAt(const Coordinate& coord);`<br/>Macht einen Springerzug auf dem Schachbrett an der Position `coord` rückgängig. Im korrespondierenden `std::array<>`-Objekt sollte der Wert 0 eingetragen werden. |
 | `inRange` | `bool inRange(const Coordinate& coord);`<br/>Liefert `true` oder `false` in Abhängigkeit davon zurück, ob die Werte des `Coordinate`-Objekts ein gültiges Feld auf dem Schachbrett spezifizieren oder nicht. |
 | `canMoveTo` | `bool canMoveTo(const Coordinate& coord);`<br/>Liefert `true` zurück, wenn der Springer von der aktuellen Position auf das Feld mit der Position `coord` springen kann. Die Koordinaten müssen gültig sein und das Feld darf von dem Springer noch nicht durch einen vorangegangenen Zug betreten worden sein. |
-| `nextKnightMoves` | `std::vector<Coordinate> nextKnightMoves(const Coordinate& coord);`<br/>Erstellt eine Liste mit allen möglichen Folgezügen, ausgehend von der Position `coord`. Ein Springer, der auf einem Schachbrett auf dem Feld mit den Koordinaten (x,y) steht, kann im nächsten Zug die Felder mit folgenden Koordinaten erreichen (siehe auch [Abbildung 3]):<br/>(*x*-1, *y*+2) und (*x*-1, *y*-2),<br/>(*x*-2 , *y*+1) und (*x*-2, *y*-1),<br/>(*x*+1, *y*-2) und (*x*+1, *y*+2),<br/>(*x*+2, *y*+1) und (*x*+2, *y*-1)<br/>Hierbei ist natürlich jeweils zu überprüfen, ob der Zielzug überhaupt auf dem Schachbrett liegt, siehe dazu die Methoden `inRange` bzw. `canMoveTo`. Folglich kann die Resultatliste bis zu acht `Coordinate`-Elemente enthalten. |
+| `nextKnightMoves` | `std::vector<Coordinate>`<br/>`nextKnightMoves(const Coordinate& coord);`<br/>Erstellt eine Liste mit allen möglichen Folgezügen, ausgehend von der Position `coord`. Ein Springer, der auf einem Schachbrett auf dem Feld mit den Koordinaten (*x*,*y*) steht, kann im nächsten Zug die Felder mit folgenden Koordinaten erreichen (siehe dazu auch [Abbildung 3]):<br/>(*x*-1, *y*+2) und (*x*-1, *y*-2),<br/>(*x*-2 , *y*+1) und (*x*-2, *y*-1),<br/>(*x*+1, *y*-2) und (*x*+1, *y*+2),<br/>(*x*+2, *y*+1) und (*x*+2, *y*-1)<br/>Hierbei ist natürlich jeweils zu überprüfen, ob der Zielzug überhaupt auf dem Schachbrett liegt, siehe dazu die Methoden `inRange` bzw. `canMoveTo`. Folglich kann die Resultatliste bis zu acht `Coordinate`-Elemente enthalten. |
 | `isSolution` | `bool isSolution();`<br/>Liefert `true` zurück, wenn aktuell auf dem Schachbrett eine Lösung des Springerproblems vorliegt, andernfalls `false`. |
 
 *Tabelle* 5: Hilfsmethoden der Klasse `KnightProblemSolver`.
 
-Wir sind so gut wie am Ziel angekommen. Die einzige noch fehlende Methode FindMoves ist gemäß [Tabelle 6] zu definieren:
+Wir sind so gut wie am Ziel angekommen. Die einzige noch fehlende Methode `findMoves` ist gemäß [Tabelle 6] zu definieren:
 
 ###### {#tabelle_6_class_knightproblemsolver_findmoves}
 
@@ -220,6 +220,94 @@ Wir sind so gut wie am Ziel angekommen. Die einzige noch fehlende Methode FindMo
 | `findMoves` | `int findMoves(const Coordinate& coord);`<br/>Bestimmt alle Lösungen des Springerproblems, falls vorhanden. Zum Beginn der Suche ist der Springer auf die Position `coord` gesetzt, typischerweise die linke untere Ecke des Schachbretts. Die Lösungen sind über die *getter*-Methode `getSolutions()` verfügbar. |
 
 *Tabelle* 6: Methode `findMoves` der Klasse `KnightProblemSolver`.
+
+Einen Pseudo-Code der `findMoves`-Methode finden Sie in [Abbildung 15] vor. Beachten Sie, wie die Hilfsmethoden der Klasse `KnightProblemSolver` aus [Tabelle 4] zum Einsatz gelangen:
+
+###### {#abbildung_15_springer_problem_pseudo_code_02}
+TO BE DONE
+*Abbildung* 15: Verfeinerung der rekursiven Methode `findMoves` zur Bestimmung aller Zugfolgen.
+
+
+# Parallelisierung des Algorithmus
+
+Wie kann man die Suche nach Lösungen des Springerproblems parallelisieren? Ist der Springer erst einmal auf seinem Startfeld positioniert, können die versuchsweisen Bestimmungen der Zugfolgen von jeweils einem separaten Thread durchgeführt werden. Da jeder Versuch zur Lösung des Springerproblems sich Notizen auf dem Schachbrett macht (Eintragung der Zugnummer), benötigt jede Task ein eigenes Schachbrett. Im Vergleich zu dem zeitlichen Gewinn, der bei der Parallelisierung des Algorithmus entsteht, ist diese Anforderung an die Implementierung jedoch als äußerst marginal einzustufen.
+
+Sie haben soeben das *Master*-*Slave*-Modell als eine Organisationsform zur Parallelisierung von Algorithmen kennen gelernt ([Abbildung 16]). Ein Master-Thread ist bei diesem Modell für die grundlegenden Aufgaben wie Organisation des Schachbretts, seine Visualisierung oder den Empfang und die Verwaltung asynchron eintreffender Lösungen zuständig. Die eigentliche Aufgabe, das Suchen nach Zugfolgen auf dem Schachbrett, wird an einen oder mehrere Slave-Threads delegiert. In Abhängigkeit von den zur Verfügung stehenden Ressourcen des unterlagerten Rechners entscheidet der Master-Thread, wie viele Slave-Threads zu erzeugen sind &ndash; oder auch zu einem späteren Zeitpunkt noch zusätzlich nachgestartet werden können. Alle Daten, die vom Master- und seinen Slave-Threads gemeinsam benutzt werden, dürfen natürlich nur nach der Strategie des &ldquo;gegenseitigen Ausschlusses&rdquo; benutzt werden.
+
+###### {#abbildung_16_springer_problem_master_slave_model}
+{{< figure src="/img/springer_problem/knight_moves_master_slave.svg" width="70%" >}}
+*Abbildung* 16: *Master*-*Slave*-Modell als eine Organisationsform paralleler Algorithmen.
+
+Ergänzen Sie Ihre Realiierung der Klasse `KnightProblemSolver` um eine Methode `findMovesParallel`-Methode, die parallel arbeitet. Die Startposition des Springers bleibt dabei zunächst in der linken unteren Ecke des Schachbretts. Nun berechnen Sie alle möglichen Züge, die der Springer von dieser Startposition aus tätigen kann. Damit haben Sie gleichzeitig die Anzahl der Slave-Threads gefunden, die Sie mit der parallelen Lösung des Problems beauftragen können. Pro Thread ist nun eine Kopie des Schachbretts anzulegen. Auf allen Kopien wird die Startposition des Springers vermerkt. Die nun folgenden Aufrufe der `findMoves`-Methode werden jeweils in den Kontext eines Slave-Threads ausgelagert. Die jeweils zweite Zugposition des Springers ist dem Thread als Parameter zu übergeben. Alle nachfolgend rekursiv stattfindenden Aufrufe der `findMoves`-Methode belassen wir &ndash; der Einfachheit halber &ndash; im jeweils gestarteten Slave-Thread. In einer Verfeinerung Ihrer Implementierung wären an dieser Stelle Optimierungen der Strategie vorstellbar. Jeder Slave-Thread kann auch selbst sein eigener *Master* werden und so weitere Slave-Threads ins Leben rufen. Es ist also eine Hierarchiebildung im *Master*-*Slave*-Modell möglich!
+
+*Hinweis*: Wenn wir die Startposition des Springers in der linken unteren Ecke belassen, können wir, unabhängig von der Größe des Schachbretts, immer nur zwei Slave-Threads ins Leben rufen, da es nur zwei unmittelbare Folgezüge bei dieser Startposition gibt. Bei hinreichend großem Schachbrett sollten Sie die Startposition des Springers in die Mitte des Schachbretts verlagern (siehe dazu auch [Abbildung 3]). Dann gibt es acht Folgezüge und Sie können acht Slave-Threads mit der parallelen Lösung des Springerproblems beauftragen!
+
+Vergleichen Sie die Laufzeiten Ihres Programms bei sequentieller und paralleler Suche. Wie groß sind die Unterschiede, die Sie beobachten? Gelingt es Ihnen, die Informationen in [Abbildung 2] zu erweitern?
+
+# Lösung
+
+In [Listing 1] stoßen wir auf den benutzerdefinierten Datentyp `Coordinate`. Mit Variablen seines Typs wird auf dem Schachbrett eine Springerposition beschrieben:
+
+###### {#listing_class_coordinate_decl}
+
+```cpp
+01: class Coordinate {
+02: 
+03:     friend std::ostream& operator<< (std::ostream&, const Coordinate&);
+04: 
+05: public:
+06:     Coordinate() = default;
+07:     Coordinate(size_t row, size_t col) : m_row{ row }, m_col{ col } {}
+08: 
+09: public:
+10:     // getter/setter
+11:     inline size_t getRow() const noexcept { return m_row; }
+12:     inline size_t getCol() const noexcept { return m_col; }
+13: 
+14:     // public interface
+15:     Coordinate fromOffset(size_t rowOfs, size_t colOfs) const noexcept;
+16: 
+17: private:
+18:     size_t m_row{};
+19:     size_t m_col{};
+20: };
+```
+
+*Listing* 1: Klasse `Coordinate`: Definition.
+
+Wir definieren in [Listing 1] die beiden Variablen `m_row` und `m_col` vom Typ `size_t`, da sie als Index für einen STL-Container verwendet werden.
+Die Methode `fromOffset` und der Operator `<<` sind einfachst zu implementieren ([Listing 2]):
+
+###### {#listing_class_coordinate_impl}
+
+```cpp
+01: Coordinate Coordinate::fromOffset(size_t rowOfs, size_t colOfs) const noexcept {
+02:     return { m_row + rowOfs, m_col + colOfs };
+03: }
+04: 
+05: std::ostream& operator<< (std::ostream& os, const Coordinate& coord) {
+06:     os << "{" << coord.m_row << "," << coord.m_col << "}";
+07:     return os;
+08: }
+```
+
+*Listing* 2: Klasse `Coordinate`: Implementierung.
+
+Beachten Sie in Zeile 2 von [Listing 2] die Anwendung der einheitliche Initialisierung unter Weglassung des Typnamens (hier: `Coordinate`).
+Da der Compiler diese Information während des Übersetzungsvorgangs kennt, können Objekte bei der Rückgabe aus Methoden ohne
+Angabe des Typs erzeugt werden.
+
+Damit sind wir schon beim Schachbrett angekommen. Wir betrachten nicht nur Schachbretter in der Standardgröße mit 8&#x00D7;8 Feldern.
+Aus diesem Grund bietet es sich an, eine Klasse `KnightProblemBoard` mit Wertparametern (*non-type template parameter*) für die Anzahl der Reihen
+und Spalten zu definieren. Damit kann der Übersetzer pro Berechnung eine optimale Schachbrett-Klasse generieren, da er &ndash; zumindest in unseren Anwendungsfällen &ndash;
+die Anzahl der Reihen und Spalten des Schachbretts bereits kennt!
+
+Bei Gebrauch von Templates weichen wir vom üblichen C++ Entwicklungsmodell für Klassen (zwei Dateien für die Schnittstelle &ndash; Header-Datei &ndash; und
+die Realisierung der Klasse &ndash; Implementierungsdatei) ab. Wir wenden das so genannte *Inclusion Model* an und implmentieren daher die Klasse `KnightProblemBoard`
+in einer einzigen Datei, so wie es in anderen Programmiersprachen (zum Beispiel C# oder Java) auch üblich ist.
+
+WEITER: Realisierng `KnightProblemBoard` 
+
 
 ****
 
@@ -246,13 +334,18 @@ Wir sind so gut wie am Ziel angekommen. Die einzige noch fehlende Methode FindMo
 [Abbildung 11]: #abbildung_11_springer_problem_knight_moves_07
 
 [Abbildung 12]: #abbildung_12_springer_problem_solution_tree
-[Abbildung 13]: #abbildung_13_springer_problem_pseudo_code
+[Abbildung 13]: #abbildung_13_springer_problem_pseudo_code_01
 
 [Abbildung 14]: #abbildung_14_springer_problem_example_board
 
+[Abbildung 15]: #abbildung_15_springer_problem_pseudo_code_02
+
+
+[Listing 1]: #listing_class_coordinate_decl
+[Listing 2]: #listing_class_coordinate_impl
+[Listing 3]: #listing_class_knightproblemboard_decl
+[Listing 4]: #listing_class_knightproblemboard_impl
+
+
 <!-- End-of-File -->
-
-
-
-
 

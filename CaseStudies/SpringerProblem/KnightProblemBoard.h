@@ -5,23 +5,22 @@
 #pragma once
 
 // =====================================================================================
-// defining board of knight problem
+// defining 'KnightProblemBoard' template using 'inclusion model'
 
-template <typename T, int ROWS, int COLS>
+template <size_t ROWS, size_t COLS>
 class KnightProblemBoard
 {
-    using Row = std::array<int, COLS>;
+private:
+    std::array<std::array<int, COLS>, ROWS> m_board;
 
 public:
+
     KnightProblemBoard() {
         clearBoard();
     }
 
 private:
-    std::array<Row, ROWS> m_board;
-
-private:
-    void verifyCoordinate(const Coordinate<T>& coord) const {
+    void verifyCoordinate(const Coordinate& coord) const {
 
         if constexpr (RangeCheck) {
             if (coord.getRow() >= ROWS || coord.getCol() >= COLS) {
@@ -31,18 +30,18 @@ private:
     }
 
 public:
-    int& at(const Coordinate<T>& coord) {
+    int& at(const Coordinate& coord) {
         verifyCoordinate(coord);
         return m_board[coord.getRow()][coord.getCol()];
     }
 
-    const int& at(const Coordinate<T>& coord) const {
+    const int& at(const Coordinate& coord) const {
         verifyCoordinate(coord);
         return m_board[coord.getRow()][coord.getCol()];
     }
 
     void clearBoard() {
-        std::for_each(m_board.begin(), m_board.end(), [](Row& row) {
+        std::for_each(m_board.begin(), m_board.end(), [](auto& row) {
             std::for_each(row.begin(), row.end(), [](auto& element) {
                 element = 0;
                 });
@@ -50,6 +49,24 @@ public:
         );
     }
 };
+
+// =====================================================================================
+// defining 'operator<<' for chess board
+
+template <size_t ROWS, size_t COLS>
+std::ostream& operator<< (std::ostream& os, const KnightProblemBoard<ROWS, COLS>& board) {
+
+    for (size_t row = 0; row != ROWS; ++row) {
+        for (size_t col = 0; col != COLS; ++col) {
+            Coordinate coord{ row, col };
+            int moveNumber = board.at(coord);
+            os << std::setw(4) << moveNumber << ' ';
+        }
+        os << std::endl;
+    }
+
+    return os;
+}
 
 // =====================================================================================
 // End-of-File

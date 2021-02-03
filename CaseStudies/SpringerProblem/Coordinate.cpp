@@ -1,18 +1,20 @@
 // =====================================================================================
-// Common.h
+// Coordinate.cpp
 // =====================================================================================
 
-#pragma once
+#include <iostream>
 
-// =====================================================================================
-// defining common constants
+#include "Coordinate.h"
 
-constexpr size_t Rows = 5;
-constexpr size_t Cols = 5;
+// public interface
+Coordinate Coordinate::fromOffset(size_t rowOfs, size_t colOfs) const noexcept {
+    return { m_row + rowOfs, m_col + colOfs };
+}
 
-constexpr bool Verbose = true;
-constexpr bool VerboseSolver = false;
-constexpr bool RangeCheck = false;
+std::ostream& operator<< (std::ostream& os, const Coordinate& coord) {
+    os << "{" << coord.m_row << "," << coord.m_col << "}";
+    return os;
+}
 
 // =====================================================================================
 // End-of-File

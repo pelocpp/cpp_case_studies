@@ -7,17 +7,16 @@
 // =====================================================================================
 // defining 'operator<<' for solutions as a global function
 
-template <typename T>
-std::ostream& operator<< (std::ostream& os, const std::list<std::vector<Coordinate<T>>>& solutions) {
+std::ostream& operator<< (std::ostream& os, const std::list<std::vector<Coordinate>>& solutions) {
 
     int counter = 0;
     int width = (solutions.size() < 10) ? 1 : (solutions.size() < 100) ? 2 : 5;
 
-    for (const std::vector<Coordinate<T>>& solution : solutions) {
+    for (const std::vector<Coordinate>& solution : solutions) {
 
         os << std::setw(width) << counter << ": ";
 
-        for (const Coordinate<T>& coordinate : solution) {
+        for (const Coordinate& coordinate : solution) {
             os << coordinate << " ";
         }
         counter++;
@@ -30,30 +29,30 @@ std::ostream& operator<< (std::ostream& os, const std::list<std::vector<Coordina
 // =====================================================================================
 // defining 'KnightProblemSolver' template using 'inclusion model'
 
-template <typename T, T HEIGHT, T WIDTH>
+template <size_t HEIGHT, size_t WIDTH>
 class KnightProblemSolver 
 {
 public:
-    using Solution = std::vector<Coordinate<T>>;
+    using Solution = std::vector<Coordinate>;
     using ListSolutions = std::list<Solution>;
 
 private:
-    KnightProblemBoard<T, HEIGHT, WIDTH> m_board;        // chess board
-    Solution                             m_current;      // solution being in construction
-    ListSolutions                        m_solutions;    // list of found solutions
-    T                                    m_moveNumber;   // number of last knight's move
+    KnightProblemBoard<HEIGHT, WIDTH> m_board;        // chess board
+    Solution                          m_current;      // solution being in construction
+    ListSolutions                     m_solutions;    // list of found solutions
+    int                               m_moveNumber;   // number of last knight's move
 
 public:
     // c'tor
-    KnightProblemSolver() : m_moveNumber{ T{} } {}
+    KnightProblemSolver() : m_moveNumber{ 0 } {}
 
 public:
     // =================================================================================
     // public interface
 
     // getter/setter
-    T getHeight() const noexcept { return HEIGHT; }
-    T getWidth() const noexcept { return WIDTH; }
+    size_t getHeight() const noexcept { return HEIGHT; }
+    size_t getWidth() const noexcept { return WIDTH; }
 
     ListSolutions getSolutions() const {
         return m_solutions;
@@ -76,7 +75,7 @@ public:
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
         // start at lower left corner            
-        Coordinate<T> start{ HEIGHT - T{ 1 }, T{} };
+        Coordinate start{ HEIGHT - 1, 0 };
         Logger<VerboseSolver>::log(std::cout, "   ... Starting sequential solver at ", start);
         int count = findMovesSequential(start);
 
@@ -102,7 +101,7 @@ public:
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
         // start at lower left corner            
-        Coordinate<T> start{ HEIGHT - T{ 1 }, T{} };
+        Coordinate start{ HEIGHT - 1, 0 };
         Logger<VerboseSolver>::log(std::cout, "   ... Starting parallel solver at ", start);
         int count = findMovesParallel(start, maxDepth);
 
@@ -120,7 +119,7 @@ public:
     }
 
     // functor notation needed for std::async
-    ListSolutions operator()(const Coordinate<T> coord, int maxDepth) {
+    ListSolutions operator()(const Coordinate coord, int maxDepth) {
 
         Logger<VerboseSolver>::log(std::cout, "   ### Launching parallel solver at ", coord, ", maxDepth = ", maxDepth);
         Logger<Verbose>::logTID(std::cout);
@@ -137,7 +136,7 @@ private:
     // internal helper methods
 
     // private helper - algorithm to solve the Knight's Tour problem sequentially
-    int findMovesSequential(const Coordinate<T>& coord) {
+    int findMovesSequential(const Coordinate& coord) {
 
         setKnightMoveAt(coord);
         m_current.push_back(coord);
@@ -148,10 +147,10 @@ private:
         }
         else {
             // determine list of possible next moves
-            std::vector<Coordinate<T>> nextMoves = nextKnightMoves(coord);
+            std::vector<Coordinate> nextMoves = nextKnightMoves(coord);
 
             // do next moves sequential
-            for (const Coordinate<T>& move : nextMoves) {
+            for (const Coordinate& move : nextMoves) {
                 findMovesSequential(move);
             }
         }
@@ -163,17 +162,17 @@ private:
     }
     
     // private helper - algorithm to solve the Knight's Tour problem in parallel
-    int findMovesParallel(const Coordinate<T>& coord, int maxDepth) {
+    int findMovesParallel(const Coordinate& coord, int maxDepth) {
 
         setKnightMoveAt(coord);
         m_current.push_back(coord);
 
         // determine list of possible next moves
-        std::vector<Coordinate<T>> nextMoves = nextKnightMoves(coord);
+        std::vector<Coordinate> nextMoves = nextKnightMoves(coord);
         std::deque<std::future<ListSolutions>> futures;
 
         int count{};
-        for (const Coordinate<T>& move : nextMoves) {
+        for (const Coordinate& move : nextMoves) {
 
             KnightProblemSolver slaveSolver = *this;  // make a copy of the solver including the current board
             slaveSolver.clearSolutions();  // don't reuse solutions of current solver
@@ -220,50 +219,50 @@ private:
     }
 
     // occupy square on the chess board
-    void setKnightMoveAt(const Coordinate<T>& coord) {
+    void setKnightMoveAt(const Coordinate& coord) {
         m_moveNumber++;
         m_board.at(coord) = m_moveNumber;
     }
 
     // release square on the chess board
-    void unsetKnightMoveAt(const Coordinate<T>& coord) {
+    void unsetKnightMoveAt(const Coordinate& coord) {
         m_moveNumber--;
         m_board.at(coord) = 0;
     }
 
     // compute list of next possible moves
-    std::vector<Coordinate<T>> nextKnightMoves(const Coordinate<T>& coord) {
-        std::vector<Coordinate<T>> list;
+    std::vector<Coordinate> nextKnightMoves(const Coordinate& coord) {
+        std::vector<Coordinate> list;
 
-        if (Coordinate<T> tmp{ coord.fromOffset(2, 1) }; canMoveTo(tmp))
+        if (Coordinate tmp{ coord.fromOffset(2, 1) }; canMoveTo(tmp))
         {
             list.push_back(tmp);
         }
-        if (Coordinate<T> tmp{ coord.fromOffset(1, 2) }; canMoveTo(tmp))
+        if (Coordinate tmp{ coord.fromOffset(1, 2) }; canMoveTo(tmp))
         {
             list.push_back(tmp);
         }
-        if (Coordinate<T> tmp{ coord.fromOffset(-2, 1) }; canMoveTo(tmp))
+        if (Coordinate tmp{ coord.fromOffset(-2, 1) }; canMoveTo(tmp))
         {
             list.push_back(tmp);
         }
-        if (Coordinate<T> tmp{ coord.fromOffset(-1, 2) }; canMoveTo(tmp))
+        if (Coordinate tmp{ coord.fromOffset(-1, 2) }; canMoveTo(tmp))
         {
             list.push_back(tmp);
         }
-        if (Coordinate<T> tmp{ coord.fromOffset(2, -1) }; canMoveTo(tmp))
+        if (Coordinate tmp{ coord.fromOffset(2, -1) }; canMoveTo(tmp))
         {
             list.push_back(tmp);
         }
-        if (Coordinate<T> tmp{ coord.fromOffset(1, -2) }; canMoveTo(tmp))
+        if (Coordinate tmp{ coord.fromOffset(1, -2) }; canMoveTo(tmp))
         {
             list.push_back(tmp);
         }
-        if (Coordinate<T> tmp{ coord.fromOffset(-2, -1) }; canMoveTo(tmp))
+        if (Coordinate tmp{ coord.fromOffset(-2, -1) }; canMoveTo(tmp))
         {
             list.push_back(tmp);
         }
-        if (Coordinate<T> tmp{ coord.fromOffset(-1, -2) }; canMoveTo(tmp))
+        if (Coordinate tmp{ coord.fromOffset(-1, -2) }; canMoveTo(tmp))
         {
             list.push_back(tmp);
         }
@@ -272,14 +271,14 @@ private:
     }
 
     // checks, whether coordinate does exist on the chess board
-    bool inRange(const Coordinate<T>& coord) {
+    bool inRange(const Coordinate& coord) {
         return
             (coord.getRow() >= 0) && (coord.getRow() < HEIGHT) && 
             (coord.getCol() >= 0) && (coord.getCol() < WIDTH);
     }
 
     // checks, whether coordinate is valid and is still not taken
-    bool canMoveTo(const Coordinate<T>& coord) {
+    bool canMoveTo(const Coordinate& coord) {
         return inRange(coord) && (m_board.at(coord) <= 0);
     }
 

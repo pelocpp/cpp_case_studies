@@ -25,87 +25,118 @@
 
 namespace SpringerProblem {
 
-    using Solution = KnightProblemSolver<Scalar, Rows, Cols>::Solution;
-    using ListSolutions = KnightProblemSolver<Scalar, Rows, Cols>::ListSolutions;
+    using Solution = KnightProblemSolver<Rows, Cols>::Solution;
+    using ListSolutions = KnightProblemSolver<Rows, Cols>::ListSolutions;
 
     void test_00_springer_problem() {
 
-        Coordinate<int> coord1(1, 2);
-        std::cout << coord1 << std::endl;
-        Coordinate<short> coord2(3, 4);
-        std::cout << coord2 << std::endl;
+        // example from blog
+        KnightProblemBoard<3, 4> board;
+
+        Coordinate coord1{2, 0};
+        board.at(coord1) = 1;
+        Coordinate coord2{ 1, 2 };
+        board.at(coord2) = 2;
+        Coordinate coord3{ 0, 0 };
+        board.at(coord3) = 3;
+        Coordinate coord4{ 2, 1 };
+        board.at(coord4) = 4;
+
+        std::cout << board << std::endl;
+
     }
 
     void test_01_springer_problem() {
 
+        // example from blog (3*4 chess board)
         std::cout << "Main: findMovesSequential():" << std::endl;
-        KnightProblemSolver<Scalar, Rows, Cols> solver;
+        KnightProblemSolver<3, 4> solver;
         int count = solver.findMovesSequential();
         ListSolutions solutions = solver.getSolutions();
         std::stringstream ss;
         ss << solutions;
         std::cout << ss.str();
-        std::cout << "Found :  " << count << std::endl;
+        std::cout << "Found:  " << count << std::endl;
     }
 
     void test_02_springer_problem() {
 
+        Coordinate coord1(1, 2);
+        std::cout << coord1 << std::endl;
+        Coordinate coord2(3, 4);
+        std::cout << coord2 << std::endl;
+    }
+
+    void test_03_springer_problem() {
+
+        std::cout << "Main: findMovesSequential():" << std::endl;
+        KnightProblemSolver<Rows, Cols> solver;
+        int count = solver.findMovesSequential();
+        ListSolutions solutions = solver.getSolutions();
+        std::stringstream ss;
+        ss << solutions;
+        std::cout << ss.str();
+        std::cout << "Found:  " << count << std::endl;
+    }
+
+    void test_04_springer_problem() {
+
         std::cout << "Main: findMovesParallel():" << std::endl;
-        KnightProblemSolver<Scalar, Rows, Cols> solver;
+        KnightProblemSolver<Rows, Cols> solver;
         int count = solver.findMovesParallel();
         ListSolutions solutions = solver.getSolutions();
         std::stringstream ss;
         ss << solutions;
         std::cout << ss.str();
-        std::cout << "Found :  " << count << std::endl;
+        std::cout << "Found:  " << count << std::endl;
     }
 
-    void test_03_springer_problem() {
+    void test_05_springer_problem() {
 
         std::cout << "Main: findMovesParallel(0):" << std::endl;
-        KnightProblemSolver<Scalar, Rows, Cols> solver;
+        KnightProblemSolver<Rows, Cols> solver;
         int count = solver.findMovesParallel(0);
         ListSolutions solutions = solver.getSolutions();
         std::stringstream ss;
         ss << solutions;
         std::cout << ss.str();
-        std::cout << "Found :  " << count << std::endl;
+        std::cout << "Found:  " << count << std::endl;
     }
 
-    void test_04_springer_problem() {
+    void test_06_springer_problem() {
 
         std::cout << "Main: findMovesParallel(2):" << std::endl;
-        KnightProblemSolver<Scalar, Rows, Cols> solver;
+        KnightProblemSolver<Rows, Cols> solver;
         int count = solver.findMovesParallel(2);
         ListSolutions solutions = solver.getSolutions();
         //std::stringstream ss;
         //ss << solutions;
         //std::cout << ss.str();
-        std::cout << "Found :  " << count << std::endl;
+        std::cout << "Found:  " << count << std::endl;
     }
 
-    void test_05_springer_problem() {
+    void test_07_springer_problem() {
 
         std::cout << "Main: findMovesParallel(3):" << std::endl;
-        KnightProblemSolver<Scalar, Rows, Cols> solver;
+        KnightProblemSolver<Rows, Cols> solver;
         int count = solver.findMovesParallel(3);
         ListSolutions solutions = solver.getSolutions();
         std::stringstream ss;
         ss << solutions;
         std::cout << ss.str();
-        std::cout << "Found :  " << count << std::endl;
+        std::cout << "Found:  " << count << std::endl;
     }
 
-    void test_06_springer_problem() {
+    void test_08_springer_problem() {
 
         std::cout << "Main: findMovesParallel(5):" << std::endl;
-        KnightProblemSolver<Scalar, Rows, Cols> solver;
+        KnightProblemSolver<Rows, Cols> solver;
         int count = solver.findMovesParallel(5);
         ListSolutions solutions = solver.getSolutions();
         std::stringstream ss;
         ss << solutions;
         std::cout << ss.str();
-        std::cout << "Found :  " << count << std::endl;
+        std::cout << "Found:  " << count << std::endl;
     }
 }
 
@@ -113,12 +144,15 @@ void test_examples () {
 
     using namespace SpringerProblem;
 
-    //test_01_springer_problem();
-    //test_02_springer_problem();
-    //test_03_springer_problem();
+    test_00_springer_problem();
+    test_01_springer_problem();
+    test_02_springer_problem();
+    test_03_springer_problem();
     test_04_springer_problem();
-    // test_05_springer_problem();
-    // test_06_springer_problem();
+    test_05_springer_problem();
+    test_06_springer_problem();
+    //test_07_springer_problem();
+    //test_08_springer_problem();
 }
 
 // =====================================================================================

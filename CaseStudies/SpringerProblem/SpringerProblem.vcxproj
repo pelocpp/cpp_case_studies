@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Coordinate.cpp" />
     <ClCompile Include="Examples.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
