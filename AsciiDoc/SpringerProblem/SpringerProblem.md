@@ -108,6 +108,8 @@ In der programmiersprachlichen Umsetzung müssen wir den Lösungsbaum nicht expl
 
 In unserem konkreten Beispiel lässt sich nun zusammenfassend das Lösungsverfahren durch die in [Abbildung 13] skizzierte, rekursive Methode `FindMoves` darstellen:
 
+TO BE DONE
+
 ###### {#abbildung_13_springer_problem_pseudo_code}
 {{< figure src="/img/springer_problem/KnightsProblem_PseudoCode_01.png" width="90%" >}}
 *Abbildung* 13: Grobskizze einer rekursiven Methode FindMoves zur Bestimmung aller Zugfolgen.
@@ -135,7 +137,7 @@ Ich habe mich für eine rudimentäre C++-Klasse `Coordinate` entschieden, deren 
 # Klasse `KnightProblemBoard`
 
 Für das Schachbrett selbst definieren wir eine Klasse `KnightProblemBoard`. Im Großen und Ganzen kann man sagen, dass diese Klasse eine zwei-dimensionale
-Ausprägung eines Objekts des Typs `std::array<>` kapselt. Mit ihrere Hilfe lässt sich die Implementierung der noch ausstehenden Klasse `KnightProblemSolver` vereinfachen.
+Ausprägung eines Objekts des Typs `std::array<>` kapselt. Mit seiner Hilfe lässt sich die Implementierung der noch ausstehenden Klasse `KnightProblemSolver` vereinfachen.
 
 Ein Wert 0 im `std::array<>`-Objekt besagt, dass das korrespondierende Feld noch nicht vom Springer besucht wurde. Ganzzahlige Werte größer Null besagen, dass der Springer schon auf dem Feld war. Der Wert selbst gibt an, beim wievielten Zug das Feld betreten wurde:
 
@@ -145,57 +147,79 @@ Ein Wert 0 im `std::array<>`-Objekt besagt, dass das korrespondierende Feld noch
 
 Die Momentaufnahme des Beispiels aus [Abbildung 14] besagt, dass auf dem Schachbrett bereits ein Springerzug der Länge vier statt gefunden hat. Der Algorithmus ist offenbar noch damit beschäftigt, den vorliegenden Springerzug zu einem Zug mit 12 Sprüngen zu vervollständigen. Eine gefundene Lösung spiegelt sich in dem `std::array<>`-Objekt also dadurch wieder, dass keine Nullen mehr vorhanden sind und jeder Wert zwischen 1 und dem Produkt der Reihen- und Spaltenanzahl genau einmal auftritt. Zwei Beispiele solcher `std::array<>`-Objekte hatten wir in [Abbildung 11] schon gesehen.
 
-
-// WEITER WEITER mit der Beschreibung der Tabelle KnightProblemBoard
-
-
-
- [Tabelle 2] beschreibt die wesentlichen Elemente der Klasse......
+ Mit [Tabelle 2] schließen wir die Betrachtung der Klasse `KnightProblemBoard` ab:
 
 ###### {#tabelle_2_class_knightproblemboard}
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Konstruktor | `Coordinate();`<br/>Es wird die Koordinate `{0, 0}` erzeugt. |
-| Benutzerdefinierter Konstruktor | `Coordinate(int row, int col);`<br/>Es wird die Koordinate mit Reihe `row` und Spalte `col` erzeugt. |
-| *getter* `getRow()` | `int getRow();`<br/>Liefert die Reihe der Koordinate zurück. |
-| *getter* `getCol()` | `int getCol();`<br/>Liefert die Spalte der Koordinate zurück. |
-| Methode `fromOffset()` | `Coordinate<T> fromOffset(int rowOfs, int colOfs);`<br/>Liefert eine neue Koordinate zurück, die sich aus der aktuellen Koordinate modifiziert um die beiden Offsets `rowOfs` und `colOfs` ergibt. |
-| Operator `<<` | `friend std::ostream& operator<< (std::ostream&, const Coordinate&);`<br/>Gibt ein `Coordinate`-Objekt auf der Konsole aus. |
+| Konstruktor | `KnightProblemBoard();`<br/>Es wird ein leeres Schachbrett angelegt, alle Felder sind mit 0 vorbelegt. |
+| *getter* `at()` | `int& at(const Coordinate<T>& coord);`<br/>Liefert eine Referenz des Schachbretts an der Stelle `coord` zurück. |
+| Methode `clearBoard()` | `void clearBoard();`<br/>Alle Felder des Schachbretts werden mit dem Wert 0 belegt. |
+| Operator `<<` | `friend std::ostream& operator<< (std::ostream&, const KnightProblemBoard&);`<br/>Gibt ein `KnightProblemBoard`-Objekt auf der Konsole aus. |
 
 *Tabelle* 2: Wesentliche Elemente der Klasse `KnightProblemBoard`.
 
-
-
-
-int& at(const Coordinate&);
-
-
-
-
-// WEITER WEITER mit dem Solver
-
-
+<!-- ########################################################################################### -->
 
 # Klasse `KnightProblemSolver`
 
-Wir kommen auf das Kernstück der Aufgabe zu sprechen. In der Klasse `KnightProblemSolver` wird auf Basis der Backtracking-Lösungsstrategie die Menge aller Springerproblemlösungen zu einer bestimmten Schachbrettgröße berechnet. Zunächst stellen wir in [Tabelle 2] den Konstruktor und die Eigenschaften der `KnightProblemSolver`-Klasse vor:
+Wir kommen auf das Kernstück der Aufgabe zu sprechen. In der Klasse `KnightProblemSolver` wird auf Basis der Backtracking-Lösungsstrategie die Menge aller Springerproblemlösungen zu einer bestimmten Schachbrettgröße berechnet. Zunächst stellen wir in [Tabelle 3] den Konstruktor und die Eigenschaften der `KnightProblemSolver`-Klasse vor:
 
-###### {#tabelle_1_class_coordinate}
+###### {#tabelle_3_class_knightproblemsolver_getters}
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Konstruktor | `Coordinate();`<br/>Es wird die Koordinate `{0, 0}` erzeugt. |
-| Benutzerdefinierter Konstruktor | `Coordinate(int row, int col);`<br/>Es wird die Koordinate mit Reihe `row` und Spalte `col` erzeugt. |
-| *getter* `getRow()` | `int getRow();`<br/>Liefert die Reihe der Koordinate zurück. |
-| *getter* `getCol()` | `int getCol();`<br/>Liefert die Spalte der Koordinate zurück. |
-| Methode `fromOffset()` | `Coordinate<T> fromOffset(int rowOfs, int colOfs);`<br/>Liefert eine neue Koordinate zurück, die sich aus der aktuellen Koordinate modifiziert um die beiden Offsets `rowOfs` und `colOfs` ergibt. |
-| Operator `<<` | `friend std::ostream& operator<< (std::ostream&, const Coordinate&);`<br/>Gibt ein `Coordinate`-Objekt auf der Konsole aus. |
+| *getter* `getRows()` | `int getRows();`<br/>Liefert die Anzahl der Reihen des Schachbretts zurück. |
+| *getter* `getCols()` | `int getCols();`<br/>Liefert die Anzahl der Spalten des Schachbretts zurück. |
+| *getter* `getSolutions()` | `std::list<std::vector<Coordinate<int>>> getSolutions();`<br/>Liefert die Liste aller ermittelten Lösungen des Springerzug-Problems zurück. Im Falle des Beispiels aus [Abbildung 11] sieht die Liste am Ende des Programms so aus:<br/>`{`<br/>&nbsp;&nbsp;`{`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{2,0}, {1,2}, {0,0}, {2,1}, {1,3}, {0,1},`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{2,2}, {0,3}, {1,1}, {2,3}, {0,2}, {1,0}`<br/>&nbsp;&nbsp;`},`<br/>&nbsp;&nbsp;{<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{2,0}, {1,2}, {0,0}, {2,1}, {1,3}, {0,1},`<br/>&nbsp;&nbsp;&nbsp;&nbsp;`{2,2}, {1,0}, {0,2}, {2,3}, {1,1}, {0,3}`<br/>&nbsp;&nbsp;`}`<br/>`}`<br/> |
+| Operator `<<` | `friend std::ostream& operator<< (std::ostream&, const KnightProblemSolver&);`<br/>Gibt ein `KnightProblemSolver`-Objekt auf der Konsole aus ???. |
 
-*Tabelle* 1: Wesentliche Elemente der Klasse `Coordinate`.
+*Tabelle* 3: *getter*-Methoden der Klasse `KnightProblemSolver`.
 
-# Klasse `KnightProblemSolver`
+Weiter geht es mit den Instanzvariablen eines `KnightProblemSolver`-Objekts.
+Im Mittelpunkt steht hier offensichtlich ein Objekt des Typs `KnightProblemBoard`, siehe [Tabelle 2].
+Weitere, wichtige Instanzvariablen der `KnightProblemSolver`-Klasse, sofern sie durch die *getter*-Methoden aus [Tabelle 3] nicht schon abgehandelt wurden, entnehmen Sie bitte [Tabelle 4]:
 
+<!-- ??????????????????????????????????????????????????????????????????????  -->
+
+###### {#tabelle_4_class_knightproblemsolver_members}
+
+| Instanzvariable | Beschreibung |
+| :---- | :---- |
+| `m_board` | `KnightProblemBoard m_board;`<br/>Repräsentiert das Schachbrett, das durch ein `KnightProblemSolver`-Objekt verwaltet wird. |
+| `m_current` | `std::vector<Coordinate<int>> m_current;`<br/>Liste von `Coordinate`-Objekten zur Ablage eines Springerzugs. Zu Beginn der Suche ist das `m_current`-Objekt logischerweise leer. Dem Springerzug aus [Abbildung 14] entspricht das Listenobjekt<br/>`{ {2,0}, {1,2}, {0,0}, {2,1} }`. |
+| `m_solutions` | `std::list<std::vector<Coordinate<int>>> m_solutions;`<br/>Liste der zu einem bestimmten Zeitpunkt während der Ausführung des  *Backtracking*-Algorithmus gefundenen Lösungen. |
+| `m_moveNumber` | `int m_moveNumber;`<br/>Zähler für den Sprung im aktuellen Springerzug. Die Variable nimmt Werte zwischen 1 (Ausgangsposition) und Zeilenanzahl &#x00D7; Spaltenanzahl (letzter Zug eines Lösungszugs) an. |
+
+*Tabelle* 4: Zentrale Instanzvariablen der Klasse `KnightProblemSolver`.
+
+Wie findet man nun eine Folge von Springerzügen auf dem Schachbrett? Die Grobskizze der Methode `findMoves` aus [Abbildung 13] gilt es nun zu verfeinern. Hierzu betrachten wir in [Tabelle 4] zuerst alle Hilfsmethoden der Klasse `KnightProblemSolver`, die zur Realisierung der `findMoves`-Methode beitragen:
+
+<!-- OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO  -->
+
+###### {#tabelle_5_class_knightproblemsolver_helpers}
+
+| Methode | Beschreibung |
+| :---- | :---- |
+| `setKnightMoveAt` | `void setKnightMoveAt(const Coordinate& coord);`<br/>Setzt den Springer auf dem Schachbrett auf die Position `coord`. Im korrespondierenden `std::array<>`-Objekt sollte die Nummer des Zugs eingetragen werden. |
+| `unsetKnightMoveAt` | `void unsetKnightMoveAt(const Coordinate& coord);`<br/>Macht einen Springerzug auf dem Schachbrett an der Position `coord` rückgängig. Im korrespondierenden `std::array<>`-Objekt sollte der Wert 0 eingetragen werden. |
+| `inRange` | `bool inRange(const Coordinate& coord);`<br/>Liefert `true` oder `false` in Abhängigkeit davon zurück, ob die Werte des `Coordinate`-Objekts ein gültiges Feld auf dem Schachbrett spezifizieren oder nicht. |
+| `canMoveTo` | `bool canMoveTo(const Coordinate& coord);`<br/>Liefert `true` zurück, wenn der Springer von der aktuellen Position auf das Feld mit der Position `coord` springen kann. Die Koordinaten müssen gültig sein und das Feld darf von dem Springer noch nicht durch einen vorangegangenen Zug betreten worden sein. |
+| `nextKnightMoves` | `std::vector<Coordinate> nextKnightMoves(const Coordinate& coord);`<br/>Erstellt eine Liste mit allen möglichen Folgezügen, ausgehend von der Position `coord`. Ein Springer, der auf einem Schachbrett auf dem Feld mit den Koordinaten (x,y) steht, kann im nächsten Zug die Felder mit folgenden Koordinaten erreichen (siehe auch [Abbildung 3]):<br/>(*x*-1, *y*+2) und (*x*-1, *y*-2),<br/>(*x*-2 , *y*+1) und (*x*-2, *y*-1),<br/>(*x*+1, *y*-2) und (*x*+1, *y*+2),<br/>(*x*+2, *y*+1) und (*x*+2, *y*-1)<br/>Hierbei ist natürlich jeweils zu überprüfen, ob der Zielzug überhaupt auf dem Schachbrett liegt, siehe dazu die Methoden `inRange` bzw. `canMoveTo`. Folglich kann die Resultatliste bis zu acht `Coordinate`-Elemente enthalten. |
+| `isSolution` | `bool isSolution();`<br/>Liefert `true` zurück, wenn aktuell auf dem Schachbrett eine Lösung des Springerproblems vorliegt, andernfalls `false`. |
+
+*Tabelle* 5: Hilfsmethoden der Klasse `KnightProblemSolver`.
+
+Wir sind so gut wie am Ziel angekommen. Die einzige noch fehlende Methode FindMoves ist gemäß [Tabelle 6] zu definieren:
+
+###### {#tabelle_6_class_knightproblemsolver_findmoves}
+
+| Methode | Beschreibung |
+| :---- | :---- |
+| `findMoves` | `int findMoves(const Coordinate& coord);`<br/>Bestimmt alle Lösungen des Springerproblems, falls vorhanden. Zum Beginn der Suche ist der Springer auf die Position `coord` gesetzt, typischerweise die linke untere Ecke des Schachbretts. Die Lösungen sind über die *getter*-Methode `getSolutions()` verfügbar. |
+
+*Tabelle* 6: Methode `findMoves` der Klasse `KnightProblemSolver`.
 
 ****
 
@@ -203,6 +227,10 @@ Wir kommen auf das Kernstück der Aufgabe zu sprechen. In der Klasse `KnightProb
 
 [Tabelle 1]:    #tabelle_1_class_coordinate
 [Tabelle 2]:    #tabelle_2_class_knightproblemboard
+[Tabelle 3]:    #tabelle_3_class_knightproblemsolver_getters
+[Tabelle 4]:    #tabelle_4_class_knightproblemsolver_members
+[Tabelle 5]:    #tabelle_5_class_knightproblemsolver_helpers
+[Tabelle 6]:    #tabelle_6_class_knightproblemsolver_findmoves
 
 [Abbildung 1]:  #abbildung_1_springer_problem_single_solution
 [Abbildung 2]:  #abbildung_2_springer_problem_number_of_solutions

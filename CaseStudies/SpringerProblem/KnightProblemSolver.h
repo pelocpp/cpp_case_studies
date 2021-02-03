@@ -35,7 +35,7 @@ class KnightProblemSolver
 {
 public:
     using Solution = std::vector<Coordinate<T>>;
-    using ListSolutions = std::list<std::vector<Coordinate<T>>>;
+    using ListSolutions = std::list<Solution>;
 
 private:
     KnightProblemBoard<T, HEIGHT, WIDTH> m_board;        // chess board
@@ -137,7 +137,7 @@ private:
     // internal helper methods
 
     // private helper - algorithm to solve the Knight's Tour problem sequentially
-    int findMovesSequential(const Coordinate<T> coord) {
+    int findMovesSequential(const Coordinate<T>& coord) {
 
         setKnightMoveAt(coord);
         m_current.push_back(coord);
@@ -163,7 +163,7 @@ private:
     }
     
     // private helper - algorithm to solve the Knight's Tour problem in parallel
-    int findMovesParallel(const Coordinate<T> coord, int maxDepth) {
+    int findMovesParallel(const Coordinate<T>& coord, int maxDepth) {
 
         setKnightMoveAt(coord);
         m_current.push_back(coord);
@@ -220,19 +220,19 @@ private:
     }
 
     // occupy square on the chess board
-    void setKnightMoveAt(const Coordinate<T> coord) {
+    void setKnightMoveAt(const Coordinate<T>& coord) {
         m_moveNumber++;
         m_board.at(coord) = m_moveNumber;
     }
 
     // release square on the chess board
-    void unsetKnightMoveAt(const Coordinate<T> coord) {
+    void unsetKnightMoveAt(const Coordinate<T>& coord) {
         m_moveNumber--;
         m_board.at(coord) = 0;
     }
 
     // compute list of next possible moves
-    std::vector<Coordinate<T>> nextKnightMoves(const Coordinate<T> coord) {
+    std::vector<Coordinate<T>> nextKnightMoves(const Coordinate<T>& coord) {
         std::vector<Coordinate<T>> list;
 
         if (Coordinate<T> tmp{ coord.fromOffset(2, 1) }; canMoveTo(tmp))
