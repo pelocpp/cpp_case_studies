@@ -29,7 +29,7 @@ std::ostream& operator<< (std::ostream& os, const std::list<std::vector<Coordina
 // =====================================================================================
 // defining 'KnightProblemSolver' template using 'inclusion model'
 
-template <size_t HEIGHT, size_t WIDTH>
+template <size_t ROWS, size_t COLS>
 class KnightProblemSolver 
 {
 public:
@@ -37,10 +37,10 @@ public:
     using ListSolutions = std::list<Solution>;
 
 private:
-    KnightProblemBoard<HEIGHT, WIDTH> m_board;        // chess board
-    Solution                          m_current;      // solution being in construction
-    ListSolutions                     m_solutions;    // list of found solutions
-    int                               m_moveNumber;   // number of last knight's move
+    KnightProblemBoard<ROWS, COLS> m_board;        // chess board
+    Solution                       m_current;      // solution being in construction
+    ListSolutions                  m_solutions;    // list of found solutions
+    int                            m_moveNumber;   // number of last knight's move
 
 public:
     // c'tor
@@ -51,8 +51,8 @@ public:
     // public interface
 
     // getter/setter
-    size_t getHeight() const noexcept { return HEIGHT; }
-    size_t getWidth() const noexcept { return WIDTH; }
+    size_t getHeight() const noexcept { return ROWS; }
+    size_t getWidth() const noexcept { return COLS; }
 
     ListSolutions getSolutions() const {
         return m_solutions;
@@ -75,7 +75,7 @@ public:
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
         // start at lower left corner            
-        Coordinate start{ HEIGHT - 1, 0 };
+        Coordinate start{ ROWS - 1, 0 };
         Logger<VerboseSolver>::log(std::cout, "   ... Starting sequential solver at ", start);
         int count = findMovesSequential(start);
 
@@ -101,7 +101,7 @@ public:
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
         // start at lower left corner            
-        Coordinate start{ HEIGHT - 1, 0 };
+        Coordinate start{ ROWS - 1, 0 };
         Logger<VerboseSolver>::log(std::cout, "   ... Starting parallel solver at ", start);
         int count = findMovesParallel(start, maxDepth);
 
@@ -179,7 +179,12 @@ private:
 
             if (maxDepth > 0) {
                 // do next moves parallel or ...
-                std::future<ListSolutions> future = std::async(std::launch::async, std::move(slaveSolver), move, maxDepth - 1);
+                std::future<ListSolutions> future = std::async(
+                    std::launch::async,
+                    std::move(slaveSolver),
+                    move,
+                    maxDepth - 1);
+
                 futures.push_back(std::move(future));
             }
             else {
@@ -193,7 +198,11 @@ private:
                 Logger<VerboseSolver>::log(std::cout, "   ... Calculated solutions from ", move, " => ", solutions.size());
 
                 if (solutions.size() != 0) {
-                    m_solutions.insert(std::end(m_solutions), std::begin(solutions), std::end(solutions));
+                    m_solutions.insert(
+                        std::end(m_solutions), 
+                        std::begin(solutions), 
+                        std::end(solutions)
+                    );
                 }
             }
         }
@@ -206,7 +215,11 @@ private:
             Logger<VerboseSolver>::log(std::cout, "   ... retrieved from Future: ", partialSolutions.size(), " solutions");
 
             if (partialSolutions.size() != 0) {
-                m_solutions.insert(std::end(m_solutions), std::begin(partialSolutions), std::end(partialSolutions));
+                m_solutions.insert(
+                    std::end(m_solutions),
+                    std::begin(partialSolutions),
+                    std::end(partialSolutions)
+                );
                 count += static_cast<int> (partialSolutions.size());
             }
         }
@@ -273,8 +286,8 @@ private:
     // checks, whether coordinate does exist on the chess board
     bool inRange(const Coordinate& coord) {
         return
-            (coord.getRow() >= 0) && (coord.getRow() < HEIGHT) && 
-            (coord.getCol() >= 0) && (coord.getCol() < WIDTH);
+            (coord.getRow() >= 0) && (coord.getRow() < ROWS) && 
+            (coord.getCol() >= 0) && (coord.getCol() < COLS);
     }
 
     // checks, whether coordinate is valid and is still not taken
@@ -284,7 +297,7 @@ private:
 
     // verifies, whether current list of moves is a solution
     bool isSolution() {
-        return m_moveNumber >= HEIGHT * WIDTH;
+        return m_moveNumber >= ROWS * COLS;
     }
 };
 

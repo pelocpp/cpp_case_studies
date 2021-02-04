@@ -18,6 +18,7 @@ Neben der Implementierung einer *Backtracking*-Strategie betrachten wir auch Üb
 * Parallelverarbeitung mit `std::future<T>` und `std::async`
 * Schlüsselwort `auto`
 * Datentyp `size_t`
+* `if constexpr` 
 
 # Einführung
 
@@ -248,7 +249,7 @@ Vergleichen Sie die Laufzeiten Ihres Programms bei sequentieller und paralleler 
 
 In [Listing 1] stoßen wir auf den benutzerdefinierten Datentyp `Coordinate`. Mit Variablen seines Typs wird auf dem Schachbrett eine Springerposition beschrieben:
 
-###### {#listing_class_coordinate_decl}
+###### {#listing_01_class_coordinate_decl}
 
 ```cpp
 01: class Coordinate {
@@ -278,7 +279,7 @@ In [Listing 1] stoßen wir auf den benutzerdefinierten Datentyp `Coordinate`. Mi
 Wir definieren in [Listing 1] die beiden Variablen `m_row` und `m_col` vom Typ `size_t`, da sie als Index für einen STL-Container verwendet werden.
 Die Methode `fromOffset` und der Operator `<<` sind einfachst zu implementieren ([Listing 2]):
 
-###### {#listing_class_coordinate_impl}
+###### {#listing_02_class_coordinate_impl}
 
 ```cpp
 01: Coordinate Coordinate::fromOffset(size_t rowOfs, size_t colOfs) const noexcept {
@@ -293,23 +294,419 @@ Die Methode `fromOffset` und der Operator `<<` sind einfachst zu implementieren 
 
 *Listing* 2: Klasse `Coordinate`: Implementierung.
 
-Beachten Sie in Zeile 2 von [Listing 2] die Anwendung der einheitliche Initialisierung unter Weglassung des Typnamens (hier: `Coordinate`).
+Beachten Sie in Zeile 2 von [Listing 2] die Anwendung der *einheitlichen Initialisierung* unter Weglassung des Typnamens (hier: `Coordinate`).
 Da der Compiler diese Information während des Übersetzungsvorgangs kennt, können Objekte bei der Rückgabe aus Methoden ohne
 Angabe des Typs erzeugt werden.
 
 Damit sind wir schon beim Schachbrett angekommen. Wir betrachten nicht nur Schachbretter in der Standardgröße mit 8&#x00D7;8 Feldern.
-Aus diesem Grund bietet es sich an, eine Klasse `KnightProblemBoard` mit Wertparametern (*non-type template parameter*) für die Anzahl der Reihen
+Aus diesem Grund bietet es sich an, eine Klasse `KnightProblemBoard` mit Wertparametern (*non-type template parameter*) für die entsprechende Anzahl der Reihen
 und Spalten zu definieren. Damit kann der Übersetzer pro Berechnung eine optimale Schachbrett-Klasse generieren, da er &ndash; zumindest in unseren Anwendungsfällen &ndash;
-die Anzahl der Reihen und Spalten des Schachbretts bereits kennt!
+die Anzahl der Reihen und Spalten vor dem Erzeugen des Schachbretts bereits kennt!
 
 Bei Gebrauch von Templates weichen wir vom üblichen C++ Entwicklungsmodell für Klassen (zwei Dateien für die Schnittstelle &ndash; Header-Datei &ndash; und
-die Realisierung der Klasse &ndash; Implementierungsdatei) ab. Wir wenden das so genannte *Inclusion Model* an und implmentieren daher die Klasse `KnightProblemBoard`
+die Realisierung der Klasse &ndash; Implementierungsdatei) ab. Wir wenden das so genannte *Inclusion Model* an und implmentieren die Klasse `KnightProblemBoard`
 in einer einzigen Datei, so wie es in anderen Programmiersprachen (zum Beispiel C# oder Java) auch üblich ist.
 
-WEITER: Realisierng `KnightProblemBoard` 
+###### {#listing_03_class_knightproblemboard}
 
+```cpp
+01: template <size_t ROWS, size_t COLS>
+02: class KnightProblemBoard
+03: {
+04: private:
+05:     std::array<std::array<int, COLS>, ROWS> m_board;
+06: 
+07: public:
+08: 
+09:     KnightProblemBoard() {
+10:         clearBoard();
+11:     }
+12: 
+13: private:
+14:     void verifyCoordinate(const Coordinate& coord) const {
+15: 
+16:         if constexpr (RangeCheck) {
+17:             if (coord.getRow() >= ROWS || coord.getCol() >= COLS) {
+18:                 throw std::range_error("verifyCoordinate failed !!! ");
+19:             }
+20:         }
+21:     }
+22: 
+23: public:
+24:     int& at(const Coordinate& coord) {
+25:         verifyCoordinate(coord);
+26:         return m_board[coord.getRow()][coord.getCol()];
+27:     }
+28: 
+29:     const int& at(const Coordinate& coord) const {
+30:         verifyCoordinate(coord);
+31:         return m_board[coord.getRow()][coord.getCol()];
+32:     }
+33: 
+34:     void clearBoard() {
+35:         std::for_each(m_board.begin(), m_board.end(), [](auto& row) {
+36:             std::for_each(row.begin(), row.end(), [](auto& element) {
+37:                 element = 0;
+38:                 });
+39:             }
+40:         );
+41:     }
+42: };
+43: 
+44: template <size_t ROWS, size_t COLS>
+45: std::ostream& operator<< (std::ostream& os, const KnightProblemBoard<ROWS, COLS>& board) {
+46: 
+47:     for (size_t row = 0; row != ROWS; ++row) {
+48:         for (size_t col = 0; col != COLS; ++col) {
+49:             Coordinate coord{ row, col };
+50:             int moveNumber = board.at(coord);
+51:             os << std::setw(4) << moveNumber << ' ';
+52:         }
+53:         os << std::endl;
+54:     }
+55: 
+56:     return os;
+57: }
+```
+
+*Listing* 3: Klasse `KnightProblemBoard`.
+
+Da wir die Anzahl der Reihen und Spalten nicht variabel gestalten, bietet sich als Datenstruktur für das Schachbrett
+ein zwei-dimensionales `std::array<T>`-Objekt an. Die Elemente des Arrays sind vom Typ `int`,
+sie beschreiben die Zugnummer des Springers beim Traversieren des Schachbretts.
+
+In Zeile 16 von [Listing 3] finden Sie einen `if constexpr` Ausdruck vor. Solche Ausdrücke können nur in Templates auftreten,
+die Bedingung muss zur Übersetzungszeit ausgewertet werden können. Wird der Ausdruck zu `true` evaluiert,
+werden die Anweisungen im nachfolgenden Block übersetzt und führen folglich zu entsprechenden Anweisungen im ausführbaren Programm.
+Im anderen Fall (`false`) ignoriert der Übersetzer einfach den Block komplett. An den `if constexpr` Ausdruck könnte sich auch ein `else`-Block anschließen,
+der nach denselben Regeln vom Übersetzer behandelt wird.
+Kurz und bündig formuliert können wir einen `if constexpr`-Ausdruck als *compile-time if* bezeichnen.
+In vorliegenden Beispiel soll es zur Übersetzungszeit möglich sein, die Methode `verifyCoordinate` mit oder ohne eine Implementierung auszustatten.
+
+Die Implementierung der `operator<<`-Methode ist bei Template Klassen nicht immer ganz trivial. Ich habe den Ansatz gewählt,
+den Operator einfach als globale Funktion zu realisieren. Deshalb gibt es in der `KnightProblemBoard`-Klasse keine entsprechende `friend`-Deklaration,
+außerdem muss die Implementierung mit der öffentlichen Schnittstelle der Klasse zurechkommen.
+
+Wenn Sie Zeile 16 genau studiert haben, werden
+Sie beobachten, dass die Variable `RangeCheck` in diesem Listing nirgends definiert ist.
+Natürlich würde dies einen Syntaxfehler nach sich ziehen, wir finden die Variablendefinition an einer anderen zentralen Stelle im Programm vor:
+
+###### {#listing_04_common_definitions}
+
+```cpp
+01: constexpr size_t Rows = 5;
+02: constexpr size_t Cols = 5;
+03: 
+04: constexpr bool Verbose = true;
+05: constexpr bool VerboseSolver = false;
+06: constexpr bool RangeCheck = false;
+```
+
+*Listing* 4: Globale Definitionen.
+
+Damit kommen wir auf den Solver des Springerproblems zu sprechen, also die Klasse `KnightProblemSolver`.
+Wie die Klasse `KnightProblemBoard` ist auch die  `KnightProblemSolver`-Klasse eine Template Klasse, wir finden die Realisierung also
+in einer einzigen Datei vor.
+Etliche Methoden dieser Klasse wie etwa `setKnightMoveAt`, `unsetKnightMoveAt`, `inRange`, `canMoveTo`, `isSolution` und `nextKnightMoves`
+wurden bereits in [Tabelle 5] sehr ausführlich spezifiziert, ihre Realisierung sollte nach den getroffenen Vorbereitung nicht weiter schwer sein:
+
+###### {#listing_03_class_knightproblemsolver}
+
+```cpp
+001: template <size_t ROWS, size_t COLS>
+002: class KnightProblemSolver 
+003: {
+004: public:
+005:     using Solution = std::vector<Coordinate>;
+006:     using ListSolutions = std::list<Solution>;
+007: 
+008: private:
+009:     KnightProblemBoard<ROWS, COLS> m_board;        // chess board
+010:     Solution                       m_current;      // solution being in construction
+011:     ListSolutions                  m_solutions;    // list of found solutions
+012:     int                            m_moveNumber;   // number of last knight's move
+013: 
+014: public:
+015:     // c'tor
+016:     KnightProblemSolver() : m_moveNumber{ 0 } {}
+017: 
+018: public:
+019:     // getter/setter
+020:     size_t getHeight() const noexcept { return ROWS; }
+021:     size_t getWidth() const noexcept { return COLS; }
+022: 
+023:     ListSolutions getSolutions() const {
+024:         return m_solutions;
+025:     }
+026: 
+027:     void clearSolutions() {
+028:         m_solutions.clear();
+029:     }
+030: 
+031:     // public interface
+032:     int findMovesSequential() {
+033: 
+034:         // reset data structures
+035:         m_board.clearBoard();
+036:         m_solutions.clear();
+037:         m_current.clear();
+038:         m_moveNumber = 0;
+039: 
+040:         // start at lower left corner            
+041:         Coordinate start{ ROWS - 1, 0 };
+042:         int count = findMovesSequential(start);
+043: 
+044:         assert(count == m_solutions.size());
+045:         return static_cast<int> (m_solutions.size());
+046:     }
+047: 
+048:     // find all solutions using thread pool (0 == seq, >= 1 par)
+049:     int findMovesParallel(int maxDepth = 1) {
+050: 
+051:         // reset data structures
+052:         m_board.clearBoard();
+053:         m_solutions.clear();
+054:         m_current.clear();
+055:         m_moveNumber = 0;
+056: 
+057:         // start at lower left corner            
+058:         Coordinate start{ ROWS - 1, 0 };
+059:         int count = findMovesParallel(start, maxDepth);
+060: 
+061:         assert(count == m_solutions.size());
+062:         return static_cast<int> (m_solutions.size());
+063:     }
+064: 
+065:     int countSolutions() {
+066:         return static_cast<int> (m_solutions.size());
+067:     }
+068: 
+069:     // functor notation needed for std::async
+070:     ListSolutions operator()(const Coordinate coord, int maxDepth) {
+071: 
+072:         int count = findMovesParallel(coord, maxDepth);
+073:         assert(count == m_solutions.size());
+074:         return m_solutions;
+075:     }
+076: 
+077: private:
+078:     // private helper - algorithm to solve the Knight's Tour problem sequentially
+079:     int findMovesSequential(const Coordinate& coord) {
+080: 
+081:         setKnightMoveAt(coord);
+082:         m_current.push_back(coord);
+083: 
+084:         if (isSolution()) {
+085:             // add found solution to the list of all solutions
+086:             m_solutions.push_back(m_current);
+087:         }
+088:         else {
+089:             // determine list of possible next moves
+090:             std::vector<Coordinate> nextMoves = nextKnightMoves(coord);
+091: 
+092:             // do next moves sequential
+093:             for (const Coordinate& move : nextMoves) {
+094:                 findMovesSequential(move);
+095:             }
+096:         }
+097: 
+098:         unsetKnightMoveAt(coord);
+099:         m_current.pop_back();
+100: 
+101:         return static_cast<int> (m_solutions.size());
+102:     }
+103:     
+104:     // private helper - algorithm to solve the Knight's Tour problem in parallel
+105:     int findMovesParallel(const Coordinate& coord, int maxDepth) {
+106: 
+107:         setKnightMoveAt(coord);
+108:         m_current.push_back(coord);
+109: 
+110:         // determine list of possible next moves
+111:         std::vector<Coordinate> nextMoves = nextKnightMoves(coord);
+112:         std::deque<std::future<ListSolutions>> futures;
+113: 
+114:         int count{};
+115:         for (const Coordinate& move : nextMoves) {
+116: 
+117:             // make a copy of the solver including the current board
+118:             KnightProblemSolver slaveSolver = *this; 
+119:             slaveSolver.clearSolutions();  // don't reuse solutions of current solver
+120: 
+121:             if (maxDepth > 0) {
+122:                 // do next moves parallel or ...
+123:                 std::future<ListSolutions> future = std::async(
+124:                     std::launch::async,
+125:                     std::move(slaveSolver),
+126:                     move,
+127:                     maxDepth - 1);
+128: 
+129:                 futures.push_back(std::move(future));
+130:             }
+131:             else {
+132:                 // ... do next moves sequential
+133:                 slaveSolver.findMovesSequential(move);
+134:                 count += slaveSolver.countSolutions();
+135: 
+136:                 // need to copy all found solutions from slave solver to current solver
+137:                 ListSolutions solutions = slaveSolver.getSolutions();
+138: 
+139:                 if (solutions.size() != 0) {
+140:                     m_solutions.insert(
+141:                         std::end(m_solutions), 
+142:                         std::begin(solutions), 
+143:                         std::end(solutions)
+144:                     );
+145:                 }
+146:             }
+147:         }
+148: 
+149:         // block async tasks, if any, and compute final result
+150:         // (just use 'std::future' references to access non-copyable objects)
+151:         for (std::future<ListSolutions>& future : futures) {
+152: 
+153:             ListSolutions partialSolutions = future.get();
+154: 
+155:             if (partialSolutions.size() != 0) {
+156:                 m_solutions.insert(
+157:                     std::end(m_solutions),
+158:                     std::begin(partialSolutions),
+159:                     std::end(partialSolutions)
+160:                 );
+161:                 count += static_cast<int> (partialSolutions.size());
+162:             }
+163:         }
+164: 
+165:         unsetKnightMoveAt(coord);
+166:         m_current.pop_back();
+167: 
+168:         assert(count == m_solutions.size());
+169:         return static_cast<int> (m_solutions.size());
+170:     }
+171: 
+172:     // occupy square on the chess board
+173:     void setKnightMoveAt(const Coordinate& coord) {
+174:         m_moveNumber++;
+175:         m_board.at(coord) = m_moveNumber;
+176:     }
+177: 
+178:     // release square on the chess board
+179:     void unsetKnightMoveAt(const Coordinate& coord) {
+180:         m_moveNumber--;
+181:         m_board.at(coord) = 0;
+182:     }
+183: 
+184:     // compute list of next possible moves
+185:     std::vector<Coordinate> nextKnightMoves(const Coordinate& coord) {
+186:         std::vector<Coordinate> list;
+187: 
+188:         if (Coordinate tmp{ coord.fromOffset(2, 1) }; canMoveTo(tmp))
+189:         {
+190:             list.push_back(tmp);
+191:         }
+192:         if (Coordinate tmp{ coord.fromOffset(1, 2) }; canMoveTo(tmp))
+193:         {
+194:             list.push_back(tmp);
+195:         }
+196:         if (Coordinate tmp{ coord.fromOffset(-2, 1) }; canMoveTo(tmp))
+197:         {
+198:             list.push_back(tmp);
+199:         }
+200:         if (Coordinate tmp{ coord.fromOffset(-1, 2) }; canMoveTo(tmp))
+201:         {
+202:             list.push_back(tmp);
+203:         }
+204:         if (Coordinate tmp{ coord.fromOffset(2, -1) }; canMoveTo(tmp))
+205:         {
+206:             list.push_back(tmp);
+207:         }
+208:         if (Coordinate tmp{ coord.fromOffset(1, -2) }; canMoveTo(tmp))
+209:         {
+210:             list.push_back(tmp);
+211:         }
+212:         if (Coordinate tmp{ coord.fromOffset(-2, -1) }; canMoveTo(tmp))
+213:         {
+214:             list.push_back(tmp);
+215:         }
+216:         if (Coordinate tmp{ coord.fromOffset(-1, -2) }; canMoveTo(tmp))
+217:         {
+218:             list.push_back(tmp);
+219:         }
+220: 
+221:         return list;
+222:     }
+223: 
+224:     // checks, whether coordinate does exist on the chess board
+225:     bool inRange(const Coordinate& coord) {
+226:         return
+227:             (coord.getRow() >= 0) && (coord.getRow() < ROWS) && 
+228:             (coord.getCol() >= 0) && (coord.getCol() < COLS);
+229:     }
+230: 
+231:     // checks, whether coordinate is valid and is still not taken
+232:     bool canMoveTo(const Coordinate& coord) {
+233:         return inRange(coord) && (m_board.at(coord) <= 0);
+234:     }
+235: 
+236:     // verifies, whether current list of moves is a solution
+237:     bool isSolution() {
+238:         return m_moveNumber >= ROWS * COLS;
+239:     }
+240: };
+```
+
+*Listing* 5: Klasse `KnightProblemSolver`.
+
+Die beiden öffentlichen Methoden `findMovesSequential` und `findMovesParallel` (Zeilen 32 ff. bzw. 49 ff. in [Listing 5])
+besitzen beide eine private Überladung, in der die eigentliche Hauptarbeit erledigt wird (Zeilen 79 ff. und 105 ff.). 
+
+Die Hauptarbeit in der Implementierung der Klasse `KnightProblemSolver` lag mit Sicherheit in der Parallelisierung des Algorithmus.
+Diese finden Sie in der privaten Hilfsmethode `findMovesParallel` vor. Hier wird von einem Startfeld ausgehend zunächst eine
+Liste aller möglichen Folgezüge ermittelt (Zeile 111, das Ergebnis liegt dann in einem `std::vector<Coordinate>`-Objekt vor).
+Natürlich müssen bei einer Parallelisierung des Algorithmus die jeweiligen Tasks (Threads) ihr eigenes Schachbrett zur Verfügung haben.
+Dies habe ich dadurch gelöst, dass der Einfachheit halber die jeweils beteiligten `KnightProblemSolver`-Objekte kopiert werden (Zeile 118). 
+
+Nun kommt die `std::async`-Methode ins Spiel. Sie besitzt zur Ausführung im Wesentlichen drei Überladungen:
+
+  * `std::async` mit normaler C-Funktion.
+  * `std::async` mit Funktor-Objekt.
+  * `std::async` mit Lambda-Funktion.
+
+Ein Aufruf mit einer normalen C-Funktion (keine Objekt-Orientierung) oder mit einer Lambda-Funktion (in diesem Anwendungsfall zu unübersichtlich) kam für mich nicht in Frage. Damit bleibt nur die Variante mit einem Funktor-Objekt übrig. Die entsprechende Realisierung der Operators `operator()`
+finden Sie in den Zeilen 70 bis 75 vor. Im Prinzip dient der Einsatz des `()`-Operators nur einem einzigen Zweck, nämlich die `findMovesParallel`-Methode
+rekursiv aufrufen zu können. Wozu ist dieser rekursive Aufruf überhaupt notwendig? Ich wollte die Parallelisierung des Algorithmus nicht nur auf eine Ebene beschränken,
+sondern auch die &ldquo;Folgezüge von Folgezügen&rdquo; mit in die Parallelisierung mit einbeziehen. Aus diesem Grund besitzt die 
+`findMovesParallel`-Methode einen Parameter `maxDepth`, der die Tiefe des rekursiven Abstiegs kontrolliert.
+Ist `maxDepth` größer als 1, dann wird, wiederum mit einem Aufruf von `findMovesParallel` (oder genauer formuliert: aus technischen Gründer ein entsprechendes Funktor-Objekt), eine Aufteilung der unterschiedlichen Berechnungen auf weitere Threads vorgenommen (Zeile 124). Andernfalls geht es in Zeile 133 mit `findMovesSequential` sequentiell weiter.
+
+In Zeile 125 ist ein weiteres technisches Detail beim Aufruf von `std::async` zu beachten. Das Objekt, das den `()`-Operator implementiert,
+kann (sinnvollweise) nicht als Referenz oder Kopie an `std::async` übergeben werden. Es muss (mittels `std::move`) die Verschiebesemantik angewendet werden.
+
+Dasselbe gilt für `std::future<ListSolutions>`-Objekte, die vorrübergehend in einem `std::deque<std::future<ListSolutions>>`-Objekte abgelegt werden.
+Auch hier muss die Verschiebesemantik zum Einsatz kommen. 
+
+Der Einsatz von `std::async`-Methoden bringt es mit sich, dass die Resultate über ein entsprechendes `std::future<T>`-Objekt &ldquo;in der nahen Zukunft&rdquo;
+abgeholt werden können. Die durch `std::async` angestoßenen Threads stehen konzeptionell für die *Slaves*. 
+Ab den Zeilen 151 werden mit einem `get`-Aufruf an den jeweiligen `std::future<T>`-Objekten die von ihnen berechneten (Zwischen-)Resultate abgeholt und
+in einen entsprechenden Container des *Masters* umkopiert. Da alle beteiligten Threads auf einer Kopie eines `KnightProblemSolver`-Objekts arbeiten,
+sind während der parallelen Ausführung keine besonderen Schutzmechanismen (etwaiger konkurrierender Zugriff auf gemeinsame Daten) notwendig.
+Ist ein *Slave* fertig, können seine Resultate im *Master* direkt umkopiert werden, es wird jetzt nicht mehr parallel gearbeitet.
+
+In den Zeilen 188 ff. finden Sie eine C++ 17 Spracherweiterung vor, eine `if`-Anweisung mit einer Variablen-Initialisierung.
+So ist die Variable `tmp` von Zeile 188 genau bis zur Zeile 191 gültig bzw. bekannt. Ihre Definition ist &ldquo;innerhalb&rdquo; der `if`-Anweisung erfolgt,
+damit erklärt sich dieser minimale Gültigkeitsbereich:
+
+```cpp
+if (Coordinate tmp{ coord.fromOffset(2, 1) }; canMoveTo(tmp))
+{
+    list.push_back(tmp);
+}
+```
+
+# Ausführung des Programms
 
 ****
+
 
 <!-- Links Definitions -->
 
@@ -341,10 +738,11 @@ WEITER: Realisierng `KnightProblemBoard`
 [Abbildung 15]: #abbildung_15_springer_problem_pseudo_code_02
 
 
-[Listing 1]: #listing_class_coordinate_decl
-[Listing 2]: #listing_class_coordinate_impl
-[Listing 3]: #listing_class_knightproblemboard_decl
-[Listing 4]: #listing_class_knightproblemboard_impl
+[Listing 1]: #listing_01_class_coordinate_decl
+[Listing 2]: #listing_02_class_coordinate_impl
+[Listing 3]: #listing_03_class_knightproblemboard
+[Listing 4]: #listing_04_common_definitions
+[Listing 5]: #listing_03_class_knightproblemsolver
 
 
 <!-- End-of-File -->
