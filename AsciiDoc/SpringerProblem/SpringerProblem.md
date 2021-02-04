@@ -222,6 +222,9 @@ Wir sind so gut wie am Ziel angekommen. Die einzige noch fehlende Methode `findM
 
 *Tabelle* 6: Methode `findMoves` der Klasse `KnightProblemSolver`.
 
+*Hinweis*: In der noch folgenden Realisierung der Klasse `KnightProblemSolver` werden Sie feststellen, dass an Stelle der Methode `findMoves` gleich zwei
+Methoden `findMovesSequential` und `findMovesParallel` in Erscheinung treten. Auf die Unterschiede dieser beiden Methoden kommen wir weiter unten noch zu sprechen.
+
 Einen Pseudo-Code der `findMoves`-Methode finden Sie in [Abbildung 15] vor. Beachten Sie, wie die Hilfsmethoden der Klasse `KnightProblemSolver` aus [Tabelle 4] zum Einsatz gelangen:
 
 ###### {#abbildung_15_springer_problem_pseudo_code_02}
@@ -300,11 +303,12 @@ Angabe des Typs erzeugt werden.
 
 Damit sind wir schon beim Schachbrett angekommen. Wir betrachten nicht nur Schachbretter in der Standardgröße mit 8&#x00D7;8 Feldern.
 Aus diesem Grund bietet es sich an, eine Klasse `KnightProblemBoard` mit Wertparametern (*non-type template parameter*) für die entsprechende Anzahl der Reihen
-und Spalten zu definieren. Damit kann der Übersetzer pro Berechnung eine optimale Schachbrett-Klasse generieren, da er &ndash; zumindest in unseren Anwendungsfällen &ndash;
-die Anzahl der Reihen und Spalten vor dem Erzeugen des Schachbretts bereits kennt!
+und Spalten zu definieren. Damit kann der Übersetzer pro Berechnung eine optimale Schachbrett-Klasse generieren,
+da er bereits &ndash; zumindest in unseren Anwendungsfällen &ndash; die
+Anzahl der Reihen und Spalten vor dem Erzeugen des Schachbretts kennt!
 
-Bei Gebrauch von Templates weichen wir vom üblichen C++ Entwicklungsmodell für Klassen (zwei Dateien für die Schnittstelle &ndash; Header-Datei &ndash; und
-die Realisierung der Klasse &ndash; Implementierungsdatei) ab. Wir wenden das so genannte *Inclusion Model* an und implmentieren die Klasse `KnightProblemBoard`
+Bei Gebrauch von Templates weichen wir vom üblichen C++ Entwicklungsmodell für Klassen (zwei Dateien, eine für die Schnittstelle &ndash; Header-Datei &ndash; und eine zweite
+für die Realisierung der Klasse &ndash; Implementierungsdatei) ab. Wir wenden das so genannte *Inclusion Model* an und implementieren die Klasse `KnightProblemBoard`
 in einer einzigen Datei, so wie es in anderen Programmiersprachen (zum Beispiel C# oder Java) auch üblich ist.
 
 ###### {#listing_03_class_knightproblemboard}
@@ -375,20 +379,20 @@ Da wir die Anzahl der Reihen und Spalten nicht variabel gestalten, bietet sich a
 ein zwei-dimensionales `std::array<T>`-Objekt an. Die Elemente des Arrays sind vom Typ `int`,
 sie beschreiben die Zugnummer des Springers beim Traversieren des Schachbretts.
 
-In Zeile 16 von [Listing 3] finden Sie einen `if constexpr` Ausdruck vor. Solche Ausdrücke können nur in Templates auftreten,
+In Zeile 16 von [Listing 3] finden Sie einen `if constexpr` Ausdruck vor. Solche Ausdrücke treten nur in Templates auf,
 die Bedingung muss zur Übersetzungszeit ausgewertet werden können. Wird der Ausdruck zu `true` evaluiert,
 werden die Anweisungen im nachfolgenden Block übersetzt und führen folglich zu entsprechenden Anweisungen im ausführbaren Programm.
 Im anderen Fall (`false`) ignoriert der Übersetzer einfach den Block komplett. An den `if constexpr` Ausdruck könnte sich auch ein `else`-Block anschließen,
 der nach denselben Regeln vom Übersetzer behandelt wird.
 Kurz und bündig formuliert können wir einen `if constexpr`-Ausdruck als *compile-time if* bezeichnen.
-In vorliegenden Beispiel soll es zur Übersetzungszeit möglich sein, die Methode `verifyCoordinate` mit oder ohne eine Implementierung auszustatten.
+Im vorliegenden Beispiel soll es zur Übersetzungszeit möglich sein, die Methode `verifyCoordinate` mit oder ohne Implementierung auszustatten.
 
 Die Implementierung der `operator<<`-Methode ist bei Template Klassen nicht immer ganz trivial. Ich habe den Ansatz gewählt,
 den Operator einfach als globale Funktion zu realisieren. Deshalb gibt es in der `KnightProblemBoard`-Klasse keine entsprechende `friend`-Deklaration,
-außerdem muss die Implementierung mit der öffentlichen Schnittstelle der Klasse zurechkommen.
+außerdem muss die Implementierung mit der öffentlichen Schnittstelle der Klasse `KnightProblemBoard` zurechtkommen.
 
 Wenn Sie Zeile 16 genau studiert haben, werden
-Sie beobachten, dass die Variable `RangeCheck` in diesem Listing nirgends definiert ist.
+Sie beobachten, dass die Variable `RangeCheck` in diesem Listing nirgendwo definiert ist.
 Natürlich würde dies einen Syntaxfehler nach sich ziehen, wir finden die Variablendefinition an einer anderen zentralen Stelle im Programm vor:
 
 ###### {#listing_04_common_definitions}
@@ -402,7 +406,7 @@ Natürlich würde dies einen Syntaxfehler nach sich ziehen, wir finden die Varia
 06: constexpr bool RangeCheck = false;
 ```
 
-*Listing* 4: Globale Definitionen.
+*Listing* 4: Datei *common.h* &ndash; globale Definitionen.
 
 Damit kommen wir auf den Solver des Springerproblems zu sprechen, also die Klasse `KnightProblemSolver`.
 Wie die Klasse `KnightProblemBoard` ist auch die  `KnightProblemSolver`-Klasse eine Template Klasse, wir finden die Realisierung also
@@ -658,43 +662,59 @@ wurden bereits in [Tabelle 5] sehr ausführlich spezifiziert, ihre Realisierung 
 *Listing* 5: Klasse `KnightProblemSolver`.
 
 Die beiden öffentlichen Methoden `findMovesSequential` und `findMovesParallel` (Zeilen 32 ff. bzw. 49 ff. in [Listing 5])
-besitzen beide eine private Überladung, in der die eigentliche Hauptarbeit erledigt wird (Zeilen 79 ff. und 105 ff.). 
+besitzen beide eine private Überladung, in der die eigentliche Hauptarbeit erledigt wird (Zeilen 79 ff. und 105 ff.).
 
-Die Hauptarbeit in der Implementierung der Klasse `KnightProblemSolver` lag mit Sicherheit in der Parallelisierung des Algorithmus.
-Diese finden Sie in der privaten Hilfsmethode `findMovesParallel` vor. Hier wird von einem Startfeld ausgehend zunächst eine
-Liste aller möglichen Folgezüge ermittelt (Zeile 111, das Ergebnis liegt dann in einem `std::vector<Coordinate>`-Objekt vor).
+Beginnen wir zunächst mit der sequentiellen Betrachtung des Springerproblems: Methode `findMovesSequential` setzt den Springer auf das Schachbrett (Zeile 81)
+und speichert diese Koordinate auch als potentiellen Kandidaten in einem Lösungspfad ab (Zeile 82).
+Die wichtigste Methode für den Algorithmus ist die kleine Hilfsmethode `isSolution`: Sie schaut auf dem Schachbrett nach,
+ob es noch freie Felder gibt oder nicht (Zeile 84).
+Wenn ja, werden ausgehend von der aktuellen Position des Springers alle möglichen Nachfolgepositionen berechnet (Zeile 90).
+Diese Liste wird nun der Reihe nach durchlaufen, um von allen möglichen Nachfolgepositionen ausgehend zu berechnen,
+ob sich eine Lösung des Springerproblems finden lässt: Die `findMovesSequential`-Methode wird zu diesem Zweck
+mit allen möglichen Nachfolgeposition rekursiv aufgerufen (Zeile 94).
+Am Ende der Methode wird der Springer von der aktuellen Position wieder entfernt und auch aus dem potentiellen Lösungspfad wieder ausgetragen.
+Hat ein Aufruf von `isSolution` ergeben, dass auf dem Schachbrett alle Felder belegt sind, haben wir eine Lösung gefunden.
+Der Lösungspfad (Instanzvariable `m_current`) wird in eine separate Liste `m_solutions` umkopiert.
+
+Eigentlich hätten wir nun mit der Methode `findMovesSequential` das Springerproblem bereits gelöst.
+Sie werden bei der Erörterung der Vorgehensweise möglicherweise bemerkt haben, dass das Durchlaufen mehrerer Nachfolgepositionen einer festen Springerposition
+einen Ansatzpunkt bietet, um hier parallel weiterzuarbeiten. Genau diese Idee steckt im Entwurf der Methode `findMovesParallel`.
+Sie ermittelt, wiederum ausgehend von einer aktuellen Springerposition eine Liste aller möglichen Folgezüge
+(Zeile 111, das Ergebnis liegt dann in einem `std::vector<Coordinate>`-Objekt vor).
 Natürlich müssen bei einer Parallelisierung des Algorithmus die jeweiligen Tasks (Threads) ihr eigenes Schachbrett zur Verfügung haben.
 Dies habe ich dadurch gelöst, dass der Einfachheit halber die jeweils beteiligten `KnightProblemSolver`-Objekte kopiert werden (Zeile 118). 
+Nun kommt die `std::async`-Methode ins Spiel. Sie besitzt im Wesentlichen drei Überladungen:
 
-Nun kommt die `std::async`-Methode ins Spiel. Sie besitzt zur Ausführung im Wesentlichen drei Überladungen:
-
-  * `std::async` mit normaler C-Funktion.
-  * `std::async` mit Funktor-Objekt.
+  * `std::async` mit normaler C-Funktion,
+  * `std::async` mit Funktor-Objekt und
   * `std::async` mit Lambda-Funktion.
 
 Ein Aufruf mit einer normalen C-Funktion (keine Objekt-Orientierung) oder mit einer Lambda-Funktion (in diesem Anwendungsfall zu unübersichtlich) kam für mich nicht in Frage. Damit bleibt nur die Variante mit einem Funktor-Objekt übrig. Die entsprechende Realisierung der Operators `operator()`
 finden Sie in den Zeilen 70 bis 75 vor. Im Prinzip dient der Einsatz des `()`-Operators nur einem einzigen Zweck, nämlich die `findMovesParallel`-Methode
-rekursiv aufrufen zu können. Wozu ist dieser rekursive Aufruf überhaupt notwendig? Ich wollte die Parallelisierung des Algorithmus nicht nur auf eine Ebene beschränken,
-sondern auch die &ldquo;Folgezüge von Folgezügen&rdquo; mit in die Parallelisierung mit einbeziehen. Aus diesem Grund besitzt die 
+rekursiv aufrufen zu können. Wozu ist dieser rekursive Aufruf überhaupt notwendig? Ich wollte die Parallelisierung des Algorithmus nicht nur auf eine
+ &ldquo;Ebene&rdquo; beschränken (Zug von der aktuellen Position zu einer möglichen Nachfolgeposition),
+sondern auch &ldquo;Züge von einer Nachfolgeposition zu den Nach-Nachfolgepositionen&rdquo; mit in die Parallelisierung mit einbeziehen können,
+sofern dies erwünscht ist. Aus diesem Grund besitzt die 
 `findMovesParallel`-Methode einen Parameter `maxDepth`, der die Tiefe des rekursiven Abstiegs kontrolliert.
-Ist `maxDepth` größer als 1, dann wird, wiederum mit einem Aufruf von `findMovesParallel` (oder genauer formuliert: aus technischen Gründer ein entsprechendes Funktor-Objekt), eine Aufteilung der unterschiedlichen Berechnungen auf weitere Threads vorgenommen (Zeile 124). Andernfalls geht es in Zeile 133 mit `findMovesSequential` sequentiell weiter.
+Ist `maxDepth` größer als 0, dann wird, wiederum mit einem Aufruf von `findMovesParallel`
+(aus technischen Gründen mit Hilfe eines entsprechenden Funktor-Objekts) eine Aufteilung der unterschiedlichen Berechnungen auf weitere Threads vorgenommen (Zeile 124). Andernfalls geht es in Zeile 133 mit `findMovesSequential` sequentiell weiter.
 
 In Zeile 125 ist ein weiteres technisches Detail beim Aufruf von `std::async` zu beachten. Das Objekt, das den `()`-Operator implementiert,
 kann (sinnvollweise) nicht als Referenz oder Kopie an `std::async` übergeben werden. Es muss (mittels `std::move`) die Verschiebesemantik angewendet werden.
-
-Dasselbe gilt für `std::future<ListSolutions>`-Objekte, die vorrübergehend in einem `std::deque<std::future<ListSolutions>>`-Objekte abgelegt werden.
+Dasselbe gilt für `std::future<ListSolutions>`-Objekte, die vorübergehend in einem `std::deque<std::future<ListSolutions>>`-Objekte abgelegt werden.
 Auch hier muss die Verschiebesemantik zum Einsatz kommen. 
 
 Der Einsatz von `std::async`-Methoden bringt es mit sich, dass die Resultate über ein entsprechendes `std::future<T>`-Objekt &ldquo;in der nahen Zukunft&rdquo;
 abgeholt werden können. Die durch `std::async` angestoßenen Threads stehen konzeptionell für die *Slaves*. 
 Ab den Zeilen 151 werden mit einem `get`-Aufruf an den jeweiligen `std::future<T>`-Objekten die von ihnen berechneten (Zwischen-)Resultate abgeholt und
 in einen entsprechenden Container des *Masters* umkopiert. Da alle beteiligten Threads auf einer Kopie eines `KnightProblemSolver`-Objekts arbeiten,
-sind während der parallelen Ausführung keine besonderen Schutzmechanismen (etwaiger konkurrierender Zugriff auf gemeinsame Daten) notwendig.
+sind während der parallelen Ausführung keine besonderen Schutzmechanismen notwendig
+(die Beachtung eines etwaigen konkurrierenden Zugriffs auf gemeinsame Daten ist nicht erforderlich).
 Ist ein *Slave* fertig, können seine Resultate im *Master* direkt umkopiert werden, es wird jetzt nicht mehr parallel gearbeitet.
 
 In den Zeilen 188 ff. finden Sie eine C++ 17 Spracherweiterung vor, eine `if`-Anweisung mit einer Variablen-Initialisierung.
 So ist die Variable `tmp` von Zeile 188 genau bis zur Zeile 191 gültig bzw. bekannt. Ihre Definition ist &ldquo;innerhalb&rdquo; der `if`-Anweisung erfolgt,
-damit erklärt sich dieser minimale Gültigkeitsbereich:
+damit erklärt sich ihr minimaler Gültigkeitsbereich:
 
 ```cpp
 if (Coordinate tmp{ coord.fromOffset(2, 1) }; canMoveTo(tmp))
@@ -704,6 +724,110 @@ if (Coordinate tmp{ coord.fromOffset(2, 1) }; canMoveTo(tmp))
 ```
 
 # Ausführung des Programms
+
+Die Hauptarbeit in der Implementierung der Klasse `KnightProblemSolver` lag mit Sicherheit in der Parallelisierung des Algorithmus.
+Mit den folgenden Testszenarien hoffe ich an Hand der Zeitmessungen nachweisen zu können, dass der Aufwand auch seine Mühe wert war.
+
+Zum Vergleichen der Laufzeiten der Realisierung ziehen wir ein Schachbrett der Größe 4×7 zu Rate.
+Auf meinem Intel-Rechner mit einem Intel® Core™ i9-9880H CPU @ 2.30 GHz Prozessor, laut Beschreibung einer 8-Kern CPU, erhalte ich das Ergebnis
+
+```
+[12180]: Main: findMovesSequential():
+[12180]:    ... Starting sequential solver at {3,0}
+[12180]: Elapsed time = 1220 [msecs]
+[12180]: Found: 1682
+[12180]: Main: findMovesParallel():
+[12180]:    ... Starting parallel solver at {3,0}
+[16356]:    ### Launching parallel solver at {1,1}, maxDepth = 0
+[ 1120]:    ### Launching parallel solver at {2,2}, maxDepth = 0
+[ 1120]:    ### calculated  622 solutions !!!
+[16356]:    ... Calculated solutions from {0,3} => 624
+[16356]:    ### calculated  1060 solutions !!!
+[12180]:    ... retrieved from Future: 1060 solutions
+[12180]:    ... retrieved from Future: 622 solutions
+[12180]: Elapsed time = 728 [msecs]
+[12180]: Found: 1682
+```
+
+Man sieht, dass sich die Mühen der Parallelisierung des Algorithmus gelohnt haben. Zum Vergleich können wir den Grad der Parallelisierung
+noch eine Ebene tiefer ziehen, die Ergebnisse werden noch besser:
+
+```
+[13008]: Main: findMovesSequential():
+[13008]:    ... Starting sequential solver at {3,0}
+[13008]: Elapsed time = 1207 [msecs]
+[13008]: Found: 1682
+[13008]: Main: findMovesParallel():
+[13008]:    ... Starting parallel solver at {3,0}
+[10588]:    ### Launching parallel solver at {1,1}, maxDepth = 1
+[ 4928]:    ### Launching parallel solver at {2,2}, maxDepth = 1
+[15856]:    ### Launching parallel solver at {3,2}, maxDepth = 0
+[15856]:    ... Launching sequential solver at {1,3}
+[ 9244]:    ### Launching parallel solver at {2,3}, maxDepth = 0
+[ 9244]:    ... Launching sequential solver at {3,5}
+[11396]:    ### Launching parallel solver at {0,3}, maxDepth = 0
+[11644]:    ### Launching parallel solver at {3,4}, maxDepth = 0
+[16648]:    ### Launching parallel solver at {0,3}, maxDepth = 0
+[ 1524]:    ### Launching parallel solver at {1,4}, maxDepth = 0
+[15316]:    ### Launching parallel solver at {0,1}, maxDepth = 0
+[11644]:    ... Launching sequential solver at {1,5}
+[18200]:    ### Launching parallel solver at {1,0}, maxDepth = 0
+[16648]:    ... Launching sequential solver at {2,4}
+[11396]:    ... Launching sequential solver at {2,4}
+[ 1524]:    ... Launching sequential solver at {3,5}
+[ 1524]:    ... Calculated solutions from {0,2} => 0
+[ 1524]:    ### calculated  0 solutions !!!
+[ 9244]:    ... Calculated solutions from {3,5} => 0
+[ 9244]:    ... Launching sequential solver at {0,4}
+[11396]:    ... Calculated solutions from {2,4} => 88
+[11396]:    ... Launching sequential solver at {1,5}
+[11644]:    ... Calculated solutions from {2,6} => 182
+[11644]:    ... Launching sequential solver at {1,3}
+[15856]:    ... Calculated solutions from {1,3} => 34
+[15856]:    ... Launching sequential solver at {2,4}
+[18200]:    ... Calculated solutions from {3,1} => 0
+[18200]:    ... Launching sequential solver at {0,2}
+[11644]:    ... Calculated solutions from {1,3} => 17
+[11644]:    ### calculated  216 solutions !!!
+[ 4928]:    ... retrieved from Future: 216 solutions
+[16648]:    ... Calculated solutions from {1,1} => 150
+[16648]:    ### calculated  206 solutions !!!
+[ 4928]:    ... retrieved from Future: 206 solutions
+[ 4928]:    ... retrieved from Future: 0 solutions
+[ 9244]:    ... Calculated solutions from {0,4} => 0
+[ 9244]:    ... Launching sequential solver at {1,5}
+[15316]:    ... Calculated solutions from {2,0} => 166
+[15316]:    ### calculated  200 solutions !!!
+[ 4928]:    ... retrieved from Future: 200 solutions
+[15856]:    ... Calculated solutions from {2,4} => 17
+[15856]:    ... Launching sequential solver at {2,0}
+[18200]:    ... Calculated solutions from {0,2} => 0
+[18200]:    ### calculated  0 solutions !!!
+[ 4928]:    ... retrieved from Future: 0 solutions
+[ 4928]:    ### calculated  622 solutions !!!
+[ 9244]:    ... Calculated solutions from {1,5} => 0
+[ 9244]:    ... Launching sequential solver at {3,1}
+[11396]:    ... Calculated solutions from {1,5} => 286
+[11396]:    ... Launching sequential solver at {2,2}
+[ 9244]:    ... Calculated solutions from {3,1} => 0
+[ 9244]:    ... Launching sequential solver at {0,2}
+[11396]:    ... Calculated solutions from {2,2} => 250
+[11396]:    ### calculated  624 solutions !!!
+[15856]:    ... Calculated solutions from {2,0} => 385
+[15856]:    ### calculated  436 solutions !!!
+[10588]:    ... retrieved from Future: 436 solutions
+[ 9244]:    ... Calculated solutions from {0,2} => 0
+[ 9244]:    ### calculated  0 solutions !!!
+[10588]:    ... retrieved from Future: 0 solutions
+[10588]:    ... retrieved from Future: 624 solutions
+[10588]:    ### calculated  1060 solutions !!!
+[13008]:    ... retrieved from Future: 1060 solutions
+[13008]:    ... retrieved from Future: 622 solutions
+[13008]: Elapsed time = 349 [msecs]
+[13008]: Found: 1682
+```
+
+Man sieht, dass sich die Mühen der Parallelisierung des Algorithmus gelohnt haben!
 
 ****
 
