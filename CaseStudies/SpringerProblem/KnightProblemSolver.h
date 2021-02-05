@@ -76,7 +76,7 @@ public:
 
         // start at lower left corner            
         Coordinate start{ ROWS - 1, 0 };
-        Logger<VerboseSolver>::log(std::cout, "   ... Starting sequential solver at ", start);
+        Logger<VerboseSolver>::log(std::cout, "   ... starting sequential solver at ", start);
         int count = findMovesSequential(start);
 
         // stopwatch
@@ -102,7 +102,7 @@ public:
 
         // start at lower left corner            
         Coordinate start{ ROWS - 1, 0 };
-        Logger<VerboseSolver>::log(std::cout, "   ... Starting parallel solver at ", start);
+        Logger<VerboseSolver>::log(std::cout, "   ... starting parallel solver at ", start);
         int count = findMovesParallel(start, maxDepth);
 
         // stopwatch

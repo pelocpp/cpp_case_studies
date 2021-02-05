@@ -4,7 +4,8 @@ Das *Springerproblem* ist auf den Schweizer Mathematiker *Leonhard Euler* (1707 
 
 Hmmm, eine gute Frage, wird sich der geneigte Leser jetzt sagen. Möglicherweise kann man sie innerhalb von wenigen Minuten selbst lösen, schließlich ist ein Schachbrett mit seinen 8&#x00D7;8 Feldern nicht so wirklich groß. Stellt man nach einer ersten Phase euphorischen Suchens ernüchternd fest, dass das Problem doch nicht so einfach zu lösen ist, kommt man vielleicht auf den revolutionären Gedanken, dem Problem mit Hilfe eines Softwareprogramms auf den Leib zu rücken. Dies ist natürlich möglich, wie wir in dieser Fallstudie am Beispiel von C++ zeigen werden.
 
-Neben der Implementierung einer *Backtracking*-Strategie betrachten wir auch Überlegungen, wie sich das Suchen von Zugfolgen parallelisieren lässt. Die Methode `std::async` und Objekte, die es &ldquo;erst in der Zukunft gibt&rdquo; (`std::future<T>`), kommen zum Einsatz.
+Neben der Implementierung einer *Backtracking*-Strategie betrachten wir auch Überlegungen, wie sich das Suchen von Zugfolgen parallelisieren lässt.
+Die Methode `std::async` und Objekte, die es &ldquo;erst in der Zukunft gibt&rdquo; (`std::future<T>`), kommen zum Einsatz.
 
 <!--more-->
 
@@ -18,7 +19,7 @@ Neben der Implementierung einer *Backtracking*-Strategie betrachten wir auch Üb
 * Parallelverarbeitung mit `std::future<T>` und `std::async`
 * Schlüsselwort `auto`
 * Datentyp `size_t`
-* `if constexpr` 
+* `if constexpr` zur Übersetzungszeit
 
 # Einführung
 
@@ -118,13 +119,26 @@ Durch das systematische Vorwärts- und Rückwärtsziehen des Springers auf dem S
 
 In der programmiersprachlichen Umsetzung müssen wir den Lösungsbaum nicht explizit erzeugen. Backtracking-Verfahren lassen sich typischerweise am einfachsten rekursiv beschreiben, die Möglichkeit eines rekursiven Methodenaufrufs nimmt einem diese Arbeit quasi ab, oder noch verwirrender: Der Lösungsbaum wird auf dem Methodenaufrufstapel implizit, quasi versteckt aufgespannt.
 
-In unserem konkreten Beispiel lässt sich nun zusammenfassend das Lösungsverfahren durch die in [Abbildung 13] skizzierte, rekursive Methode `FindMoves` darstellen:
-
-TO BE DONE
+In unserem konkreten Beispiel lässt sich nun zusammenfassend das Lösungsverfahren durch die in [Abbildung 13] skizzierte, rekursive Methode `findMoves` darstellen:
 
 ###### {#abbildung_13_springer_problem_pseudo_code_01}
-{{< figure src="/img/springer_problem/KnightsProblem_PseudoCode_01.png" width="90%" >}}
-*Abbildung* 13: Grobskizze einer rekursiven Methode FindMoves zur Bestimmung aller Zugfolgen.
+
+****
+> **Methode**: `findMoves`<br/>
+> **Eingabe**: Aktuelle Position (*x*, *y*) des Springers
+> ****
+> * Springer setzen: Markiere Zielfeld (*x*, *y*) als belegt<br/>
+> * **if** (&ldquo;*alle Felder des Schachbretts sind belegt*&ldquo;) **then**<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Lösung gefunden: In Liste abspeichern<br/>
+> * **else**<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;* Bestimmung aller möglichen Folgezüge des Springers<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;* Für alle möglichen Folgezüge (x<sup>'</sup>, y<sup>'</sup>):<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Aufruf von `findMoves` mit (x<sup>'</sup>, y<sup>'</sup>)&nbsp;&nbsp;&nbsp;// Rekursion<br/>
+> * **endif**<br/>
+> * Springer zurücksetzen: Markiere Zielfeld (*x*, *y*) als unbelegt&nbsp;&nbsp;&nbsp;// Backtracking
+****
+
+*Abbildung* 13: Grobskizze einer rekursiven Methode `findMoves` zur Bestimmung aller Zugfolgen.
 
 Wir schließen die theoretischen Vorarbeiten hiermit ab, es folgen Hinweise für eine Umsetzung des Lösungsverfahrens in eine *Modern C++*-Anwendung.
 
@@ -192,7 +206,7 @@ Weiter geht es mit den Instanzvariablen eines `KnightProblemSolver`-Objekts. Im 
 | :---- | :---- |
 | `m_board` | `KnightProblemBoard m_board;`<br/>Repräsentiert das Schachbrett, das durch ein `KnightProblemSolver`-Objekt verwaltet wird. |
 | `m_current` | `std::vector<Coordinate> m_current;`<br/>Liste von `Coordinate`-Objekten zur Ablage eines Springerzugs. Zu Beginn der Suche ist das `m_current`-Objekt logischerweise leer. Dem Springerzug aus [Abbildung 14] entspricht das Listenobjekt<br/>`{ {2,0}, {1,2}, {0,0}, {2,1} }`. |
-| `m_solutions` | `std::list<std::vector<Coordinate>> m_solutions;`<br/>Liste der zu einem bestimmten Zeitpunkt während der Ausführung des  *Backtracking*-Algorithmus bislang gefundenen Lösungen. |
+| `m_solutions` | `std::list<std::vector<Coordinate>> m_solutions;`<br/>Liste der zu einem bestimmten Zeitpunkt während der Ausführung des *Backtracking*-Algorithmus bislang gefundenen Lösungen. |
 | `m_moveNumber` | `int m_moveNumber;`<br/>Zähler für den Sprung im aktuellen Springerzug. Die Variable nimmt Werte zwischen 1 (Ausgangsposition) und Zeilenanzahl &#x00D7; Spaltenanzahl (letzter Zug eines Lösungszugs) an. |
 
 *Tabelle* 4: Zentrale Instanzvariablen der Klasse `KnightProblemSolver`.
@@ -228,7 +242,25 @@ Methoden `findMovesSequential` und `findMovesParallel` in Erscheinung treten. Au
 Einen Pseudo-Code der `findMoves`-Methode finden Sie in [Abbildung 15] vor. Beachten Sie, wie die Hilfsmethoden der Klasse `KnightProblemSolver` aus [Tabelle 4] zum Einsatz gelangen:
 
 ###### {#abbildung_15_springer_problem_pseudo_code_02}
-TO BE DONE
+
+****
+> **Methode**: `findMoves`<br/>
+> **Eingabe**: Aktuelle Koordinate `Coordinate`:`coord` des Springers
+> ****
+> * Füge Springer auf Feld `coord` hinzu: Aufruf von `setKnightMoveAt()`<br/>
+> * Füge Springerposition `coord` in Liste `m_current` hinzu: Aufruf von `push_back()`<br/>
+> * **if** (`isSolution()` == `true`) **then**<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Speicher Lösung in `m_solutions` ab: Aufruf von `nextKnightMoves()`<br/>
+> * **else**<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;* Bestimme Liste `nextMoves` aller möglichen Folgezüge: Aufruf von `push_back()`<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;* for (`tmp` in `nextMoves`) <br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Rekursiver Aufruf: `findMoves()` mit `tmp`&nbsp;&nbsp;&nbsp;<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;* endfor <br/>
+> * **endif**<br/>
+> * Entferne Springer von Position `coord`: Aufruf von `unsetKnightMoveAt()`<br/>
+> * Entferne Springer aus Liste `m_current`: Aufruf von `pop_back()`<br/>
+****
+
 *Abbildung* 15: Verfeinerung der rekursiven Methode `findMoves` zur Bestimmung aller Zugfolgen.
 
 
@@ -733,18 +765,9 @@ Auf meinem Intel-Rechner mit einem Intel® Core™ i9-9880H CPU @ 2.30 GHz Proze
 
 ```
 [12180]: Main: findMovesSequential():
-[12180]:    ... Starting sequential solver at {3,0}
 [12180]: Elapsed time = 1220 [msecs]
 [12180]: Found: 1682
 [12180]: Main: findMovesParallel():
-[12180]:    ... Starting parallel solver at {3,0}
-[16356]:    ### Launching parallel solver at {1,1}, maxDepth = 0
-[ 1120]:    ### Launching parallel solver at {2,2}, maxDepth = 0
-[ 1120]:    ### calculated  622 solutions !!!
-[16356]:    ... Calculated solutions from {0,3} => 624
-[16356]:    ### calculated  1060 solutions !!!
-[12180]:    ... retrieved from Future: 1060 solutions
-[12180]:    ... retrieved from Future: 622 solutions
 [12180]: Elapsed time = 728 [msecs]
 [12180]: Found: 1682
 ```
@@ -754,83 +777,14 @@ noch eine Ebene tiefer ziehen, die Ergebnisse werden noch besser:
 
 ```
 [13008]: Main: findMovesSequential():
-[13008]:    ... Starting sequential solver at {3,0}
 [13008]: Elapsed time = 1207 [msecs]
 [13008]: Found: 1682
 [13008]: Main: findMovesParallel():
-[13008]:    ... Starting parallel solver at {3,0}
-[10588]:    ### Launching parallel solver at {1,1}, maxDepth = 1
-[ 4928]:    ### Launching parallel solver at {2,2}, maxDepth = 1
-[15856]:    ### Launching parallel solver at {3,2}, maxDepth = 0
-[15856]:    ... Launching sequential solver at {1,3}
-[ 9244]:    ### Launching parallel solver at {2,3}, maxDepth = 0
-[ 9244]:    ... Launching sequential solver at {3,5}
-[11396]:    ### Launching parallel solver at {0,3}, maxDepth = 0
-[11644]:    ### Launching parallel solver at {3,4}, maxDepth = 0
-[16648]:    ### Launching parallel solver at {0,3}, maxDepth = 0
-[ 1524]:    ### Launching parallel solver at {1,4}, maxDepth = 0
-[15316]:    ### Launching parallel solver at {0,1}, maxDepth = 0
-[11644]:    ... Launching sequential solver at {1,5}
-[18200]:    ### Launching parallel solver at {1,0}, maxDepth = 0
-[16648]:    ... Launching sequential solver at {2,4}
-[11396]:    ... Launching sequential solver at {2,4}
-[ 1524]:    ... Launching sequential solver at {3,5}
-[ 1524]:    ... Calculated solutions from {0,2} => 0
-[ 1524]:    ### calculated  0 solutions !!!
-[ 9244]:    ... Calculated solutions from {3,5} => 0
-[ 9244]:    ... Launching sequential solver at {0,4}
-[11396]:    ... Calculated solutions from {2,4} => 88
-[11396]:    ... Launching sequential solver at {1,5}
-[11644]:    ... Calculated solutions from {2,6} => 182
-[11644]:    ... Launching sequential solver at {1,3}
-[15856]:    ... Calculated solutions from {1,3} => 34
-[15856]:    ... Launching sequential solver at {2,4}
-[18200]:    ... Calculated solutions from {3,1} => 0
-[18200]:    ... Launching sequential solver at {0,2}
-[11644]:    ... Calculated solutions from {1,3} => 17
-[11644]:    ### calculated  216 solutions !!!
-[ 4928]:    ... retrieved from Future: 216 solutions
-[16648]:    ... Calculated solutions from {1,1} => 150
-[16648]:    ### calculated  206 solutions !!!
-[ 4928]:    ... retrieved from Future: 206 solutions
-[ 4928]:    ... retrieved from Future: 0 solutions
-[ 9244]:    ... Calculated solutions from {0,4} => 0
-[ 9244]:    ... Launching sequential solver at {1,5}
-[15316]:    ... Calculated solutions from {2,0} => 166
-[15316]:    ### calculated  200 solutions !!!
-[ 4928]:    ... retrieved from Future: 200 solutions
-[15856]:    ... Calculated solutions from {2,4} => 17
-[15856]:    ... Launching sequential solver at {2,0}
-[18200]:    ... Calculated solutions from {0,2} => 0
-[18200]:    ### calculated  0 solutions !!!
-[ 4928]:    ... retrieved from Future: 0 solutions
-[ 4928]:    ### calculated  622 solutions !!!
-[ 9244]:    ... Calculated solutions from {1,5} => 0
-[ 9244]:    ... Launching sequential solver at {3,1}
-[11396]:    ... Calculated solutions from {1,5} => 286
-[11396]:    ... Launching sequential solver at {2,2}
-[ 9244]:    ... Calculated solutions from {3,1} => 0
-[ 9244]:    ... Launching sequential solver at {0,2}
-[11396]:    ... Calculated solutions from {2,2} => 250
-[11396]:    ### calculated  624 solutions !!!
-[15856]:    ... Calculated solutions from {2,0} => 385
-[15856]:    ### calculated  436 solutions !!!
-[10588]:    ... retrieved from Future: 436 solutions
-[ 9244]:    ... Calculated solutions from {0,2} => 0
-[ 9244]:    ### calculated  0 solutions !!!
-[10588]:    ... retrieved from Future: 0 solutions
-[10588]:    ... retrieved from Future: 624 solutions
-[10588]:    ### calculated  1060 solutions !!!
-[13008]:    ... retrieved from Future: 1060 solutions
-[13008]:    ... retrieved from Future: 622 solutions
 [13008]: Elapsed time = 349 [msecs]
 [13008]: Found: 1682
 ```
 
 Man sieht, dass sich die Mühen der Parallelisierung des Algorithmus gelohnt haben!
-
-****
-
 
 <!-- Links Definitions -->
 
@@ -856,9 +810,7 @@ Man sieht, dass sich die Mühen der Parallelisierung des Algorithmus gelohnt hab
 
 [Abbildung 12]: #abbildung_12_springer_problem_solution_tree
 [Abbildung 13]: #abbildung_13_springer_problem_pseudo_code_01
-
 [Abbildung 14]: #abbildung_14_springer_problem_example_board
-
 [Abbildung 15]: #abbildung_15_springer_problem_pseudo_code_02
 
 
@@ -868,6 +820,4 @@ Man sieht, dass sich die Mühen der Parallelisierung des Algorithmus gelohnt hab
 [Listing 4]: #listing_04_common_definitions
 [Listing 5]: #listing_03_class_knightproblemsolver
 
-
 <!-- End-of-File -->
-
