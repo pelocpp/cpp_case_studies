@@ -40,7 +40,7 @@ viele programmiersprachliche Konstrukte bzw. Sprachmittel von *Modern C++*!
 
 Bevor wir uns dem Algorithmus zur Konstruktion einer Potenzmenge (und damit der Klasse `PowerSet`) zuwenden,
 benötigen Sie als Fundament die Klasse `PartialSet`. Implementieren Sie ein Grundgerüst dieser Klasse
-an Hand der Vorgaben in [Tabelle 1].
+an Hand der Vorgaben aus [Tabelle 1].
 
 Eine Instanz der Klasse `PartialSet` sollte ihre Elemente immer in aufsteigend sortierter Form ablegen.
 Auf diese Weise lassen sich Operationen wie zum Beispiel das Vergleichen von `PartialSet`-Objekten leichter implementieren.
@@ -176,7 +176,7 @@ Wir fahren mit einigen Hilfestellungen zur Implementierung der Klasse `PowerSet`
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Konstruktor | `PowerSet();`<br/>Es wird die ein-elementige Potenzmenge erzeugt (bestehend aus der leeren Menge `{ }`). |
+| Konstruktor | `PowerSet();`<br/>Es wird die einelementige Potenzmenge erzeugt (bestehend aus der leeren Menge `{ }`). |
 | Benutzerdefinierter Konstruktor | `PowerSet(size_t n);`<br/>Es wird die Potenzmenge zur Grundmenge { 1, 2, ..., *n* } erzeugt. |
 | *getter* `size()` | `size_t size() const;`<br/>Liefert die Anzahl der Elemente aus der Basismenge zurück. |
 | *getter* `cardinality()` | `size_t cardinality() const;`<br/>Liefert die Anzahl der Elemente der Potenzmenge zurück. *Hinweis*: Besteht die Basismenge aus *n* Elementen, so besitzt die Potenzmenge 2<sup>*n*</sup> Teilmengen. |
@@ -309,7 +309,7 @@ Wie müssten Sie einen Operator `<` in der Klasse `PartialSet` definieren, um di
 
 | Operator | Beschreibung |
 | :---- | :---- |
-| Operator `<` | `friend bool operator<(const PartialSet&, const PartialSet&);`<br/>Vergleicht zwei `PartialSet`-Objekte auf &ldquo;kleiner&rdquo;. Wir bezeichnen eine Teilmenge *S*1 &ldquo;kleiner&rdquo; als eine Teilmenge *S*2, wenn *S*1 entweder weniger Elemente als *S*2 enthält oder, falls *S*2 gleich viel Elemente enthält, das erste Element von *S*1 kleiner ist als das erste Element von *S*2. Stimmen beide Teilmengen im ersten Element überein, setzen wir den Vergleich mit dem zweiten, dritten, etc. Element solange fort, bis ein Unterschied vorhanden ist. Dabei wird vorausgesetzt, dass die Elemente beider Teilmengen in aufsteigender Reihenfolge vorliegen. |
+| Operator `<` | `friend bool operator<(const PartialSet&, const PartialSet&);`<br/>Vergleicht zwei `PartialSet`-Objekte auf &ldquo;kleiner&rdquo;. Wir bezeichnen eine Teilmenge *S*1 &ldquo;kleiner&rdquo; als eine Teilmenge *S*2, wenn *S*1 entweder weniger Elemente als *S*2 enthält oder, falls *S*2 gleich viele Elemente enthält, das erste Element von *S*1 kleiner ist als das erste Element von *S*2. Stimmen beide Teilmengen im ersten Element überein, setzen wir den Vergleich mit dem zweiten, dritten, usw. Element fort, bis ein Unterschied auftritt. Dabei wird vorausgesetzt, dass die Elemente beider Teilmengen in aufsteigender Reihenfolge vorliegen. |
 
 *Tabelle* 3: Definition des Operators `operator<` in der Klasse `PartialSet`.
 
@@ -357,7 +357,7 @@ Next Set: { 1, 2, 3 }
 
 Von einer Potenzmenge lassen sich Teilmengen bilden. Zum Beispiel kann man alle Elemente einer
 Potenzmenge betrachten, die dieselbe Anzahl *k* von Elementen besitzen. Dazu betrachten wir am
-besten ein Beispiel: Alle zwei-elementigen Teilmengen der Potenzmenge, deren Grundmenge aus
+besten ein Beispiel: Alle zweielementigen Teilmengen der Potenzmenge, deren Grundmenge aus
 den Elementen 0, 1, und 2 besteht, lauten `{0, 1}`, `{0, 2}` und `{1, 2}`.
 Ergänzen Sie Ihre Realisierung der Klasse `PowerSet` um eine Methode `partialSetsBySize`:
 
@@ -487,14 +487,16 @@ möglicherweise etwas auffällig: Es geht schlicht und ergreifend darum, eine Te
 um es an einem Beispiel festzumachen.
 Dies sieht beim ersten Betrachten recht trivial aus &ndash; mit einer Ausnahme: Nach der Zahl 3, also dem letzten Element der Teilmenge, wird kein Komma mehr ausgegeben.
 Natürlich ist dieses Problem nicht unlösbar, aber eben nicht mit ein paar C++-Anweisungen im Programmierstil einer ungebremsten Eleganz, wie wir den Zeilen 30 bis 38 entnehmen können.
+
 Das Problem einer leeren Teilmenge ist in Zeile 30 abgehandelt: Nur wenn die beiden Iterator-Objekte `set.m_numbers.begin()` und `set.m_numbers.end()` gleich sind,
 kommt es nicht zur Ausführung des Rumpfes der Bedingungsanweisung. Jetzt können wir bei einer nicht-leeren Teilmenge das Problem des letzten Kommas angehen,
 die `std::prev`-Methode liefert immer ein gültiges Iterator-Objekt zurück (eben da die Teilmenge nicht leer ist).
 Die `for`-Wiederholungsschleife gibt alle Elemente der Teilmenge bist auf das letzte aus,
 diesem widmen wir uns in Zeile 37 separat.
-
 Elegante *Modern C++*-Anweisungen wie die bereichs-basierte Wiederholungsschleife können wir leider in diesem Beispiel
-nicht einsetzen, da der Bereich nicht vollständig durchlaufen wird. Damit sind wir bei der Klasse `PowerSet` angekommen
+nicht einsetzen, da der Bereich nicht vollständig durchlaufen wird.
+
+Damit sind wir bei der Klasse `PowerSet` angekommen
 ([Listing 3] und [Listing 4]):
 
 ###### {#listing_class_powerset_decl}
@@ -609,10 +611,10 @@ nicht einsetzen, da der Bereich nicht vollständig durchlaufen wird. Damit sind 
 
 *Listing* 4: Klasse `PowerSet`: Implementierung.
 
-Einige Anmerkungen zu [Listing 4]: In Zeile 13 darf der Aufruf von `clear()` hier nicht fehlen, da im Standard-Konstruktor der Klasse `PowerSet` das Mengenobjekt `m_sets` *nicht* leer ist,
+Einige Anmerkungen zu [Listing 4]: In Zeile 13 darf der Aufruf von `clear()` nicht fehlen, da im Standard-Konstruktor der Klasse `PowerSet` das Mengenobjekt `m_sets` *nicht* initialisiert wird,
 sondern mit der leeren Menge vorbelegt wird. Die einheitliche Initialisierung veranlasst in Zeile 47 in diesem Fall den Aufruf des Standard-Konstruktors der Klasse `PartialSet`.
-Schließlich kann der Gebrauch des Links-Shift Operators (Zeile 63) kann zu besseren Laufzeiten führen als der Einsatz der `pow`-Funktion aus der `math`-Bibliothek.
-Die Zeilen 45 bis 57 ([Listing 4] sind möglicherweise etwas kurz geraten, in jedem Fall implementieren sie die
+Schließlich kann der Gebrauch des Links-Shift Operators (Zeile 63) zu besseren Laufzeiten führen als der Einsatz der `pow`-Funktion aus der `math`-Bibliothek.
+Die Zeilen 45 bis 57 ([Listing 4]) sind möglicherweise etwas kurz geraten, in jedem Fall implementieren sie die
 intuitive Konstruktionsvorschrift für Potenzmengen.
 
 # There&lsquo;s more

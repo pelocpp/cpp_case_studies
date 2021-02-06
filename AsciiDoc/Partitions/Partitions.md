@@ -1,6 +1,6 @@
 <!-- Partitions.md -->
 
-In der Zahlentheorie oder der Kombinatorik ist eine *Partition* einer natürlichen Zahl *n* eine Möglichkeit, *n* als Summe natürlicher Zahlen zu schreiben. Zwei Summen, die sich nur in der Reihenfolge ihrer Summanden unterscheiden, werden als dieselbe Partition aufgefasst. Zum Beispiel kann die natürliche Zahl 4 auf fünf verschiedene Arten aufgeteilt werden:
+In der Zahlentheorie oder in der Kombinatorik ist eine *Partition* einer natürlichen Zahl *n* eine Möglichkeit, *n* als Summe natürlicher Zahlen zu schreiben. Zwei Summen, die sich nur in der Reihenfolge ihrer Summanden unterscheiden, werden als dieselbe Partition aufgefasst. Zum Beispiel kann die natürliche Zahl 4 auf fünf verschiedene Arten aufgeteilt werden:
 
 ```
 4
@@ -156,7 +156,9 @@ true
 false
 ```
 
-Möchte man die einzelnen Zahlen einer Partition einzeln durchlaufen, zum Beispiel mit einer bereichs-basierten `for`-Schleife, dann muss die Klasse `Partition` noch um zwei Methoden `begin()` und `end()` erweitert werden, die geeignete Iteratorobjekte zurückliefern. _Hinweis_: In der Realisierung dieser beiden Methoden
+Möchte man die einzelnen Zahlen einer Partition einzeln durchlaufen, zum Beispiel mit einer bereichs-basierten `for`-Schleife, dann muss die Klasse `Partition` noch um zwei Methoden `begin()` und `end()` erweitert werden, die geeignete Iteratorobjekte zurückliefern.
+
+*Hinweis*: In der Realisierung dieser beiden Methoden
 können diese auf gleichnamige Methoden des unterlagerten STL-Containers verschaltet werden:
 
 ```cpp
@@ -215,10 +217,10 @@ Partitions of 3:
 Wenn Sie in diesem Beispiel die Anzahl der Konstruktorenaufrufe der `Partition`-Objekte zählen,
 werden Sie feststellen, dass pro `insert`-Methodenaufruf an einem `PartitionSet`-Objekt zwei `Partition`-Objekte erzeugt werden:
 
-* Ein erstes als Parameter des `insert`-Methodenaufruf.
+* Ein erstes als Parameter des `insert`-Methodenaufrufs.
 * Ein zweites beim Einfügen in den STL-Container der `PartitionSet`-Klasse.
 
-Unter Verwendung der `emplace`-Methode, die von den meisten STL-Containerklassen bereitgestellt wird, erreicht man, dass in so einer Situation ein `Partition`-Objekt nur ein einziges Mal angelegt wird. Das heißt zunächst einmal, dass die `insert`-Methode in ihrer betrachteten Form so nicht zum Zuge kommen kann. Genau die Erzeugung dieses `Partition`-Objekts, dass als Parameter an `insert` übergeben wird, gilt es ja gerade zu vermeiden. Dies wiederum hat zur Folge, dass alle Parameter, die man zur Erzeugung eines `Partition`-Objekts benötigt, an eine entsprechende Methoden an der `PartitionSet`-Klasse zu übergeben sind. Wir nennen diese Methode sinnigerweise ebenfalls `emplace`.
+Unter Verwendung der `emplace`-Methode, die von den meisten STL-Containerklassen bereitgestellt wird, erreicht man, dass in so einer Situation ein `Partition`-Objekt nur ein einziges Mal angelegt wird. Das heißt zunächst einmal, dass die `insert`-Methode in ihrer betrachteten Form so nicht zum Zuge kommen kann. Genau die Erzeugung dieses `Partition`-Objekts, das als Parameter an `insert` übergeben wird, gilt es ja gerade zu vermeiden. Dies wiederum hat zur Folge, dass alle Parameter, die man zur Erzeugung eines `Partition`-Objekts benötigt, an eine entsprechende Methode an der `PartitionSet`-Klasse zu übergeben sind. Wir nennen diese Methode sinnigerweise ebenfalls `emplace`.
 
 Damit sind wir bei variadischen Templates angekommen, um mit ihrer Hilfe beliebig viele `size_t`-Werte (die Zahlen, aus denen eine Partition besteht) 
 geeignet an eine Methode der `PartitionSet`-Klasse übergeben zu können:
@@ -247,7 +249,7 @@ Partitions of 4:
 [5 partitions]
 ```
 
-Erkennen Sie zwischen den Aufrufen der `emplace`- und der `insert`-Methode einen Unterschied? Richtig erkannt: Die `insert`-Aufrufe nehmen ein `std::initializer_list<size_t>`-Objekt entgegen, deshalb müssen zwischen den runden Klammern noch geschweifte Klammern da sein. Die `emplace`-Aufrufe sind als Methoden mit einer variablen Anzahl von Parametern konzipiert (präziser formuliert: als _Parameter Pack_). Hier sind geschweifte Klammern nicht notwendig und als solche syntaktisch auch gar nicht zulässig. Wir testen zusätzlich noch, dass dieselbe Partition nicht mehrfach einem `PartitionSet`-Objekt hinzugefügt werden kann:
+Erkennen Sie zwischen den Aufrufen der `emplace`- und der `insert`-Methode einen Unterschied? Richtig erkannt: Die `insert`-Aufrufe nehmen ein `std::initializer_list<size_t>`-Objekt entgegen, deshalb müssen zwischen den runden Klammern noch geschweifte Klammern stehen. Die `emplace`-Aufrufe sind mit einer variablen Anzahl von Parametern konzipiert (präziser formuliert: als _Parameter Pack_). Hier sind geschweifte Klammern nicht notwendig und als solche syntaktisch auch gar nicht zulässig. Wir testen zusätzlich noch, dass dieselbe Partition nicht mehrfach einem `PartitionSet`-Objekt hinzugefügt werden kann:
 
 ```cpp
 PartitionSet set{ 4 };
@@ -279,7 +281,7 @@ Partitions of 4:
 
 Wir kommen nun auf das Kernstück der Aufgabe zu sprechen, die algorithmische Berechnung aller Partitionen zu einer vorgegebenen natürlichen Zahl. Ist _n_ die zu Grunde liegende natürliche Zahl, so gehen wir davon aus, dass mittels Rekursion die Menge aller Partitionen der Zahl _n_ - 1 bereits vorliegt. Da für _n_ = 1 diese Berechnung trivial ist, stellt diese Annahme keine Einschränkung dar!
 
-Haben wir alle Partitionen der Zahl _n_ - 1 vorliegen, so berechnen wir wie folgt alle Partitionen der Zahl _n_: Wir nehmen eine beliebige Partition der Zahl _n_ - 1 zur Hand. Ihre Anzahl der Summanden sei _m_. Wenn wir der Reihe nach zu jedem einzelnen dieser _m_ Summanden den Wert 1 addieren, erhalten wir auf einen Schlag _m_ Partitionen der Zahl _n_! Um es am folgenden Beispiel zu demonstrieren: Ist
+Haben wir alle Partitionen der Zahl _n_ - 1 vorliegen, so berechnen wir wie folgt alle Partitionen der Zahl _n_: Wir nehmen eine beliebige Partition der Zahl _n_ - 1 zur Hand. Ihre Anzahl der Summanden sei _m_. Wenn wir nun der Reihe nach zu jedem einzelnen dieser _m_ Summanden den Wert 1 addieren, erhalten wir auf einen Schlag _m_ Partitionen der Zahl _n_! Um es am folgenden Beispiel zu demonstrieren: Ist
 
 ```
 4 + 2 + 2
@@ -342,7 +344,7 @@ und ordnen Sie diese einer separaten Klasse `PartitionsCalculator` zu ([Tabelle 
 
 | Methode | Beschreibung |
 | :---- | :---- |
-| `calculate()` | `static PartitionSet calculate(size_t n);`<br/>Berechnet die Menge aller Partitionen der Zahl _n_ anhand des in <<Abbildung 1>> beschriebenen Algorithmus. Das Ergebnis wird durch den Rückgabewert (Objekt vom Typ `PartitionSet`) zurückgeliefert. |
+| `calculate()` | `static PartitionSet calculate(size_t n);`<br/>Berechnet die Menge aller Partitionen der Zahl _n_ anhand des in [Listing 1] beschriebenen Algorithmus. Das Ergebnis wird durch den Rückgabewert (Objekt vom Typ `PartitionSet`) zurückgeliefert. |
 
 *Tabelle* 3: Elemente der Klasse `PartitionsCalculator`.
 
@@ -374,7 +376,7 @@ Partitions of 6:
 
 # Anzahl der Partitionen
 
-Die Anzahl der Partitionen einer natürlichen Zahl haben Sie im letzten Teilschritts als Nebeneffekt berechnet. Es gibt aber auch eine alternative Möglichkeit mit Hilfe einer rekursiven Formel, also ohne die Partitionen selbst bestimmen zu müssen. Wir führen zu diesem Zweck die Bezeichnung _sum_(_n_) für die gesuchte Anzahl ein. Ferner sei _b_(_n_, _m_) die Anzahl der Zerlegungen von _n_, in denen der größte Summand gleich _m_ ist. Also an einem Beispiel erläutert: In der Menge aller Partitionen von 5
+Die Anzahl der Partitionen einer natürlichen Zahl haben Sie im letzten Teilschritt als Nebeneffekt berechnet. Es gibt aber auch eine alternative Möglichkeit mit Hilfe einer rekursiven Formel, also ohne die Partitionen selbst bestimmen zu müssen. Wir führen zu diesem Zweck die Bezeichnung _sum_(_n_) für die gesuchte Anzahl ein. Ferner sei _b_(_n_, _m_) die Anzahl der Zerlegungen von _n_, in denen der größte Summand gleich _m_ ist. Also an einem Beispiel erläutert: In der Menge aller Partitionen von 5
 
 ```
 1: 5 = 5
@@ -404,7 +406,7 @@ Weiter muss man nicht gehen, denn _b_(_n_,_n_+1), _b_(_n_,_n_+2) sind ja alle 0.
 
 _b_(_n_,_m_) = _b_(_n_-1,_m_-1) + _b_(_n_-_m_,_m_)
 
-Wenn Sie die folgenden Anfangsbedingungen berücksichtigen, von deren Korrektheit man sich leicht überzeugen kann, steht einer einfachen, direkten Umsetzung in eine rekursive {cpp}-Methode `numberOfPartitions` ([Tabelle 4]) nichts mehr im Weg:
+Wenn Sie die folgenden Anfangsbedingungen berücksichtigen, von deren Korrektheit man sich leicht überzeugen kann, steht einer einfachen, direkten Umsetzung in eine rekursive Methode `numberOfPartitions` ([Tabelle 4]) nichts mehr im Wege:
 
 ###### {#tabelle_4_class_partitionscalculator_02}
 
@@ -415,7 +417,7 @@ Wenn Sie die folgenden Anfangsbedingungen berücksichtigen, von deren Korrekthei
 
 *Tabelle* 4: Zwei Überladungen der Methode `numberOfPartitions` in der Klasse `PartitionsCalculator`.
 
-Für die Zahlen von 1 bis 20 ergeben sich folglich folgende Anzahlen an Partitionen:
+Für die Zahlen von 1 bis 20 ergeben sich folgende Anzahlen an Partitionen:
 
 ```cpp
 for (size_t i = 1; i != 21; ++i) {
@@ -505,7 +507,7 @@ auto begin() { return m_numbers.cbegin(); }
 auto end() { return m_numbers.cend(); }
 ```
 
-Wenn wir den Typ einer Variable oder wie in unserem Fall, den Rückgabetyp einer Methode, mit `auto` definieren, bestimmmt der Übersetzer den tatsächlichen Typ aus dem Kontext. Die beiden Methoden liefern also Objekte des Typs `std::multiset<size_t, std::greater<size_t>>::const_iterator` zurück, nur ist die Lesbarkeit mit `auto` halt doch um ein Vielfaches angenehmer. Damit sind wir schon bei der Implementierung der Klasse `Partition` angekommen:
+Wenn wir den Typ einer Variable oder wie in unserem Fall, den Rückgabetyp einer Methode, mit `auto` definieren, bestimmt der Übersetzer den tatsächlichen Typ aus dem Kontext. Die beiden Methoden liefern also Objekte des Typs `std::multiset<size_t, std::greater<size_t>>::const_iterator` zurück, nur ist die Lesbarkeit mit `auto` doch um ein Vielfaches angenehmer. Damit sind wir schon bei der Implementierung der Klasse `Partition` angekommen:
 
 ###### {#listing_class_partition_impl}
 
@@ -649,12 +651,12 @@ Zur Verwaltung der `Partition`-Objekte gibt es die Klasse `PartitionSet`:
 
 *Listing* 4: Klasse `PartitionSet`: Definition.
 
-Der Default-Konstruktor ergibt bei dieser Klasse wenig Sinn. Es sollte in Minimalfall immer die natürliche Zahl, um deren Zerlegungen es geht, bekannt sein. Deshalb wird in Zeile 9 ([Listing 4]) der Default-Konstruktor mit dem Schlüsselwort `delete` markiert, die Klasse besitzt folglich *keinen* Standard-Konstruktor. Für die Realisierung der `emplace`-Methode (Zeile 20) kommt das Feature der &ldquo;template member function&rdquo; zum Einsatz. Ferner findet die Implementierung
+Der Default-Konstruktor ergibt bei dieser Klasse wenig Sinn. Es sollte in Minimalfall immer die natürliche Zahl, um deren Zerlegungen es geht, bekannt sein. Deshalb wird in Zeile 9 ([Listing 4]) der Default-Konstruktor mit dem Schlüsselwort `delete` markiert, die Klasse besitzt folglich *keinen* Standard-Konstruktor. Für die Realisierung der `emplace`-Methode (Zeile 20) kommt das Feature der &ldquo;*Template Member Function*&rdquo; zum Einsatz. Ferner findet die Implementierung
 im Header-File statt, da dies bei Templates der einfachste Ansatz ist.
 
-In Zeile 24 von [Listing 4] findet die so genannte _Parameter Pack Expansion_ statt (`static_cast<size_t>(args)...`). Es handelt sich um die drei nachgestellten Punkte (`...`) nach dem Parameter `args`. Wir wenden die  _Parameter Pack Expansion_ an, um alle Parameter in einem `std::initializer_list<size_t>`-Objekt zusammenzufassen. Dieses Objekt verwenden wir zur Fehlerüberprüfung (Zeile 26) und berechnen mit `std::accumulate` die Summe der Parameter. Den auf diese Weise erhaltenen Wert vegleichen wir in Zeile 27 mit `m_number` auf Übereinstimmung. Bei Nicht-Übereinstimmung werden wir ein `std::invalid_argument`-Objekt und verlassen die `emplace`-Methode vorzeitig.
+In Zeile 24 von [Listing 4] findet die so genannte _Parameter Pack Expansion_ statt (`static_cast<size_t>(args)...`). Es handelt sich um die drei nachgestellten Punkte (`...`) nach dem Parameter `args`. Wir wenden die  _Parameter Pack Expansion_ an, um alle Parameter in einem `std::initializer_list<size_t>`-Objekt zusammenzufassen. Dieses Objekt verwenden wir zur Fehlerüberprüfung (Zeile 26) und berechnen mit `std::accumulate` die Summe der Parameter. Den auf diese Weise erhaltenen Wert vergleichen wir in Zeile 27 mit `m_number` auf Übereinstimmung. Bei Nicht-Übereinstimmung werfen wir ein `std::invalid_argument`-Objekt und verlassen die `emplace`-Methode vorzeitig.
 
-In Zeile 31 führen wir eine zweite _Parameter Pack Expansion_ aus, um damit _In-Place_-Konstruktion ein `Partition`-Objekt zu erzeugen, das wir an die `emplace`-Methode des `std::multiset<size_t, std::greater<size_t>>`-Objekts durchschleusen. Der Rückgabewert von `emplace` ist vom Typ `std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool>`. Hier interessiert uns nur der zweite Wert des Paares. Er gibt an, ob die Partition bereits in der Partitionenmenge vorhanden war oder nicht. Für Zugriff auf `std::pair<>`-Objekte gibt es die `std::get<>`-Methode, der Template Parameter muss vom Typ `int` sein. Für die Realisierung der `PartitionSet`-Klasse im _.cpp_-File bleiben nur noch ein Konstuktor, die `insert`-Methode und der Ausgabeoperator übrig:
+In Zeile 31 führen wir eine zweite _Parameter Pack Expansion_ aus, um damit *_*in-place* ein `Partition`-Objekt zu erzeugen, das wir an die `emplace`-Methode des `std::multiset<size_t, std::greater<size_t>>`-Objekts durchschleusen. Der Rückgabewert von `emplace` ist vom Typ `std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool>`. Hier interessiert uns nur der zweite Wert des Paares. Er gibt an, ob die Partition bereits in der Partitionenmenge vorhanden war oder nicht. Für den Zugriff auf `std::pair<>`-Objekte gibt es die `std::get<>`-Methode, der Template Parameter muss vom Typ `int` sein. Für die Realisierung der `PartitionSet`-Klasse im _.cpp_-File bleiben nur noch ein Konstruktor, die `insert`-Methode und der Ausgabeoperator übrig:
 
 ###### {#listing_class_partitionset_impl}
 
@@ -787,7 +789,7 @@ Die Aufruf von Konstruktoren der Klasse `std::vector<T>` kann manchmal leicht ve
 
 # There&lsquo;s more
 
-Das Thema &ldquo;Aufzählen&rdquo; &ndash; in unserem Fall &ldquo;Partitionen aufzählen&rdquo; tritt immer bei Klassen in Erscheinung, deren Gestalt gewisse Ähnlichkeiten mit einem Container haben. Ergänzen Sie Ihre Implementierung der Klasse `PartitionSet` entsprechend.
+Das Thema &ldquo;Aufzählen&rdquo; &ndash; in unserem Fall &ldquo;Partitionen aufzählen&rdquo; &ndash; tritt immer bei Klassen in Erscheinung, deren Struktur gewisse Ähnlichkeiten mit einem Container hat. Ergänzen Sie Ihre Implementierung der Klasse `PartitionSet` entsprechend.
 
 _Beispielfragment_:
 
