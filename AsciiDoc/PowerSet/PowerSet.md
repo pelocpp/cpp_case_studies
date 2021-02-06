@@ -329,7 +329,7 @@ notwendigen Objekte für den Start und das Ende einer Aufzählung bereitstellen 
 
 *Tabelle* 4: Aufzählung einer Potenzmenge.
 
-Studieren und testen Sie Ihre Funktionsweise der Iterator-Realisierung an einer bereichs-basierten Wiederholungsschleife:
+Studieren und testen Sie Ihre Funktionsweise der Iterator-Realisierung an einer bereichsbasierten Wiederholungsschleife:
 
 *Beispiel* 4:
 
@@ -399,7 +399,7 @@ Partial set of size 3:
 
 # Lösung
 
-> Quellcode: Siehe auch [Github](https://github.com/peterloos/Cpp_HouseOfSantaClaus.git).
+> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
 
 Wir stellen nachfolgend den Quellcode der beteiligten Klassen vor. Am Anfang stehen Teilmengen einer Potenzmenge und damit 
 die Klasse `PartialSet` ([Listing 1] und [Listing 2]):
@@ -493,7 +493,7 @@ kommt es nicht zur Ausführung des Rumpfes der Bedingungsanweisung. Jetzt könne
 die `std::prev`-Methode liefert immer ein gültiges Iterator-Objekt zurück (eben da die Teilmenge nicht leer ist).
 Die `for`-Wiederholungsschleife gibt alle Elemente der Teilmenge bist auf das letzte aus,
 diesem widmen wir uns in Zeile 37 separat.
-Elegante *Modern C++*-Anweisungen wie die bereichs-basierte Wiederholungsschleife können wir leider in diesem Beispiel
+Elegante *Modern C++*-Anweisungen wie die bereichsbasierte Wiederholungsschleife können wir leider in diesem Beispiel
 nicht einsetzen, da der Bereich nicht vollständig durchlaufen wird.
 
 Damit sind wir bei der Klasse `PowerSet` angekommen

@@ -81,8 +81,8 @@ void Test02_PartitionSet_03()
 void Test02_PartitionSet_04()
 {
     PartitionSet set{ 4 };
-    bool b;
 
+    bool b;
     b = set.emplace(2, 1, 1);
     std::cout << std::boolalpha << b << std::endl;
     b = set.emplace(1, 2, 1);

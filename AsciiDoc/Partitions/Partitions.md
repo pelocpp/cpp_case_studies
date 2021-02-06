@@ -43,8 +43,8 @@ Wir beschäftigen uns in dieser Fallstudie mit der Fragestellung, auf wie viele 
 4 = 3 + 1
 4 = 2 + 2
 4 = 2 + 1 + 1
-
 4 = 1 + 1 + 1 + 1
+
 5 = 5
 5 = 4 + 1
 5 = 3 + 2
@@ -156,7 +156,7 @@ true
 false
 ```
 
-Möchte man die einzelnen Zahlen einer Partition einzeln durchlaufen, zum Beispiel mit einer bereichs-basierten `for`-Schleife, dann muss die Klasse `Partition` noch um zwei Methoden `begin()` und `end()` erweitert werden, die geeignete Iteratorobjekte zurückliefern.
+Möchte man die einzelnen Zahlen einer Partition einzeln durchlaufen, zum Beispiel mit einer bereichsbasierten `for`-Schleife, dann muss die Klasse `Partition` noch um zwei Methoden `begin()` und `end()` erweitert werden, die geeignete Iteratorobjekte zurückliefern.
 
 *Hinweis*: In der Realisierung dieser beiden Methoden
 können diese auf gleichnamige Methoden des unterlagerten STL-Containers verschaltet werden:
@@ -455,6 +455,8 @@ Number partitions of 20: 627
 
 # Lösung
 
+> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
+
 Wir gehen zunächst auf die Klasse `Partition` ein. Da die Zahlen einer Partition mehrfach auftreten dürfen,
 bietet sich als Container eine Instanz der Klasse `std::multiset` an. In der Ausgabe einer Partition auf der Konsole sollten die Zahlen in absteigender Reihenfolge aufgelistet werden, für die Vergleichsfunktion greifen wir deshalb auf das Funktionsobjekt `std::greater<size_t>` zurück. Eine Definition der `Partition`-Klasse sieht so aus:
 
@@ -500,7 +502,7 @@ bietet sich als Container eine Instanz der Klasse `std::multiset` an. In der Aus
 
 In Zeile 5 von [Listing 2] finden wir einen Initialisierer für eine Instanzvariable vor. In diesem Fall kann man dann den Default-Konstruktor mit `default` definieren.
 
-In den Zeilen 24 und 27 werden eine `begin()` und `end()`-Methode definiert, um `Partition`-Objekte iterieren zu können. Darunter verstehen wir, dass wir in einer bereichs-basierten `for`-Schleife die einzelnen Zahlen der Partition traversieren können. Eine Iterator-Unterstützung ist einfach zu realisieren, wenn wir die Iteratorimplementierung eines unterlagerten STL-Containers zur Verfügung stehen haben. In unserem Fall ist dies das `std::multiset<size_t, std::greater<size_t>>`-Objekt, dessen `begin()` und `end()`-Methode uns die gewünschten Iteratorobjekte zurückliefern. Die Definitionen in den Zeilen 24 und 27 hätte man auch kürzer und damit einfacher lesbarer gestalten können:
+In den Zeilen 24 und 27 werden eine `begin()` und `end()`-Methode definiert, um `Partition`-Objekte iterieren zu können. Darunter verstehen wir, dass wir in einer bereichsbasierten `for`-Schleife die einzelnen Zahlen der Partition traversieren können. Eine Iterator-Unterstützung ist einfach zu realisieren, wenn wir die Iteratorimplementierung eines unterlagerten STL-Containers zur Verfügung stehen haben. In unserem Fall ist dies das `std::multiset<size_t, std::greater<size_t>>`-Objekt, dessen `begin()` und `end()`-Methode uns die gewünschten Iteratorobjekte zurückliefern. Die Definitionen in den Zeilen 24 und 27 hätte man auch kürzer und damit einfacher lesbarer gestalten können:
 
 ```cpp
 auto begin() { return m_numbers.cbegin(); }
@@ -567,12 +569,12 @@ Wenn wir den Typ einer Variable oder wie in unserem Fall, den Rückgabetyp einer
 53:         ++it2;
 54:     }
 55: 
-56:     return true; // wird das erreicht ????????????
+56:     return true;
 57: }
 58: 
 59: bool operator>(const Partition& p1, const Partition& p2)
 60: {
-61:     return !(p1 < p2);
+61:     return ! (p1 == p2 || (p1 < p2));
 62: }
 63: 
 64: // output
@@ -695,7 +697,8 @@ In Zeile 31 führen wir eine zweite _Parameter Pack Expansion_ aus, um damit *_*
 
 Die Implementierung der `insert`-Methode (Zeilen 5 bis 14) hätte man auch kürzer gestalten können. Es ging mir darum, zum einen diese Methode mit einem Rückgabewert (Partition schon vorhanden oder nicht) und mit einer Fehlerüberprüfung (Partition und Partitionenmenge passen zusammen oder nicht) auszustatten.
 
-Die Methoden zum Berechnen aller Partitionen einer natürlichen Zahl sind vom Charakter her eher funktional ausgelegt, in der Klasse `PartitionCalculator` finden sich daher nur statische Klassenmethoden vor:
+Die Methoden zum Berechnen aller Partitionen einer natürlichen Zahl sind vom Charakter her eher funktional ausgelegt,
+in der Klasse `PartitionCalculator` finden sich daher nur statische Klassenmethoden vor:
 
 ###### {#listing_class_partitioncalculator_decl}
 

@@ -34,10 +34,10 @@ public:
             throw std::invalid_argument("Number of partition doesn't match set!");
         }
 
-         //std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result
-         //   = m_partitions.emplace(list);
-
         auto result = m_partitions.emplace(Partition{ static_cast<size_t>(args) ... });
+
+        //std::pair<std::set<Partition, std::greater<Partition>>::iterator, bool> result
+        //   = m_partitions.emplace(list);
 
         return std::get<1>(result);
     }

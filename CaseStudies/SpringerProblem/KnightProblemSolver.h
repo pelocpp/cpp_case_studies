@@ -7,12 +7,12 @@
 // =====================================================================================
 // defining 'operator<<' for solutions as a global function
 
-std::ostream& operator<< (std::ostream& os, const std::list<std::vector<Coordinate>>& solutions) {
+std::ostream& operator<< (std::ostream& os, const std::list<std::list<Coordinate>>& solutions) {
 
     int counter = 0;
     int width = (solutions.size() < 10) ? 1 : (solutions.size() < 100) ? 2 : 5;
 
-    for (const std::vector<Coordinate>& solution : solutions) {
+    for (const std::list<Coordinate>& solution : solutions) {
 
         os << std::setw(width) << counter << ": ";
 
@@ -33,7 +33,7 @@ template <size_t ROWS, size_t COLS>
 class KnightProblemSolver 
 {
 public:
-    using Solution = std::vector<Coordinate>;
+    using Solution = std::list<Coordinate>;
     using ListSolutions = std::list<Solution>;
 
 private:

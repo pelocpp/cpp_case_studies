@@ -65,12 +65,12 @@ bool operator<(const Partition& p1, const Partition& p2)
         ++it2;
     }
 
-    return true; // wird das erreicht ?????????????????
+    return true;
 }
 
 bool operator>(const Partition& p1, const Partition& p2)
 {
-    return !(p1 < p2);
+   return ! (p1 == p2 || (p1 < p2));
 }
 
 // output
