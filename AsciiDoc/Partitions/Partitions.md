@@ -308,32 +308,27 @@ wird nicht konstruiert, da bei allen berechneten Partitionen mindestens ein Summ
 
 ###### {#pseudocode_listing_algorithm}
 
-**Methode**: `Calculate`
-**Input**: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zahl *n*
-**Output**: &nbsp;&nbsp;`PartitionSet`-Objekt mit allen Partitionen der Zahl *n*
-
-**if** *n* = 1 **then**
-
-> **return** `PartitionSet`-Objekt mit Zerlegung `{ 1 }`
-
-**else**
-
-> Berechne rekursiv `PartitionSet`-Objekt *P*<sub>*n* - 1</sub> zur Zahl *n* - 1:
-> `PartitionSet` *P*<sub>*n* - 1</sub> = `calculate` (*n* - 1)
-> *P*<sub>result</sub> = leeres `PartitionSet`-Objekt
-
-> **for all** p &#x2208; *P*<sub>*n* - 1</sub> **do**<br/>
-
-> > Berechne *m* Kandidaten für eine Partition von *n* (*m* Anzahl der Summanden von *p*) durch sukzessive Addition von 1 auf die einzelnen Summanden
-> > Füge Kandidaten in *P*<sub>result</sub> ein, wenn dieser noch nicht in *P*<sub>result</sub> enthalten ist
-
-> **endfor**
-
-> Erzeuge Partition *P*<sub>1</sub> der Länge *n* (Summanden alle gleich 1)
-> Füge Partition *P*<sub>1</sub> in *P*<sub>result</sub> ein
-> **return** *P*<sub>result</sub>
-
-**endif**
+****
+> **Methode**: `Calculate`<br/>
+> **Input**: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zahl *n*<br/>
+> **Output**: &nbsp;&nbsp;`PartitionSet`-Objekt mit allen Partitionen der Zahl *n*
+> ****
+> **if** *n* = 1 **then**<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;**return** `PartitionSet`-Objekt mit Zerlegung `{ 1 }`<br/>
+> **else**<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Berechne rekursiv `PartitionSet`-Objekt *P*<sub>*n* - 1</sub> zur Zahl *n* - 1:<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`PartitionSet` *P*<sub>*n* - 1</sub> = `calculate` (*n* - 1)<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;*P*<sub>result</sub> = leeres `PartitionSet`-Objekt<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;**for all** p &#x2208; *P*<sub>*n* - 1</sub> **do**<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Berechne *m* Kandidaten für eine Partition von *n* (*m* Anzahl der Summanden von *p*)
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;durch sukzessive Addition von 1 auf die einzelnen Summanden<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Füge Kandidaten in *P*<sub>result</sub> ein, wenn dieser noch nicht in *P*<sub>result</sub> enthalten ist<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;**endfor**<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Erzeuge Partition *P*<sub>1</sub> der Länge *n* (Summanden alle gleich 1)<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;Füge Partition *P*<sub>1</sub> in *P*<sub>result</sub> ein<br/>
+> &nbsp;&nbsp;&nbsp;&nbsp;**return** *P*<sub>result</sub><br/>
+> **endif**
+****
 
 *Listing* 1: Pseudocode zur Berechnung aller Partitionen einer natürlichen Zahl.
 
