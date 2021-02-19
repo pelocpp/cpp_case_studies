@@ -11,58 +11,57 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KnightProblem", "CaseStudie
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Permutations", "CaseStudies\Permutations\Permutations.vcxproj", "{253E3080-9F17-410A-927E-F3EDCA507077}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AsciiDoc", "AsciiDoc", "{2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Permutations", "Permutations", "{FE02D751-6BFA-4C45-8E1C-DB363360910C}"
 	ProjectSection(SolutionItems) = preProject
-		AsciiDoc\Permutations\PermutationPseudeCode.png = AsciiDoc\Permutations\PermutationPseudeCode.png
-		AsciiDoc\Permutations\Permutations.adoc = AsciiDoc\Permutations\Permutations.adoc
+		MarkDown\Permutations\PermutationPseudeCode.png = MarkDown\Permutations\PermutationPseudeCode.png
+		MarkDown\Permutations\Permutations.adoc = MarkDown\Permutations\Permutations.adoc
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpringerProblem", "SpringerProblem", "{1BE26B8E-3A21-40D3-A0C6-2FF5EA62C8E4}"
 	ProjectSection(SolutionItems) = preProject
-		AsciiDoc\SpringerProblem\knight_moves_001.png = AsciiDoc\SpringerProblem\knight_moves_001.png
-		AsciiDoc\SpringerProblem\knight_moves_002.png = AsciiDoc\SpringerProblem\knight_moves_002.png
-		AsciiDoc\SpringerProblem\knight_moves_003.png = AsciiDoc\SpringerProblem\knight_moves_003.png
-		AsciiDoc\SpringerProblem\knight_moves_004.png = AsciiDoc\SpringerProblem\knight_moves_004.png
-		AsciiDoc\SpringerProblem\knight_moves_005.png = AsciiDoc\SpringerProblem\knight_moves_005.png
-		AsciiDoc\SpringerProblem\knight_moves_006.png = AsciiDoc\SpringerProblem\knight_moves_006.png
-		AsciiDoc\SpringerProblem\knight_moves_007.png = AsciiDoc\SpringerProblem\knight_moves_007.png
-		AsciiDoc\SpringerProblem\knight_moves_008.png = AsciiDoc\SpringerProblem\knight_moves_008.png
-		AsciiDoc\SpringerProblem\knight_moves_01.svg = AsciiDoc\SpringerProblem\knight_moves_01.svg
-		AsciiDoc\SpringerProblem\knight_moves_02.svg = AsciiDoc\SpringerProblem\knight_moves_02.svg
-		AsciiDoc\SpringerProblem\knight_moves_03.svg = AsciiDoc\SpringerProblem\knight_moves_03.svg
-		AsciiDoc\SpringerProblem\knight_moves_04.svg = AsciiDoc\SpringerProblem\knight_moves_04.svg
-		AsciiDoc\SpringerProblem\knight_moves_05.svg = AsciiDoc\SpringerProblem\knight_moves_05.svg
-		AsciiDoc\SpringerProblem\knight_moves_06.svg = AsciiDoc\SpringerProblem\knight_moves_06.svg
-		AsciiDoc\SpringerProblem\knight_moves_07.svg = AsciiDoc\SpringerProblem\knight_moves_07.svg
-		AsciiDoc\SpringerProblem\knight_moves_board_example.svg = AsciiDoc\SpringerProblem\knight_moves_board_example.svg
-		AsciiDoc\SpringerProblem\knight_moves_master_slave.svg = AsciiDoc\SpringerProblem\knight_moves_master_slave.svg
-		AsciiDoc\SpringerProblem\knight_moves_possible_moves.png = AsciiDoc\SpringerProblem\knight_moves_possible_moves.png
-		AsciiDoc\SpringerProblem\knight_moves_possible_moves.svg = AsciiDoc\SpringerProblem\knight_moves_possible_moves.svg
-		AsciiDoc\SpringerProblem\knight_moves_solution_tree.png = AsciiDoc\SpringerProblem\knight_moves_solution_tree.png
-		AsciiDoc\SpringerProblem\Knight_Moves_Solutions.png = AsciiDoc\SpringerProblem\Knight_Moves_Solutions.png
-		AsciiDoc\SpringerProblem\knight_moves_start.svg = AsciiDoc\SpringerProblem\knight_moves_start.svg
-		AsciiDoc\SpringerProblem\Knight_Problem_Single_Solution.png = AsciiDoc\SpringerProblem\Knight_Problem_Single_Solution.png
-		AsciiDoc\SpringerProblem\KnightsProblem_PseudoCode_01.png = AsciiDoc\SpringerProblem\KnightsProblem_PseudoCode_01.png
-		AsciiDoc\SpringerProblem\SpringerProblem.adoc = AsciiDoc\SpringerProblem\SpringerProblem.adoc
-		AsciiDoc\SpringerProblem\SpringerProblem.md = AsciiDoc\SpringerProblem\SpringerProblem.md
+		MarkDown\SpringerProblem\knight_moves_001.png = MarkDown\SpringerProblem\knight_moves_001.png
+		MarkDown\SpringerProblem\knight_moves_002.png = MarkDown\SpringerProblem\knight_moves_002.png
+		MarkDown\SpringerProblem\knight_moves_003.png = MarkDown\SpringerProblem\knight_moves_003.png
+		MarkDown\SpringerProblem\knight_moves_004.png = MarkDown\SpringerProblem\knight_moves_004.png
+		MarkDown\SpringerProblem\knight_moves_005.png = MarkDown\SpringerProblem\knight_moves_005.png
+		MarkDown\SpringerProblem\knight_moves_006.png = MarkDown\SpringerProblem\knight_moves_006.png
+		MarkDown\SpringerProblem\knight_moves_007.png = MarkDown\SpringerProblem\knight_moves_007.png
+		MarkDown\SpringerProblem\knight_moves_008.png = MarkDown\SpringerProblem\knight_moves_008.png
+		MarkDown\SpringerProblem\knight_moves_01.svg = MarkDown\SpringerProblem\knight_moves_01.svg
+		MarkDown\SpringerProblem\knight_moves_02.svg = MarkDown\SpringerProblem\knight_moves_02.svg
+		MarkDown\SpringerProblem\knight_moves_03.svg = MarkDown\SpringerProblem\knight_moves_03.svg
+		MarkDown\SpringerProblem\knight_moves_04.svg = MarkDown\SpringerProblem\knight_moves_04.svg
+		MarkDown\SpringerProblem\knight_moves_05.svg = MarkDown\SpringerProblem\knight_moves_05.svg
+		MarkDown\SpringerProblem\knight_moves_06.svg = MarkDown\SpringerProblem\knight_moves_06.svg
+		MarkDown\SpringerProblem\knight_moves_07.svg = MarkDown\SpringerProblem\knight_moves_07.svg
+		MarkDown\SpringerProblem\knight_moves_board_example.svg = MarkDown\SpringerProblem\knight_moves_board_example.svg
+		MarkDown\SpringerProblem\knight_moves_master_slave.svg = MarkDown\SpringerProblem\knight_moves_master_slave.svg
+		MarkDown\SpringerProblem\knight_moves_possible_moves.png = MarkDown\SpringerProblem\knight_moves_possible_moves.png
+		MarkDown\SpringerProblem\knight_moves_possible_moves.svg = MarkDown\SpringerProblem\knight_moves_possible_moves.svg
+		MarkDown\SpringerProblem\knight_moves_solution_tree.png = MarkDown\SpringerProblem\knight_moves_solution_tree.png
+		MarkDown\SpringerProblem\Knight_Moves_Solutions.png = MarkDown\SpringerProblem\Knight_Moves_Solutions.png
+		MarkDown\SpringerProblem\knight_moves_start.svg = MarkDown\SpringerProblem\knight_moves_start.svg
+		MarkDown\SpringerProblem\Knight_Problem_Single_Solution.png = MarkDown\SpringerProblem\Knight_Problem_Single_Solution.png
+		MarkDown\SpringerProblem\KnightsProblem_PseudoCode_01.png = MarkDown\SpringerProblem\KnightsProblem_PseudoCode_01.png
+		MarkDown\SpringerProblem\SpringerProblem.adoc = MarkDown\SpringerProblem\SpringerProblem.adoc
+		MarkDown\SpringerProblem\SpringerProblem.md = MarkDown\SpringerProblem\SpringerProblem.md
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CollatzSequence", "CaseStudies\CollatzSequence\CollatzSequence.vcxproj", "{0531CAA7-922B-45E3-8B83-AC82D2186EBF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CollatzSequence", "CollatzSequence", "{9A6045C5-DA88-477B-809F-DF25A567C741}"
 	ProjectSection(SolutionItems) = preProject
-		AsciiDoc\CollatzSequence\Iterator_Documentation.adoc = AsciiDoc\CollatzSequence\Iterator_Documentation.adoc
+		MarkDown\CollatzSequence\Iterator_Documentation.adoc = MarkDown\CollatzSequence\Iterator_Documentation.adoc
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Partitions", "CaseStudies\Partitions\Partitions.vcxproj", "{9C865E9F-2A61-4034-AAEE-B037AD7FA37E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Partitions", "Partitions", "{3AEF1E44-3D6E-4702-9E13-7E889AF9E0B5}"
 	ProjectSection(SolutionItems) = preProject
-		AsciiDoc\Partitions\PartitionPseudeCode.png = AsciiDoc\Partitions\PartitionPseudeCode.png
-		AsciiDoc\Partitions\Partitions.adoc = AsciiDoc\Partitions\Partitions.adoc
-		AsciiDoc\Partitions\Partitions.md = AsciiDoc\Partitions\Partitions.md
+		MarkDown\Partitions\PartitionPseudeCode.png = MarkDown\Partitions\PartitionPseudeCode.png
+		MarkDown\Partitions\Partitions.adoc = MarkDown\Partitions\Partitions.adoc
+		MarkDown\Partitions\Partitions.md = MarkDown\Partitions\Partitions.md
+		MarkDown\Partitions\PartitionSet_PseudoCode.svg = MarkDown\Partitions\PartitionSet_PseudoCode.svg
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeConverter", "CaseStudies\CodeConverter\CodeConverter.vcxproj", "{8D3E05BA-9DF0-441A-88A7-09DA95C4BDE4}"
@@ -71,9 +70,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PowerSet", "CaseStudies\Pow
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerSet", "PowerSet", "{66556638-3412-4C70-901C-C7B86679A2CD}"
 	ProjectSection(SolutionItems) = preProject
-		AsciiDoc\PowerSet\PowerSet.adoc = AsciiDoc\PowerSet\PowerSet.adoc
-		AsciiDoc\PowerSet\PowerSet.md = AsciiDoc\PowerSet\PowerSet.md
+		MarkDown\PowerSet\PowerSet.adoc = MarkDown\PowerSet\PowerSet.adoc
+		MarkDown\PowerSet\PowerSet.md = MarkDown\PowerSet\PowerSet.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MarkDown", "MarkDown", "{0C9A9D81-4CA6-466B-B647-022ACE8E79C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,11 +153,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{FE02D751-6BFA-4C45-8E1C-DB363360910C} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
-		{1BE26B8E-3A21-40D3-A0C6-2FF5EA62C8E4} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
-		{9A6045C5-DA88-477B-809F-DF25A567C741} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
-		{3AEF1E44-3D6E-4702-9E13-7E889AF9E0B5} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
-		{66556638-3412-4C70-901C-C7B86679A2CD} = {2BFFBAEB-8C87-4C2B-B640-3E38C61437CE}
+		{FE02D751-6BFA-4C45-8E1C-DB363360910C} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{1BE26B8E-3A21-40D3-A0C6-2FF5EA62C8E4} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{9A6045C5-DA88-477B-809F-DF25A567C741} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{3AEF1E44-3D6E-4702-9E13-7E889AF9E0B5} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{66556638-3412-4C70-901C-C7B86679A2CD} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}
