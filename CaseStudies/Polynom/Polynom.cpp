@@ -1,47 +1,31 @@
+// =====================================================================================
+// Polynom.cpp
+// =====================================================================================
+
 #include <iostream>
-using namespace std;
+#include <vector>
+#include <algorithm>
 
 #include "Polynom.h"
 
 // c'tors
-Polynom::Polynom()
+Polynom::Polynom(const std::vector<double>& vector) : m_coefficients{ vector }
 {
-    // default c'tor: create zero polynom
-    m_coefficients.push_back(0.0);
+    removeLeadingZeros();
 }
 
-Polynom::Polynom(std::vector<double> coefficients)
+Polynom::Polynom(std::initializer_list<double> list) : m_coefficients{ list } 
 {
-    // remove leading zeros, if any ...
-    int top = coefficients.size() - 1;
-    while (top > 0 && coefficients[top] == 0)
-    {
-        coefficients.pop_back();
-        top--;
-    }
-
-    m_coefficients = coefficients;
-}
-
-Polynom::Polynom(const Polynom& p)
-{
-    // copy c'tor
-    m_coefficients = p.m_coefficients;
-}
-
-// d'tor
-Polynom::~Polynom()
-{
-    // cerr << "d'tor Polynom" << "["<< this << "]" << endl;
+    removeLeadingZeros();
 }
 
 // getter
-int Polynom::Rank() const
+size_t Polynom::rank() const
 {
     return m_coefficients.size() - 1;
 }
 
-bool Polynom::IsZero() const
+bool Polynom::zero() const
 {
     return m_coefficients.size() == 1 && m_coefficients[0] == 0;
 }
@@ -49,54 +33,64 @@ bool Polynom::IsZero() const
 // unary mathematical operators + and -
 Polynom operator+ (const Polynom& p)
 {
-    return Polynom(p);
+    return Polynom{ p };
 }
 
 Polynom operator- (const Polynom& p)
 {
-    Polynom tmp(p);
-    for (size_t i = 0; i < tmp.m_coefficients.size(); i++)
-        tmp.m_coefficients[i] *= -1.0;
-    return tmp;
+    //Polynom tmp{ p };
+
+    //std::for_each(std::begin (tmp.m_coefficients), std::end(tmp.m_coefficients), [](double& coeff) {
+    //    coeff *= -1.0;
+    //});
+    //
+    //return tmp;
+
+    // ############# templates: hier muss kräftig <T> hin ......
+
+    std::vector<double> tmp{ p.m_coefficients };
+
+    std::for_each(std::begin(tmp), std::end(tmp), [](auto& coeff) {  // auto oder T
+        coeff *= -1.0;
+        }
+    );
+
+    return { tmp };
 }
 
 // binary mathematical operators +, -, *, / and %
 Polynom operator+ (const Polynom& p1, const Polynom& p2)
 {
-    int count = (p1.m_coefficients.size() <= p2.m_coefficients.size()) ? p2.m_coefficients.size() : p1.m_coefficients.size();
+    size_t count = (p1.m_coefficients.size() <= p2.m_coefficients.size())
+        ? p2.m_coefficients.size()
+        : p1.m_coefficients.size();
 
     // create array for new coefficients
-    std::vector<double> coefficients;
-    for (size_t i = count - 1;; i--)
+    std::vector<double> coefficients(count);
+    for (size_t i = count - 1; i != (size_t)-1; i--)
     {
         double coeff = 0.0;
         if (i < p1.m_coefficients.size())
             coeff += p1.m_coefficients[i];
         if (i < p2.m_coefficients.size())
             coeff += p2.m_coefficients[i];
-        coefficients.insert(coefficients.begin(), coeff);
-        if (i == 0)
-            break;
+        coefficients.at(i) = coeff;
     }
 
-    // create result polynom
-    Polynom tmp(coefficients);
-
-    return tmp;
+    return { coefficients };
 }
-
 
 Polynom operator- (const Polynom& p1, const Polynom& p2)
 {
-    Polynom tmp = -p2;
+    Polynom tmp{ -p2 };
     tmp = p1 + tmp;
-    return tmp;
+    return tmp;   // #################################### kürzer schreiben
 }
 
 Polynom operator* (const Polynom& p1, const Polynom& p2)
 {
     // create array of coefficients
-    int count = p1.m_coefficients.size() + p2.m_coefficients.size() - 1;
+    size_t count = p1.m_coefficients.size() + p2.m_coefficients.size() - 1;
     // double* coefficients = new double[count];
 
     // create vector of a specific size for new coefficients
@@ -107,9 +101,9 @@ Polynom operator* (const Polynom& p1, const Polynom& p2)
     //    coefficients[i] = 0.0;
 
     // compute coefficients of polynom product
-    for (int i = p1.m_coefficients.size() - 1; i >= 0; i--)
+    for (size_t i = p1.m_coefficients.size() - 1; i != (size_t)-1; i--)
     {
-        for (int j = p2.m_coefficients.size() - 1; j >= 0; j--)
+        for (size_t j = p2.m_coefficients.size() - 1; j != (size_t)-1; j--)
         {
             coefficients[i + j] += p1.m_coefficients[i] * p2.m_coefficients[j];
         }
@@ -118,7 +112,7 @@ Polynom operator* (const Polynom& p1, const Polynom& p2)
     // create result polynom
     // Polynom result(coefficients, count);
 
-    Polynom result(coefficients);
+    Polynom result{ coefficients };
 
     // delete temporary array of coefficients
     // delete[] coefficients;
@@ -131,14 +125,14 @@ Polynom operator/ (const Polynom& p1, const Polynom& p2)
 {
     // degree of numerator polynom is less than degree of denominator polynom
     if (p1.m_coefficients.size() < p2.m_coefficients.size())
-        return Polynom();
+        return Polynom{};  // ################################################## Stimmt der Def c'tor hier
 
     // need copies of arguments
     Polynom tmp1 = p1;
     Polynom tmp2 = p2;
 
     // create coefficients array of result polynom
-    int count = p1.m_coefficients.size() - p2.m_coefficients.size() + 1;
+    size_t count = p1.m_coefficients.size() - p2.m_coefficients.size() + 1;
     // double* rescoeff = new double[count];
     std::vector<double> rescoeff(count);
 
@@ -147,7 +141,7 @@ Polynom operator/ (const Polynom& p1, const Polynom& p2)
     //    rescoeff[i] = 0.0;
 
     // apply algorithm of polynom division
-    for (int i = count - 1; i >= 0; i--)
+    for (size_t i = count - 1; i != (size_t)-1; i--)
     {
         // premature end of division reached (comparing degrees)
         if (tmp1.m_coefficients.size() < p2.m_coefficients.size())
@@ -162,10 +156,10 @@ Polynom operator/ (const Polynom& p1, const Polynom& p2)
         tmp2 = tmp2 * coeff;
 
         // calculate difference of ranks
-        int diffRank = tmp1.m_coefficients.size() - p2.m_coefficients.size();
+        size_t diffRank = tmp1.m_coefficients.size() - p2.m_coefficients.size();
 
         // multiply denominator polynom with one ore more 'x'
-        tmp2.MultiplyX(diffRank);
+        tmp2.multiplyX(diffRank);
 
         // subtract denominator polynom from numerator polynom
         tmp1 = tmp1 - tmp2;
@@ -292,7 +286,7 @@ Polynom operator% (const Polynom& p1, const Polynom& p2)
 //
 //
 //// horner scheme
-//double Polynom::Compute(double x)
+//double Polynom::computeHorner(double x)
 //{
 //    double y = m_coefficients[m_count - 1];
 //    for (int i = m_count - 2; i >= 0; i--)
@@ -303,13 +297,13 @@ Polynom operator% (const Polynom& p1, const Polynom& p2)
 //// apply horner scheme, using array subscripting operator
 //double Polynom::operator[](double x)
 //{
-//    return Compute(x);
+//    return computeHorner(x);
 //}
 //
 //// apply horner scheme, using function call operator
 //double Polynom::operator() (double x)
 //{
-//    return Compute(x);
+//    return computeHorner(x);
 //}
 
 
@@ -330,7 +324,7 @@ bool operator== (const Polynom& p1, const Polynom& p2)
     if (p1.m_coefficients.size() != p2.m_coefficients.size())
         return false;
 
-    for (size_t i = 0; i < p1.m_coefficients.size(); i++)
+    for (size_t i = 0; i != p1.m_coefficients.size(); i++)
         if (p1.m_coefficients[i] != p2.m_coefficients[i])
             return false;
 
@@ -350,7 +344,7 @@ bool operator<  (const Polynom& p1, const Polynom& p2)
     if (p1.m_coefficients.size() > p2.m_coefficients.size())
         return false;
 
-    for (int i = p1.m_coefficients.size() - 1; i >= 0; i--)
+    for (size_t i = p1.m_coefficients.size() - 1; i != (size_t)-1; i--)
     {
         if (p1.m_coefficients[i] < p2.m_coefficients[i])
             return true;
@@ -377,7 +371,7 @@ bool operator>= (const Polynom& p1, const Polynom& p2)
 }
 
 // output
-ostream& operator<< (ostream& os, const Polynom& p)
+std::ostream& operator<< (std::ostream& os, const Polynom& p)
 {
     for (size_t i = p.m_coefficients.size() - 1; /* i >= 0 */ ; i--)
     {
@@ -443,7 +437,7 @@ Polynom operator* (const Polynom& p, double d)
 }
 
 // private helper methods
-void Polynom::MultiplyX()
+void Polynom::multiplyX()
 {
     // create new array of coefficients
     //double* tmp = new double[m_count + 1];
@@ -466,8 +460,23 @@ void Polynom::MultiplyX()
     m_coefficients = tmp;
 }
 
-void Polynom::MultiplyX(int k)
+void Polynom::multiplyX(size_t k)
 {
-    for (int i = 0; i < k; i++)
-        MultiplyX();
+    for (size_t i = 0; i != k; i++) {
+        multiplyX();
+    }
 }
+
+void Polynom::removeLeadingZeros() {
+    // remove leading zeros, if any ...
+    size_t top = m_coefficients.size() - 1;
+    while (top != 0 && m_coefficients[top] == 0.0)   // TODO: Hier muss dann T {} stehen !!!!
+    {
+        m_coefficients.pop_back();
+        top--;
+    }
+}
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================
