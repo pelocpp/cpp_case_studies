@@ -15,14 +15,14 @@ eine Auflistung von endlich (oder auch unendlich) vielen fortlaufend nummerierte
 Die Zahl mit der Nummer _i_ &ndash; man sagt hier auch: mit dem Index _i_ &ndash; wird _i_-tes Glied der Folge genannt.
 
 Diese Fallstudie zeigt, wie sich die Berechnung der Elemente einer Zahlenfolge in einen C++&ndash;Iterator einbetten lässt,
-um auf diese Weise mit Hilfe der STL-Algorithmen performante und elegant
-in das C++&ndash;Programmiermodell integrierte Algorithmen zu erhalten.
+um auf diese Weise mit Hilfe der STL performante und elegant
+in das C++&ndash;Programmiermodell integrierte Algorithmen formulieren zu können.
 
 # Die &ldquo;teuflische Zahlenfolge&rdquo; oder auch das *Collatz*-Problem
 
 Das *Collatz*-Problem, auch als &ldquo;3*n* + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
 Problem und wird dem Mathematiker *Lothar Collatz* zugeschrieben. Bei dem Problem geht es um
-Zahlenfolgen, die nach einem einfachen Bildungsgesetz konstruiert werden. Gegeben ist eine
+Zahlenfolgen, die nach einem sehr einfachen Bildungsgesetz konstruiert werden. Gegeben ist eine
 beliebige natürliche Startzahl _n_, aus der eine Folge von Zahlen nach den folgenden zwei Regeln gebildet wird:
 
 * Ist die Zahl _n_ gerade, so ist die nächste Zahl gleich der Hälfte der Zahl.
@@ -30,7 +30,7 @@ beliebige natürliche Startzahl _n_, aus der eine Folge von Zahlen nach den folg
 
 Merkwürdigerweise erreicht diese Folge nach endlich vielen Schritten immer die Zahl 1. Man kann
 die Vermutung auch so betrachten: Jede Folge mündet in den Zyklus 4, 2, 1 – egal, mit welcher
-Startzahl man die Folge gestartet hat. Wählen wir zum Beispiel den Startwert 7, so lautet die Folge
+Startzahl man die Folge startet. Wählen wir zum Beispiel den Startwert 7, so lautet die Folge
 
 7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1.
 
@@ -43,7 +43,6 @@ Natürlich wollen wir in dieser Fallstudie keinen Versuch unternehmen, das *Coll
 Kommen wir auf C++ und damit auf eine Umsetzung des Regelwerks in einen C++&ndash;Algorithmus zu sprechen. 
 In einem ersten Ansatz würde man vielleicht eine Klasse `CollatzSolver` implementieren, die beispielsweise eine `next`- und eine `current`-Methode hat, und diese
 nach Bedarf aufrufen. Wir wollen aber einen Schritt weitergehen und C++&ndash;Iteratoren ins Spiel bringen.
-
 Durch die Implementierung des *Collatz*-Problems in Form eines C++&ndash;Iterators kann die Implementierung in Kombination mit der STL verwendet werden,
 wodurch nicht nur die Lesbarkeit des Codes verbessert wird. Es stehen vor allem alle STL-Algorithmen nahtlos zur Verfügung, 
 um Ergebnisse in der Berechnung der &ldquo;teuflischen Zahlenfolge&rdquo; weiterverarbeiten zu können.
@@ -83,10 +82,16 @@ Diese Funktionen geben jeweils Iteratorobjekte zurück. Das von `begin()` zurüc
 das von `end()` für das letzte Element der Auflistung. 
 Hierauf gehen wir später noch näher ein, da eben genau dieses &ldquo;letzte Element&rdquo; nicht immer von vorneherein bekannt ist.
 
+# Lösung
+
+> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
+
+## Klasse `CollatzIterator`
+
 Kommen wir jetzt auf die Iterator-Klasse zu sprechen. Vom obigen Code-Fragment können wir ableiten, dass die folgenden drei Operatoren vorhanden sein müssen:
 
   * `operator*` &ndash; Dereferenzieren eines Iterator-Objekts (in Analogie zu einem C/C++&ndash;Zeiger).
-  * `operator++` (Präfix) &ndash; Inkrementiert das Iterator-Objekt, damit dieses auf das nächste Element im Container verweist (es genügt die Präfix-Version des Operators).
+  * `operator++` &ndash; Inkrementiert das Iterator-Objekt, damit dieses auf das nächste Element im Container verweist &ndash; es genügt die Präfix-Version des Operators.
   * `operator!=` &ndash; Überprüfung, ob die Wiederholungsschleife enden soll. Dies ist der Fall, wenn der Iterator dieselbe Position erreicht hat, die `end()` beschreibt.
 
 *Hinweis*:
@@ -99,7 +104,7 @@ Wie lässt sich nun eine Zahlenfolge und das Iteratorkonzept von C++ miteinander
 In der Iteratorklasse ist die Realisierung in der Berechnung der Zahlenfolge unterzubringen.
 Der `++`&ndash;Operator ist diejenige Stelle, an der von einem Folgenglied zum nächsten weitergegangen wird.
 Mit dem `*`&ndash;Operator kann man auf das aktuelle Folgenglied zugreifen.
-Die Bestimung des Iterationsendes obliegt dem `!=`&ndash;Operator.
+Die Bestimmung des Iterationsendes obliegt dem `!=`&ndash;Operator.
 
 Instanzen der Iteratorklasse werden in der Regel von einer zweiten Klasse zur Verfügung gestellt, eben dem Container.
 Diese Klasse nimmt typischerweise die Initialisierungswerte für die Zahlenfolge entgegen und belegt damit die Iteratorenobjekte vor.
@@ -108,7 +113,7 @@ die als Rückgabewert ein Iteratorobjekt für das erste Folgenglied bzw. das End
 Die Initialisierungswerte der Bereichsklasse gehen mehr oder weniger in die Iteratorenobjekt für Start und Ende der Zahlenfolge ein.
 
 Genug der allgemeinen Theorie, lassen Sie uns einen Blick auf die Iteratorklasse `CollatzIterator`
-zur Berechnung der teuflischen Folge werfen:
+zur Berechnung der teuflischen Folge werfen ([Listing 1]):
 
 ###### {#listing_01_collatziterator_interface}
 
@@ -145,10 +150,9 @@ zur Berechnung der teuflischen Folge werfen:
 Mit ihrer Hilfe sollte es nicht mehr passieren, dass Instanzvariablen von Klassen ohne Vorbelegungswerte auftreten.
 Dieses Feature hat zur Folge, dass man nicht mehr zwingend den Default-Konstruktor einer Klasse ausprogrammieren muss.
 Mit der Kurzschreibweise in Zeile 17 ist erreicht, dass die Klasse einen Default-Konstruktor besitzt und die Instanzvariablen
-auf Basis ihrer jeweiligen Initialisierer vorbelegt sind.
+auf Basis ihrer jeweiligen Initialisierer vorbelegt werden.
 Die Zeilen 4 bis 8 bezeichnet man als *Iterator Traits* (zu deutsch etwa *Iterator Spuren*),
 sie sind wichtig für die Integration des Iterators in die STL.
-
 Eine mögliche Realisierung der `CollatzIterator`-Klasse folgt in [Listing 2]:
 
 ###### {#listing_02_collatziterator_implementation}
@@ -176,6 +180,8 @@ Eine mögliche Realisierung der `CollatzIterator`-Klasse folgt in [Listing 2]:
 ```
 
 *Listing* 2: Klasse `CollatzIterator`: Implementierung.
+
+## Klasse `CollatzSequence`
 
 Nun benötigen wir noch eine Klasse für die Zahlenfolge, also die Containerklasse.
 Im wesentlichen legt sie nur den Startwert für die Folge fest
@@ -224,7 +230,7 @@ Aus diesem Grund lautet das typische Muster zum Definieren von Container- und It
   * Definition (Implementierung) der Iteratorklasse.
 
 In unserem Anwendungsfall &ndash; Realisierung von Zahlenfolgen mit C++&ndash;Iteratoren &ndash; liegt der Iteration kein Container zugrunde.
-Alle Informationen zu den iterierenden Werten residieren in der Iteratorklasse, die Containerklasse muss also keine `friend`-Deklaration der Iteratorklasse haben.
+Alle Informationen zu den iterierenden Werten residieren in der Iteratorklasse, die Containerklasse muss also keine `friend`-Deklaration der Iteratorklasse haben ([Listing 4]):
 
 ###### {#listing_04_collatzsequence_implementation}
 
@@ -233,8 +239,8 @@ Alle Informationen zu den iterierenden Werten residieren in der Iteratorklasse, 
 02: CollatzSequence::CollatzSequence(int start) : m_start{ start } {}
 03: 
 04: // iterator support
-05: CollatzIterator CollatzSequence::begin() const { return { m_start }; } <1>
-06: CollatzIterator CollatzSequence::end()   const { return { 1 }; } <1>
+05: CollatzIterator CollatzSequence::begin() const { return { m_start }; }
+06: CollatzIterator CollatzSequence::end()   const { return { 1 }; }
 
 ```
 
@@ -243,16 +249,21 @@ Alle Informationen zu den iterierenden Werten residieren in der Iteratorklasse, 
 Das C++11&ndash;Sprachfeature der &ldquo;Uniform Initialization&rdquo; kann auch zusammen mit einer `return`-Anweisung auftreten.
 Betrachten Sie die beiden Zeilen 5 und 6 von [Listing 4]. Es steht auf Grund der Definition
 der Methoden `begin()` und `end()` fest, dass diese ein Objekt des Typs `CollatzIterator` zurückliefern müssen.
-Wozu aber
+Wozu dann
+
+```cpp
+return { CollatzIterator { m_start } };
+```
+
+bzw.
 
 ```cpp
 return { CollatzIterator { 1 } };
 ```
 
-schreiben, wenn die Information des Klassentyps `CollatzIterator` überflüssig ist bzw. diese dem Compiler ohnehin bekannt ist.
-
+schreiben, wenn die Information des Klassentyps `CollatzIterator` überflüssig ist bzw. dem Compiler bekannt ist.
 Nun können wir unsere erste teuflische Folgen berechnen. Wir verzichten zunächst noch auf den Einsatz einer Containerklasse
-und greifen ausschließlich auf Iteratorobjekte zurück:
+und testen ausschließlich Iteratorobjekte:
 
 ```cpp
 CollatzIterator iter{ 7 };
@@ -272,10 +283,10 @@ while (iter != end) {
 
 Wenn Sie die Ausgabe genau betrachten, können Sie einen kleinen Schönheitsfehler erkennen: Richtig erkannt, 
 die Folge sollte den Wert 1 als letztes Element und nicht die 2 haben.
-Dies ist nicht ganz trival lösbar, aber wenn wir an zwei Stelle im Quellcode geschickt eingreifen, haben wir auch dieses Problem behoben:
+Dies ist nicht ganz trival lösbar, aber wenn wir an zwei Stellen im Quellcode geschickt eingreifen, haben wir auch dieses Problem behoben:
 
   * Beobachtung 1: In der Festlegung des Ende-Iteratorobjekts sind wir ein wenig gekniffen: Der Wert 1 ist eigentlich der einzig mögliche Wert,
-    der sich hier anbietet. Da er aber das Ende der Zahlenfolge ist, wird er von der Iteration ausgenommen, was wir vermeinden wollen.
+    der sich hier anbietet. Da er aber das Ende der Zahlenfolge ist, wird er von der Iteration ausgenommen, was wir vermeiden wollen.
 
   * Beobachtung 2: Des Rätsels Lösung liegt an einer ganz anderen Stelle in der Iteratorklasse verborgen: Es ist der `operator!=`, den wir in einer ersten Version
     seiner Realisierung etwas &ldquo;unterschätzt&rdquo; haben:  
@@ -316,7 +327,7 @@ Dies ist nicht ganz trival lösbar, aber wenn wir an zwei Stelle im Quellcode ge
 Wenn Sie diese Änderungen in der Implementierung der `CollatzIterator`-Klassen einbringen,
 werden Sie in der Ausgabe die 1 als letztes Element der Zahlenfolge vorfinden!
 
-Jetzt können wir eigentlich aus dem vollen Schöpfen und unsere Container- samt Iteratorklasse gegen zahlreiche STL-Algorithmen testen.
+Jetzt können wir eigentlich aus dem vollen Schöpfen und unsere Container- und Iteratorklasse gegen zahlreiche STL-Algorithmen testen.
 Wir fangen mit einer bereichsbasierten `for`-Wiederholungsschleife an. Diese benötigt die Container-Klasse
 unserer Realisierung (nicht die Iteratorklasse),
 die jeweiligen Iteratorobjekte werden &ndash; für uns nicht sichtbar &ndash; durch Anweisungen angefordert,
@@ -341,7 +352,7 @@ drei Operatoren `operator++()`, `operator!=()` und `operator*()` vorhanden sein.
 
 Für die nachfolgenden Code-Fragmente muss die Iteratorklasse noch weitere Auskünfte bereitstellen.
 Wir sind beim Themenkreis der so genannten &ldquo;Iterator Traits&rdquo; &ndash; zu deutsch etwa &ldquo;Iterator Spuren&rdquo; &ndash; angekommen.
-Die Anforderung lässt sich vergleichsweise einfach durch 5 `using`-Deklarationen erfüllen:
+Die Anforderung lässt sich vergleichsweise einfach durch fünf `using`-Deklarationen erfüllen:
 
 ```cpp
 using iterator_category = std::forward_iterator_tag;
@@ -350,6 +361,8 @@ using difference_type = int;
 using pointer = int*;
 using reference = int&;
 ```
+
+## `CollatzIterator` und `CollatzSequence` im Zusammenspiel mit STL-Algorithmen
 
 Wir stellen als Erstes eine Anwendung des `std::copy`-Algorithmus vor:
 
@@ -395,11 +408,21 @@ std::cout << count << std::endl;
 13
 ```
 
+*Hinweis*:
+Ohne eine entsprechenden Definition der &ldquo;Iterator Traits&rdquo; in der Klasse `CollatzIterator` ([Listing 1])
+ist der Algorithmus-Aufruf `std::distance` nicht übersetzungsfähig! 
+Die Fehlermeldung ist leider nicht einfach verständlich, bei genauem Hinsehen kann man erkennen,
+dass die zum Zählen der Elemente notwendige Information des Abstands zweier Elemente fehlt:
+
+```
+Failed to specialize function template ... std::iterator_traits<remove_cv<remove_reference<_Ty>::type>::type>>::difference_type
+```
+
 Um einen Standard-Vektor (`std::vector<>`) mit den Elementen der Zahlenfolge zu füllen, 
 bietet sich eine Kombination von `std::copy` mit `std::back_inserter` an:
 
 ```cpp
-std::vector<int> numbers{ 100 };
+std::vector<int> numbers{ };
 CollatzSequence seq{ 7 };
 std::copy(std::begin(seq), std::end(seq), std::back_inserter(numbers));
 
@@ -477,12 +500,67 @@ std::cout << s << std::endl;
 [17]:     1
 ```
 
-
 # There&lsquo;s more
 
 In diesem Abschnitt bietet es sich an, eine Schwachstelle in der Definition der Iteratorklasse `CollatzIterator` zu beseitigen.
 Nicht jede Zahlenfolge muss Elemente des Typs `int` haben, `long`, `short`, `__int64` etc. wären auch geeignetete Kandidaten.
-Wir sind bei Templates angekommen ...
+Wir sind bei Templates angekommen: Eine Implementierung zweier Klassen `CollatzIteratorEx<T>` und `CollatzSequenceEx<T>`
+finden Sie unter [Github](https://github.com/pelocpp/cpp_case_studies.git) vor.
+
+# There&lsquo;s much more
+
+In C++ 20 wird ein neues Sprachkonzept, genannt *Concepts* eingeführt, eine clevere Vorgehensweise,
+um Restriktionen für Datentypen festzulegen, die eine Template-Funktion oder -klasse annehmen kann.
+Während Iteratorkategorien und -eigenschaften gleich bleiben, ändert sich die Art und Weise, *wie* Sie diese erzwingen:
+mit *Tags* bis C++ 17 (so wie wir es auch in dieser Fallstudie getan haben),
+mit *Concepts*  in C++ 20.
+
+Beispielsweise würden Sie anstelle des Tags `std::forward_iterator_tag` Ihren Iterator mit dem
+`std::forward_iterator`-*Konzept* markieren. Dieser neue Mechanismus hilft dabei,
+bessere Definitionen für Iteratoren zu erhalten
+und Fehlermeldungen des Compilers werden besser lesbarer.
+
+Im Augenblick ist die Umsetzung von *Concepts* und *Ranges* im Visual C++ Compiler noch nicht abgeschlossen,
+so dass ich eine Aktualisierung dieses Artikels noch in die (nahe) Zukunft verschiebe.
+Erste Schritte in diese Richtung werden vermutlich so aussehen, dass die Klasse `CollatzSequenceEx`
+in einen *Range* bzw. in eine *View* umzusetzen ist. Dazu gibt es eine Hilfsklasse `std::ranges::view_interface`:
+
+```cpp
+template <class T>
+class CollatzViewExEx : public std::ranges::view_interface<CollatzViewExEx<T>> {
+public:
+    CollatzViewExEx() = default;
+    CollatzViewExEx(T start) : m_start(start), m_begin(start), m_end () {}
+
+    auto begin() const { return m_begin; }
+    auto end() const { return m_end; }
+
+private:
+    T m_start;
+
+    CollatzIteratorEx<T> m_begin;
+    CollatzIteratorEx<T> m_end;
+};
+```
+
+Immerhin lässt sich mit diesem ersten kleinen Schritt bereits ein `CollatzViewExEx`-Objekt
+mit einer bereichsbasierten `for`-Wiederholungsschleife traversieren:
+
+```
+CollatzViewExEx view{ 7 };
+for (int n : view) {
+    std::cout << n << " - ";
+}
+```
+
+*Ausgabe*:
+
+```
+7 - 22 - 11 - 34 - 17 - 52 - 26 - 13 - 40 - 20 - 10 - 5 - 16 - 8 - 4 - 2 - 1 -
+```
+
+Sollten Sie mit den neuartigen C++ Konzepten bzgl. *Ranges* und *Concepts* (mit Visual C++)
+bessere Fortschritte erzielen, würde ich mich über eine Nachricht freuen :-)
 
 <!-- Links Definitions -->
 

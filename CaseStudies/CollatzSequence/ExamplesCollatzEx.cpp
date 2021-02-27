@@ -13,8 +13,6 @@
 #include "CollatzIteratorEx.h"
 #include "CollatzSequenceEx.h"
 
-// Default Sequence testen ,,,, mit dem 1 er 
-
 void Test01_Collatz_Ex()
 {
     CollatzIteratorEx<short> iter{ 7 };
@@ -38,22 +36,23 @@ void Test02_Collatz_Ex()
 
 void Test03_Collatz_Ex()
 {
-    CollatzSequenceEx<long> seq{ 13 };
+    CollatzSequenceEx<long> seq{ 7 };
     std::ostream_iterator<int> out{ std::cout, "  " };
     std::copy(std::begin(seq), std::end(seq), out);
+    std::cout << std::endl;
 }
 
 void Test04_Collatz_Ex()
 {
-    CollatzSequenceEx<long> seq{ 13 };
+    CollatzSequenceEx<long> seq{ 7 };
     int sum = std::accumulate(std::begin(seq), std::end(seq), 0);
     std::cout << sum << std::endl;
 }
 
 void Test05_Collatz_Ex()
 {
-    std::vector<int> numbers{ 100 };
-    CollatzSequenceEx<long> seq{ 13 };
+    std::vector<int> numbers{ };
+    CollatzSequenceEx<long> seq{ 7 };
     std::copy(std::begin(seq), std::end(seq), std::back_inserter(numbers));
 
     for (int number : numbers) {
@@ -63,7 +62,7 @@ void Test05_Collatz_Ex()
 
 void Test06_Collatz_Ex()
 {
-    CollatzSequenceEx<long> seq{ 13 };
+    CollatzSequenceEx<long> seq{ 7 };
     for (int number : seq) {
         std::cout << number << " ";
     }
@@ -72,7 +71,7 @@ void Test06_Collatz_Ex()
 
 void Test07_Collatz_Ex()
 {
-    CollatzSequenceEx<long> seq{ 13 };
+    CollatzSequenceEx<long> seq{ 7 };
 
     std::string s = std::accumulate(
         std::begin(seq),
@@ -94,7 +93,7 @@ void Test07_Collatz_Ex()
 
 void Test08_Collatz_Ex()
 {
-    CollatzSequenceEx<long> seq{ 13 };
+    CollatzSequenceEx<long> seq{ 7 };
 
     //std::iterator_traits<CollatzIterator>::difference_type count 
     //    = std::distance(std::begin(seq), std::end(seq));

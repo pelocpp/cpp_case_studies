@@ -13,8 +13,6 @@
 #include "CollatzIterator.h"
 #include "CollatzSequence.h"
 
-// Default Sequence testen ,,,, mit dem 1 er 
-
 void Test01_Collatz()
 {
     CollatzIterator iter{ 7 };
@@ -24,6 +22,7 @@ void Test01_Collatz()
         std::cout << *iter << ' ';
         ++iter;
     }
+    std::cout << std::endl;
 }
 
 void Test02_Collatz()
@@ -32,6 +31,7 @@ void Test02_Collatz()
     for (int n : seq) {
         std::cout << n << ' ';
     }
+    std::cout << std::endl;
 }
 
 void Test03_Collatz()
@@ -39,6 +39,7 @@ void Test03_Collatz()
     CollatzSequence seq{ 17 };
     std::ostream_iterator<int> out{ std::cout, "  " };
     std::copy(std::begin(seq), std::end(seq), out);
+    std::cout << std::endl;
 }
 
 void Test04_Collatz()
@@ -51,12 +52,13 @@ void Test04_Collatz()
 void Test05_Collatz()
 {
     std::vector<int> numbers{};
-    CollatzSequence seq{ 7 };
+    CollatzSequence seq{ 9 };
     std::copy(std::begin(seq), std::end(seq), std::back_inserter(numbers));
 
     for (int number : numbers) {
         std::cout << number << std::endl;
     }
+    std::cout << std::endl;
 }
 
 void Test06_Collatz()
@@ -65,6 +67,7 @@ void Test06_Collatz()
     for (int number : seq) {
         std::cout << number << " ";
     }
+    std::cout << std::endl;
 }
 
 void Test07_Collatz()
