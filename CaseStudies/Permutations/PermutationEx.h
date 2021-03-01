@@ -33,7 +33,7 @@ public:
     PermutationEx<T> removeAt(int i) const {
         std::vector<T> tmp = m_values;
         tmp.erase(tmp.begin() + i);
-        return PermutationEx<T>(tmp);
+        return PermutationEx<T>(tmp);   // andere Schreibweise {  }
     }
 
     // operator(s)

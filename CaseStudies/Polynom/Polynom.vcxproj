@@ -141,11 +141,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ExamplesPolynom.cpp" />
+    <ClCompile Include="ExamplesPolynomEx.cpp" />
     <ClCompile Include="Polynom.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Polynom.h" />
+    <ClInclude Include="PolynomEx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

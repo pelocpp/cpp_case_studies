@@ -2,21 +2,14 @@
 // Program.cpp
 // =====================================================================================
 
-// TODO: Braucht es den Copy Kontruktor ???
-
 // TODO: ES muss ein Template gemacht werden
 
 // TODO: ES muss ein Concept für den Datentyp gemacht werden
 
 // TODO: Hmmm, das Beispiel würde sich für den "Rocket" Operator <=> anbieten 
 
-// TODO: Operator+:  Wozu diese beiden komischen Zeilen:
-
 // TODO: Beschreiben: The correct way: There are two ways to loop backward correctly, the first one is :
 // https://jdhao.github.io/2017/10/07/loop-forward-backward-with-cpp-vector/
-
-// TODO:     Polynom(std::vector<double> coefficients);  // TODO: Brauchen wir den ????
-// Es gibt da ja die Initializer_list 
 
 
 #include <iostream>
@@ -24,40 +17,82 @@
 
 #include "Polynom.h"
 
-void Testing_Ctors();
-void Testing_Output();
-void Testing_IsZero();
-void Testing_UnaryPolynomOperators();
+void test_Ctors();
+void test_Output();
+void test_Zero();
+void test_Rank();
+void test_UnaryPolynomOperators();
 
-void Testing_PolynomAddition();
-void Testing_PolynomSubtraction();
+void test_Addition();
+void test_Subtraction();
+void test_Multiplication();
+void test_Division();
+void test_Modulo();
 
-void Testing_PolynomMultiplication();
-void Testing_AssignmentOperators();
+void test_AssignmentOperators();
+void test_Evaluation_ArraySubscriptOperator();
+void test_ComparisonOperators();
 
-void Testing_Evaluation_ArraySubscriptOperator();
-void Testing_Evaluation_FunctionCallOperator();
-void Testing_Evaluation_BothVariants();
-void Testing_ComparisonOperators();
-void Testing_Division();
+void test_Ctors_Ex();
+void test_Output_Ex();
+void test_Zero_Ex();
+void test_Rank_Ex();
+void test_UnaryPolynomOperators_Ex();
+
+void test_Addition_Ex();
+void test_Subtraction_Ex();
+void test_Multiplication_Ex();
+void test_Division_Ex();
+void test_Modulo_Ex();
+
+void test_AssignmentOperators_Ex();
+void test_Evaluation_ArraySubscriptOperator_Ex();
+void test_ComparisonOperators_Ex();
+
+void test_PolynomZipper();
+
+void test() {
+    test_Ctors();
+    test_Output();
+    test_Zero();
+    test_Rank();
+    test_UnaryPolynomOperators();
+
+    test_Addition();
+    test_Subtraction();
+    test_Multiplication();
+    test_Division();
+    test_Modulo();
+
+    test_AssignmentOperators();
+    test_Evaluation_ArraySubscriptOperator();
+
+    test_ComparisonOperators();
+
+    test_PolynomZipper();
+}
+
+void testEx() {
+    test_Ctors_Ex();
+    test_Output_Ex();
+    test_Zero_Ex();
+    test_Rank_Ex();
+    test_UnaryPolynomOperators_Ex();
+
+    test_Addition_Ex();
+    test_Subtraction_Ex();
+    test_Multiplication_Ex();
+    test_Division_Ex();
+    test_Modulo_Ex();
+
+    test_AssignmentOperators_Ex();
+    test_Evaluation_ArraySubscriptOperator_Ex();
+    test_ComparisonOperators_Ex();
+}
 
 int main()
 {
-    //Testing_Ctors();
-    //Testing_Output();
-    //Testing_IsZero();
-    //Testing_UnaryPolynomOperators();
-
-    Testing_PolynomAddition();
-    Testing_PolynomSubtraction();
-
-    //Testing_PolynomMultiplication();
-    //Testing_AssignmentOperators();
-    //Testing_Evaluation_ArraySubscriptOperator();
-    //Testing_Evaluation_FunctionCallOperator();
-    //Testing_Evaluation_BothVariants();
-    //Testing_ComparisonOperators();
-    //Testing_Division();
+    testEx();
 
     return 0;
 }

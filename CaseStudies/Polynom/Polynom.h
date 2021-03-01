@@ -10,7 +10,7 @@ private:
     std::vector<double> m_coefficients{ 0 };  // zero polynom
 
 public:
-    // c'tors / d'tor
+    // c'tors
     Polynom() = default;
     Polynom(std::initializer_list<double>);
 
@@ -22,9 +22,6 @@ public:
     // getter
     size_t rank() const;
     bool zero() const;
-
-    // assignment operator
-    Polynom& operator= (const Polynom&);  // ?????????????????????????????????????
 
     // unary mathematical operators
     friend Polynom operator+ (const Polynom&);
@@ -53,25 +50,21 @@ public:
     friend bool operator>= (const Polynom&, const Polynom&);
 
     // index operator
-    double operator[] (double x);
-
-    // function call operator
-    double operator() (double x);
+    const double operator[] (double x) const;
 
     // output
-    friend std::ostream& operator<< (std::ostream& os, const Polynom& p);
+    friend std::ostream& operator<< (std::ostream&, const Polynom&);
 
 private:
     // private helper operators
-    friend Polynom operator* (const Polynom& p, double d);
-    friend Polynom operator* (double d, const Polynom& p);
+    friend Polynom operator* (const Polynom&, double);
+    friend Polynom operator* (double, const Polynom&);
 
     // horner scheme
-    double computeHorner(double x);
+    double computeHorner(double) const;
 
     // private helper methods
-    void multiplyX();
-    void multiplyX(size_t k);
+    void multiplyX(size_t);
     void removeLeadingZeros();
 };
 

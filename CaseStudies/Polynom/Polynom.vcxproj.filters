@@ -24,9 +24,15 @@
     <ClCompile Include="ExamplesPolynom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ExamplesPolynomEx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Polynom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PolynomEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
