@@ -324,34 +324,21 @@ void Polynom::multiplyX(size_t k)
     m_coefficients = tmp;
 }
 
-//Using std::find_ifand std::vector::erase:
-//
-//auto rit = std::find_if(bits_vector.rbegin(), bits_vector.rend(),
-//    [](int v) { return v != 0; });
-//bits_vector.erase(rit.base(), end(bits_vector));
-
-
-//void Polynom::removeLeadingZeros() {
-//    // remove leading zeros, if any ...
-//    size_t top = m_coefficients.size() - 1;
-//    while (top != 0 && m_coefficients[top] == 0.0)
-//    {
-//        m_coefficients.pop_back();
-//        top--;
-//    }
-//}
-
-void Polynom::removeLeadingZeros() {
-    // remove leading zeros, if any ...
-    auto reverseIter = std::find_if(
-        m_coefficients.rbegin(), 
-        m_coefficients.rend(), 
-        [](double value) {
-            return value != 0.0;
-        }
+void Polynom::removeLeadingZeros()
+{
+    // remove leading zeros, if any ... using STL
+    std::reverse_iterator<std::vector<double>::iterator> r_it = std::find_if(
+        std::rbegin(m_coefficients),
+        std::rend(m_coefficients),
+        [](double value) { return value != 0.0; }
     );
 
-    m_coefficients.erase(reverseIter.base(), end(m_coefficients));
+    // vector contains only '0's - rescue last '0'
+    if (r_it == std::rend(m_coefficients)) {
+        r_it--;
+    }
+
+    m_coefficients.erase(r_it.base(), std::end(m_coefficients));
 }
 
 

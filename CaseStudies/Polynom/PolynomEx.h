@@ -268,13 +268,27 @@ private:
     }
     
     void removeLeadingZeros() {
-        // remove leading zeros, if any ...
-        size_t top = m_coefficients.size() - 1;
-        while (top != 0 && m_coefficients[top] == T{})
-        {
-            m_coefficients.pop_back();
-            top--;
+        //// remove leading zeros, if any ...
+        //size_t top = m_coefficients.size() - 1;
+        //while (top != 0 && m_coefficients[top] == T{})
+        //{
+        //    m_coefficients.pop_back();
+        //    top--;
+        //}
+
+        // remove leading zeros, if any ... using STL
+        std::reverse_iterator<std::vector<T>::iterator> r_it = std::find_if(
+            std::rbegin(m_coefficients),
+            std::rend(m_coefficients),
+            [](T value) { return value != T{}; }
+        );
+
+        // vector contains only '0's - rescue last '0'
+        if (r_it == std::rend(m_coefficients)) {
+            r_it--;
         }
+
+        m_coefficients.erase(r_it.base(), std::end(m_coefficients));
     }
 };
 

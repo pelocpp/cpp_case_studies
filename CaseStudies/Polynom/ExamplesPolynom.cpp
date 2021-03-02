@@ -36,21 +36,48 @@ void test_Ctors()
     std::cout << p7 << std::endl;
 }
 
+void test_RemoveLeadingZeros()
+{
+    Polynom p1{ };
+    std::cout << p1 << std::endl;
+
+    Polynom p2{ 0.0 };
+    std::cout << p2 << std::endl;
+
+    Polynom p3{ 0.0, 0.0 };
+    std::cout << p3 << std::endl;
+
+    Polynom p4{ 0.0, 0.0, 0.0 };
+    std::cout << p4 << std::endl;
+
+    Polynom p5{ 1.0 };
+    std::cout << p5 << std::endl;
+
+    Polynom p6{ 1.0, 0.0 };
+    std::cout << p6 << std::endl;
+
+    Polynom p7{ 1.0, 0.0, 2.0, 0.0, 3.0 };
+    std::cout << p7 << std::endl;
+
+    Polynom p8{ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 };
+    std::cout << p8 << std::endl;
+
+    Polynom p9{ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0, 0.0 };
+    std::cout << p9 << std::endl;
+}
+
 void test_Output()
 {
     Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
     std::cout << p1 << std::endl;
 
     // testing leading zeros
-    Polynom p2{ 2.0, -4.0, 0.0, 3.0, 0.0 };
+    Polynom p2{ 0.0, 0.0, 0.0 };
     std::cout << p2 << std::endl;
 
-    Polynom p3{ 0.0, 0.0, 0.0 };
-    std::cout << p3 << std::endl;
-
     // testing trailing zero
-    Polynom p4{ 0.0, 2.0, -4.0, 0.0, 3.0 };
-    std::cout << p4 << std::endl;
+    Polynom p3{ 0.0, 0.0, 2.0, -4.0, 0.0, 3.0 };
+    std::cout << p3 << std::endl;
 }
 
 void test_Zero()

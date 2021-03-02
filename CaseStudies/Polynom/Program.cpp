@@ -2,8 +2,6 @@
 // Program.cpp
 // =====================================================================================
 
-// TODO: ES muss ein Template gemacht werden
-
 // TODO: ES muss ein Concept für den Datentyp gemacht werden
 
 // TODO: Hmmm, das Beispiel würde sich für den "Rocket" Operator <=> anbieten 
@@ -11,13 +9,9 @@
 // TODO: Beschreiben: The correct way: There are two ways to loop backward correctly, the first one is :
 // https://jdhao.github.io/2017/10/07/loop-forward-backward-with-cpp-vector/
 
-
-#include <iostream>
-#include <vector>
-
-#include "Polynom.h"
-
+// no-template version
 void test_Ctors();
+void test_RemoveLeadingZeros();
 void test_Output();
 void test_Zero();
 void test_Rank();
@@ -33,7 +27,9 @@ void test_AssignmentOperators();
 void test_Evaluation_ArraySubscriptOperator();
 void test_ComparisonOperators();
 
+// template version
 void test_Ctors_Ex();
+void test_RemoveLeadingZeros_Ex();
 void test_Output_Ex();
 void test_Zero_Ex();
 void test_Rank_Ex();
@@ -49,10 +45,10 @@ void test_AssignmentOperators_Ex();
 void test_Evaluation_ArraySubscriptOperator_Ex();
 void test_ComparisonOperators_Ex();
 
-void test_PolynomZipper();
-
-void test() {
+void test() 
+{
     test_Ctors();
+    test_RemoveLeadingZeros();
     test_Output();
     test_Zero();
     test_Rank();
@@ -66,14 +62,13 @@ void test() {
 
     test_AssignmentOperators();
     test_Evaluation_ArraySubscriptOperator();
-
     test_ComparisonOperators();
-
-    test_PolynomZipper();
 }
 
-void testEx() {
+void testEx() 
+{
     test_Ctors_Ex();
+    test_RemoveLeadingZeros_Ex();
     test_Output_Ex();
     test_Zero_Ex();
     test_Rank_Ex();
@@ -92,6 +87,7 @@ void testEx() {
 
 int main()
 {
+    //test();
     testEx();
 
     return 0;

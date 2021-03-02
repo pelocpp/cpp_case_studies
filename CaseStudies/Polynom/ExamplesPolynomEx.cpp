@@ -38,6 +38,36 @@ void test_Ctors_Ex()
     std::cout << p7 << std::endl;
 }
 
+void test_RemoveLeadingZeros_Ex()
+{
+    PolynomEx<ScalarType> p1{ };
+    std::cout << p1 << std::endl;
+
+    PolynomEx<ScalarType> p2{ 0.0 };
+    std::cout << p2 << std::endl;
+
+    PolynomEx<ScalarType> p3{ 0.0, 0.0 };
+    std::cout << p3 << std::endl;
+
+    PolynomEx<ScalarType> p4{ 0.0, 0.0, 0.0 };
+    std::cout << p4 << std::endl;
+
+    PolynomEx<ScalarType> p5{ 1.0 };
+    std::cout << p5 << std::endl;
+
+    PolynomEx<ScalarType> p6{ 1.0, 0.0 };
+    std::cout << p6 << std::endl;
+
+    PolynomEx<ScalarType> p7{ 1.0, 0.0, 2.0, 0.0, 3.0 };
+    std::cout << p7 << std::endl;
+
+    PolynomEx<ScalarType> p8{ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0 };
+    std::cout << p8 << std::endl;
+
+    PolynomEx<ScalarType> p9{ 1.0, 0.0, 2.0, 0.0, 3.0, 0.0, 0.0 };
+    std::cout << p9 << std::endl;
+}
+
 void test_Output_Ex()
 {
     PolynomEx<ScalarType> p1{ 2.0, -4.0, 0.0, 3.0 };
