@@ -8,11 +8,11 @@ Algorithmus zur Bestimmung der Potenzmenge betrachten wir diese in *Modern C++*.
 
 # Lernziele
 
-* Einheitliche Initialisierung
-* Initialisierungsliste (`std::initializer_list<T>`)
-* STL-Klasse `std::set<T>`
-* Container-Methoden `cbegin()` und `cend()`
-* C++ Iteratorenkonzept
+  * Einheitliche Initialisierung
+  * Initialisierungsliste (`std::initializer_list<T>`)
+  * STL-Klasse `std::set<T>`
+  * Container-Methoden `cbegin()` und `cend()`
+  * C++ Iteratorenkonzept
 
 # Einführung
 

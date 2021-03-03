@@ -11,16 +11,16 @@ Die Methode `std::async` und Objekte, die es &ldquo;erst in der Zukunft&rdquo; g
 
 # Lernziele
 
-* Einheitliche Initialisierung und Default-Initialisierung
-* Einheitliche Initialisierung mit redundanten Typnamen
-* STL-Containerklassen `std::list<T>`, `std::vector<T>`, `std::array<T>` und `std::deque<T>`
-* STL-Algorithmus `std::for_each`
-* `if`-Anweisung mit Variablen-Initialisierung
-* Parallelverarbeitung mit `std::future<T>` und `std::async`
-* Schlüsselwort `auto`
-* Datentyp `size_t`
-* `if constexpr` zur Übersetzungszeit
-* Schlüsselwort `noexcept`
+  * Einheitliche Initialisierung und Default-Initialisierung
+  * Einheitliche Initialisierung mit redundanten Typnamen
+  * STL-Containerklassen `std::list<T>`, `std::vector<T>`, `std::array<T>` und `std::deque<T>`
+  * STL-Algorithmus `std::for_each`
+  * `if`-Anweisung mit Variablen-Initialisierung
+  * Parallelverarbeitung mit `std::future<T>` und `std::async`
+  * Schlüsselwort `auto`
+  * Datentyp `size_t`
+  * `if constexpr` zur Übersetzungszeit
+  * Schlüsselwort `noexcept`
 
 # Einführung
 

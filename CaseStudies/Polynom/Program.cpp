@@ -10,6 +10,7 @@
 // https://jdhao.github.io/2017/10/07/loop-forward-backward-with-cpp-vector/
 
 // no-template version
+void test_script();
 void test_Ctors();
 void test_RemoveLeadingZeros();
 void test_Output();
@@ -87,8 +88,9 @@ void testEx()
 
 int main()
 {
+    test_script();
     //test();
-    testEx();
+    //testEx();
 
     return 0;
 }

@@ -9,6 +9,24 @@
 #include "Polynom.h"
 
 // testing c'tors and d'tor
+void test_script()
+{
+    //Polynom p1{ };
+    //Polynom p2{ -5.0, +6.0, -7.0 };
+
+    //std::cout << p1 << std::endl;
+    //std::cout << p1.rank() << std::endl;
+    //std::cout << std::boolalpha << p1.zero() << std::endl;
+
+    //std::cout << p2 << std::endl;
+    //std::cout << p2.rank() << std::endl;
+    //std::cout << std::boolalpha << p2.zero() << std::endl;
+
+    Polynom p{ 2.0, -4.0, 0.0, 3.0 };
+    std::cout << p << std::endl;
+}
+
+// testing c'tors and d'tor
 void test_Ctors()
 {
     Polynom p{ };

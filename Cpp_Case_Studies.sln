@@ -77,6 +77,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PowerSet", "PowerSet", "{66
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MarkDown", "MarkDown", "{0C9A9D81-4CA6-466B-B647-022ACE8E79C3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Polynoms", "Polynoms", "{7262339A-E38C-4745-9B91-DBDA9F38B39C}"
+	ProjectSection(SolutionItems) = preProject
+		MarkDown\Polynoms\PolynomDivision01.png = MarkDown\Polynoms\PolynomDivision01.png
+		MarkDown\Polynoms\PolynomDivision02.png = MarkDown\Polynoms\PolynomDivision02.png
+		MarkDown\Polynoms\PolynomDivision03.png = MarkDown\Polynoms\PolynomDivision03.png
+		MarkDown\Polynoms\PolynomDivision04.png = MarkDown\Polynoms\PolynomDivision04.png
+		MarkDown\Polynoms\Polynoms.md = MarkDown\Polynoms\Polynoms.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -159,6 +168,7 @@ Global
 		{9A6045C5-DA88-477B-809F-DF25A567C741} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{3AEF1E44-3D6E-4702-9E13-7E889AF9E0B5} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{66556638-3412-4C70-901C-C7B86679A2CD} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{7262339A-E38C-4745-9B91-DBDA9F38B39C} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}
