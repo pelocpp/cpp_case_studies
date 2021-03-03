@@ -8,22 +8,63 @@
 
 #include "Polynom.h"
 
-// testing c'tors and d'tor
-void test_script()
+// testing examples from script
+void test_script_01()
 {
-    //Polynom p1{ };
-    //Polynom p2{ -5.0, +6.0, -7.0 };
+    Polynom p1{ };
+    Polynom p2{ -5.0, +6.0, -7.0 };
 
-    //std::cout << p1 << std::endl;
-    //std::cout << p1.rank() << std::endl;
-    //std::cout << std::boolalpha << p1.zero() << std::endl;
+    std::cout << p1 << std::endl;
+    std::cout << p1.rank() << std::endl;
+    std::cout << std::boolalpha << p1.zero() << std::endl;
 
-    //std::cout << p2 << std::endl;
-    //std::cout << p2.rank() << std::endl;
-    //std::cout << std::boolalpha << p2.zero() << std::endl;
+    std::cout << p2 << std::endl;
+    std::cout << p2.rank() << std::endl;
+    std::cout << std::boolalpha << p2.zero() << std::endl;
 
     Polynom p{ 2.0, -4.0, 0.0, 3.0 };
     std::cout << p << std::endl;
+}
+
+// testing examples from script
+void test_script_02()
+{
+    //Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
+    //Polynom p2{ 3.0, 3.0, 5.0 };
+    //Polynom p3 = p1 - p2;
+    //std::cout << p1 << std::endl;
+    //std::cout << p2 << std::endl;
+    //std::cout << p3 << std::endl;
+
+    //Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
+    //Polynom p2{ 3.0, 3.0, 5.0 };
+    //std::cout << "p1*p2: " << p1 * p2 << std::endl;
+
+    //Polynom p1{ 0, -4, 8, 10, 3 };
+    //Polynom p2{ 0, 4, 3 };
+    //std::cout << "p1%p2: " << p1 % p2 << std::endl;
+
+    //Polynom p1{ 4.0, -2.0, 6.0, 5.0, -1.0, 2.0 };
+    //Polynom p2{ 4.0, 2.0, 0.0, 1.0 };
+    //std::cout << p1 << std::endl;
+    //std::cout << p2 << std::endl;
+    //std::cout << "p1/p2: " << p1 / p2 << std::endl;
+
+    Polynom p1{ 1.0, 2.0, 3.0 };
+    Polynom p2{ 3.0, 2.0, 1.0 };
+    std::cout << p1 << std::endl;
+    std::cout << p2 << std::endl;
+
+    p1 += p2;
+    std::cout << p1 << std::endl;
+    p1 -= p2;
+    std::cout << p1 << std::endl;
+    p1 *= p2;
+    std::cout << p1 << std::endl;
+    p1 /= p2;
+    std::cout << p1 << std::endl;
+    p1 %= p2;
+    std::cout << p1 << std::endl;
 }
 
 // testing c'tors and d'tor
@@ -324,31 +365,31 @@ void test_AssignmentOperators()
     std::cout << p1 << std::endl;
 }
 
-void test_Evaluation_ArraySubscriptOperator()
+void test_Evaluation()
 {
     Polynom p1{ 1.0 };
     std::cout << "p1: " << p1 << std::endl;
 
     // values of p at 0.0, 1.0 and 2.0
-    std::cout << "p1(0.0) = " << p1[0.0] << std::endl;
-    std::cout << "p1(1.0) = " << p1[1.0] << std::endl;
-    std::cout << "p1(2.0) = " << p1[2.0] << std::endl;
+    std::cout << "p1(0.0) = " << p1(0.0) << std::endl;
+    std::cout << "p1(1.0) = " << p1(1.0) << std::endl;
+    std::cout << "p1(2.0) = " << p1(2.0) << std::endl;
 
     Polynom p2{ 1.0, 3.0 };
     std::cout << "p2: " << p2 << std::endl;
 
     // values of p at 0.0, 1.0 and 2.0
-    std::cout << "p2(0.0) = " << p2[0.0] << std::endl;
-    std::cout << "p2(1.0) = " << p2[1.0] << std::endl;
-    std::cout << "p2(2.0) = " << p2[2.0] << std::endl;
+    std::cout << "p2(0.0) = " << p2(0.0) << std::endl;
+    std::cout << "p2(1.0) = " << p2(1.0) << std::endl;
+    std::cout << "p2(2.0) = " << p2(2.0) << std::endl;
 
     Polynom p3{ 2.0, -4.0, 0.0, 3.0 };
     std::cout << "p3: " << p3 << std::endl;
 
     // values of p at 0.0, 1.0 and 2.0
-    std::cout << "p3(0.0) = " << p3[0.0] << std::endl;
-    std::cout << "p3(1.0) = " << p3[1.0] << std::endl;
-    std::cout << "p3(2.0) = " << p3[2.0] << std::endl;
+    std::cout << "p3(0.0) = " << p3(0.0) << std::endl;
+    std::cout << "p3(1.0) = " << p3(1.0) << std::endl;
+    std::cout << "p3(2.0) = " << p3(2.0) << std::endl;
 }
 
 void test_ComparisonOperators()

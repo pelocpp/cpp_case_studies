@@ -49,8 +49,8 @@ public:
     friend bool operator>  (const Polynom&, const Polynom&);
     friend bool operator>= (const Polynom&, const Polynom&);
 
-    // index operator
-    const double operator[] (double x) const;
+    // functor operator
+    double operator() (double);
 
     // output
     friend std::ostream& operator<< (std::ostream&, const Polynom&);

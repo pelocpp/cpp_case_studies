@@ -165,8 +165,9 @@ public:
         return p1;
     }
 
-    // apply horner scheme, using array subscripting operator
-    const T operator[] (T x) const {
+    // apply horner scheme, using functor operator
+    T operator() (T x)
+    {
         return computeHorner(x);
     }
 
@@ -268,15 +269,7 @@ private:
     }
     
     void removeLeadingZeros() {
-        //// remove leading zeros, if any ...
-        //size_t top = m_coefficients.size() - 1;
-        //while (top != 0 && m_coefficients[top] == T{})
-        //{
-        //    m_coefficients.pop_back();
-        //    top--;
-        //}
-
-        // remove leading zeros, if any ... using STL
+        // remove leading zeros, if any ... using STL algorithms
         std::reverse_iterator<std::vector<T>::iterator> r_it = std::find_if(
             std::rbegin(m_coefficients),
             std::rend(m_coefficients),

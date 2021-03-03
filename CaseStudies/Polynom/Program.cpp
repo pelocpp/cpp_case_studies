@@ -10,7 +10,8 @@
 // https://jdhao.github.io/2017/10/07/loop-forward-backward-with-cpp-vector/
 
 // no-template version
-void test_script();
+void test_script_01();
+void test_script_02();
 void test_Ctors();
 void test_RemoveLeadingZeros();
 void test_Output();
@@ -25,7 +26,7 @@ void test_Division();
 void test_Modulo();
 
 void test_AssignmentOperators();
-void test_Evaluation_ArraySubscriptOperator();
+void test_Evaluation();
 void test_ComparisonOperators();
 
 // template version
@@ -43,7 +44,7 @@ void test_Division_Ex();
 void test_Modulo_Ex();
 
 void test_AssignmentOperators_Ex();
-void test_Evaluation_ArraySubscriptOperator_Ex();
+void test_Evaluation_Ex();
 void test_ComparisonOperators_Ex();
 
 void test() 
@@ -62,7 +63,7 @@ void test()
     test_Modulo();
 
     test_AssignmentOperators();
-    test_Evaluation_ArraySubscriptOperator();
+    test_Evaluation();
     test_ComparisonOperators();
 }
 
@@ -82,13 +83,13 @@ void testEx()
     test_Modulo_Ex();
 
     test_AssignmentOperators_Ex();
-    test_Evaluation_ArraySubscriptOperator_Ex();
+    test_Evaluation_Ex();
     test_ComparisonOperators_Ex();
 }
 
 int main()
 {
-    test_script();
+    test_Evaluation();
     //test();
     //testEx();
 

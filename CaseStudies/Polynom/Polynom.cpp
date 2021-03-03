@@ -194,8 +194,8 @@ double Polynom::computeHorner(double x) const
     return y;
 }
 
-// apply horner scheme, using array subscripting operator
-const double Polynom::operator[] (double x) const
+// apply horner scheme, using functor operator
+double Polynom::operator() (double x)
 {
     return computeHorner(x);
 }
@@ -326,7 +326,7 @@ void Polynom::multiplyX(size_t k)
 
 void Polynom::removeLeadingZeros()
 {
-    // remove leading zeros, if any ... using STL
+    // remove leading zeros, if any ... using STL algorithms
     std::reverse_iterator<std::vector<double>::iterator> r_it = std::find_if(
         std::rbegin(m_coefficients),
         std::rend(m_coefficients),

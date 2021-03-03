@@ -311,31 +311,31 @@ void test_AssignmentOperators_Ex()
     std::cout << p1 << std::endl;
 }
 
-void test_Evaluation_ArraySubscriptOperator_Ex()
+void test_Evaluation_Ex()
 {
     PolynomEx<ScalarType> p1{ 1.0 };
     std::cout << "p1: " << p1 << std::endl;
 
     // values of p at 0.0, 1.0 and 2.0
-    std::cout << "p1(0.0) = " << p1[0.0] << std::endl;
-    std::cout << "p1(1.0) = " << p1[1.0] << std::endl;
-    std::cout << "p1(2.0) = " << p1[2.0] << std::endl;
+    std::cout << "p1(0.0) = " << p1(0.0) << std::endl;
+    std::cout << "p1(1.0) = " << p1(1.0) << std::endl;
+    std::cout << "p1(2.0) = " << p1(2.0) << std::endl;
 
     PolynomEx<ScalarType> p2{ 1.0, 3.0 };
     std::cout << "p2: " << p2 << std::endl;
 
     // values of p at 0.0, 1.0 and 2.0
-    std::cout << "p2(0.0) = " << p2[0.0] << std::endl;
-    std::cout << "p2(1.0) = " << p2[1.0] << std::endl;
-    std::cout << "p2(2.0) = " << p2[2.0] << std::endl;
+    std::cout << "p2(0.0) = " << p2(0.0) << std::endl;
+    std::cout << "p2(1.0) = " << p2(1.0) << std::endl;
+    std::cout << "p2(2.0) = " << p2(2.0) << std::endl;
 
     PolynomEx<ScalarType> p3{ 2.0, -4.0, 0.0, 3.0 };
     std::cout << "p3: " << p3 << std::endl;
 
     // values of p at 0.0, 1.0 and 2.0
-    std::cout << "p3(0.0) = " << p3[0.0] << std::endl;
-    std::cout << "p3(1.0) = " << p3[1.0] << std::endl;
-    std::cout << "p3(2.0) = " << p3[2.0] << std::endl;
+    std::cout << "p3(0.0) = " << p3(0.0) << std::endl;
+    std::cout << "p3(1.0) = " << p3(1.0) << std::endl;
+    std::cout << "p3(2.0) = " << p3(2.0) << std::endl;
 }
 
 void test_ComparisonOperators_Ex()

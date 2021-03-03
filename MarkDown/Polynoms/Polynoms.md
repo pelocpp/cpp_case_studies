@@ -203,8 +203,234 @@ Abschließend treffen wir eine Aussage zum Vergleich zweier Polynome: Ein Polyno
 Ist der Grad gleich, sind der Reihe nach alle Koeffizienten, beginnend bei a<sub>n</sub>, zu vergleichen.
 Sind alle Koeffizienten gleich, sind die Polynome gleich.
 
-Informationen bezüglich der einzelnen C++-Operatorensignaturen der soeben betrachteten Polynomfunktionen finden Sie nun in Tabelle 3 vor:
+Informationen bezüglich der einzelnen C++-Operatorensignaturen der soeben betrachteten Polynomfunktionen finden Sie nun in [Tabelle 3] vor:
 
+###### {#tabelle_3_class_polynom_arithmetic_operators}
+
+| Element | Beschreibung |
+| :---- | :---- |
+| Operator `+` | `friend Polynom operator+ (const Polynom&, const Polynom&);`<br/>Addition zweier Polynome. |
+| Operator `-` | `friend Polynom operator+ (const Polynom&, const Polynom&);`<br/>Subtraktion zweier Polynome. |
+| Operator `*` | `friend Polynom operator+ (const Polynom&, const Polynom&);`<br/>Multiplikation zweier Polynome. |
+| Operator `/` | `friend Polynom operator+ (const Polynom&, const Polynom&);`<br/>Division zweier Polynome. |
+| Operator `%` | `friend Polynom operator+ (const Polynom&, const Polynom&);`<br/>Rest bei Division zweier Polynome. |
+
+*Tabelle* 3: Arithmetische Operatoren der Klasse `Polynom`.
+
+Zum Testen Ihrer Realisierung fügen wir einige Testbeispiele auf:
+
+*Beispiel*:
+
+```cpp
+Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
+Polynom p2{ 3.0, 3.0, 5.0 };
+Polynom p3 = p1 + p2;
+std::cout << p1 << std::endl;
+std::cout << p2 << std::endl;
+std::cout << p3 << std::endl;
+```
+
+*Ausgabe*:
+
+```
+3x^3-4x^1+2
+5x^2+3x^1+3
+3x^3+5x^2-x^1+5
+```
+
+*Beispiel*:
+
+```cpp
+Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
+Polynom p2{ 3.0, 3.0, 5.0 };
+Polynom p3 = p1 - p2;
+std::cout << p3 << std::endl;
+```
+
+*Ausgabe*:
+
+```
+3x^3-5x^2-7x^1-1
+```
+
+*Beispiel*:
+
+```cpp
+Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
+Polynom p2{ 3.0, 3.0, 5.0 };
+std::cout << "p1*p2: " << p1*p2 << std::endl;
+```
+
+*Ausgabe*:
+
+```
+p1*p2: 15x^5+9x^4-11x^3-2x^2-6x^1+6
+```
+
+*Beispiel*:
+
+```cpp
+Polynom p1{ 4.0, -2.0, 6.0, 5.0, -1.0, 2.0 };
+Polynom p2{ 4.0, 2.0, 0.0, 1.0 };
+std::cout << p1 << std::endl;
+std::cout << p2 << std::endl;
+std::cout << "p1/p2: " << p1/p2 << std::endl;
+```
+
+*Ausgabe*:
+
+```
+2x^5-x^4+5x^3+6x^2-2x^1+4
+x^3+2x^1+4
+p1/p2: 2x^2-x^1+1
+```
+
+*Beispiel*:
+
+```cpp
+Polynom p1{ 0, -4, 8, 10, 3 };
+Polynom p2{ 0, 4, 3 };
+std::cout << "p1%p2: " << p1 % p2 << std::endl;
+```
+
+*Ausgabe*:
+
+```
+p1%p2: -4x^1
+```
+
+*Hinweis*: Die Division zweier Polynome kann in der Realisierung dadurch vereinfacht werden,
+wenn Sie die Klasse `Polynom` um zwei Hilfsmethoden sowie zwei Hilfsoperatoren ergänzen ([Tabelle 4]):
+
+###### {#tabelle_4_class_polynom_helper_methods}
+
+| Element | Beschreibung |
+| :---- | :---- |
+| Operator `*` | `friend Polynom operator* (const Polynom& p, double scalar);`<br/>`friend Polynom operator* (double scalar, const Polynom& p);`<br/>Multiplikation eines Polynoms `p` mit der Konstanten `scalar`. |
+| Methode `multiplyX` | `void multiplyX(size_t k);`<br/>Multiplikation eines Polynoms mit `x` oder einer Potenz von `x`. Der Parameter `k` spezifiziert den Exponenten von `x`, beschreibt also den Term *x*<sup>k</sup>. |
+
+*Tabelle* 4: Hilfsmethoden der Klasse `Polynom`.
+
+Die arithmetischen Operatoren sollten in der Klasse `Polynom` auch in der Wertzuweisungsform vorhanden sein, siehe [Tabelle 5]:
+
+###### {#tabelle_5_class_polynom_arithmetic_assignment_operators}
+
+| Element | Beschreibung |
+| :---- | :---- |
+| Operator `+=` | `friend Polynom& operator+= (Polynom&, const Polynom&);`<br/>Additionswertzuweisung. |
+| Operator `-=` | `friend Polynom& operator-= (Polynom&, const Polynom&);`<br/>Subtraktionswertzuweisung. |
+| Operator `*=` | `friend Polynom& operator*= (Polynom&, const Polynom&);`<br/>Multiplikationswertzuweisung. |
+| Operator `/=` | `friend Polynom& operator/= (Polynom&, const Polynom&);`<br/>Divisionswertzuweisung. |
+| Operator `%=` | `friend Polynom& operator%= (Polynom&, const Polynom&);`<br/>Modulo Wertzuweisung. |
+
+*Tabelle* 5: Arithmetische Operatoren der Klasse `Polynom` in der Wertzuweisungsform.
+
+Auch zu den Operatoren von [Tabelle 5] führen wir ein Beispiel auf:
+
+*Beispiel*:
+
+```cpp
+Polynom p1{ 1.0, 2.0, 3.0 };
+Polynom p2{ 3.0, 2.0, 1.0 };
+std::cout << p1 << std::endl;
+std::cout << p2 << std::endl;
+
+p1 += p2;
+std::cout << p1 << std::endl;
+p1 -= p2;
+std::cout << p1 << std::endl;
+p1 *= p2;
+std::cout << p1 << std::endl;
+p1 /= p2;
+std::cout << p1 << std::endl;
+p1 %= p2;
+std::cout << p1 << std::endl;
+```
+
+*Ausgabe*:
+
+```
+3x^2+2x^1+1
+x^2+2x^1+3
+4x^2+4x^1+4
+3x^2+2x^1+1
+3x^4+8x^3+14x^2+8x^1+3
+3x^2+2x^1+1
+-4x^1-8
+```
+
+Bislang haben uns wir ausschließlich dem &ldquo;Ring der Polynome&rdquo; zugewendet, wie ein Mathematiker sagen würde.
+Um die mathematische Schreibweise für die Auswertung eines Polynoms *p* an der Stelle *y* nachzuahmen,
+bieten sich in C++ gleich zwei Operatoren an: Der Index-Operator `[]` sowie der Funktionsaufruf-Operator `()`, auch *Funktor* genannt.
+Der Index-Operator bietet sich eigentlich immer dann an, wenn die zugrunde liegende Klasse den Charakter von etwas &ldquo;indizierbarem&rdquo; hat.
+Dies trifft auf die Klasse `Polynom` eigentlich nicht zu, daher ist meine Wahl auf den Funktionsaufruf-Operator `()` gefallen:
+
+###### {#tabelle_6_class_polynom_functor}
+
+| Element | Beschreibung |
+| :---- | :---- |
+| Operator `()` | `double operator() (double x);`<br/>Auswertung des Polynoms an der Stelle `x`. |
+
+*Tabelle* 6: Funktionsaufruf-Operator `()` zum Auswerten eines Polynoms.
+
+*Beispiel*:
+
+```cpp
+Polynom p1{ 1.0 };
+std::cout << "p1: " << p1 << std::endl;
+
+std::cout << "p1(0.0) = " << p1(0.0) << std::endl;
+std::cout << "p1(1.0) = " << p1(1.0) << std::endl;
+std::cout << "p1(2.0) = " << p1(2.0) << std::endl;
+
+Polynom p2{ 1.0, 3.0 };
+std::cout << "p2: " << p2 << std::endl;
+
+std::cout << "p2(0.0) = " << p2(0.0) << std::endl;
+std::cout << "p2(1.0) = " << p2(1.0) << std::endl;
+std::cout << "p2(2.0) = " << p2(2.0) << std::endl;
+
+Polynom p3{ 2.0, -4.0, 0.0, 3.0 };
+std::cout << "p3: " << p3 << std::endl;
+
+std::cout << "p3(0.0) = " << p3(0.0) << std::endl;
+std::cout << "p3(1.0) = " << p3(1.0) << std::endl;
+std::cout << "p3(2.0) = " << p3(2.0) << std::endl;
+```
+
+*Ausgabe*:
+
+```
+p1: 1
+p1(0.0) = 1
+p1(1.0) = 1
+p1(2.0) = 1
+p2: 3x^1+1
+p2(0.0) = 1
+p2(1.0) = 4
+p2(2.0) = 7
+p3: 3x^3-4x^1+2
+p3(0.0) = 2
+p3(1.0) = 1
+p3(2.0) = 18
+```
+
+Natürlich lassen sich Polynome auch vergleichen. In [Tabelle 7] finden Sie die üblichen Vergleichsoperatoren vor:
+
+###### {#tabelle_7_class_comparison_operators}
+
+| Element | Beschreibung |
+| :---- | :---- |
+| Operator `==` | `friend Polynom& operator== (const Polynom&, const Polynom&);`<br/>Test auf Gleichheit zweier Polynome. |
+| Operator `!=` | `friend Polynom& operator!= (const Polynom&, const Polynom&);`<br/>Test auf Ungleichheit zweier Polynome. |
+| Operator `<` | `friend Polynom& operator< (const Polynom&, const Polynom&);`<br/>Test auf &ldquo;Kleiner&rdquo; zweier Polynome. |
+| Operator `<=` | `friend Polynom& operator<= (const Polynom&, const Polynom&);`<br/>Test auf &ldquo;Kleiner-Gleich&rdquo; zweier Polynome. |
+| Operator `>` | `friend Polynom& operator> (const Polynom&, const Polynom&);`<br/>Test auf &ldquo;Größer&rdquo; zweier Polynome. |
+| Operator `>=` | `friend Polynom& operator>= (const Polynom&, const Polynom&);`<br/>Test auf &ldquo;Größer-Gleich&rdquo; zweier Polynome. |
+
+*Tabelle* 7: Vergleichsoperatoren für Objekte der Klasse `Polynom`.
+
+WEITER: Testbeispioel und die Implementierung testen !!!!!!!!!!
 
 // =================================================================================================
 
@@ -220,10 +446,11 @@ um die Grundmenge mit unterschiedlichen integralen Datentypen definieren zu kön
 
 [Tabelle 1]: #tabelle_1_class_polynom_ctors
 [Tabelle 2]: #tabelle_2_class_polynom_output
-
-[Tabelle 3]: #tabelle_3_class_partialset_operators
-[Tabelle 4]: #tabelle_4_class_partialset_begin_end
-[Tabelle 5]: #tabelle_5_class_powerset_begin_partialsetsbysize
+[Tabelle 3]: #tabelle_3_class_polynom_arithmetic_operators
+[Tabelle 4]: #tabelle_4_class_polynom_helper_methods
+[Tabelle 5]: #tabelle_5_class_polynom_arithmetic_assignment_operators
+[Tabelle 6]: #tabelle_6_class_polynom_functor
+[Tabelle 7]: #tabelle_7_class_comparison_operators
 
 // [Listing 1]: #tabelle_1_class_polynom_ctors
 // [Listing 2]: #listing_class_partialset_impl
