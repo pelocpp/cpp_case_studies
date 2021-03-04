@@ -430,9 +430,197 @@ Natürlich lassen sich Polynome auch vergleichen. In [Tabelle 7] finden Sie die 
 
 *Tabelle* 7: Vergleichsoperatoren für Objekte der Klasse `Polynom`.
 
-WEITER: Testbeispioel und die Implementierung testen !!!!!!!!!!
+Wir überprüfen die Vergleichsoperatoren ebenfalls an einem Beispiel:
 
-// =================================================================================================
+*Beispiel*:
+
+```cpp
+Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
+Polynom p2{ 3.0, 3.0, 5.0 };
+
+std::cout << "p1: " << p1 << std::endl;
+std::cout << "p2: " << p2 << std::endl;
+
+std::cout << "p1 == p2: " << (p1 == p2) << std::endl;
+std::cout << "p1 != p2: " << (p1 != p2) << std::endl;
+std::cout << "p1 <  p2: " << (p1 < p2) << std::endl;
+std::cout << "p1 <= p2: " << (p1 <= p2) << std::endl;
+std::cout << "p1 >  p2: " << (p1 > p2) << std::endl;
+std::cout << "p1 >= p2: " << (p1 >= p2) << std::endl;
+```
+
+*Ausgabe*:
+
+```
+p1: 3x^3-4x^1+2
+p2: 5x^2+3x^1+3
+p1 == p2: 0
+p1 != p2: 1
+p1 <  p2: 0
+p1 <= p2: 0
+p1 >  p2: 1
+p1 >= p2: 1
+```
+
+# Lösung
+
+> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
+
+Für die Ablage der Koeffizienten in einem `Polynom`-Objekt gibt es mehrere Möglichkeiten.
+Mit einem Objekt des Typs `std::vector<double>` vereinfacht sich die Implementierung der einzelnen Polynomfunktionen erheblich.
+Das Grundgerüst der Klassendefinition finden Sie in [Listing 1] vor:
+
+###### {#listing_1_class_polynom_decl}
+
+```cpp
+01: class Polynom
+02: {
+03: private:
+04:     std::vector<double> m_coefficients{ 0 };  // zero polynom
+05: 
+06: public:
+07:     // c'tors
+08:     Polynom() = default;
+09:     Polynom(std::initializer_list<double>);
+10: 
+11: private:
+12:     // internal helper c'tor
+13:     Polynom(const std::vector<double>&);
+14: 
+15: public:
+16:     // getter
+17:     size_t rank() const;
+18:     bool zero() const;
+19: 
+20:     // unary mathematical operators
+21:     friend Polynom operator+ (const Polynom&);
+22:     friend Polynom operator- (const Polynom&);
+23: 
+24:     // binary mathematical operators
+25:     friend Polynom operator+ (const Polynom&, const Polynom&);
+26:     friend Polynom operator- (const Polynom&, const Polynom&);
+27:     friend Polynom operator* (const Polynom&, const Polynom&);
+28:     friend Polynom operator/ (const Polynom&, const Polynom&);
+29:     friend Polynom operator% (const Polynom&, const Polynom&);
+30: 
+31:     // binary mathematical assignment operators
+32:     friend Polynom& operator+= (Polynom&, const Polynom&);
+33:     friend Polynom& operator-= (Polynom&, const Polynom&);
+34:     friend Polynom& operator*= (Polynom&, const Polynom&);
+35:     friend Polynom& operator/= (Polynom&, const Polynom&);
+36:     friend Polynom& operator%= (Polynom&, const Polynom&);
+37: 
+38:     // comparison operators
+39:     friend bool operator== (const Polynom&, const Polynom&);
+40:     friend bool operator!= (const Polynom&, const Polynom&);
+41:     friend bool operator<  (const Polynom&, const Polynom&);
+42:     friend bool operator<= (const Polynom&, const Polynom&);
+43:     friend bool operator>  (const Polynom&, const Polynom&);
+44:     friend bool operator>= (const Polynom&, const Polynom&);
+45: 
+46:     // functor operator
+47:     double operator() (double);
+48: 
+49:     // output
+50:     friend std::ostream& operator<< (std::ostream&, const Polynom&);
+51: 
+52: private:
+53:     // private helper operators
+54:     friend Polynom operator* (const Polynom&, double);
+55:     friend Polynom operator* (double, const Polynom&);
+56: 
+57:     // horner scheme
+58:     double computeHorner(double) const;
+59: 
+60:     // private helper methods
+61:     void multiplyX(size_t);
+62:     void removeTrailingZeros();
+63: };
+```
+
+*Listing* 1: Klasse `Polynom`: Definition.
+
+Da die Klasse `Polynom` nur eine einzige Instanzvariable besitzt (`m_coefficients` vom Typ `std::vector<double>`, Zeile 4 von [Listing 1]),
+bedarf diese Festlegung einiger Ergänzungen. Etliche Methoden erwarten, dass in diesem Objekt die Koeffizienten des Polynoms abgelegt sind.
+Vor allem geht es darum, dass keine überflüssigen Elemente &ndash; damit sind 0-Elemente am Ende des Objekts gemeint &ndash; vorhanden sind.
+Überflüssige 0-Elemente in einem `std::vector<double>`-Objeket würden dazu führen, dass die `size`()-Methode beispielsweise
+einen falschen Wert zurückliefert, wenn die Anzahl der Koeffizienten gefragt ist. Natürlich ließe sich dieser Umstand auch anders lösen,
+zum Beispiel dadurch, dass man neben dem `m_coefficients`-Objekt eine zweite Instanzvariable, nennen wie sie `m_size`,
+mitführt und -verwaltet. Damit würden 0-Elemente am Ende des `std::vector<double>`-Objekts nicht zu falschen Konsequenzen führen.
+
+&ldquo;Viele Wege führen nach Rom&rdquo; &ndash; bei mir ist dies die Entscheidung für einen *minimalistischen Ansatz*
+mit einer einzigen Instanzvariablen. Dies hat allerdings zur Folge, dass eine Methode `removeTrailingZeros` ins Spiel kommt,
+die immer, wenn ein neues `std::vector<double>` berechnet wurde (nach einer Polynom-Addition, -Subtraktion etc.) 
+auf das Koeffizienten-Objekt angewendet wird.
+
+Damit stellen wir in [Listing 2] die Konstruktoren, *getter*-Methoden `rank` und `zero` und die `removeTrailingZeros`-Hilfsmethode vor:
+
+###### {#listing_2_class_polynom_ctors_getters}
+
+```cpp
+01: // c'tors
+02: Polynom::Polynom(const std::vector<double>& vector) : m_coefficients{ vector }
+03: {
+04:     removeTrailingZeros();
+05: }
+06: 
+07: Polynom::Polynom(std::initializer_list<double> list) : m_coefficients{ list } 
+08: {
+09:     removeTrailingZeros();
+10: }
+11: 
+12: // getter
+13: size_t Polynom::rank() const
+14: {
+15:     return m_coefficients.size() - 1;
+16: }
+17: 
+18: bool Polynom::zero() const
+19: {
+20:     return m_coefficients.size() == 1 && m_coefficients[0] == 0;
+21: }
+22: 
+23: void Polynom::removeTrailingZeros()
+24: {
+25:     // remove trailing zeros, if any ... using STL algorithms
+26:     std::reverse_iterator<std::vector<double>::iterator> r_it = std::find_if(
+27:         std::rbegin(m_coefficients),
+28:         std::rend(m_coefficients),
+29:         [](double value) { return value != 0.0; }
+30:     );
+31: 
+32:     // vector contains only '0's - rescue last '0'
+33:     if (r_it == std::rend(m_coefficients)) {
+34:         r_it--;
+35:     }
+36: 
+37:     m_coefficients.erase(r_it.base(), std::end(m_coefficients));
+38: }
+```
+
+*Listing* 2: Klasse `Polynom`: Konstruktoren, *getter*-Methoden und `removeTrailingZeros`-Hilfsmethode.
+
+In [Listing 2] finden wir zwei sehr ähnliche Konstruktoren vor:
+
+```cpp
+Polynom(std::initializer_list<double> list) : m_coefficients{ list } 
+Polynom(const std::vector<double>& vector) : m_coefficients{ vector }
+```
+
+Der erste der beiden Konstruktoren ist für den Anwender gedacht &ndash; die Koeffizienten eines Polynoms lassen sich ideal
+als variabel lange Liste von `double`-Werten übergeben. Der zweite Konstruktor ist `private` deklariert, er spielt in der Realisierung
+der arithmetischen Operatoren eine Rolle, wenn zu einer mathematischen Operation ein Resultat-Koeffizientenvektor zu berechnen ist.
+
+Damit wären wir schon bei der Mathematik angekommen, die Implementierung der mathematischen Operatoren
+finden Sie in [Listing 3] vor:
+
+###### {#listing_3_class_polynom_arithmetic_operators}
+
+```cpp
+WEITER
+```
+
+*Listing* 3: Klasse `Polynom`: Arithmetische Operatoren.
 
 # There&lsquo;s more
 
@@ -452,9 +640,7 @@ um die Grundmenge mit unterschiedlichen integralen Datentypen definieren zu kön
 [Tabelle 6]: #tabelle_6_class_polynom_functor
 [Tabelle 7]: #tabelle_7_class_comparison_operators
 
-// [Listing 1]: #tabelle_1_class_polynom_ctors
-// [Listing 2]: #listing_class_partialset_impl
-// [Listing 3]: #listing_class_powerset_decl
-// [Listing 4]: #listing_class_powerset_impl
+[Listing 1]: #listing_1_class_polynom_decl
+[Listing 1]: #listing_2_class_polynom_ctors_getters
 
 <!-- End-of-File -->

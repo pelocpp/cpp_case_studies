@@ -65,7 +65,7 @@ private:
 
     // private helper methods
     void multiplyX(size_t);
-    void removeLeadingZeros();
+    void removeTrailingZeros();
 };
 
 // =====================================================================================

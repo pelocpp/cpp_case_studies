@@ -38,7 +38,7 @@ void test_Ctors_Ex()
     std::cout << p7 << std::endl;
 }
 
-void test_RemoveLeadingZeros_Ex()
+void test_RemoveTrailingZeros_Ex()
 {
     PolynomEx<ScalarType> p1{ };
     std::cout << p1 << std::endl;

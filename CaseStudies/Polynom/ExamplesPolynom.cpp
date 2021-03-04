@@ -50,21 +50,21 @@ void test_script_02()
     //std::cout << p2 << std::endl;
     //std::cout << "p1/p2: " << p1 / p2 << std::endl;
 
-    Polynom p1{ 1.0, 2.0, 3.0 };
-    Polynom p2{ 3.0, 2.0, 1.0 };
-    std::cout << p1 << std::endl;
-    std::cout << p2 << std::endl;
+    //Polynom p1{ 1.0, 2.0, 3.0 };
+    //Polynom p2{ 3.0, 2.0, 1.0 };
+    //std::cout << p1 << std::endl;
+    //std::cout << p2 << std::endl;
 
-    p1 += p2;
-    std::cout << p1 << std::endl;
-    p1 -= p2;
-    std::cout << p1 << std::endl;
-    p1 *= p2;
-    std::cout << p1 << std::endl;
-    p1 /= p2;
-    std::cout << p1 << std::endl;
-    p1 %= p2;
-    std::cout << p1 << std::endl;
+    //p1 += p2;
+    //std::cout << p1 << std::endl;
+    //p1 -= p2;
+    //std::cout << p1 << std::endl;
+    //p1 *= p2;
+    //std::cout << p1 << std::endl;
+    //p1 /= p2;
+    //std::cout << p1 << std::endl;
+    //p1 %= p2;
+    //std::cout << p1 << std::endl;
 }
 
 // testing c'tors and d'tor
@@ -95,7 +95,7 @@ void test_Ctors()
     std::cout << p7 << std::endl;
 }
 
-void test_RemoveLeadingZeros()
+void test_RemoveTrailingZeros()
 {
     Polynom p1{ };
     std::cout << p1 << std::endl;
@@ -394,21 +394,18 @@ void test_Evaluation()
 
 void test_ComparisonOperators()
 {
+Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
+Polynom p2{ 3.0, 3.0, 5.0 };
 
-    Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
-    Polynom p2{ 2.0, -4.0, 0.0, 3.0 };
+std::cout << "p1: " << p1 << std::endl;
+std::cout << "p2: " << p2 << std::endl;
 
-    std::cout << "p1: " << p1 << std::endl;
-    std::cout << "p2: " << p2 << std::endl;
-    // Polynom p2{ 3.0, 3.0, 5.0 };
-
-    std::cout << "p1 == p2: " << (p1 == p2) << std::endl;
-
-    //std::cout << "p1 != p2: " << (p1 != p2) << std::endl;
-    //std::cout << "p1 <  p2: " << (p1 < p2) << std::endl;
-    //std::cout << "p1 <= p2: " << (p1 <= p2) << std::endl;
-    //std::cout << "p1 >  p2: " << (p1 > p2) << std::endl;
-    //std::cout << "p1 >= p2: " << (p1 >= p2) << std::endl;
+std::cout << "p1 == p2: " << (p1 == p2) << std::endl;
+std::cout << "p1 != p2: " << (p1 != p2) << std::endl;
+std::cout << "p1 <  p2: " << (p1 < p2) << std::endl;
+std::cout << "p1 <= p2: " << (p1 <= p2) << std::endl;
+std::cout << "p1 >  p2: " << (p1 > p2) << std::endl;
+std::cout << "p1 >= p2: " << (p1 >= p2) << std::endl;
 }
 
 // =====================================================================================

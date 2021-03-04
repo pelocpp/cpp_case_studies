@@ -11,12 +11,12 @@
 // c'tors
 Polynom::Polynom(const std::vector<double>& vector) : m_coefficients{ vector }
 {
-    removeLeadingZeros();
+    removeTrailingZeros();
 }
 
 Polynom::Polynom(std::initializer_list<double> list) : m_coefficients{ list } 
 {
-    removeLeadingZeros();
+    removeTrailingZeros();
 }
 
 // getter
@@ -324,9 +324,9 @@ void Polynom::multiplyX(size_t k)
     m_coefficients = tmp;
 }
 
-void Polynom::removeLeadingZeros()
+void Polynom::removeTrailingZeros()
 {
-    // remove leading zeros, if any ... using STL algorithms
+    // remove trailing zeros, if any ... using STL algorithms
     std::reverse_iterator<std::vector<double>::iterator> r_it = std::find_if(
         std::rbegin(m_coefficients),
         std::rend(m_coefficients),
@@ -340,7 +340,6 @@ void Polynom::removeLeadingZeros()
 
     m_coefficients.erase(r_it.base(), std::end(m_coefficients));
 }
-
 
 // =====================================================================================
 // End-of-File

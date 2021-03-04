@@ -13,7 +13,7 @@
 void test_script_01();
 void test_script_02();
 void test_Ctors();
-void test_RemoveLeadingZeros();
+void test_RemoveTrailingZeros();
 void test_Output();
 void test_Zero();
 void test_Rank();
@@ -31,7 +31,7 @@ void test_ComparisonOperators();
 
 // template version
 void test_Ctors_Ex();
-void test_RemoveLeadingZeros_Ex();
+void test_RemoveTrailingZeros_Ex();
 void test_Output_Ex();
 void test_Zero_Ex();
 void test_Rank_Ex();
@@ -50,7 +50,7 @@ void test_ComparisonOperators_Ex();
 void test() 
 {
     test_Ctors();
-    test_RemoveLeadingZeros();
+    test_RemoveTrailingZeros();
     test_Output();
     test_Zero();
     test_Rank();
@@ -70,7 +70,7 @@ void test()
 void testEx() 
 {
     test_Ctors_Ex();
-    test_RemoveLeadingZeros_Ex();
+    test_RemoveTrailingZeros_Ex();
     test_Output_Ex();
     test_Zero_Ex();
     test_Rank_Ex();
@@ -89,7 +89,7 @@ void testEx()
 
 int main()
 {
-    test_Evaluation();
+    test_ComparisonOperators();
     //test();
     //testEx();
 

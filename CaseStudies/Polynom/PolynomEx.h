@@ -19,13 +19,13 @@ public:
     PolynomEx() = default;
 
     PolynomEx(std::initializer_list<T> list) : m_coefficients{ list } {
-        removeLeadingZeros();
+        removeTrailingZeros();
     }
 
 private:
     // internal helper c'tor
     PolynomEx(const std::vector<T>& vector) : m_coefficients{ vector } {
-        removeLeadingZeros();
+        removeTrailingZeros();
     }
 
 public:
@@ -268,8 +268,9 @@ private:
         m_coefficients = tmp;
     }
     
-    void removeLeadingZeros() {
-        // remove leading zeros, if any ... using STL algorithms
+    void removeTrailingZeros() {
+
+        // remove trailing zeros, if any ... using STL algorithms
         std::reverse_iterator<std::vector<T>::iterator> r_it = std::find_if(
             std::rbegin(m_coefficients),
             std::rend(m_coefficients),
