@@ -6,17 +6,10 @@ Formal ist ein Polynom als Summe von Vielfachen von Potenzen einer Variablen *x*
 P<sub>n</sub>(*x*) = a<sub>n</sub>*x*<sup>n</sup> + a<sub>n-1</sub>*x*<sup>n-1</sup> + ... + a<sub>2</sub>*x*<sup>2</sup> + a<sub>1</sub>*x* + a<sub>0</sub>.
 
 Entwickeln Sie eine Klasse `Polynom`, die &ndash; möglichst einfallsreich &ndash; die unterschiedlichen Konstrukte
-(Instanzvariablen, Konstruktoren, Methoden, inklusive *getter*- und *setter*-Methoden, Operatoren usw.)
-zur Definition einer Klasse in Modern C++ in Anspruch nimmt.
+(Instanzvariablen, Konstruktoren, Methoden, inklusive *getter*- und *setter*-Methoden, Lambda-Funktionen, Operatoren usw.)
+zur Definition einer Klasse in &ldquo;Modern C++&rdquo; in Anspruch nimmt.
 
 <!--more-->
-
-# Einführung
-
-Die Variable *x* wie auch die Koeffizienten a<sub>i</sub> können beliebige reelle Werte annehmen,
-wir sprechen von einem reellen Polynom. Als *Grad* des Polynoms wird der höchste Exponent *n* bezeichnet,
-für den der Koeffizient an des Ausdrucks a<sub>n</sub>*x*<sup>n</sup> nicht null ist.
-Dieser Koeffizient wird auch *Leitkoeffizient* genannt.
 
 # Lernziele
 
@@ -28,9 +21,16 @@ Dieser Koeffizient wird auch *Leitkoeffizient* genannt.
   * `std::move`  aus dem *Standard Library Header* `<algorithm>`
   * STL-Algorithmen `std::begin`, `std::end`, `std::for_each`, `std::next`, `std::transform`, `std::find_if`
 
+# Einführung
+
+Die Variable *x* wie auch die Koeffizienten a<sub>i</sub> können beliebige reelle Werte annehmen,
+wir sprechen von einem reellen Polynom. Als *Grad* des Polynoms wird der höchste Exponent *n* bezeichnet,
+für den der Koeffizient des Ausdrucks a<sub>n</sub>*x*<sup>n</sup> nicht Null ist.
+Dieser Koeffizient wird auch *Leitkoeffizient* genannt.
+
 # Konstruktoren und *getter*-/*setter*-Methoden
 
-Die Konstruktoren und *getter*-/*setter*-Methoden der Klasse `Polynom` finden Sie in [Tabelle 1] genauer spezifiziert vor
+Die Konstruktoren und *getter*-/*setter*-Methoden der Klasse `Polynom` finden Sie in [Tabelle 1] genauer spezifiziert vor:
 
 ###### {#tabelle_1_class_polynom_ctors}
 
@@ -104,7 +104,7 @@ Polynome besitzen eine Reihe zentraler Operatoren und Methoden, um sie beispiels
 oder aber um ihren Wert für ein bestimmtes Argument zu berechnen.
 Im Folgenden finden Sie einige Wiederholungen der Grundlagen von Polynomen vor.
 
-Die Addition eines Polynoms des Grades *n* mit einem Polynom des Grades kleiner-gleich *m* ergibt ein Polynom des Grades *max*(*n*, *m*).
+Die Addition eines Polynoms des Grades *n* mit einem Polynom des Grades *m* ergibt ein Polynom des Grades *max*(*n*, *m*).
 Die Koeffizienten des Ergebnispolynoms werden jeweils durch Addition des Koeffizienten *a*<sub>i</sub> des einen Polynoms
 mit dem passenden Koeffizienten *b*<sub>i</sub> des anderen Polynoms gebildet. Für die beiden Polynome
 
@@ -140,7 +140,7 @@ Auf die Division gehen wir etwas ausführlicher ein.
 Wir teilen das Polynom *x*<sup>3</sup> + 6*x*<sup>2</sup> + 3*x* - 10 durch das Polynom *x* + 5. Zuerst müssen wir bestimmen,
 wie oft *x* + 5 in das erste Polynom hineinpasst.
 Man betrachtet dabei stets die höchste Potenz aus beiden Polynomen (also *x*<sup>3</sup> aus dem ersten und *x* aus dem zweiten Polynom) und berechnet,
-wie oft *x* in *x*<sup>3</sup> hineinpasst. Anders herum formuliert: Mit was muss man *x* malnehmen, so dass *x*<sup>3</sup> herauskommt?
+wie oft *x* in *x*<sup>3</sup> hineinpasst. Anders herum formuliert: Mit was muss man *x* multiplizieren, so dass *x*<sup>3</sup> herauskommt?
 Natürlich mit *x*<sup>2</sup>, das erste Teilresultat der Division ergibt sich nun zu
 
 (*x*<sup>3</sup> + 6*x*<sup>2</sup> + 3*x* - 10) : (*x* + 5) = *x*<sup>2</sup>
@@ -153,18 +153,18 @@ also gleiche Potenzen von *x* sind jeweils untereinander zu schreiben:
 
  *x*<sup>3</sup> + 5*x*<sup>2</sup>
 
-Nun wird die Subtraktion durchgeführt und werden anschließend alle restlichen Glieder des Polynoms &ldquo;heruntergeholt&rdquo;:
+Nun wird die Subtraktion durchgeführt und anschließend werden alle restlichen Glieder des Polynoms &ldquo;heruntergeholt&rdquo;:
 
 {{< figure src="/img/polynoms/PolynomDivision01.png" width="35%" >}}
 
 Der Rest hat nur noch den Polynomgrad 2, wir haben also das Problem schon um einen Grad verringert.
-Nun stehen wir wieder vor der Ausgangsfrage: Wie oft passt das *x* aus dem Divisor in das *x*2,
+Nun stehen wir wieder vor der Ausgangsfrage: Wie oft passt das *x* aus dem Divisor in das *x*<sup>2</sup>,
 die höchste Potenz des Restes. Offensichtlich *x*-Mal, damit ist der nächste Summand
 des Quotienten (des Ergebnisses) +*x*:
 
 {{< figure src="/img/polynoms/PolynomDivision02.png" width="40%" >}}
 
-Die jetzt noch zu beantwortende Frage lautet &ldquo;Wie oft passt x in -2x?&rdquo;.
+Die jetzt noch zu beantwortende Frage lautet &ldquo;Wie oft passt *x* in -2*x*?&rdquo;.
 Offensichtlich -2-Mal, und die (letzte) Subtraktion sieht nun so aus:
 
 {{< figure src="/img/polynoms/PolynomDivision03.png" width="42%" >}}
@@ -181,13 +181,13 @@ Damit kommen wir zur Auswertung des Polynoms an einer bestimmten Stelle *x*.
 Um uns unnötige Berechnungen von Potenzen zu ersparen, berechnen wir den Wert mit dem sogenannten *Horner*-Schema.
 Die Arbeitsweise des Horner-Schemas kann man leicht erkennen, wenn wir es konkret für Polynome bis zum dritten Grad einmal exemplarisch betrachten:
 
-P<sub>0</sub>(x) = a<sub>0</sub>,
+P<sub>0</sub>(*x*) = a<sub>0</sub>,
 
-P<sub>1</sub>(x) = a<sub>1</sub>x + a<sub>0</sub>,
+P<sub>1</sub>(*x*) = a<sub>1</sub>*x* + a<sub>0</sub>,
 
-P<sub>2</sub>(x) = a<sub>2</sub>x<sup>2</sup> + a<sub>1</sub>x + a<sub>0</sub> = (a<sub>2</sub>x + a<sub>1</sub>)x + a<sub>0</sub>,
+P<sub>2</sub>(*x*) = a<sub>2</sub>*x*<sup>2</sup> + a<sub>1</sub>*x* + a<sub>0</sub> = (a<sub>2</sub>*x* + a<sub>1</sub>)*x* + a<sub>0</sub>,
 
-P<sub>3</sub>(x) = a<sub>3</sub>x<sup>3</sup> + a<sub>2</sub>x<sup>2</sup> + a<sub>1</sub>x + a<sub>0</sub> = ((a<sub>3</sub>x + a<sub>2</sub>)x + a<sub>1</sub>)x + a<sub>0</sub>.
+P<sub>3</sub>(*x*) = a<sub>3</sub>*x*<sup>3</sup> + a<sub>2</sub>*x*<sup>2</sup> + a<sub>1</sub>*x* + a<sub>0</sub> = ((a<sub>3</sub>*x* + a<sub>2</sub>)*x* + a<sub>1</sub>)*x* + a<sub>0</sub>.
 
 Jetzt wird die Wiederholstruktur des *Horner*-Schemas deutlich erkennbar:
 
@@ -228,11 +228,11 @@ auch unär gibt ([Tabelle 4]):
 | Element | Beschreibung |
 | :---- | :---- |
 | Operator `+` | `friend Polynom operator+ (const Polynom&);`<br/>Unärer Plus &ndash; Das Ergebnis des unären Plus-Operators (`+`) ist der Wert seines Operanden. |
-| Operator `-` | `friend Polynom operator- (const Polynom&);`<br/>Negation eines Polynoms (Vorzeichenwechsel) &ndash; Der unäre Negations Operator (`-`) erzeugt den negativen Wert seines Operanden. |
+| Operator `-` | `friend Polynom operator- (const Polynom&);`<br/>Negation eines Polynoms (Vorzeichenwechsel) &ndash; Der unäre Negations-Operator (`-`) erzeugt den negativen Wert seines Operanden. |
 
 *Tabelle* 4: Die beiden Operatoren `+` und `-` der Klasse `Polynom` in ihrer unären Ausprägung.
 
-Zum Testen Ihrer Realisierung fügen wir einige Testbeispiele auf:
+Zum Testen Ihrer Realisierung führen wir einige Testbeispiele auf:
 
 *Beispiel*:
 
@@ -315,7 +315,7 @@ p1%p2: -4x^1
 ```
 
 *Hinweis*: Die Division zweier Polynome kann in der Realisierung dadurch vereinfacht werden,
-wenn Sie die Klasse `Polynom` um zwei Hilfsmethoden sowie zwei Hilfsoperatoren ergänzen ([Tabelle 5]):
+wenn Sie die Klasse `Polynom` um eine Hilfsmethode sowie zwei Hilfsoperatoren ergänzen ([Tabelle 5]):
 
 ###### {#tabelle_5_class_polynom_helper_methods}
 
@@ -324,7 +324,7 @@ wenn Sie die Klasse `Polynom` um zwei Hilfsmethoden sowie zwei Hilfsoperatoren e
 | Operator `*` | `friend Polynom operator* (const Polynom& p, double scalar);`<br/>`friend Polynom operator* (double scalar, const Polynom& p);`<br/>Multiplikation eines Polynoms `p` mit der Konstanten `scalar`. |
 | Methode `multiplyX` | `void multiplyX(size_t k);`<br/>Multiplikation eines Polynoms mit `x` oder einer Potenz von `x`. Der Parameter `k` spezifiziert den Exponenten von `x`, beschreibt also den Term *x*<sup>k</sup>. |
 
-*Tabelle* 5: Hilfsmethoden der Klasse `Polynom`.
+*Tabelle* 5: Hilfsmethoden/-operatoren der Klasse `Polynom`.
 
 Die arithmetischen Operatoren sollten in der Klasse `Polynom` auch in der Wertzuweisungsform vorhanden sein, siehe [Tabelle 6]:
 
@@ -340,7 +340,7 @@ Die arithmetischen Operatoren sollten in der Klasse `Polynom` auch in der Wertzu
 
 *Tabelle* 6: Arithmetische Operatoren der Klasse `Polynom` in der Wertzuweisungsform.
 
-Auch zu den Operatoren von [Tabelle 5] führen wir ein Beispiel auf:
+Auch zu den Operatoren von [Tabelle 6] führen wir ein Beispiel auf:
 
 *Beispiel*:
 
@@ -374,7 +374,8 @@ x^2+2x^1+3
 -4x^1-8
 ```
 
-Bislang haben uns wir ausschließlich dem &ldquo;Ring der Polynome&rdquo; zugewendet, wie ein Mathematiker sagen würde.
+Bislang haben uns wir ausschließlich dem &ldquo;Ring der Polynome&rdquo; zugewendet, wie ein Mathematiker sagen würde,
+also dem Verknüpfen von Polynomen mit Operatoren.
 Um die mathematische Schreibweise für die Auswertung eines Polynoms *p* an der Stelle *y* nachzuahmen,
 bieten sich in C++ gleich zwei Operatoren an: Der Index-Operator `[]` sowie der Funktionsaufruf-Operator `()`, auch *Funktor* genannt.
 Der Index-Operator bietet sich eigentlich immer dann an, wenn die zugrunde liegende Klasse den Charakter von etwas &ldquo;indizierbarem&rdquo; hat.
@@ -560,15 +561,16 @@ bedarf diese Festlegung einiger Ergänzungen. Etliche Methoden erwarten, dass in
 Vor allem geht es darum, dass keine überflüssigen Elemente &ndash; damit sind 0-Elemente am Ende des Objekts gemeint &ndash; vorhanden sind.
 Überflüssige 0-Elemente in einem `std::vector<double>`-Objeket würden dazu führen, dass die `size`()-Methode beispielsweise
 einen falschen Wert zurückliefert, wenn die Anzahl der Koeffizienten gefragt ist. Natürlich ließe sich dieser Umstand auch anders lösen,
-zum Beispiel dadurch, dass man neben dem `m_coefficients`-Objekt eine zweite Instanzvariable, nennen wie sie `m_size`,
+zum Beispiel dadurch, dass man neben dem `m_coefficients`-Objekt eine zweite Instanzvariable, nennen wir sie `m_size`,
 mitführt und -verwaltet. Damit würden 0-Elemente am Ende des `std::vector<double>`-Objekts nicht zu falschen Konsequenzen führen.
 
 &ldquo;Viele Wege führen nach Rom&rdquo; &ndash; bei mir ist dies die Entscheidung für einen *minimalistischen Ansatz*
-mit einer einzigen Instanzvariablen. Dies hat allerdings zur Folge, dass eine Methode `removeTrailingZeros` ins Spiel kommt,
-die immer, wenn ein neues `std::vector<double>` berechnet wurde (nach einer Polynom-Addition, -Subtraktion etc.) 
+mit einer einzigen Instanzvariablen. Dies hat allerdings zur Folge, dass eine Methode `removeTrailingZeros` ins Spiel kommt (Zeile 62, [Listing 1]),
+die immer, wenn ein neues `std::vector<double>` berechnet wurde (nach einer Polynom-Addition, -Subtraktion etc.),
 auf das Koeffizienten-Objekt angewendet wird.
 
-Damit stellen wir in [Listing 2] die Konstruktoren, *getter*-Methoden `rank` und `zero` und die `removeTrailingZeros`-Hilfsmethode vor:
+Damit stellen wir in [Listing 2] die Konstruktoren und die *getter*-Methoden `rank` und `zero` vor,
+auf die `removeTrailingZeros`-Hilfsmethode kommen wir weiter unten noch zu sprechen:
 
 ###### {#listing_2_class_polynom_ctors_getters}
 
@@ -594,26 +596,9 @@ Damit stellen wir in [Listing 2] die Konstruktoren, *getter*-Methoden `rank` und
 19: {
 20:     return m_coefficients.size() == 1 && m_coefficients[0] == 0;
 21: }
-22: 
-23: void Polynom::removeTrailingZeros()
-24: {
-25:     // remove trailing zeros, if any ... using STL algorithms
-26:     std::reverse_iterator<std::vector<double>::iterator> r_it = std::find_if(
-27:         std::rbegin(m_coefficients),
-28:         std::rend(m_coefficients),
-29:         [](double value) { return value != 0.0; }
-30:     );
-31: 
-32:     // vector contains only '0's - rescue last '0'
-33:     if (r_it == std::rend(m_coefficients)) {
-34:         r_it--;
-35:     }
-36: 
-37:     m_coefficients.erase(r_it.base(), std::end(m_coefficients));
-38: }
 ```
 
-*Listing* 2: Klasse `Polynom`: Konstruktoren, *getter*-Methoden und `removeTrailingZeros`-Hilfsmethode.
+*Listing* 2: Klasse `Polynom`: Konstruktoren und *getter*-Methoden.
 
 In [Listing 2] finden wir zwei sehr ähnliche Konstruktoren vor:
 
@@ -752,7 +737,7 @@ finden Sie in [Listing 3] vor:
 
 Die Realisierung der arithmetischen Operatoren in [Listing 3]
 hält sich streng an die vorgestellten Algorithmen. Da wir es häufig mit Wiederholungsschleifen
-in Zusammenspiel mit dem Datentyp `size_t` zu tun haben, sollte wir auf eine mögliche Stolperfalle näher eingehen:
+in Zusammenspiel mit dem Datentyp `size_t` zu tun haben, sollten wir auf eine mögliche Stolperfalle näher eingehen:
 Wie traversiere ich eine Wiederholungsschleife korrekt rückwärts?
 Wir könnten es auf die folgende Weise versuchen:
 
@@ -763,7 +748,7 @@ for (size_t i = m_coefficients.size()-1; i >= 0; --i){
 ```
 
 Dieses Code-Fragment enthält einen schwerwiegenden Fehler: Da der Schleifenzähler `i` ein Typ ohne Vorzeichen ist,
-werde `i` niemals kleiner als 0 sein! Aus diesem Grund haben wir es hier mit einer Enflosschleife zu tun!
+wird `i` niemals kleiner als 0 sein! Aus diesem Grund haben wir es hier mit einer Endlosschleife zu tun!
 Eine mögliche korrekte Variante sieht so aus:
 
 ```cpp
@@ -778,11 +763,12 @@ Auf diese stoppt die Schleife korrekt.
 
 Die Realisierung des Horner-Schemas birgt keine Schwierigkeiten. Natürlich hätte man in der Realisierung ([Listing 4])
 auch eine simple klassische `for`-Wiederholungsschleife einsetzen können. Ich wollte im gesamten Programm
-so viel wie möglich &ndash; und bitte auch so sinnvoll wie möglich &ndash; mit STL-Algorithmen arbeiten,
-um auf diesen Weise ihren Umgang zu schulen. Beachten Sie mehrere Kleinigkeiten in [Listing 4]:
+so viel wie möglich und sinnvoll Algorithmen der STL arbeiten,
+um auf diese Weise ihren Umgang zu schulen. Beachten Sie mehrere Kleinigkeiten in [Listing 4]:
 Zum einen müssen wir den Koeffizienten-Vektor rückwärts traversieren, es kommen deshalb die beiden Iteratoren-Objekte zum Einsatz,
-die wir mit `std::rbegin()` und `std::rend()` erhalten. Desweiteren starten wir das Horner-Schema nicht mit dem ersten Koeffizienten,
-sonder innerhalb der Wiederholungsschleife mit dem zweiten (der erste Koeffizient wird in Zeile 5 berücksichtigt).
+die wir mit einem Aufruf von `std::rbegin()` und `std::rend()` erhalten.
+Des weiteren starten wir das Horner-Schema nicht mit dem ersten Koeffizienten,
+sondern innerhalb der Wiederholungsschleife mit dem zweiten (der erste Koeffizient wird in Zeile 5 berücksichtigt).
 Dies erklärt den Aufruf von `std::next()` in Zeile 8 von [Listing 4]:
 
 ###### {#listing_4_class_polynom_horner_scheme}
@@ -814,10 +800,10 @@ Dies erklärt den Aufruf von `std::next()` in Zeile 8 von [Listing 4]:
 
 *Listing* 4: Klasse `Polynom`: Realisierung des Horner-Schemas.
 
-Zum (wiederholten) Multiplizieren eines Polynoms mit *x* &ndash; so wie dies an manchen Stellen in der Implementierung der arithmetischen
-Operatoren benötigt wird  &ndash; übernimmt die Hilfsmethode `multiplyX` (siehe Zeile 61 von [Listing 1]).
-Wiederum mit Hilfe eines geschickt gewählten STL-Algithmus ist diese Implementierung sehr einfach,
-wenngleich möglicherweise ein klein wenig trickreich ([Listing 5]):
+Das (wiederholte) Multiplizieren eines Polynoms mit *x* &ndash; so wie dies an manchen Stellen in der Implementierung der arithmetischen
+Operatoren benötigt wird &ndash; übernimmt die Hilfsmethode `multiplyX` ([Listing 5]).
+Wiederum mit Hilfe eines geschickt gewählten STL-Algorithmus ist diese Implementierung sehr einfach,
+wenngleich möglicherweise ein klein wenig trickreich ausgefallen:
 
 ###### {#listing_5_class_polynom_multiplyx}
 
@@ -839,9 +825,9 @@ wenngleich möglicherweise ein klein wenig trickreich ([Listing 5]):
 
 Der Aufruf der Methode `std::move` in Zeile 7 von [Listing 5] ist nicht zu verwechseln mit der gleichnamigen Methode aus dem
 *Standard Library Header* `<utility>` (hier fungiert `std::move()` als eine Umwandlungsfunktion,
-die aus dem Argument eine Rvalue-Referenz erzeugt).
-Es gibt eine Überladung der Methode im *Standard Library Header* `<algorithm>`, die eine Verschiebung von Elementen in einem 
-zu spezifierenden Bereich vollzieht. Dies ist in  7 von [Listing 5] der Fall, der Bereich ist ein ` std::vector<double>`-Objekt,
+die aus dem Argument eine *RValue*-Referenz erzeugt).
+Es gibt eine weitere Überladung der Methode im *Standard Library Header* `<algorithm>`, die eine Verschiebung von Elementen in einem 
+Bereich vollzieht. Dies ist in Zeile 7 von [Listing 5] der Fall, der Bereich ist ein ` std::vector<double>`-Objekt,
 das in Zeile 4 mit einer bestimmten Länge angelegt und mit 0-Werten vorbelegt wird.
 
 Und noch zwei weitere STL-Algorithmen können wir in Aktion betrachten ([Listing 6]): `std::transform` und `std::find_if`.
@@ -886,14 +872,14 @@ Wir sind bei Methode `removeTrailingZeros` und bei einer Überladung des `operat
 
 *Listing* 6: Klasse `Polynom`: Anwendung der beiden STL-Algorithmen `std::transform` und `std::find_if`.
 
-Die `std::transform`-Methode in Zeile 6 von [Listing 6] verwenden wir, um eine Polynom mit einem skalaren Wert zu multiplizieren.
+Die `std::transform`-Methode in Zeile 6 von [Listing 6] verwenden wir, um ein Polynom mit einem skalaren Wert zu multiplizieren.
 Im Prinzip legen wir vom Ausgangspolynom eine Kopie an, die `std::transform`-Methode arbeitet auf der Kopie und multipliziert 
-jeden einzelnen Koeffizienten mit dem Skalar. Die  `std::find_if`-Funktion wiederum setzen wir ein,
-um mögliche `0`-Elemente am Ende des Koeffizientenvektors zu suchen. Da es auch in einem Sonderfall ein zulässiges `0`-Element am
+jeden einzelnen Koeffizienten mit einem Skalar. Die  `std::find_if`-Funktion wiederum setzen wir ein,
+um mögliche `0`-Elemente am Ende des Koeffizientenvektors zu suchen. Da es in einem Sonderfall ein zulässiges `0`-Element am
 Ende des Vektors geben darf (Null-Polynom), schließen wir diesen Fall in den Zeilen 26 bis 29 aus.
-Das Löschen der Elemente schließlich übergeben wir der Methode `erase` am `std::vector<double>`-Objekt.
+Das Löschen der Elemente schließlich übergeben wir der Methode `erase()` am `std::vector<double>`-Objekt.
 
-*Hinweis*: Zeile 20 von [Listing 6] könnte man leichter lesbar formulieren:
+*Hinweis*: Zeile 20 von [Listing 6] könnte man leichter lesbarer formulieren:
 
 ```cpp
 auto r_it = std::find_if (
@@ -901,7 +887,9 @@ auto r_it = std::find_if (
 ```
 
 Ich überlasse es Ihrer Entscheidung, welchen Programmierstil Sie bevorzugen: Einfache Lesbarkeit des Quellcodes
-versus präzise Formulierungen der zum Einsatz kommenden Datentypen. Nicht immer ist es möglich, beides zu vereinen.
+versus präzise Formulierungen der zum Einsatz kommenden Datentypen. Leider ist es nicht immer möglich, beides unter einen Hut zu bringen.
+Mit diesen Erläuterungen sollten die wesentichen Passagen des Quellcodes angesprochen worden sein,
+die noch fehlenden Programmteile finden Sie [hier](https://github.com/pelocpp/cpp_case_studies.git) vor.
 
 # There&lsquo;s more
 
@@ -912,12 +900,12 @@ Mittlerweile unterstützt C++ drei Gleitkommadatentypen:
   * `double` &ndash; Gleitkommatyp mit doppelter Genauigkeit.
   * `long double` &ndash; Gleitkommatyp mit erweiterter doppelter Genauigkeit.
 
-Welche Änderungen sind an der Klassen `Polynom` vorzunehmen,
+Welche Änderungen sind an der Klasse `Polynom` vorzunehmen,
 um Polynome mit unterschiedlichen Gleitkommadatentypen definieren zu können?
 
 # There&lsquo;s much more
 
-In C++ 20 wird ein neues Sprachkonzept, genannt *Concepts* eingeführt.
+In C++ 20 wird ein neues Sprachkonzept &ndash; genannt *Concepts* &ndash; eingeführt.
 Mit *Concepts* kann man Restriktionen für Datentypen festzulegen, die eine Template-Funktion oder -klasse annehmen kann.
 
 Definieren Sie Ihre Klasse `Polynom<T>` mit Hilfe von *Concepts* so, dass ausschließlich die drei Datentypen

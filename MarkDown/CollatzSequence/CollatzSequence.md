@@ -98,7 +98,7 @@ Kommen wir jetzt auf die Iterator-Klasse zu sprechen. Vom obigen Code-Fragment k
 *Hinweis*:
 Mit diesen drei Operatoren lassen sich Iterator-Klassen implementieren,
 die im Kontext einer bereichsbasierten `for`-Wiederholungsschleife einsetzbar sind.
-Für andere STL-Algorithen, wie zum Beispiel `std::find` oder `std::copy`, um nur zwei von ihnen exemplarisch zu nennen,
+Für andere STL-Algorithmen, wie zum Beispiel `std::find` oder `std::copy`, um nur zwei von ihnen exemplarisch zu nennen,
 sind zusätzliche Klassenelemente notwendig. Wir werden an anderer Stelle darauf näher eingehen.
 
 Wie lässt sich nun eine Zahlenfolge und das Iteratorkonzept von C++ miteinander verbinden?
@@ -152,7 +152,7 @@ Mit ihrer Hilfe sollte es nicht mehr passieren, dass Instanzvariablen von Klasse
 Dieses Feature hat zur Folge, dass man nicht mehr zwingend den Default-Konstruktor einer Klasse ausprogrammieren muss.
 Mit der Kurzschreibweise in Zeile 17 ist erreicht, dass die Klasse einen Default-Konstruktor besitzt und die Instanzvariablen
 auf Basis ihrer jeweiligen Initialisierer vorbelegt werden.
-Die Zeilen 4 bis 8 bezeichnet man als *Iterator Traits* (zu deutsch etwa *Iterator Spuren*),
+Die Zeilen 4 bis 8 bezeichnet man als *Iterator Traits* (zu Deutsch etwa *Iterator Spuren*),
 sie sind wichtig für die Integration des Iterators in die STL.
 Eine mögliche Realisierung der `CollatzIterator`-Klasse folgt in [Listing 2]:
 
@@ -185,7 +185,7 @@ Eine mögliche Realisierung der `CollatzIterator`-Klasse folgt in [Listing 2]:
 ## Klasse `CollatzSequence`
 
 Nun benötigen wir noch eine Klasse für die Zahlenfolge, also die Containerklasse.
-Im wesentlichen legt sie nur den Startwert für die Folge fest
+Im Wesentlichen legt sie nur den Startwert für die Folge fest
 und stellt zwei Iteratorobjekte für Start und Ende der Zahlenfolge zur Verfügung ([Listing 3]):
 
 ###### {#listing_03_collatzsequence_interface}
@@ -263,7 +263,7 @@ return { CollatzIterator { 1 } };
 ```
 
 schreiben, wenn die Information des Klassentyps `CollatzIterator` überflüssig ist bzw. dem Compiler bekannt ist.
-Nun können wir unsere erste teuflische Folgen berechnen. Wir verzichten zunächst noch auf den Einsatz einer Containerklasse
+Nun können wir unsere erste teuflische Folge berechnen. Wir verzichten zunächst noch auf den Einsatz einer Containerklasse
 und testen ausschließlich Iteratorobjekte:
 
 ```cpp
@@ -284,7 +284,7 @@ while (iter != end) {
 
 Wenn Sie die Ausgabe genau betrachten, können Sie einen kleinen Schönheitsfehler erkennen: Richtig erkannt, 
 die Folge sollte den Wert 1 als letztes Element und nicht die 2 haben.
-Dies ist nicht ganz trival lösbar, aber wenn wir an zwei Stellen im Quellcode geschickt eingreifen, haben wir auch dieses Problem behoben:
+Dies ist nicht ganz trivial lösbar, aber wenn wir an zwei Stellen im Quellcode geschickt eingreifen, haben wir auch dieses Problem behoben:
 
   * Beobachtung 1: In der Festlegung des Ende-Iteratorobjekts sind wir ein wenig gekniffen: Der Wert 1 ist eigentlich der einzig mögliche Wert,
     der sich hier anbietet. Da er aber das Ende der Zahlenfolge ist, wird er von der Iteration ausgenommen, was wir vermeiden wollen.
@@ -305,7 +305,7 @@ Dies ist nicht ganz trival lösbar, aber wenn wir an zwei Stellen im Quellcode g
     sondern müssen hier quasi auf den Vorgänger von `m_current` zurückgreifen. Damit benötigen wir neben `m_current` noch eine zweite Instanzvariable `m_last`,
     die den Vorgänger von `m_current` repräsentiert.
 
-  * Beobachtung 3: Für die beiden Operatoren `++` und `!=` benötigen wir eine geringfüg modifizierte Realisierung:
+  * Beobachtung 3: Für die beiden Operatoren `++` und `!=` benötigen wir eine geringfügig modifizierte Realisierung:
 
     ```cpp
     CollatzIterator& CollatzIterator::operator++()
@@ -352,7 +352,7 @@ eine Implementierung der beiden Methoden `begin()` und `end()`. An den zurückge
 drei Operatoren `operator++()`, `operator!=()` und `operator*()` vorhanden sein. Anderfalls wäre ein derartiges Code-Fragment nicht übersetzungsfähig.
 
 Für die nachfolgenden Code-Fragmente muss die Iteratorklasse noch weitere Auskünfte bereitstellen.
-Wir sind beim Themenkreis der so genannten &ldquo;Iterator Traits&rdquo; &ndash; zu deutsch etwa &ldquo;Iterator Spuren&rdquo; &ndash; angekommen.
+Wir sind beim Themenkreis der so genannten &ldquo;Iterator Traits&rdquo; &ndash; zu Deutsch etwa &ldquo;Iterator Spuren&rdquo; &ndash; angekommen.
 Die Anforderung lässt sich vergleichsweise einfach durch fünf `using`-Deklarationen erfüllen:
 
 ```cpp
