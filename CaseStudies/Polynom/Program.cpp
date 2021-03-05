@@ -6,9 +6,6 @@
 
 // TODO: Hmmm, das Beispiel würde sich für den "Rocket" Operator <=> anbieten 
 
-// TODO: Beschreiben: The correct way: There are two ways to loop backward correctly, the first one is :
-// https://jdhao.github.io/2017/10/07/loop-forward-backward-with-cpp-vector/
-
 // no-template version
 void test_script_01();
 void test_script_02();
@@ -89,7 +86,7 @@ void testEx()
 
 int main()
 {
-    test_ComparisonOperators();
+    test_Addition();
     //test();
     //testEx();
 

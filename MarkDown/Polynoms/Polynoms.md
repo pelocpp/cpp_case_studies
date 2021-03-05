@@ -1,7 +1,5 @@
 <!-- Polynoms.md -->
 
-# Einführung
-
 Gegenstand dieser Aufgabe sind Polynomfunktionen, kurz auch Polynome genannt.
 Formal ist ein Polynom als Summe von Vielfachen von Potenzen einer Variablen *x* definiert:
 
@@ -24,6 +22,9 @@ zur Definition einer Klasse in Modern C++ in Anspruch nimmt.
   * Initialisierungsliste (`std::initializer_list<T>`)
   * STL-Klasse `std::vector<T>`
   * C++ Iteratorenkonzept
+  * Container-Methoden `rbegin()` und `rend()`
+  * `std::move`  aus dem *Standard Library Header* `<algorithm>`
+  * STL-Algorithmen `std::begin`, `std::end`, `std::for_each`, `std::next`, `std::transform`, `std::find_if`
 
 # Konstruktoren und *getter*-/*setter*-Methoden
 
@@ -210,12 +211,24 @@ Informationen bezüglich der einzelnen C++-Operatorensignaturen der soeben betra
 | Element | Beschreibung |
 | :---- | :---- |
 | Operator `+` | `friend Polynom operator+ (const Polynom&, const Polynom&);`<br/>Addition zweier Polynome. |
-| Operator `-` | `friend Polynom operator+ (const Polynom&, const Polynom&);`<br/>Subtraktion zweier Polynome. |
-| Operator `*` | `friend Polynom operator+ (const Polynom&, const Polynom&);`<br/>Multiplikation zweier Polynome. |
-| Operator `/` | `friend Polynom operator+ (const Polynom&, const Polynom&);`<br/>Division zweier Polynome. |
-| Operator `%` | `friend Polynom operator+ (const Polynom&, const Polynom&);`<br/>Rest bei Division zweier Polynome. |
+| Operator `-` | `friend Polynom operator- (const Polynom&, const Polynom&);`<br/>Subtraktion zweier Polynome. |
+| Operator `*` | `friend Polynom operator* (const Polynom&, const Polynom&);`<br/>Multiplikation zweier Polynome. |
+| Operator `/` | `friend Polynom operator/ (const Polynom&, const Polynom&);`<br/>Division zweier Polynome. |
+| Operator `%` | `friend Polynom operator% (const Polynom&, const Polynom&);`<br/>Rest bei Division zweier Polynome. |
 
 *Tabelle* 3: Arithmetische Operatoren der Klasse `Polynom`.
+
+In Ergänzung zu [Tabelle 3] sollten wir nicht vergessen, dass es die beiden Operatoren `+` und `-` neben ihrer binären Stelligkeit
+auch unär gibt ([Tabelle 4]):
+
+###### {#tabelle_4_class_polynom_arithmetic_operators_unary}
+
+| Element | Beschreibung |
+| :---- | :---- |
+| Operator `+` | `friend Polynom operator+ (const Polynom&);`<br/>Unärer Plus &ndash; Das Ergebnis des unären Plus-Operators (`+`) ist der Wert seines Operanden. |
+| Operator `-` | `friend Polynom operator- (const Polynom&);`<br/>Negation eines Polynoms (Vorzeichenwechsel) &ndash; Der unäre Negations Operator (`-`) erzeugt den negativen Wert seines Operanden. |
+
+*Tabelle* 4: Die beiden Operatoren `+` und `-` der Klasse `Polynom` in ihrer unären Ausprägung.
 
 Zum Testen Ihrer Realisierung fügen wir einige Testbeispiele auf:
 
@@ -300,9 +313,9 @@ p1%p2: -4x^1
 ```
 
 *Hinweis*: Die Division zweier Polynome kann in der Realisierung dadurch vereinfacht werden,
-wenn Sie die Klasse `Polynom` um zwei Hilfsmethoden sowie zwei Hilfsoperatoren ergänzen ([Tabelle 4]):
+wenn Sie die Klasse `Polynom` um zwei Hilfsmethoden sowie zwei Hilfsoperatoren ergänzen ([Tabelle 5]):
 
-###### {#tabelle_4_class_polynom_helper_methods}
+###### {#tabelle_5_class_polynom_helper_methods}
 
 | Element | Beschreibung |
 | :---- | :---- |
@@ -311,9 +324,9 @@ wenn Sie die Klasse `Polynom` um zwei Hilfsmethoden sowie zwei Hilfsoperatoren e
 
 *Tabelle* 4: Hilfsmethoden der Klasse `Polynom`.
 
-Die arithmetischen Operatoren sollten in der Klasse `Polynom` auch in der Wertzuweisungsform vorhanden sein, siehe [Tabelle 5]:
+Die arithmetischen Operatoren sollten in der Klasse `Polynom` auch in der Wertzuweisungsform vorhanden sein, siehe [Tabelle 6]:
 
-###### {#tabelle_5_class_polynom_arithmetic_assignment_operators}
+###### {#tabelle_6_class_polynom_arithmetic_assignment_operators}
 
 | Element | Beschreibung |
 | :---- | :---- |
@@ -363,9 +376,9 @@ Bislang haben uns wir ausschließlich dem &ldquo;Ring der Polynome&rdquo; zugewe
 Um die mathematische Schreibweise für die Auswertung eines Polynoms *p* an der Stelle *y* nachzuahmen,
 bieten sich in C++ gleich zwei Operatoren an: Der Index-Operator `[]` sowie der Funktionsaufruf-Operator `()`, auch *Funktor* genannt.
 Der Index-Operator bietet sich eigentlich immer dann an, wenn die zugrunde liegende Klasse den Charakter von etwas &ldquo;indizierbarem&rdquo; hat.
-Dies trifft auf die Klasse `Polynom` eigentlich nicht zu, daher ist meine Wahl auf den Funktionsaufruf-Operator `()` gefallen:
+Dies trifft auf die Klasse `Polynom` eigentlich nicht zu, daher ist meine Wahl auf den Funktionsaufruf-Operator `()` gefallen ([Tabelle 7]):
 
-###### {#tabelle_6_class_polynom_functor}
+###### {#tabelle_7_class_polynom_functor}
 
 | Element | Beschreibung |
 | :---- | :---- |
@@ -415,9 +428,9 @@ p3(1.0) = 1
 p3(2.0) = 18
 ```
 
-Natürlich lassen sich Polynome auch vergleichen. In [Tabelle 7] finden Sie die üblichen Vergleichsoperatoren vor:
+Natürlich lassen sich Polynome auch vergleichen. In [Tabelle 8] finden Sie die üblichen Vergleichsoperatoren vor:
 
-###### {#tabelle_7_class_comparison_operators}
+###### {#tabelle_8_class_comparison_operators}
 
 | Element | Beschreibung |
 | :---- | :---- |
@@ -617,30 +630,314 @@ finden Sie in [Listing 3] vor:
 ###### {#listing_3_class_polynom_arithmetic_operators}
 
 ```cpp
-WEITER
+001: // unary mathematical operators + and -
+002: Polynom operator+ (const Polynom& p)
+003: {
+004:     return Polynom{ p };
+005: }
+006: 
+007: Polynom operator- (const Polynom& p)
+008: {
+009:     std::vector<double> tmp{ p.m_coefficients };
+010: 
+011:     std::for_each(std::begin(tmp), std::end(tmp), [](double& coeff) {
+012:         coeff *= -1.0;
+013:         }
+014:     );
+015: 
+016:     return { tmp };
+017: }
+018: 
+019: // binary mathematical operators +, -, *, / and %
+020: Polynom operator+ (const Polynom& p1, const Polynom& p2)
+021: {
+022:     size_t count = (p1.m_coefficients.size() <= p2.m_coefficients.size())
+023:         ? p2.m_coefficients.size()
+024:         : p1.m_coefficients.size();
+025: 
+026:     // create array for new coefficients
+027:     std::vector<double> coefficients(count);
+028:     // for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) { static_cast<size_t>(-1)
+029:     for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
+030:         double coeff = 0.0;
+031:         if (i < p1.m_coefficients.size())
+032:             coeff += p1.m_coefficients[i];
+033:         if (i < p2.m_coefficients.size())
+034:             coeff += p2.m_coefficients[i];
+035:         coefficients.at(i) = coeff;
+036:     }
+037: 
+038:     return { coefficients };
+039: }
+040: 
+041: Polynom operator- (const Polynom& p1, const Polynom& p2)
+042: {
+043:     return p1 + -p2;
+044: }
+045: 
+046: Polynom operator* (const Polynom& p1, const Polynom& p2)
+047: {
+048:     // create array of coefficients
+049:     size_t count = p1.m_coefficients.size() + p2.m_coefficients.size() - 1;
+050: 
+051:     // create vector of a specific size for new coefficients
+052:     std::vector<double> coefficients(count, 0);
+053: 
+054:     // compute coefficients of polynom product
+055:     for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
+056:         for (size_t j = p2.m_coefficients.size() - 1; j != static_cast<size_t>(-1); j--) {
+057:             coefficients[i + j] += p1.m_coefficients[i] * p2.m_coefficients[j];
+058:         }
+059:     }
+060: 
+061:     return { coefficients };
+062: }
+063: 
+064: Polynom operator/ (const Polynom& p1, const Polynom& p2)
+065: {
+066:     // degree of numerator polynom is less than degree of denominator polynom
+067:     if (p1.m_coefficients.size() < p2.m_coefficients.size())
+068:         return {};
+069: 
+070:     // need copies of arguments
+071:     Polynom tmp1{ p1 };
+072:     Polynom tmp2{ p2 };
+073: 
+074:     // create coefficients array of result polynom
+075:     size_t count = p1.m_coefficients.size() - p2.m_coefficients.size() + 1;
+076:     std::vector<double> rescoeff(count);
+077: 
+078:     // apply algorithm of polynom division
+079:     for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
+080: 
+081:         // premature end of division reached (comparing degrees)
+082:         if (tmp1.m_coefficients.size() < p2.m_coefficients.size())
+083:             break;
+084: 
+085:         // calculate next coefficient of result polynom
+086:         double coeff =
+087:             tmp1.m_coefficients[tmp1.m_coefficients.size() - 1] /
+088:             tmp2.m_coefficients[tmp2.m_coefficients.size() - 1];
+089: 
+090:         // multiply denominator polynom with coefficient
+091:         tmp2 = tmp2 * coeff;
+092: 
+093:         // calculate difference of ranks
+094:         size_t diffRank = tmp1.m_coefficients.size() - p2.m_coefficients.size();
+095: 
+096:         // multiply denominator polynom with one ore more 'x'
+097:         tmp2.multiplyX(diffRank);
+098: 
+099:         // subtract denominator polynom from numerator polynom
+100:         tmp1 = tmp1 - tmp2;
+101: 
+102:         // poke calculated coefficient into result polynom
+103:         rescoeff[diffRank] = coeff;
+104: 
+105:         // restore denominator polynom
+106:         tmp2 = p2;
+107:     }
+108: 
+109:     return { rescoeff };
+110: }
+111: 
+112: Polynom operator% (const Polynom& p1, const Polynom& p2)
+113: {
+114:     return p1 - (p1 / p2) * p2;
+115: }
 ```
 
-*Listing* 3: Klasse `Polynom`: Arithmetische Operatoren.
+*Listing* 3: Klasse `Polynom`: Arithmetische Operatoren (binär und unär).
+
+Die Realisierung der arithmetischen Operatoren in [Listing 3]
+hält sich streng an die vorgestellten Algorithmen. Da wir es häufig mit Wiederholungsschleifen
+in Zusammenspiel mit dem Datentyp `size_t` zu tun haben, sollte wir auf eine mögliche Stolperfalle näher eingehen:
+Wie traversieren ich eine Wiederholungsschleife korrekt rückwärts?
+Wir könnten es auf die folgende Weise versuchen:
+
+```cpp
+for (size_t i = m_coefficients.size()-1; i >= 0; --i){
+    // do something with m_coefficients[i]
+}
+```
+
+Dieses Code-Fragment enthält einen schwerwiegenden Fehler: Da der Schleifenzähler `i` ein Typ ohne Vorzeichen ist,
+werde `i` niemals kleiner als 0 sein! Aus diesem Grund haben wir es hier mit einer Enflosschleife zu tun!
+Eine mögliche korrekte Variante sieht so aus:
+
+```cpp
+for (size_t i = m_coefficients.size()-1;  i != static_cast<size_t>(-1); --i){
+    // do something with m_coefficients[i]
+}
+```
+
+Da `i` ein Typ ohne Vorzeichen ist, wird `i`-1, wenn `i` gleich 0 ist, zu `static_cast<size_t>(-1)`.
+Auf diese stoppt die Schleife korrekt.
+*Nebenbemerkung*: `i`-1 ist der größte Wert, den eine Variable des Typs `size_t` darstellen kann. 
+
+Die Realisierung des Horner-Schemas birgt keine Schwierigkeiten. Natürlich hätte man in der Realisierung ([Listing 4])
+auch eine simple klassische `for`-Wiederholungsschleife einsetzen können. Ich wollte im gesamten Programm
+so viel wie möglich &ndash; und bitte auch so sinnvoll wie möglich &ndash; mit STL-Algorithmen arbeiten,
+um auf diesen Weise ihren Umgang zu schulen. Beachten Sie mehrere Kleinigkeiten in [Listing 4]:
+Zum einen müssen wir den Koeffizienten-Vektor rückwärts traversieren, es kommen deshalb die beiden Iteratoren-Objekte zum Einsatz,
+die wir mit `std::rbegin()` und `std::rend()` erhalten. Desweiteren starten wir das Horner-Schema nicht mit dem ersten Koeffizienten,
+sonder innerhalb der Wiederholungsschleife mit dem zweiten (der erste Koeffizient wird in Zeile 5 berücksichtigt).
+Dies erklärt den Aufruf von `std::next()` in Zeile 8 von [Listing 4]:
+
+###### {#listing_4_class_polynom_horner_scheme}
+
+```cpp
+01: // horner scheme
+02: double Polynom::computeHorner(double x) const
+03: {
+04:     size_t count = m_coefficients.size();
+05:     double y = m_coefficients[count - 1];
+06: 
+07:     std::for_each(
+08:         std::next(std::rbegin(m_coefficients)),
+09:         std::rend(m_coefficients), 
+10:         [&](double coeff) {
+11:             y = coeff + y * x;
+12:         }
+13:     );
+14: 
+15:     return y;
+16: }
+17: 
+18: // apply horner scheme, using functor operator
+19: double Polynom::operator() (double x)
+20: {
+21:     return computeHorner(x);
+22: }
+```
+
+*Listing* 4: Klasse `Polynom`: Realisierung des Horner-Schemas.
+
+Zum (wiederholten) Multiplizieren eines Polynoms mit *x* &ndash; so wie dies an manchen Stellen in der Implementierung der arithmetischen
+Operatoren benötigt wird  &ndash; übernimmt die Hilfsmethode `multiplyX` (siehe Zeile 61 von [Listing 1]).
+Wiederum mit Hilfe eines geschickt gewählten STL-Algithmus ist diese Implementierung sehr einfach,
+wenngleich möglicherweise ein klein wenig trickreich ([Listing 5]):
+
+###### {#listing_5_class_polynom_multiplyx}
+
+```cpp
+01: void Polynom::multiplyX(size_t k)
+02: {
+03:     // create new array of coefficients
+04:     std::vector<double> tmp(m_coefficients.size() + k);
+05: 
+06:     // compute new coefficients - same as shifting to the right
+07:     std::move(m_coefficients.begin(), m_coefficients.end(), tmp.begin() + k);
+08: 
+09:     // switch coefficients buffer
+10:     m_coefficients = tmp;
+11: }
+```
+
+*Listing* 5: Klasse `Polynom`: Realisierung der `multiplyX`-Methode.
+
+Der Aufruf der Methode `std::move` in Zeile 7 von [Listing 5] ist nicht zu verwechseln mit der gleichnamigen Methode aus dem
+*Standard Library Header* `<utility>` (hier fungiert `std::move()` als eine Umwandlungsfunktion,
+die aus dem Argument eine Rvalue-Referenz erzeugt).
+Es gibt eine Überladung der Methode im *Standard Library Header* `<algorithm>`, die eine Verschiebung von Elementen in einem 
+zu spezifierenden Bereich vollzieht. Dies ist in  7 von [Listing 5] der Fall, der Bereich ist ein ` std::vector<double>`-Objekt,
+das in Zeile 4 mit einer bestimmten Länge angelegt und mit 0-Werten vorbelegt wird.
+
+Und noch zwei weitere STL-Algorithmen können wir in Aktion betrachten ([Listing 6]): `std::transform` und `std::find_if`.
+Wir sind bei Methode `removeTrailingZeros` und bei einer Überladung des `operator*`-Operators angekommen:
+
+###### {#listing_6_two_stl_algorithms}
+
+```cpp
+01: // private helper operators
+02: Polynom operator* (double scalar, const Polynom& p)
+03: {
+04:     // scalar multiplication with STL
+05:     Polynom q{ p };
+06:     std::transform (
+07:         std::begin(p.m_coefficients),
+08:         std::end(p.m_coefficients), 
+09:         std::begin(q.m_coefficients),
+10:         [scalar](const auto& elem) {
+11:             return elem * scalar;
+12:         }
+13:     );
+14:     return q;
+15: }
+16: 
+17: void Polynom::removeTrailingZeros()
+18: {
+19:     // remove trailing zeros, if any ... using STL algorithms
+20:     std::reverse_iterator<std::vector<double>::iterator> r_it = std::find_if(
+21:         std::rbegin(m_coefficients),
+22:         std::rend(m_coefficients),
+23:         [](double value) { return value != 0.0; }
+24:     );
+25: 
+26:     // vector contains only '0's - rescue last '0'
+27:     if (r_it == std::rend(m_coefficients)) {
+28:         r_it--;
+29:     }
+30: 
+31:     m_coefficients.erase(r_it.base(), std::end(m_coefficients));
+32: }
+```
+
+*Listing* 6: Klasse `Polynom`: Anwendung der beiden STL-Algorithmen `std::transform` und `std::find_if`.
+
+Die `std::transform`-Methode in Zeile 6 von [Listing 6] verwenden wir, um eine Polynom mit einem skalaren Wert zu multiplizieren.
+Im Prinzip legen wir vom Ausgangspolynom eine Kopie an, die `std::transform`-Methode arbeitet auf der Kopie und multipliziert 
+jeden einzelnen Koeffizienten mit dem Skalar. Die  `std::find_if`-Funktion wiederum setzen wir ein,
+um mögliche `0`-Elemente am Ende des Koeffizientenvektors zu suchen. Da es auch in einem Sonderfall ein zulässiges `0`-Element am
+Ende des Vektors geben darf (Null-Polynom), schließen wir diesen Fall in den Zeilen 26 bis 29 aus.
+Das Löschen der Elemente schließlich übergeben wir der Methode `erase` am `std::vector<double>`-Objekt.
+
+*Hinweis*: Zeile 20 von [Listing 6] könnte man leichter lesbar formulieren:
+
+```cpp
+auto r_it = std::find_if (
+...
+```
+
+Ich überlasse es Ihrer Entscheidung, welchen Programmierstil Sie bevorzugen: Einfache Lesbarkeit des Quellcodes
+versus präzise Formulierungen der zum Einsatz kommenden Datentypen. Nicht immer ist es möglich, beides zu vereinen.
 
 # There&lsquo;s more
 
-Unsere bisherigen Betrachtungen einer Potenzmenge haben sich ausschließlich auf Grundmengen mit ganzen Zahlen beschränkt.
-Für die Grundmenge kann man aber auch die Annahme treffen, dass deren integraler Datentyp (`int`, `short`, `long`, `size_t`, etc.) variabel sein sollte.
-Auch kann man sich eine Grundmenge aus Zeichen (`char`) vorstellen.
-Welche Änderungen sind an den beiden Klassen `PartialSet` und `PowerSet` vorzunehmen,
-um die Grundmenge mit unterschiedlichen integralen Datentypen definieren zu können?
+Unsere bisherigen Betrachtungen haben sich ausschließlich auf Polynome mit Koeffizienten des Typs `double` beschränkt.
+Mittlerweile unterstützt C++ drei Gleitkommadatentypen:
+
+  * `float` &ndash; Gleitkommatyp mit einfacher Genauigkeit.
+  * `double` &ndash; Gleitkommatyp mit doppelter Genauigkeit.
+  * `long double` &ndash; Gleitkommatyp mit erweiterter doppelter Genauigkeit.
+
+Welche Änderungen sind an der Klassen `Polynom` vorzunehmen,
+um Polynome mit unterschiedlichen Gleitkommadatentypen definieren zu können?
+
+# There&lsquo;s much more
+
+In C++ 20 wird ein neues Sprachkonzept, genannt *Concepts* eingeführt.
+Mit *Concepts* kann man Restriktionen für Datentypen festzulegen, die eine Template-Funktion oder -klasse annehmen kann.
+
+Definieren Sie Ihre Klasse `Polynom<T>` mit Hilfe von *Concepts* so, dass ausschließlich die drei Datentypen
+`float`, `double` und `long double` als Template-Argument in Betracht kommen!
 
 <!-- Links Definitions -->
 
 [Tabelle 1]: #tabelle_1_class_polynom_ctors
 [Tabelle 2]: #tabelle_2_class_polynom_output
 [Tabelle 3]: #tabelle_3_class_polynom_arithmetic_operators
-[Tabelle 4]: #tabelle_4_class_polynom_helper_methods
-[Tabelle 5]: #tabelle_5_class_polynom_arithmetic_assignment_operators
-[Tabelle 6]: #tabelle_6_class_polynom_functor
-[Tabelle 7]: #tabelle_7_class_comparison_operators
+[Tabelle 4]: #tabelle_4_class_polynom_arithmetic_operators_unary
+[Tabelle 5]: #tabelle_5_class_polynom_helper_methods
+[Tabelle 6]: #tabelle_6_class_polynom_arithmetic_assignment_operators
+[Tabelle 7]: #tabelle_7_class_polynom_functor
+[Tabelle 8]: #tabelle_8_class_comparison_operators
 
 [Listing 1]: #listing_1_class_polynom_decl
-[Listing 1]: #listing_2_class_polynom_ctors_getters
+[Listing 2]: #listing_2_class_polynom_ctors_getters
+[Listing 3]: #listing_3_class_polynom_arithmetic_operators
+[Listing 4]: #listing_4_class_polynom_horner_scheme
+[Listing 5]: #listing_5_class_polynom_multiplyx
+[Listing 6]: #listing_6_two_stl_algorithms
 
 <!-- End-of-File -->

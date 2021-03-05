@@ -57,8 +57,8 @@ Polynom operator+ (const Polynom& p1, const Polynom& p2)
 
     // create array for new coefficients
     std::vector<double> coefficients(count);
-    for (size_t i = count - 1; i != (size_t)-1; i--) {
-
+    // for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) { static_cast<size_t>(-1)
+    for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
         double coeff = 0.0;
         if (i < p1.m_coefficients.size())
             coeff += p1.m_coefficients[i];
@@ -84,8 +84,8 @@ Polynom operator* (const Polynom& p1, const Polynom& p2)
     std::vector<double> coefficients(count, 0);
 
     // compute coefficients of polynom product
-    for (size_t i = p1.m_coefficients.size() - 1; i != (size_t)-1; i--) {
-        for (size_t j = p2.m_coefficients.size() - 1; j != (size_t)-1; j--) {
+    for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
+        for (size_t j = p2.m_coefficients.size() - 1; j != static_cast<size_t>(-1); j--) {
             coefficients[i + j] += p1.m_coefficients[i] * p2.m_coefficients[j];
         }
     }
@@ -108,7 +108,7 @@ Polynom operator/ (const Polynom& p1, const Polynom& p2)
     std::vector<double> rescoeff(count);
 
     // apply algorithm of polynom division
-    for (size_t i = count - 1; i != (size_t)-1; i--) {
+    for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
 
         // premature end of division reached (comparing degrees)
         if (tmp1.m_coefficients.size() < p2.m_coefficients.size())
@@ -226,7 +226,7 @@ bool operator<  (const Polynom& p1, const Polynom& p2)
     if (p1.m_coefficients.size() > p2.m_coefficients.size())
         return false;
 
-    for (size_t i = p1.m_coefficients.size() - 1; i != (size_t)-1; i--) {
+    for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
         if (p1.m_coefficients[i] < p2.m_coefficients[i])
             return true;
         if (p1.m_coefficients[i] > p2.m_coefficients[i])

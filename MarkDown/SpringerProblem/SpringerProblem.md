@@ -62,7 +62,7 @@ Damit kommen wir jetzt auf die Details des Springerproblems zu sprechen. Die Zug
 
 Wir erläutern nun eine Lösungsstrategie für das Springerproblem am Beispiel eines 3&#x00D7;4-Schachbretts und erklären in einzelnen Schritten den Ablauf. Exemplarisch legen wir für den Springer die Startposition in der linken unteren Ecke fest, also das Feld mit den Koordinaten (2,0), wobei wir den Ursprung des Bretts in der linken, oberen Ecke festlegen ( [Abbildung 4]). Es wäre aber auch jedes andere Feld zur Erörterung der Lösungsstrategie geeignet. Die &ldquo;1&rdquo; symbolisiert, dass es sich um den ersten Zug des Springers handelt:
 
-###### {#abbildung_4_springer_problem_knight_moves_01}
+###### {#abbildung_4_springer_problem_knight_moves_start}
 {{< figure src="/img/springer_problem/knight_moves_start.svg" width="25%" >}}
 *Abbildung* 4: Ausgangssituation &ldquo;1&rdquo;: Springer wird im linken unteren Feld platziert.
 

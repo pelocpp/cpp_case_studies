@@ -54,7 +54,7 @@ public:
 
         // create array for new coefficients
         std::vector<T> coefficients(count);
-        for (size_t i = count - 1; i != (size_t)-1; i--) {
+        for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
 
             T coeff{ };
             if (i < p1.m_coefficients.size())
@@ -79,8 +79,8 @@ public:
         std::vector<T> coefficients(count);
 
         // compute coefficients of polynom product
-        for (size_t i = p1.m_coefficients.size() - 1; i != (size_t)-1; i--) {
-            for (size_t j = p2.m_coefficients.size() - 1; j != (size_t)-1; j--) {
+        for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
+            for (size_t j = p2.m_coefficients.size() - 1; j != static_cast<size_t>(-1); j--) {
                 coefficients[i + j] += p1.m_coefficients[i] * p2.m_coefficients[j];
             }
         }
@@ -102,7 +102,7 @@ public:
         std::vector<T> rescoeff(count);
 
         // apply algorithm of polynom division
-        for (size_t i = count - 1; i != (size_t)-1; i--) {
+        for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
 
             // premature end of division reached (comparing degrees)
             if (tmp1.m_coefficients.size() < p2.m_coefficients.size())
@@ -194,7 +194,7 @@ public:
         if (p1.m_coefficients.size() > p2.m_coefficients.size())
             return false;
 
-        for (size_t i = p1.m_coefficients.size() - 1; i != (size_t)-1; i--) {
+        for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
             if (p1.m_coefficients[i] < p2.m_coefficients[i])
                 return true;
             if (p1.m_coefficients[i] > p2.m_coefficients[i])
