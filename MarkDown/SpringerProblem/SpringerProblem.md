@@ -1,10 +1,19 @@
 <!-- Das Springerproblem -->
 
-Das *Springerproblem* ist auf den Schweizer Mathematiker *Leonhard Euler* (1707 &ndash; 1783) zurückzuführen. Dieser stellte sich vor über 200 Jahren, genauer gesagt im Jahre 1758, die folgende Frage: &ldquo;Gegeben sei ein leeres Schachbrett. Gibt es eine Zugfolge, mit der der Springer alle (schwarzen und weißen) Felder des Bretts genau einmal besucht?&rdquo;. Dabei legen wir zugrunde, dass der Springer auf dem Schachbrett in der Ecke unten links startet.
+Das *Springerproblem* ist auf den Schweizer Mathematiker *Leonhard Euler* (1707 &ndash; 1783) zurückzuführen.
+Dieser stellte sich vor über 200 Jahren, genauer gesagt im Jahre 1758, die folgende Frage:
+&ldquo;Gegeben sei ein leeres Schachbrett. Gibt es eine Zugfolge, mit der der Springer alle (schwarzen und weißen)
+Felder des Bretts genau einmal besucht?&rdquo;.
 
-Hmmm, eine gute Frage, wird sich der geneigte Leser jetzt sagen. Möglicherweise kann man sie innerhalb von wenigen Minuten selbst beantworten, schließlich ist ein Schachbrett mit seinen 8&#x00D7;8 Feldern nicht so wirklich groß. Stellt man nach einer ersten Phase euphorischen Suchens ernüchternd fest, dass das Problem doch nicht ganz so einfach zu lösen ist, kommt man vielleicht auf den revolutionären Gedanken, dem Problem mit Hilfe eines Softwareprogramms auf den Leib zu rücken. Dies ist natürlich möglich, wie wir in dieser Fallstudie am Beispiel von *Modern C++* zeigen werden.
+Hmmm, eine gute Frage, wird sich der geneigte Leser jetzt sagen. Möglicherweise kann man sie innerhalb
+von wenigen Minuten selbst beantworten, schließlich ist ein Schachbrett mit seinen 8&#x00D7;8 Feldern
+nicht so wirklich groß. Stellt man nach einer ersten Phase euphorischen Suchens ernüchternd fest,
+dass das Problem doch nicht ganz so einfach zu lösen ist, kommt man vielleicht auf den revolutionären Gedanken,
+dem Problem mit Hilfe eines Softwareprogramms auf den Leib zu rücken. Dies ist natürlich möglich,
+wie wir in dieser Fallstudie am Beispiel von *Modern C++* zeigen werden.
 
-Neben der Implementierung einer *Backtracking*-Strategie betrachten wir auch Überlegungen, wie sich das Suchen von Zugfolgen parallelisieren lässt.
+Neben der Implementierung einer *Backtracking*-Strategie betrachten wir auch Überlegungen,
+wie sich das Suchen von Zugfolgen parallelisieren lässt.
 Die Methode `std::async` und Objekte, die es &ldquo;erst in der Zukunft&rdquo; gibt (`std::future<T>`), kommen zum Einsatz.
 
 <!--more-->
@@ -24,17 +33,22 @@ Die Methode `std::async` und Objekte, die es &ldquo;erst in der Zukunft&rdquo; g
 
 # Einführung
 
-Der Standardalgorithmus für die Lösung solcher Probleme ist das sogenannte *Backtracking*. Die Idee hierbei ist, die Figur solange zu setzen, bis entweder eine Lösung gefunden wurde, oder man sie nicht mehr weitersetzen kann. In diesem Fall geht man dann einen Zug zurück und versucht, eine Lösung über einen alternativen Weg zu finden. Auf diese Weise findet das Verfahren immer eine oder mehrere Lösungen &ndash; wenn es sie denn gibt.
+Der Standardalgorithmus für die Lösung solcher Probleme ist das sogenannte *Backtracking*.
+Dabei legen wir zugrunde, dass der Springer auf dem Schachbrett in der Ecke unten links startet.
+Die Idee hierbei ist, die Figur solange zu setzen, bis entweder eine Lösung gefunden wurde,
+oder man sie nicht mehr weitersetzen kann.
+In diesem Fall geht man dann einen Zug zurück und versucht,
+eine Lösung über einen alternativen Weg zu finden. Auf diese Weise findet das Verfahren immer
+eine oder mehrere Lösungen &ndash; wenn es sie denn gibt.
 
-Zu beachten ist dabei leider noch ein kleiner Schönheitsfehler: Die Laufzeiten derartiger Programme können immens sein (Tage, Wochen, Jahre, ...), je nachdem, welche Schachbretter wir betrachten, wenn wir das Springerproblem nicht nur für Schachbretter mit der Standardgröße von 8&#x00D7;8 Feldern analysieren wollen, sondern verallgemeinert betrachten. 
+Zu beachten ist dabei leider noch ein kleiner Schönheitsfehler: Die Laufzeiten derartiger Programme
+können immens sein (Tage, Wochen, Jahre, ...), je nachdem, welche Schachbretter wir betrachten,
+wenn wir das Springerproblem nicht nur für Schachbretter mit der Standardgröße von 8&#x00D7;8 Feldern analysieren wollen,
+sondern verallgemeinert betrachten. 
 
-<!--more-->
-
-<!--
-Gegenstand dieser Fallstudie ist das klassische Springerproblem des Schachspiels. Die Springerfigur wird dazu auf ein beliebiges Feld eines *n*&#x00D7;*n* Schachbretts gestellt. Das Problem besteht nun darin, eine Zugfolge zu finden, bei der der Springer, entsprechend seiner Bewegungsmöglichkeiten im Schach, nacheinander alle Felder des Schachbrettes besetzt &ndash; jedes Feld genau einmal!
--->
-
-Prinzipiell ist von vorneherein nicht klar, ob es überhaupt eine Lösung gibt. Wenn ja, kann es auch sein, dass mehrere Zugfolgen existieren! Eine mögliche Lösung des Springerproblems auf einem realen Schachbrett (also mit 64 Feldern) finden Sie in [Abbildung 1] vor:
+Prinzipiell ist von vorneherein nicht klar, ob es überhaupt eine Lösung gibt.
+Wenn ja, kann es auch sein, dass mehrere Zugfolgen existieren! Eine mögliche Lösung des Springerproblems
+auf einem realen Schachbrett (also mit 64 Feldern) finden Sie in [Abbildung 1] vor:
 
 ###### {#abbildung_1_springer_problem_single_solution}
 

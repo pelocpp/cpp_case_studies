@@ -57,7 +57,6 @@ Polynom operator+ (const Polynom& p1, const Polynom& p2)
 
     // create array for new coefficients
     std::vector<double> coefficients(count);
-    // for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) { static_cast<size_t>(-1)
     for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
         double coeff = 0.0;
         if (i < p1.m_coefficients.size())

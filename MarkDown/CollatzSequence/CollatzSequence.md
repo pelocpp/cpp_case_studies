@@ -1,6 +1,25 @@
 <!-- CollatzSequence.md -->
 
-# *Collatz*-Zahlenfolgen und C++&ndash;Iteratoren
+Das *Collatz*-Problem, auch als &ldquo;3*n* + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
+Problem und wird dem Mathematiker *Lothar Collatz* zugeschrieben. 
+
+Diese Fallstudie zeigt, wie sich die Berechnung der Elemente einer Zahlenfolge in einen C++&ndash;Iterator einbetten lässt,
+um auf diese Weise mit Hilfe der STL performante und elegant
+in das C++&ndash;Programmiermodell integrierte Algorithmen formulieren zu können.
+
+<!--more-->
+
+# Einführung
+
+Unter einer _Zahlenfolge_ (auch _Zahlenreihe_) verstehen wir in der Mathematik
+eine Auflistung von endlich (oder auch unendlich) vielen fortlaufend nummerierten Zahlen.
+Die Zahl mit der Nummer _i_ &ndash; man sagt hier auch: mit dem Index _i_ &ndash; wird _i_-tes Glied der Folge genannt.
+
+Bei dem Problem geht es um Zahlenfolgen, die nach einem sehr einfachen Bildungsgesetz konstruiert werden. Gegeben ist eine
+beliebige natürliche Startzahl _n_, aus der eine Folge von Zahlen nach den folgenden zwei Regeln gebildet wird:
+
+* Ist die Zahl _n_ gerade, so ist die nächste Zahl gleich der Hälfte der Zahl.
+* Ist die Zahl _n_ ungerade, so wird die Zahl mit 3 multipliziert und um 1 erhöht.
 
 # Lernziele
 
@@ -8,25 +27,7 @@
   * STL-Algorithmen (`std::distance`, `std::accumulate`, `std::copy`, `std::back_inserter`)
   * Bereichsbasierte `for`-Wiederholungsschleife (Range-based `for`-Loop)
 
-# Beschreibung
-
-Unter einer _Zahlenfolge_ (auch _Zahlenreihe_) verstehen wir in der Mathematik
-eine Auflistung von endlich (oder auch unendlich) vielen fortlaufend nummerierten Zahlen.
-Die Zahl mit der Nummer _i_ &ndash; man sagt hier auch: mit dem Index _i_ &ndash; wird _i_-tes Glied der Folge genannt.
-
-Diese Fallstudie zeigt, wie sich die Berechnung der Elemente einer Zahlenfolge in einen C++&ndash;Iterator einbetten lässt,
-um auf diese Weise mit Hilfe der STL performante und elegant
-in das C++&ndash;Programmiermodell integrierte Algorithmen formulieren zu können.
-
 # Die &ldquo;teuflische Zahlenfolge&rdquo; oder auch das *Collatz*-Problem
-
-Das *Collatz*-Problem, auch als &ldquo;3*n* + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
-Problem und wird dem Mathematiker *Lothar Collatz* zugeschrieben. Bei dem Problem geht es um
-Zahlenfolgen, die nach einem sehr einfachen Bildungsgesetz konstruiert werden. Gegeben ist eine
-beliebige natürliche Startzahl _n_, aus der eine Folge von Zahlen nach den folgenden zwei Regeln gebildet wird:
-
-* Ist die Zahl _n_ gerade, so ist die nächste Zahl gleich der Hälfte der Zahl.
-* Ist die Zahl _n_ ungerade, so wird die Zahl mit 3 multipliziert und um 1 erhöht.
 
 Merkwürdigerweise erreicht diese Folge nach endlich vielen Schritten immer die Zahl 1. Man kann
 die Vermutung auch so betrachten: Jede Folge mündet in den Zyklus 4, 2, 1 – egal, mit welcher

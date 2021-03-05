@@ -5,16 +5,18 @@ Formal ist ein Polynom als Summe von Vielfachen von Potenzen einer Variablen *x*
 
 P<sub>n</sub>(*x*) = a<sub>n</sub>*x*<sup>n</sup> + a<sub>n-1</sub>*x*<sup>n-1</sup> + ... + a<sub>2</sub>*x*<sup>2</sup> + a<sub>1</sub>*x* + a<sub>0</sub>.
 
-Die Variable *x* wie auch die Koeffizienten a<sub>i</sub> können beliebige reelle Werte annehmen,
-wir sprechen von einem reellen Polynom. Als *Grad* des Polynoms wird der höchste Exponent *n* bezeichnet,
-für den der Koeffizient an des Ausdrucks a<sub>n</sub>*x*<sup>n</sup> nicht null ist.
-Dieser Koeffizient wird auch *Leitkoeffizient* genannt.
-
 Entwickeln Sie eine Klasse `Polynom`, die &ndash; möglichst einfallsreich &ndash; die unterschiedlichen Konstrukte
 (Instanzvariablen, Konstruktoren, Methoden, inklusive *getter*- und *setter*-Methoden, Operatoren usw.)
 zur Definition einer Klasse in Modern C++ in Anspruch nimmt.
 
-<!--more--> 
+<!--more-->
+
+# Einführung
+
+Die Variable *x* wie auch die Koeffizienten a<sub>i</sub> können beliebige reelle Werte annehmen,
+wir sprechen von einem reellen Polynom. Als *Grad* des Polynoms wird der höchste Exponent *n* bezeichnet,
+für den der Koeffizient an des Ausdrucks a<sub>n</sub>*x*<sup>n</sup> nicht null ist.
+Dieser Koeffizient wird auch *Leitkoeffizient* genannt.
 
 # Lernziele
 
@@ -153,19 +155,19 @@ also gleiche Potenzen von *x* sind jeweils untereinander zu schreiben:
 
 Nun wird die Subtraktion durchgeführt und werden anschließend alle restlichen Glieder des Polynoms &ldquo;heruntergeholt&rdquo;:
 
-{{< figure src="/img/Polynoms/PolynomDivision01.png" width="25%" >}}
+{{< figure src="/img/polynoms/PolynomDivision01.png" width="35%" >}}
 
 Der Rest hat nur noch den Polynomgrad 2, wir haben also das Problem schon um einen Grad verringert.
 Nun stehen wir wieder vor der Ausgangsfrage: Wie oft passt das *x* aus dem Divisor in das *x*2,
 die höchste Potenz des Restes. Offensichtlich *x*-Mal, damit ist der nächste Summand
 des Quotienten (des Ergebnisses) +*x*:
 
-{{< figure src="/img/Polynoms/PolynomDivision02.png" width="25%" >}}
+{{< figure src="/img/polynoms/PolynomDivision02.png" width="40%" >}}
 
 Die jetzt noch zu beantwortende Frage lautet &ldquo;Wie oft passt x in -2x?&rdquo;.
 Offensichtlich -2-Mal, und die (letzte) Subtraktion sieht nun so aus:
 
-{{< figure src="/img/Polynoms/PolynomDivision03.png" width="25%" >}}
+{{< figure src="/img/polynoms/PolynomDivision03.png" width="42%" >}}
 
 Dass diese Polynomdivision keinen Rest besitzt, ist in der Tat Zufall – oder um es doch ehrlich zu sagen:
 Ich habe es mit Absicht so hingedeichselt :-). Es kann allerdings auch der Fall vorliegen, dass das Restpolynom
@@ -173,7 +175,7 @@ nicht mehr durch das Divisorpolynom teilbar ist. In diesem Fall weist die Polyno
 Neben der Division gibt es daher auch die Modulo-Operation für Polynome,
 also die Bestimmung des Restpolynoms bei Polynomdivision, siehe dazu folgendes Beispiel:
 
-{{< figure src="/img/Polynoms/PolynomDivision04.png" width="25%" >}}
+{{< figure src="/img/polynoms/PolynomDivision04.png" width="55%" >}}
 
 Damit kommen wir zur Auswertung des Polynoms an einer bestimmten Stelle *x*.
 Um uns unnötige Berechnungen von Potenzen zu ersparen, berechnen wir den Wert mit dem sogenannten *Horner*-Schema.
@@ -322,7 +324,7 @@ wenn Sie die Klasse `Polynom` um zwei Hilfsmethoden sowie zwei Hilfsoperatoren e
 | Operator `*` | `friend Polynom operator* (const Polynom& p, double scalar);`<br/>`friend Polynom operator* (double scalar, const Polynom& p);`<br/>Multiplikation eines Polynoms `p` mit der Konstanten `scalar`. |
 | Methode `multiplyX` | `void multiplyX(size_t k);`<br/>Multiplikation eines Polynoms mit `x` oder einer Potenz von `x`. Der Parameter `k` spezifiziert den Exponenten von `x`, beschreibt also den Term *x*<sup>k</sup>. |
 
-*Tabelle* 4: Hilfsmethoden der Klasse `Polynom`.
+*Tabelle* 5: Hilfsmethoden der Klasse `Polynom`.
 
 Die arithmetischen Operatoren sollten in der Klasse `Polynom` auch in der Wertzuweisungsform vorhanden sein, siehe [Tabelle 6]:
 
@@ -336,7 +338,7 @@ Die arithmetischen Operatoren sollten in der Klasse `Polynom` auch in der Wertzu
 | Operator `/=` | `friend Polynom& operator/= (Polynom&, const Polynom&);`<br/>Divisionswertzuweisung. |
 | Operator `%=` | `friend Polynom& operator%= (Polynom&, const Polynom&);`<br/>Modulo Wertzuweisung. |
 
-*Tabelle* 5: Arithmetische Operatoren der Klasse `Polynom` in der Wertzuweisungsform.
+*Tabelle* 6: Arithmetische Operatoren der Klasse `Polynom` in der Wertzuweisungsform.
 
 Auch zu den Operatoren von [Tabelle 5] führen wir ein Beispiel auf:
 
@@ -384,7 +386,7 @@ Dies trifft auf die Klasse `Polynom` eigentlich nicht zu, daher ist meine Wahl a
 | :---- | :---- |
 | Operator `()` | `double operator() (double x);`<br/>Auswertung des Polynoms an der Stelle `x`. |
 
-*Tabelle* 6: Funktionsaufruf-Operator `()` zum Auswerten eines Polynoms.
+*Tabelle* 7: Funktionsaufruf-Operator `()` zum Auswerten eines Polynoms.
 
 *Beispiel*:
 
@@ -441,7 +443,7 @@ Natürlich lassen sich Polynome auch vergleichen. In [Tabelle 8] finden Sie die 
 | Operator `>` | `friend Polynom& operator> (const Polynom&, const Polynom&);`<br/>Test auf &ldquo;Größer&rdquo; zweier Polynome. |
 | Operator `>=` | `friend Polynom& operator>= (const Polynom&, const Polynom&);`<br/>Test auf &ldquo;Größer-Gleich&rdquo; zweier Polynome. |
 
-*Tabelle* 7: Vergleichsoperatoren für Objekte der Klasse `Polynom`.
+*Tabelle* 8: Vergleichsoperatoren für Objekte der Klasse `Polynom`.
 
 Wir überprüfen die Vergleichsoperatoren ebenfalls an einem Beispiel:
 
@@ -657,94 +659,93 @@ finden Sie in [Listing 3] vor:
 025: 
 026:     // create array for new coefficients
 027:     std::vector<double> coefficients(count);
-028:     // for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) { static_cast<size_t>(-1)
-029:     for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
-030:         double coeff = 0.0;
-031:         if (i < p1.m_coefficients.size())
-032:             coeff += p1.m_coefficients[i];
-033:         if (i < p2.m_coefficients.size())
-034:             coeff += p2.m_coefficients[i];
-035:         coefficients.at(i) = coeff;
-036:     }
-037: 
-038:     return { coefficients };
-039: }
-040: 
-041: Polynom operator- (const Polynom& p1, const Polynom& p2)
-042: {
-043:     return p1 + -p2;
-044: }
-045: 
-046: Polynom operator* (const Polynom& p1, const Polynom& p2)
-047: {
-048:     // create array of coefficients
-049:     size_t count = p1.m_coefficients.size() + p2.m_coefficients.size() - 1;
-050: 
-051:     // create vector of a specific size for new coefficients
-052:     std::vector<double> coefficients(count, 0);
-053: 
-054:     // compute coefficients of polynom product
-055:     for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
-056:         for (size_t j = p2.m_coefficients.size() - 1; j != static_cast<size_t>(-1); j--) {
-057:             coefficients[i + j] += p1.m_coefficients[i] * p2.m_coefficients[j];
-058:         }
-059:     }
-060: 
-061:     return { coefficients };
-062: }
-063: 
-064: Polynom operator/ (const Polynom& p1, const Polynom& p2)
-065: {
-066:     // degree of numerator polynom is less than degree of denominator polynom
-067:     if (p1.m_coefficients.size() < p2.m_coefficients.size())
-068:         return {};
-069: 
-070:     // need copies of arguments
-071:     Polynom tmp1{ p1 };
-072:     Polynom tmp2{ p2 };
-073: 
-074:     // create coefficients array of result polynom
-075:     size_t count = p1.m_coefficients.size() - p2.m_coefficients.size() + 1;
-076:     std::vector<double> rescoeff(count);
-077: 
-078:     // apply algorithm of polynom division
-079:     for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
-080: 
-081:         // premature end of division reached (comparing degrees)
-082:         if (tmp1.m_coefficients.size() < p2.m_coefficients.size())
-083:             break;
-084: 
-085:         // calculate next coefficient of result polynom
-086:         double coeff =
-087:             tmp1.m_coefficients[tmp1.m_coefficients.size() - 1] /
-088:             tmp2.m_coefficients[tmp2.m_coefficients.size() - 1];
-089: 
-090:         // multiply denominator polynom with coefficient
-091:         tmp2 = tmp2 * coeff;
-092: 
-093:         // calculate difference of ranks
-094:         size_t diffRank = tmp1.m_coefficients.size() - p2.m_coefficients.size();
-095: 
-096:         // multiply denominator polynom with one ore more 'x'
-097:         tmp2.multiplyX(diffRank);
-098: 
-099:         // subtract denominator polynom from numerator polynom
-100:         tmp1 = tmp1 - tmp2;
-101: 
-102:         // poke calculated coefficient into result polynom
-103:         rescoeff[diffRank] = coeff;
-104: 
-105:         // restore denominator polynom
-106:         tmp2 = p2;
-107:     }
-108: 
-109:     return { rescoeff };
-110: }
-111: 
-112: Polynom operator% (const Polynom& p1, const Polynom& p2)
-113: {
-114:     return p1 - (p1 / p2) * p2;
-115: }
+028:     for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
+029:         double coeff = 0.0;
+030:         if (i < p1.m_coefficients.size())
+031:             coeff += p1.m_coefficients[i];
+032:         if (i < p2.m_coefficients.size())
+033:             coeff += p2.m_coefficients[i];
+034:         coefficients.at(i) = coeff;
+035:     }
+036: 
+037:     return { coefficients };
+038: }
+039: 
+040: Polynom operator- (const Polynom& p1, const Polynom& p2)
+041: {
+042:     return p1 + -p2;
+043: }
+044: 
+045: Polynom operator* (const Polynom& p1, const Polynom& p2)
+046: {
+047:     // create array of coefficients
+048:     size_t count = p1.m_coefficients.size() + p2.m_coefficients.size() - 1;
+049: 
+050:     // create vector of a specific size for new coefficients
+051:     std::vector<double> coefficients(count, 0);
+052: 
+053:     // compute coefficients of polynom product
+054:     for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
+055:         for (size_t j = p2.m_coefficients.size() - 1; j != static_cast<size_t>(-1); j--) {
+056:             coefficients[i + j] += p1.m_coefficients[i] * p2.m_coefficients[j];
+057:         }
+058:     }
+059: 
+060:     return { coefficients };
+061: }
+062: 
+063: Polynom operator/ (const Polynom& p1, const Polynom& p2)
+064: {
+065:     // degree of numerator polynom is less than degree of denominator polynom
+066:     if (p1.m_coefficients.size() < p2.m_coefficients.size())
+067:         return {};
+068: 
+069:     // need copies of arguments
+070:     Polynom tmp1{ p1 };
+071:     Polynom tmp2{ p2 };
+072: 
+073:     // create coefficients array of result polynom
+074:     size_t count = p1.m_coefficients.size() - p2.m_coefficients.size() + 1;
+075:     std::vector<double> rescoeff(count);
+076: 
+077:     // apply algorithm of polynom division
+078:     for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
+079: 
+080:         // premature end of division reached (comparing degrees)
+081:         if (tmp1.m_coefficients.size() < p2.m_coefficients.size())
+082:             break;
+083: 
+084:         // calculate next coefficient of result polynom
+085:         double coeff =
+086:             tmp1.m_coefficients[tmp1.m_coefficients.size() - 1] /
+087:             tmp2.m_coefficients[tmp2.m_coefficients.size() - 1];
+088: 
+089:         // multiply denominator polynom with coefficient
+090:         tmp2 = tmp2 * coeff;
+091: 
+092:         // calculate difference of ranks
+093:         size_t diffRank = tmp1.m_coefficients.size() - p2.m_coefficients.size();
+094: 
+095:         // multiply denominator polynom with one ore more 'x'
+096:         tmp2.multiplyX(diffRank);
+097: 
+098:         // subtract denominator polynom from numerator polynom
+099:         tmp1 = tmp1 - tmp2;
+100: 
+101:         // poke calculated coefficient into result polynom
+102:         rescoeff[diffRank] = coeff;
+103: 
+104:         // restore denominator polynom
+105:         tmp2 = p2;
+106:     }
+107: 
+108:     return { rescoeff };
+109: }
+110: 
+111: Polynom operator% (const Polynom& p1, const Polynom& p2)
+112: {
+113:     return p1 - (p1 / p2) * p2;
+114: }
 ```
 
 *Listing* 3: Klasse `Polynom`: Arithmetische Operatoren (binär und unär).
@@ -752,7 +753,7 @@ finden Sie in [Listing 3] vor:
 Die Realisierung der arithmetischen Operatoren in [Listing 3]
 hält sich streng an die vorgestellten Algorithmen. Da wir es häufig mit Wiederholungsschleifen
 in Zusammenspiel mit dem Datentyp `size_t` zu tun haben, sollte wir auf eine mögliche Stolperfalle näher eingehen:
-Wie traversieren ich eine Wiederholungsschleife korrekt rückwärts?
+Wie traversiere ich eine Wiederholungsschleife korrekt rückwärts?
 Wir könnten es auf die folgende Weise versuchen:
 
 ```cpp
