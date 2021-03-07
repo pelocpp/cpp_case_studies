@@ -255,8 +255,7 @@ std::ostream& operator<< (std::ostream& os, const Polynom& p)
 {
     for (size_t i = p.m_coefficients.size() - 1; /* i >= 0 */ ; i--)
     {
-        if (p.m_coefficients[i] == 0.0 && p.m_coefficients.size() > 1)
-        {
+        if (p.m_coefficients[i] == 0.0 && p.m_coefficients.size() > 1) {
             if (i == 0)
                 break;
             else 
@@ -268,12 +267,10 @@ std::ostream& operator<< (std::ostream& os, const Polynom& p)
                 os << '+';
         }
 
-        if (p.m_coefficients[i] != 1 && p.m_coefficients[i] != -1)
-        {
+        if (p.m_coefficients[i] != 1 && p.m_coefficients[i] != -1) {
             os << p.m_coefficients[i];
         }
-        else if (i > 0)
-        {
+        else if (i > 0) {
             if (p.m_coefficients[i] == -1)
                 os << '-';
         }

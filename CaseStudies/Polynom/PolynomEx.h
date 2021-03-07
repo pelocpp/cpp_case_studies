@@ -8,7 +8,11 @@
 #include <vector>
 #include <algorithm>
 
+// requires T to be a floating-point type
 template <typename T>
+concept IsFloatingPoint = std::is_floating_point_v<T>;
+
+template <IsFloatingPoint T>
 class PolynomEx
 {
 private:

@@ -8,65 +8,6 @@
 
 #include "Polynom.h"
 
-// testing examples from script
-void test_script_01()
-{
-    Polynom p1{ };
-    Polynom p2{ -5.0, +6.0, -7.0 };
-
-    std::cout << p1 << std::endl;
-    std::cout << p1.rank() << std::endl;
-    std::cout << std::boolalpha << p1.zero() << std::endl;
-
-    std::cout << p2 << std::endl;
-    std::cout << p2.rank() << std::endl;
-    std::cout << std::boolalpha << p2.zero() << std::endl;
-
-    Polynom p{ 2.0, -4.0, 0.0, 3.0 };
-    std::cout << p << std::endl;
-}
-
-// testing examples from script
-void test_script_02()
-{
-    //Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
-    //Polynom p2{ 3.0, 3.0, 5.0 };
-    //Polynom p3 = p1 - p2;
-    //std::cout << p1 << std::endl;
-    //std::cout << p2 << std::endl;
-    //std::cout << p3 << std::endl;
-
-    //Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
-    //Polynom p2{ 3.0, 3.0, 5.0 };
-    //std::cout << "p1*p2: " << p1 * p2 << std::endl;
-
-    //Polynom p1{ 0, -4, 8, 10, 3 };
-    //Polynom p2{ 0, 4, 3 };
-    //std::cout << "p1%p2: " << p1 % p2 << std::endl;
-
-    //Polynom p1{ 4.0, -2.0, 6.0, 5.0, -1.0, 2.0 };
-    //Polynom p2{ 4.0, 2.0, 0.0, 1.0 };
-    //std::cout << p1 << std::endl;
-    //std::cout << p2 << std::endl;
-    //std::cout << "p1/p2: " << p1 / p2 << std::endl;
-
-    //Polynom p1{ 1.0, 2.0, 3.0 };
-    //Polynom p2{ 3.0, 2.0, 1.0 };
-    //std::cout << p1 << std::endl;
-    //std::cout << p2 << std::endl;
-
-    //p1 += p2;
-    //std::cout << p1 << std::endl;
-    //p1 -= p2;
-    //std::cout << p1 << std::endl;
-    //p1 *= p2;
-    //std::cout << p1 << std::endl;
-    //p1 /= p2;
-    //std::cout << p1 << std::endl;
-    //p1 %= p2;
-    //std::cout << p1 << std::endl;
-}
-
 // testing c'tors and d'tor
 void test_Ctors()
 {
@@ -394,18 +335,37 @@ void test_Evaluation()
 
 void test_ComparisonOperators()
 {
-Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
-Polynom p2{ 3.0, 3.0, 5.0 };
+    Polynom p1{ 2.0, -4.0, 0.0, 3.0 };
+    Polynom p2{ 3.0, 3.0, 5.0 };
 
-std::cout << "p1: " << p1 << std::endl;
-std::cout << "p2: " << p2 << std::endl;
+    std::cout << "p1: " << p1 << std::endl;
+    std::cout << "p2: " << p2 << std::endl;
 
-std::cout << "p1 == p2: " << (p1 == p2) << std::endl;
-std::cout << "p1 != p2: " << (p1 != p2) << std::endl;
-std::cout << "p1 <  p2: " << (p1 < p2) << std::endl;
-std::cout << "p1 <= p2: " << (p1 <= p2) << std::endl;
-std::cout << "p1 >  p2: " << (p1 > p2) << std::endl;
-std::cout << "p1 >= p2: " << (p1 >= p2) << std::endl;
+    std::cout << "p1 == p2: " << (p1 == p2) << std::endl;
+    std::cout << "p1 != p2: " << (p1 != p2) << std::endl;
+    std::cout << "p1 <  p2: " << (p1 < p2) << std::endl;
+    std::cout << "p1 <= p2: " << (p1 <= p2) << std::endl;
+    std::cout << "p1 >  p2: " << (p1 > p2) << std::endl;
+    std::cout << "p1 >= p2: " << (p1 >= p2) << std::endl;
+}
+
+void test_SimpleStress()
+{
+    Polynom p1{ 2.0, 1.0 };
+    Polynom p2{ 0.0, 0.0, 2.0 };
+
+    std::cout << "p1: " << p1 << std::endl;
+    std::cout << "p2: " << p2 << std::endl;
+
+    for (size_t i = 1; i != 15; ++i) {
+        p1 *= p2;
+        std::cout << "p1: " << p1 << std::endl;
+    }
+
+    for (size_t i = 1; i != 15; ++i) {
+        p1 /= p2;
+        std::cout << "p1: " << p1 << std::endl;
+    }
 }
 
 // =====================================================================================

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <concepts>
 
 #include "PolynomEx.h"
 
@@ -340,21 +341,18 @@ void test_Evaluation_Ex()
 
 void test_ComparisonOperators_Ex()
 {
-
     PolynomEx<ScalarType> p1{ 2.0, -4.0, 0.0, 3.0 };
-    PolynomEx<ScalarType> p2{ 2.0, -4.0, 0.0, 3.0 };
+    PolynomEx<ScalarType> p2{ 3.0, 3.0, 5.0 };
 
     std::cout << "p1: " << p1 << std::endl;
     std::cout << "p2: " << p2 << std::endl;
-    // PolynomEx<ScalarType> p2{ 3.0, 3.0, 5.0 };
 
     std::cout << "p1 == p2: " << (p1 == p2) << std::endl;
-
-    //std::cout << "p1 != p2: " << (p1 != p2) << std::endl;
-    //std::cout << "p1 <  p2: " << (p1 < p2) << std::endl;
-    //std::cout << "p1 <= p2: " << (p1 <= p2) << std::endl;
-    //std::cout << "p1 >  p2: " << (p1 > p2) << std::endl;
-    //std::cout << "p1 >= p2: " << (p1 >= p2) << std::endl;
+    std::cout << "p1 != p2: " << (p1 != p2) << std::endl;
+    std::cout << "p1 <  p2: " << (p1 < p2) << std::endl;
+    std::cout << "p1 <= p2: " << (p1 <= p2) << std::endl;
+    std::cout << "p1 >  p2: " << (p1 > p2) << std::endl;
+    std::cout << "p1 >= p2: " << (p1 >= p2) << std::endl;
 }
 
 // =====================================================================================
