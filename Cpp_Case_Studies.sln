@@ -86,6 +86,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Polynoms", "Polynoms", "{72
 		MarkDown\Polynoms\Polynoms.md = MarkDown\Polynoms\Polynoms.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Josephus", "Josephus", "{10811C36-BEBE-41C5-A3CF-876A1DA2C95B}"
+	ProjectSection(SolutionItems) = preProject
+		MarkDown\Josephus\Josephus.md = MarkDown\Josephus\Josephus.md
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Josephus", "CaseStudies\Josephus\Josephus.vcxproj", "{5879C022-0F45-4AA7-87B3-7355ADDF34F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -158,6 +165,14 @@ Global
 		{2C948318-3FFE-419C-A63F-E6FE674DF8E9}.Release|x64.Build.0 = Release|x64
 		{2C948318-3FFE-419C-A63F-E6FE674DF8E9}.Release|x86.ActiveCfg = Release|Win32
 		{2C948318-3FFE-419C-A63F-E6FE674DF8E9}.Release|x86.Build.0 = Release|Win32
+		{5879C022-0F45-4AA7-87B3-7355ADDF34F5}.Debug|x64.ActiveCfg = Debug|x64
+		{5879C022-0F45-4AA7-87B3-7355ADDF34F5}.Debug|x64.Build.0 = Debug|x64
+		{5879C022-0F45-4AA7-87B3-7355ADDF34F5}.Debug|x86.ActiveCfg = Debug|Win32
+		{5879C022-0F45-4AA7-87B3-7355ADDF34F5}.Debug|x86.Build.0 = Debug|Win32
+		{5879C022-0F45-4AA7-87B3-7355ADDF34F5}.Release|x64.ActiveCfg = Release|x64
+		{5879C022-0F45-4AA7-87B3-7355ADDF34F5}.Release|x64.Build.0 = Release|x64
+		{5879C022-0F45-4AA7-87B3-7355ADDF34F5}.Release|x86.ActiveCfg = Release|Win32
+		{5879C022-0F45-4AA7-87B3-7355ADDF34F5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -169,6 +184,7 @@ Global
 		{3AEF1E44-3D6E-4702-9E13-7E889AF9E0B5} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{66556638-3412-4C70-901C-C7B86679A2CD} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{7262339A-E38C-4745-9B91-DBDA9F38B39C} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{10811C36-BEBE-41C5-A3CF-876A1DA2C95B} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}
