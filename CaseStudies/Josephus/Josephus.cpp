@@ -10,14 +10,14 @@
 #include "Josephus.h"
 
 // c'tors
-Josephus::Josephus() : Josephus{ 17 } {}   // TODO :Beachte die Konstruktor Delegation
+Josephus::Josephus() : Josephus{ 17 } {}
 
-Josephus::Josephus(size_t count) : m_count{ count }, m_alive{ count }, m_lastEliminated {0 } {
-    createLinkedList();
+Josephus::Josephus(size_t count) : m_count{ count }, m_alive{ count } {
+    initScenario();
 }
 
 // private helper methods
-void Josephus::createLinkedList()
+void Josephus::initScenario()
 {
     for (size_t i = 0; i != m_count; ++i) {
         m_soldiers.push_front(Soldier{ m_count - i });
@@ -26,30 +26,13 @@ void Josephus::createLinkedList()
     m_current = m_soldiers.begin();
 }
 
-// output
-std::ostream& operator<< (std::ostream& os, const Josephus& josephus)
-{
-    os << '[';
-
-    // C++ 20: Da geht ein int i =0; JAAAAAAAAAAAAAAAAAAA
-    for (size_t i = 0;  const Soldier& soldier : josephus.m_soldiers) {
-        os << soldier() << ',';    // TO be done: Das letzte Komma ...............
-    }
-
-    os << ']';
-    return os;
-}
-
-
-
 bool Josephus::eliminateNextSoldier()
 {
-    // more than one soldier?
+    // more than one soldier alive?
     if (m_alive == 1)
         return false;
 
     // locate next soldier
-    // TODO: ist das -1 hier richtig ?!?!?!
     std::forward_list<Soldier>::iterator preceding;
 
     for (size_t i = 0; i != m_passby - 1; ++i) {
@@ -71,14 +54,25 @@ bool Josephus::eliminateNextSoldier()
     }
 
     // remove soldier from list
-    // std::forward_list<Soldier>::iterator iter = m_soldiers.erase_after(m_current);
-    // m_soldiers.erase_after(m_current);
     m_soldiers.erase_after(preceding);
-
     m_alive--;
-    // m_lastEliminated = (*m_current).getNumber();
 
     return true;
+}
+
+// output
+std::ostream& operator<< (std::ostream& os, const Josephus& josephus)
+{
+    os << '[';
+    for (size_t i = 1; const Soldier & soldier : josephus.m_soldiers) {
+        os << soldier();
+        if (i < josephus.m_alive) {
+            os << ',';
+            ++i;
+        }
+    }
+    os << ']';
+    return os;
 }
 
 // =====================================================================================

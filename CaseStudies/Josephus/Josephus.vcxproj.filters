@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ExamplesJosephus.cpp">
+    <ClCompile Include="Examples.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Josephus.cpp">
@@ -24,12 +24,18 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Josephus02.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Josephus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Soldier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JosephusEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

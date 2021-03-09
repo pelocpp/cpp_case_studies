@@ -1,31 +1,90 @@
 <!-- Josephus.md -->
 
-Das *Collatz*-Problem, auch als &ldquo;3*n* + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
-Problem und wird dem Mathematiker *Lothar Collatz* zugeschrieben. 
-
-Diese Fallstudie zeigt, wie sich die Berechnung der Elemente einer Zahlenfolge in einen C++&ndash;Iterator einbetten lässt,
-um auf diese Weise mit Hilfe der STL performante und elegant
-in das C++&ndash;Programmiermodell integrierte Algorithmen formulieren zu können.
-
-<!--more-->
-
-# Einführung
-
-Unter einer _Zahlenfolge_ (auch _Zahlenreihe_) verstehen wir in der Mathematik
-eine Auflistung von endlich (oder auch unendlich) vielen fortlaufend nummerierten Zahlen.
-Die Zahl mit der Nummer _i_ &ndash; man sagt hier auch: mit dem Index _i_ &ndash; wird _i_-tes Glied der Folge genannt.
-
-Bei dem Problem geht es um Zahlenfolgen, die nach einem sehr einfachen Bildungsgesetz konstruiert werden. Gegeben ist eine
-beliebige natürliche Startzahl _n_, aus der eine Folge von Zahlen nach den folgenden zwei Regeln gebildet wird:
-
-* Ist die Zahl _n_ gerade, so ist die nächste Zahl gleich der Hälfte der Zahl.
-* Ist die Zahl _n_ ungerade, so wird die Zahl mit 3 multipliziert und um 1 erhöht.
+Das Meisterwerk des Historikers *Flavius Josephus* ist seine geschichtliche Darstellung des Jüdischen Krieges.
+Einer Legende zufolge war er während dieses Krieges Mitglied einer 41-köpfigen jüdischen Rebellenbande,
+die im Jahre 67 n. Chr. in der galiläischen Stadt Jotopata ein Zentrum des antirömischen Widerstandes bildete.
+Nach 47-tägiger Belagerung gelang es den Römern unter der Führung ihres Kaisers *Vespasian* jedoch,
+die Stadt einzunehmen. Die Rebellen beschlossen, den Freitod einer Gefangenschaft vorzuziehen.
+Vergebens beschwor Josephus seine Mitstreiter, davon abzulassen. Um wenigstens sich zusammen
+mit einem unbekannten Mitverschwörer vor dieser Freitod-Orgie zu retten,
+schlug er als Tötungsritual den alten römischen Brauch der *Decimatio* (Dezimierung) vor:
+Zuerst mussten sich die Rebellen in einem Kreis herum aufzustellen, danach sollte sich jeder dritte
+nacheinander im Kreis das Leben nehmen. Josephus jedoch konnte Dank seiner mathematischen Begabung
+schnell ausrechnen, wo er und sein Freund im Kreis stehen mussten, um als Letzte übrig zu bleiben
+und somit dem Tode zu entkommen.
 
 # Lernziele
+
+  * Delegation von Konstruktoren (nun auch in C++)
+  * Bereichs-basierte `for`-Wiederholungsschleife (Range-Based For Loop) *mit* Variablendeklaration
+  * Container `std::forward_list<T>`
 
   * C++ Iterator-Konzept
   * STL-Algorithmen (`std::distance`, `std::accumulate`, `std::copy`, `std::back_inserter`)
   * Bereichsbasierte `for`-Wiederholungsschleife (Range-based `for`-Loop)
+
+# Aufgabe
+
+Schreiben Sie ein Programm, dass berechnet, an welche Stelle des Kreises Josephus sich und seinen Freund stellte,
+um zu überleben? Zum Entwurf einer Lösung können sehr unterschiedliche Datenstrukturen zum Einsatz kommen.
+Investieren Sie zunächst genügend Zeit in die Ausgestaltung eines Entwurfs,
+bevor Sie mit der Implementierung anfangen.
+
+Bei 17 Soldaten sollte die Ausgabe des Programms wie folgt aussehen, wenn jeder dritte Soldat ausgesondert wird:
+
+```
+Number of soldiers: 17
+Eliminating: Each 3. soldier
+
+Removed  3   [1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
+Removed  6   [1,2,4,5,7,8,9,10,11,12,13,14,15,16,17]
+Removed  9   [1,2,4,5,7,8,10,11,12,13,14,15,16,17]
+Removed 12   [1,2,4,5,7,8,10,11,13,14,15,16,17]
+Removed 15   [1,2,4,5,7,8,10,11,13,14,16,17]
+Removed  1   [2,4,5,7,8,10,11,13,14,16,17]
+Removed  5   [2,4,7,8,10,11,13,14,16,17]
+Removed 10   [2,4,7,8,11,13,14,16,17]
+Removed 14   [2,4,7,8,11,13,16,17]
+Removed  2   [4,7,8,11,13,16,17]
+Removed  8   [4,7,11,13,16,17]
+Removed 16   [4,7,11,13,17]
+Removed  7   [4,11,13,17]
+Removed 17   [4,11,13]
+Removed 13   [4,11]
+Removed  4   [11]
+
+Last eliminated soldier: 4
+Last alive soldier:      11
+```
+
+Die Ausgabe kann durch das nachfolgende Codefragment erzeugt werden. Sie dürfen hiervon abweichen und eigene Vorstellungen umsetzen:
+
+```
+Josephus j{ 17 };
+j.setPassBy(3);
+
+std::cout << "Number of soldiers: " << j.count() << std::endl;
+std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl << std::endl;
+
+while (j.alive() > 1)
+{
+    j.eliminateNextSoldier();
+    std::cout << "Removed ";
+    std::cout.width(2);
+    std::cout << j.lastEliminated() << "   " << j << std::endl;
+}
+
+std::cout << std::endl;
+std::cout << "Last eliminated soldier: " << j.lastEliminated() << std::endl;
+std::cout << "Last alive soldier:      " << j.lastAlive() << std::endl;
+```
+
+Wie lautet nun die Antwort des Josephus-Problems in seiner historisch überlieferten Version?
+Es handelt sich dabei – einschließlich Josephus – um 41 Soldaten und es wird jeweils jeder dritte Soldat getötet.
+
+
+# Lösung
+
 
 # Die &ldquo;teuflische Zahlenfolge&rdquo; oder auch das *Collatz*-Problem
 

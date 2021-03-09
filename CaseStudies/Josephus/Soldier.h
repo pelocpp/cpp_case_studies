@@ -4,9 +4,6 @@
 
 #pragma once
 
-// #include <iostream>
-//#include <string>
-
 class Soldier
 {
 private:
@@ -22,8 +19,6 @@ public:
 
     // operators
     size_t operator()() const { return m_number; };
-    //CollatzIterator& operator++();
-    //bool operator!=(const CollatzIterator&) const;
 };
 
 // =====================================================================================
