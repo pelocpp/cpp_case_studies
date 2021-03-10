@@ -18,24 +18,33 @@
     <ClCompile Include="Examples.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Josephus.cpp">
+    <ClCompile Include="JosephusListImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Josephus02.cpp">
+    <ClCompile Include="JosephusArrayImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Josephus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Josephus.h">
+    <ClInclude Include="JosephusListImpl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Soldier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JosephusEx.h">
+    <ClInclude Include="JosephusArrayImpl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IJosephus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Josephus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

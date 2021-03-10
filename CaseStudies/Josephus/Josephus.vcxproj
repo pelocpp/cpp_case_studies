@@ -143,12 +143,15 @@
   <ItemGroup>
     <ClCompile Include="Examples.cpp" />
     <ClCompile Include="Josephus.cpp" />
-    <ClCompile Include="Josephus02.cpp" />
+    <ClCompile Include="JosephusListImpl.cpp" />
+    <ClCompile Include="JosephusArrayImpl.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IJosephus.h" />
     <ClInclude Include="Josephus.h" />
-    <ClInclude Include="JosephusEx.h" />
+    <ClInclude Include="JosephusListImpl.h" />
+    <ClInclude Include="JosephusArrayImpl.h" />
     <ClInclude Include="Soldier.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

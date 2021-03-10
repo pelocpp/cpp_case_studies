@@ -8,32 +8,57 @@
 #include <forward_list>
 
 #include "Soldier.h"
+#include "IJosephus.h"
 #include "Josephus.h"
-#include "JosephusEx.h"
+#include "Josephus.h"
+#include "JosephusListImpl.h"
+#include "JosephusArrayImpl.h"
 
 void test01_Josephus()
 {
-    Josephus j{};
+    JosephusListImpl j{ };
     j.setPassBy(3);
 
     std::cout << "Number of soldiers: " << j.count() << std::endl;
-    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl;
-    std::cout << j << std::endl;
+    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl << std::endl;
+
+    while (j.alive() > 1)
+    {
+        j.eliminateNextSoldier();
+        std::cout << "Removed ";
+        std::cout.width(2);
+        std::cout << j.lastEliminated() << "   " << j << std::endl;
+    }
+
+    std::cout << std::endl;
+    std::cout << "Last eliminated soldier: " << j.lastEliminated() << std::endl;
+    std::cout << "Last alive soldier:      " << j.lastAlive() << std::endl;
 }
 
 void test02_Josephus()
 {
-    Josephus j{ 41 };
-    j.setPassBy(5);
+    JosephusListImpl j{ 41, 10 };
+    j.setPassBy(3);
 
     std::cout << "Number of soldiers: " << j.count() << std::endl;
-    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl;
-    std::cout << j << std::endl;
+    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl << std::endl;
+
+    while (j.alive() > 1)
+    {
+        j.eliminateNextSoldier();
+        std::cout << "Removed ";
+        std::cout.width(2);
+        std::cout << j.lastEliminated() << "   " << j << std::endl;
+    }
+
+    std::cout << std::endl;
+    std::cout << "Last eliminated soldier: " << j.lastEliminated() << std::endl;
+    std::cout << "Last alive soldier:      " << j.lastAlive() << std::endl;
 }
 
 void test03_Josephus()
 {
-    Josephus j{ 17 };
+    JosephusArrayImpl j{ };
     j.setPassBy(3);
 
     std::cout << "Number of soldiers: " << j.count() << std::endl;
@@ -49,52 +74,118 @@ void test03_Josephus()
 
     std::cout << std::endl;
     std::cout << "Last eliminated soldier: " << j.lastEliminated() << std::endl;
-    std::cout << "Last alive soldier:      " << j.lastAlive() << std::endl;
+    std::cout << "Last alive soldier:      " << j.LAST_ALIVE() << std::endl;
 }
 
-void test04_Josephus()
-{
-    Josephus j{ 41 };
-    j.setPassBy(3);
 
-    std::cout << "Number of soldiers: " << j.count() << std::endl;
-    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl << std::endl;
 
-    while (j.alive() > 1)
-    {
-        j.eliminateNextSoldier();
-        std::cout << "Removed ";
-        std::cout.width(2);
-        std::cout << j.lastEliminated() << "   " << j << std::endl;
-    }
 
-    std::cout << std::endl;
-    std::cout << "Last eliminated soldier: " << j.lastEliminated() << std::endl;
-    std::cout << "Last alive soldier:      " << j.lastAlive() << std::endl;
-}
+//void test01_Josephus()
+//{
+//    Josephus j{};
+//    j.setPassBy(3);
+//
+//    std::cout << "Number of soldiers: " << j.count() << std::endl;
+//    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl;
+//    std::cout << j << std::endl;
+//}
+//
+//void test02_Josephus()
+//{
+//    Josephus j{ 41 };
+//    j.setPassBy(5);
+//
+//    std::cout << "Number of soldiers: " << j.count() << std::endl;
+//    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl;
+//    std::cout << j << std::endl;
+//}
+//
+//void test03_Josephus()
+//{
+//    Josephus j{ 17 };
+//    j.setPassBy(3);
+//
+//    std::cout << "Number of soldiers: " << j.count() << std::endl;
+//    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl << std::endl;
+//
+//    while (j.alive() > 1)
+//    {
+//        j.eliminateNextSoldier();
+//        std::cout << "Removed ";
+//        std::cout.width(2);
+//        std::cout << j.lastEliminated() << "   " << j << std::endl;
+//    }
+//
+//    std::cout << std::endl;
+//    std::cout << "Last eliminated soldier: " << j.lastEliminated() << std::endl;
+//    std::cout << "Last alive soldier:      " << j.lastAlive() << std::endl;
+//}
+//
+//void test04_Josephus()
+//{
+//    Josephus j{ 41 };
+//    j.setPassBy(3);
+//
+//    std::cout << "Number of soldiers: " << j.count() << std::endl;
+//    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl << std::endl;
+//
+//    while (j.alive() > 1)
+//    {
+//        j.eliminateNextSoldier();
+//        std::cout << "Removed ";
+//        std::cout.width(2);
+//        std::cout << j.lastEliminated() << "   " << j << std::endl;
+//    }
+//
+//    std::cout << std::endl;
+//    std::cout << "Last eliminated soldier: " << j.lastEliminated() << std::endl;
+//    std::cout << "Last alive soldier:      " << j.lastAlive() << std::endl;
+//}
+//
+//void test05_Josephus()
+//{
+//    JosephusEx j{ };
+//    j.setPassBy(3);
+//
+//    std::cout << "Number of soldiers: " << j.count() << std::endl;
+//    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl << std::endl;
+//
+//    while (j.alive() > 1)
+//    {
+//        j.eliminateNextSoldier();
+//        std::cout << "Removed ";
+//        std::cout.width(2);
+//        std::cout << j.lastEliminated() << "   " << j << std::endl;
+//    }
+//
+//    std::cout << std::endl;
+//    std::cout << "Last eliminated soldier: " << j.lastEliminated() << std::endl;
+//    std::cout << "Last alive soldier:      " << j.lastAlive() << std::endl;
+//}
 
 // =====================================================================================
 // End-of-File
 // =====================================================================================
 
-
-void test05_Josephus()
+void test10_Josephus()
 {
-    JosephusEx j{ };
-    j.setPassBy(3);
+    IJosephus* j = new JosephusListImpl { };
+    j->setPassBy(3);
 
-    std::cout << "Number of soldiers: " << j.count() << std::endl;
-    std::cout << "Eliminating: Each " << j.passBy() << ". soldier" << std::endl << std::endl;
+    std::cout << "Number of soldiers: " << j->count() << std::endl;
+    std::cout << "Eliminating: Each " << j->passBy() << ". soldier" << std::endl << std::endl;
 
-    while (j.alive() > 1)
+    while (j->alive() > 1)
     {
-        j.eliminateNextSoldier();
+        j->eliminateNextSoldier();
         std::cout << "Removed ";
         std::cout.width(2);
-        std::cout << j.lastEliminated() << "   " << j << std::endl;
+        std::cout << j->lastEliminated() << "   " << j << std::endl;
     }
 
     std::cout << std::endl;
-    std::cout << "Last eliminated soldier: " << j.lastEliminated() << std::endl;
-    std::cout << "Last alive soldier:      " << j.lastAlive() << std::endl;
+    std::cout << "Last eliminated soldier: " << j->lastEliminated() << std::endl;
+    std::cout << "Last alive soldier:      " << j->lastAlive() << std::endl;
+
+    delete j;
 }

@@ -5,26 +5,25 @@
 void test01_Josephus();
 void test02_Josephus();
 void test03_Josephus();
-void test04_Josephus();
 
-void test05_Josephus();
+void test10_Josephus();
+
+
+// A) Fehler: test10_Josephus da stimmt die Ausgabe nicht ... wenn über IJosephus Pointer zugegriffen wird
+
+// B) Fehler: test03_Josephus da stimmt die Ausgabe nicht ... implementierung falsch 
+
+// C) Fehler: test10_Josephus da sollte ein smart pointer rein ...
+
 
 void test_Josephus()
 {
-    test01_Josephus();
-    test02_Josephus();
     test03_Josephus();
-    test04_Josephus();
-}
-
-void test_JosephusEx()
-{
-    test05_Josephus();
 }
 
 int main()
 {   
-    test_JosephusEx();
+    test_Josephus();
     return 0;
 }
 
