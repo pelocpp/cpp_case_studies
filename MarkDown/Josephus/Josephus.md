@@ -1,17 +1,16 @@
 <!-- Josephus.md -->
 
-Das Meisterwerk des Historikers *Flavius Josephus* ist seine geschichtliche Darstellung des Jüdischen Krieges.
-Einer Legende zufolge war er während dieses Krieges Mitglied einer 41-köpfigen jüdischen Rebellenbande,
-die im Jahre 67 n. Chr. in der galiläischen Stadt Jotopata ein Zentrum des antirömischen Widerstandes bildete.
-Nach 47-tägiger Belagerung gelang es den Römern unter der Führung ihres Kaisers *Vespasian* jedoch,
-die Stadt einzunehmen. Die Rebellen beschlossen, den Freitod einer Gefangenschaft vorzuziehen.
-Vergebens beschwor Josephus seine Mitstreiter, davon abzulassen. Um wenigstens sich zusammen
-mit einem unbekannten Mitverschwörer vor dieser Freitod-Orgie zu retten,
-schlug er als Tötungsritual den alten römischen Brauch der *Decimatio* (Dezimierung) vor:
-Zuerst mussten sich die Rebellen in einem Kreis herum aufzustellen, danach sollte sich jeder dritte
-nacheinander im Kreis das Leben nehmen. Josephus jedoch konnte Dank seiner mathematischen Begabung
-schnell ausrechnen, wo er und sein Freund im Kreis stehen mussten, um als Letzte übrig zu bleiben
-und somit dem Tode zu entkommen.
+In dieser Fallstudie  betrachten wir ein sehr &ldquo;martialisches&rdquo; Problem,
+das durch den jüdischen Historiker *Flavius Josephus* überliefert ist.
+Dieser soll soll im römisch-jüdischen Krieg mit 41 Kameraden den Selbstmord der Gefangenschaft vorgezogen haben.
+Details finden Sie gleich weiter unten vor &ndash; umso interessanter die Fragestellung,
+wie Informatiker bei dieser Fallstudie ins Spiel kommen:
+*Josephus* fand nämlich heraus, an welche Position im Kreis er sich stellen musste,
+um als letzter übrig zu bleiben, also um überleben zu können. 
+
+Damit sind schlagartig vielen Türen der Informatik geöffnet, zum Beispiel einfach-verkettete Listen, Arrays
+und sogar das Prinzip der Vererbung, um nur einige wenige anzusprechen.
+Lassen Sie sich überraschen, wie wir mit den Hilfsmitteln des *Modern C++* die Lösung des überlieferten Problems bestimmen.
 
 <!--more-->
 
@@ -25,6 +24,21 @@ und somit dem Tode zu entkommen.
   * STL-Algorithmus `std::find_if`
 
 # Aufgabe
+
+Das Meisterwerk des Historikers *Flavius Josephus* ist seine geschichtliche Darstellung des Jüdischen Krieges.
+Einer Legende zufolge war er während dieses Krieges Mitglied einer 41-köpfigen jüdischen Rebellenbande,
+die im Jahre 67 n. Chr. in der galiläischen Stadt Jotopata ein Zentrum des antirömischen Widerstandes bildete.
+Nach 47-tägiger Belagerung gelang es den Römern unter der Führung ihres Kaisers *Vespasian* jedoch,
+die Stadt einzunehmen. Die Rebellen beschlossen, den Freitod einer Gefangenschaft vorzuziehen.
+Vergebens beschwor Josephus seine Mitstreiter, davon abzulassen. Um wenigstens sich zusammen
+mit einem unbekannten Mitverschwörer vor dieser Freitod-Orgie zu retten,
+schlug er als Tötungsritual den alten römischen Brauch der *Decimatio* (Dezimierung) vor:
+Zuerst mussten sich die Rebellen in einem Kreis herum aufzustellen, danach sollte sich jeder dritte
+nacheinander im Kreis das Leben nehmen. Josephus jedoch konnte Dank seiner mathematischen Begabung
+schnell ausrechnen, wo er und sein Freund im Kreis stehen mussten, um als Letzte übrig zu bleiben
+und somit dem Tode zu entkommen.
+
+# Anforderungen an das Programm
 
 Schreiben Sie ein Programm, dass berechnet, an welche Stelle des Kreises Josephus sich und seinen Freund stellte,
 um zu überleben? Zum Entwurf einer Lösung können sehr unterschiedliche Datenstrukturen zum Einsatz kommen.
