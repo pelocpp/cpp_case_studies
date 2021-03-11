@@ -143,14 +143,14 @@
   <ItemGroup>
     <ClCompile Include="Examples.cpp" />
     <ClCompile Include="Josephus.cpp" />
-    <ClCompile Include="JosephusListImpl.cpp" />
+    <ClCompile Include="JosephusForwardListImpl.cpp" />
     <ClCompile Include="JosephusArrayImpl.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IJosephus.h" />
     <ClInclude Include="Josephus.h" />
-    <ClInclude Include="JosephusListImpl.h" />
+    <ClInclude Include="JosephusForwardListImpl.h" />
     <ClInclude Include="JosephusArrayImpl.h" />
     <ClInclude Include="Soldier.h" />
   </ItemGroup>

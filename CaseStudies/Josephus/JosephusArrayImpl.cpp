@@ -15,11 +15,48 @@
 JosephusArrayImpl::JosephusArrayImpl() : JosephusArrayImpl{ NumSoldiers, DefaultPassBy } {}
 
 JosephusArrayImpl::JosephusArrayImpl(size_t count, size_t passby) : Josephus{ count, passby } {
-    initScenario();
+    init();
+}
+
+// public interface
+bool JosephusArrayImpl::eliminateNextSoldier()
+{
+    // more than one soldier alive?
+    if (m_alive == 1) {
+        return false;
+    }
+
+    for (int i = 0; i < m_passby - 1; i++) {
+        moveToNextAliveSoldier();
+        nextIndex();  // skip found alive soldier
+    }
+
+    moveToNextAliveSoldier();
+
+    // kill 'n'.th soldier
+    m_soldiers[m_current] = false;
+    m_alive--;
+    m_lastEliminated = m_current + 1;
+
+    // compute index of last alive soldier
+    if (m_alive == 1) {
+
+        std::array<bool, NumSoldiers>::iterator it = std::find_if(
+            std::begin(m_soldiers),
+            std::end(m_soldiers),
+            [](bool b) {
+                return b == true;
+            }
+        );
+
+        m_lastAlive = it - std::begin(m_soldiers) + 1;
+    }
+
+    return true;
 }
 
 // private helper methods
-void JosephusArrayImpl::initScenario()
+void JosephusArrayImpl::init()
 {
     for (bool& entry : m_soldiers) {
         entry = true;
@@ -44,70 +81,29 @@ void JosephusArrayImpl::nextIndex()
     }
 }
 
-// getter/setter
-size_t JosephusArrayImpl::lastAlive() const { return m_lastAlive; }
-
-
-// ??????????????????????????????????????????
-//size_t JosephusArrayImpl::lastAlive() const
-//{
-//    std::array<bool, NumSoldiers>::const_iterator it = std::find_if(std::begin(m_soldiers), std::end(m_soldiers), [](bool b) { return b == true; });
-//
-//    m_lastAlive = it - std::begin(m_soldiers);
-//    //if (m_lastAlive == 0) {
-//    //    moveToNextAliveSoldier();
-//    //    m_lastAlive = m_current + 1;
-//    //}
-//
-//    //return m_lastAlive;
-//}
-
-size_t JosephusArrayImpl::LAST_ALIVE()
-{
-    std::array<bool, NumSoldiers>::iterator it = std::find_if(
-        std::begin(m_soldiers),
-        std::end(m_soldiers), 
-        [](bool b) {
-            return b == true;
-        });
-    m_lastAlive = it - std::begin(m_soldiers) + 1;
-    return m_lastAlive;
-}
-
-bool JosephusArrayImpl::eliminateNextSoldier()
-{
-    // more than one soldier alive?
-    if (m_alive == 1)
-        return false;
-
-    for (int i = 0; i < m_passby - 1; i++) {
-        moveToNextAliveSoldier();
-        nextIndex();  // skip found alive soldier
-    }
-
-    moveToNextAliveSoldier();
-
-    // kill 'n'.th soldier
-    m_soldiers[m_current] = false;
-    m_alive--;
-    m_lastEliminated = m_current + 1;
-
-    return true;
-}
-
 // output
-std::ostream& operator<< (std::ostream& os, const JosephusArrayImpl& j)
+std::ostream& operator<< (std::ostream& os, JosephusArrayImpl& j)
 {
-    os << '[';
-    for (size_t i = 1; const Soldier & soldier : j.m_soldiers) {
-        os << soldier();
-        if (i < j.m_alive) {
-            os << ',';
-            ++i;
-        }
-    }
-    os << ']';
-    return os;
+     os << '[';
+     size_t save = j.m_current;  // save current state of position index
+     j.m_current = 0;
+
+     int count = 0;
+     do {
+         j.moveToNextAliveSoldier();
+         os << (j.m_current + 1);
+
+         count++;
+         if (count < j.alive())
+             os << ',';
+         
+         j.nextIndex();
+     }
+     while (count < j.alive());
+
+     os << ']';
+     j.m_current = save;  // restore current state of position index
+     return os;
 }
 
 // =====================================================================================

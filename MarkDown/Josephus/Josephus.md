@@ -13,15 +13,16 @@ nacheinander im Kreis das Leben nehmen. Josephus jedoch konnte Dank seiner mathe
 schnell ausrechnen, wo er und sein Freund im Kreis stehen mussten, um als Letzte übrig zu bleiben
 und somit dem Tode zu entkommen.
 
+<!--more-->
+
 # Lernziele
 
-  * Delegation von Konstruktoren (nun auch in C++)
+  * Default-Initialisierung für Member-Variablen
+  * Delegation von Konstruktoren (nun auch in C++ enthalten)
   * Bereichs-basierte `for`-Wiederholungsschleife (Range-Based For Loop) *mit* Variablendeklaration
   * Container `std::forward_list<T>`
-
-  * C++ Iterator-Konzept
-  * STL-Algorithmen (`std::distance`, `std::accumulate`, `std::copy`, `std::back_inserter`)
-  * Bereichsbasierte `for`-Wiederholungsschleife (Range-based `for`-Loop)
+  * Neue Schlüsselwörter `override` und `final` ergänzend zu `virtual`
+  * STL-Algorithmus `std::find_if`
 
 # Aufgabe
 
@@ -82,551 +83,462 @@ std::cout << "Last alive soldier:      " << j.lastAlive() << std::endl;
 Wie lautet nun die Antwort des Josephus-Problems in seiner historisch überlieferten Version?
 Es handelt sich dabei – einschließlich Josephus – um 41 Soldaten und es wird jeweils jeder dritte Soldat getötet.
 
-
-# Lösung
-
-
-# Die &ldquo;teuflische Zahlenfolge&rdquo; oder auch das *Collatz*-Problem
-
-Merkwürdigerweise erreicht diese Folge nach endlich vielen Schritten immer die Zahl 1. Man kann
-die Vermutung auch so betrachten: Jede Folge mündet in den Zyklus 4, 2, 1 – egal, mit welcher
-Startzahl man die Folge startet. Wählen wir zum Beispiel den Startwert 7, so lautet die Folge
-
-7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1.
-
-Bis heute konnte das Collatz-Problem mathematisch nicht bewiesen werden. Auch konnte man mit Hilfe von Computerprogrammen die Vermutung bis heute nur unterstützen,
-aber nicht widerlegen. Alle Startzahlen bis ca. 5,76 * 10<sup>18</sup> untermauern die Vermutung (Stand Januar 2009).
-Obwohl das Problem so einfach zu formulieren ist, gilt es als extrem schwierig, die mit ihm verbundene Aussage mathematisch zu beweisen.
-Oder wie es *Paul Erdös*, einer der bedeutendsten Mathematiker des 20. Jahrhunderts, formulierte: &ldquo;absolut hoffnungslos&rdquo;.
-
-Natürlich wollen wir in dieser Fallstudie keinen Versuch unternehmen, das *Collatz*-Problem zu lösen.
-Kommen wir auf C++ und damit auf eine Umsetzung des Regelwerks in einen C++&ndash;Algorithmus zu sprechen. 
-In einem ersten Ansatz würde man vielleicht eine Klasse `CollatzSolver` implementieren, die beispielsweise eine `next`- und eine `current`-Methode hat, und diese
-nach Bedarf aufrufen. Wir wollen aber einen Schritt weitergehen und C++&ndash;Iteratoren ins Spiel bringen.
-Durch die Implementierung des *Collatz*-Problems in Form eines C++&ndash;Iterators kann die Implementierung in Kombination mit der STL verwendet werden,
-wodurch nicht nur die Lesbarkeit des Codes verbessert wird. Es stehen vor allem alle STL-Algorithmen nahtlos zur Verfügung, 
-um Ergebnisse in der Berechnung der &ldquo;teuflischen Zahlenfolge&rdquo; weiterverarbeiten zu können.
-
-## C++&ndash;Iteratoren und die bereichsbasierte `for`-Wiederholungsschleife
-
-Wir beginnen unsere Betrachtungen mit der Minimalversion eines C++&ndash;Iterators und werfen dazu einen Blick auf die bereichsbasierte `for`-Wiederholungsschleife
-in C++:
-
-```cpp
-for (auto elem : container) {
-    /* loop body */
-}
-```
-
-Vereinfacht kann man &ndash; in einer pseudo-code ähnlichen Notation &ndash; sagen, dass diese Wiederholungsschleife
-durch den C++&ndash;Compiler auf eine Anweisungsfolge der Gestalt
-
-```cpp
-/* modified code from cppreference */
-auto it = container.begin();
-auto end  = container.end();
-
-for (; it != end; ++it) 
-{
-    auto elem { *it };
-    /* loop body */
-}
-```
-
-umgesetzt wird. Wenn man sich die exemplarische Darstellung der `for`&ndash;Schleife ansieht, ist es ziemlich offensichtlich, was implementiert werden muss.
-Dabei müssen wir zwischen zwei Arten von Objekten unterscheiden:
-Dem Container und damit dem iterierbaren Bereich auf der einen Seite (hier: `container`) und dem Iterator bzw. den Iteratoren andererseits (hier: `it` und `end`).
-
-Der iterierbare Bereich (*Container*) muss zwei Funktionen `begin()` und `end()` implementieren.
-Diese Funktionen geben jeweils Iteratorobjekte zurück. Das von `begin()` zurückgelieferte Iteratorobjekt steht für das erste Element in der Auflistung,
-das von `end()` für das letzte Element der Auflistung. 
-Hierauf gehen wir später noch näher ein, da eben genau dieses &ldquo;letzte Element&rdquo; nicht immer von vorneherein bekannt ist.
-
 # Lösung
 
 > Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
 
-## Klasse `CollatzIterator`
+Zur Vertiefung bzw. Wiederholung elementarer programmiersprachlicher C++-Konstrukte im Umfeld der Vererbung
+stellen wir auf Basis des objekt-orientierten Entwurfs zunächst eine Schnittstelle `IJosephus` vor.
+Schnittstellen lassen sich in C++ mit so genannten pure-virtuellen Methoden nachahmen,
+in anderen Programmiersprachen gibt es eigens dafür ein programmiersprachliches Konstrukt mit dem Schlüsselwort `interface`.
 
-Kommen wir jetzt auf die Iterator-Klasse zu sprechen. Vom obigen Code-Fragment können wir ableiten, dass die folgenden drei Operatoren vorhanden sein müssen:
+Zur `IJosephus`-Schnittstelle bieten wir eine unvollständige Realisierung in Gestalt einer Klasse `Josephus` an,
+die ihrerseits als Basis zweier konkreter Klassen `JosephusArrayImpl` und `JosephusForwardListImpl` fungiert.
+Beginnen wir in [Listing 1] mit der Schnittstelle `IJosephus`:
 
-  * `operator*` &ndash; Dereferenzieren eines Iterator-Objekts (in Analogie zu einem C/C++&ndash;Zeiger).
-  * `operator++` &ndash; Inkrementiert das Iterator-Objekt, damit dieses auf das nächste Element im Container verweist &ndash; es genügt die Präfix-Version des Operators.
-  * `operator!=` &ndash; Überprüfung, ob die Wiederholungsschleife enden soll. Dies ist der Fall, wenn der Iterator dieselbe Position erreicht hat, die `end()` beschreibt.
-
-*Hinweis*:
-Mit diesen drei Operatoren lassen sich Iterator-Klassen implementieren,
-die im Kontext einer bereichsbasierten `for`-Wiederholungsschleife einsetzbar sind.
-Für andere STL-Algorithmen, wie zum Beispiel `std::find` oder `std::copy`, um nur zwei von ihnen exemplarisch zu nennen,
-sind zusätzliche Klassenelemente notwendig. Wir werden an anderer Stelle darauf näher eingehen.
-
-Wie lässt sich nun eine Zahlenfolge und das Iteratorkonzept von C++ miteinander verbinden?
-In der Iteratorklasse ist die Realisierung in der Berechnung der Zahlenfolge unterzubringen.
-Der `++`&ndash;Operator ist diejenige Stelle, an der von einem Folgenglied zum nächsten weitergegangen wird.
-Mit dem `*`&ndash;Operator kann man auf das aktuelle Folgenglied zugreifen.
-Die Bestimmung des Iterationsendes obliegt dem `!=`&ndash;Operator.
-
-Instanzen der Iteratorklasse werden in der Regel von einer zweiten Klasse zur Verfügung gestellt, eben dem Container.
-Diese Klasse nimmt typischerweise die Initialisierungswerte für die Zahlenfolge entgegen und belegt damit die Iteratorenobjekte vor.
-Diese zweite Klasse &ndash; wir bezeichen sie als _Bereichs_&ndash; oder _Sequenzklasse_ &ndash; besitzt zwei Methoden `begin()` und `end()`,
-die als Rückgabewert ein Iteratorobjekt für das erste Folgenglied bzw. das Ende der Auflistung repräsentieren.
-Die Initialisierungswerte der Bereichsklasse gehen mehr oder weniger in die Iteratorenobjekt für Start und Ende der Zahlenfolge ein.
-
-Genug der allgemeinen Theorie, lassen Sie uns einen Blick auf die Iteratorklasse `CollatzIterator`
-zur Berechnung der teuflischen Folge werfen ([Listing 1]):
-
-###### {#listing_01_collatziterator_interface}
+###### {#listing_01_ijosephus_interface}
 
 ```cpp
-01: class CollatzIterator
+01: class IJosephus
 02: {
 03: public:
-04:     using iterator_category = std::forward_iterator_tag;
-05:     using value_type = int;
-06:     using difference_type = int;
-07:     using pointer = int*;
-08:     using reference = int&;
+04:     // getter/setter
+05:     virtual size_t count() const = 0;
+06:     virtual size_t alive() const = 0;
+07:     virtual size_t lastEliminated() const = 0;
+08:     virtual size_t lastAlive() const = 0;
+09:     virtual size_t passBy() const = 0;
+10:     virtual void setPassBy(int passby) = 0;
+11: 
+12:     // public interface
+13:     virtual bool eliminateNextSoldier() = 0;
+14:     virtual void eliminateAll() = 0;
+15: };
+```
+
+*Listing* 1: Klasse `IJosephus`: Definition.
+
+Weiter geht es in [Listing 2] und [Listing 3] mit einer abstrakten Basisklasse `Josephus`.
+Die zahlreichen Eigenschaften (*getter*/*setter*-Methoden) der `IJosephus`-Schnittstelle lassen sich hier zentral zusammenfassen:
+
+###### {#listing_02_josephus_interface}
+
+```cpp
+01: class Josephus : public IJosephus
+02: {
+03: protected:
+04:     size_t m_count;                    // total number of soldiers
+05:     size_t m_alive;                    // number of alive soldiers
+06:     size_t m_lastEliminated{ 0 };      // last eliminated soldier
+07:     size_t m_lastAlive{ 0 };           // number of surviving soldier
+08:     size_t m_passby{ DefaultPassBy };  // "decimatio"
 09: 
-10: private:
-11:     int m_start{ 1 };
-12:     int m_current{ 1 };
-13:     int m_last{ };
+10: public:
+11:     // c'tors
+12:     Josephus();
+13:     Josephus(size_t count, size_t passby);
 14: 
-15: public:
-16:     // c'tors
-17:     CollatzIterator() = default;
-18:     CollatzIterator(int start);
-19: 
-20:     // operators
-21:     int operator*() const;
-22:     CollatzIterator& operator++();
-23:     bool operator!=(const CollatzIterator&) const;
+15:     // public interface
+16:     virtual void eliminateAll() override final;
+17: 
+18:     // getter/setter
+19:     virtual size_t count() const override { return m_count; }
+20:     virtual size_t alive() const override { return m_alive; }
+21:     virtual size_t lastEliminated() const override { return m_lastEliminated; }
+22:     virtual size_t lastAlive() const override { return m_lastAlive; }
+23:     virtual size_t passBy() const override { return m_passby; }
+24:     virtual void setPassBy(int passby) override { m_passby = passby; }
+25: };
+```
+
+*Listing* 2: Klasse `Josephus`: Definition.
+
+###### {#listing_03_josephus_implementation}
+
+```cpp
+01: // c'tors
+02: Josephus::Josephus() : Josephus{ NumSoldiers, DefaultPassBy } {}
+03: 
+04: Josephus::Josephus(size_t count, size_t passby) 
+05:     : m_count{ count }, m_alive{ count }, m_passby{ passby } {}
+06: 
+07: void Josephus::eliminateAll()
+08: {
+09:     while (eliminateNextSoldier())
+10:         ;
+11: }
+```
+
+*Listing* 3: Klasse `Josephus`: Implementierung.
+
+Nun sind bei der noch ausstehenden Realisierung angekommen. Zwei einfache Ansätze lassen sich auf Basis eines eindimensionalen Felds (vom Typ `bool`) 
+oder einer einfach-verketteten Liste verfolgen. Natürlich wollen wir soweit möglich auf den Werkzeugkasten der STL zurückgreifen,
+es bieten sich die beiden Klassen `std::array<T>` bzw. `std::forward_list<T>` an. Beginnen wir in  [Listing 4]
+mit Betrachtung einer Klasse `JosephusArrayImpl`, die die Klasse `Josephus` spezialisiert und dazu ein eindimensionales Feld
+des Typs `std::array<bool>` verwendet. Der einzige Wehrmutstropfen bei diesem Lösungsansatz besteht darin, dass `std::array<T>`-Instanzen ihre Länge
+zur Übersetzungszeit kennen müssen. Wir  definieren dazu an zentraler Stelle im Programm eine Variable `NumSoldiers`:
+
+```
+constexpr size_t NumSoldiers = 17;    // number of soldiers
+```
+
+In [Listing 4] (Schnittstelle) und [Listing 5] (Implementierung) finden Sie die Details zur Klasse `JosephusArrayImpl` vor:
+
+###### {#listing_04_josephusarrayimpl_interface}
+
+```cpp
+01: class JosephusArrayImpl : public Josephus
+02: {
+03: private:
+04:     // array of boolean states: alive or not
+05:     std::array<bool, NumSoldiers> m_soldiers{ }; 
+06:     size_t m_current;  // current index into array
+07: 
+08: public:
+09:     // c'tors
+10:     JosephusArrayImpl();
+11:     JosephusArrayImpl(size_t count, size_t passby);
+12: 
+13:     // public interface
+14:     virtual bool eliminateNextSoldier() override;
+15: 
+16: private:
+17:     // private helper methods
+18:     void init();
+19:     void moveToNextAliveSoldier();
+20:     void nextIndex();
+21: 
+22:     // output
+23:     friend std::ostream& operator<< (std::ostream&, JosephusArrayImpl&);
 24: };
 ```
 
-*Listing* 1: Klasse `CollatzIterator`: Definition.
+*Listing* 4: Klasse `JosephusArrayImpl`: Schnittstelle.
 
-[Listing 1] demonstriert einige Neuerungen von C++. Da wären zum Beispiel Initialisierer für Instanzvariablen (Zeilen 11 bis 13).
-Mit ihrer Hilfe sollte es nicht mehr passieren, dass Instanzvariablen von Klassen ohne Vorbelegungswerte auftreten.
-Dieses Feature hat zur Folge, dass man nicht mehr zwingend den Default-Konstruktor einer Klasse ausprogrammieren muss.
-Mit der Kurzschreibweise in Zeile 17 ist erreicht, dass die Klasse einen Default-Konstruktor besitzt und die Instanzvariablen
-auf Basis ihrer jeweiligen Initialisierer vorbelegt werden.
-Die Zeilen 4 bis 8 bezeichnet man als *Iterator Traits* (zu Deutsch etwa *Iterator Spuren*),
-sie sind wichtig für die Integration des Iterators in die STL.
-Eine mögliche Realisierung der `CollatzIterator`-Klasse folgt in [Listing 2]:
-
-###### {#listing_02_collatziterator_implementation}
+###### {#listing_05_josephusarrayimpl_implementation}
 
 ```cpp
-01: // c'tor
-02: CollatzIterator::CollatzIterator(int start) : m_start{ start }, m_current{ start } {}
+01: // c'tors
+02: JosephusArrayImpl::JosephusArrayImpl() : JosephusArrayImpl{ NumSoldiers, DefaultPassBy } {}
 03: 
-04: // operator(s)
-05: int CollatzIterator::operator*() const { return m_current; }
-06: 
-07: CollatzIterator& CollatzIterator::operator++()
-08: {
-09:     m_current = (m_current % 2 == 0)
-10:         ? m_current = m_current / 2
-11:         : m_current = 3 * m_current + 1;
-12: 
-13:     return *this;
-14: }
+04: JosephusArrayImpl::JosephusArrayImpl(size_t count, size_t passby) : Josephus{ count, passby } {
+05:     init();
+06: }
+07: 
+08: // public interface
+09: bool JosephusArrayImpl::eliminateNextSoldier()
+10: {
+11:     // more than one soldier alive?
+12:     if (m_alive == 1) {
+13:         return false;
+14:     }
 15: 
-16: bool CollatzIterator::operator!=(const CollatzIterator& seq) const
-17: { 
-18:     return m_current != seq.m_current;
-19: }
+16:     for (int i = 0; i < m_passby - 1; i++) {
+17:         moveToNextAliveSoldier();
+18:         nextIndex();  // skip found alive soldier
+19:     }
+20: 
+21:     moveToNextAliveSoldier();
+22: 
+23:     // kill 'n'.th soldier
+24:     m_soldiers[m_current] = false;
+25:     m_alive--;
+26:     m_lastEliminated = m_current + 1;
+27: 
+28:     // compute index of last alive soldier
+29:     if (m_alive == 1) {
+30: 
+31:         std::array<bool, NumSoldiers>::iterator it = std::find_if(
+32:             std::begin(m_soldiers),
+33:             std::end(m_soldiers),
+34:             [](bool b) {
+35:                 return b == true;
+36:             }
+37:         );
+38: 
+39:         m_lastAlive = it - std::begin(m_soldiers) + 1;
+40:     }
+41: 
+42:     return true;
+43: }
+44: 
+45: // private helper methods
+46: void JosephusArrayImpl::init()
+47: {
+48:     for (bool& entry : m_soldiers) {
+49:         entry = true;
+50:     }
+51: 
+52:     m_current = 0;
+53: }
+54: 
+55: void JosephusArrayImpl::moveToNextAliveSoldier()
+56:  {
+57:     while (m_soldiers[m_current] == false) {
+58:         nextIndex(); // move index to next entry
+59:     }
+60: }
+61: 
+62: void JosephusArrayImpl::nextIndex()
+63: {
+64:     // move index to next entry
+65:     m_current++;
+66:     if (m_current >= m_count) {
+67:         m_current = 0;
+68:     }
+69: }
+70: 
+71: // output
+72: std::ostream& operator<< (std::ostream& os, JosephusArrayImpl& j)
+73: {
+74:      os << '[';
+75:      size_t save = j.m_current;  // save current state of position index
+76:      j.m_current = 0;
+77: 
+78:      int count = 0;
+79:      do {
+80:          j.moveToNextAliveSoldier();
+81:          os << (j.m_current + 1);
+82: 
+83:          count++;
+84:          if (count < j.alive())
+85:              os << ',';
+86:          
+87:          j.nextIndex();
+88:      }
+89:      while (count < j.alive());
+90: 
+91:      os << ']';
+92:      j.m_current = save;  // restore current state of position index
+93:      return os;
+94: }
 ```
 
-*Listing* 2: Klasse `CollatzIterator`: Implementierung.
+*Listing* 5: Klasse `JosephusArrayImpl`: Implementierung.
 
-## Klasse `CollatzSequence`
+Eine alternative Lösung des *Josephus*-Problems ist mit verketteten Listen möglich.
+Dazu bedarf es allerdings einer Hilfsklasse `Soldier` ([Listing 6]), die in der verketteten Liste ein einzelnes Listenelement darstellt:
 
-Nun benötigen wir noch eine Klasse für die Zahlenfolge, also die Containerklasse.
-Im Wesentlichen legt sie nur den Startwert für die Folge fest
-und stellt zwei Iteratorobjekte für Start und Ende der Zahlenfolge zur Verfügung ([Listing 3]):
-
-###### {#listing_03_collatzsequence_interface}
+###### {#listing_06_class_soldier}
 
 ```cpp
-01: // forward declaration of iterator class
-02: class CollatzIterator;
-03: 
-04: class CollatzSequence
-05: {
-06: private:
-07:     int m_start{ 1 };
-08: 
-09: public:
-10:     // c'tor(s)
-11:     CollatzSequence() = default;
-12:     CollatzSequence(int start);
+01: class Soldier
+02: {
+03: private:
+04:     size_t m_number{ 1 };
+05: 
+06: public:
+07:     // c'tors
+08:     Soldier() = delete;
+09:     Soldier(size_t number) : m_number{ number } {};
+10: 
+11:     // getter
+12:     size_t getNumber() { return m_number; }
 13: 
-14:     // iterator support
-15:     CollatzIterator begin() const;
-16:     CollatzIterator end()   const;
-17: };
+14:     // operators
+15:     size_t operator()() const { return m_number; };
+16: };
 ```
 
-*Listing* 3: Klasse `CollatzSequence`: Definition.
+*Listing* 6: Klasse `Soldier`.
 
-Die `CollatzSequence`-Klassendefinition enthält keine Überraschungen bis auf eine Subtilität
-in Bezug auf die beiden Klassen `CollatzIterator` und `CollatzSequence`,
-die wir ansprechen müssen: Container- und Iteratorklassen sind &ndash; das liegt in der Natur der Sache &ndash; normalerweise
-eng miteinander verknüpft:
+Auf Basis der Klasse `Soldier` in [Listing 6] und einer verketteten Liste lässt sich der letzte überlebende Soldat nun
+mit Hilfe einer Klasse `JosephusForwardListImpl` wie folgt ermitteln ([Listing 7] und [Listing 8]):
 
-  * Die Containerklasse muss die beiden Methoden `begin()` und `end()` implementieren. Diese beiden Methoden liefern Iteratorenobjekte zurück.
-  * Ein Iteratorobjekt kennt in der Regel seine Containerklasse, folglich muss im Iteratorobjekt eine Referenz (bzw. eine Zeigervariable) auf den dazugehörigen Container vorhanden sein.
-
-Diese Art des gegenseitigen Referenzierens hat zur Folge, dass wir den Container vor dem Iterator definieren müssen und umgekehrt.
-Darüber hinaus benötigt der Iterator normalerweise Zugriff auf (private) Containermethoden und Datenelemente,
-um seine Arbeit erledigen zu können.
-Aus diesem Grund lautet das typische Muster zum Definieren von Container- und Iteratorklassen wie folgt:
-
-  * Vorwärtsdeklaration der Iteratorklasse.
-  * Definition (Implementierung) der Containerklasse.
-  * Definition der Iteratorklasse als Freund (`friend`) in der Containerklasse.
-  * Definition (Implementierung) der Iteratorklasse.
-
-In unserem Anwendungsfall &ndash; Realisierung von Zahlenfolgen mit C++&ndash;Iteratoren &ndash; liegt der Iteration kein Container zugrunde.
-Alle Informationen zu den iterierenden Werten residieren in der Iteratorklasse, die Containerklasse muss also keine `friend`-Deklaration der Iteratorklasse haben ([Listing 4]):
-
-###### {#listing_04_collatzsequence_implementation}
+###### {#listing_07_josephusforwardlistimpl_interface}
 
 ```cpp
-01: // c'tor(s)
-02: CollatzSequence::CollatzSequence(int start) : m_start{ start } {}
-03: 
-04: // iterator support
-05: CollatzIterator CollatzSequence::begin() const { return { m_start }; }
-06: CollatzIterator CollatzSequence::end()   const { return { 1 }; }
-
+01: class JosephusForwardListImpl : public Josephus
+02: {
+03: private:
+04:     // linked list of Soldier objects
+05:     std::forward_list<Soldier> m_soldiers;
+06:     std::forward_list<Soldier>::iterator m_current;
+07: 
+08: public:
+09:     // c'tors
+10:     JosephusForwardListImpl();
+11:     JosephusForwardListImpl(size_t count, size_t passby);
+12: 
+13:     // public interface
+14:     virtual bool eliminateNextSoldier() override;
+15: 
+16: private:
+17:     // private helper methods
+18:     void init();
+19: 
+20:     // output
+21:     friend std::ostream& operator<< (std::ostream&, const JosephusForwardListImpl&);
+22: };
 ```
 
-*Listing* 4: Klasse `CollatzSequence`: Implementierung.
+*Listing* 7: Klasse `JosephusForwardListImpl`: Schnittstelle.
 
-Das C++11&ndash;Sprachfeature der &ldquo;Uniform Initialization&rdquo; kann auch zusammen mit einer `return`-Anweisung auftreten.
-Betrachten Sie die beiden Zeilen 5 und 6 von [Listing 4]. Es steht auf Grund der Definition
-der Methoden `begin()` und `end()` fest, dass diese ein Objekt des Typs `CollatzIterator` zurückliefern müssen.
-Wozu dann
+###### {#listing_08_josephusforwardlistimpl_implementation}
 
 ```cpp
-return { CollatzIterator { m_start } };
+01: // c'tors
+02: JosephusForwardListImpl::JosephusForwardListImpl() 
+03:     : JosephusForwardListImpl{ NumSoldiers, DefaultPassBy } {}
+04: 
+05: JosephusForwardListImpl::JosephusForwardListImpl(size_t count, size_t passby)
+06:     : Josephus{ count, passby } {
+07:     init();
+08: }
+09: 
+10: // public interface
+11: bool JosephusForwardListImpl::eliminateNextSoldier()
+12: {
+13:     // more than one soldier alive?
+14:     if (m_alive == 1) {
+15:         return false;
+16:     }
+17: 
+18:     // locate next soldier
+19:     std::forward_list<Soldier>::iterator preceding;
+20: 
+21:     for (size_t i = 0; i != m_passby - 1; ++i) {
+22: 
+23:         preceding = m_current;
+24:         ++m_current;
+25: 
+26:         if (m_current == m_soldiers.end()) {
+27:             preceding = m_soldiers.before_begin();
+28:             m_current = m_soldiers.begin();
+29:         }
+30:     }
+31: 
+32:     m_lastEliminated = (*m_current).getNumber();
+33: 
+34:     ++m_current;
+35:     if (m_current == m_soldiers.end()) {
+36:         m_current = m_soldiers.begin();
+37:     }
+38: 
+39:     // remove soldier from list
+40:     m_soldiers.erase_after(preceding);
+41:     m_alive--;
+42: 
+43:     // compute index of last alive soldier
+44:     if (m_alive == 1) {
+45:         m_lastAlive = (*m_current).getNumber();
+46:     }
+47: 
+48:     return true;
+49: }
+50: 
+51: // private helper methods
+52: void JosephusForwardListImpl::init()
+53: {
+54:     for (size_t i = 0; i != m_count; ++i) {
+55:         m_soldiers.push_front(Soldier{ m_count - i });
+56:     }
+57: 
+58:     m_current = m_soldiers.begin();
+59: }
+60: 
+61: // output
+62: std::ostream& operator<< (std::ostream& os, const JosephusForwardListImpl& josephus)
+63: {
+64:     os << '[';
+65:     for (size_t i = 1; const Soldier & soldier : josephus.m_soldiers) {
+66:         os << soldier();
+67:         if (i < josephus.m_alive) {
+68:             os << ',';
+69:             ++i;
+70:         }
+71:     }
+72:     os << ']';
+73:     return os;
+74: }
 ```
 
-bzw.
+*Listing* 8: Klasse `JosephusForwardListImpl`: Implementierung.
+
+Mit folgendem Testrahmen kommen wir nun dem Rätsel auf die Spur, an welche Stelle im Kreis sich Josephus gestellt hat:
 
 ```cpp
-return { CollatzIterator { 1 } };
-```
+std::shared_ptr<IJosephus> sp = std::make_shared<JosephusForwardListImpl>(41, 3);
+sp->setPassBy(3);
 
-schreiben, wenn die Information des Klassentyps `CollatzIterator` überflüssig ist bzw. dem Compiler bekannt ist.
-Nun können wir unsere erste teuflische Folge berechnen. Wir verzichten zunächst noch auf den Einsatz einer Containerklasse
-und testen ausschließlich Iteratorobjekte:
+std::cout << "Number of soldiers: " << sp->count() << std::endl;
+std::cout << "Eliminating: Each " << sp->passBy() << ". soldier" << std::endl << std::endl;
 
-```cpp
-CollatzIterator iter{ 7 };
-CollatzIterator end{ 1 };
-
-while (iter != end) {
-    std::cout << *iter << ' ';
-    ++iter;
+while (sp->alive() > 1)
+{
+    sp->eliminateNextSoldier();
+    std::cout << "Removed " << std::setw(2) << sp->lastEliminated() << std::endl;
 }
+
+std::cout << std::endl;
+std::cout << "Last eliminated soldier: " << sp->lastEliminated() << std::endl;
+std::cout << "Last alive soldier:      " << sp->lastAlive() << std::endl;
 ```
 
-*Ausgabe*:
+Ausgabe des Programms:
 
 ```
-7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2
+Number of soldiers: 41
+Eliminating: Each 3. soldier
+
+Removed  3
+Removed  6
+Removed  9
+Removed 12
+Removed 15
+Removed 18
+Removed 21
+Removed 24
+Removed 27
+Removed 30
+Removed 33
+Removed 36
+Removed 39
+Removed  1
+Removed  5
+Removed 10
+Removed 14
+Removed 19
+Removed 23
+Removed 28
+Removed 32
+Removed 37
+Removed 41
+Removed  7
+Removed 13
+Removed 20
+Removed 26
+Removed 34
+Removed 40
+Removed  8
+Removed 17
+Removed 29
+Removed 38
+Removed 11
+Removed 25
+Removed  2
+Removed 22
+Removed  4
+Removed 35
+Removed 16
+
+Last eliminated soldier: 16
+Last alive soldier:      31
 ```
 
-Wenn Sie die Ausgabe genau betrachten, können Sie einen kleinen Schönheitsfehler erkennen: Richtig erkannt, 
-die Folge sollte den Wert 1 als letztes Element und nicht die 2 haben.
-Dies ist nicht ganz trivial lösbar, aber wenn wir an zwei Stellen im Quellcode geschickt eingreifen, haben wir auch dieses Problem behoben:
-
-  * Beobachtung 1: In der Festlegung des Ende-Iteratorobjekts sind wir ein wenig gekniffen: Der Wert 1 ist eigentlich der einzig mögliche Wert,
-    der sich hier anbietet. Da er aber das Ende der Zahlenfolge ist, wird er von der Iteration ausgenommen, was wir vermeiden wollen.
-
-  * Beobachtung 2: Des Rätsels Lösung liegt an einer ganz anderen Stelle in der Iteratorklasse verborgen: Es ist der `operator!=`, den wir in einer ersten Version
-    seiner Realisierung etwas &ldquo;unterschätzt&rdquo; haben:  
-
-    ```cpp
-    bool CollatzIterator::operator!=(const CollatzIterator& seq) const
-    { 
-        return m_current != seq.m_current;
-    }
-    ```
-
-    Vergleichen wir den Wert von `m_current` mit dem Wert `seq.m_current` eines anderen Iteratorobjekts, ist es eigentlich schon zu spät:
-    Das Ende-Iteratorobjekt wartet hier mit dem Wert 1 auf, wir können das Element 1 in der Zahlenfolge so nicht mehr als gültigen Wert erklären.
-    Wollten wir den Wert 1 mit in die Zahlenfolge aufnehmen, dürfen wir beim Vergleich nicht den aktuellen Wert vergleichen,
-    sondern müssen hier quasi auf den Vorgänger von `m_current` zurückgreifen. Damit benötigen wir neben `m_current` noch eine zweite Instanzvariable `m_last`,
-    die den Vorgänger von `m_current` repräsentiert.
-
-  * Beobachtung 3: Für die beiden Operatoren `++` und `!=` benötigen wir eine geringfügig modifizierte Realisierung:
-
-    ```cpp
-    CollatzIterator& CollatzIterator::operator++()
-    {
-        m_last = m_current;
-    
-        m_current = (m_current % 2 == 0)
-            ? m_current = m_current / 2
-            : m_current = 3 * m_current + 1;
-    
-        return *this;
-    }
-    
-    bool CollatzIterator::operator!=(const CollatzIterator& seq) const
-    { 
-        return m_last != seq.m_current;
-    }
-    ```
-
-Wenn Sie diese Änderungen in der Implementierung der `CollatzIterator`-Klassen einbringen,
-werden Sie in der Ausgabe die 1 als letztes Element der Zahlenfolge vorfinden!
-
-Jetzt können wir eigentlich aus dem vollen Schöpfen und unsere Container- und Iteratorklasse gegen zahlreiche STL-Algorithmen testen.
-Wir fangen mit einer bereichsbasierten `for`-Wiederholungsschleife an. Diese benötigt die Container-Klasse
-unserer Realisierung (nicht die Iteratorklasse),
-die jeweiligen Iteratorobjekte werden &ndash; für uns nicht sichtbar &ndash; durch Anweisungen angefordert,
-die der Übersetzer generiert:
-
-```cpp
-CollatzSequence seq{ 17 };
-for (int n : seq) {
-    std::cout << n << ' ';
-}
-```
-
-*Ausgabe*:
-
-```
-17 52 26 13 40 20 10 5 16 8 4 2 1
-```
-
-Die bereichsbasierte `for`-Wiederholungsschleife erwartet am Containerobjekt &ndash; hier: Klasse `CollatzSequence` &ndash; 
-eine Implementierung der beiden Methoden `begin()` und `end()`. An den zurückgelieferten Objekten wiederum müssen die
-drei Operatoren `operator++()`, `operator!=()` und `operator*()` vorhanden sein. Anderfalls wäre ein derartiges Code-Fragment nicht übersetzungsfähig.
-
-Für die nachfolgenden Code-Fragmente muss die Iteratorklasse noch weitere Auskünfte bereitstellen.
-Wir sind beim Themenkreis der so genannten &ldquo;Iterator Traits&rdquo; &ndash; zu Deutsch etwa &ldquo;Iterator Spuren&rdquo; &ndash; angekommen.
-Die Anforderung lässt sich vergleichsweise einfach durch fünf `using`-Deklarationen erfüllen:
-
-```cpp
-using iterator_category = std::forward_iterator_tag;
-using value_type = int;
-using difference_type = int;
-using pointer = int*;
-using reference = int&;
-```
-
-## `CollatzIterator` und `CollatzSequence` im Zusammenspiel mit STL-Algorithmen
-
-Wir stellen als Erstes eine Anwendung des `std::copy`-Algorithmus vor:
-
-```cpp
-CollatzSequence seq{ 17 };
-std::ostream_iterator<int> out{ std::cout, "  " };
-std::copy(std::begin(seq), std::end(seq), out);
-```
-
-*Ausgabe*:
-
-```
-17  52  26  13  40  20  10  5  16  8  4  2  1
-```
-
-Wollten wir die Summe aller Folgenglieder bestimmen, kann man den Algorithmus `std::accumulate` anwenden. 
-Besitzt dieser keinen vierten Parameter und wird der dritte Parameter mit dem Wert 0 vorbelegt, erhalten wir die Summe
-der Elemente in der Aufzählung zurück:
-
-```cpp
-CollatzSequence seq{ 17 };
-int sum = std::accumulate(std::begin(seq), std::end(seq), 0);
-std::cout << sum << std::endl;
-```
-
-*Ausgabe*:
-
-```
-214
-```
-
-Ist nicht die Summe, sondern die Anzahl der Folgenglieder gesucht, erhalten wir die Anwort von dem Algorithmus `std::distance`:
-
-```cpp
-CollatzSequence seq{ 17 };
-int count = std::distance(std::begin(seq), std::end(seq));
-std::cout << count << std::endl;
-```
-
-*Ausgabe*:
-
-```
-13
-```
-
-*Hinweis*:
-Ohne eine entsprechenden Definition der &ldquo;Iterator Traits&rdquo; in der Klasse `CollatzIterator` ([Listing 1])
-ist der Algorithmus-Aufruf `std::distance` nicht übersetzungsfähig! 
-Die Fehlermeldung ist leider nicht einfach verständlich, bei genauem Hinsehen kann man erkennen,
-dass die zum Zählen der Elemente notwendige Information des Abstands zweier Elemente fehlt:
-
-```
-Failed to specialize function template ... std::iterator_traits<remove_cv<remove_reference<_Ty>::type>::type>>::difference_type
-```
-
-Um einen Standard-Vektor (`std::vector<>`) mit den Elementen der Zahlenfolge zu füllen, 
-bietet sich eine Kombination von `std::copy` mit `std::back_inserter` an:
-
-```cpp
-std::vector<int> numbers{ };
-CollatzSequence seq{ 7 };
-std::copy(std::begin(seq), std::end(seq), std::back_inserter(numbers));
-
-for (int number : numbers) {
-    std::cout << number << std::endl;
-}
-```
-
-*Ausgabe*:
-
-```
-7
-22
-11
-34
-17
-52
-26
-13
-40
-20
-10
-5
-16
-8
-4
-2
-1
-```
-
-Die letzte Ausgabe können wir &ndash; im Kontext des `std::accumulate` Algorithmus &ndash; etwas umfangreicher gestalten.
-Sie erinnnern sich: Das erste Mal hatten wir `std::accumulate` eingesetzt, um die Folgenglieder zu addieren.
-Dieses Mal verwenden wir `std::accumulate`, um als Resultat eine Zeichenkette zu erzeugen, die die Folgenglieder nach gewissen Vorgaben weiterverarbeitet:
-
-```cpp
-CollatzSequence seq{ 7 };
-
-std::string s = std::accumulate(
-    std::begin(seq),
-    std::end(seq),
-    std::string(""), // first element
-    [counter = 0] (const std::string& first, const auto& next) mutable {
-        counter++;
-        std::ostringstream ss;
-        ss << "[" << std::setfill('0') << std::setw(2) << counter << "]"
-            << ": " << std::setfill(' ') << std::setw(5)
-            << std::right << next << std::endl;
-
-        return first + ss.str();
-    }
-);
-
-std::cout << s << std::endl;
-```
-
-*Ausgabe*:
-
-```
-[01]:     7
-[02]:    22
-[03]:    11
-[04]:    34
-[05]:    17
-[06]:    52
-[07]:    26
-[08]:    13
-[09]:    40
-[10]:    20
-[11]:    10
-[12]:     5
-[13]:    16
-[14]:     8
-[15]:     4
-[16]:     2
-[17]:     1
-```
-
-# There&lsquo;s more
-
-In diesem Abschnitt bietet es sich an, eine Schwachstelle in der Definition der Iteratorklasse `CollatzIterator` zu beseitigen.
-Nicht jede Zahlenfolge muss Elemente des Typs `int` haben, `long`, `short`, `__int64` etc. wären auch geeignetete Kandidaten.
-Wir sind bei Templates angekommen: Eine Implementierung zweier Klassen `CollatzIteratorEx<T>` und `CollatzSequenceEx<T>`
-finden Sie unter [Github](https://github.com/pelocpp/cpp_case_studies.git) vor.
-
-# There&lsquo;s much more
-
-In C++ 20 wird ein neues Sprachkonzept, genannt *Concepts* eingeführt, eine clevere Vorgehensweise,
-um Restriktionen für Datentypen festzulegen, die eine Template-Funktion oder -klasse annehmen kann.
-Während Iteratorkategorien und -eigenschaften gleich bleiben, ändert sich die Art und Weise, *wie* Sie diese erzwingen:
-mit *Tags* bis C++ 17 (so wie wir es auch in dieser Fallstudie getan haben),
-mit *Concepts*  in C++ 20.
-
-Beispielsweise würden Sie anstelle des Tags `std::forward_iterator_tag` Ihren Iterator mit dem
-`std::forward_iterator`-*Konzept* markieren. Dieser neue Mechanismus hilft dabei,
-bessere Definitionen für Iteratoren zu erhalten
-und Fehlermeldungen des Compilers werden besser lesbarer.
-
-Im Augenblick ist die Umsetzung von *Concepts* und *Ranges* im Visual C++ Compiler noch nicht abgeschlossen,
-so dass ich eine Aktualisierung dieses Artikels noch in die (nahe) Zukunft verschiebe.
-Erste Schritte in diese Richtung werden vermutlich so aussehen, dass die Klasse `CollatzSequenceEx`
-in einen *Range* bzw. in eine *View* umzusetzen ist. Dazu gibt es eine Hilfsklasse `std::ranges::view_interface`:
-
-```cpp
-template <class T>
-class CollatzViewExEx : public std::ranges::view_interface<CollatzViewExEx<T>> {
-public:
-    CollatzViewExEx() = default;
-    CollatzViewExEx(T start) : m_start(start), m_begin(start), m_end () {}
-
-    auto begin() const { return m_begin; }
-    auto end() const { return m_end; }
-
-private:
-    T m_start;
-
-    CollatzIteratorEx<T> m_begin;
-    CollatzIteratorEx<T> m_end;
-};
-```
-
-Immerhin lässt sich mit diesem ersten kleinen Schritt bereits ein `CollatzViewExEx`-Objekt
-mit einer bereichsbasierten `for`-Wiederholungsschleife traversieren:
-
-```
-CollatzViewExEx view{ 7 };
-for (int n : view) {
-    std::cout << n << " - ";
-}
-```
-
-*Ausgabe*:
-
-```
-7 - 22 - 11 - 34 - 17 - 52 - 26 - 13 - 40 - 20 - 10 - 5 - 16 - 8 - 4 - 2 - 1 -
-```
-
-Sollten Sie mit den neuartigen C++ Konzepten bzgl. *Ranges* und *Concepts* (mit Visual C++)
-bessere Fortschritte erzielen, würde ich mich über eine Nachricht freuen :-)
+Der Legende nach stellte Josephus sich an die 16. Stelle und blieb damit als Vorletzter übrig.
+Er konnte auf diese Weise den letzten, schwächeren Mann an der 31. Position überwältigen.
+Beide ergaben sich den Römern und konnten auf diese Weise ihr Leben retten.
 
 <!-- Links Definitions -->
 
-[Listing 1]: #listing_01_collatziterator_interface
-[Listing 2]: #listing_02_collatziterator_implementation
-[Listing 3]: #listing_03_collatzsequence_interface
-[Listing 4]: #listing_04_collatzsequence_implementation
+[Listing 1]: #listing_01_ijosephus_interface
+[Listing 2]: #listing_02_josephus_interface
+[Listing 3]: #listing_03_josephus_implementation
+[Listing 4]: #listing_04_josephusarrayimpl_interface
+[Listing 5]: #listing_05_josephusarrayimpl_implementation
+[Listing 6]: #listing_06_class_soldier
+[Listing 7]: #listing_07_josephusforwardlistimpl_interface
+[Listing 8]: #listing_08_josephusforwardlistimpl_implementation
 
 <!-- End-of-File -->

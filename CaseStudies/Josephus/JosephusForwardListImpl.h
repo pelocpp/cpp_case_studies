@@ -1,32 +1,30 @@
 // =====================================================================================
-// JosephusListImpl.h
+// JosephusForwardListImpl.h
 // =====================================================================================
 
 #pragma once
 
-class JosephusListImpl : public Josephus
+class JosephusForwardListImpl : public Josephus
 {
 private:
+    // linked list of Soldier objects
     std::forward_list<Soldier> m_soldiers;
     std::forward_list<Soldier>::iterator m_current;
 
 public:
     // c'tors
-    JosephusListImpl();
-    JosephusListImpl(size_t count, size_t passby);
+    JosephusForwardListImpl();
+    JosephusForwardListImpl(size_t count, size_t passby);
 
-    // getter/setter
-    virtual size_t lastAlive() const override { return (*m_current).getNumber(); }
-
-    // pubic interface
-    bool eliminateNextSoldier();
+    // public interface
+    virtual bool eliminateNextSoldier() override;
 
 private:
     // private helper methods
-    void initScenario();
+    void init();
 
     // output
-    friend std::ostream& operator<< (std::ostream&, const JosephusListImpl&);
+    friend std::ostream& operator<< (std::ostream&, const JosephusForwardListImpl&);
 };
 
 // =====================================================================================

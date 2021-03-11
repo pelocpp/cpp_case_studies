@@ -15,10 +15,9 @@ public:
     virtual size_t passBy() const = 0;
     virtual void setPassBy(int passby) = 0;
 
-    // pubic interface
+    // public interface
     virtual bool eliminateNextSoldier() = 0;
-
-    // TODO : eliminateAll ???????????
+    virtual void eliminateAll() = 0;
 };
 
 // =====================================================================================
