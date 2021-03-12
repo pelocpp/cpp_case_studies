@@ -1,8 +1,8 @@
 <!-- Josephus.md -->
 
 In dieser Fallstudie  betrachten wir ein sehr &ldquo;martialisches&rdquo; Problem,
-das durch den jüdischen Historiker *Flavius Josephus* überliefert ist.
-Dieser soll soll im römisch-jüdischen Krieg mit 41 Kameraden den Selbstmord der Gefangenschaft vorgezogen haben.
+das durch den jüdischen Historiker *Flavius Josephus* überliefert worden ist.
+Dieser soll im römisch&ndash;jüdischen Krieg mit 41 Kameraden den Selbstmord der Gefangenschaft vorgezogen haben.
 Details finden Sie gleich weiter unten vor &ndash; umso interessanter die Fragestellung,
 wie Informatiker bei dieser Fallstudie ins Spiel kommen:
 *Josephus* fand nämlich heraus, an welche Position im Kreis er sich stellen musste,
@@ -34,7 +34,7 @@ Vergebens beschwor Josephus seine Mitstreiter, davon abzulassen. Um wenigstens s
 mit einem unbekannten Mitverschwörer vor dieser Freitod-Orgie zu retten,
 schlug er als Tötungsritual den alten römischen Brauch der *Decimatio* (Dezimierung) vor:
 Zuerst mussten sich die Rebellen in einem Kreis herum aufzustellen, danach sollte sich jeder dritte
-nacheinander im Kreis das Leben nehmen. Josephus jedoch konnte Dank seiner mathematischen Begabung
+nacheinander im Kreis das Leben nehmen. Josephus jedoch konnte dank seiner mathematischen Begabung
 schnell ausrechnen, wo er und sein Freund im Kreis stehen mussten, um als Letzte übrig zu bleiben
 und somit dem Tode zu entkommen.
 
@@ -206,7 +206,7 @@ Am Ende bleiben in dem Feld zwei Einträge mit einem `true`-Wert übrig, es hand
 
 {{< figure src="/img/josephus/JosephusRing_02_Array.png" width="60%" >}}
 
-*Abbildung* 1: Beispiel des Josephus-Problems mit 12 Rebellen und Auszählabstand 3 &ndash; Datenstruktur Array.
+*Abbildung* 1: Beispiel des Josephus-Problems mit Datenstruktur Array.
 
 Beginnen wir in  [Listing 4]
 mit Betrachtung einer Klasse `JosephusArrayImpl`, die die Klasse `Josephus` spezialisiert und dazu ein eindimensionales Feld
@@ -356,14 +356,14 @@ In [Listing 4] (Schnittstelle) und [Listing 5] (Implementierung) finden Sie die 
 
 Ordnen Sie *n* nummerierte Soldaten in einer einfach verketteten Liste an.
 Wenn Sie den Knoten des letzten Soldaten auf den Knoten des ersten Soldaten zeigen lassen, kommen Sie der Realität sehr nahe!
-Dann wird, beginnend mit dem ersten Soldaten, jeder *m*-te Soldat (Knoten) aus der Liste entfernt, wobei der Kreis geschlossen bleibt.
+Dann wird, beginnend mit dem ersten Soldaten, jeder *m*.-te Soldat (Knoten) aus der Liste entfernt, wobei der Kreis geschlossen bleibt.
 Auf diese Weise erkennt man, welche zwei Soldaten als letztes überleben!
 
 ###### {#abbildung_2_josephus_problem_linkedlist_solution}
 
-{{< figure src="/img/josephus/JosephusRing_01_LinkedList.png" width="60%" >}}
+{{< figure src="/img/josephus/JosephusRing_01_LinkedList.png" width="50%" >}}
 
-*Abbildung* 2: Beispiel des Josephus-Problems mit 12 Rebellen und Auszählabstand 3 – Datenstruktur verkettete Liste.
+*Abbildung* 2: Beispiel des Josephus-Problems mit Datenstruktur &ldquo;verkettete Liste&rdquo;.
 
 Am Beispiel aus [Abbildung 2] können Sie die Arbeitsweise des &ldquo;Auszählens&rdquo; nachverfolgen.
 12 Soldaten sind hier in einem Kreis angeordnet. Nacheinander bringt sich jeder dritte um.
@@ -398,7 +398,7 @@ Zu diesem Zweck definieren wir die Hilfsklasse `Soldier` ([Listing 6]), die in d
 
 Auf Basis der Klasse `Soldier` in [Listing 6] und einer verketteten Liste lässt sich der letzte überlebende Soldat nun
 mit Hilfe einer Klasse `JosephusForwardListImpl` wie in [Listing 7] und [Listing 8] gezeigt ermitteln.
-Wir verzichten allerdings darauf, das letzte Element in der Liste auf des Erste wiederum zeigen zu lassen.
+Wir verzichten allerdings darauf, das letzte Element in der Liste auf das Erste wiederum zeigen zu lassen.
 Die Methode `eliminateNextSoldier` zollt diesem Umstand Beachtung, in dem sie
 bei Erreichen des Listenendes wieder zurück zum Anfang schaltet.
 Studieren Sie zu diesem Zweck genau den Einsatz der Methoden 
