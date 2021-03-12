@@ -89,6 +89,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Josephus", "Josephus", "{10811C36-BEBE-41C5-A3CF-876A1DA2C95B}"
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\Josephus\Josephus.md = MarkDown\Josephus\Josephus.md
+		MarkDown\Josephus\JosephusRing_01_LinkedList.png = MarkDown\Josephus\JosephusRing_01_LinkedList.png
+		MarkDown\Josephus\JosephusRing_02_Array.png = MarkDown\Josephus\JosephusRing_02_Array.png
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Josephus", "CaseStudies\Josephus\Josephus.vcxproj", "{5879C022-0F45-4AA7-87B3-7355ADDF34F5}"

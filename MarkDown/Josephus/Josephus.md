@@ -10,7 +10,7 @@ um als letzter übrig zu bleiben, also um überleben zu können.
 
 Damit sind schlagartig vielen Türen der Informatik geöffnet, zum Beispiel einfach-verkettete Listen, Arrays
 und sogar das Prinzip der Vererbung, um nur einige wenige anzusprechen.
-Lassen Sie sich überraschen, wie wir mit den Hilfsmitteln des *Modern C++* die Lösung des überlieferten Problems bestimmen.
+Lassen Sie sich überraschen, wie wir mit den Hilfsmitteln des *Modern C++* die Lösung des Josephus-Problems bestimmen.
 
 <!--more-->
 
@@ -101,14 +101,15 @@ Es handelt sich dabei – einschließlich Josephus – um 41 Soldaten und es wir
 
 > Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
 
-Zur Vertiefung bzw. Wiederholung elementarer programmiersprachlicher C++-Konstrukte im Umfeld der Vererbung
-stellen wir auf Basis des objekt-orientierten Entwurfs zunächst eine Schnittstelle `IJosephus` vor.
-Schnittstellen lassen sich in C++ mit so genannten pure-virtuellen Methoden nachahmen,
-in anderen Programmiersprachen gibt es eigens dafür ein programmiersprachliches Konstrukt mit dem Schlüsselwort `interface`.
+Zur Lösung des Problems bieten sich bzgl. des Einsatzes von Datenstrukturen prinzipiell zwei Möglichkeiten an:
+Entweder der Aufbau einer einfach verketteten Liste, in der jeder Knoten einen Soldaten der Rebellenbande darstellt.
+Oder aber ein Array vom Typ `bool`, das pro Rebell einen Eintrag besitzt.
+Für beide Varianten stellen wir eine Lösung vor.
 
-Zur `IJosephus`-Schnittstelle bieten wir eine unvollständige Realisierung in Gestalt einer Klasse `Josephus` an,
-die ihrerseits als Basis zweier konkreter Klassen `JosephusArrayImpl` und `JosephusForwardListImpl` fungiert.
-Beginnen wir in [Listing 1] mit der Schnittstelle `IJosephus`:
+Zur Vertiefung bzw. Wiederholung elementarer programmiersprachlicher C++&ndash;Konstrukte im Umfeld der Vererbung
+stellen wir auf Basis des objekt-orientierten Entwurfs zunächst eine Schnittstelle `IJosephus` vor ([Listing 1]).
+Schnittstellen lassen sich in C++ mit so genannten &ldquo;pure-virtuellen&rdquo; Methoden nachahmen,
+in anderen Programmiersprachen gibt es eigens dafür ein programmiersprachliches Konstrukt mit dem Schlüsselwort `interface`.
 
 ###### {#listing_01_ijosephus_interface}
 
@@ -132,7 +133,9 @@ Beginnen wir in [Listing 1] mit der Schnittstelle `IJosephus`:
 
 *Listing* 1: Klasse `IJosephus`: Definition.
 
-Weiter geht es in [Listing 2] und [Listing 3] mit einer abstrakten Basisklasse `Josephus`.
+Zur `IJosephus`-Schnittstelle bieten wir eine unvollständige Realisierung in Gestalt einer Klasse `Josephus` an,
+die nachfolgend ihrerseits als Basis zweier konkreter Klassen `JosephusArrayImpl` und `JosephusForwardListImpl` fungiert.
+In [Listing 2] und [Listing 3] stellen wie die abstrakte Basisklasse `Josephus` vor.
 Die zahlreichen Eigenschaften (*getter*/*setter*-Methoden) der `IJosephus`-Schnittstelle lassen sich hier zentral zusammenfassen:
 
 ###### {#listing_02_josephus_interface}
@@ -185,9 +188,27 @@ Die zahlreichen Eigenschaften (*getter*/*setter*-Methoden) der `IJosephus`-Schni
 
 *Listing* 3: Klasse `Josephus`: Implementierung.
 
-Nun sind bei der noch ausstehenden Realisierung angekommen. Zwei einfache Ansätze lassen sich auf Basis eines eindimensionalen Felds (vom Typ `bool`) 
+Nun sind wir bei der noch ausstehenden Realisierung der eigentlichen Funktionalität des Josephus-Problems angekommen.
+Zwei einfache Ansätze lassen sich auf Basis eines eindimensionalen Felds (vom Typ `bool`) 
 oder einer einfach-verketteten Liste verfolgen. Natürlich wollen wir soweit möglich auf den Werkzeugkasten der STL zurückgreifen,
-es bieten sich die beiden Klassen `std::array<T>` bzw. `std::forward_list<T>` an. Beginnen wir in  [Listing 4]
+es bieten sich die beiden Klassen `std::array<T>` bzw. `std::forward_list<T>` an.
+
+## Lösung mit `std::array<T>` als zentraler Datenstruktur
+
+In einem Array vom Typ `bool` können Sie mit den beiden Werten `true` und `false` hinterlegen,
+ob der *i*.-te Soldat während des Auszählens noch am Leben ist oder nicht.
+Das Auszählen selbst erfolgt durch geschicktes Traversieren des Arrays, wobei Sie im Wesentlichen nur darauf achten müssen,
+keine Zugriffsverletzung mit einem unzulässigen Index zu erzeugen.
+Zur Illustration finden Sie in [Abbildung 1] ein Beispiel mit 12 Soldaten und Auszählabstand 3 vor.
+Am Ende bleiben in dem Feld zwei Einträge mit einem `true`-Wert übrig, es handelt sich um die Soldaten 3 und 8.
+
+###### {#abbildung_1_josephus_problem_array_solution}
+
+{{< figure src="/img/josephus/JosephusRing_02_Array.png" width="60%" >}}
+
+*Abbildung* 1: Beispiel des Josephus-Problems mit 12 Rebellen und Auszählabstand 3 &ndash; Datenstruktur Array.
+
+Beginnen wir in  [Listing 4]
 mit Betrachtung einer Klasse `JosephusArrayImpl`, die die Klasse `Josephus` spezialisiert und dazu ein eindimensionales Feld
 des Typs `std::array<bool>` verwendet. Der einzige Wehrmutstropfen bei diesem Lösungsansatz besteht darin, dass `std::array<T>`-Instanzen ihre Länge
 zur Übersetzungszeit kennen müssen. Wir  definieren dazu an zentraler Stelle im Programm eine Variable `NumSoldiers`:
@@ -330,8 +351,27 @@ In [Listing 4] (Schnittstelle) und [Listing 5] (Implementierung) finden Sie die 
 
 *Listing* 5: Klasse `JosephusArrayImpl`: Implementierung.
 
-Eine alternative Lösung des *Josephus*-Problems ist mit verketteten Listen möglich.
-Dazu bedarf es allerdings einer Hilfsklasse `Soldier` ([Listing 6]), die in der verketteten Liste ein einzelnes Listenelement darstellt:
+
+## Lösung mit `std::forward_list<T>` als zentraler Datenstruktur
+
+Ordnen Sie *n* nummerierte Soldaten in einer einfach verketteten Liste an.
+Wenn Sie den Knoten des letzten Soldaten auf den Knoten des ersten Soldaten zeigen lassen, kommen Sie der Realität sehr nahe!
+Dann wird, beginnend mit dem ersten Soldaten, jeder *m*-te Soldat (Knoten) aus der Liste entfernt, wobei der Kreis geschlossen bleibt.
+Auf diese Weise erkennt man, welche zwei Soldaten als letztes überleben!
+
+###### {#abbildung_2_josephus_problem_linkedlist_solution}
+
+{{< figure src="/img/josephus/JosephusRing_01_LinkedList.png" width="60%" >}}
+
+*Abbildung* 2: Beispiel des Josephus-Problems mit 12 Rebellen und Auszählabstand 3 – Datenstruktur verkettete Liste.
+
+Am Beispiel aus [Abbildung 2] können Sie die Arbeitsweise des &ldquo;Auszählens&rdquo; nachverfolgen.
+12 Soldaten sind hier in einem Kreis angeordnet. Nacheinander bringt sich jeder dritte um.
+Soldat 1 stirbt zuerst, danach Soldat 4 usw. Neben den Soldaten steht die jeweilige Nummer in der Eliminationsreihenfolge.
+Am Schluss bleiben die Soldaten 3 und 8 übrig.
+
+Für die Template Klasse `std::forward_list<T>` benötigen wir ein Template Argument.
+Zu diesem Zweck definieren wir die Hilfsklasse `Soldier` ([Listing 6]), die in der verketteten Liste ein einzelnes Listenelement darstellt:
 
 ###### {#listing_06_class_soldier}
 
@@ -357,7 +397,13 @@ Dazu bedarf es allerdings einer Hilfsklasse `Soldier` ([Listing 6]), die in der 
 *Listing* 6: Klasse `Soldier`.
 
 Auf Basis der Klasse `Soldier` in [Listing 6] und einer verketteten Liste lässt sich der letzte überlebende Soldat nun
-mit Hilfe einer Klasse `JosephusForwardListImpl` wie folgt ermitteln ([Listing 7] und [Listing 8]):
+mit Hilfe einer Klasse `JosephusForwardListImpl` wie in [Listing 7] und [Listing 8] gezeigt ermitteln.
+Wir verzichten allerdings darauf, das letzte Element in der Liste auf des Erste wiederum zeigen zu lassen.
+Die Methode `eliminateNextSoldier` zollt diesem Umstand Beachtung, in dem sie
+bei Erreichen des Listenendes wieder zurück zum Anfang schaltet.
+Studieren Sie zu diesem Zweck genau den Einsatz der Methoden 
+`begin()`, `end()`, `before_begin()`, `erase_after()` und `push_front()`
+in [Listing 8].
 
 ###### {#listing_07_josephusforwardlistimpl_interface}
 
@@ -554,5 +600,8 @@ Beide ergaben sich den Römern und konnten auf diese Weise ihr Leben retten.
 [Listing 6]: #listing_06_class_soldier
 [Listing 7]: #listing_07_josephusforwardlistimpl_interface
 [Listing 8]: #listing_08_josephusforwardlistimpl_implementation
+
+[Abbildung 1]:  #abbildung_1_josephus_problem_array_solution
+[Abbildung 2]:  #abbildung_2_josephus_problem_linkedlist_solution
 
 <!-- End-of-File -->
