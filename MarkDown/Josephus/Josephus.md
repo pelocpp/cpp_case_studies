@@ -6,7 +6,7 @@ Dieser soll im römisch&ndash;jüdischen Krieg mit 41 Kameraden den Selbstmord d
 Details finden Sie gleich weiter unten vor &ndash; umso interessanter die Fragestellung,
 wie Informatiker bei dieser Fallstudie ins Spiel kommen:
 *Josephus* fand nämlich heraus, an welche Position im Kreis er sich stellen musste,
-um als letzter übrig zu bleiben, also um überleben zu können. 
+um als letzter übrig zu bleiben, also um überleben zu können. 
 
 Damit sind schlagartig vielen Türen der Informatik geöffnet, zum Beispiel einfach-verkettete Listen, Arrays
 und sogar das Prinzip der Vererbung, um nur einige wenige anzusprechen.
