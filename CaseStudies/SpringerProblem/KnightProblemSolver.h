@@ -9,8 +9,8 @@
 
 std::ostream& operator<< (std::ostream& os, const std::list<std::list<Coordinate>>& solutions) {
 
-    int counter = 0;
-    int width = (solutions.size() < 10) ? 1 : (solutions.size() < 100) ? 2 : 5;
+    int counter{};
+    int width{ (solutions.size() < 10) ? 1 : (solutions.size() < 100) ? 2 : 5 };
 
     for (const std::list<Coordinate>& solution : solutions) {
 
@@ -77,11 +77,11 @@ public:
         // start at lower left corner            
         Coordinate start{ ROWS - 1, 0 };
         Logger<VerboseSolver>::log(std::cout, "   ... starting sequential solver at ", start);
-        int count = findMovesSequential(start);
+        int count{ findMovesSequential(start) };
 
         // stopwatch
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+        auto duration{ std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() };
         Logger<Verbose>::log(std::cout, "Elapsed time = ", duration, " [msecs]");
 
         assert(count == m_solutions.size());
@@ -98,16 +98,16 @@ public:
         m_moveNumber = 0;
 
         // stopwatch
-        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+        std::chrono::steady_clock::time_point begin{ std::chrono::steady_clock::now() };
 
         // start at lower left corner            
         Coordinate start{ ROWS - 1, 0 };
         Logger<VerboseSolver>::log(std::cout, "   ... starting parallel solver at ", start);
-        int count = findMovesParallel(start, maxDepth);
+        int count{ findMovesParallel(start, maxDepth) };
 
         // stopwatch
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+        std::chrono::steady_clock::time_point end{ std::chrono::steady_clock::now() };
+        auto duration{ std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() };
         Logger<Verbose>::log(std::cout, "Elapsed time = ", duration, " [msecs]");
 
         assert(count == m_solutions.size());
@@ -124,7 +124,7 @@ public:
         Logger<VerboseSolver>::log(std::cout, "   ### Launching parallel solver at ", coord, ", maxDepth = ", maxDepth);
         Logger<Verbose>::logTID(std::cout);
 
-        int count = findMovesParallel(coord, maxDepth);
+        int count{ findMovesParallel(coord, maxDepth) };
         Logger<VerboseSolver>::log(std::cout, "   ### calculated  ", m_solutions.size(), " solutions !!!");
 
         assert(count == m_solutions.size());
@@ -147,7 +147,7 @@ private:
         }
         else {
             // determine list of possible next moves
-            std::vector<Coordinate> nextMoves = nextKnightMoves(coord);
+            std::vector<Coordinate> nextMoves{ nextKnightMoves(coord) };
 
             // do next moves sequential
             for (const Coordinate& move : nextMoves) {
@@ -168,13 +168,13 @@ private:
         m_current.push_back(coord);
 
         // determine list of possible next moves
-        std::vector<Coordinate> nextMoves = nextKnightMoves(coord);
+        std::vector<Coordinate> nextMoves{ nextKnightMoves(coord) };
         std::deque<std::future<ListSolutions>> futures;
 
         int count{};
         for (const Coordinate& move : nextMoves) {
 
-            KnightProblemSolver slaveSolver = *this;  // make a copy of the solver including the current board
+            KnightProblemSolver slaveSolver{ *this };  // make a copy of the solver including the current board
             slaveSolver.clearSolutions();  // don't reuse solutions of current solver
 
             if (maxDepth > 0) {
@@ -194,7 +194,7 @@ private:
                 count += slaveSolver.countSolutions();
 
                 // need to copy all found solutions from slave solver to current solver
-                ListSolutions solutions = slaveSolver.getSolutions();
+                ListSolutions solutions{ slaveSolver.getSolutions() };
                 Logger<VerboseSolver>::log(std::cout, "   ... Calculated solutions from ", move, " => ", solutions.size());
 
                 if (solutions.size() != 0) {
@@ -211,7 +211,7 @@ private:
         // (just use 'std::future' references to access non-copyable objects)
         for (std::future<ListSolutions>& future : futures) {
 
-            ListSolutions partialSolutions = future.get();
+            ListSolutions partialSolutions{ future.get() };
             Logger<VerboseSolver>::log(std::cout, "   ... retrieved from Future: ", partialSolutions.size(), " solutions");
 
             if (partialSolutions.size() != 0) {

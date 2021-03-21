@@ -30,9 +30,9 @@ namespace SpringerProblem {
 
     void test_00_springer_problem() {
 
-        Coordinate coord1(1, 2);
+        Coordinate coord1{ 1, 2 };
         std::cout << coord1 << std::endl;
-        Coordinate coord2(3, 4);
+        Coordinate coord2{ 3, 4 };
         std::cout << coord2 << std::endl;
     }
 
@@ -55,8 +55,8 @@ namespace SpringerProblem {
 
         Logger<Verbose>::log(std::cout, "Main: findMovesSequential():");
         KnightProblemSolver<Rows, Cols> solver;
-        int count = solver.findMovesSequential();
-        //ListSolutions solutions = solver.getSolutions();
+        int count{ solver.findMovesSequential() };
+        //ListSolutions solutions{ solver.getSolutions() };
         //std::stringstream ss;
         //ss << solutions;
         //std::cout << ss.str();
@@ -67,8 +67,8 @@ namespace SpringerProblem {
 
         Logger<Verbose>::log(std::cout, "Main: findMovesParallel():");
         KnightProblemSolver<Rows, Cols> solver;
-        int count = solver.findMovesParallel(depth);
-        //ListSolutions solutions = solver.getSolutions();
+        int count{ solver.findMovesParallel(depth) };
+        //ListSolutions solutions{ solver.getSolutions() };
         //std::stringstream ss;
         //ss << solutions;
         //std::cout << ss.str();

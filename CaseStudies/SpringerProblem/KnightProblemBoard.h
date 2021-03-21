@@ -56,10 +56,10 @@ public:
 template <size_t ROWS, size_t COLS>
 std::ostream& operator<< (std::ostream& os, const KnightProblemBoard<ROWS, COLS>& board) {
 
-    for (size_t row = 0; row != ROWS; ++row) {
-        for (size_t col = 0; col != COLS; ++col) {
+    for (size_t row{}; row != ROWS; ++row) {
+        for (size_t col{}; col != COLS; ++col) {
             Coordinate coord{ row, col };
-            int moveNumber = board.at(coord);
+            int moveNumber{ board.at(coord) };
             os << std::setw(4) << moveNumber << ' ';
         }
         os << std::endl;
