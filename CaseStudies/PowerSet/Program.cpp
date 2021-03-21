@@ -7,19 +7,6 @@
 
 // =====================================================================================
 
-// TODO: PeLo
-// 
-// + Operator, um zwei PartialSets zu vereinigen !!!!!1
-
-//  PeLo Anstelle von Zahlen lassen sich Potenzmenge auch
-//  von Zeichen bilden !!!
-// 'A'  'B'  'C'    ????????? 
-
-// TODO: PeLo  Ausprobieren: Die set ist sorted ... aber ist es kleiner oder kleiner-gleich, der das dann
-// Also welche Operatoren sind dafür notwendig !!!
-
-// TODO: Vielleicht eine PartialPowerSet implementieren ... für die PartialSetsBySize
-
 void test_PartialSet_01();
 void test_PartialSet_02();
 void test_PartialSet_03();
@@ -46,7 +33,6 @@ int main()
     test_PowerSet_05();
 
     test_Iterator_01();
-
     test_PartialSetsBySize_01();
 
     return 0;

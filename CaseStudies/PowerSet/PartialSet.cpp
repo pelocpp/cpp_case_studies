@@ -40,8 +40,8 @@ std::ostream& operator<< (std::ostream& os, const PartialSet& set)
     os << "{ ";
     if (set.m_numbers.begin() != set.m_numbers.end()) {
 
-        std::set<size_t>::const_iterator it = set.m_numbers.begin();
-        std::set<size_t>::const_iterator penultimate = std::prev(set.m_numbers.end());
+        std::set<size_t>::const_iterator it{ set.m_numbers.begin() };
+        std::set<size_t>::const_iterator penultimate{ std::prev(set.m_numbers.end()) };
         for (it = set.m_numbers.begin(); it != penultimate; ++it) {
             os << (*it) << ", ";
         }
