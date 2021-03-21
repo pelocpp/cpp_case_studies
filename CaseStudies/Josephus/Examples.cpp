@@ -111,7 +111,7 @@ void test06_Josephus()
 
 void test07_Josephus()
 {
-    std::shared_ptr<IJosephus> sp = std::make_shared<JosephusForwardListImpl>(41, 3);
+    std::shared_ptr<IJosephus> sp{ std::make_shared<JosephusForwardListImpl>(41, 3) };
     sp->setPassBy(3);
 
     std::cout << "Number of soldiers: " << sp->count() << std::endl;

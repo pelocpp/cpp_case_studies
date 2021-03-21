@@ -4,8 +4,8 @@
 
 #pragma once
 
-constexpr size_t NumSoldiers = 17;    // default number of soldiers
-constexpr size_t DefaultPassBy = 3;   // default "decimatio"
+constexpr size_t NumSoldiers{ 17 };    // default number of soldiers
+constexpr size_t DefaultPassBy{ 3 };   // default "decimatio"
 
 class Josephus : public IJosephus
 {
