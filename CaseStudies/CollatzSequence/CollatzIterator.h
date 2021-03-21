@@ -19,7 +19,7 @@ public:
 private:
     int m_start{ 1 };
     int m_current{ 1 };
-    int m_last{ };
+    int m_last{};
 
 public:
     // c'tors

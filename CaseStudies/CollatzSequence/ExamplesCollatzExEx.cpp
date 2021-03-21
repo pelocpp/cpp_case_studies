@@ -14,7 +14,7 @@ template <class T>
 class CollatzViewExEx : public std::ranges::view_interface<CollatzViewExEx<T>> {
 public:
     CollatzViewExEx() = default;
-    CollatzViewExEx(T start) : m_start(start), m_begin(start), m_end () {}
+    CollatzViewExEx(T start) : m_start{ start }, m_begin{ start }, m_end{} {}
 
     auto begin() const { return m_begin; }
     auto end() const { return m_end; }

@@ -106,7 +106,7 @@ void Test08_Collatz()
 
     // or - same as
 
-    int count = std::distance(std::begin(seq), std::end(seq));
+    int count{ std::distance(std::begin(seq), std::end(seq)) };
 
     std::cout << count << std::endl;
 }
