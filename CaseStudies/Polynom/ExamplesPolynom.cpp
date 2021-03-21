@@ -357,12 +357,12 @@ void test_SimpleStress()
     std::cout << "p1: " << p1 << std::endl;
     std::cout << "p2: " << p2 << std::endl;
 
-    for (size_t i = 1; i != 15; ++i) {
+    for (size_t i{ 1 }; i != 15; ++i) {
         p1 *= p2;
         std::cout << "p1: " << p1 << std::endl;
     }
 
-    for (size_t i = 1; i != 15; ++i) {
+    for (size_t i{ 1 }; i != 15; ++i) {
         p1 /= p2;
         std::cout << "p1: " << p1 << std::endl;
     }

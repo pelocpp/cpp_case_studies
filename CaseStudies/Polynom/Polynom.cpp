@@ -51,13 +51,13 @@ Polynom operator- (const Polynom& p)
 // binary mathematical operators +, -, *, / and %
 Polynom operator+ (const Polynom& p1, const Polynom& p2)
 {
-    size_t count = (p1.m_coefficients.size() <= p2.m_coefficients.size())
+    size_t count{ (p1.m_coefficients.size() <= p2.m_coefficients.size())
         ? p2.m_coefficients.size()
-        : p1.m_coefficients.size();
+        : p1.m_coefficients.size() };
 
     // create array for new coefficients
     std::vector<double> coefficients(count);
-    for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
+    for (size_t i{ count - 1 }; i != static_cast<size_t>(-1); i--) {
         double coeff = 0.0;
         if (i < p1.m_coefficients.size())
             coeff += p1.m_coefficients[i];
@@ -77,14 +77,14 @@ Polynom operator- (const Polynom& p1, const Polynom& p2)
 Polynom operator* (const Polynom& p1, const Polynom& p2)
 {
     // create array of coefficients
-    size_t count = p1.m_coefficients.size() + p2.m_coefficients.size() - 1;
+    size_t count{ p1.m_coefficients.size() + p2.m_coefficients.size() - 1 };
 
     // create vector of a specific size for new coefficients
     std::vector<double> coefficients(count, 0);
 
     // compute coefficients of polynom product
-    for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
-        for (size_t j = p2.m_coefficients.size() - 1; j != static_cast<size_t>(-1); j--) {
+    for (size_t i{ p1.m_coefficients.size() - 1 }; i != static_cast<size_t>(-1); i--) {
+        for (size_t j{ p2.m_coefficients.size() - 1 }; j != static_cast<size_t>(-1); j--) {
             coefficients[i + j] += p1.m_coefficients[i] * p2.m_coefficients[j];
         }
     }
@@ -103,26 +103,26 @@ Polynom operator/ (const Polynom& p1, const Polynom& p2)
     Polynom tmp2{ p2 };
 
     // create coefficients array of result polynom
-    size_t count = p1.m_coefficients.size() - p2.m_coefficients.size() + 1;
+    size_t count{ p1.m_coefficients.size() - p2.m_coefficients.size() + 1 };
     std::vector<double> rescoeff(count);
 
     // apply algorithm of polynom division
-    for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
+    for (size_t i{ count - 1 }; i != static_cast<size_t>(-1); i--) {
 
         // premature end of division reached (comparing degrees)
         if (tmp1.m_coefficients.size() < p2.m_coefficients.size())
             break;
 
         // calculate next coefficient of result polynom
-        double coeff =
+        double coeff{
             tmp1.m_coefficients[tmp1.m_coefficients.size() - 1] /
-            tmp2.m_coefficients[tmp2.m_coefficients.size() - 1];
+            tmp2.m_coefficients[tmp2.m_coefficients.size() - 1] };
 
         // multiply denominator polynom with coefficient
         tmp2 = tmp2 * coeff;
 
         // calculate difference of ranks
-        size_t diffRank = tmp1.m_coefficients.size() - p2.m_coefficients.size();
+        size_t diffRank{ tmp1.m_coefficients.size() - p2.m_coefficients.size() };
 
         // multiply denominator polynom with one ore more 'x'
         tmp2.multiplyX(diffRank);
@@ -179,8 +179,8 @@ Polynom& operator%= (Polynom& p1, const Polynom& p2)
 // horner scheme
 double Polynom::computeHorner(double x) const
 {
-    size_t count = m_coefficients.size();
-    double y = m_coefficients[count - 1];
+    size_t count{ m_coefficients.size() };
+    double y{ m_coefficients[count - 1] };
 
     std::for_each(
         std::next(std::rbegin(m_coefficients)),
@@ -205,7 +205,7 @@ bool operator== (const Polynom& p1, const Polynom& p2)
     if (p1.m_coefficients.size() != p2.m_coefficients.size())
         return false;
 
-    for (size_t i = 0; i != p1.m_coefficients.size(); i++)
+    for (size_t i{}; i != p1.m_coefficients.size(); i++)
         if (p1.m_coefficients[i] != p2.m_coefficients[i])
             return false;
 
@@ -225,7 +225,7 @@ bool operator<  (const Polynom& p1, const Polynom& p2)
     if (p1.m_coefficients.size() > p2.m_coefficients.size())
         return false;
 
-    for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
+    for (size_t i{ p1.m_coefficients.size() - 1 }; i != static_cast<size_t>(-1); i--) {
         if (p1.m_coefficients[i] < p2.m_coefficients[i])
             return true;
         if (p1.m_coefficients[i] > p2.m_coefficients[i])
@@ -253,7 +253,7 @@ bool operator>= (const Polynom& p1, const Polynom& p2)
 // output
 std::ostream& operator<< (std::ostream& os, const Polynom& p)
 {
-    for (size_t i = p.m_coefficients.size() - 1; /* i >= 0 */ ; i--)
+    for (size_t i{ p.m_coefficients.size() - 1 }; /* i >= 0 */; i--)
     {
         if (p.m_coefficients[i] == 0.0 && p.m_coefficients.size() > 1) {
             if (i == 0)

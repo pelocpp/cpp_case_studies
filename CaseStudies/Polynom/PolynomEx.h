@@ -58,7 +58,7 @@ public:
 
         // create array for new coefficients
         std::vector<T> coefficients(count);
-        for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
+        for (size_t i{ count - 1 }; i != static_cast<size_t>(-1); i--) {
 
             T coeff{ };
             if (i < p1.m_coefficients.size())
@@ -77,14 +77,14 @@ public:
     
     friend PolynomEx<T> operator* (const PolynomEx& p1, const PolynomEx& p2) {
         // create array of coefficients
-        size_t count = p1.m_coefficients.size() + p2.m_coefficients.size() - 1;
+        size_t count{ p1.m_coefficients.size() + p2.m_coefficients.size() - 1 };
 
         // create vector of a specific size for new coefficients
         std::vector<T> coefficients(count);
 
         // compute coefficients of polynom product
-        for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
-            for (size_t j = p2.m_coefficients.size() - 1; j != static_cast<size_t>(-1); j--) {
+        for (size_t i{ p1.m_coefficients.size() - 1 }; i != static_cast<size_t>(-1); i--) {
+            for (size_t j{ p2.m_coefficients.size() - 1 }; j != static_cast<size_t>(-1); j--) {
                 coefficients[i + j] += p1.m_coefficients[i] * p2.m_coefficients[j];
             }
         }
@@ -102,26 +102,26 @@ public:
         PolynomEx tmp2{ p2 };
 
         // create coefficients array of result polynom
-        size_t count = p1.m_coefficients.size() - p2.m_coefficients.size() + 1;
+        size_t count{ p1.m_coefficients.size() - p2.m_coefficients.size() + 1 };
         std::vector<T> rescoeff(count);
 
         // apply algorithm of polynom division
-        for (size_t i = count - 1; i != static_cast<size_t>(-1); i--) {
+        for (size_t i{ count - 1 }; i != static_cast<size_t>(-1); i--) {
 
             // premature end of division reached (comparing degrees)
             if (tmp1.m_coefficients.size() < p2.m_coefficients.size())
                 break;
 
             // calculate next coefficient of result polynom
-            T coeff =
+            T coeff{
                 tmp1.m_coefficients[tmp1.m_coefficients.size() - 1] /
-                tmp2.m_coefficients[tmp2.m_coefficients.size() - 1];
+                tmp2.m_coefficients[tmp2.m_coefficients.size() - 1] };
 
             // multiply denominator polynom with coefficient
             tmp2 = tmp2 * coeff;
 
             // calculate difference of ranks
-            size_t diffRank = tmp1.m_coefficients.size() - p2.m_coefficients.size();
+            size_t diffRank{ tmp1.m_coefficients.size() - p2.m_coefficients.size() };
 
             // multiply denominator polynom with one ore more 'x'
             tmp2.multiplyX(diffRank);
@@ -198,7 +198,7 @@ public:
         if (p1.m_coefficients.size() > p2.m_coefficients.size())
             return false;
 
-        for (size_t i = p1.m_coefficients.size() - 1; i != static_cast<size_t>(-1); i--) {
+        for (size_t i{ p1.m_coefficients.size() - 1 }; i != static_cast<size_t>(-1); i--) {
             if (p1.m_coefficients[i] < p2.m_coefficients[i])
                 return true;
             if (p1.m_coefficients[i] > p2.m_coefficients[i])
@@ -245,8 +245,8 @@ private:
     // horner scheme
     T computeHorner(T x) const
     {
-        size_t count = m_coefficients.size();
-        T y = m_coefficients[count - 1];
+        size_t count{ m_coefficients.size() };
+        T y{ m_coefficients[count - 1] };
 
         std::for_each(
             std::next(std::rbegin(m_coefficients)),
@@ -293,7 +293,7 @@ private:
 // output
 template <typename T>
 inline std::ostream& operator<< (std::ostream& os, const PolynomEx<T>& p) {
-    for (size_t i = p.rank(); /* i >= 0 */; i--)
+    for (size_t i{ p.rank() }; /* i >= 0 */; i--)
     {
         if (p.getCoefficient(i) == 0.0 && p.rank() + 1 > 1)
         {

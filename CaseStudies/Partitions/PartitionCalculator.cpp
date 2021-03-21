@@ -28,7 +28,7 @@ PartitionSet PartitionCalculator::calculate(size_t number)
         for (const auto& p : setMinusOne) {
 
             std::vector<size_t> numbers = p.numbers();
-            for (size_t j = 0; j != numbers.size(); j++) {
+            for (size_t j{}; j != numbers.size(); j++) {
                 numbers[j]++;
                 Partition q{ numbers };
                 result.insert(q);

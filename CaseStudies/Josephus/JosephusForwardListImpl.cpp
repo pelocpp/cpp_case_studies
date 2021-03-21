@@ -31,7 +31,7 @@ bool JosephusForwardListImpl::eliminateNextSoldier()
     // locate next soldier
     std::forward_list<Soldier>::iterator preceding;
 
-    for (size_t i = 0; i != m_passby - 1; ++i) {
+    for (size_t i{}; i != m_passby - 1; ++i) {
 
         preceding = m_current;
         ++m_current;
@@ -64,7 +64,7 @@ bool JosephusForwardListImpl::eliminateNextSoldier()
 // private helper methods
 void JosephusForwardListImpl::init()
 {
-    for (size_t i = 0; i != m_count; ++i) {
+    for (size_t i{}; i != m_count; ++i) {
         m_soldiers.push_front(Soldier{ m_count - i });
     }
 
@@ -75,7 +75,7 @@ void JosephusForwardListImpl::init()
 std::ostream& operator<< (std::ostream& os, const JosephusForwardListImpl& josephus)
 {
     os << '[';
-    for (size_t i = 1; const Soldier & soldier : josephus.m_soldiers) {
+    for (size_t i{ 1 }; const Soldier & soldier : josephus.m_soldiers) {
         os << soldier();
         if (i < josephus.m_alive) {
             os << ',';

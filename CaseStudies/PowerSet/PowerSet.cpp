@@ -55,10 +55,10 @@ std::ostream& operator<< (std::ostream& os, const PowerSet& ps)
 // private helper methods
 void PowerSet::computePartialSets() {
 
-    for (size_t i = 0; i != m_cardinality; i++) {
+    for (size_t i{}; i != m_cardinality; i++) {
 
         PartialSet set{ };
-        for (size_t j = 0; j != m_size; j++) {
+        for (size_t j{}; j != m_size; j++) {
 
             int mask = 1 << j;
             if ((mask & i) != 0) {
