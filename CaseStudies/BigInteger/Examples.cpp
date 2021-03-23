@@ -9,6 +9,7 @@
 
 #include "BigInteger.h"
 #include "BigFaculty.h"
+#include "BigMersenne.h"
 
 //#include <sstream>
 //#include <numeric>
@@ -249,6 +250,51 @@ void Test_Faculty(int limit)
         BigInteger f{ BigFaculty::faculty(n) };
         std::cout << "Faculty of " << n << ": " << f << std::endl;
     }
+}
+
+void Test_Power(int limit)
+{
+    BigInteger two { 2 };
+    for (int n{ 1 }; n != limit; ++n)
+    {
+        BigInteger f{ two.pow(n)};
+        std::cout << "2 ^ " << n << ": " << f << std::endl;
+    }
+}
+
+void Test_Mersenne_01()
+{
+    BigInteger mersenne { BigMersenne::number(11213) };
+
+    std::cout << "Mersenne: " << mersenne << std::endl;
+    std::cout << "Number of Digits: " << mersenne.size() << std::endl;
+   // std::cout << "Computation Time: {0}", sw.ElapsedMilliseconds);
+}
+
+void Test_Mersenne_02()
+{
+    std::vector<int> power {
+        2, 3, 5, 7, 13, 17, 19, 31, 61, 89, 107, 127, 521, 607,
+        1279, 2203, 2281, 3217, 4253, 4423, 9689, 9941,
+        11213, 19937, 21701, 23209, 44497, 86243,
+        110503, 132049, 216091, 756839, 859433 
+    };
+
+    for (int i = 0; i < power.size(); i++)
+    {
+        BigInteger mersenne{ BigMersenne::number(power[i]) };
+        std::cout << (i+1) << ".th Mersenne Prime:" << (i + 1);
+        std::cout << mersenne << std::endl;
+        std::cout << "Number of Digits: " << mersenne.size() << std::endl;
+
+
+        //    mersenne.Cardinality, sw.ElapsedMilliseconds);
+        //Console.WriteLine();
+
+        // std::cout << "Computation Time: {0}", sw.ElapsedMilliseconds);
+    }
+
+
 }
 
 // =====================================================================================

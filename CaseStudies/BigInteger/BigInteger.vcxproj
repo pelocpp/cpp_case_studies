@@ -143,12 +143,14 @@
   <ItemGroup>
     <ClCompile Include="BigFaculty.cpp" />
     <ClCompile Include="BigInteger.cpp" />
+    <ClCompile Include="BigMersenne.cpp" />
     <ClCompile Include="Examples.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BigFaculty.h" />
     <ClInclude Include="BigInteger.h" />
+    <ClInclude Include="BigMersenne.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

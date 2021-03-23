@@ -2,9 +2,8 @@
 // Program.cpp
 // =====================================================================================
 
-// TODO: soll das Array size_t oder int enthalten ?????????????
+// TODO: soll das Array size_t oder int enthalten ????????????? Nein:  usize8
 
-// brauchen wir ein separates m_length: wohl eher n
 
 // TODO: Cardinality muss size_t sein !!!!
 
@@ -44,10 +43,14 @@ void Test_Sizes()
 
 void Test_Division();
 void Test_Faculty(int limit);
+void Test_Power(int limit);
+
+void Test_Mersenne_01();
+void Test_Mersenne_02();
 
 int main()
 {   
-    Test_Faculty(31);
+    Test_Mersenne_02();
 }
 
 // =====================================================================================

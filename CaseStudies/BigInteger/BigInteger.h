@@ -67,9 +67,11 @@ public:
 
     // public helper methods
     BigInteger abs() const;
+    BigInteger pow(int);
 
     // test method
-    friend BigInteger faculty(BigInteger);
+    //friend BigInteger faculty(BigInteger);
+   // public BigInteger Power(int exponent)
 
 private:
     // private helper operator

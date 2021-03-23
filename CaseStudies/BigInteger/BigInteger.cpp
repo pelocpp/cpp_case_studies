@@ -349,6 +349,25 @@ BigInteger BigInteger::abs() const
     return tmp;
 }
 
+BigInteger BigInteger::pow(int exponent)
+{
+    if (exponent == 0)
+        return BigInteger{ 1 };
+
+    BigInteger result { *this };
+    if (exponent == 1)
+        return result;
+
+    for (int i = 1; i < exponent; i++)
+        result = result * *this;
+
+    if (!m_sign && exponent % 2 == 1) {
+        result.m_sign = m_sign;   // TESTEN .. wieso nicht false ?????????????????
+    }
+
+    return result;
+}
+
 // private helper operators
 int& BigInteger::operator[] (size_t n)
 {
