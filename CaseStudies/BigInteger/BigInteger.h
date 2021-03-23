@@ -7,10 +7,6 @@
 class BigInteger
 {
 private:
-    //int* m_digits;
-    //int  m_length;
-    //bool m_sign;
-
     std::vector<int> m_digits;
     int  m_length;
     bool m_sign;
@@ -18,25 +14,22 @@ private:
 public:
     // c'tors / d'tor
     BigInteger();
-    BigInteger(std::string_view);
-    BigInteger(const BigInteger&);
+    explicit BigInteger(std::string_view);
 
     // type conversion c'tors
-    BigInteger(int n);
-    BigInteger(long n);
+    explicit BigInteger(int n);
+    explicit BigInteger(long n);
+    explicit BigInteger(long long n);
 
 private:
     // internal helper c'tor
-    BigInteger(bool sign, int digits[], int length);
+    BigInteger(bool sign, int digits[], int length);  // TODO: Der kommt wohl weg ...........
 
 public:
     // getter
-    bool Sign() const;
-    int Cardinality() const;
-    bool IsNull() const;
-
-    // assignment operator
-    BigInteger& operator= (const BigInteger&);
+    bool sign() const;
+    int cardinality() const;
+    bool isNull() const;
 
     // comparison operators
     friend bool operator== (const BigInteger& a, const BigInteger& b);
@@ -58,11 +51,11 @@ public:
     friend BigInteger operator% (const BigInteger& a, const BigInteger& b);
 
     // arithmetic-assignment operators
-    friend const BigInteger& operator+= (BigInteger& a, const BigInteger& b);
-    friend const BigInteger& operator-= (BigInteger& a, const BigInteger& b);
-    friend const BigInteger& operator*= (BigInteger& a, const BigInteger& b);
-    friend const BigInteger& operator/= (BigInteger& a, const BigInteger& b);
-    friend const BigInteger& operator%= (BigInteger& a, const BigInteger& b);
+    friend BigInteger& operator+= (BigInteger& a, const BigInteger& b);
+    friend BigInteger& operator-= (BigInteger& a, const BigInteger& b);
+    friend BigInteger& operator*= (BigInteger& a, const BigInteger& b);
+    friend BigInteger& operator/= (BigInteger& a, const BigInteger& b);
+    friend BigInteger& operator%= (BigInteger& a, const BigInteger& b);
 
     // increment/decrement operators (prefix/postfix version)
     friend BigInteger& operator++ (BigInteger& a);           // prefix increment
@@ -71,20 +64,21 @@ public:
     friend const BigInteger operator-- (BigInteger& a, int); // postfix decrement
 
     // public helper methods
-    BigInteger Abs() const;
+    BigInteger abs() const;
 
     // test method
-    friend BigInteger Faculty(BigInteger n);
+    friend BigInteger faculty(BigInteger n);
 
 private:
     // private helper operator
-    int& operator[] (int) const; // subscript operator
+    int& operator[] (int);  // subscript operator
+    const int& operator[] (int) const; // const subscript operator
 
     // private helper methods
-    void RemoveLeadingZeros();
-    void Zero();
-    int CompareTo(const BigInteger& a) const;
-    void ToBigInteger(long);
+    void removeLeadingZeros();
+    // void Zero();
+    int compareTo(const BigInteger& a) const;
+    void toBigInteger(long long);
 
     // output
     friend std::ostream& operator<< (std::ostream& os, const BigInteger& n);
