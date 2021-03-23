@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "BigInteger.h"
+#include "BigFaculty.h"
 
 //#include <sstream>
 //#include <numeric>
@@ -241,8 +242,14 @@ void Test_Division ()
     std::cout << n1 << " / " << n2 << " = " << (n1 / n2) << std::endl;
 }
 
-
-
+void Test_Faculty(int limit)
+{
+    for (BigInteger n{ 1 }; n != BigInteger { limit }; ++n)
+    {
+        BigInteger f{ BigFaculty::faculty(n) };
+        std::cout << "Faculty of " << n << ": " << f << std::endl;
+    }
+}
 
 // =====================================================================================
 // End-of-File

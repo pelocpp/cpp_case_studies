@@ -11,7 +11,9 @@
 #include "BigInteger.h"
 
 // c'tors / d'tor
-BigInteger::BigInteger() : m_digits{ 1 }, m_length{ 1 }, m_sign{ true } { m_digits[0] = 0; }
+BigInteger::BigInteger() : m_digits{ 1 }, m_sign{ true } {
+    m_digits[0] = 0; 
+}
 
 BigInteger::BigInteger(std::string_view sv) : m_sign{ true }
 {
@@ -41,8 +43,6 @@ BigInteger::BigInteger(std::string_view sv) : m_sign{ true }
     }
 
     removeLeadingZeros();
-
-    m_length = m_digits.size();
 }
 
 // type conversion c'tors
@@ -64,9 +64,9 @@ BigInteger::BigInteger(long long n)
 // getter
 bool BigInteger::sign() const { return m_sign; }
 
-int BigInteger::cardinality() const { return m_length; }
+size_t BigInteger::size() const { return m_digits.size(); }
 
-bool BigInteger::isNull() const { return m_length == 1 and m_digits[0] == 0; }
+bool BigInteger::isNull() const { return m_digits.size() == 1 and m_digits[0] == 0; }
 
 // unary arithmetic operators
 BigInteger operator+ (const BigInteger& a)
@@ -93,19 +93,19 @@ BigInteger operator+ (const BigInteger& a, const BigInteger& b)
         return (a.sign()) ? a - b.abs() : b - a.abs();
 
     // need vector
-    int size{ (a.cardinality() >= b.cardinality()) ?
-        a.cardinality() + 1 :
-        b.cardinality() + 1 };
+    size_t size{ (a.size() >= b.size()) ?
+        a.size() + 1 :
+        b.size() + 1 };
 
     std::vector<int> digits(size);
 
     // add numbers digit per digit
-    size_t carry {};
+    int carry {};
     for (size_t i{}; i != size; i++)
     {
-        if (i < a.cardinality())
+        if (i < a.size())
             carry += a[i];
-        if (i < b.cardinality())
+        if (i < b.size())
             carry += b[i];
 
         digits[i] = carry % 10;
@@ -115,9 +115,8 @@ BigInteger operator+ (const BigInteger& a, const BigInteger& b)
     // move result vector into a BigInteger object
     BigInteger tmp{};
     tmp.m_digits = std::move(digits);
-    tmp.removeLeadingZeros();
     tmp.m_sign = a.sign();
-    tmp.m_length = tmp.m_digits.size();
+    tmp.removeLeadingZeros();
     return tmp;
 }
 
@@ -134,7 +133,7 @@ BigInteger operator- (const BigInteger& a, const BigInteger& b)
     BigInteger tmp{ a };
 
     // traverse digits of subtrahend
-    for (int i = 0; i < b.cardinality(); i++)
+    for (size_t i {}; i != b.size(); ++i)
     {
         if (tmp[i] < b[i])
         {
@@ -146,12 +145,12 @@ BigInteger operator- (const BigInteger& a, const BigInteger& b)
             else
             {
                 // preceding digit is zero, cannot borrow directly
-                int pos{ i + 1 };
+                size_t pos{ i + 1 };
                 while (tmp[pos] == 0)
                     pos++;
 
                 // borrow indirectly
-                for (int k{ pos }; k >= i + 1; k--)
+                for (size_t k{ pos }; k >= i + 1; --k)
                 {
                     tmp[k]--;
                     tmp[k - 1] += 10;
@@ -164,21 +163,20 @@ BigInteger operator- (const BigInteger& a, const BigInteger& b)
     }
 
     tmp.removeLeadingZeros();
-    tmp.m_length = tmp.m_digits.size();
     return tmp;
 }
 
 BigInteger operator* (const BigInteger& a, const BigInteger& b)
 {
-    int size{ a.cardinality() + b.cardinality() };
+    size_t size{ a.size() + b.size() };
     std::vector<int> digits(size);
 
     int carry {};
-    for (int i{}; i < size; i++)
+    for (size_t i{}; i != size; ++i)
     {
         digits[i] = carry;
-        for (int j {}; j < b.cardinality(); j++) {
-            if (i - j >= 0 && i - j < a.cardinality()) {
+        for (int j {}; j != b.size(); ++j) {
+            if (i - j >= 0 && i - j < a.size()) {  // ?????????????????? Differenz zweier unsigned int
                 digits[i] += a[i - j] * b[j];
             }
         }
@@ -189,9 +187,8 @@ BigInteger operator* (const BigInteger& a, const BigInteger& b)
     // move result vector into a BigInteger object
     BigInteger tmp{};
     tmp.m_digits = std::move(digits);
-    tmp.removeLeadingZeros();
     tmp.m_sign = (a.sign() == b.sign()) ? true : false;
-    tmp.m_length = tmp.m_digits.size();
+    tmp.removeLeadingZeros();
     return tmp;
 }
 
@@ -203,16 +200,18 @@ BigInteger operator/ (const BigInteger& a, const BigInteger& b)
     // need positive divisor
     BigInteger bAbs{ b.abs() };
 
-    int pos{ a.cardinality() - 1 };
+    size_t pos{ a.size() - 1 };
 
-    while (pos >= 0)
+    while (pos != (size_t)-1)
+    // while (pos >= 0)
     {
         // append next digit from dividend to temporary divisor
-        int len{ (remainder.isNull()) ? 1 : remainder.cardinality() + 1 };
+        size_t len{ (remainder.isNull()) ? 1 : remainder.size() + 1 };
         std::vector<int> digits;
 
         // copy old digits
-        for (int k {}; k < len - 1; k++) {
+        for (int k {}; k != len - 1; ++k) {
+        // for (int k {}; k < len - 1; k++) {
             digits.push_back(remainder[k]);
         }
 
@@ -222,7 +221,6 @@ BigInteger operator/ (const BigInteger& a, const BigInteger& b)
         // move result vector into remainder object
         remainder.m_digits = std::move(digits);
         remainder.m_sign = true;
-        remainder.m_length = remainder.m_digits.size();
 
         // divide current dividend with divisor
         int n {};
@@ -241,9 +239,8 @@ BigInteger operator/ (const BigInteger& a, const BigInteger& b)
     // move result vector into a BigInteger object
     BigInteger tmp{};
     tmp.m_digits = std::move(result);
-    tmp.removeLeadingZeros();
     tmp.m_sign = (a.sign() == b.sign()) ? true : false;
-    tmp.m_length = tmp.m_digits.size();
+    tmp.removeLeadingZeros();
     return tmp;
 }
 
@@ -281,6 +278,36 @@ BigInteger& operator%= (BigInteger& a, const BigInteger& b)
 {
     a = a % b;
     return a;
+}
+
+// increment operator: prefix version
+BigInteger& operator++ (BigInteger& a)
+{
+    a += BigInteger{ 1 };
+    return a;
+}
+
+// decrement operator: prefix version
+BigInteger& operator-- (BigInteger& a)
+{
+    a -= BigInteger{ 1 };
+    return a;
+}
+
+// increment operator: postfix version
+BigInteger operator++ (BigInteger& a, int)
+{
+    BigInteger tmp{ a };  // construct a copy
+    ++a;                  // increment number
+    return tmp;           // return the copy
+}
+
+// decrement operator: postfix version
+BigInteger operator-- (BigInteger& a, int)
+{
+    BigInteger tmp(a); // construct a copy
+    --a;               // decrement number
+    return tmp;         // return the copy
 }
 
 // comparison operators
@@ -323,18 +350,18 @@ BigInteger BigInteger::abs() const
 }
 
 // private helper operators
-int& BigInteger::operator[] (int n)
+int& BigInteger::operator[] (size_t n)
 {
-    if (n < 0 or n >= m_length) {
+    if (n >= m_digits.size()) {
         throw std::invalid_argument("illegal index");
     }
 
     return m_digits[n];
 }
 
-const int& BigInteger::operator[] (int n) const 
+const int& BigInteger::operator[] (size_t n) const
 {
-    if (n < 0 or n >= m_length) {
+    if (n >= m_digits.size()) {
         throw std::invalid_argument("illegal index");
     }
 
@@ -342,24 +369,25 @@ const int& BigInteger::operator[] (int n) const
 };
 
 // private helper methods
-int BigInteger::compareTo(const BigInteger& a) const {
+int BigInteger::compareTo(const BigInteger& a) const 
+{
     if (m_sign && !a.m_sign)
         return 1;
     if (!m_sign && a.m_sign)
         return -1;
 
     int order = 0;
-    if (cardinality() < a.cardinality())
+    if (size() < a.size())
     {
         order = -1;
     }
-    else if (cardinality() > a.cardinality())
+    else if (size() > a.size())
     {
         order = 1;
     }
     else
     {
-        for (int i = cardinality() - 1; i >= 0; i--)
+        for (size_t i = size() - 1; i != (size_t)-1; --i)
         {
             if (m_digits[i] < a.m_digits[i])
             {
@@ -395,7 +423,6 @@ void BigInteger::toBigInteger(long long n)
     }
 
     removeLeadingZeros();
-    m_length = m_digits.size();
 }
 
 void BigInteger::removeLeadingZeros()
@@ -424,7 +451,7 @@ std::ostream& operator<< (std::ostream& os, const BigInteger& n)
     std::for_each(
         std::rbegin(n.m_digits), 
         std::rend(n.m_digits),
-        [&,i = n.m_length - 1] (int digit) mutable {
+        [&,i = n.m_digits.size() - 1] (int digit) mutable {
             os << (char)(digit + '0');
             if (i > 0 && i % 3 == 0)
                 os << '.';

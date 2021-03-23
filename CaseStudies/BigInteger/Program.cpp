@@ -43,11 +43,11 @@ void Test_Sizes()
 
 
 void Test_Division();
-
+void Test_Faculty(int limit);
 
 int main()
 {   
-    Test_Division();
+    Test_Faculty(31);
 }
 
 // =====================================================================================

@@ -8,7 +8,6 @@ class BigInteger
 {
 private:
     std::vector<int> m_digits;
-    int  m_length;
     bool m_sign;
 
 public:
@@ -17,9 +16,9 @@ public:
     explicit BigInteger(std::string_view);
 
     // type conversion c'tors
-    explicit BigInteger(int n);
-    explicit BigInteger(long n);
-    explicit BigInteger(long long n);
+    explicit BigInteger(int);
+    explicit BigInteger(long);
+    explicit BigInteger(long long);
 
 private:
     // internal helper c'tor
@@ -28,60 +27,63 @@ private:
 public:
     // getter
     bool sign() const;
-    int cardinality() const;
+    size_t size() const;
     bool isNull() const;
 
     // comparison operators
-    friend bool operator== (const BigInteger& a, const BigInteger& b);
-    friend bool operator!= (const BigInteger& a, const BigInteger& b);
-    friend bool operator<  (const BigInteger& a, const BigInteger& b);
-    friend bool operator<= (const BigInteger& a, const BigInteger& b);
-    friend bool operator>  (const BigInteger& a, const BigInteger& b);
-    friend bool operator>= (const BigInteger& a, const BigInteger& b);
+    friend bool operator== (const BigInteger&, const BigInteger&);
+    friend bool operator!= (const BigInteger&, const BigInteger&);
+    friend bool operator<  (const BigInteger&, const BigInteger&);
+    friend bool operator<= (const BigInteger&, const BigInteger&);
+    friend bool operator>  (const BigInteger&, const BigInteger&);
+    friend bool operator>= (const BigInteger&, const BigInteger&);
 
     // unary arithmetic operators
-    friend BigInteger operator+ (const BigInteger& a);
-    friend BigInteger operator- (const BigInteger& a);
+    friend BigInteger operator+ (const BigInteger&);
+    friend BigInteger operator- (const BigInteger&);
 
     // binary arithmetic operators
-    friend BigInteger operator+ (const BigInteger& a, const BigInteger& b);
-    friend BigInteger operator- (const BigInteger& a, const BigInteger& b);
-    friend BigInteger operator* (const BigInteger& a, const BigInteger& b);
-    friend BigInteger operator/ (const BigInteger& a, const BigInteger& b);
-    friend BigInteger operator% (const BigInteger& a, const BigInteger& b);
+    friend BigInteger operator+ (const BigInteger&, const BigInteger&);
+    friend BigInteger operator- (const BigInteger&, const BigInteger&);
+    friend BigInteger operator* (const BigInteger&, const BigInteger&);
+    friend BigInteger operator/ (const BigInteger&, const BigInteger&);
+    friend BigInteger operator% (const BigInteger&, const BigInteger&);
 
     // arithmetic-assignment operators
-    friend BigInteger& operator+= (BigInteger& a, const BigInteger& b);
-    friend BigInteger& operator-= (BigInteger& a, const BigInteger& b);
-    friend BigInteger& operator*= (BigInteger& a, const BigInteger& b);
-    friend BigInteger& operator/= (BigInteger& a, const BigInteger& b);
-    friend BigInteger& operator%= (BigInteger& a, const BigInteger& b);
+    friend BigInteger& operator+= (BigInteger&, const BigInteger&);
+    friend BigInteger& operator-= (BigInteger&, const BigInteger&);
+    friend BigInteger& operator*= (BigInteger&, const BigInteger&);
+    friend BigInteger& operator/= (BigInteger&, const BigInteger&);
+    friend BigInteger& operator%= (BigInteger&, const BigInteger&);
 
     // increment/decrement operators (prefix/postfix version)
-    friend BigInteger& operator++ (BigInteger& a);           // prefix increment
-    friend const BigInteger operator++ (BigInteger& a, int); // postfix increment
-    friend BigInteger& operator-- (BigInteger& a);           // prefix decrement
-    friend const BigInteger operator-- (BigInteger& a, int); // postfix decrement
+    friend BigInteger& operator++ (BigInteger&);       // prefix increment
+    friend BigInteger  operator++ (BigInteger&, int);  // postfix increment
+    friend BigInteger& operator-- (BigInteger&);       // prefix decrement
+    friend BigInteger  operator-- (BigInteger&, int);  // postfix decrement
+
+    // functor (supporting formatted output)
+    std::string operator()(int);  // n Blöcke in einer Zeile ....
 
     // public helper methods
     BigInteger abs() const;
 
     // test method
-    friend BigInteger faculty(BigInteger n);
+    friend BigInteger faculty(BigInteger);
 
 private:
     // private helper operator
-    int& operator[] (int);  // subscript operator
-    const int& operator[] (int) const; // const subscript operator
+    int& operator[] (size_t);  // subscript operator
+    const int& operator[] (size_t) const; // const subscript operator
 
     // private helper methods
     void removeLeadingZeros();
     // void Zero();
-    int compareTo(const BigInteger& a) const;
+    int compareTo(const BigInteger&) const;
     void toBigInteger(long long);
 
     // output
-    friend std::ostream& operator<< (std::ostream& os, const BigInteger& n);
+    friend std::ostream& operator<< (std::ostream&, const BigInteger&);
 };
 
 // =====================================================================================
