@@ -26,9 +26,9 @@ private:
 
 public:
     // getter
-    bool sign() const;
     size_t size() const;
-    bool isNull() const;
+    bool zero() const;
+    bool sign() const;
 
     // comparison operators
     friend bool operator== (const BigInteger&, const BigInteger&);

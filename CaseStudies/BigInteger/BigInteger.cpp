@@ -66,7 +66,7 @@ bool BigInteger::sign() const { return m_sign; }
 
 size_t BigInteger::size() const { return m_digits.size(); }
 
-bool BigInteger::isNull() const { return m_digits.size() == 1 and m_digits[0] == 0; }
+bool BigInteger::zero() const { return m_digits.size() == 1 and m_digits[0] == 0; }
 
 // unary arithmetic operators
 BigInteger operator+ (const BigInteger& a)
@@ -78,7 +78,7 @@ BigInteger operator- (const BigInteger& a)
 {
     BigInteger tmp{ a };
 
-    if (!a.isNull()) {
+    if (! a.zero()) {
         tmp.m_sign = !tmp.m_sign;
     }
 
@@ -206,7 +206,7 @@ BigInteger operator/ (const BigInteger& a, const BigInteger& b)
     // while (pos >= 0)
     {
         // append next digit from dividend to temporary divisor
-        size_t len{ (remainder.isNull()) ? 1 : remainder.size() + 1 };
+        size_t len{ (remainder.zero()) ? 1 : remainder.size() + 1 };
         std::vector<int> digits;
 
         // copy old digits

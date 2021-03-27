@@ -100,6 +100,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BigInteger", "BigInteger", "{36BCC98E-787D-4EB0-B46A-160DACE32755}"
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\BigInteger\BigInteger.md = MarkDown\BigInteger\BigInteger.md
+		MarkDown\BigInteger\Schulmathematik_Addition_01.png = MarkDown\BigInteger\Schulmathematik_Addition_01.png
+		MarkDown\BigInteger\Schulmathematik_Addition_02.png = MarkDown\BigInteger\Schulmathematik_Addition_02.png
+		MarkDown\BigInteger\Schulmathematik_Division.png = MarkDown\BigInteger\Schulmathematik_Division.png
+		MarkDown\BigInteger\Schulmathematik_Multiplikation.png = MarkDown\BigInteger\Schulmathematik_Multiplikation.png
+		MarkDown\BigInteger\Schulmathematik_Subtraktion_01.png = MarkDown\BigInteger\Schulmathematik_Subtraktion_01.png
+		MarkDown\BigInteger\Schulmathematik_Subtraktion_02.png = MarkDown\BigInteger\Schulmathematik_Subtraktion_02.png
 	EndProjectSection
 EndProject
 Global
