@@ -97,7 +97,7 @@ BigInteger operator+ (const BigInteger& a, const BigInteger& b)
         a.size() + 1 :
         b.size() + 1 };
 
-    std::vector<int> digits(size);
+    std::vector<digit_t> digits(size);
 
     // add numbers digit per digit
     int carry {};
@@ -169,9 +169,9 @@ BigInteger operator- (const BigInteger& a, const BigInteger& b)
 BigInteger operator* (const BigInteger& a, const BigInteger& b)
 {
     size_t size{ a.size() + b.size() };
-    std::vector<int> digits(size);
+    std::vector<digit_t> digits(size);
 
-    int carry {};
+    digit_t carry {};
     for (size_t i{}; i != size; ++i)
     {
         digits[i] = carry;
@@ -195,7 +195,7 @@ BigInteger operator* (const BigInteger& a, const BigInteger& b)
 BigInteger operator/ (const BigInteger& a, const BigInteger& b) 
 {
     BigInteger remainder{};
-    std::vector<int> result;
+    std::vector<digit_t> result;
 
     // need positive divisor
     BigInteger bAbs{ b.abs() };
@@ -203,15 +203,13 @@ BigInteger operator/ (const BigInteger& a, const BigInteger& b)
     size_t pos{ a.size() - 1 };
 
     while (pos != (size_t)-1)
-    // while (pos >= 0)
     {
         // append next digit from dividend to temporary divisor
         size_t len{ (remainder.zero()) ? 1 : remainder.size() + 1 };
-        std::vector<int> digits;
+        std::vector<digit_t> digits;
 
         // copy old digits
         for (int k {}; k != len - 1; ++k) {
-        // for (int k {}; k < len - 1; k++) {
             digits.push_back(remainder[k]);
         }
 
@@ -223,7 +221,7 @@ BigInteger operator/ (const BigInteger& a, const BigInteger& b)
         remainder.m_sign = true;
 
         // divide current dividend with divisor
-        int n {};
+        digit_t n {};
         while (bAbs <= remainder)
         {
             n++;
@@ -369,7 +367,7 @@ BigInteger BigInteger::pow(int exponent)
 }
 
 // private helper operators
-int& BigInteger::operator[] (size_t n)
+digit_t& BigInteger::operator[] (size_t n)
 {
     if (n >= m_digits.size()) {
         throw std::invalid_argument("illegal index");
@@ -378,7 +376,7 @@ int& BigInteger::operator[] (size_t n)
     return m_digits[n];
 }
 
-const int& BigInteger::operator[] (size_t n) const
+const digit_t& BigInteger::operator[] (size_t n) const
 {
     if (n >= m_digits.size()) {
         throw std::invalid_argument("illegal index");
@@ -447,7 +445,7 @@ void BigInteger::toBigInteger(long long n)
 void BigInteger::removeLeadingZeros()
 {
     // remove trailing zeros, if any ... using STL algorithms
-    std::reverse_iterator<std::vector<int>::iterator> r_it{ std::find_if(
+    std::reverse_iterator<std::vector<digit_t>::iterator> r_it{ std::find_if(
         std::rbegin(m_digits),
         std::rend(m_digits),
         [](int value) { return value != 0; }

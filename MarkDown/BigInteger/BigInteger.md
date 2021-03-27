@@ -10,16 +10,17 @@ die eine exakte Arithmetik vorzeichenbehafteter ganzer Zahlen beliebiger Größe
 Um potentiell beliebig viele Ziffern einer sehr großen Zahl in einem `BigInteger`-Objekt abzulegen,
 gibt es mehrere Möglichkeiten wie etwa die Verwendung (generischer) Standardcontainer
 aus der STL (C++ Standard Template Library) oder auch einfach die Ablage der Ziffern in einer Zeichenkette.
-In der vorgestellten Lösung zu dieser Aufgabe greifen wir auf ein `std::vector<XXX>`-Objekt zurück.
+In der vorgestellten Lösung zu dieser Aufgabe greifen wir auf ein `std::vector<T>`-Objekt zurück.
 
 <!--more-->
 
 # Lernziele
 
 
-  * Container `string_view` und `std::vector<XXX>`
+  * Container `string_view` und `std::vector<T>`
   * `std::reverse_iterator`
   * Lambda-Funktionen (mit `mutable`)
+  * Datentyp `uint8_t`
 
 ---
 
@@ -104,7 +105,7 @@ bei der Addition der nächsten zwei Ziffern, siehe [Abbildung 1]:
 *Abbildung* 1: Schriftliche Addition der Schulmathematik.
 
 Bei der Umsetzung der schriftlichen Addition in einem C++-Programm stellt sich die Frage,
-in welcher Reihenfolge die einzelnen Ziffern im korrespondierenden `std::vector<XXX>` des `BigInteger`-Objekts abgelegt werden.
+in welcher Reihenfolge die einzelnen Ziffern im korrespondierenden `std::vector`-Objekt abgelegt werden.
 Da die einzelnen Ziffern stellenweise, beginnend mit der niedrigstwertigen Stelle, zu addieren sind, bietet es sich an,
 die einzelnen Ziffern in umgekehrter Reihenfolge im Container abzuspeichern.
 Wenn wir das Beispiel aus [Abbildung 1] noch einmal betrachten,
@@ -267,21 +268,51 @@ Entsprechende Operatoren hierzu sind in [Tabelle 6] festgelegt:
 # Hilfsmethoden der Klasse `BigInteger`
 
 Möglicherweise benötigen Sie zur Implementierung der vorangestellten Abschnitte noch die eine oder andere Hilfsmethode.
-Bei den arithmetischen Operationen können beispielsweise in manchen Situationen im internen `std::vector<XXX>`_Objekt
+Bei den arithmetischen Operationen können beispielsweise in manchen Situationen im internen `std::vector<T>`-Objekt
 führende Nullen entstehen. Im Extremfall kann man dies bei der Subtraktion einer Zahl mit sich selbst beobachten, also etwa 100 - 100.
 Das Ergebnis sollte dann nicht 000, sondern 0 lauten.
-Zur Behebung dieser Unschönheit finden Sie in Tabelle 7 die Methode RemoveLeadingZeros nebst einigen weiteren Methoden vor:
-
-
-WEITER: Hilfsmethoden ...................
+Zur Behebung dieser Unschönheit finden Sie in Tabelle 7 die Methode `removeLeadingZeros` nebst einigen weiteren Methoden vor:
 
 ###### {#tabelle_7_class_biginteger_helper_methods}  
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Operator `==` | `friend bool operator== (const BigInteger&, const BigInteger&);`<br/>Vergleicht den Wert zweier `BigInteger`-Objekte auf Gleichheit. |
+| Methode `removeLeadingZeros` | `void removeLeadingZeros();`<br/>Entfernt führende Nullen im internen `std::vector<T>`-Objekt eines `BigInteger`-Objekts. |
+| Methode `abs` | `BigInteger abs() const;`<br/>Liefert ein `BigInteger`-Objekt mit dem Absolutbetrag des aktuellen Objekts zurück. |
+| Methode `pow` | `BigInteger pow(int n);`<br/>Liefert ein `BigInteger`-Objekt zurück, das die Basis (`*this`) potenziert mit dem Exponenten `n` repräsentiert &ndash; also `*this`<sup>n</sup>. |
 
 *Tabelle* 7: Hilfsmethoden der Klasse `BigInteger`.
+
+# Einige Beispiele
+
+To be done ...
+
+# Lösung
+
+Die Realisierung der Klasse `BigInteger` ist nicht in allen Teilen trivial.
+Wir gehen die einzelnen Abschnitte detailliert durch.
+Die notwendigen Instanzvariablen einer Klasse `BigInteger` wurden durch die Aufgabenstellung mehr oder minder nahe gelegt:
+
+```cpp
+std::vector<DigitType> m_digits;
+bool m_sign;
+```
+
+Die einzelnen Ziffern der großen Zahl werden in einem Array des Typs `std::vector<DigitType>` abgelegt.
+Hier hätte man vielleicht der Einfachheit halber einen Typ `std::vector<int>` erwartet. 
+Da wir es möglicherweise mit vielen Ziffern zu tun haben, die im Speicher dicht gepackt und konsekutiv abgelegt werden sollten,
+wollen wir hier platzsparend vorgehen. Mit einer Typdefinition
+
+```cpp
+using digit_t = uint8_t;  
+```
+
+können wir diese Festlegung auch variabel (bzgl. der Übersetzungszeit) gestalten.
+
+WEITER WEITER .,,
+
+ 
+
 
 
 <!-- Links Definitions -->

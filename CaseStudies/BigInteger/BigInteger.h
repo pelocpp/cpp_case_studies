@@ -4,10 +4,12 @@
 
 #pragma once
 
+using digit_t = uint8_t;
+
 class BigInteger
 {
 private:
-    std::vector<int> m_digits;
+    std::vector<digit_t> m_digits;
     bool m_sign;
 
 public:
@@ -19,10 +21,6 @@ public:
     explicit BigInteger(int);
     explicit BigInteger(long);
     explicit BigInteger(long long);
-
-private:
-    // internal helper c'tor
-    BigInteger(bool sign, int digits[], int length);  // TODO: Der kommt wohl weg ...........
 
 public:
     // getter
@@ -75,8 +73,8 @@ public:
 
 private:
     // private helper operator
-    int& operator[] (size_t);  // subscript operator
-    const int& operator[] (size_t) const; // const subscript operator
+    digit_t& operator[] (size_t);  // subscript operator
+    const digit_t& operator[] (size_t) const; // const subscript operator
 
     // private helper methods
     void removeLeadingZeros();
