@@ -15,6 +15,56 @@
 //#include <numeric>
 //#include <iomanip>
 
+void Test_Script_01()
+{
+    // testing c'tors
+    BigInteger n1{ "1234567" };
+    std::cout << n1 << std::endl;
+
+    BigInteger n2{ "-1234567" };
+    std::cout << n2 << std::endl;
+
+    BigInteger n3{ "123.456.789.012.345.678" };
+    std::cout << n3 << std::endl;
+}
+
+void Test_Script_02()
+{
+    // testing addition
+    BigInteger n1{ "11111111" };
+    BigInteger n2{ "22222222" };
+    std::cout << n1 << " + " << n2 << " = " << n1 + n2 << std::endl;
+
+    n1 = BigInteger{ "99999999999999" };
+    n2 = BigInteger{ "1" };
+    std::cout << n1 << " + " << n2 << " = " << n1 + n2 << std::endl;
+}
+
+void Test_Script_03()
+{
+    // testing subtraction
+    BigInteger n1{ "999" };
+    BigInteger n2{ "900" };
+    std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+    n1 = BigInteger{ "999" };
+    n2 = BigInteger{ "998" };
+    std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+    n1 = BigInteger{ "999" };
+    n2 = BigInteger{ "999" };
+    std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+    n1 = BigInteger{ "11111" };
+    n2 = BigInteger{ "222" };
+    std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+    n1 = BigInteger{ "1000000" };
+    n2 = BigInteger{ "1" };
+    std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+}
+
+
 void Test_TypeConversion_Ctors()
 {
     // testing type conversion c'tors
@@ -296,6 +346,16 @@ void Test_Mersenne_02()
 
 
 }
+
+
+
+void Test_Formatting_Output()
+{
+    // testing c'tors
+    BigInteger n1{ "123456736346346456456456456456" };
+    std::cout << n1(3) << std::endl;
+}
+
 
 // =====================================================================================
 // End-of-File

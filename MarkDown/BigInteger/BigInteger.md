@@ -2,15 +2,15 @@
 
 Die ganzzahligen Standarddatentypen in C++ wie `short`, `int` usw. besitzen allesamt die Eigenschaft,
 dass ihr Wertebereich limitiert ist. Für viele Anwendungen ist dies nicht nachteilig,
-da sich speziell mit den Datentypen `int` und `long` oder auch mit `size_t` ziemlich große Zahlen darstellen lassen.
+da sich speziell mit den Datentypen `int` und `long` oder auch `size_t` ziemlich große Zahlen darstellen lassen.
 Für manche Anwendungen ist die Verarbeitung von ganzen Zahlen beliebiger Größe jedoch unabdingbar.
 Wir stellen im Folgenden eine Klasse `BigInteger` vor,
 die eine exakte Arithmetik vorzeichenbehafteter ganzer Zahlen beliebiger Größe zur Verfügung stellt.
 
 Um potentiell beliebig viele Ziffern einer sehr großen Zahl in einem `BigInteger`-Objekt abzulegen,
 gibt es mehrere Möglichkeiten wie etwa die Verwendung (generischer) Standardcontainer
-aus der STL (C++ Standard Template Library) oder auch einfach die Ablage der Ziffern in einer Zeichenkette.
-In der vorgestellten Lösung zu dieser Aufgabe greifen wir auf ein `std::vector<T>`-Objekt zurück.
+aus der STL (C++ Standard Template Library) oder auch einfach nur die Ablage der Ziffern in einer Zeichenkette.
+In der vorgestellten Lösung legen wir auf ein `std::vector<T>`-Objekt zugrunde.
 
 <!--more-->
 
@@ -21,16 +21,8 @@ In der vorgestellten Lösung zu dieser Aufgabe greifen wir auf ein `std::vector<
   * `std::reverse_iterator`
   * Lambda-Funktionen (mit `mutable`)
   * Datentyp `uint8_t`
-
----
-
-  * Default-Initialisierung für Member-Variablen
-  * Delegation von Konstruktoren (nun auch in C++ enthalten)
-  * Bereichs-basierte `for`-Wiederholungsschleife (Range-Based For Loop) *mit* Variablendeklaration
-  * Container `std::forward_list<T>`
-  * Neue Schlüsselwörter `override` und `final` ergänzend zu `virtual`
-  * STL-Algorithmus `std::find_if`
-
+  * Verschiebesemantik mit `std::move`
+  * Werfen von Ausnahmen mit `throw` und `std::invalid_argument`
 
 # Grundgerüst der Klasse `BigInteger`
 
@@ -52,7 +44,7 @@ Erste Hinweise zur `BigInteger`-Klasse finden Sie in [Tabelle 1] vor:
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Konstruktor | `BigInteger() = default;`<br/>Erzeugt ein `BigInteger`-Objekt mit dem Wert Null. |
+| Konstruktor | `BigInteger();`<br/>Erzeugt ein `BigInteger`-Objekt zur Zahl 0. |
 | Benutzerdefinierter Konstruktor | `explicit BigInteger(std::string_view);`<br/>Erzeugt ein `BigInteger`-Objekt mit Hilfe der Beschreibung einer Zahl in Form einer Zeichenkette. |
 | Konvertierungs-Konstruktor | `explicit BigInteger(int);`<br/>Erzeugt ein `BigInteger`-Objekt anhand eines `int`-Werts. |
 | Konvertierungs-Konstruktor | `explicit BigInteger(long);`<br/>Erzeugt ein `BigInteger`-Objekt anhand eines `long`-Werts. |
@@ -78,7 +70,7 @@ Die *getter*- und *setter*-Methoden der Klasse `BigInteger` sind in [Tabelle 2] 
 | Element | Beschreibung |
 | :---- | :---- |
 | *getter* `size()` | `size_t size() const;`<br/>Liefert die Anzahl der Ziffern der Zahl, auch *Stelligkeit* der ganzen Zahl genannt, zurück. |
-| *getter* `zero()` | `bool zero() const;`<br/>Liefert den Wert `true` zurück, wenn das aktuelle Polynom das Null-Polynom ist, andernfalls `false`. |
+| *getter* `zero()` | `bool zero() const;`<br/>Liefert den Wert `true` zurück, wenn die Zahl 0 ist, andernfalls `false`. |
 | *getter* `sign()` | `bool sign() const;`<br/>Liefert das Vorzeichen der Zahl zurück, `true` entspricht einer positiven Zahl, `false` einer negativen. |
 
 *Tabelle* 2: *getter*-/*setter*-Methoden der Klasse `BigInteger`.
@@ -93,7 +85,7 @@ ist nach jeder dritten Stelle ein Punkt einzufügen, also zum Beispiel `"99.999"
 
 Wir geben nun einige Hinweise zu den Grundrechenarten, wie sie in der Schulmathematik gelehrt werden.
 Bei der so genannten *schriftlichen Addition* werden die zu addierenden Zahlen rechtsbündig so angeordnet,
-dass jeweils gleichwertige Ziffern (Einer unter Einer, Zehner unter Zehner usw.) untereinander stehen.
+dass jeweils gleichwertige Ziffern untereinander stehen (Einer unter Einer, Zehner unter Zehner usw.).
 Man addiert dann die jeweils untereinander stehenden Ziffern, beginnend mit den Einern.
 Ergeben die addierten Ziffern eine Zahl größer oder gleich 10, berücksichtigt man den Übertrag
 bei der Addition der nächsten zwei Ziffern, siehe [Abbildung 1]:
@@ -166,7 +158,7 @@ Man schreibt jede Multiplikation untereinander und addiert die einzelnen Werte.
 Wie bei der Addition ist auch bei der Multiplikation ein Überlauf auf die jeweils nächsthöhere Stelle zu übertragen.
 
 Im Gegensatz zum Standardverfahren der Schulmathematik vereinfachen wir das Verfahren dahingehend,
-dass wir in den einzelnen Zeilen keinerlei Überlauf berücksichtigen. Dies tun wir erst,
+dass wir in den einzelnen Zeilen keinen Überlauf berücksichtigen. Dies tun wir erst,
 wenn wir die Zwischenresultate der einzelnen Zeilen Spalte für Spalte, von rechts beginnend, zusammenzählen.
 Am Beispiel von 98 * 12345 können Sie den Algorithmus in [Abbildung 5] nachverfolgen:
 
@@ -175,7 +167,6 @@ Am Beispiel von 98 * 12345 können Sie den Algorithmus in [Abbildung 5] nachverf
 {{< figure src="/img/biginteger/Schulmathematik_Multiplikation.png" width="30%" >}}
 
 *Abbildung* 5: Standardverfahren für schriftliche Multiplikation.
-
 
 Wir schließen diese Betrachtungen mit der schriftlichen Division ab. Bezüglich der Namensgebung
 rekapitulieren wir zunächst einmal, dass ein *Dividend* durch einen *Divisor* geteilt wird,
@@ -222,11 +213,11 @@ arithmetischen Wertzuweisungsoperatoren wie zum Beispiel `+=`, siehe hierzu [Tab
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Operator `+` | `friend BigInteger& operator+= (BigInteger&, const BigInteger&);`<br/>Addition von `a` und `b` mit Zuweisung an `a`. |
-| Operator `-` | `friend BigInteger& operator-= (BigInteger&, const BigInteger&);`<br/>Subtraktion von `a` und `b` mit Zuweisung an `a`. |
-| Operator `*` | `friend BigInteger& operator*= (BigInteger&, const BigInteger&);`<br/>Multiplikation von `a` und `b` mit Zuweisung an `a`. |
-| Operator `/` | `friend BigInteger& operator/= (BigInteger&, const BigInteger&);`<br/>Division von `a` und `b` mit Zuweisung an `a`. |
-| Operator `%` | `friend BigInteger& operator%= (BigInteger&, const BigInteger&);`<br/>Rest bei Division von `a` und `b` mit Zuweisung an `a`. |
+| Operator `+` | `friend BigInteger& operator+= (BigInteger& a, const BigInteger& b);`<br/>Addition von `a` und `b` mit Zuweisung an `a`. |
+| Operator `-` | `friend BigInteger& operator-= (BigInteger& a, const BigInteger& b);`<br/>Subtraktion von `a` und `b` mit Zuweisung an `a`. |
+| Operator `*` | `friend BigInteger& operator*= (BigInteger& a, const BigInteger& b);`<br/>Multiplikation von `a` und `b` mit Zuweisung an `a`. |
+| Operator `/` | `friend BigInteger& operator/= (BigInteger& a, const BigInteger& b);`<br/>Division von `a` und `b` mit Zuweisung an `a`. |
+| Operator `%` | `friend BigInteger& operator%= (BigInteger& a, const BigInteger& b);`<br/>Rest bei Division von `a` und `b` mit Zuweisung an `a`. |
 
 *Tabelle* 4: Arithmetische Wertzuweisungsoperatoren der Klasse `BigInteger`.
 
@@ -256,12 +247,12 @@ Entsprechende Operatoren hierzu sind in [Tabelle 6] festgelegt:
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Operator `==` | `friend bool operator== (const BigInteger&, const BigInteger&);`<br/>Vergleicht den Wert zweier `BigInteger`-Objekte auf Gleichheit. |
-| Operator `!=` | `friend bool operator!= (const BigInteger&, const BigInteger&);`<br/>Vergleicht den Wert zweier `BigInteger`-Objekte auf Ungleichheit. |
-| Operator `<`  | `friend bool operator<  (const BigInteger&, const BigInteger&);`<br/>Umsetzung der mathematischen Relationen kleiner. |
-| Operator `<=` | `friend bool operator<= (const BigInteger&, const BigInteger&);`<br/>Umsetzung der mathematischen Relationen kleiner-gleich. |
-| Operator `>`  | `friend bool operator>  (const BigInteger&, const BigInteger&);`<br/>Umsetzung der mathematischen Relationen größer. |
-| Operator `>=` | `friend bool operator>= (const BigInteger&, const BigInteger&);`<br/>Umsetzung der mathematischen Relationen größer-gleich. |
+| Operator `==` | `friend bool operator== (const BigInteger& a, const BigInteger& b);`<br/>Vergleicht den Wert zweier `BigInteger`-Objekte `a` und `b` auf Gleichheit. |
+| Operator `!=` | `friend bool operator!= (const BigInteger& a, const BigInteger& b);`<br/>Vergleicht den Wert zweier `BigInteger`-Objekte `a` und `b` auf Ungleichheit. |
+| Operator `<`  | `friend bool operator<  (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relationen kleiner. |
+| Operator `<=` | `friend bool operator<= (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relationen kleiner-gleich. |
+| Operator `>`  | `friend bool operator>  (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relationen größer. |
+| Operator `>=` | `friend bool operator>= (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relationen größer-gleich. |
 
 *Tabelle* 6: Vergleichsoperatoren der Klasse `BigInteger`.
 
@@ -270,7 +261,7 @@ Entsprechende Operatoren hierzu sind in [Tabelle 6] festgelegt:
 Möglicherweise benötigen Sie zur Implementierung der vorangestellten Abschnitte noch die eine oder andere Hilfsmethode.
 Bei den arithmetischen Operationen können beispielsweise in manchen Situationen im internen `std::vector<T>`-Objekt
 führende Nullen entstehen. Im Extremfall kann man dies bei der Subtraktion einer Zahl mit sich selbst beobachten, also etwa 100 - 100.
-Das Ergebnis sollte dann nicht 000, sondern 0 lauten.
+Das Ergebnis sollte dann nicht 000, sondern eben 0 lauten.
 Zur Behebung dieser Unschönheit finden Sie in Tabelle 7 die Methode `removeLeadingZeros` nebst einigen weiteren Methoden vor:
 
 ###### {#tabelle_7_class_biginteger_helper_methods}  
@@ -285,7 +276,82 @@ Zur Behebung dieser Unschönheit finden Sie in Tabelle 7 die Methode `removeLead
 
 # Einige Beispiele
 
-To be done ...
+*Beispiel*:
+
+```cpp
+// testing c'tors
+BigInteger n1{ "1234567" };
+std::cout << n1 << std::endl;
+
+BigInteger n2{ "-1234567" };
+std::cout << n2 << std::endl;
+
+BigInteger n3{ "123.456.789.012.345.678" };
+std::cout << n3 << std::endl;
+```
+
+*Ausgabe*:
+
+```
+1.234.567
+-1.234.567
+123.456.789.012.345.678
+```
+
+*Beispiel*:
+
+```cpp
+// testing addition
+BigInteger n1{ "11111111" };
+BigInteger n2{ "22222222" };
+std::cout << n1 << " + " << n2 << " = " << n1 + n2 << std::endl;
+
+n1 = BigInteger{ "99999999999999" };
+n2 = BigInteger{ "1" };
+std::cout << n1 << " + " << n2 << " = " << n1 + n2 << std::endl;
+```
+
+*Ausgabe*:
+
+```
+11.111.111 + 22.222.222 = 33.333.333
+99.999.999.999.999 + 1 = 100.000.000.000.000
+```
+
+*Beispiel*:
+
+```cpp
+// testing subtraction
+BigInteger n1{ "999" };
+BigInteger n2{ "900" };
+std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+n1 = BigInteger{ "999" };
+n2 = BigInteger{ "998" };
+std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+n1 = BigInteger{ "999" };
+n2 = BigInteger{ "999" };
+std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+n1 = BigInteger{ "11111" };
+n2 = BigInteger{ "222" };
+std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+n1 = BigInteger{ "1000000" };
+n2 = BigInteger{ "1" };
+std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+```
+
+*Ausgabe*:
+
+```
+999 - 900 = 99
+999 - 998 = 1
+999 - 999 = 0
+11.111 - 222 = 10.889
+1.000.000 - 1 = 999.999
+```
 
 # Lösung
 
@@ -307,9 +373,18 @@ wollen wir hier platzsparend vorgehen. Mit einer Typdefinition
 using digit_t = uint8_t;  
 ```
 
-können wir diese Festlegung auch variabel (bzgl. der Übersetzungszeit) gestalten.
+können wir diese Anforderung erzielen und die Festlegung auch variabel (bzgl. der Übersetzungszeit) gestalten.
 
-WEITER WEITER .,,
+
+
+
+###### {#listing_1_class_biginteger_decl}
+
+```cpp
+```
+
+*Listing* 1: Klasse `Polynom`: Definition.
+
 
  
 
@@ -325,11 +400,6 @@ WEITER WEITER .,,
 [Tabelle 6]: #tabelle_6_class_biginteger_comparison_operators
 [Tabelle 7]: #tabelle_7_class_biginteger_helper_methods
 
-
-
-
-
-
 [Abbildung 1]:  #abbildung_1_schriftlichen_addition_01
 [Abbildung 2]:  #abbildung_2_schriftlichen_addition_02
 [Abbildung 3]:  #abbildung_3_schulmathematik_subtraktion_01
@@ -337,17 +407,7 @@ WEITER WEITER .,,
 [Abbildung 5]:  #abbildung_5_schulmathematik_multiplikation
 [Abbildung 6]:  #abbildung_5_schulmathematik_division
 
-
-
-
-[Listing 1]: #listing_01_ijosephus_interface
-[Listing 2]: #listing_02_josephus_interface
-[Listing 3]: #listing_03_josephus_implementation
-[Listing 4]: #listing_04_josephusarrayimpl_interface
-[Listing 5]: #listing_05_josephusarrayimpl_implementation
-[Listing 6]: #listing_06_class_soldier
-[Listing 7]: #listing_07_josephusforwardlistimpl_interface
-[Listing 8]: #listing_08_josephusforwardlistimpl_implementation
+[Listing 1]: #listing_1_class_biginteger_decl
 
 
 <!-- End-of-File -->

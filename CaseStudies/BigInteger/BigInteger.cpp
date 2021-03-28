@@ -305,7 +305,7 @@ BigInteger operator-- (BigInteger& a, int)
 {
     BigInteger tmp(a); // construct a copy
     --a;               // decrement number
-    return tmp;         // return the copy
+    return tmp;        // return the copy
 }
 
 // comparison operators
@@ -468,7 +468,7 @@ std::ostream& operator<< (std::ostream& os, const BigInteger& n)
     std::for_each(
         std::rbegin(n.m_digits), 
         std::rend(n.m_digits),
-        [&,i = n.m_digits.size() - 1] (int digit) mutable {
+        [&, i = n.m_digits.size() - 1] (int digit) mutable {
             os << (char)(digit + '0');
             if (i > 0 && i % 3 == 0)
                 os << '.';
@@ -477,6 +477,85 @@ std::ostream& operator<< (std::ostream& os, const BigInteger& n)
 
     return os;
 }
+
+// functor (supporting formatted output)
+std::string BigInteger::operator()(int n)
+{
+    std::string firstSuffix{};
+    std::string subsequentSuffix{};
+
+    std::string result{};
+
+    int skippedDigits{};
+
+    auto rev_it = std::rbegin(m_digits);
+ //   std::reverse_iterator<std::vector<digit_t>::iterator>  rev_ittt;
+
+    // formatted output only meaningful if four or more digits
+    // TO BE DONE
+
+    if (! m_sign) {
+        firstSuffix = "-";
+        subsequentSuffix = " ";
+    }
+
+
+    // calculate suffix of output
+    if (size() % 3 == 0) {
+        char digit1 = m_digits.rbegin()[0] + '0'; // ultimate element
+        char digit2 = m_digits.rbegin()[1] + '0'; // penultimate element
+        char digit3 = m_digits.rbegin()[2] + '0'; // pen-penultimate element
+        firstSuffix.push_back(digit1);
+        firstSuffix.push_back(digit2);
+        firstSuffix.push_back(digit3);
+        subsequentSuffix.append("   ");
+        rev_it += 3;
+        skippedDigits = 3;
+    }
+    else if (size() % 3 == 1) {
+        char digit1 = m_digits.rbegin()[0] + '0'; // ultimate element
+
+        firstSuffix.push_back(digit1);
+
+        subsequentSuffix.append(" ");
+        rev_it += 1;
+        skippedDigits = 1;
+    }
+    else if (size() % 3 == 2) {
+        char digit1 = m_digits.rbegin()[0] + '0'; // ultimate element
+        char digit2 = m_digits.rbegin()[1] + '0'; // penultimate element
+
+        firstSuffix.push_back(digit1);
+        firstSuffix.push_back(digit2);
+
+        subsequentSuffix.append("  ");
+        rev_it += 2;
+        skippedDigits = 2;
+    }
+
+    result = firstSuffix;
+    result.push_back('.');
+
+    int blocks{ 1 };
+
+    std::for_each(
+        rev_it,
+        std::rend(m_digits),
+        [&, i = m_digits.size() - skippedDigits - 1](int digit) mutable {
+        result.push_back ((char)(digit + '0'));
+        if (i > 0 && i % 3 == 0) {
+            result.push_back('.');
+            ++blocks;
+        }
+        --i;
+
+        if (blocks % n == 0)
+            result.push_back('\n');
+    });
+
+    return result;
+}
+
 
 // =====================================================================================
 // End-of-File
