@@ -347,13 +347,11 @@ void Test_Mersenne_02()
 
 }
 
-
-
 void Test_Formatting_Output()
 {
     // testing c'tors
-    BigInteger n1{ "123456736346346456456456456456" };
-    std::cout << n1(3) << std::endl;
+    BigInteger n1{ "12345678901234567890123456789012345678901234567890" };
+    std::cout << n1(4) << std::endl;
 }
 
 

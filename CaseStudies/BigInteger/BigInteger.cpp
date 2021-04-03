@@ -482,23 +482,17 @@ std::ostream& operator<< (std::ostream& os, const BigInteger& n)
 std::string BigInteger::operator()(int n)
 {
     std::string firstSuffix{};
-    std::string subsequentSuffix{};
+    std::string subsequentSuffix{ std::string {" "} };
 
     std::string result{};
-
     int skippedDigits{};
 
-    auto rev_it = std::rbegin(m_digits);
- //   std::reverse_iterator<std::vector<digit_t>::iterator>  rev_ittt;
-
-    // formatted output only meaningful if four or more digits
-    // TO BE DONE
-
     if (! m_sign) {
-        firstSuffix = "-";
-        subsequentSuffix = " ";
+        firstSuffix = std::string{ "-" };
+        subsequentSuffix = std::string{ "  " };
     }
 
+    std::reverse_iterator<std::vector<digit_t>::iterator> rev_it = std::rbegin(m_digits);
 
     // calculate suffix of output
     if (size() % 3 == 0) {
@@ -536,7 +530,7 @@ std::string BigInteger::operator()(int n)
     result = firstSuffix;
     result.push_back('.');
 
-    int blocks{ 1 };
+    int blocks{ 0 };
 
     std::for_each(
         rev_it,
@@ -549,13 +543,15 @@ std::string BigInteger::operator()(int n)
         }
         --i;
 
-        if (blocks % n == 0)
+        if (blocks == n) {
             result.push_back('\n');
+            blocks = 0;
+            result.append(subsequentSuffix);
+        }
     });
 
     return result;
 }
-
 
 // =====================================================================================
 // End-of-File

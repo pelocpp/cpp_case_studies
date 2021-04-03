@@ -61,15 +61,11 @@ public:
     friend BigInteger  operator-- (BigInteger&, int);  // postfix decrement
 
     // functor (supporting formatted output)
-    std::string operator()(int);  // n Blöcke in einer Zeile ....
+    std::string operator()(int);
 
     // public helper methods
     BigInteger abs() const;
     BigInteger pow(int);
-
-    // test method
-    //friend BigInteger faculty(BigInteger);
-   // public BigInteger Power(int exponent)
 
 private:
     // private helper operator
@@ -78,7 +74,6 @@ private:
 
     // private helper methods
     void removeLeadingZeros();
-    // void Zero();
     int compareTo(const BigInteger&) const;
     void toBigInteger(long long);
 

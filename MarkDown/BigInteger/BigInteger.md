@@ -357,7 +357,7 @@ std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
 
 Die Realisierung der Klasse `BigInteger` ist nicht in allen Teilen trivial.
 Wir gehen die einzelnen Abschnitte detailliert durch.
-Die notwendigen Instanzvariablen einer Klasse `BigInteger` wurden durch die Aufgabenstellung mehr oder minder nahe gelegt:
+Die notwendigen Instanzvariablen der Klasse `BigInteger` wurden durch die Aufgabenstellung mehr oder minder nahe gelegt:
 
 ```cpp
 std::vector<DigitType> m_digits;
@@ -374,19 +374,290 @@ using digit_t = uint8_t;
 ```
 
 können wir diese Anforderung erzielen und die Festlegung auch variabel (bzgl. der Übersetzungszeit) gestalten.
+Für das Vorzeichen der Zahl benötigen wir eine zusätzliche Instanzvariable `m_sign`,
+der Datentyp `bool` gestattet es, positive Zahlen mit dem Wert `true` und negative Zahlen mit `false` zu assoziieren. 
 
-
-
+In [Listing 1] beginnen wir unseren Parcours durch den Lösungsteil mit der Schnittstelle der Klasse `BigInteger`:
 
 ###### {#listing_1_class_biginteger_decl}
 
 ```cpp
+01: class BigInteger
+02: {
+03: private:
+04:     std::vector<digit_t> m_digits;
+05:     bool m_sign;
+06: 
+07: public:
+08:     // c'tors / d'tor
+09:     BigInteger();
+10:     explicit BigInteger(std::string_view);
+11: 
+12:     // type conversion c'tors
+13:     explicit BigInteger(int);
+14:     explicit BigInteger(long);
+15:     explicit BigInteger(long long);
+16: 
+17: public:
+18:     // getter
+19:     size_t size() const;
+20:     bool zero() const;
+21:     bool sign() const;
+22: 
+23:     // comparison operators
+24:     friend bool operator== (const BigInteger&, const BigInteger&);
+25:     friend bool operator!= (const BigInteger&, const BigInteger&);
+26:     friend bool operator<  (const BigInteger&, const BigInteger&);
+27:     friend bool operator<= (const BigInteger&, const BigInteger&);
+28:     friend bool operator>  (const BigInteger&, const BigInteger&);
+29:     friend bool operator>= (const BigInteger&, const BigInteger&);
+30: 
+31:     // unary arithmetic operators
+32:     friend BigInteger operator+ (const BigInteger&);
+33:     friend BigInteger operator- (const BigInteger&);
+34: 
+35:     // binary arithmetic operators
+36:     friend BigInteger operator+ (const BigInteger&, const BigInteger&);
+37:     friend BigInteger operator- (const BigInteger&, const BigInteger&);
+38:     friend BigInteger operator* (const BigInteger&, const BigInteger&);
+39:     friend BigInteger operator/ (const BigInteger&, const BigInteger&);
+40:     friend BigInteger operator% (const BigInteger&, const BigInteger&);
+41: 
+42:     // arithmetic-assignment operators
+43:     friend BigInteger& operator+= (BigInteger&, const BigInteger&);
+44:     friend BigInteger& operator-= (BigInteger&, const BigInteger&);
+45:     friend BigInteger& operator*= (BigInteger&, const BigInteger&);
+46:     friend BigInteger& operator/= (BigInteger&, const BigInteger&);
+47:     friend BigInteger& operator%= (BigInteger&, const BigInteger&);
+48: 
+49:     // increment/decrement operators (prefix/postfix version)
+50:     friend BigInteger& operator++ (BigInteger&);       // prefix increment
+51:     friend BigInteger  operator++ (BigInteger&, int);  // postfix increment
+52:     friend BigInteger& operator-- (BigInteger&);       // prefix decrement
+53:     friend BigInteger  operator-- (BigInteger&, int);  // postfix decrement
+54: 
+55:     // functor (supporting formatted output)
+56:     std::string operator()(int);
+57: 
+58:     // public helper methods
+59:     BigInteger abs() const;
+60:     BigInteger pow(int);
+61: 
+62: private:
+63:     // private helper operator
+64:     digit_t& operator[] (size_t);  // subscript operator
+65:     const digit_t& operator[] (size_t) const; // const subscript operator
+66: 
+67:     // private helper methods
+68:     void removeLeadingZeros();
+69:     int compareTo(const BigInteger&) const;
+70:     void toBigInteger(long long);
+71: 
+72:     // output
+73:     friend std::ostream& operator<< (std::ostream&, const BigInteger&);
+74: };
 ```
 
-*Listing* 1: Klasse `Polynom`: Definition.
+*Listing* 1: Klasse `BigInteger`: Definition.
+
+Der Standardkonstruktor soll die Zahl 0 repräsentieren, dazu benötigen wir immerhin ein Ziffernfeld der Länge 1:
+
+```cpp
+// default c'tor
+BigInteger::BigInteger() : m_digits{ 1 }, m_sign{ true } {
+    m_digits[0] = 0; 
+} 
+```
+
+Der wichtigste Konstruktor der `BigInteger`-Klasse erwartet eine (beliebig lange) Zeichenkette und kopiert ihren Inhalt,
+abgesehen von den Punkten `.` für die verbesserte Lesbarkeit der Eingabe, in das `m_digits`-Vektorobjekt um.
+Da wir im Prinzip nur konstante Zeichenketten erwarten (oder unterstützen), ist der Parameter vom Typ `std::string_view`.
+`std::string_view`-Objekte sind eine optimierte Version der Klasse `std::string`,
+sie bestehen ausschließlich aus einem *raw*-Zeiger einer konstanten Zeichenkette und einer Längenangabe.
+Prinzipiell wird von der Zeichenkette erwartet, dass diese korrekt aufgebaut ist.
+Im Fehlerfall wird eine Ausnahme geworfen (siehe die Zeilen 10 und 23 von [Listing 2]):
+
+###### {#listing_2_user_def_ctor}
+
+```cpp
+01: BigInteger::BigInteger(std::string_view sv) : m_sign{ true }
+02: {
+03:     std::reverse_iterator<std::string_view::iterator> r = sv.rbegin();
+04: 
+05:     std::for_each(std::rbegin(sv), std::prev(std::rend(sv)), [this](char ch) {
+06:         if (ch == '.') {
+07:             return;
+08:         }
+09:         else if (! std::isdigit(ch)) {
+10:             throw std::invalid_argument("illegal digit in big number");
+11:         }
+12:         else {
+13:             m_digits.push_back(ch - '0');
+14:         }
+15:     });
+16: 
+17:     char ch = *std::prev(std::rend(sv));
+18:     if (ch == '+' or ch == '-') {
+19:         m_sign = (ch == '-') ? false : true;
+20:     }
+21:     else {
+22:         if (!std::isdigit(ch)) {
+23:             throw std::invalid_argument("illegal digit in big number");
+24:         }
+25:         m_digits.push_back(ch - '0');
+26:     }
+27: 
+28:     removeLeadingZeros();
+29: }
+```
+
+*Listing* 2: Benutzerdefinierter Konstruktor der Klasse `BigInteger`.
+
+Da wir die Ziffern eines `BigInteger`-Objekts intern in der umgekehrten Reihenfolge ablegen wollen,
+kommt ein `std::reverse_iterator` zum Einsatz.
+
+Nach der Erzeugung eines `BigInteger`-Objekts an Hand einer Zeichenkette kommen wir gleich auf die entgegengesetzte Operation zu sprechen:
+Umwandlung eines BigInteger-Objekts in eine Zeichenkette. Diese Operationn haben wir im Funktor der Klasse untergebracht.
+Dieser ist flexiblel in der Aufnahme von Parameterwerten.
+Wir definieren ihn mit einem Parameter vom Typ `int`, um die Anzahl der Dreiziffernblöcke pro Zeile festzulegen.
+Die Zeilen 10 bis 48 ([Listing 3]) widmen sich dem Umstand, mit wie vielen Leerzeichen der erste Dreiziffernblock aufzufüllen ist,
+wenn die Anzahl der Ziffern kein Vielfaches von Drei ist. Da auch noch ein mögliches Vorzeichen zu berücksichtigen ist,
+gewinnt der Sourcecode leider nicht gerade an Übersichtlichkeit.
+
+###### {#listing_3_to_string_conversion}
+
+```cpp
+01: // functor (supporting formatted output)
+02: std::string BigInteger::operator()(int n)
+03: {
+04:     std::string firstSuffix{};
+05:     std::string subsequentSuffix{ std::string {" "} };
+06: 
+07:     std::string result{};
+08:     int skippedDigits{};
+09: 
+10:     if (! m_sign) {
+11:         firstSuffix = std::string{ "-" };
+12:         subsequentSuffix = std::string{ "  " };
+13:     }
+14: 
+15:     std::reverse_iterator<std::vector<digit_t>::iterator> rev_it = std::rbegin(m_digits);
+16: 
+17:     // calculate suffix of output
+18:     if (size() % 3 == 0) {
+19:         char digit1 = m_digits.rbegin()[0] + '0'; // ultimate element
+20:         char digit2 = m_digits.rbegin()[1] + '0'; // penultimate element
+21:         char digit3 = m_digits.rbegin()[2] + '0'; // pen-penultimate element
+22:         firstSuffix.push_back(digit1);
+23:         firstSuffix.push_back(digit2);
+24:         firstSuffix.push_back(digit3);
+25:         subsequentSuffix.append("   ");
+26:         rev_it += 3;
+27:         skippedDigits = 3;
+28:     }
+29:     else if (size() % 3 == 1) {
+30:         char digit1 = m_digits.rbegin()[0] + '0'; // ultimate element
+31: 
+32:         firstSuffix.push_back(digit1);
+33: 
+34:         subsequentSuffix.append(" ");
+35:         rev_it += 1;
+36:         skippedDigits = 1;
+37:     }
+38:     else if (size() % 3 == 2) {
+39:         char digit1 = m_digits.rbegin()[0] + '0'; // ultimate element
+40:         char digit2 = m_digits.rbegin()[1] + '0'; // penultimate element
+41: 
+42:         firstSuffix.push_back(digit1);
+43:         firstSuffix.push_back(digit2);
+44: 
+45:         subsequentSuffix.append("  ");
+46:         rev_it += 2;
+47:         skippedDigits = 2;
+48:     }
+49: 
+50:     result = firstSuffix;
+51:     result.push_back('.');
+52: 
+53:     int blocks{ 0 };
+54: 
+55:     std::for_each(
+56:         rev_it,
+57:         std::rend(m_digits),
+58:         [&, i = m_digits.size() - skippedDigits - 1](int digit) mutable {
+59:         result.push_back ((char)(digit + '0'));
+60:         if (i > 0 && i % 3 == 0) {
+61:             result.push_back('.');
+62:             ++blocks;
+63:         }
+64:         --i;
+65: 
+66:         if (blocks == n) {
+67:             result.push_back('\n');
+68:             blocks = 0;
+69:             result.append(subsequentSuffix);
+70:         }
+71:     });
+72: 
+73:     return result;
+74: }
+```
+
+*Listing* 3: Wandlung Klasse `BigInteger` nach `std::string`.
+
+Laut Spezifikation besitzt die `BigInteger`-Klasse drei *getter*-Methoden
+`size`, `zero` und `sign`, mehr hierzu in [Listing 4]:
 
 
- 
+###### {#listing_4_getter}
+
+```cpp
+01: bool BigInteger::sign() const { return m_sign; }
+02: size_t BigInteger::size() const { return m_digits.size(); }
+03: bool BigInteger::zero() const { return m_digits.size() == 1 and m_digits[0] == 0; }
+```
+
+*Listing* 4: *getter*-Methoden `size`, `zero` und `sign` der Klasse `BigInteger`.
+
+Die unären Operatoren `+` und `-`, also positives oder negatives Vorzeichen eines `BigInteger`-Objekts,
+dürfen in einer korrekten Implementierung nicht fehlen ([Listing 5]):
+
+###### {#listing_5_unary_operators}
+
+```cpp
+01: BigInteger operator+ (const BigInteger& a)
+02: {
+03:     return { a };
+04: }
+05: 
+06: BigInteger operator- (const BigInteger& a)
+07: {
+08:     BigInteger tmp{ a };
+09: 
+10:     if (! a.zero()) {
+11:         tmp.m_sign = !tmp.m_sign;
+12:     }
+13: 
+14:     return tmp;
+15: }
+```
+
+*Listing* 5: Unäre Operatoren `+` und `-` der Klasse `BigInteger`.
+
+Beide Operatoren `+` und `-` delegieren ihre Arbeit im wesentlichen an den Kopier-Konstruktur der `BigInteger`-Klasse.
+Dieser ist nicht explizit implementiert, da die `BigInteger`-Klasse entweder aus elementaren Instanzvariablen (hier genügt eine flache Kopie)
+oder einem `std::vector<>`-Objekt besteht. Letzteres besitzt seinen eigenen Kopier-Konstruktur,
+dieser wird beim Kopieren eines `BigInteger`-Objekts in Anspruch genommen.
+
+Damit sind wir beim Kernstück der `BigInteger`-Klasse angekommen, ihren arithmetischen Operatoren.
+Die Addition großer Zahlen entnehmen Sie bitte [Listing 6]:
+
+###### {#listing_6_addition}
+
+```cpp
+WEITER WEITER ...
+```
+
 
 
 
@@ -408,6 +679,24 @@ können wir diese Anforderung erzielen und die Festlegung auch variabel (bzgl. d
 [Abbildung 6]:  #abbildung_5_schulmathematik_division
 
 [Listing 1]: #listing_1_class_biginteger_decl
+[Listing 2]: #listing_2_user_def_ctor
+[Listing 3]: #listing_3_to_string_conversion
+[Listing 4]: #listing_4_getter
+[Listing 5]: #listing_5_unary_operators
+[Listing 6]: #listing_6_addition
+[Listing 7]: #listing_7_subtraction
+[Listing 8]: #listing_8_multiplication
+[Listing 9]: #listing_9_division
+
 
 
 <!-- End-of-File -->
+
+
+###### {#listing_2_user_def_ctor}
+
+```cpp
+
+```
+
+*Listing* 2: Benutzerdefinierter Konstruktor der Klasse `BigInteger`.
