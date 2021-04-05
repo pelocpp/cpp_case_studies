@@ -45,6 +45,19 @@ BigInteger::BigInteger(std::string_view sv) : m_sign{ true }
     removeLeadingZeros();
 }
 
+// literal operator ("raw" version)
+BigInteger operator"" _big(const char* literal)
+{
+    std::string raw{ literal };
+
+    // remove ticks, which can be used for better readability
+    std::string::iterator it = std::remove(raw.begin(), raw.end(), '\'');
+    raw.erase(it, raw.end());
+
+    // std::string is implicitly converted from std::string to std::string_view
+    return BigInteger { raw };
+}
+
 // type conversion c'tors
 BigInteger::BigInteger(int n)
 {
@@ -172,11 +185,10 @@ BigInteger operator* (const BigInteger& a, const BigInteger& b)
     std::vector<digit_t> digits(size);
 
     digit_t carry {};
-    for (size_t i{}; i != size; ++i)
-    {
+    for (size_t i{}; i != size; ++i) {
         digits[i] = carry;
-        for (int j {}; j != b.size(); ++j) {
-            if (i - j >= 0 && i - j < a.size()) {  // ?????????????????? Differenz zweier unsigned int
+        for (size_t j {}; j != b.size(); ++j) {
+            if (i >= j && i - j < a.size()) {
                 digits[i] += a[i - j] * b[j];
             }
         }
@@ -202,8 +214,7 @@ BigInteger operator/ (const BigInteger& a, const BigInteger& b)
 
     size_t pos{ a.size() - 1 };
 
-    while (pos != (size_t)-1)
-    {
+    while (pos != (size_t)-1) {
         // append next digit from dividend to temporary divisor
         size_t len{ (remainder.zero()) ? 1 : remainder.size() + 1 };
         std::vector<digit_t> digits;
@@ -222,16 +233,14 @@ BigInteger operator/ (const BigInteger& a, const BigInteger& b)
 
         // divide current dividend with divisor
         digit_t n {};
-        while (bAbs <= remainder)
-        {
+        while (bAbs <= remainder) {
             n++;
             remainder -= bAbs;
         }
 
         result.insert(std::begin(result), n);
 
-        // fetch next digit from divisor
-        pos--;
+        pos--; // fetch next digit from divisor
     }
 
     // move result vector into a BigInteger object
@@ -308,6 +317,22 @@ BigInteger operator-- (BigInteger& a, int)
     return tmp;        // return the copy
 }
 
+// type conversion operators
+BigInteger::operator int() const
+{
+    return static_cast<int> (toLongLong());
+}
+
+BigInteger::operator long() const
+{
+    return static_cast<long> (toLongLong());
+}
+
+BigInteger::operator long long() const
+{
+    return static_cast<long long> (toLongLong());
+}
+
 // comparison operators
 bool operator== (const BigInteger& a, const BigInteger& b)
 {
@@ -360,7 +385,7 @@ BigInteger BigInteger::pow(int exponent)
         result = result * *this;
 
     if (!m_sign && exponent % 2 == 1) {
-        result.m_sign = m_sign;   // TESTEN .. wieso nicht false ?????????????????
+        result.m_sign = m_sign;
     }
 
     return result;
@@ -442,6 +467,15 @@ void BigInteger::toBigInteger(long long n)
     removeLeadingZeros();
 }
 
+long long BigInteger::toLongLong() const
+{
+    long long n = 0;
+    std::for_each(std::rbegin(m_digits), std::rend(m_digits), [&](digit_t digit) {
+        n = 10ll * n + (long long) digit;
+     });
+    return (m_sign) ? n : -n;
+}
+
 void BigInteger::removeLeadingZeros()
 {
     // remove trailing zeros, if any ... using STL algorithms
@@ -495,18 +529,7 @@ std::string BigInteger::operator()(int n)
     std::reverse_iterator<std::vector<digit_t>::iterator> rev_it = std::rbegin(m_digits);
 
     // calculate suffix of output
-    if (size() % 3 == 0) {
-        char digit1 = m_digits.rbegin()[0] + '0'; // ultimate element
-        char digit2 = m_digits.rbegin()[1] + '0'; // penultimate element
-        char digit3 = m_digits.rbegin()[2] + '0'; // pen-penultimate element
-        firstSuffix.push_back(digit1);
-        firstSuffix.push_back(digit2);
-        firstSuffix.push_back(digit3);
-        subsequentSuffix.append("   ");
-        rev_it += 3;
-        skippedDigits = 3;
-    }
-    else if (size() % 3 == 1) {
+    if (size() % 3 == 1) {
         char digit1 = m_digits.rbegin()[0] + '0'; // ultimate element
 
         firstSuffix.push_back(digit1);
@@ -525,6 +548,17 @@ std::string BigInteger::operator()(int n)
         subsequentSuffix.append("  ");
         rev_it += 2;
         skippedDigits = 2;
+    }
+    else if (size() % 3 == 0) {
+        char digit1 = m_digits.rbegin()[0] + '0'; // ultimate element
+        char digit2 = m_digits.rbegin()[1] + '0'; // penultimate element
+        char digit3 = m_digits.rbegin()[2] + '0'; // pen-penultimate element
+        firstSuffix.push_back(digit1);
+        firstSuffix.push_back(digit2);
+        firstSuffix.push_back(digit3);
+        subsequentSuffix.append("   ");
+        rev_it += 3;
+        skippedDigits = 3;
     }
 
     result = firstSuffix;

@@ -60,6 +60,11 @@ public:
     friend BigInteger& operator-- (BigInteger&);       // prefix decrement
     friend BigInteger  operator-- (BigInteger&, int);  // postfix decrement
 
+    // type conversion operators
+    operator int() const;
+    operator long() const;
+    operator long long() const;
+
     // functor (supporting formatted output)
     std::string operator()(int);
 
@@ -76,10 +81,13 @@ private:
     void removeLeadingZeros();
     int compareTo(const BigInteger&) const;
     void toBigInteger(long long);
+    long long toLongLong() const;
 
     // output
     friend std::ostream& operator<< (std::ostream&, const BigInteger&);
 };
+
+BigInteger operator"" _big(const char*);
 
 // =====================================================================================
 // End-of-File

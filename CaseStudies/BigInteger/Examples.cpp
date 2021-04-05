@@ -3,6 +3,7 @@
 // =====================================================================================
 
 #include <iostream>
+#include <iomanip>
 #include <string_view>
 #include <vector>
 #include <algorithm>
@@ -26,6 +27,27 @@ void Test_Script_01()
 
     BigInteger n3{ "123.456.789.012.345.678" };
     std::cout << n3 << std::endl;
+}
+
+void Test_Literals()
+{
+    // testing literals
+    BigInteger n{};
+
+    n = 1_big;
+    std::cout << n << std::endl;
+
+    n = 1234567890_big;
+    std::cout << n << std::endl;
+
+    n = -1234567890_big;
+    std::cout << n << std::endl;
+
+    n = 111111111111111111111111111111111111111111111111111111_big;
+    std::cout << n << std::endl;
+
+    n = 111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111_big;
+    std::cout << n << std::endl;
 }
 
 void Test_Script_02()
@@ -293,12 +315,33 @@ void Test_Division ()
     std::cout << n1 << " / " << n2 << " = " << (n1 / n2) << std::endl;
 }
 
+void Test_DivisionPowerByTwo()
+{
+    BigInteger huge{ "2.475.880.078.570.760.549.798.248.448" };
+
+    while (huge != 1_big)
+    {
+        std::cout << huge << " / 2 = ";
+        huge = huge / 2_big;
+        std::cout << huge << std::endl;
+    }
+}
+
+void Test_Faculty_0(int limit)
+{
+    for (int n{ 1 }; n != limit; ++n)
+    {
+        size_t f{ BigFaculty::faculty(n) };
+        std::cout << "Faculty of " << n << ": " << f << std::endl;
+    }
+}
+
 void Test_Faculty(int limit)
 {
-    for (BigInteger n{ 1 }; n != BigInteger { limit }; ++n)
+    for (BigInteger n{ 1 }; n != BigInteger{ limit }; ++n)
     {
         BigInteger f{ BigFaculty::faculty(n) };
-        std::cout << "Faculty of " << n << ": " << f << std::endl;
+        std::cout << "Faculty of " << n << ": " << std::left << f << std::endl;
     }
 }
 
@@ -310,15 +353,21 @@ void Test_Power(int limit)
         BigInteger f{ two.pow(n)};
         std::cout << "2 ^ " << n << ": " << f << std::endl;
     }
+
+    BigInteger minus_three{ -3 };
+    for (int n{ 1 }; n != limit; ++n)
+    {
+        BigInteger f{ minus_three.pow(n) };
+        std::cout << "-3 ^ " << n << ": " << f << std::endl;
+    }
 }
 
 void Test_Mersenne_01()
 {
     BigInteger mersenne { BigMersenne::number(11213) };
-
-    std::cout << "Mersenne: " << mersenne << std::endl;
+    std::cout << "Mersenne: " << std::endl;
+    std::cout << mersenne(16) << std::endl;
     std::cout << "Number of Digits: " << mersenne.size() << std::endl;
-   // std::cout << "Computation Time: {0}", sw.ElapsedMilliseconds);
 }
 
 void Test_Mersenne_02()
@@ -345,6 +394,17 @@ void Test_Mersenne_02()
     }
 
 
+}
+
+void Test_TypeConversionOperators()
+{
+    BigInteger n{ "-12345" };
+
+    int k = n;
+    long l = n;
+    long long ll = n;
+
+    std::cout << k << std::endl << l << std::endl << ll << std::endl;
 }
 
 void Test_Formatting_Output()

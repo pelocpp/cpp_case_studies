@@ -19,10 +19,10 @@ size_t BigFaculty::faculty(int n)
 
 BigInteger BigFaculty::faculty(BigInteger n)
 {
-    if (n == BigInteger{ 1 })
-        return BigInteger{ 1 };
+    if (n == 1_big)
+        return 1_big;
     else
-        return n * faculty(n - BigInteger{ 1 });
+        return n * faculty(n - 1_big);
 }
 
 // =====================================================================================

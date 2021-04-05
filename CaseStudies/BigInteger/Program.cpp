@@ -45,7 +45,9 @@ void Test_Script_02();
 void Test_Script_03();
 
 void Test_Division();
+void Test_DivisionPowerByTwo();
 void Test_Faculty(int limit);
+void Test_Faculty_0(int limit);
 void Test_Power(int limit);
 
 void Test_Mersenne_01();
@@ -53,9 +55,13 @@ void Test_Mersenne_02();
 
 void Test_Formatting_Output();
 
+void Test_TypeConversionOperators();
+
+void Test_Literals();
+
 int main()
 {   
-    Test_Formatting_Output();
+    Test_Mersenne_01();
 }
 
 // =====================================================================================
