@@ -1522,6 +1522,8 @@ Wir geben abschließend zwei Anregungen: *Perfekte* Zahlen und *Primzahlen*:
 *Definition*: Eine ganze (positive) Zahl wird perfekte vollkommene Zahl (auch vollkommene Zahl) genannt,
 wenn sie gleich der Summe aller ihrer (positiven) Teiler außer sich selbst ist.
 
+Die ersten 5 perfekten Zahlen lauten  6, 28, 496, 8.128 und 33.550.336.
+
 Weitaus bekannter dürfte die Definition für Primzahlen sein:
 
 *Definition*: Eine Primzahl ist eine ganze (positive) Zahl, die größer als 1 und ausschließlich durch sich selbst und durch 1 teilbar ist. 
@@ -1535,13 +1537,70 @@ Die beteiligten Klassen BigPerfectNumbers und BigPrimeNumbers finden Sie
 [hier](https://github.com/pelocpp/cpp_case_studies.git)
 vor.
 
+Die Berechnung der ersten drei perfekten Zahlen mit der Klasse `BigInteger` fällt bzgl. ihrer Laufzeit
+noch nicht so auf:
+
+```cpp
+std::chrono::system_clock::time_point begin{ std::chrono::system_clock::now() };
+
+BigInteger limit{ 500 };
+for (BigInteger n{ 2 }; n != limit; ++n) {
+    if (BigPerfectNumbers::isPerfect(n)) {
+        std::cout << n << " is *prefect*" << std::endl;
+    }
+}
+
+std::chrono::system_clock::time_point end{ std::chrono::system_clock::now() };
+std::chrono::system_clock::duration duration{ end - begin };
+double ticks{ std::chrono::duration<double>(duration).count() };
+std::cout << ticks << " seconds." << std::endl;
+```
+
+*Ausgabe*:
+
+```
+6 is *prefect*
+28 is *prefect*
+496 is *prefect*
+0.144654 seconds.
+```
+
+Allerdings sollte nicht verschwiegen werden, dass ich zur Ausführung des Programms den *Release*-Modus gewählt habe.
+Spannender wird es mit dem nächsten Code-Fragment: Hier habe ich aus Wikipedia die ersten XXX perfekten Zahlen übernommen.
+Die Aufgabe des Code-Fragment besteht gewissermaßen darin, eine Überprüfung der Angaben aus Wikipedia zu machen &ndash;
+wenngleich ich daran natürlich nicht den geringsten Zweifel habe. Um es gleich vorweg zu nehmen: 
+Auf meinem Rechner habe ich das Ende der Berechnungen nicht abgewartet .......
 
 
+```cpp
+std::chrono::system_clock::time_point begin{ std::chrono::system_clock::now() };
 
+// https://en.wikipedia.org/wiki/List_of_perfect_numbers
+std::vector<BigInteger> candidates
+{
+    6_big,
+    28_big,
+    496_big,
+    8'128_big,
+    33'550'336_big,
+    8'589'869'056_big,
+    137'438'691'328_big,
+    2'305'843'008'139'952'128_big,
+    2'658'455'991'569'831'744'654'692'615'953'842'176_big,
+    191'561'942'608'236'107'294'793'378'084'303'638'130'997'321'548'169'216_big
+};
 
+std::for_each(std::begin(candidates), std::end(candidates), [](const BigInteger& candidate) {
+    if (BigPerfectNumbers::isPerfect(candidate)) {
+        std::cout << candidate << " is *prefect*" << std::endl;
+    }
+});
 
-
-
+std::chrono::system_clock::time_point end{ std::chrono::system_clock::now() };
+std::chrono::system_clock::duration duration{ end - begin };
+double ticks{ std::chrono::duration<double>(duration).count() };
+std::cout << ticks << " seconds." << std::endl;
+```
 
 
 <!-- Links Definitions -->

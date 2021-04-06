@@ -54,6 +54,47 @@ bool BigPrimeNumbers::isPrime(BigInteger number)
     return true;
 }
 
+std::pair<size_t, size_t> BigPrimeNumbers::factorize(size_t number)
+{
+    std::pair<size_t, size_t> result;
+    result.first = 1;
+    result.second = number;
+
+    // factorizing a long variable using a very simple approach
+    for (long i = 2; i < number; i++)
+    {
+        if ((number % i) == 0)
+        {
+            result.first = i;
+            result.second = number / i;
+            break;
+        }
+    }
+
+    return result;
+}
+
+std::pair<BigInteger, BigInteger> BigPrimeNumbers::factorize(BigInteger number)
+{
+    std::pair<BigInteger, BigInteger> result;
+    result.first = 1_big;
+    result.second = number;
+
+    // factorizing a big integer object using a very simple approach
+    for (BigInteger i{ 2 }; i < number; i++)
+    {
+        BigInteger tmp{ number % i };
+        if (tmp.zero())
+        {
+            result.first = i;
+            result.second = number / i;
+            break;
+        }
+    }
+
+    return result;
+}
+
 // =====================================================================================
 // End-of-File
 // =====================================================================================

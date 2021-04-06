@@ -65,7 +65,7 @@ void Test_03_PerfectNumbers();
 
 int main()
 {   
-    Test_Faculty_0(31);
+    Test_02_PerfectNumbers();
 }
 
 // =====================================================================================

@@ -14,9 +14,8 @@
 #include "BigMersenne.h"
 #include "BigPerfectNumbers.h"
 
-//#include <sstream>
-//#include <numeric>
-//#include <iomanip>
+// =====================================================================================
+// markdown examples
 
 void Test_Script_01()
 {
@@ -29,27 +28,6 @@ void Test_Script_01()
 
     BigInteger n3{ "123.456.789.012.345.678" };
     std::cout << n3 << std::endl;
-}
-
-void Test_Literals()
-{
-    // testing literals
-    BigInteger n{};
-
-    n = 1_big;
-    std::cout << n << std::endl;
-
-    n = 1234567890_big;
-    std::cout << n << std::endl;
-
-    n = -1234567890_big;
-    std::cout << n << std::endl;
-
-    n = 111111111111111111111111111111111111111111111111111111_big;
-    std::cout << n << std::endl;
-
-    n = 111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111_big;
-    std::cout << n << std::endl;
 }
 
 void Test_Script_02()
@@ -88,24 +66,36 @@ void Test_Script_03()
     std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
 }
 
+// =====================================================================================
+// literals
+
+void Test_Literals()
+{
+    // testing literals
+    BigInteger n{};
+
+    n = 1_big;
+    std::cout << n << std::endl;
+
+    n = 1234567890_big;
+    std::cout << n << std::endl;
+
+    n = -1234567890_big;
+    std::cout << n << std::endl;
+
+    n = 111111111111111111111111111111111111111111111111111111_big;
+    std::cout << n << std::endl;
+
+    n = 111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111_big;
+    std::cout << n << std::endl;
+}
+
+// =====================================================================================
+// conversion c'tors
 
 void Test_TypeConversion_Ctors()
 {
     // testing type conversion c'tors
-
-//#define SHRT_MIN    (-32768)
-//#define SHRT_MAX      32767
-//#define USHRT_MAX     0xffff
-//#define INT_MIN     (-2147483647 - 1)
-//#define INT_MAX       2147483647
-//#define UINT_MAX      0xffffffff
-//#define LONG_MIN    (-2147483647L - 1)
-//#define LONG_MAX      2147483647L
-//#define ULONG_MAX     0xffffffffUL
-//#define LLONG_MAX     9223372036854775807i64
-//#define LLONG_MIN   (-9223372036854775807i64 - 1)
-//#define ULLONG_MAX    0xffffffffffffffffui64
-
     BigInteger n1{ 123 };
     std::cout << n1 << std::endl;
 
@@ -117,8 +107,11 @@ void Test_TypeConversion_Ctors()
 
     BigInteger n4{ 1213213213 };
     std::cout << n4 << std::endl;
-
 }
+
+// =====================================================================================
+// leading zeros
+
 void Test01_BigInteger_LeadingZeros()
 {
     BigInteger b0{};
@@ -146,12 +139,8 @@ void Test01_BigInteger_LeadingZeros()
     std::cout << b7 << std::endl;
 }
 
-void Test01_BigInteger()
-{
-    BigInteger b{"1.2.3.4.567890"};
-    std::cout << "=====================" << std::endl;
-    std::cout << b << std::endl;
-}
+// =====================================================================================
+// leading addition
 
 void Test_Add()
 {
@@ -163,30 +152,6 @@ void Test_Add()
     n1 = BigInteger("99999999999999");
     n2 = BigInteger("1");
     std::cout << n1 << " + " << n2 << " = " << n1 + n2 << std::endl;
-}
-
-void Test_Sub()
-{
-    //// testing subtraction
-    //BigInteger n1("999");
-    //BigInteger n2("900");
-    //cout << n1 << " - " << n2 << " = " << n1 - n2 << endl;
-
-    //n1 = BigInteger("999");
-    //n2 = BigInteger("998");
-    //cout << n1 << " - " << n2 << " = " << n1 - n2 << endl;
-
-    //n1 = BigInteger("999");
-    //n2 = BigInteger("999");
-    //cout << n1 << " - " << n2 << " = " << n1 - n2 << endl;
-
-    //n1 = BigInteger("11111");
-    //n2 = BigInteger("222");
-    //cout << n1 << " - " << n2 << " = " << n1 - n2 << endl;
-
-    //n1 = BigInteger("1000000");
-    //n2 = BigInteger("1");
-    //cout << n1 << " - " << n2 << " = " << n1 - n2 << endl;
 }
 
 void Test_AddWithSign()
@@ -211,6 +176,33 @@ void Test_AddWithSign()
     n2 = BigInteger("-222");
     std::cout << n1 << " + " << n2 << " = " << n1 + n2 << std::endl;
     std::cout << std::endl;
+}
+
+// =====================================================================================
+// leading subtraction
+
+void Test_Sub()
+{
+    // testing subtraction
+    BigInteger n1("999");
+    BigInteger n2("900");
+    std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+    n1 = BigInteger("999");
+    n2 = BigInteger("998");
+    std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+    n1 = BigInteger("999");
+    n2 = BigInteger("999");
+    std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+    n1 = BigInteger("11111");
+    n2 = BigInteger("222");
+    std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
+
+    n1 = BigInteger("1000000");
+    n2 = BigInteger("1");
+    std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
 }
 
 void TestSubWithSign()
@@ -254,6 +246,9 @@ void TestSubWithSign()
     n2 = BigInteger("-333");
     std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
 }
+
+// =====================================================================================
+// leading multiplication
 
 void Test_Mul_01_Unsigned()
 {
@@ -310,6 +305,9 @@ void Test_Mul_02_Signed()
     std::cout << std::endl;
 }
 
+// =====================================================================================
+// leading division
+
 void Test_Division ()
 {
     BigInteger n1{ 6682850 };
@@ -329,6 +327,9 @@ void Test_DivisionPowerByTwo()
     }
 }
 
+// =====================================================================================
+// leading faculty
+
 void Test_Faculty_0(int limit)
 {
     for (int n{ 1 }; n != limit; ++n)
@@ -347,6 +348,9 @@ void Test_Faculty(int limit)
     }
 }
 
+// =====================================================================================
+// leading power
+
 void Test_Power(int limit)
 {
     BigInteger two { 2 };
@@ -363,6 +367,9 @@ void Test_Power(int limit)
         std::cout << "-3 ^ " << n << ": " << f << std::endl;
     }
 }
+
+// =====================================================================================
+// leading mersenne
 
 void Test_Mersenne_01()
 {
@@ -387,20 +394,17 @@ void Test_Mersenne_02()
         std::cout << (i+1) << ".th Mersenne Prime:" << (i + 1);
         std::cout << mersenne << std::endl;
         std::cout << "Number of Digits: " << mersenne.size() << std::endl;
-
-
-        //    mersenne.Cardinality, sw.ElapsedMilliseconds);
-        //Console.WriteLine();
-
-        // std::cout << "Computation Time: {0}", sw.ElapsedMilliseconds);
     }
 }
+
+// =====================================================================================
+// perfect numbers
 
 void Test_01_PerfectNumbers()
 {
     for (size_t i{ 2 }; i != 10000; ++i) {
         if (BigPerfectNumbers::isPerfect(i)) {
-            std::cout << i << " is PERFECT" << std::endl;
+            std::cout << i << " is *prefect*" << std::endl;
         }
     }
 }
@@ -409,10 +413,10 @@ void Test_02_PerfectNumbers()
 {
     std::chrono::system_clock::time_point begin{ std::chrono::system_clock::now() };
 
-    BigInteger limit{ "500" };
+    BigInteger limit{ 500 };
     for (BigInteger n{ 2 }; n != limit; ++n) {
         if (BigPerfectNumbers::isPerfect(n)) {
-            std::cout << n << " is PERFECT" << std::endl;
+            std::cout << n << " is *prefect*" << std::endl;
         }
     }
 
@@ -443,7 +447,7 @@ void Test_03_PerfectNumbers()
 
     std::for_each(std::begin(candidates), std::end(candidates), [](const BigInteger& candidate) {
         if (BigPerfectNumbers::isPerfect(candidate)) {
-            std::cout << candidate << " is PERFECT" << std::endl;
+            std::cout << candidate << " is *prefect*" << std::endl;
         }
     });
 
@@ -452,6 +456,13 @@ void Test_03_PerfectNumbers()
     double ticks{ std::chrono::duration<double>(duration).count() };
     std::cout << ticks << " seconds." << std::endl;
 }
+
+// =====================================================================================
+// prime numbers
+
+
+// =====================================================================================
+// perfect numbers
 
 void Test_TypeConversionOperators()
 {
@@ -464,13 +475,15 @@ void Test_TypeConversionOperators()
     std::cout << k << std::endl << l << std::endl << ll << std::endl;
 }
 
+// =====================================================================================
+// formatting output
+
 void Test_Formatting_Output()
 {
     // testing c'tors
     BigInteger n1{ "12345678901234567890123456789012345678901234567890" };
     std::cout << n1(4) << std::endl;
 }
-
 
 // =====================================================================================
 // End-of-File
