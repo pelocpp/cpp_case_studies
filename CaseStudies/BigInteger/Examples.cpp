@@ -7,10 +7,12 @@
 #include <string_view>
 #include <vector>
 #include <algorithm>
+#include <chrono>
 
 #include "BigInteger.h"
 #include "BigFaculty.h"
 #include "BigMersenne.h"
+#include "BigPerfectNumbers.h"
 
 //#include <sstream>
 //#include <numeric>
@@ -392,8 +394,63 @@ void Test_Mersenne_02()
 
         // std::cout << "Computation Time: {0}", sw.ElapsedMilliseconds);
     }
+}
 
+void Test_01_PerfectNumbers()
+{
+    for (size_t i{ 2 }; i != 10000; ++i) {
+        if (BigPerfectNumbers::isPerfect(i)) {
+            std::cout << i << " is PERFECT" << std::endl;
+        }
+    }
+}
 
+void Test_02_PerfectNumbers()
+{
+    std::chrono::system_clock::time_point begin{ std::chrono::system_clock::now() };
+
+    BigInteger limit{ "500" };
+    for (BigInteger n{ 2 }; n != limit; ++n) {
+        if (BigPerfectNumbers::isPerfect(n)) {
+            std::cout << n << " is PERFECT" << std::endl;
+        }
+    }
+
+    std::chrono::system_clock::time_point end{ std::chrono::system_clock::now() };
+    std::chrono::system_clock::duration duration{ end - begin };
+    double ticks{ std::chrono::duration<double>(duration).count() };
+    std::cout << ticks << " seconds." << std::endl;
+}
+
+void Test_03_PerfectNumbers()
+{
+    std::chrono::system_clock::time_point begin{ std::chrono::system_clock::now() };
+
+    // https://en.wikipedia.org/wiki/List_of_perfect_numbers
+    std::vector<BigInteger> candidates
+    {
+        6_big,
+        28_big,
+        496_big,
+        8'128_big,
+        33'550'336_big,
+        8'589'869'056_big,
+        137'438'691'328_big,
+        2'305'843'008'139'952'128_big,
+        2'658'455'991'569'831'744'654'692'615'953'842'176_big,
+        191'561'942'608'236'107'294'793'378'084'303'638'130'997'321'548'169'216_big
+    };
+
+    std::for_each(std::begin(candidates), std::end(candidates), [](const BigInteger& candidate) {
+        if (BigPerfectNumbers::isPerfect(candidate)) {
+            std::cout << candidate << " is PERFECT" << std::endl;
+        }
+    });
+
+    std::chrono::system_clock::time_point end{ std::chrono::system_clock::now() };
+    std::chrono::system_clock::duration duration{ end - begin };
+    double ticks{ std::chrono::duration<double>(duration).count() };
+    std::cout << ticks << " seconds." << std::endl;
 }
 
 void Test_TypeConversionOperators()

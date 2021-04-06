@@ -59,9 +59,13 @@ void Test_TypeConversionOperators();
 
 void Test_Literals();
 
+void Test_01_PerfectNumbers();
+void Test_02_PerfectNumbers();
+void Test_03_PerfectNumbers();
+
 int main()
 {   
-    Test_Mersenne_01();
+    Test_Faculty_0(31);
 }
 
 // =====================================================================================

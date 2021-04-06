@@ -240,7 +240,7 @@ BigInteger operator/ (const BigInteger& a, const BigInteger& b)
 
         result.insert(std::begin(result), n);
 
-        pos--; // fetch next digit from divisor
+        --pos; // fetch next digit from divisor
     }
 
     // move result vector into a BigInteger object
@@ -381,8 +381,9 @@ BigInteger BigInteger::pow(int exponent)
     if (exponent == 1)
         return result;
 
-    for (int i = 1; i < exponent; i++)
+    for (int i{ 1 }; i != exponent; i++) {
         result = result * *this;
+    }
 
     if (!m_sign && exponent % 2 == 1) {
         result.m_sign = m_sign;
@@ -419,25 +420,19 @@ int BigInteger::compareTo(const BigInteger& a) const
         return -1;
 
     int order = 0;
-    if (size() < a.size())
-    {
+    if (size() < a.size()) {
         order = -1;
     }
-    else if (size() > a.size())
-    {
+    else if (size() > a.size()) {
         order = 1;
     }
-    else
-    {
-        for (size_t i = size() - 1; i != (size_t)-1; --i)
-        {
-            if (m_digits[i] < a.m_digits[i])
-            {
+    else {
+        for (size_t i = size() - 1; i != (size_t)-1; --i) {
+            if (m_digits[i] < a.m_digits[i]) {
                 order = -1;
                 break;
             }
-            else if (m_digits[i] > a.m_digits[i])
-            {
+            else if (m_digits[i] > a.m_digits[i]) {
                 order = 1;
                 break;
             }
@@ -483,9 +478,9 @@ void BigInteger::removeLeadingZeros()
         std::rbegin(m_digits),
         std::rend(m_digits),
         [](int value) { return value != 0; }
-    ) };
+    )};
 
-    // vector contains only '0's - rescue last '0'
+    // vector contains only '0's - save last '0'
     if (r_it == std::rend(m_digits)) {
         r_it--;
     }

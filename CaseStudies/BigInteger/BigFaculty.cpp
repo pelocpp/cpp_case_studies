@@ -9,7 +9,7 @@
 #include "BigInteger.h"
 #include "BigFaculty.h"
 
-size_t BigFaculty::faculty(int n)
+size_t BigFaculty::faculty(size_t n)
 {
     if (n == 1)
         return 1;

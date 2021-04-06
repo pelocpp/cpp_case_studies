@@ -7,25 +7,27 @@ Für manche Anwendungen ist die Verarbeitung von ganzen Zahlen beliebiger Größ
 Wir stellen im Folgenden eine Klasse `BigInteger` vor,
 die eine exakte Arithmetik vorzeichenbehafteter ganzer Zahlen beliebiger Größe zur Verfügung stellt.
 
-Um potentiell beliebig viele Ziffern einer sehr großen Zahl in einem `BigInteger`-Objekt abzulegen,
-gibt es mehrere Möglichkeiten wie etwa die Verwendung (generischer) Standardcontainer
-aus der STL (C++ Standard Template Library) oder auch einfach nur die Ablage der Ziffern in einer Zeichenkette.
-In der vorgestellten Lösung legen wir auf ein `std::vector<T>`-Objekt zugrunde.
-
 <!--more-->
 
 # Lernziele
 
-  * Container `string_view` und `std::vector<T>`
-  * Benutzerdefiertes Literal `_big`
+  * Funktor einer Klasse
+  * Container `std::vector<T>`
+  * Klasse `string_view`
+  * Benutzerdefiertes Literal (hier: `_big`)
   * Lambda-Funktionen (mit `mutable`)
   * Datentyp `uint8_t`
   * Verschiebesemantik mit `std::move`
-  * `std::reverse_iterator`
+  * Einsatz von `std::reverse_iterator`
   * Werfen von Ausnahmen mit `throw` und `std::invalid_argument`
   * STL-Algorithmen bzw. -Funktionen `std::for_each`, `std::find_if`, `std::begin`, `std::end`, `std::rbegin`, `std::rend`, `std::isdigit` und `std::remove`
 
 # Grundgerüst der Klasse `BigInteger`
+
+Um potentiell beliebig viele Ziffern einer sehr großen Zahl in einem `BigInteger`-Objekt abzulegen,
+gibt es mehrere Möglichkeiten wie etwa die Verwendung (generischer) Standardcontainer
+aus der STL (C++ Standard Template Library) oder auch einfach nur die Ablage der Ziffern in einer Zeichenkette.
+In der vorgestellten Lösung legen wir auf ein `std::vector<T>`-Objekt zugrunde.
 
 Unsere Kenntnisse aus der Schulmathematik zur schriftlichen Addition, Multiplikation usw. stellen
 die Grundlage für die Implementierung der arithmetischen Operatoren in der `BigInteger`-Klasse dar.
@@ -65,9 +67,8 @@ halber in der Zeichenkette zulässig, wie etwa `"123.456.789"`.
 
 Eine zweite Möglichkeit zum Benutzen von `BigInteger`-Objekten sind ab C++ 11 die
 so genannten &ldquo;benutzerdefinierte Literale&rdquo;.
-
 Diese gestatten es, einen konstanten Wert der jeweiligen Klasse, also `BigInteger` in unserem Fall, mit einem
-Suffix in das Lexikon von C++ aufzunehmen. Wenn wir uns bei de Suffix auf `_big` festlegen, dann sind die
+Suffix in das Lexikon von C++ aufzunehmen. Wenn wir uns auf das Suffix `_big` festlegen, dann sind die
 folgenden Anweisungen gültiges C++:
 
 ```cpp
@@ -83,15 +84,15 @@ In der letzten Wertzuweisung erkennen wir eine weitere Neuerung von C++:
 In konstanten ganzzahligen Werten &ndash; und damit auch in benutzerdefinierten Literalen &ndash; können
 Einzelhochkommata zur besseren Lesbarkeit eingefügt werden. Damit kein Mißverständnis entsteht:
 
-  * Im Konstuktor der Klasse `BigInteger` mit einem `std::string_view`-Objekt als Parameter
-    haben wir uns auf den Punkt als zulässiges Trennzeichen festgelegt.
+  * Im Konstruktor der Klasse `BigInteger` mit einem `std::string_view`-Objekt als Parameter
+    haben wir uns auf den Punkt `.` als zulässiges Trennzeichen festgelegt.
     Theoretisch hätten wir uns auch für ein anderes Trennzeichen entscheiden können.
-    Es bleibt der Realisierung des Konstruktors überlassen, diese Trennzeichen herauszufiltern und damit zu ignorieren.
-  * Benutzerdefinierte Literale der Klasse `BigInteger` werden vom C++-Scanner analysiert, hier ist der Punkt unzulässig. 
-    Allerdings werden die Einzelhochkomma an die Realisierung des korrespondierenden Operators durchgereicht,
-    also auch in diesem Fall ist eine Sonderbehandlung notwendig.
+    Es bleibt der Realisierung des Konstruktors überlassen, diese Trennzeichen herauszufiltern und zu ignorieren.
+  * Benutzerdefinierte Literale der Klasse `BigInteger` werden vom C++-Scanner analysiert, hier ist der Punkt deshalb unzulässig, dafür aber das Hochkomma. 
+    Allerdings werden die Hochkommata an die Realisierung des korrespondierenden C++-Operators durchgereicht,
+    also ist auch in diesem Fall eine Sonderbehandlung notwendig.
 
-Damit stellt sich die Frage nach der Realisierung eines derartigen Suffixes für literale `BigInteger` Objekte:
+Damit stellt sich die Frage nach der Realisierung eines derartigen Suffixes für literale `BigInteger`-Objekte:
 Es ist der sogenannte *Literaloperator* `operator""` mit folgender Schnittstelle zu implementieren:
 
 ```cpp
@@ -99,6 +100,7 @@ BigInteger operator"" _big(const char* literal);
 ```
 
 Bei einem Literal `1234567890_big` wird der Literaloperator mit dem Parameter `"1234567890"` aufgerufen.
+
 Damit sind wir bei den *getter*-Methoden der Klasse `BigInteger` angekommen,
 sie sind in [Tabelle 2] beschrieben:
 
@@ -110,7 +112,7 @@ sie sind in [Tabelle 2] beschrieben:
 | *getter* `zero()` | `bool zero() const;`<br/>Liefert den Wert `true` zurück, wenn die Zahl 0 ist, andernfalls `false`. |
 | *getter* `sign()` | `bool sign() const;`<br/>Liefert das Vorzeichen der Zahl zurück, `true` entspricht einer positiven Zahl, `false` einer negativen. |
 
-*Tabelle* 2: *getter*-/*setter*-Methoden der Klasse `BigInteger`.
+*Tabelle* 2: *getter*-Methoden der Klasse `BigInteger`.
 
 # Ausgabe
 
@@ -134,12 +136,12 @@ bei der Addition der nächsten zwei Ziffern, siehe [Abbildung 1]:
 *Abbildung* 1: Schriftliche Addition der Schulmathematik.
 
 Bei der Umsetzung der schriftlichen Addition in einem C++-Programm stellt sich die Frage,
-in welcher Reihenfolge die einzelnen Ziffern im korrespondierenden `std::vector`-Objekt abgelegt werden.
+in welcher Reihenfolge die einzelnen Ziffern im korrespondierenden `std::vector<T>`-Objekt abgelegt werden.
 Da die einzelnen Ziffern stellenweise, beginnend mit der niedrigstwertigen Stelle, zu addieren sind, bietet es sich an,
 die einzelnen Ziffern in umgekehrter Reihenfolge im Container abzuspeichern.
 Wenn wir das Beispiel aus [Abbildung 1] noch einmal betrachten,
 so würde die Ablage und Verarbeitung der beiden Zahlen 28345 und 7567 in einem `BigInteger`-Objekt
-wie in [Abbildung 2] aussehen:
+wie in [Abbildung 2] gezeigt aussehen:
 
 ###### {#abbildung_2_schriftlichen_addition_02}
 
@@ -167,9 +169,9 @@ wie wir im Beispiel aus [Abbildung 3] vorführen:
 *Abbildung* 3: Entbündelungsverfahren für Subtraktion.
 
 Die Subtraktion der Einerstelle in [Abbildung 3] bereitet keine Probleme, 4 minus 2 ist gleich 2.
-Die Zehnerstellen lassen sich zunächst nicht abziehen, der Minuend (6) ist zu klein.
+Die Zehnerstellen lassen sich zunächst nicht abziehen, der Minuend 6 ist zu klein.
 Er wird darum um 10 erhöht, also gleich 16 gesetzt.
-Diese 10 wird von der links daneben stehenden Ziffer (8) geliehen und deshalb wird diese
+Diese 10 wird von der links daneben stehenden Ziffer 8 geliehen und deshalb wird diese
 um 1 erniedrigt (neuer Wert 7). Nun können die nächsten zwei Subtraktionen (16 minus 9 und 7 minus 5)
 problemlos durchgeführt werden und man erhält 272 als korrektes Gesamtergebnis der Subtraktion.
 
@@ -233,7 +235,7 @@ für eine Ergänzung der `BigInteger`-Klasse in [Tabelle 3] zusammen:
 
 ###### {#tabelle_3_class_biginteger_arithmetic_operators}
 
-| Element | Beschreibung |
+| Operator | Beschreibung |
 | :---- | :---- |
 | Operator `+` | `friend BigInteger operator+ (const BigInteger& a, const BigInteger& b);`<br/>Liefert ein neues `BigInteger`-Objekt zurück, dessen Wert sich aus der Addition von `a` und `b` ergibt. |
 | Operator `-` | `friend BigInteger operator- (const BigInteger& a, const BigInteger& b);`<br/>Liefert ein neues `BigInteger`-Objekt zurück, dessen Wert sich aus der Subtraktion von `a` und `b` ergibt. |
@@ -248,7 +250,7 @@ arithmetischen Wertzuweisungsoperatoren wie zum Beispiel `+=`, siehe hierzu [Tab
 
 ###### {#tabelle_4_class_biginteger_arithmetic_assignment_operators}  
 
-| Element | Beschreibung |
+| Operator | Beschreibung |
 | :---- | :---- |
 | Operator `+` | `friend BigInteger& operator+= (BigInteger& a, const BigInteger& b);`<br/>Addition von `a` und `b` mit Zuweisung an `a`. |
 | Operator `-` | `friend BigInteger& operator-= (BigInteger& a, const BigInteger& b);`<br/>Subtraktion von `a` und `b` mit Zuweisung an `a`. |
@@ -264,7 +266,7 @@ Für diese beiden Fälle benötigen wir jeweils den `+`&ndash; oder `-`&ndash;Op
 
 ###### {#tabelle_5_class_biginteger_unary_arithmetic_operators}
 
-| Element | Beschreibung |
+| Operator | Beschreibung |
 | :---- | :---- |
 | Operator `+` | `friend BigInteger operator+ (const BigInteger& a);`<br/>Liefert ein neues `BigInteger`-Objekt zurück, dessen Wert eine Kopie von `a` ist. |
 | Operator `-` | `friend BigInteger operator- (const BigInteger& b);`<br/>Liefert ein neues `BigInteger`-Objekt zurück, dessen Wert eine negative Kopie von `a` ist. |
@@ -282,14 +284,14 @@ Entsprechende Operatoren hierzu sind in [Tabelle 6] festgelegt:
 
 ###### {#tabelle_6_class_biginteger_comparison_operators}  
 
-| Element | Beschreibung |
+| Operator | Beschreibung |
 | :---- | :---- |
 | Operator `==` | `friend bool operator== (const BigInteger& a, const BigInteger& b);`<br/>Vergleicht den Wert zweier `BigInteger`-Objekte `a` und `b` auf Gleichheit. |
 | Operator `!=` | `friend bool operator!= (const BigInteger& a, const BigInteger& b);`<br/>Vergleicht den Wert zweier `BigInteger`-Objekte `a` und `b` auf Ungleichheit. |
-| Operator `<`  | `friend bool operator<  (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relationen kleiner. |
-| Operator `<=` | `friend bool operator<= (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relationen kleiner-gleich. |
-| Operator `>`  | `friend bool operator>  (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relationen größer. |
-| Operator `>=` | `friend bool operator>= (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relationen größer-gleich. |
+| Operator `<`  | `friend bool operator<  (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relation kleiner. |
+| Operator `<=` | `friend bool operator<= (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relation kleiner-gleich. |
+| Operator `>`  | `friend bool operator>  (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relation größer. |
+| Operator `>=` | `friend bool operator>= (const BigInteger& a, const BigInteger& b);`<br/>Umsetzung der mathematischen Relation größer-gleich. |
 
 *Tabelle* 6: Vergleichsoperatoren der Klasse `BigInteger`.
 
@@ -299,11 +301,11 @@ Möglicherweise benötigen Sie zur Implementierung der vorangestellten Abschnitt
 Bei den arithmetischen Operationen können beispielsweise in manchen Situationen im internen `std::vector<T>`-Objekt
 führende Nullen entstehen. Im Extremfall kann man dies bei der Subtraktion einer Zahl mit sich selbst beobachten, also etwa 100 - 100.
 Das Ergebnis sollte dann nicht 000, sondern eben 0 lauten.
-Zur Behebung dieser Unschönheit finden Sie in Tabelle 7 die Methode `removeLeadingZeros` nebst einigen weiteren Methoden vor:
+Zur Behebung dieser Unschönheit finden Sie in [Tabelle 7] die Methode `removeLeadingZeros` nebst einigen weiteren Methoden vor:
 
 ###### {#tabelle_7_class_biginteger_helper_methods}  
 
-| Element | Beschreibung |
+| Methode | Beschreibung |
 | :---- | :---- |
 | Methode `removeLeadingZeros` | `void removeLeadingZeros();`<br/>Entfernt führende Nullen im internen `std::vector<T>`-Objekt eines `BigInteger`-Objekts. |
 | Methode `abs` | `BigInteger abs() const;`<br/>Liefert ein `BigInteger`-Objekt mit dem Absolutbetrag des aktuellen Objekts zurück. |
@@ -333,6 +335,38 @@ std::cout << n3 << std::endl;
 1.234.567
 -1.234.567
 123.456.789.012.345.678
+```
+
+*Beispiel*:
+
+```cpp
+// testing literals
+BigInteger n{};
+
+n = 1_big;
+std::cout << n << std::endl;
+
+n = 1234567890_big;
+std::cout << n << std::endl;
+
+n = -1234567890_big;
+std::cout << n << std::endl;
+
+n = 111111111111111111111111111111111111111111111111111111_big;
+std::cout << n << std::endl;
+
+n = 111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111_big;
+std::cout << n << std::endl;
+```
+
+*Ausgabe*:
+
+```
+1
+1.234.567.890
+-1.234.567.890
+111.111.111.111.111.111.111.111.111.111.111.111.111.111.111.111.111.111
+111.111.111.111.111.111.111.111.111.111.111.111.111.111.111.111.111.111
 ```
 
 *Beispiel*:
@@ -392,6 +426,8 @@ std::cout << n1 << " - " << n2 << " = " << n1 - n2 << std::endl;
 
 # Lösung
 
+> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
+
 Die Realisierung der Klasse `BigInteger` ist nicht in allen Teilen trivial.
 Wir gehen die einzelnen Abschnitte detailliert durch.
 Die notwendigen Instanzvariablen der Klasse `BigInteger` wurden durch die Aufgabenstellung mehr oder minder nahe gelegt:
@@ -403,7 +439,7 @@ bool m_sign;
 
 Die einzelnen Ziffern der großen Zahl werden in einem Array des Typs `std::vector<DigitType>` abgelegt.
 Hier hätte man vielleicht der Einfachheit halber einen Typ `std::vector<int>` erwartet. 
-Da wir es möglicherweise mit vielen Ziffern zu tun haben, die im Speicher dicht gepackt und konsekutiv abgelegt werden sollten,
+Da wir es möglicherweise mit sehr vielen Ziffern zu tun haben, die im Speicher dicht gepackt und konsekutiv abgelegt werden sollten,
 wollen wir hier platzsparend vorgehen. Mit einer Typdefinition
 
 ```cpp
@@ -505,7 +541,7 @@ In [Listing 1] beginnen wir unseren Parcours durch den Lösungsteil mit der Schn
 84: BigInteger operator"" _big(const char*);
 ```
 
-*Listing* 1: Klasse `BigInteger`: Definition.
+*Listing* 1: Schnittstelle der Klasse `BigInteger`.
 
 Der Standardkonstruktor soll die Zahl 0 repräsentieren, dazu benötigen wir immerhin ein Ziffernfeld der Länge 1:
 
@@ -522,7 +558,7 @@ Da wir im Prinzip nur konstante Zeichenketten erwarten (oder unterstützen), ist
 `std::string_view`-Objekte sind eine optimierte Version der Klasse `std::string`,
 sie bestehen ausschließlich aus einem *raw*-Zeiger einer konstanten Zeichenkette und einer Längenangabe.
 Prinzipiell wird von der Zeichenkette erwartet, dass diese korrekt aufgebaut ist.
-Im Fehlerfall wird eine Ausnahme geworfen (siehe die Zeilen 10 und 23 von [Listing 2]):
+Im Fehlerfall wird eine Ausnahme des Typs `std::invalid_argument` geworfen (siehe die Zeilen 10 und 23 von [Listing 2]):
 
 ###### {#listing_2_user_def_ctor}
 
@@ -560,15 +596,15 @@ Im Fehlerfall wird eine Ausnahme geworfen (siehe die Zeilen 10 und 23 von [Listi
 
 *Listing* 2: Benutzerdefinierter Konstruktor der Klasse `BigInteger`.
 
-Da wir die Ziffern eines `BigInteger`-Objekts intern in der umgekehrten Reihenfolge ablegen wollen,
+Da wir die Ziffern eines `BigInteger`-Objekts intern in der umgekehrten Reihenfolge ablegen,
 kommt ein `std::reverse_iterator` zum Einsatz.
 
 Nach der Erzeugung eines `BigInteger`-Objekts an Hand einer Zeichenkette kommen wir gleich auf die entgegengesetzte Operation zu sprechen:
-Umwandlung eines BigInteger-Objekts in eine Zeichenkette. Diese Operationn haben wir im Funktor der Klasse untergebracht.
+Umwandlung eines BigInteger-Objekts in eine Zeichenkette. Diese Operation haben wir im Funktor der Klasse untergebracht.
 Dieser ist flexiblel in der Aufnahme von Parameterwerten.
 Wir definieren ihn mit einem Parameter vom Typ `int`, um die Anzahl der Dreiziffernblöcke pro Zeile festzulegen.
 Die Zeilen 10 bis 48 ([Listing 3]) widmen sich dem Umstand, mit wie vielen Leerzeichen der erste Dreiziffernblock aufzufüllen ist,
-wenn die Anzahl der Ziffern kein Vielfaches von Drei ist. Da auch noch ein mögliches Vorzeichen zu berücksichtigen ist,
+wenn die Anzahl der Ziffern kein Vielfaches von 3 ist. Da auch noch ein mögliches Vorzeichen zu berücksichtigen ist,
 gewinnt der Sourcecode leider nicht gerade an Übersichtlichkeit.
 
 ###### {#listing_3_to_string_conversion}
@@ -824,11 +860,10 @@ In Zeile 5 erfolgt ein Aufruf der entsprechenden Addition mit bereinigten Vorzei
 Im anderen Fall lässt die Subtraktion sich auch durchführen, es sind nur Subtrahend und Minuend
 zu vertauschen und das Vorzeichen des Ergebnisses entsprechend anzupassen.
 Da das Entbündelungsverfahrens nur funktioniert, wenn der Subtrahend kleiner als der Minuend ist,
-muss auch dieser Fall noch berücksichtigt werden, siehe dazu die Zeilen 7 und 8 von Listing 5.
+muss auch dieser Fall noch berücksichtigt werden, siehe dazu die Zeilen 7 und 8 von [Listing 7].
 
 In Zeile 7 finden wir den `<`-Operators auf zwei `BigInteger`-Objekte angewendet vor.
 Damit sind wir bei den Vergleichsoperatoren angekommen ([Listing 8]):
-
 
 ###### {#listing_8_comparison_operators}
 
@@ -869,7 +904,6 @@ bool operator>= (const BigInteger& a, const BigInteger& b)
 Die eigentliche Arbeit, die man zum Vergleichen zweier `BigInteger`-Objekte anstellen muss,
 wurde dabei in eine Hilfsmethode `compareTo` ausgelagert ([Listing 9]):
 
-
 ###### {#listing_9_compareto}
 
 ```cpp
@@ -881,39 +915,33 @@ wurde dabei in eine Hilfsmethode `compareTo` ausgelagert ([Listing 9]):
 06:         return -1;
 07: 
 08:     int order = 0;
-09:     if (size() < a.size())
-10:     {
-11:         order = -1;
-12:     }
-13:     else if (size() > a.size())
-14:     {
-15:         order = 1;
-16:     }
-17:     else
-18:     {
-19:         for (size_t i = size() - 1; i != (size_t)-1; --i)
-20:         {
-21:             if (m_digits[i] < a.m_digits[i])
-22:             {
-23:                 order = -1;
-24:                 break;
-25:             }
-26:             else if (m_digits[i] > a.m_digits[i])
-27:             {
-28:                 order = 1;
-29:                 break;
-30:             }
-31:         }
-32:     }
-33: 
-34:     return (m_sign) ? order : -order;
-35: }
+09:     if (size() < a.size()) {
+10:         order = -1;
+11:     }
+12:     else if (size() > a.size()) {
+13:         order = 1;
+14:     }
+15:     else {
+16:         for (size_t i = size() - 1; i != (size_t)-1; --i) {
+17:             if (m_digits[i] < a.m_digits[i]) {
+18:                 order = -1;
+19:                 break;
+20:             }
+21:             else if (m_digits[i] > a.m_digits[i]) {
+22:                 order = 1;
+23:                 break;
+24:             }
+25:         }
+26:     }
+27: 
+28:     return (m_sign) ? order : -order;
+29: }
 ```
 
 *Listing* 9: Hilfsmethode `compareTo` für die Vergleichsoperatoren der Klasse `BigInteger`.
 
 Da die Ziffern einer großen Zahl intern im `BigInteger`-Objekt in der umgekehrten Reihenfolge abgelegt werden,
-ist in der `for`-Wiederholungsschleife von [Listing 9] (Zeile 19) zu beachten, dass die Ziffern von der höchstwertigen
+ist in der `for`-Wiederholungsschleife von [Listing 9] (Zeile 16) zu beachten, dass die Ziffern von der höchstwertigen
 bis hin zur niedrigstwertigen Ziffer verglichen werden.
 
 Wir sind etwas vom Thema abgekommen, wir waren bei den arithmetischen Operatoren stehen geblieben
@@ -967,15 +995,16 @@ Der `*`-Operator ermöglicht eine recht kurze und übersichtliche Realisierung d
 07:     if (exponent == 1)
 08:         return result;
 09: 
-10:     for (int i = 1; i < exponent; i++)
+10:     for (int i{ 1 }; i != exponent; i++) {
 11:         result = result * *this;
-12: 
-13:     if (!m_sign && exponent % 2 == 1) {
-14:         result.m_sign = m_sign;
-15:     }
-16: 
-17:     return result;
-18: }
+12:     }
+13: 
+14:     if (!m_sign && exponent % 2 == 1) {
+15:         result.m_sign = m_sign;
+16:     }
+17: 
+18:     return result;
+19: }
 ```
 
 Wir sind fast am Ziel angekommen, es fehlt nur noch die Division ([Listing 11]):
@@ -1019,7 +1048,7 @@ Wir sind fast am Ziel angekommen, es fehlt nur noch die Division ([Listing 11]):
 34: 
 35:         result.insert(std::begin(result), n);
 36: 
-37:         pos--; // fetch next digit from divisor
+37:         --pos; // fetch next digit from divisor
 38:     }
 39: 
 40:     // move result vector into a BigInteger object
@@ -1035,10 +1064,8 @@ Wir sind fast am Ziel angekommen, es fehlt nur noch die Division ([Listing 11]):
 
 Das Ergebnis einer Division wird, wie in [Abbildung 6] beschrieben, Ziffer für Ziffer berechnet.
 Aus diesem Grund bemühen wir in Zeile 35 ein `std::vector<>`-Objekt, das die einzelnen Ziffern aufnimmt.
-Ab Zeile 41ff verschieben wir dieses Objekt in ein `BigInteger`-Objekt und liefern dieses als Ergebnis der Division zurück.
-
+Ab Zeile 41ff. verschieben wir dieses Objekt in ein `BigInteger`-Objekt und liefern dieses als Ergebnis der Division zurück.
 Das Spiegelstück der Divison, die Division mit Rest, führt uns zum Modulo-Operator `%` in [Listing 12]:
-
 
 ###### {#listing_12_modulo}
 
@@ -1130,9 +1157,9 @@ Sie kommt in der Realisierung der diversen Methoden und Operatoren der `BigInteg
 05:         std::rbegin(m_digits),
 06:         std::rend(m_digits),
 07:         [](int value) { return value != 0; }
-08:     ) };
+08:     )};
 09: 
-10:     // vector contains only '0's - rescue last '0'
+10:     // vector contains only '0's - save last '0'
 11:     if (r_it == std::rend(m_digits)) {
 12:         r_it--;
 13:     }
@@ -1155,7 +1182,7 @@ schnell einen sehr großen Wert annimmt. Wir können das an einer Methode `facul
 die wir auf Basis des Datentyps `size_t` definieren:
 
 ```cpp
-size_t BigFaculty::faculty(int n)
+size_t BigFaculty::faculty(size_t n)
 {
     if (n == 1)
         return 1;
@@ -1210,7 +1237,7 @@ was aber für die Falschheit der Ergebnisse nicht der Grund ist:
 
 *Abbildung* 7: Rekursive Definition der Fakultätfunktion.
 
-Mit den regulären Sprachmitteln von C++ kommen wir jetzt nicht weiter, der Wertebereich des Datentyps `size_t` lässt
+Mit den regulären Sprachmitteln von C++ kommen wir hier nicht korrekt an das Ziel, der Wertebereich des Datentyps `size_t` lässt
 einfach keine größeren Zahlen zu. Ersetzen wir in der Methode `faculty` den Datentyp `size_t` durch `BigInteger`,
 so können wir die Fakultät korrekt für beliebig große Argumente berechnen:
 
@@ -1226,7 +1253,7 @@ BigInteger BigFaculty::faculty(BigInteger n)
 
 Nebenbei bemerkt ist die aus der Mathematik hinlänglich bekannte Fakultät-Funktion ein guter Kandidat,
 um vorzugsweise die Subtraktion und Multiplikation intensiv testen zu können.
-Mit folgendem Testrahmen sehen die ersten dreißig Fakultäten so aus:
+Mit folgendem Testrahmen sehen die ersten fünfunddreißig Fakultäten so aus:
 
 ```cpp
 void Test_Faculty(int limit)
@@ -1297,7 +1324,7 @@ while (huge != 1_big)
 
 *Ausgabe*:
 
-```cpp
+```
 2.475.880.078.570.760.549.798.248.448 / 2 = 1.237.940.039.285.380.274.899.124.224
 1.237.940.039.285.380.274.899.124.224 / 2 = 618.970.019.642.690.137.449.562.112
 618.970.019.642.690.137.449.562.112 / 2 = 309.485.009.821.345.068.724.781.056
@@ -1391,15 +1418,12 @@ while (huge != 1_big)
 2 / 2 = 1
 ```
 
-WEITER: Perfekte Zahlen ...........
-
-
 Zum Abschluss betrachten wir noch *Mersenne*-Zahlen. Eine *Mersenne*-Zahl ist eine Zahl der Form 2*n* - 1.
 Die Primzahlen unter den *Mersenne*-Zahlen werden *Mersenne-Primzahlen* genannt.
-Diese können wiederum, wie Sie sich denken können, sehr groß werden. Im Jahre 1963 gelang es dem Mathematiker
-Donald B. Gillies nachzuweisen, dass für den Exponenten *n* = 11213 die resultierende Mersenne-Zahl prim ist.
+Diese können wiederum, wie Sie vermuten, sehr groß werden. Im Jahre 1963 gelang es dem Mathematiker
+*Donald B. Gillies* nachzuweisen, dass für den Exponenten *n* = 11213 die resultierende Mersenne-Zahl prim ist.
 Sollte es mir gelungen sein, Ihr Interesse an Mersenne-Primzahlen zu wecken,
-dann dürfen Sie zum Abschluss &ndash; mit Hilfe der *BigInteger*-Klasse &ndash; einen Blick auf diese Zahl werfen.
+dann dürfen Sie zum Abschluss &ndash; mit Hilfe der `BigInteger`-Klasse &ndash; einen Blick auf diese Zahl werfen.
 In der Liste aller bekannten Mersenne-Primzahlen rangiert sie an der 23. Stelle:
 
 ```cpp
@@ -1408,6 +1432,9 @@ std::cout << "Mersenne: " << std::endl;
 std::cout << mersenne(16) << std::endl;
 std::cout << "Number of Digits: " << mersenne.size() << std::endl;
 ```
+
+Beachten Sie in dem Code-Fragment: Zur Ausgabe der *Mersenne*-Zahl greifen wir auf den Funktor in der Klasse `BigInteger` zurück.
+Es sollen pro Zeile 16 Dreiziffernblöcke ausgegeben werden.
 
 *Ausgabe*:
 
@@ -1489,7 +1516,33 @@ Number of Digits: 3376
 
 # There&lsquo;s more
 
-TODO: Primzahlen ... siehe github bei CSharp
+Natürlich gibt es noch weitere mathematische Spielereien, für die sich die Klasse `BigInteger` eignet.
+Wir geben abschließend zwei Anregungen: *Perfekte* Zahlen und *Primzahlen*:
+
+*Definition*: Eine ganze (positive) Zahl wird perfekte vollkommene Zahl (auch vollkommene Zahl) genannt,
+wenn sie gleich der Summe aller ihrer (positiven) Teiler außer sich selbst ist.
+
+Weitaus bekannter dürfte die Definition für Primzahlen sein:
+
+*Definition*: Eine Primzahl ist eine ganze (positive) Zahl, die größer als 1 und ausschließlich durch sich selbst und durch 1 teilbar ist. 
+
+Sowohl perfekte Zahlen als auch Primzahlen lassen sich mit den herkömmlichen Sprachmitteln von C++
+(und natürlich auch anderen Hochsprachen) relativ einfach bestimmen &ndash; wenn wir nur auf der Suche nach vergleichsweise
+&ldquo;kleinen&rdquo; Zahlen sind. Für die Bestimmung größerer Zahlen benötigen wir Hilfsmittel wie beispielsweise die
+Klasse `BigInteger`. Um es vorweg zunehmen: Wir werden mit einem zweiten Problem konfrontiert sein:
+Der Laufzeit des Programms. Wie lange derartige Berechnungen sein können, dürfen Sie mit den folgenden Code-Fragment eruieren.
+Die beteiligten Klassen BigPerfectNumbers und BigPrimeNumbers finden Sie
+[hier](https://github.com/pelocpp/cpp_case_studies.git)
+vor.
+
+
+
+
+
+
+
+
+
 
 <!-- Links Definitions -->
 

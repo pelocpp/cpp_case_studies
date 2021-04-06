@@ -1,14 +1,14 @@
 // =====================================================================================
-// BigFaculty.h
+// BigPerfectNumbers.h
 // =====================================================================================
 
 #pragma once
 
-class BigFaculty
+class BigPerfectNumbers
 {
 public:
-    static size_t faculty(size_t n);
-    static BigInteger faculty(BigInteger n);
+   static bool isPerfect(size_t);
+   static bool isPerfect(const BigInteger&);
 };
 
 // =====================================================================================

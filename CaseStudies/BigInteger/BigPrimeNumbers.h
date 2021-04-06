@@ -1,14 +1,14 @@
 // =====================================================================================
-// BigFaculty.h
+// BigPrimeNumbers.h
 // =====================================================================================
 
 #pragma once
 
-class BigFaculty
+class BigPrimeNumbers
 {
 public:
-    static size_t faculty(size_t n);
-    static BigInteger faculty(BigInteger n);
+   static bool isPrime(size_t);
+   static bool isPrime(BigInteger);
 };
 
 // =====================================================================================

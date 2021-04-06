@@ -30,6 +30,12 @@
     <ClCompile Include="BigMersenne.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BigPerfectNumbers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BigPrimeNumbers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BigInteger.h">
@@ -39,6 +45,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BigMersenne.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BigPerfectNumbers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BigPrimeNumbers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

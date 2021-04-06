@@ -144,6 +144,8 @@
     <ClCompile Include="BigFaculty.cpp" />
     <ClCompile Include="BigInteger.cpp" />
     <ClCompile Include="BigMersenne.cpp" />
+    <ClCompile Include="BigPerfectNumbers.cpp" />
+    <ClCompile Include="BigPrimeNumbers.cpp" />
     <ClCompile Include="Examples.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
@@ -151,6 +153,8 @@
     <ClInclude Include="BigFaculty.h" />
     <ClInclude Include="BigInteger.h" />
     <ClInclude Include="BigMersenne.h" />
+    <ClInclude Include="BigPerfectNumbers.h" />
+    <ClInclude Include="BigPrimeNumbers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
