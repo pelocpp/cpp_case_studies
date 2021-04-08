@@ -7,8 +7,14 @@
 class BigFaculty
 {
 public:
-    static size_t faculty(size_t n);
-    static BigInteger faculty(BigInteger n);
+    template <typename T>
+    static T faculty(const T& n)
+    {
+        if (n == static_cast<T> (1))
+            return static_cast<T> (1);
+        else
+            return n * faculty(n - static_cast<T> (1));
+    }
 };
 
 // =====================================================================================

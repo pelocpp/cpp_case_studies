@@ -31,7 +31,7 @@ bool BigPrimeNumbers::isPrime(size_t number)
     return true;
 }
 
-bool BigPrimeNumbers::isPrime(BigInteger number)
+bool BigPrimeNumbers::isPrime(const BigInteger& number)
 {
     // the smallest prime number is 2
     if (number <= 2_big)
@@ -54,14 +54,12 @@ bool BigPrimeNumbers::isPrime(BigInteger number)
     return true;
 }
 
-std::pair<size_t, size_t> BigPrimeNumbers::factorize(size_t number)
+std::pair<size_t, size_t> BigPrimeNumbers::hasPrimeFactor(size_t number)
 {
-    std::pair<size_t, size_t> result;
-    result.first = 1;
-    result.second = number;
+    std::pair<size_t, size_t> result{ 1 , number };
 
     // factorizing a long variable using a very simple approach
-    for (long i = 2; i < number; i++)
+    for (long i{ 2 }; i != number; ++i)
     {
         if ((number % i) == 0)
         {
@@ -74,14 +72,13 @@ std::pair<size_t, size_t> BigPrimeNumbers::factorize(size_t number)
     return result;
 }
 
-std::pair<BigInteger, BigInteger> BigPrimeNumbers::factorize(BigInteger number)
+std::pair<BigInteger, BigInteger> BigPrimeNumbers::hasPrimeFactor(const BigInteger& number)
 {
-    std::pair<BigInteger, BigInteger> result;
-    result.first = 1_big;
-    result.second = number;
+    // std::pair<BigInteger, BigInteger> result{ 1_big , number };
+    std::pair<BigInteger, BigInteger> result{ (BigInteger) 1 , number };
 
     // factorizing a big integer object using a very simple approach
-    for (BigInteger i{ 2 }; i < number; i++)
+    for (BigInteger i{ 2 }; i != number; ++i)
     {
         BigInteger tmp{ number % i };
         if (tmp.zero())
@@ -93,6 +90,60 @@ std::pair<BigInteger, BigInteger> BigPrimeNumbers::factorize(BigInteger number)
     }
 
     return result;
+}
+
+std::vector<size_t> BigPrimeNumbers::getPrimeFactors(size_t number)
+{
+    std::vector<size_t> factors;
+    size_t factor{ 2 };
+
+    while (number != 1)
+    {
+        if (number % factor == 0)
+        {
+            // store found factor in result vector
+            factors.push_back(factor);
+
+            // divide number through this prime factor
+            number = number / factor;
+
+            // remove same prime factor, if any
+            while (number % factor == 0) {
+                number = number / factor;
+            }
+        }
+
+        factor++;
+    }
+
+    return factors;
+}
+
+std::vector<BigInteger> BigPrimeNumbers::getPrimeFactors(BigInteger number)
+{
+    std::vector<BigInteger> factors;
+    BigInteger factor{ 2 };
+
+    while (number != 1_big)
+    {
+        if (number % factor == 0_big)
+        {
+            // store found factor in result vector
+            factors.push_back(factor);
+
+            // divide number through this prime factor
+            number = number / factor;
+
+            // remove same prime factor, if any
+            while (number % factor == 0_big) {
+                number = number / factor;
+            }
+        }
+
+        factor++;
+    }
+
+    return factors;
 }
 
 // =====================================================================================

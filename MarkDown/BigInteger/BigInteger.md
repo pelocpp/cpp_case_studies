@@ -1239,17 +1239,30 @@ was aber für die Falschheit der Ergebnisse nicht der Grund ist:
 
 Mit den regulären Sprachmitteln von C++ kommen wir hier nicht korrekt an das Ziel, der Wertebereich des Datentyps `size_t` lässt
 einfach keine größeren Zahlen zu. Ersetzen wir in der Methode `faculty` den Datentyp `size_t` durch `BigInteger`,
-so können wir die Fakultät korrekt für beliebig große Argumente berechnen:
+so können wir die Fakultät korrekt für beliebig große Argumente berechnen. Wir greifen die Gelegenheit noch beim Schopfe
+und definieren die Methode `faculty` jetzt als so genannte *Template Member Methode*.
+Auf diese Weise haben wir eine einzige Implementierung, die sich für Daten des Typs `size_t` **und** `BigInteger`
+verwenden lässt:
 
 ```cpp
-BigInteger BigFaculty::faculty(BigInteger n)
+class BigFaculty
 {
-    if (n == 1_big)
-        return 1_big;
-    else
-        return n * faculty(n - 1_big);
-}
+public:
+    template <typename T>
+    static T faculty(const T& n)
+    {
+        if (n == static_cast<T> (1))
+            return static_cast<T> (1);
+        else
+            return n * faculty(n - static_cast<T> (1));
+    }
+};
 ```
+
+Der einzige &ndash; wenn wir das so sehen wollen &ndash; unschöne Aspekt dieser Realisierung ist die
+Verwendung von konstanten Werten. Für die Konstante `1` (Datentyp `int` oder auch `size_t`) bzw. `1_big` (Datentyp `BigInteger`)
+schreiben wir in einer generischen Methode `static_cast<T>(1)`  (Datentyp `T`).
+Da die Wartung einer Methode in jedem Fall besser ist als die von zwei Methoden, bevorzuge ich diese Variante.
 
 Nebenbei bemerkt ist die aus der Mathematik hinlänglich bekannte Fakultät-Funktion ein guter Kandidat,
 um vorzugsweise die Subtraktion und Multiplikation intensiv testen zu können.
@@ -1526,7 +1539,8 @@ Die ersten 5 perfekten Zahlen lauten  6, 28, 496, 8.128 und 33.550.336.
 
 Weitaus bekannter dürfte die Definition für Primzahlen sein:
 
-*Definition*: Eine Primzahl ist eine ganze (positive) Zahl, die größer als 1 und ausschließlich durch sich selbst und durch 1 teilbar ist. 
+*Definition*: Eine Primzahl ist eine ganze (positive) Zahl, die größer als 1 und ausschließlich durch sich selbst
+und durch 1 teilbar ist. 
 
 Sowohl perfekte Zahlen als auch Primzahlen lassen sich mit den herkömmlichen Sprachmitteln von C++
 (und natürlich auch anderen Hochsprachen) relativ einfach bestimmen &ndash; wenn wir nur auf der Suche nach vergleichsweise
@@ -1566,7 +1580,7 @@ std::cout << ticks << " seconds." << std::endl;
 ```
 
 Allerdings sollte nicht verschwiegen werden, dass ich zur Ausführung des Programms den *Release*-Modus gewählt habe.
-Spannender wird es mit dem nächsten Code-Fragment: Hier habe ich aus Wikipedia die ersten XXX perfekten Zahlen übernommen.
+Spannender wird es mit dem nächsten Code-Fragment: Hier habe ich aus Wikipedia die ersten 10 perfekten Zahlen übernommen.
 Die Aufgabe des Code-Fragment besteht gewissermaßen darin, eine Überprüfung der Angaben aus Wikipedia zu machen &ndash;
 wenngleich ich daran natürlich nicht den geringsten Zweifel habe. Um es gleich vorweg zu nehmen: 
 Auf meinem Rechner habe ich das Ende der Berechnungen nicht abgewartet .......
@@ -1602,6 +1616,177 @@ double ticks{ std::chrono::duration<double>(duration).count() };
 std::cout << ticks << " seconds." << std::endl;
 ```
 
+Auch die Suche nach sehr großen Primzahlen ist ein beliebtes Steckenpferd von Mathematikern.
+Eine sehr einfache, leider auch sehr laufzeitintensive Methode zur Überprüfung der Primzahleigenschaft
+einer `BigInteger`-Zahl sieht so aus:
+
+```cpp
+bool BigPrimeNumbers::isPrime(const BigInteger& number)
+{
+    // the smallest prime number is 2
+    if (number <= 2_big)
+        return number == 2_big;
+
+    // even numbers other than 2 are not prime
+    if (number % 2_big == 0_big)
+        return false;
+
+    // check odd divisors from 3 to the half of the number
+    // (in lack of a high precision sqare root function) 
+    BigInteger end = number / 2_big + 1_big;
+    for (BigInteger i{ 3 }; i <= end; i += 2_big) {
+        BigInteger tmp{ number % i };
+        if (tmp.zero())
+            return false;
+    }
+
+    // found prime number
+    return true;
+}
+```
+
+Mit dieser Funktion `isPrime` kann man prinzipiell jeden beliebigen Bereich von Zahlen nach Primzahlen durchsuchen,
+zum Beispiel auf diese Weise:
+
+```cpp
+    BigInteger lower{ 10000 };
+    BigInteger upper{ 11001 };
+    BigInteger count{};
+
+    for (BigInteger i{ lower }; i != upper; ++i)
+    {
+        if (BigPrimeNumbers::isPrime(i)) {
+            std::cout << "  found " << i << std::endl;
+            count++;
+        }
+    }
+
+    std::cout 
+        << count << " prime numbers between " << lower << " and " 
+        << (upper - 1_big) << "." << std::endl;
+```
+
+Eng verbunden mit der Primzahleigenschaft einer natürlichen Zahl ist auch die Fragestellung, 
+aus welchen Primfaktoren eine natürliche Zahl besteht. Dazu stellen wir die folgende Methode `hasPrimeFactor` bereit:
+
+```cpp
+std::pair<BigInteger, BigInteger> BigPrimeNumbers::hasPrimeFactor(const BigInteger& number)
+{
+    // std::pair<BigInteger, BigInteger> result{ 1_big , number };
+    std::pair<BigInteger, BigInteger> result{ (BigInteger) 1 , number };
+
+    // factorizing a big integer object using a very simple approach
+    for (BigInteger i{ 2 }; i != number; ++i)
+    {
+        BigInteger tmp{ number % i };
+        if (tmp.zero())
+        {
+            result.first = i;
+            result.second = number / i;
+            break;
+        }
+    }
+
+    return result;
+}
+```
+
+`hasPrimeFactor` ermittelt zunächst nicht *alle* einer Zahl, sondern bricht die Suche nach dem ersten
+gefundenen Primfaktor ab. Im Resultat-`std::pair`-Objekt befindet sich im ersten Eintrag eine `1`,
+wenn die Zahl prim ist, anderfalls ist in `first` ein Primfaktor abgelegt (`second` enthält den Rest bei Division mit dem gefundenen Primfaktor). 
+Ein Testszenario könnte so aussehen:
+
+```cpp
+std::chrono::system_clock::time_point begin{ std::chrono::system_clock::now() };
+
+BigInteger number{ 13821503_big * 13821503_big };
+
+std::pair<BigInteger, BigInteger> result{ BigPrimeNumbers::hasPrimeFactor(number) };
+
+if (result.first != 1_big)
+{
+    std::cout
+        << "Found factors " << result.first << " and "
+        << result.second << "." << std::endl;
+}
+else
+{
+    std::cout << number << " is prime." << std::endl;
+}
+
+std::chrono::system_clock::time_point end{ std::chrono::system_clock::now() };
+std::chrono::system_clock::duration duration{ end - begin };
+double ticks{ std::chrono::duration<double>(duration).count() };
+std::cout << ticks << " seconds." << std::endl;
+```
+
+*Ausgabe*:
+
+```
+Found factors 13.821.503 and 13.821.503.
+220.308 seconds.
+```
+
+Okay, das Ergebnis stimmt, die Laufzeit des Programms ist allerdings doch unangenehm lang, um es vornehm auszudrücken.
+
+Zu Primzahlen &ndash; und auch zu anderen mathematischen Spielereien &ndash; ließen sich noch unendlich viele Beispiele
+finden, wir wollen dieses Thema mit einer Funktion `getPrimeFactors` abschließen,
+die zu einer natürliche Zahl alle ihre Primfaktoren berechnet:
+
+```cpp
+std::vector<BigInteger> BigPrimeNumbers::getPrimeFactors(BigInteger number)
+{
+    std::vector<BigInteger> factors;
+    BigInteger factor{ 2 };
+
+    while (number != 1_big)
+    {
+        if (number % factor == 0_big)
+        {
+            // store found factor in result vector
+            factors.push_back(factor);
+
+            // divide number through this prime factor
+            number = number / factor;
+
+            // remove same prime factor, if any
+            while (number % factor == 0_big) {
+                number = number / factor;
+            }
+        }
+
+        factor++;
+    }
+
+    return factors;
+}
+```
+
+Auch hierzu ein Beispiel:
+
+```cpp
+// testing getPrimeFactors
+BigInteger candidate{ 44100_big };  // 44100 = 2 * 2 * 3 * 3 * 5 * 5 * 7 * 7
+
+std::vector<BigInteger> factors{ BigPrimeNumbers::getPrimeFactors(candidate) };
+
+std::cout << "Prime factorization of " << candidate << ':' << std::endl;
+std::for_each(std::begin(factors), std::end(factors), [](const BigInteger& factor) {
+    std::cout << "  found factor " << factor << std::endl;
+    });
+std::cout << "Done." << std::endl;
+```
+
+*Ausgabe*:
+
+```
+Prime factorization of 44.100:
+  found factor 2
+  found factor 3
+  found factor 5
+  found factor 7
+Done.
+```
 
 <!-- Links Definitions -->
 

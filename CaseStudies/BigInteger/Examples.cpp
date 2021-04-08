@@ -13,6 +13,7 @@
 #include "BigFaculty.h"
 #include "BigMersenne.h"
 #include "BigPerfectNumbers.h"
+#include "BigPrimeNumbers.h"
 
 // =====================================================================================
 // markdown examples
@@ -330,16 +331,16 @@ void Test_DivisionPowerByTwo()
 // =====================================================================================
 // leading faculty
 
-void Test_Faculty_0(int limit)
+void Test_Faculty_01(size_t limit)
 {
-    for (int n{ 1 }; n != limit; ++n)
+    for (size_t n{ 1 }; n != limit; ++n)
     {
         size_t f{ BigFaculty::faculty(n) };
         std::cout << "Faculty of " << n << ": " << f << std::endl;
     }
 }
 
-void Test_Faculty(int limit)
+void Test_Faculty_02(long long limit)
 {
     for (BigInteger n{ 1 }; n != BigInteger{ limit }; ++n)
     {
@@ -460,6 +461,106 @@ void Test_03_PerfectNumbers()
 // =====================================================================================
 // prime numbers
 
+void Test_Range(int max)
+{
+    int count{};
+    for (int i{ 2 }; i != max; ++i)
+    {
+        if (BigPrimeNumbers::isPrime(i)) {
+            std::cout << "  found " << i << std::endl;
+            ++count;
+        }
+    }
+
+    std::cout << count << " prime numbers up to " << (max-1) << "." << std::endl;
+}
+
+void Test_Range()
+{
+    BigInteger lower{ 10000 };
+    BigInteger upper{ 11001 };
+    BigInteger count{};
+
+    for (BigInteger i{ lower }; i != upper; ++i)
+    {
+        if (BigPrimeNumbers::isPrime(i)) {
+            std::cout << "  found " << i << std::endl;
+            count++;
+        }
+    }
+
+    std::cout 
+        << count << " prime numbers between " << lower << " and " 
+        << (upper - 1_big) << "." << std::endl;
+}
+
+void Test_Factorize_01()
+{
+    size_t number{ ((size_t)13821503) * ((size_t)13821503) };
+    std::pair<size_t, size_t> result{ BigPrimeNumbers::hasPrimeFactor(number) };
+
+    if (result.first != 1) {
+        std::cout 
+            << "Found factors " << result.first << " and " 
+            << result.second << "." << std::endl;
+    }
+    else {
+        std::cout << number << " is prime." << std::endl;
+    }
+}
+
+void Test_Factorize_02()
+{
+    std::chrono::system_clock::time_point begin{ std::chrono::system_clock::now() };
+
+    BigInteger number{ 13821503_big * 13821503_big };
+
+    std::pair<BigInteger, BigInteger> result{ BigPrimeNumbers::hasPrimeFactor(number) };
+
+    if (result.first != 1_big)
+    {
+        std::cout
+            << "Found factors " << result.first << " and "
+            << result.second << "." << std::endl;
+    }
+    else
+    {
+        std::cout << number << " is prime." << std::endl;
+    }
+
+    std::chrono::system_clock::time_point end{ std::chrono::system_clock::now() };
+    std::chrono::system_clock::duration duration{ end - begin };
+    double ticks{ std::chrono::duration<double>(duration).count() };
+    std::cout << ticks << " seconds." << std::endl;
+}
+
+void Test_Factorize_03()
+{
+    // testing getPrimeFactors
+    size_t candidate{ 44100 };  // 44100 = 2 * 2 * 3 * 3 * 5 * 5 * 7 * 7
+
+    std::vector<size_t> factors{ BigPrimeNumbers::getPrimeFactors(candidate) };
+
+    std::cout << "Prime factorization of " << candidate << ':' << std::endl;
+    std::for_each(std::begin(factors), std::end(factors), [](size_t factor) {
+        std::cout << "  found factor " << factor << std::endl;
+    });
+    std::cout << "Done." << std::endl;
+}
+
+void Test_Factorize_04()
+{
+    // testing getPrimeFactors
+    BigInteger candidate{ 44100_big };  // 44100 = 2 * 2 * 3 * 3 * 5 * 5 * 7 * 7
+
+    std::vector<BigInteger> factors{ BigPrimeNumbers::getPrimeFactors(candidate) };
+
+    std::cout << "Prime factorization of " << candidate << ':' << std::endl;
+    std::for_each(std::begin(factors), std::end(factors), [](const BigInteger& factor) {
+        std::cout << "  found factor " << factor << std::endl;
+        });
+    std::cout << "Done." << std::endl;
+}
 
 // =====================================================================================
 // perfect numbers

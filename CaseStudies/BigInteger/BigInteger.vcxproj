@@ -141,7 +141,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BigFaculty.cpp" />
     <ClCompile Include="BigInteger.cpp" />
     <ClCompile Include="BigMersenne.cpp" />
     <ClCompile Include="BigPerfectNumbers.cpp" />

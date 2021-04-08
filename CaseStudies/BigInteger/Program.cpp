@@ -18,36 +18,14 @@
 
 #include <iostream>
 
-void Test_Sizes()
-{
-    size_t tmp;
-
-    tmp = 123;
-
-    return;
-    //std::cout << sizeof(size_t) << std::endl;
-    //std::cout << sizeof(SHRT_MIN) << std::endl;
-    //std::cout << sizeof(SHRT_MAX) << std::endl;
-    //std::cout << sizeof(USHRT_MAX) << std::endl;
-    //std::cout << sizeof(INT_MIN) << std::endl;
-    //std::cout << sizeof(INT_MAX) << std::endl;
-    //std::cout << sizeof(UINT_MAX) << std::endl;
-    //std::cout << sizeof(LONG_MIN) << std::endl;
-    //std::cout << sizeof(LONG_MAX) << std::endl;
-    //std::cout << sizeof(ULONG_MAX) << std::endl;
-    //std::cout << sizeof(LLONG_MAX) << std::endl;
-    //std::cout << sizeof(LLONG_MIN) << std::endl;
-    //std::cout << sizeof(ULLONG_MAX) << std::endl;
-}
-
 void Test_Script_01();
 void Test_Script_02();
 void Test_Script_03();
 
 void Test_Division();
 void Test_DivisionPowerByTwo();
-void Test_Faculty(int limit);
-void Test_Faculty_0(int limit);
+void Test_Faculty_01(size_t limit);
+void Test_Faculty_02(long long limit);
 void Test_Power(int limit);
 
 void Test_Mersenne_01();
@@ -63,9 +41,17 @@ void Test_01_PerfectNumbers();
 void Test_02_PerfectNumbers();
 void Test_03_PerfectNumbers();
 
+void Test_Range();
+void Test_Range(int max);
+void Test_Factorize_01();
+void Test_Factorize_02();
+void Test_Factorize_03();
+void Test_Factorize_04();
+
+
 int main()
 {   
-    Test_02_PerfectNumbers();
+    Test_Factorize_04();
 }
 
 // =====================================================================================

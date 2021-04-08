@@ -7,8 +7,8 @@
 class BigPerfectNumbers
 {
 public:
-   static bool isPerfect(size_t);
-   static bool isPerfect(const BigInteger&);
+    static bool isPerfect(size_t);
+    static bool isPerfect(const BigInteger&);
 };
 
 // =====================================================================================

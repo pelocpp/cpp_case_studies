@@ -24,9 +24,6 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BigFaculty.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BigMersenne.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

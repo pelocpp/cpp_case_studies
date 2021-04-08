@@ -7,7 +7,7 @@
 class BigMersenne
 {
 public:
-   static BigInteger number(int n);
+    static BigInteger number(int n);
 };
 
 // =====================================================================================
