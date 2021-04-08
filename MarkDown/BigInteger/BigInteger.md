@@ -1532,27 +1532,26 @@ Number of Digits: 3376
 Natürlich gibt es noch weitere mathematische Spielereien, für die sich die Klasse `BigInteger` eignet.
 Wir geben abschließend zwei Anregungen: *Perfekte* Zahlen und *Primzahlen*:
 
-*Definition*: Eine ganze (positive) Zahl wird perfekte vollkommene Zahl (auch vollkommene Zahl) genannt,
+*Definition*: Eine ganze (positive) Zahl wird *perfekte* Zahl (auch *vollkommene* Zahl) genannt,
 wenn sie gleich der Summe aller ihrer (positiven) Teiler außer sich selbst ist.
 
 Die ersten 5 perfekten Zahlen lauten  6, 28, 496, 8.128 und 33.550.336.
 
 Weitaus bekannter dürfte die Definition für Primzahlen sein:
 
-*Definition*: Eine Primzahl ist eine ganze (positive) Zahl, die größer als 1 und ausschließlich durch sich selbst
+*Definition*: Eine *Primzahl* ist eine ganze (positive) Zahl, die größer als 1 und ausschließlich durch sich selbst
 und durch 1 teilbar ist. 
 
 Sowohl perfekte Zahlen als auch Primzahlen lassen sich mit den herkömmlichen Sprachmitteln von C++
 (und natürlich auch anderen Hochsprachen) relativ einfach bestimmen &ndash; wenn wir nur auf der Suche nach vergleichsweise
 &ldquo;kleinen&rdquo; Zahlen sind. Für die Bestimmung größerer Zahlen benötigen wir Hilfsmittel wie beispielsweise die
 Klasse `BigInteger`. Um es vorweg zunehmen: Wir werden mit einem zweiten Problem konfrontiert sein:
-Der Laufzeit des Programms. Wie lange derartige Berechnungen sein können, dürfen Sie mit den folgenden Code-Fragment eruieren.
-Die beteiligten Klassen BigPerfectNumbers und BigPrimeNumbers finden Sie
+Der Laufzeit des Programms. Wie lange derartige Berechnungen sein können, dürfen Sie mit folgendem Code-Fragment eruieren.
+Die beteiligten Klassen `BigPerfectNumbers` und `BigPrimeNumbers` finden Sie
 [hier](https://github.com/pelocpp/cpp_case_studies.git)
 vor.
-
 Die Berechnung der ersten drei perfekten Zahlen mit der Klasse `BigInteger` fällt bzgl. ihrer Laufzeit
-noch nicht so auf:
+noch nicht so sehr ins Gewicht:
 
 ```cpp
 std::chrono::system_clock::time_point begin{ std::chrono::system_clock::now() };
@@ -1581,7 +1580,7 @@ std::cout << ticks << " seconds." << std::endl;
 
 Allerdings sollte nicht verschwiegen werden, dass ich zur Ausführung des Programms den *Release*-Modus gewählt habe.
 Spannender wird es mit dem nächsten Code-Fragment: Hier habe ich aus Wikipedia die ersten 10 perfekten Zahlen übernommen.
-Die Aufgabe des Code-Fragment besteht gewissermaßen darin, eine Überprüfung der Angaben aus Wikipedia zu machen &ndash;
+Die Aufgabe des Code-Fragments besteht gewissermaßen darin, eine Überprüfung der Angaben aus Wikipedia zu machen &ndash;
 wenngleich ich daran natürlich nicht den geringsten Zweifel habe. Um es gleich vorweg zu nehmen: 
 Auf meinem Rechner habe ich das Ende der Berechnungen nicht abgewartet .......
 
@@ -1645,7 +1644,7 @@ bool BigPrimeNumbers::isPrime(const BigInteger& number)
 }
 ```
 
-Mit dieser Funktion `isPrime` kann man prinzipiell jeden beliebigen Bereich von Zahlen nach Primzahlen durchsuchen,
+Mit dieser Funktion `isPrime` kann man prinzipiell jeden beliebigen Bereich von Zahlen nach Primzahlen durchforsten,
 zum Beispiel auf diese Weise:
 
 ```cpp
@@ -1691,8 +1690,8 @@ std::pair<BigInteger, BigInteger> BigPrimeNumbers::hasPrimeFactor(const BigInteg
 }
 ```
 
-`hasPrimeFactor` ermittelt zunächst nicht *alle* einer Zahl, sondern bricht die Suche nach dem ersten
-gefundenen Primfaktor ab. Im Resultat-`std::pair`-Objekt befindet sich im ersten Eintrag eine `1`,
+`hasPrimeFactor` ermittelt zunächst nicht *alle* Primfaktoren einer Zahl, sondern bricht die Suche nach dem ersten
+gefundenen Primfaktor ab. Im Resultat-`std::pair<>`-Objekt befindet sich im ersten Eintrag eine `1`,
 wenn die Zahl prim ist, anderfalls ist in `first` ein Primfaktor abgelegt (`second` enthält den Rest bei Division mit dem gefundenen Primfaktor). 
 Ein Testszenario könnte so aussehen:
 
@@ -1728,10 +1727,9 @@ Found factors 13.821.503 and 13.821.503.
 ```
 
 Okay, das Ergebnis stimmt, die Laufzeit des Programms ist allerdings doch unangenehm lang, um es vornehm auszudrücken.
-
 Zu Primzahlen &ndash; und auch zu anderen mathematischen Spielereien &ndash; ließen sich noch unendlich viele Beispiele
 finden, wir wollen dieses Thema mit einer Funktion `getPrimeFactors` abschließen,
-die zu einer natürliche Zahl alle ihre Primfaktoren berechnet:
+die zu einer natürliche Zahl all ihre Primfaktoren berechnet:
 
 ```cpp
 std::vector<BigInteger> BigPrimeNumbers::getPrimeFactors(BigInteger number)
@@ -1821,15 +1819,4 @@ Done.
 [Listing 13]: #listing_13_miscellaneous
 [Listing 14]: #listing_14_removeleadingzeros
 
-
 <!-- End-of-File -->
-
-
-###### {#listing_2_user_def_ctor}
-
-```cpp
-
-```
-
-*Listing* 2: Benutzerdefinierter Konstruktor der Klasse `BigInteger`.
-
