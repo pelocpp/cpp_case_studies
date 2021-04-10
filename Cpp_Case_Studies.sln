@@ -109,6 +109,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BigInteger", "BigInteger", 
 		MarkDown\BigInteger\Schulmathematik_Subtraktion_02.png = MarkDown\BigInteger\Schulmathematik_Subtraktion_02.png
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Palindrom", "Palindrom", "{C25A9D62-26BD-426C-B2F9-273D2E8380AA}"
+	ProjectSection(SolutionItems) = preProject
+		MarkDown\Palindrom\Palindrom.md = MarkDown\Palindrom\Palindrom.md
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Palindrom", "CaseStudies\Palindrom\Palindrom.vcxproj", "{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -197,6 +204,14 @@ Global
 		{316BB0F6-B05F-4986-9C81-95156399E869}.Release|x64.Build.0 = Release|x64
 		{316BB0F6-B05F-4986-9C81-95156399E869}.Release|x86.ActiveCfg = Release|Win32
 		{316BB0F6-B05F-4986-9C81-95156399E869}.Release|x86.Build.0 = Release|Win32
+		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Debug|x64.ActiveCfg = Debug|x64
+		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Debug|x64.Build.0 = Debug|x64
+		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Debug|x86.ActiveCfg = Debug|Win32
+		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Debug|x86.Build.0 = Debug|Win32
+		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Release|x64.ActiveCfg = Release|x64
+		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Release|x64.Build.0 = Release|x64
+		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Release|x86.ActiveCfg = Release|Win32
+		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -210,6 +225,7 @@ Global
 		{7262339A-E38C-4745-9B91-DBDA9F38B39C} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{10811C36-BEBE-41C5-A3CF-876A1DA2C95B} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{36BCC98E-787D-4EB0-B46A-160DACE32755} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{C25A9D62-26BD-426C-B2F9-273D2E8380AA} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}
