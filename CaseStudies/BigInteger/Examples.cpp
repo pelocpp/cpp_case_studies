@@ -92,7 +92,7 @@ void Test_Literals()
 }
 
 // =====================================================================================
-// conversion c'tors
+// type conversion c'tors
 
 void Test_TypeConversion_Ctors()
 {
@@ -141,7 +141,7 @@ void Test01_BigInteger_LeadingZeros()
 }
 
 // =====================================================================================
-// leading addition
+// addition
 
 void Test_Add()
 {
@@ -180,7 +180,7 @@ void Test_AddWithSign()
 }
 
 // =====================================================================================
-// leading subtraction
+// subtraction
 
 void Test_Sub()
 {
@@ -249,7 +249,7 @@ void TestSubWithSign()
 }
 
 // =====================================================================================
-// leading multiplication
+// multiplication
 
 void Test_Mul_01_Unsigned()
 {
@@ -307,16 +307,16 @@ void Test_Mul_02_Signed()
 }
 
 // =====================================================================================
-// leading division
+// division
 
-void Test_Division ()
+void Test_Div ()
 {
     BigInteger n1{ 6682850 };
     BigInteger n2{ 196 };
     std::cout << n1 << " / " << n2 << " = " << (n1 / n2) << std::endl;
 }
 
-void Test_DivisionPowerByTwo()
+void Test_DivPowerByTwo()
 {
     BigInteger huge{ "2.475.880.078.570.760.549.798.248.448" };
 
@@ -329,10 +329,11 @@ void Test_DivisionPowerByTwo()
 }
 
 // =====================================================================================
-// leading faculty
+// faculty
 
-void Test_Faculty_01(size_t limit)
+void Test_Faculty_01()
 {
+    size_t limit{ 30 };
     for (size_t n{ 1 }; n != limit; ++n)
     {
         size_t f{ BigFaculty::faculty(n) };
@@ -340,8 +341,9 @@ void Test_Faculty_01(size_t limit)
     }
 }
 
-void Test_Faculty_02(long long limit)
+void Test_Faculty_02()
 {
+    long long limit{ 30 };
     for (BigInteger n{ 1 }; n != BigInteger{ limit }; ++n)
     {
         BigInteger f{ BigFaculty::faculty(n) };
@@ -350,10 +352,11 @@ void Test_Faculty_02(long long limit)
 }
 
 // =====================================================================================
-// leading power
+// power
 
-void Test_Power(int limit)
+void Test_Power()
 {
+    int limit{ 31 };
     BigInteger two { 2 };
     for (int n{ 1 }; n != limit; ++n)
     {
@@ -370,7 +373,7 @@ void Test_Power(int limit)
 }
 
 // =====================================================================================
-// leading mersenne
+// mersenne
 
 void Test_Mersenne_01()
 {
@@ -461,8 +464,9 @@ void Test_03_PerfectNumbers()
 // =====================================================================================
 // prime numbers
 
-void Test_Range(int max)
+void Test_Range_01()
 {
+    int max{ 501 };
     int count{};
     for (int i{ 2 }; i != max; ++i)
     {
@@ -475,7 +479,7 @@ void Test_Range(int max)
     std::cout << count << " prime numbers up to " << (max-1) << "." << std::endl;
 }
 
-void Test_Range()
+void Test_Range_02()
 {
     BigInteger lower{ 10000 };
     BigInteger upper{ 11001 };
@@ -563,7 +567,7 @@ void Test_Factorize_04()
 }
 
 // =====================================================================================
-// perfect numbers
+// type conversion operators
 
 void Test_TypeConversionOperators()
 {
