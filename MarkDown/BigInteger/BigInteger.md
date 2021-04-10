@@ -14,7 +14,7 @@ die eine exakte Arithmetik vorzeichenbehafteter ganzer Zahlen beliebiger Größe
   * Funktor einer Klasse
   * Container `std::vector<T>`
   * Klasse `string_view`
-  * Benutzerdefiertes Literal (hier: `_big`)
+  * Benutzerdefiniertes Literal (hier: `_big`)
   * Lambda-Funktionen (mit `mutable`)
   * Datentyp `uint8_t`
   * Verschiebesemantik mit `std::move`
@@ -41,7 +41,6 @@ Ziel dieser Fallstudie ist es, einen Klassentyp zu entwickeln, der die Wertebere
 dieser elementaren ganzzahligen Datentypen überwindet.
 
 Erste Hinweise zur `BigInteger`-Klasse finden Sie in [Tabelle 1] vor:
-
 
 ###### {#tabelle_1_class_biginteger_ctors}
 
@@ -82,7 +81,7 @@ n = 111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111'111_big;
 
 In der letzten Wertzuweisung erkennen wir eine weitere Neuerung von C++:
 In konstanten ganzzahligen Werten &ndash; und damit auch in benutzerdefinierten Literalen &ndash; können
-Einzelhochkommata zur besseren Lesbarkeit eingefügt werden. Damit kein Mißverständnis entsteht:
+Einzelhochkommata zur besseren Lesbarkeit eingefügt werden. Damit kein Missverständnis entsteht:
 
   * Im Konstruktor der Klasse `BigInteger` mit einem `std::string_view`-Objekt als Parameter
     haben wir uns auf den Punkt `.` als zulässiges Trennzeichen festgelegt.
@@ -100,6 +99,9 @@ BigInteger operator"" _big(const char* literal);
 ```
 
 Bei einem Literal `1234567890_big` wird der Literaloperator mit dem Parameter `"1234567890"` aufgerufen.
+
+*Anmerkung*: Es ist eine Restriktion des Microsoft Visual C++ Compilers, dass benutzerdefinierte Literale
+mit einem Unterstrich `'_'` anfangen müssen.
 
 Damit sind wir bei den *getter*-Methoden der Klasse `BigInteger` angekommen,
 sie sind in [Tabelle 2] beschrieben:
@@ -131,7 +133,7 @@ bei der Addition der nächsten zwei Ziffern, siehe [Abbildung 1]:
 
 ###### {#abbildung_1_schriftlichen_addition_01}
 
-{{< figure src="/img/biginteger/Schulmathematik_Addition_01.png" width="30%" >}}
+{{< figure src="/img/biginteger/Schulmathematik_Addition_01.png" width="15%" >}}
 
 *Abbildung* 1: Schriftliche Addition der Schulmathematik.
 
@@ -145,7 +147,7 @@ wie in [Abbildung 2] gezeigt aussehen:
 
 ###### {#abbildung_2_schriftlichen_addition_02}
 
-{{< figure src="/img/biginteger/Schulmathematik_Addition_02.png" width="30%" >}}
+{{< figure src="/img/biginteger/Schulmathematik_Addition_02.png" width="55%" >}}
 
 *Abbildung* 2: Ablage der Ziffern in umgekehrter Reihenfolge.
 
@@ -186,7 +188,7 @@ muss zum Leihen drei Stellen nach links gegangen werden:
 
 ###### {#abbildung_4_schulmathematik_subtraktion_02}
 
-{{< figure src="/img/biginteger/Schulmathematik_Subtraktion_02.png" width="30%" >}}
+{{< figure src="/img/biginteger/Schulmathematik_Subtraktion_02.png" width="35%" >}}
 
 *Abbildung* 4: Entbündelungsverfahren mit Null als linkem Nachbarn.
 
@@ -203,7 +205,7 @@ Am Beispiel von 98 * 12345 können Sie den Algorithmus in [Abbildung 5] nachverf
 
 ###### {#abbildung_5_schulmathematik_multiplikation}
 
-{{< figure src="/img/biginteger/Schulmathematik_Multiplikation.png" width="30%" >}}
+{{< figure src="/img/biginteger/Schulmathematik_Multiplikation.png" width="40%" >}}
 
 *Abbildung* 5: Standardverfahren für schriftliche Multiplikation.
 
@@ -226,7 +228,7 @@ zur Illustration betrachten wir in [Abbildung 6] das folgende Beispiel:
 
 ###### {#abbildung_6_schulmathematik_division}
 
-{{< figure src="/img/biginteger/Schulmathematik_Division.png" width="30%" >}}
+{{< figure src="/img/biginteger/Schulmathematik_Division.png" width="50%" >}}
 
 *Abbildung* 5: Standardverfahren der schriftlichen Division.
 
@@ -260,7 +262,7 @@ arithmetischen Wertzuweisungsoperatoren wie zum Beispiel `+=`, siehe hierzu [Tab
 
 *Tabelle* 4: Arithmetische Wertzuweisungsoperatoren der Klasse `BigInteger`.
 
-In den meisten Situationen denken wir bei arithmetische Operatoren an ihre binäre Variante.
+In den meisten Situationen denken wir bei arithmetischen Operatoren an ihre binäre Variante.
 Ganze &ndash; und damit auch sehr große ganze &ndash; Zahlen können auch ein Vorzeichen haben: `+` oder `-`.
 Für diese beiden Fälle benötigen wir jeweils den `+`&ndash; oder `-`&ndash;Operator in seiner unären Ausprägung ([Tabelle 5]):
 
@@ -553,7 +555,7 @@ BigInteger::BigInteger() : m_digits{ 1 }, m_sign{ true } {
 ```
 
 Der wichtigste Konstruktor der `BigInteger`-Klasse erwartet eine (beliebig lange) Zeichenkette und kopiert ihren Inhalt,
-abgesehen von den Punkten `.` für die verbesserte Lesbarkeit der Eingabe, in das `m_digits`-Vektorobjekt um.
+abgesehen von den Punkten `'.'` für die verbesserte Lesbarkeit der Eingabe, in das `m_digits`-Vektorobjekt um.
 Da wir im Prinzip nur konstante Zeichenketten erwarten (oder unterstützen), ist der Parameter vom Typ `std::string_view`.
 `std::string_view`-Objekte sind eine optimierte Version der Klasse `std::string`,
 sie bestehen ausschließlich aus einem *raw*-Zeiger einer konstanten Zeichenkette und einer Längenangabe.
@@ -601,7 +603,7 @@ kommt ein `std::reverse_iterator` zum Einsatz.
 
 Nach der Erzeugung eines `BigInteger`-Objekts an Hand einer Zeichenkette kommen wir gleich auf die entgegengesetzte Operation zu sprechen:
 Umwandlung eines BigInteger-Objekts in eine Zeichenkette. Diese Operation haben wir im Funktor der Klasse untergebracht.
-Dieser ist flexiblel in der Aufnahme von Parameterwerten.
+Dieser ist flexibel in der Aufnahme von Parameterwerten.
 Wir definieren ihn mit einem Parameter vom Typ `int`, um die Anzahl der Dreiziffernblöcke pro Zeile festzulegen.
 Die Zeilen 10 bis 48 ([Listing 3]) widmen sich dem Umstand, mit wie vielen Leerzeichen der erste Dreiziffernblock aufzufüllen ist,
 wenn die Anzahl der Ziffern kein Vielfaches von 3 ist. Da auch noch ein mögliches Vorzeichen zu berücksichtigen ist,
@@ -727,9 +729,9 @@ dürfen in einer korrekten Implementierung nicht fehlen ([Listing 5]):
 
 *Listing* 5: Unäre Operatoren `+` und `-` der Klasse `BigInteger`.
 
-Beide Operatoren `+` und `-` delegieren ihre Arbeit im wesentlichen an den Kopier-Konstruktur der `BigInteger`-Klasse.
+Beide Operatoren `+` und `-` delegieren ihre Arbeit im Wesentlichen an den Kopier-Konstruktor der `BigInteger`-Klasse.
 Dieser ist nicht explizit implementiert, da die `BigInteger`-Klasse entweder aus elementaren Instanzvariablen (hier genügt eine flache Kopie)
-oder einem `std::vector<>`-Objekt besteht. Letzteres besitzt seinen eigenen Kopier-Konstruktur,
+oder einem `std::vector<>`-Objekt besteht. Letzteres besitzt seinen eigenen Kopier-Konstruktor,
 dieser wird beim Kopieren eines `BigInteger`-Objekts in Anspruch genommen.
 
 Damit sind wir beim Kernstück der `BigInteger`-Klasse angekommen, ihren arithmetischen Operatoren.
@@ -777,7 +779,7 @@ Die Addition großer Zahlen entnehmen Sie bitte [Listing 6]:
 
 Subtil in [Listing 6] sind die zwei Zeilen 4 und 5: Nicht jede Addition zweier ganzer Zahlen ist in Wirklichkeit eine Addition.
 Je nach Vorhandensein eines negativen Vorzeichens beim ersten oder zweiten Summanden kann auch eine Subtraktion vorliegen.
-Sollte dies der Fall sein, wird in Zeile 5 an diese weiterverzeigt, die Parameter werden bzgl. ihres Vorzeichens
+Sollte dies der Fall sein, wird in Zeile 5 an diese weiterverzweigt, die Parameter werden bzgl. ihres Vorzeichens
 entsprechend angepasst.
 
 Bei der Addition zweier ganzer Zahlen kann man nicht präzise von vorne herein entscheiden, aus wie vielen Ziffern
@@ -859,7 +861,7 @@ Analog zur Addition kann auch bei einer Subtraktion der Fall vorliegen, dass die
 In Zeile 5 erfolgt ein Aufruf der entsprechenden Addition mit bereinigten Vorzeichen.
 Im anderen Fall lässt die Subtraktion sich auch durchführen, es sind nur Subtrahend und Minuend
 zu vertauschen und das Vorzeichen des Ergebnisses entsprechend anzupassen.
-Da das Entbündelungsverfahrens nur funktioniert, wenn der Subtrahend kleiner als der Minuend ist,
+Da das Entbündelungsverfahren nur funktioniert, wenn der Subtrahend kleiner als der Minuend ist,
 muss auch dieser Fall noch berücksichtigt werden, siehe dazu die Zeilen 7 und 8 von [Listing 7].
 
 In Zeile 7 finden wir den `<`-Operators auf zwei `BigInteger`-Objekte angewendet vor.
@@ -1060,12 +1062,12 @@ Wir sind fast am Ziel angekommen, es fehlt nur noch die Division ([Listing 11]):
 46: }
 ```
 
-*Listing* 11: Implementierung der Divison großer ganzer Zahlen.
+*Listing* 11: Implementierung der Division großer ganzer Zahlen.
 
 Das Ergebnis einer Division wird, wie in [Abbildung 6] beschrieben, Ziffer für Ziffer berechnet.
 Aus diesem Grund bemühen wir in Zeile 35 ein `std::vector<>`-Objekt, das die einzelnen Ziffern aufnimmt.
 Ab Zeile 41ff. verschieben wir dieses Objekt in ein `BigInteger`-Objekt und liefern dieses als Ergebnis der Division zurück.
-Das Spiegelstück der Divison, die Division mit Rest, führt uns zum Modulo-Operator `%` in [Listing 12]:
+Das Spiegelstück der Division, die Division mit Rest, führt uns zum Modulo-Operator `%` in [Listing 12]:
 
 ###### {#listing_12_modulo}
 
@@ -1076,7 +1078,7 @@ Das Spiegelstück der Divison, die Division mit Rest, führt uns zum Modulo-Oper
 04: }
 ```
 
-*Listing* 12: Implementierung der Divison mit Rest (Modulo) großer ganzer Zahlen.
+*Listing* 12: Implementierung der Division mit Rest (Modulo) großer ganzer Zahlen.
 
 Es sind noch einige Restarbeiten zu erledigen, wie etwa die Betrachtung der unären Operatoren `++` und `--`
 sowie der (expliziten) Konvertierungsoperatoren vom `BigInteger`-Klassentyp hin
@@ -1532,7 +1534,7 @@ Number of Digits: 3376
 Natürlich gibt es noch weitere mathematische Spielereien, für die sich die Klasse `BigInteger` eignet.
 Wir geben abschließend zwei Anregungen: *Perfekte* Zahlen und *Primzahlen*:
 
-*Definition*: Eine ganze (positive) Zahl wird *perfekte* Zahl (auch *vollkommene* Zahl) genannt,
+*Definition*: Eine ganze (positive) Zahl wird *perfekte* (auch *vollkommene*) Zahl genannt,
 wenn sie gleich der Summe aller ihrer (positiven) Teiler außer sich selbst ist.
 
 Die ersten 5 perfekten Zahlen lauten  6, 28, 496, 8.128 und 33.550.336.
@@ -1545,8 +1547,8 @@ und durch 1 teilbar ist.
 Sowohl perfekte Zahlen als auch Primzahlen lassen sich mit den herkömmlichen Sprachmitteln von C++
 (und natürlich auch anderen Hochsprachen) relativ einfach bestimmen &ndash; wenn wir nur auf der Suche nach vergleichsweise
 &ldquo;kleinen&rdquo; Zahlen sind. Für die Bestimmung größerer Zahlen benötigen wir Hilfsmittel wie beispielsweise die
-Klasse `BigInteger`. Um es vorweg zunehmen: Wir werden mit einem zweiten Problem konfrontiert sein:
-Der Laufzeit des Programms. Wie lange derartige Berechnungen sein können, dürfen Sie mit folgendem Code-Fragment eruieren.
+Klasse `BigInteger`. Um es vorweg zu nehmen: Wir werden mit einem zweiten Problem konfrontiert sein:
+Der Laufzeit des jeweiligen Programms. Wie lange derartige Berechnungen sein können, dürfen Sie mit folgendem Code-Fragment eruieren.
 Die beteiligten Klassen `BigPerfectNumbers` und `BigPrimeNumbers` finden Sie
 [hier](https://github.com/pelocpp/cpp_case_studies.git)
 vor.
@@ -1581,9 +1583,9 @@ std::cout << ticks << " seconds." << std::endl;
 Allerdings sollte nicht verschwiegen werden, dass ich zur Ausführung des Programms den *Release*-Modus gewählt habe.
 Spannender wird es mit dem nächsten Code-Fragment: Hier habe ich aus Wikipedia die ersten 10 perfekten Zahlen übernommen.
 Die Aufgabe des Code-Fragments besteht gewissermaßen darin, eine Überprüfung der Angaben aus Wikipedia zu machen &ndash;
-wenngleich ich daran natürlich nicht den geringsten Zweifel habe. Um es gleich vorweg zu nehmen: 
-Auf meinem Rechner habe ich das Ende der Berechnungen nicht abgewartet .......
-
+wenngleich ich natürlich nicht den geringsten Zweifel an der Korrektheit habe. Um es gleich vorweg zu nehmen: 
+Auf meinem Rechner habe ich das Ende der Berechnungen nicht abgewartet ... Vielleicht schaffen Sie es auf Ihrem Rechner &ndash;
+und möglicherweise mit adäquaten Optimierungen an der `BigInteger`-Klasse &ndash; das Ziel zu erreichen?
 
 ```cpp
 std::chrono::system_clock::time_point begin{ std::chrono::system_clock::now() };
@@ -1728,8 +1730,8 @@ Found factors 13.821.503 and 13.821.503.
 
 Okay, das Ergebnis stimmt, die Laufzeit des Programms ist allerdings doch unangenehm lang, um es vornehm auszudrücken.
 Zu Primzahlen &ndash; und auch zu anderen mathematischen Spielereien &ndash; ließen sich noch unendlich viele Beispiele
-finden, wir wollen dieses Thema mit einer Funktion `getPrimeFactors` abschließen,
-die zu einer natürliche Zahl all ihre Primfaktoren berechnet:
+finden. Wir wollen dieses Thema mit einer Funktion `getPrimeFactors` abschließen,
+die zu einer natürliche Zahl *alle* ihre Primfaktoren berechnet:
 
 ```cpp
 std::vector<BigInteger> BigPrimeNumbers::getPrimeFactors(BigInteger number)
