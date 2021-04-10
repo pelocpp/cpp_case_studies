@@ -4,13 +4,10 @@
 
 #pragma once
 
-using digit_t = uint8_t;
-
 class Number
 {
 private:
-    std::vector<digit_t> m_digits;
-    bool m_sign;
+    std::vector<int> m_digits;
 
 public:
     // c'tors / d'tor
@@ -20,6 +17,10 @@ public:
 public:
     // getter
     size_t size() const;
+    bool symmetric() const;
+
+    // binary arithmetic addition operator
+    friend Number operator+ (const Number&, const Number&);
 
     // comparison operators
     //friend bool operator== (const Number&, const Number&);
@@ -30,20 +31,23 @@ public:
     //friend bool operator>= (const Number&, const Number&);
 
     // binary arithmetic operators
-    friend Number operator+ (const Number&, const Number&);
+    // friend Number operator+ (const Number&, const Number&);
 
     // functor (supporting formatted output)
     std::string operator()(int);
 
+    // public interface
+    Number add(const Number&) const;
+    Number reverse() const;
+    void prependDigit(int digit);
+
 private:
     // private helper operator
-    digit_t& operator[] (size_t);  // subscript operator
-    const digit_t& operator[] (size_t) const; // const subscript operator
+    int& operator[] (size_t);  // subscript operator
+    const int& operator[] (size_t) const; // const subscript operator
 
     // private helper methods
-    //void removeLeadingZeros();
-    //int compareTo(const Number&) const;
-    //void toNumber(long long);
+    void removeLeadingZeros();
 
     // output
     friend std::ostream& operator<< (std::ostream&, const Number&);
