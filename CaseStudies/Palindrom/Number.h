@@ -42,18 +42,12 @@ public:
     void prependDigit(int digit);
 
 private:
-    // private helper operator
-    int& operator[] (size_t);  // subscript operator
-    const int& operator[] (size_t) const; // const subscript operator
-
     // private helper methods
     void removeLeadingZeros();
 
     // output
     friend std::ostream& operator<< (std::ostream&, const Number&);
 };
-
-// Number operator"" _big(const char*);
 
 // =====================================================================================
 // End-of-File
