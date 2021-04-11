@@ -4,10 +4,12 @@
 
 void Test_Constructors();
 void Test_Add();
+void Test_Palindrom_01();
+//void Test_Palindrom_02();
 
 int main()
 {   
-    Test_Add();
+    Test_Palindrom_01();
 }
 
 // =====================================================================================

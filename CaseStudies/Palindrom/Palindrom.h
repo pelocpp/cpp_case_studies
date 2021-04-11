@@ -6,23 +6,9 @@
 
 class Palindrom
 {
-private:
-    Number m_start;
-    int m_steps;
-
 public:
-    // c'tors 
-    Palindrom();
-
-public:
-    // getter / setter
-    void setStart(const Number&);
-    Number getStart() const;
-    void setSteps(int);
-    int getSteps() const;
-
-    // public interface
-    std::tuple<Number, Number, int> calcPalindrom() const;
+    static std::tuple<std::optional<Number>, Number, size_t>
+        calcPalindrom(const Number&, size_t);
 };
 
 // =====================================================================================

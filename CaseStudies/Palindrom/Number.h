@@ -22,17 +22,6 @@ public:
     // binary arithmetic addition operator
     friend Number operator+ (const Number&, const Number&);
 
-    // comparison operators
-    //friend bool operator== (const Number&, const Number&);
-    //friend bool operator!= (const Number&, const Number&);
-    //friend bool operator<  (const Number&, const Number&);
-    //friend bool operator<= (const Number&, const Number&);
-    //friend bool operator>  (const Number&, const Number&);
-    //friend bool operator>= (const Number&, const Number&);
-
-    // binary arithmetic operators
-    // friend Number operator+ (const Number&, const Number&);
-
     // functor (supporting formatted output)
     std::string operator()(int);
 
