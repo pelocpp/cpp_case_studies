@@ -9,7 +9,7 @@
 #include <optional>
 
 #include "Number.h"
-#include "Palindrom.h"
+#include "PalindromCalculator.h"
 
 // =====================================================================================
 // markdown examples
@@ -58,8 +58,12 @@ void Test_Palindrom_01()
     Number start{ "89" };
     size_t count{ 20 }; // choose 100 for success
 
-    const auto& [palindrom, begin, steps] = Palindrom::calcPalindrom(start, count);
-    std::cout << "Searching palindrom beginning at " << begin << " [" << steps << " steps]:" << std::endl;
+    const auto& [palindrom, begin, steps] =
+        PalindromCalculator::calcPalindrom(start, count);
+
+    std::cout 
+        << "Searching palindrom beginning at " << begin 
+        << " [" << steps << " steps]:" << std::endl;
 
     if (palindrom.has_value()) {
         std::cout << "Found palindrom: " << palindrom.value() << std::endl;
@@ -71,7 +75,22 @@ void Test_Palindrom_01()
 
 void Test_Palindrom_02()
 {
+    Number start{ "89" };
+    size_t count{ 100 }; // choose 100 for success
 
+    std::tuple<std::optional<Number>, Number, size_t> result = 
+        PalindromCalculator::calcPalindrom(start, count);
+
+    std::cout 
+        << "Searching palindrom beginning at " << std::get<1>(result) 
+        << " [" << std::get<2>(result) << " steps]:" << std::endl;
+
+    if (std::get<0>(result).has_value()) {
+        std::cout << "Found palindrom: " << std::get<0>(result).value() << std::endl;
+    }
+    else {
+        std::cout << "No palindrom found!" << std::endl;
+    }
 }
 
 // =====================================================================================

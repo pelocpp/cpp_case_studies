@@ -1,10 +1,10 @@
 // =====================================================================================
-// Palindrom.h
+// PalindromCalculator.h
 // =====================================================================================
 
 #pragma once
 
-class Palindrom
+class PalindromCalculator
 {
 public:
     static std::tuple<std::optional<Number>, Number, size_t>

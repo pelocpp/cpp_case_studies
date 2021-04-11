@@ -24,7 +24,7 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Palindrom.cpp">
+    <ClCompile Include="PalindromCalculator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,7 +32,7 @@
     <ClInclude Include="Number.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Palindrom.h">
+    <ClInclude Include="PalindromCalculator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

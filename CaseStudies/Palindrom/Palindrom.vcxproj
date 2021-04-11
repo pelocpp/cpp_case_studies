@@ -143,12 +143,12 @@
   <ItemGroup>
     <ClCompile Include="Examples.cpp" />
     <ClCompile Include="Number.cpp" />
-    <ClCompile Include="Palindrom.cpp" />
+    <ClCompile Include="PalindromCalculator.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Number.h" />
-    <ClInclude Include="Palindrom.h" />
+    <ClInclude Include="PalindromCalculator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
