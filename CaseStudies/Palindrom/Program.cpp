@@ -13,10 +13,11 @@ void Test_Palindrom_03();
 void Test_Palindrom_04();
 void Test_Palindrom_05();
 void Test_Palindrom_06();
+void Test_FourthEulerProblem();
 
 int main()
 {   
-    Test_Markdown();
+    Test_Palindrom_04();
 }
 
 // =====================================================================================

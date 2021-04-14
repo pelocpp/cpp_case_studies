@@ -9,6 +9,8 @@ class PalindromCalculator
 public:
     static std::tuple<std::optional<Number>, Number, size_t>
         calcPalindrom(const Number&, size_t);
+
+    static std::tuple<size_t, size_t, size_t> forthEulerProblem();
 };
 
 // =====================================================================================

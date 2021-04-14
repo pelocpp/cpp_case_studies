@@ -1,5 +1,7 @@
 <!-- Palindrom.md -->
 
+Spiegelzahlen – auch Palindrome genannt
+
 Eine natürliche Zahl, die identisch ist mit ihrer Kehrzahl wie z.B. 131, wird Palindrom genannt.
 In dieser Fallstudie betachten wir eine nicht deterministische Methode zur Berechnung beliebig großer Palindrome
 
@@ -71,7 +73,7 @@ Es folgen einige Beispiele, um die Arbeitsweise der Klasse `Number` näher illus
 *Beispiel*:
 
 ```cpp
-Number n("1234321");
+Number n{ "1234321" };
 std::cout << std::boolalpha << n.symmetric() << std::endl;
 ```
 
@@ -84,8 +86,8 @@ true
 *Beispiel*:
 
 ```cpp
-Number n("12345");
-Number m = n.reverse();
+Number n{ "12345" };
+Number m{ n.reverse() };
 std::cout << n << std::endl;
 std::cout << m << std::endl;
 ```
@@ -100,11 +102,11 @@ std::cout << m << std::endl;
 *Beispiel*:
 
 ```cpp
-Number n1("1282");
+Number n1{ "1282" };
 std::cout << n1 << std::endl;
-Number n2("976");
+Number n2{ "976" };
 std::cout << "+ " << n2 << std::endl;
-Number n3 = n1.add(n2);
+Number n3{ n1.add(n2) };
 std::cout << n3 << std::endl;
 ```
 
@@ -160,17 +162,152 @@ müssen Sie die Anzahl der wiederholten Additionen begrenzen. Weitere Details en
 *Tabelle* 1: Elemente der Klasse `PalindromCalculator`.
 
 Die Methode `calcPalindrom` liefert ein `std::tuple`-Objekt mit drei Werten zurück:
-Dem berechneten Palindrom, falls eines gefunden wurde, dem Ausgangswert und der Anzahl der Iterationsschritte.
+Dem berechneten Palindrom, falls eines gefunden wurde, dem Ausgangswert der Berechnung und der Anzahl der Iterationsschritte.
 
 Für den Umstand, dass ein Palindrom berechnet werden kann oder nicht, 
 bietet sich die Utility-Klasse `std::optional<T>` an: 
-Ein `std::optional<T>`-Objekt ist ein Hüllenobjekt zu einem anderen Objekt eines beliebigen Typs `T`,
+Ein `std::optional<T>`-Objekt ist ein Hüllenobjekt zu einem anderen Objekt beliebigen Typs `T`,
 in unserem Fall `Number`: Konnte ein Palindrom und damit ein `Number`-Objekt berechnet werden,
 ist dieses im  `std::optional<>`-Objekt enhalten und via `value()` verfügbar.
-Findet die Berechnung kein Palindrom, liefert eine Methode `has_value()` am Hüllenobjekt
-dem Wert `false` zurück. Im Hüllenobjekt selbst ist an Stelle eines `Number`-Objekts der Wert `std::nullopt_t` abgelegt.
+Findet die Berechnung kein Palindrom, liefert die Methode `has_value()` am Hüllenobjekt
+den Wert `false` zurück.
+Im Hüllenobjekt selbst ist dann an Stelle eines `Number`-Objekts der Wert `std::nullopt_t` abgelegt.
+
+Damit betrachten wir ein erstes Beispiel:
+
+*Beispiel*:
+
+```cpp
+Number start{ "89" };
+size_t count{ 100 };
+
+const auto& [palindrom, begin, steps] {
+    PalindromCalculator::calcPalindrom(start, count)
+};
+
+std::cout 
+    << "Searching palindrom beginning at " << begin 
+    << " [" << steps << " steps]:" << std::endl;
+
+if (palindrom.has_value()) {
+    std::cout << "Found palindrom: " << palindrom.value() << std::endl;
+}
+else {
+    std::cout << "No palindrom found!" << std::endl;
+}
+```
+
+*Ausgabe*:
+
+```
+Searching palindrom beginning at 89 [24 steps]:
+Found palindrom: 8.813.200.023.188
+```
+
+Würden wir beim Aufruf von `calcPalindrom` den Wert des zweiten Parameters mit 20 vorbelegen,
+erhalten wir die Ausgabe
+
+```
+Searching palindrom beginning at 89 [20 steps]:
+No palindrom found!
+```
+
+Ohne Verwendung von `auto` müssten wir das letzte Beispiel so formulieren:
+
+```cpp
+Number start{ "89" };
+size_t count{ 100 }; // choose 100 for success
+
+std::tuple<std::optional<Number>, Number, size_t> result{
+    PalindromCalculator::calcPalindrom(start, count)
+};
+
+std::cout 
+    << "Searching palindrom beginning at " << std::get<1>(result) 
+    << " [" << std::get<2>(result) << " steps]:" << std::endl;
+
+if (std::get<0>(result).has_value()) {
+    std::cout << "Found palindrom: " << std::get<0>(result).value() << std::endl;
+}
+else {
+    std::cout << "No palindrom found!" << std::endl;
+}
+```
+
+Natürlich möchte man auch den Verlauf des Algorithmus verfolgen können.
+In diesem Fall könnte man mit wenigen Ergänzungen in der Methode `calcPalindrom` folgende Ausgabe erhalten:
+
+```
+Number:  89
+Inverse: 98
+Number:  187
+Inverse: 781
+Number:  968
+Inverse: 869
+Number:  1.837
+Inverse: 7.381
+Number:  9.218
+Inverse: 8.129
+Number:  17.347
+Inverse: 74.371
+Number:  91.718
+Inverse: 81.719
+Number:  173.437
+Inverse: 734.371
+Number:  907.808
+Inverse: 808.709
+Number:  1.716.517
+Inverse: 7.156.171
+Number:  8.872.688
+Inverse: 8.862.788
+Number:  17.735.476
+Inverse: 67.453.771
+Number:  85.189.247
+Inverse: 74.298.158
+Number:  159.487.405
+Inverse: 504.784.951
+Number:  664.272.356
+Inverse: 653.272.466
+Number:  1.317.544.822
+Inverse: 2.284.457.131
+Number:  3.602.001.953
+Inverse: 3.591.002.063
+Number:  7.193.004.016
+Inverse: 6.104.003.917
+Number:  13.297.007.933
+Inverse: 33.970.079.231
+Number:  47.267.087.164
+Inverse: 46.178.076.274
+Number:  93.445.163.438
+Inverse: 83.436.154.439
+Number:  176.881.317.877
+Inverse: 778.713.188.671
+Number:  955.594.506.548
+Inverse: 845.605.495.559
+Number:  1.801.200.002.107
+Inverse: 7.012.000.021.081
+Number:  8.813.200.023.188
+Searching palindrom beginning at 89 [24 steps]:
+Found palindrom: 8.813.200.023.188
+```
+
+# Viertes Eulersches Problem
+
+Ein nach dem Mathematiker *Leonhard Euler* benanntes Problem lautet:
+&ldquo;Finde das größte Palindrom, das ein Produkt aus zwei dreistelligen Zahlen ist!&rdquo;.
+Zum besseren Verständnis: Das größte 4-stellige Palindrom als Produkt zweier 2-stelliger Zahlen ist 9009 = 91 * 99.
+
+*Hinweis*: Für die Multiplikation dreistelliger Zahlen dürfen Sie Variablen des Typs `int` verwenden.
+Sie müssen die Klasse `Number` also nicht um eine Multiplikationsmethode ergänzen.
+
+Schreiben Sie eine C++-Funktion, die mit Hilfe der Klasse `Number` das vierte Eulersche Problem löst.
+
+# Lösung
+
+> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
 
 
+WEITER
 
 ===============================================
 

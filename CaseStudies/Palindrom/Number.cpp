@@ -75,11 +75,6 @@ Number Number::add (const Number& number) const
     return tmp;
 }
 
-Number operator+ (const Number& n, const Number& m) 
-{
-    return n.add(m);
-}
-
 Number Number::reverse() const
 {
     std::vector<int> digits{ m_digits };
@@ -92,34 +87,15 @@ Number Number::reverse() const
     return tmp;
 }
 
-//void Number::prependDigit(int digit)
-//{
-//    m_digits.insert(m_digits.begin(), digit);
-//}
-
 // private helper methods
 void Number::removeLeadingZeros()
 {
-    //// take care of 0 number - should never occur
-    //if (m_digits.size() == 1 and m_digits[0] == 0)
-    //    return;
-
-    //// simple implementation, we just handle a single zero digit
-    //if (m_digits[m_digits.size() - 1] == 0) {
-    //    m_digits.pop_back();
-    //}
-
     // remove trailing zeros, if any ... using STL algorithms
     std::reverse_iterator<std::vector<int>::iterator> r_it{ std::find_if(
         std::rbegin(m_digits),
         std::rend(m_digits),
         [](int value) { return value != 0; }
     ) };
-
-    // vector contains only '0's - save last '0'
-    //if (r_it == std::rend(m_digits)) {
-    //    r_it--;
-    //}
 
     m_digits.erase(r_it.base(), std::end(m_digits));
 }

@@ -19,16 +19,9 @@ public:
     size_t size() const;
     bool symmetric() const;
 
-    // binary arithmetic addition operator
-    friend Number operator+ (const Number&, const Number&);
-
-    // functor (supporting formatted output)
-    std::string operator()(int);   // ??????????????????????????
- 
     // public interface
     Number add(const Number&) const;
     Number reverse() const;
-   // void prependDigit(int digit);
 
 private:
     // private helper methods

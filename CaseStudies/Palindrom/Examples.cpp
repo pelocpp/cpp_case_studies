@@ -21,19 +21,19 @@ void calcPalindrom(const Number&, size_t);
 
 void Test_Markdown()
 {
-    //Number n("1234321");
-    //std::cout << std::boolalpha << n.symmetric() << std::endl;
+    Number n{ "1234321" };
+    std::cout << std::boolalpha << n.symmetric() << std::endl;
 
-    //Number n1("12345");
-    //Number m1 = n.reverse();
-    //std::cout << n1 << std::endl;
-    //std::cout << m1 << std::endl;
+    Number n1{ "12345" };
+    Number m1{ n.reverse() };
+    std::cout << n1 << std::endl;
+    std::cout << m1 << std::endl;
 
-    Number n2("1282");
+    Number n2{ "1282" };
     std::cout << n2 << std::endl;
-    Number n3("976");
+    Number n3{ "976" };
     std::cout << "+ " << n3 << std::endl;
-    Number n4 = n2.add(n3);
+    Number n4{ n2.add(n3) };
     std::cout << n4 << std::endl;
 }
 
@@ -56,23 +56,23 @@ void Test_Constructors()
 void Test_Add()
 {
     // testing addition // 3.333
-    Number n1 = Number("1111");
-    Number n2 = Number("2222");
+    Number n1{ "1111" };
+    Number n2{ "2222" };
     std::cout << n1 << " + " << n2 << " = " << n1.add(n2) << std::endl;
 
     // 16.665
-    n1 = Number("7777");
-    n2 = Number("8888");
+    n1 = Number{ "7777" };
+    n2 = Number{ "8888" };
     std::cout << n1 << " + " << n2 << " = " << n1.add(n2) << std::endl;
 
     // 2.258
-    n1 = Number("1282");
-    n2 = Number("976");
+    n1 = Number{ "1282" };
+    n2 = Number{ "976" };
     std::cout << n1 << " + " << n2 << " = " << n1.add(n2) << std::endl;
 
     // 100.000.000.000.000
-    n1 = Number("99999999999999");
-    n2 = Number("1");
+    n1 = Number{ "99999999999999" };
+    n2 = Number{ "1" };
     std::cout << n1 << " + " << n2 << " = " << n1.add(n2) << std::endl;
 }
 
@@ -82,10 +82,11 @@ void Test_Add()
 void Test_Palindrom_01()
 {
     Number start{ "89" };
-    size_t count{ 20 }; // choose 100 for success
+    size_t count{ 100 }; // choose 100 for success
 
-    const auto& [palindrom, begin, steps] =
-        PalindromCalculator::calcPalindrom(start, count);
+    const auto& [palindrom, begin, steps] {
+        PalindromCalculator::calcPalindrom(start, count)
+    };
 
     std::cout 
         << "Searching palindrom beginning at " << begin 
@@ -104,8 +105,9 @@ void Test_Palindrom_02()
     Number start{ "89" };
     size_t count{ 100 }; // choose 100 for success
 
-    std::tuple<std::optional<Number>, Number, size_t> result = 
-        PalindromCalculator::calcPalindrom(start, count);
+    std::tuple<std::optional<Number>, Number, size_t> result{
+        PalindromCalculator::calcPalindrom(start, count)
+    };
 
     std::cout 
         << "Searching palindrom beginning at " << std::get<1>(result) 
@@ -149,8 +151,9 @@ void Test_Palindrom_06()
 
 void calcPalindrom(const Number& start, size_t count)
 {
-    std::tuple<std::optional<Number>, Number, size_t> result =
-        PalindromCalculator::calcPalindrom(start, count);
+    std::tuple<std::optional<Number>, Number, size_t> result{
+        PalindromCalculator::calcPalindrom(start, count) 
+    };
 
     std::cout
         << "Searching palindrom beginning at " << std::get<1>(result)
@@ -162,6 +165,16 @@ void calcPalindrom(const Number& start, size_t count)
     else {
         std::cout << "No palindrom found!" << std::endl;
     }
+}
+
+void Test_FourthEulerProblem()
+{
+    std::tuple<size_t, size_t, size_t> solution{ PalindromCalculator::forthEulerProblem() };
+
+    std::cout << "Solution of fourth Euler problem:" << std::endl;
+    std::cout 
+        << std::get<1>(solution) << " * " << std::get<2>(solution) 
+        << " = " << std::get<0>(solution) << std::endl;
 }
 
 // =====================================================================================

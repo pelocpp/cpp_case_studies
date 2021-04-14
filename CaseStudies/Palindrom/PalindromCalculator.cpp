@@ -3,6 +3,7 @@
 // =====================================================================================
 
 #include <iostream>
+#include <string>
 #include <vector>
 #include <string_view>
 #include <tuple>
@@ -24,18 +25,50 @@ PalindromCalculator::calcPalindrom(const Number& start, size_t steps)
         }
 
         if (n.symmetric()) {
-            return std::make_tuple(n, start, i);
+            return { n, start, i };
         }
 
         Number m{ n.reverse() };
-        n = n + m;
+        n = n.add(m);
 
         if constexpr (Verbose) {
             std::cout << "Inverse: " << m << std::endl;
         }
     }
 
-    return std::make_tuple(std::nullopt, start, steps);
+    return { std::nullopt, start, steps };
+}
+
+std::tuple<size_t, size_t, size_t>
+PalindromCalculator::forthEulerProblem()
+{
+    size_t i{ 1 }, j{ 1 };
+    size_t candidate{ 1 };
+
+    for (size_t n{ 111 }; n != 999; ++n)
+    {
+        for (size_t m{ 111 }; m != 999; ++m)
+        {
+            if (n < m)
+            {
+                size_t prod = n * m;
+                std::string s{ std::to_string(prod) };
+                Number num{ s};
+
+                if (num.symmetric())
+                {
+                    if (prod > candidate)
+                    {
+                        i = n;
+                        j = m;
+                        candidate = i * j;
+                    }
+                }
+            }
+        }
+    }
+
+    return { candidate, i, j };
 }
 
 // =====================================================================================
