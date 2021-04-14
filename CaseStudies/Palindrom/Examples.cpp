@@ -12,7 +12,33 @@
 #include "PalindromCalculator.h"
 
 // =====================================================================================
-// markdown examples
+// helper function
+
+void calcPalindrom(const Number&, size_t);
+
+// =====================================================================================
+// markdown constructors
+
+void Test_Markdown()
+{
+    //Number n("1234321");
+    //std::cout << std::boolalpha << n.symmetric() << std::endl;
+
+    //Number n1("12345");
+    //Number m1 = n.reverse();
+    //std::cout << n1 << std::endl;
+    //std::cout << m1 << std::endl;
+
+    Number n2("1282");
+    std::cout << n2 << std::endl;
+    Number n3("976");
+    std::cout << "+ " << n3 << std::endl;
+    Number n4 = n2.add(n3);
+    std::cout << n4 << std::endl;
+}
+
+// =====================================================================================
+// constructors
 
 void Test_Constructors()
 {
@@ -83,6 +109,51 @@ void Test_Palindrom_02()
 
     std::cout 
         << "Searching palindrom beginning at " << std::get<1>(result) 
+        << " [" << std::get<2>(result) << " steps]:" << std::endl;
+
+    if (std::get<0>(result).has_value()) {
+        std::cout << "Found palindrom: " << std::get<0>(result).value() << std::endl;
+    }
+    else {
+        std::cout << "No palindrom found!" << std::endl;
+    }
+}
+
+void Test_Palindrom_03()
+{
+    Number start{ "1.186.060.307.891.929.990" };
+    size_t count{ 270 };
+    calcPalindrom(start, count);
+}
+
+void Test_Palindrom_04()
+{
+    Number start{ "13.968.441.660.506.503.386.020" };
+    size_t count{ 300 };
+    calcPalindrom(start, count);
+}
+
+void Test_Palindrom_05()
+{
+    Number start{ "107.000.020.928.910" };
+    size_t count{ 200 };
+    calcPalindrom(start, count);
+}
+
+void Test_Palindrom_06()
+{
+    Number start{ "89" };
+    size_t count{ 500 };
+    calcPalindrom(start, count);
+}
+
+void calcPalindrom(const Number& start, size_t count)
+{
+    std::tuple<std::optional<Number>, Number, size_t> result =
+        PalindromCalculator::calcPalindrom(start, count);
+
+    std::cout
+        << "Searching palindrom beginning at " << std::get<1>(result)
         << " [" << std::get<2>(result) << " steps]:" << std::endl;
 
     if (std::get<0>(result).has_value()) {

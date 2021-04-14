@@ -1,5 +1,181 @@
 <!-- Palindrom.md -->
 
+Eine natürliche Zahl, die identisch ist mit ihrer Kehrzahl wie z.B. 131, wird Palindrom genannt.
+In dieser Fallstudie betachten wir eine nicht deterministische Methode zur Berechnung beliebig großer Palindrome
+
+Die in C++ eingebauten elementaren Datentypen (wie `int` oder `long`) stellen keine echte Hilfe dar,
+wenn wir potentiell unendlich große Palindrome berechnen wollen.
+Zu diesem Zweck entwerfen wir im Folgenden zunächst eine Klasse `Number`, mit deren Hilfe sich
+sehr große Zahlen darstellen lassen. Im Anschluss daran gehen wir auf die Klasse `PalindromCalculator` ein,
+um Palindrome zu berechnen.
+
+<!--more-->
+
+# Lernziele
+
+  * Container `std::vector<int>`
+  * Klasse `std::string_view`
+  * Einsatz von `std::reverse_iterator`
+  * STL-Algorithmen bzw. -Funktionen `std::for_each`, `std::find_if`, `std::begin`, `std::end`, `std::rbegin`, `std::rend`, `std::isdigit` und `std::remove`
+  * Utility-Klassen `std::tuple` und `std::optional`
+  * Konstrukt `if constexpr`
+
+# Aufgabe
+
+Für die Erzeugung von Palindromen gibt es einen sehr einfachen Algorithmus, der leider nicht immer funktioniert:
+Man addiere eine beliebige Zahl mit ihrer Kehrzahl und untersuche das Ergebnis daraufhin, ob man eine Spiegelzahl erhalten hat.
+Wenn nicht, setze man das Spiel fort, bis das Ergebnis ein Palindrom ist, zum Beispiel:
+
+```
+165 + 561 ⇒ 726 + 627 ⇒ 1353 + 3531 = 4884
+```
+
+Da dieser Algorithmus nicht immer funktioniert, muss man darauf achten, dass man nicht in eine Endlosschleife gerät!
+Zur Lösung der Aufgabe sind eine Reihe von Klassen zu entwickeln, deren Arbeitsweise im Folgenden näher beschrieben wird.
+
+# Klasse `Number`
+
+Objekte der Klasse `Number` beschreiben eine beliebig große Zahl, deren Ziffern durch ein `std::string_view`-Objekt festgelegt werden.
+Im Gegensatz zur Klasse `BigInteger` aus der Fallstudie XXX sollen `Number`-Objekte nicht den kompletten Satz
+arithmetischer Operationen unterstützen. Es genügt einzig und allein die Addition von `Number`-Objekten,
+um ein nicht-deterministisches Verfahren zur Berechnung von Palindromen implementieren zu können.
+Die in [Tabelle 1] beschriebenen Elemente der Klasse `Number` dienen hierzu zur Vorbereitung:
+
+###### {#tabelle_1_class_number}
+
+| Element | Beschreibung |
+| :---- | :---- |
+| Konstruktor | `Number();`<br/>Erzeugt ein `Number`-Objekt zur Zahl 0. |
+| Benutzerdefinierter Konstruktor | `explicit Number(std::string_view);`<br/>Erzeugt ein `Number`-Objekt mit Hilfe der Beschreibung einer Zahl in Form einer Zeichenkette. |
+| *getter* `size()` | `size_t size() const;`<br/>Liefert die Anzahl der Ziffern der Zahl, auch *Stelligkeit* der ganzen Zahl genannt, zurück. |
+| *getter* `symmetric()` | `bool symmetric() const;`<br/>Liefert `true` zurück, wenn das aktuelle `Number`-Objekt eine Spiegelzahl ist, andernfalls `false`. |
+| Methode `add` | `Number add(const Number&) const;`<br/>Addiert zwei beliebig lange `Number`-Objekte. Das Ergebnis wird als Rückgabewert von `add` zurückgegeben. |
+| Methode `reverse` | `Number reverse() const;`<br/>Erstellt zum aktuellen `Number`-Objekt das inverse Number-Objekt, auch als *Kehrzahl* bezeichnet. Das aktuelle `Number`-Objekt bleibt unverändert. |
+
+*Tabelle* 1: Elemente der Klasse `Number`.
+
+Bei der Additionsmethode `add` legen Sie Ihre Kenntnisse aus der Schulmathematik zu Grunde:
+Die zu addierenden Zahlen sind &ldquo;gedanklich&rdquo; betrachtet untereinander zu schreiben.
+Die Zahlen werden nun von hinten beginnend aufaddiert, wobei ein Übertrag entstehen kann.
+Dieser ist dann im nächsten Schritt zu berücksichtigen, wie in [Abbildung 1] am Beispiel
+der beiden Zahlen 1282 und 976 dargestellt wird:
+
+###### {#abbildung_1_schriftlichen_addition_01}
+
+{{< figure src="/img/palindrom/SchulmathematikAddition.png" width="60%" >}}
+
+*Abbildung* 1: Schriftliche Addition aus der Schulmathematik.
+
+Es folgen einige Beispiele, um die Arbeitsweise der Klasse `Number` näher illustrieren:
+
+*Beispiel*:
+
+```cpp
+Number n("1234321");
+std::cout << std::boolalpha << n.symmetric() << std::endl;
+```
+
+*Ausgabe*:
+
+```
+true
+```
+
+*Beispiel*:
+
+```cpp
+Number n("12345");
+Number m = n.reverse();
+std::cout << n << std::endl;
+std::cout << m << std::endl;
+```
+
+*Ausgabe*:
+
+```
+12.345
+54.321
+```
+
+*Beispiel*:
+
+```cpp
+Number n1("1282");
+std::cout << n1 << std::endl;
+Number n2("976");
+std::cout << "+ " << n2 << std::endl;
+Number n3 = n1.add(n2);
+std::cout << n3 << std::endl;
+```
+
+*Ausgabe*:
+
+```
+1.282
++ 976
+2.258
+```
+
+*Anmerkung*:
+
+Überlegen Sie sich, in welcher Reihenfolge Sie die Ziffern einer natürlichen Zahl in einem `Number`-Objekt abspeichern.
+Bei geeigneter Ablage kann sich die Implementierung der `add`-Methode vereinfachen!
+
+# Klasse `PalindromCalculator`
+
+Für die Erzeugung von Palindromen gibt es einen Algorithmus, der leider nicht deterministisch ist:
+Addiert man eine beliebige Zahl wiederholt mit ihrer Kehrzahl (inversen Zahl), kann man ein Palindrom erhalten.
+
+*Beispiel*:
+
+```
+Zahl: 53978
+inverse Zahl: + 87935
+addiert: 141913
+inverse Zahl: + 319141
+addiert: 461054
+inverse Zahl: + 450164
+addiert: 911218
+inverse Zahl: + 812119
+addiert: 1723337
+inverse Zahl: + 7333271
+addiert: 9056608
+inverse Zahl: + 8066509
+addiert: 17123117
+inverse Zahl: + 71132171
+addiert: 88255288 7 Schritte
+```
+
+Die einfache Idee des Algorithmus basiert also auf der wiederholten Addition einer beliebigen Zahl mit ihrer inversen Zahl.
+Da in einigen (wenigen) Situationen der Algorithmus in eine Endlosschleife geraten kann,
+müssen Sie die Anzahl der wiederholten Additionen begrenzen. Weitere Details entnehmen Sie [Tabelle 2]:
+
+
+###### {#tabelle_2_class_palindromcalculator}
+
+| Element | Beschreibung |
+| :---- | :---- |
+| Methode `calcPalindrom` | `static std::tuple<std::optional<Number>, Number, size_t> calcPalindrom(const Number& number, size_t steps);`<br/>.Die Methode versucht, zu einem vorgegebenen Ausgangswert `number` ein Palindrom zu berechnen. Wird ein Palindrom ermittelt, bricht der Algorithmus ab. Andernfalls erfolgt die Terminierung nach einer festgelegten Anzahl `steps` von Iterationsschritten. |
+
+*Tabelle* 1: Elemente der Klasse `PalindromCalculator`.
+
+Die Methode `calcPalindrom` liefert ein `std::tuple`-Objekt mit drei Werten zurück:
+Dem berechneten Palindrom, falls eines gefunden wurde, dem Ausgangswert und der Anzahl der Iterationsschritte.
+
+Für den Umstand, dass ein Palindrom berechnet werden kann oder nicht, 
+bietet sich die Utility-Klasse `std::optional<T>` an: 
+Ein `std::optional<T>`-Objekt ist ein Hüllenobjekt zu einem anderen Objekt eines beliebigen Typs `T`,
+in unserem Fall `Number`: Konnte ein Palindrom und damit ein `Number`-Objekt berechnet werden,
+ist dieses im  `std::optional<>`-Objekt enhalten und via `value()` verfügbar.
+Findet die Berechnung kein Palindrom, liefert eine Methode `has_value()` am Hüllenobjekt
+dem Wert `false` zurück. Im Hüllenobjekt selbst ist an Stelle eines `Number`-Objekts der Wert `std::nullopt_t` abgelegt.
+
+
+
+===============================================
+
+
+
 In dieser Fallstudie  betrachten wir ein sehr &ldquo;martialisches&rdquo; Problem,
 das durch den jüdischen Historiker *Flavius Josephus* überliefert worden ist.
 Dieser soll im römisch&ndash;jüdischen Krieg mit 41 Kameraden den Selbstmord der Gefangenschaft vorgezogen haben.
@@ -592,16 +768,11 @@ Beide ergaben sich den Römern und konnten auf diese Weise ihr Leben retten.
 
 <!-- Links Definitions -->
 
-[Listing 1]: #listing_01_ijosephus_interface
-[Listing 2]: #listing_02_josephus_interface
-[Listing 3]: #listing_03_josephus_implementation
-[Listing 4]: #listing_04_josephusarrayimpl_interface
-[Listing 5]: #listing_05_josephusarrayimpl_implementation
-[Listing 6]: #listing_06_class_soldier
-[Listing 7]: #listing_07_josephusforwardlistimpl_interface
-[Listing 8]: #listing_08_josephusforwardlistimpl_implementation
+[Tabelle 1]: #tabelle_1_class_number
+[Tabelle 2]: #tabelle_2_class_palindromcalculator
 
-[Abbildung 1]:  #abbildung_1_josephus_problem_array_solution
-[Abbildung 2]:  #abbildung_2_josephus_problem_linkedlist_solution
+[Listing 1]: #listing_01_ijosephus_interface
+
+[Abbildung 1]:  #abbildung_1_schriftlichen_addition_01
 
 <!-- End-of-File -->

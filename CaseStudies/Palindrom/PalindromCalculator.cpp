@@ -24,7 +24,7 @@ PalindromCalculator::calcPalindrom(const Number& start, size_t steps)
         }
 
         if (n.symmetric()) {
-            return std::make_tuple(n, start, i + 1);
+            return std::make_tuple(n, start, i);
         }
 
         Number m{ n.reverse() };
