@@ -33,7 +33,10 @@ Number::Number(std::string_view sv)
 }
 
 // getter
-size_t Number::size() const { return m_digits.size(); }
+size_t Number::size() const 
+{ 
+    return m_digits.size();
+}
 
 bool Number::symmetric() const
 {

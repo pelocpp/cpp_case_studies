@@ -14,7 +14,6 @@ public:
     Number();
     explicit Number(std::string_view);
 
-public:
     // getter
     size_t size() const;
     bool symmetric() const;

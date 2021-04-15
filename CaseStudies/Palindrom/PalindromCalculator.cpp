@@ -12,7 +12,7 @@
 #include "Number.h"
 #include "PalindromCalculator.h"
 
-constexpr bool Verbose = true;
+constexpr bool Verbose = false;
 
 std::tuple<std::optional<Number>, Number, size_t>
 PalindromCalculator::calcPalindrom(const Number& start, size_t steps)
@@ -51,18 +51,15 @@ PalindromCalculator::forthEulerProblem()
         {
             if (n < m)
             {
-                size_t prod = n * m;
+                size_t prod{ n * m };
                 std::string s{ std::to_string(prod) };
-                Number num{ s};
+                Number num{ s };
 
-                if (num.symmetric())
+                if (num.symmetric() and prod > candidate)
                 {
-                    if (prod > candidate)
-                    {
-                        i = n;
-                        j = m;
-                        candidate = i * j;
-                    }
+                    i = n;
+                    j = m;
+                    candidate = i * j;
                 }
             }
         }

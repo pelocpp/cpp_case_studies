@@ -149,6 +149,13 @@ void Test_Palindrom_06()
     calcPalindrom(start, count);
 }
 
+void Test_Palindrom_07()
+{
+    Number start{ "13.968.441.660.506.503.386.020" };
+    size_t count{ 300 };
+    calcPalindrom(start, count);
+}
+
 void calcPalindrom(const Number& start, size_t count)
 {
     std::tuple<std::optional<Number>, Number, size_t> result{

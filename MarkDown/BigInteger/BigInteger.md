@@ -793,7 +793,7 @@ Diese werden in Zeile 31 durch einen Aufruf der `removeLeadingZeros`-Methode ent
 
 Beachten Sie bitte auch Zeile 29: Die Berechnung des Resultats der Addition erfolgte in einem `std::vector<>` Objekt.
 Als Rückgabewert der Addition benötigen wir aber ein `BigInteger` Objekt!
-In jedem Fall wollen wir vermeiden, dass es bei der Konstruktion dieses Objekts zu einer &ndash; unnötigen  &ndash;
+In jedem Fall wollen wir vermeiden, dass es bei der Konstruktion dieses Objekts zu einer &ndash; unnötigen &ndash;
 Kopie des beteiligten `std::vector<>`-Objekts kommt. Die *Verschiebesemantik* ist hierzu angesagt.
 In Zeile 29 verschieben wir das Resultat-Vektorobjekt mittels des Verschiebewertzuweisungsoperators,
 der von der Klasse `std::vector<>` bereitgestellt wird, in das  `BigInteger`-Objekt. Dazu wandeln wir die *LValue*-Referenz des
