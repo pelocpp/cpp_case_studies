@@ -1,9 +1,7 @@
 <!-- Palindrom.md -->
 
-Spiegelzahlen – auch Palindrome genannt
-
-Eine natürliche Zahl, die identisch ist mit ihrer Kehrzahl wie z.B. 131, wird Palindrom genannt.
-In dieser Fallstudie betachten wir eine nicht deterministische Methode zur Berechnung beliebig großer Palindrome
+Eine natürliche Zahl, die identisch ist mit ihrer Kehrzahl wie z.B. 131, wird *Palindrom* genannt.
+In dieser Fallstudie betrachten wir eine nicht deterministische Methode zur Berechnung beliebig großer Palindrome.
 
 Die in C++ eingebauten elementaren Datentypen (wie `int` oder `long`) stellen keine echte Hilfe dar,
 wenn wir potentiell unendlich große Palindrome berechnen wollen.
@@ -17,11 +15,11 @@ um Palindrome zu berechnen.
 
   * Container `std::vector<int>`
   * Klasse `std::string_view`
+  * Utility-Klassen `std::tuple` und `std::optional`
+  * Konstrukt `if constexpr`
   * Einsatz von `std::reverse_iterator`
   * Verschiebesemantik mit `std::move`
   * STL-Algorithmen bzw. -Funktionen `std::for_each`, `std::find_if`, `std::begin`, `std::end`, `std::rbegin`, `std::rend`, `std::isdigit` und `std::remove`
-  * Utility-Klassen `std::tuple` und `std::optional`
-  * Konstrukt `if constexpr`
 
 # Aufgabe
 
@@ -34,12 +32,15 @@ Wenn nicht, setze man das Spiel fort, bis das Ergebnis ein Palindrom ist, zum Be
 ```
 
 Da dieser Algorithmus nicht immer funktioniert, muss man darauf achten, dass man nicht in eine Endlosschleife gerät!
-Zur Lösung der Aufgabe sind eine Reihe von Klassen zu entwickeln, deren Arbeitsweise im Folgenden näher beschrieben wird.
+Zur Lösung der Aufgabe sind zwei Klassen `Number` und `PalindromCalculator` zu entwickeln,
+deren Arbeitsweise im Folgenden näher beschrieben wird.
 
 # Klasse `Number`
 
 Objekte der Klasse `Number` beschreiben eine beliebig große Zahl, deren Ziffern durch ein `std::string_view`-Objekt festgelegt werden.
-Im Gegensatz zur Klasse `BigInteger` aus der Fallstudie XXX sollen `Number`-Objekte nicht den kompletten Satz
+Im Gegensatz zur Klasse `BigInteger` aus der Fallstudie
+[Exakte Arithmetik ganzer Zahlen]({{< ref "/post/2021-04-10-biginteger" >}})
+sollen `Number`-Objekte nicht den kompletten Satz
 arithmetischer Operationen unterstützen. Es genügt einzig und allein die Addition von `Number`-Objekten,
 um ein nicht-deterministisches Verfahren zur Berechnung von Palindromen implementieren zu können.
 Die in [Tabelle 1] beschriebenen Elemente der Klasse `Number` dienen hierzu zur Vorbereitung:
@@ -53,7 +54,7 @@ Die in [Tabelle 1] beschriebenen Elemente der Klasse `Number` dienen hierzu zur 
 | *getter* `size()` | `size_t size() const;`<br/>Liefert die Anzahl der Ziffern der Zahl, auch *Stelligkeit* der ganzen Zahl genannt, zurück. |
 | *getter* `symmetric()` | `bool symmetric() const;`<br/>Liefert `true` zurück, wenn das aktuelle `Number`-Objekt eine Spiegelzahl ist, andernfalls `false`. |
 | Methode `add` | `Number add(const Number&) const;`<br/>Addiert zwei beliebig lange `Number`-Objekte. Das Ergebnis wird als Rückgabewert von `add` zurückgegeben. |
-| Methode `reverse` | `Number reverse() const;`<br/>Erstellt zum aktuellen `Number`-Objekt das inverse Number-Objekt, auch als *Kehrzahl* bezeichnet. Das aktuelle `Number`-Objekt bleibt unverändert. |
+| Methode `reverse` | `Number reverse() const;`<br/>Erstellt zum aktuellen `Number`-Objekt das inverse `Number`-Objekt, auch als *Kehrzahl* bezeichnet. Das aktuelle `Number`-Objekt bleibt unverändert. |
 
 *Tabelle* 1: Elemente der Klasse `Number`.
 
@@ -69,7 +70,12 @@ der beiden Zahlen 1282 und 976 dargestellt wird:
 
 *Abbildung* 1: Schriftliche Addition aus der Schulmathematik.
 
-Es folgen einige Beispiele, um die Arbeitsweise der Klasse `Number` näher illustrieren:
+*Anmerkung*:
+
+Überlegen Sie sich, in welcher Reihenfolge Sie die Ziffern einer natürlichen Zahl in einem `Number`-Objekt abspeichern.
+Bei geeigneter Ablage kann sich die Implementierung der `add`-Methode vereinfachen!
+
+Es folgen einige Beispiele, um die Arbeitsweise der Klasse `Number` näher zu illustrieren:
 
 *Beispiel*:
 
@@ -119,11 +125,6 @@ std::cout << n3 << std::endl;
 2.258
 ```
 
-*Anmerkung*:
-
-Überlegen Sie sich, in welcher Reihenfolge Sie die Ziffern einer natürlichen Zahl in einem `Number`-Objekt abspeichern.
-Bei geeigneter Ablage kann sich die Implementierung der `add`-Methode vereinfachen!
-
 # Klasse `PalindromCalculator`
 
 Für die Erzeugung von Palindromen gibt es einen Algorithmus, der leider nicht deterministisch ist:
@@ -162,14 +163,18 @@ müssen Sie die Anzahl der wiederholten Additionen begrenzen. Weitere Details en
 
 *Tabelle* 1: Elemente der Klasse `PalindromCalculator`.
 
-Die Methode `calcPalindrom` liefert ein `std::tuple`-Objekt mit drei Werten zurück:
-Dem berechneten Palindrom, falls eines gefunden wurde, dem Ausgangswert der Berechnung und der Anzahl der Iterationsschritte.
+Die Methode `calcPalindrom` liefert ein `std::tuple<>`-Objekt mit drei Werten zurück:
+Dem berechneten Palindrom, falls eines gefunden wurde, dem Ausgangswert der Berechnung und der Anzahl der Iterationsschritte:
+
+```cpp
+std::tuple<std::optional<Number>, Number, size_t>
+```
 
 Für den Umstand, dass ein Palindrom berechnet werden kann oder nicht, 
 bietet sich die Utility-Klasse `std::optional<T>` an: 
 Ein `std::optional<T>`-Objekt ist ein Hüllenobjekt zu einem anderen Objekt beliebigen Typs `T`,
 in unserem Fall `Number`: Konnte ein Palindrom und damit ein `Number`-Objekt berechnet werden,
-ist dieses im  `std::optional<>`-Objekt enhalten und via `value()` verfügbar.
+ist dieses im  `std::optional<>`-Objekt enthalten und via `value()` verfügbar.
 Findet die Berechnung kein Palindrom, liefert die Methode `has_value()` am Hüllenobjekt
 den Wert `false` zurück.
 Im Hüllenobjekt selbst ist dann an Stelle eines `Number`-Objekts der Wert `std::nullopt_t` abgelegt.
@@ -235,8 +240,9 @@ else {
 }
 ```
 
-Natürlich möchte man auch den Verlauf des Algorithmus verfolgen können.
-In diesem Fall könnte man mit wenigen Ergänzungen in der Methode `calcPalindrom` folgende Ausgabe erhalten:
+Natürlich möchte man den Verlauf des Algorithmus auch verfolgen können.
+In diesem Fall könnte man mit wenigen Ergänzungen in der Methode `calcPalindrom` folgende
+ausführlicheren Ausgaben erhalten:
 
 ```
 Number:  89
@@ -461,10 +467,10 @@ Die Realisierung der Klasse `Number` schließt sich in [Listing 2] an:
 *Listing* 2: Klasse `Number`: Realisierung.
 
 Beachten Sie die Zeilen 64 und 76 von [Listing 2]:
-Die Berechnung des Resultats der Addition erfolgte in einem `std::vector<>` Objekt.
+Die Berechnung des Resultats der Addition erfolgte in einem `std::vector<int>` Objekt.
 Als Rückgabewert der Addition benötigen wir aber ein `Number` Objekt!
 In jedem Fall wollen wir vermeiden, dass es bei der Konstruktion dieses Objekts zu einer &ndash; unnötigen &ndash;
-Kopie des beteiligten `std::vector<>`-Objekts kommt. Die *Verschiebesemantik* ist hierzu angesagt.
+Kopie des beteiligten `std::vector<int>`-Objekts kommt. Die *Verschiebesemantik* ist hierzu angesagt.
 In Zeile 64 bzw. 76 verschieben wir das Resultat-Vektorobjekt mittels des Verschiebewertzuweisungsoperators,
 der von der Klasse `std::vector<>` bereitgestellt wird, in das  `Number`-Objekt.
 Dazu wandeln wir die *LValue*-Referenz des Arguments `digits` mit Hilfe von `std::move` in eine *RValue*-Referenz um!
@@ -472,7 +478,7 @@ Dazu wandeln wir die *LValue*-Referenz des Arguments `digits` mit Hilfe von `std
 Die Implementierung eines nicht-deterministischen Algorithmus zum Berechnen von Palindromen stellen wir
 an Hand der Klasse `PalindromCalculator` in [Listing 3] und [Listing 4] vor.
 Die Klasse besteht nur aus zwei Klassenmethoden, eine zum Berechnen von Palindromen und eine zweite,
-um das vierte Eulersche Problem zu berechnen:
+um das vierte Eulersche Problem zu lösen:
 
 ###### {#listing_03_palindromcalculator_interface}
 
@@ -554,9 +560,9 @@ um das vierte Eulersche Problem zu berechnen:
 *Listing* 4: Klasse `PalindromCalculator`: Realisierung.
 
 Leider produziert die `calcPalindrom`-Methode nicht bei jedem ihrer Aufrufe ein Palindrom.
-Wir müssen aus diesem Grund die Klasse sehr sorgfältigen Tests unterziehen &ndash; einen Ausschnitt des Testszenarios
-finden Sie in den nachfolgenden Ausschnitten vor. Eine interessante WebSite zum Thema
-&ldquo;Reversal-Addition Palindrome Records&rdquo; findet man unter [What is a Palindrome?](http://jasondoucette.com/pal/).
+Wir müssen aus diesem Grund die Klasse `PalindromCalculator` sehr sorgfältigen Tests unterziehen &ndash; einen Ausschnitt des Testszenarios
+finden Sie in den nachfolgenden Ausschnitten vor. Eine interessante Website zum Thema
+&ldquo;*Reversal-Addition Palindrome Records*&rdquo; findet man unter [What is a Palindrome?](http://jasondoucette.com/pal/).
 
 Eine Kostprobe gefällig? Die Zahl 1.186.060.307.891.929.990 wird dort getestet &ndash; und wir können das Resultat
 mit unserem Testprogramm verifizieren:
@@ -600,16 +606,13 @@ Found palindrom:
     984.873.422.673.467.987.856.626.544
 ```
 
-Auch findet man dort &ldquo;Weltrekorde&rdquo; dokumentiert vor:
+Auch findet man unter [What is a Palindrome?](http://jasondoucette.com/pal/) &ldquo;Weltrekorde&rdquo; dokumentiert vor:
 
-**THE NEW WORLD RECORD (Jan 4, 2021)**
+> **THE NEW WORLD RECORD (Jan 4, 2021)**<br/>
+> **Anton Stefanov** has discovered the new World Record!<br/>
+> The **23 digit** number 13968441660506503386020 solves after **289 iterations** to form a 142 digit palindrome!
 
-**Anton Stefanov** has discovered the new World Record!
-
-The **23 digit** number 13968441660506503386020
-solves after **289 iterations** to form a 142 digit palindrome!
-
-Das wollen wir doch glattweg überprüfen und schmeißen unserer Realisierung mit dem
+Das wollen wir doch glattweg überprüfen und schmeißen unsere Realisierung mit dem
 Startwert 13.968.441.660.506.503.386.020 an:
 
 ```cpp
@@ -632,7 +635,7 @@ Found palindrom:
   434.366
 ```
 
-Vielleicht finden Sie mit Hilfe dieses Lösungsvorschlage neue Weltrekorde :)
+Vielleicht finden Sie mit Hilfe dieses Lösungsvorschlags neue Weltrekorde :)
 
 <!-- Links Definitions -->
 
