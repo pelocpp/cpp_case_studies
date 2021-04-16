@@ -117,6 +117,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Palindrom", "Palindrom", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Palindrom", "CaseStudies\Palindrom\Palindrom.vcxproj", "{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParallelPrimes", "CaseStudies\ParallelPrimes\ParallelPrimes.vcxproj", "{BB764893-E121-492C-914C-1667C8CCE117}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -213,6 +215,14 @@ Global
 		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Release|x64.Build.0 = Release|x64
 		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Release|x86.ActiveCfg = Release|Win32
 		{FF3A77B6-690C-43D3-B8EC-EDEF82F4819E}.Release|x86.Build.0 = Release|Win32
+		{BB764893-E121-492C-914C-1667C8CCE117}.Debug|x64.ActiveCfg = Debug|x64
+		{BB764893-E121-492C-914C-1667C8CCE117}.Debug|x64.Build.0 = Debug|x64
+		{BB764893-E121-492C-914C-1667C8CCE117}.Debug|x86.ActiveCfg = Debug|Win32
+		{BB764893-E121-492C-914C-1667C8CCE117}.Debug|x86.Build.0 = Debug|Win32
+		{BB764893-E121-492C-914C-1667C8CCE117}.Release|x64.ActiveCfg = Release|x64
+		{BB764893-E121-492C-914C-1667C8CCE117}.Release|x64.Build.0 = Release|x64
+		{BB764893-E121-492C-914C-1667C8CCE117}.Release|x86.ActiveCfg = Release|Win32
+		{BB764893-E121-492C-914C-1667C8CCE117}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
