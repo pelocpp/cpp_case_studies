@@ -13,7 +13,7 @@
 
 // =====================================================================================
 
-void Test_01()
+void Test_00()
 {
     constexpr size_t val = 7;
 
@@ -27,6 +27,24 @@ void Test_01()
     std::cout << end1 << std::endl;
     std::cout << end2 << std::endl;
     std::cout << end3 << std::endl;
+}
+
+//void Test_01()
+//{
+//    PrimeNumberCalculator calculator;
+//    calculator.calcPrimes();
+//}
+
+void Test_02()
+{
+    PrimeNumberCalculator calculator;
+    calculator.calcPrimesEx();
+}
+
+void Test_03()
+{
+    PrimeNumberCalculator calculator;
+    calculator.calcPrimesExEx();
 }
 
 // =====================================================================================
