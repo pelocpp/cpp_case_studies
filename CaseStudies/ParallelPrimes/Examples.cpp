@@ -13,38 +13,53 @@
 
 // =====================================================================================
 
-void Test_00()
+void Test_01()
 {
-    constexpr size_t val = 7;
-
-    size_t end1{ static_cast<size_t>(std::sqrt(val)) };
-
-    double end2{ ceil(std::sqrt(val)) };
-
-    size_t end3{ static_cast<size_t>(ceil(std::sqrt(val))) };
-
-    std::cout << std::sqrt(val) << std::endl;
-    std::cout << end1 << std::endl;
-    std::cout << end2 << std::endl;
-    std::cout << end3 << std::endl;
+    // there is no possibility to reset a std::latch object
+    //{
+    //    PrimeNumberCalculator calculator;
+    //    calculator.minimum(2);
+    //    calculator.maximum(100);
+    //    calculator.threadCount(4);
+    //    calculator.calcPrimes();
+    //}
+    //{
+    //    PrimeNumberCalculator calculator;
+    //    calculator.minimum(2);
+    //    calculator.maximum(1'000);
+    //    calculator.threadCount(4);
+    //    calculator.calcPrimes();
+    //}
+    {
+        PrimeNumberCalculator calculator;
+        calculator.minimum(2);
+        calculator.maximum(1'000'000);
+        calculator.threadCount(6);
+        calculator.calcPrimes();
+    }
 }
-
-//void Test_01()
-//{
-//    PrimeNumberCalculator calculator;
-//    calculator.calcPrimes();
-//}
 
 void Test_02()
 {
-    PrimeNumberCalculator calculator;
-    calculator.calcPrimesEx();
-}
-
-void Test_03()
-{
-    PrimeNumberCalculator calculator;
-    calculator.calcPrimesExEx();
+    // there is no possibility to reset a std::latch object
+    {
+        PrimeNumberCalculator calculator;
+        calculator.minimum(2);
+        calculator.maximum(100);
+        calculator.calcPrimesEx();
+    }
+    {
+        PrimeNumberCalculator calculator;
+        calculator.minimum(2);
+        calculator.maximum(1'000);
+        calculator.calcPrimesEx();
+    }
+    {
+        PrimeNumberCalculator calculator;
+        calculator.minimum(2);
+        calculator.maximum(1'000'000);
+        calculator.calcPrimes();
+    }
 }
 
 // =====================================================================================
