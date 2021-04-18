@@ -49,23 +49,47 @@ Im primären Thread der Anwendung finden nur verwaltungstechnische Tätigkeiten 
 Ein Architekturbild zur Realisierung mit den zuvor skizzierten Realisierungsgedanken finden Sie in [Abbildung 1] vor.
 Auf der rechten Seite ist das zentrale Datenobjekt dargestellt (Klasse `PrimeNumberCalculator`).
 Mittels öffentlicher Eigenschaften lassen sich die obere und untere Grenze zum Suchen nach Primzahlen setzen.
-Die private Instanzvariable _next kann nur intern im Objekt benutzt werden – und
-dies vorzugsweise nur von der öffentlichen Methode CalcPrimes.
+Die private Instanzvariable `m_next` kann nur intern im Objekt benutzt werden – und
+dies vorzugsweise nur von der öffentlichen Methode `calcPrimes`.
 
-Auf der linken Seite erkennt man eine beliebige Anzahl von n Threads T1, ... Tn, die jeder für sich mit Hilfe
-der CalcPrimes-Methode auf der Suche nach Primzahlen sind. In der Realisierung von CalcPrimes muss sichergestellt sein,
-dass zwei (quasi-)parallele Aufrufe von CalcPrimes niemals dieselbe Zahl analysieren:
+Auf der linken Seite erkennt man eine beliebige Anzahl von *n* Threads T<sub>1</sub>, ... T<sub>n</sub>, die jeder für sich mit Hilfe
+der `calcPrimes`-Methode auf der Suche nach Primzahlen sind. In der Realisierung von `calcPrimes` muss sichergestellt sein,
+dass zwei (quasi-)parallele Aufrufe von `calcPrimes` niemals dieselbe Zahl analysieren:
 
 ###### {#abbildung_1_application_overview}
 
-{{< figure src="/img/josephus/JosephusRing_02_Array.png" width="60%" >}}
+{{< figure src="/img/parallelprimes/MultiThreadingPrimeCalculatorArchitecture.png" width="60%" >}}
 
 *Abbildung* 1: Architektur einer parallelen Primzahlen-Anwendung.
 
 
-Die Ausgabe der Anwendung könnte wie in [Abbildung 2] gezeigt aussehen. Im oberen Bereich der Anwendung lassen sich in zwei TextBox-Objekten die untere und obere Grenze des zu untersuchenden Zahlenbereichs einzugeben. Mit dem ComboBox-Steuerelement ist die Anzahl der Sekundärthreads einzustellen, die Primzahlen suchen. Im unteren Teil der Anwendung sind in einem StackPanel-Steuerelement eine Reihe von TextBox-Objekten vertikal angeordnet, für jeden Sekundärthread eines.
+Die Ausgabe der Anwendung könnte wie in [Abbildung 2] gezeigt aussehen.
+Es sollten die IDs aller Threads ausgegeben werden, die sich an der Suche nach Primzahlen beteiligen &ndash;
+und auch die Anzahl der gefundenen Primzahlen, die jeder Thread separat berechnet hat.
+Die Summe aller Werte müsste dann den korrekten Summenwert aller Primzahlen in einem bestimmten Zahlenbereich widerspiegeln:
 
-Mit der Schaltfläche „Compute ...“ werden die Sekundärthreads erzeugt und gestartet. Ist ein Sekundärthread mit der Berechnung der Primzahlen fertig, beendet er sich und zeigt die Anzahl der von ihm ermittelten Primzahlen in dem ihm zugeordneten TextBox-Objekt an. Ganz unten erkennt man noch ein TextBox-Objekt, das quasi eine Art Statuszeile darstellt. Dieses enthält nach dem Ende aller Sekundärthreads das Endergebnis, also die Summe aller gefundenen Primzahlen.
+###### {#abbildung_2_parallelprimes_output_01}
+
+{{< figure src="/img/parallelprimes/ParallelPrimesOutput01.png" width="60%" >}}
+
+*Abbildung* 2: Ausgabe der Ergebnisse in der Konsole.
+
+Nach dem Start der Anwendung werden die Sekundärthreads erzeugt und gestartet.
+Ist ein Sekundärthread mit der Berechnung der Primzahlen fertig, beendet er sich und zeigt die Anzahl der von ihm ermittelten Primzahlen
+in der Konsole an. Sind alle Threads mit ihren Berechnungen fertig, wird in der letzten Zeile das Endergebnis,
+also die Summe aller gefundenen Primzahlen, dargestellt.
+
+In einer zweiten Variation der Anwendung werden die Primzahlen auch selbst ausgegeben, also nicht nur deren Anzahl.
+Dies ist bei recht großen Zahlenbereichen etwas kritisch, da es dann sehr viele Primzahlen gibt.
+In [Abbildung 3] finden Sie das Resultat aller Primzahlen im Bereich von 2 bis 1000 vor:
+
+###### {#abbildung_3_parallelprimes_output_02}
+
+{{< figure src="/img/parallelprimes/ParallelPrimesOutput01.png" width="60%" >}}
+
+*Abbildung* 3: Ausgabe der Ergebnisse mit allen berechneten Primzahlen.
+
+
 
 
 
@@ -88,84 +112,6 @@ TODO: Beschreiben warum die Futures notwending sind !!!!!!!!!
 
 // =====================================================================================
 
-
-Das *Collatz*-Problem, auch als &ldquo;3*n* + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
-Problem und wird dem Mathematiker *Lothar Collatz* zugeschrieben. 
-
-Diese Fallstudie zeigt, wie sich die Berechnung der Elemente einer Zahlenfolge in einen C++&ndash;Iterator einbetten lässt,
-um auf diese Weise mit Hilfe der STL performante und elegant
-in das C++&ndash;Programmiermodell integrierte Algorithmen formulieren zu können.
-
-
-
-
-Unter einer _Zahlenfolge_ (auch _Zahlenreihe_) verstehen wir in der Mathematik
-eine Auflistung von endlich (oder auch unendlich) vielen fortlaufend nummerierten Zahlen.
-Die Zahl mit der Nummer _i_ &ndash; man sagt hier auch: mit dem Index _i_ &ndash; wird _i_-tes Glied der Folge genannt.
-
-Bei dem Problem geht es um Zahlenfolgen, die nach einem sehr einfachen Bildungsgesetz konstruiert werden. Gegeben ist eine
-beliebige natürliche Startzahl _n_, aus der eine Folge von Zahlen nach den folgenden zwei Regeln gebildet wird:
-
-* Ist die Zahl _n_ gerade, so ist die nächste Zahl gleich der Hälfte der Zahl.
-* Ist die Zahl _n_ ungerade, so wird die Zahl mit 3 multipliziert und um 1 erhöht.
-
-
-
-# Die &ldquo;teuflische Zahlenfolge&rdquo; oder auch das *Collatz*-Problem
-
-Merkwürdigerweise erreicht diese Folge nach endlich vielen Schritten immer die Zahl 1. Man kann
-die Vermutung auch so betrachten: Jede Folge mündet in den Zyklus 4, 2, 1 – egal, mit welcher
-Startzahl man die Folge startet. Wählen wir zum Beispiel den Startwert 7, so lautet die Folge
-
-7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1.
-
-Bis heute konnte das Collatz-Problem mathematisch nicht bewiesen werden. Auch konnte man mit Hilfe von Computerprogrammen die Vermutung bis heute nur unterstützen,
-aber nicht widerlegen. Alle Startzahlen bis ca. 5,76 * 10<sup>18</sup> untermauern die Vermutung (Stand Januar 2009).
-Obwohl das Problem so einfach zu formulieren ist, gilt es als extrem schwierig, die mit ihm verbundene Aussage mathematisch zu beweisen.
-Oder wie es *Paul Erdös*, einer der bedeutendsten Mathematiker des 20. Jahrhunderts, formulierte: &ldquo;absolut hoffnungslos&rdquo;.
-
-Natürlich wollen wir in dieser Fallstudie keinen Versuch unternehmen, das *Collatz*-Problem zu lösen.
-Kommen wir auf C++ und damit auf eine Umsetzung des Regelwerks in einen C++&ndash;Algorithmus zu sprechen. 
-In einem ersten Ansatz würde man vielleicht eine Klasse `CollatzSolver` implementieren, die beispielsweise eine `next`- und eine `current`-Methode hat, und diese
-nach Bedarf aufrufen. Wir wollen aber einen Schritt weitergehen und C++&ndash;Iteratoren ins Spiel bringen.
-Durch die Implementierung des *Collatz*-Problems in Form eines C++&ndash;Iterators kann die Implementierung in Kombination mit der STL verwendet werden,
-wodurch nicht nur die Lesbarkeit des Codes verbessert wird. Es stehen vor allem alle STL-Algorithmen nahtlos zur Verfügung, 
-um Ergebnisse in der Berechnung der &ldquo;teuflischen Zahlenfolge&rdquo; weiterverarbeiten zu können.
-
-## C++&ndash;Iteratoren und die bereichsbasierte `for`-Wiederholungsschleife
-
-Wir beginnen unsere Betrachtungen mit der Minimalversion eines C++&ndash;Iterators und werfen dazu einen Blick auf die bereichsbasierte `for`-Wiederholungsschleife
-in C++:
-
-```cpp
-for (auto elem : container) {
-    /* loop body */
-}
-```
-
-Vereinfacht kann man &ndash; in einer pseudo-code ähnlichen Notation &ndash; sagen, dass diese Wiederholungsschleife
-durch den C++&ndash;Compiler auf eine Anweisungsfolge der Gestalt
-
-```cpp
-/* modified code from cppreference */
-auto it = container.begin();
-auto end  = container.end();
-
-for (; it != end; ++it) 
-{
-    auto elem { *it };
-    /* loop body */
-}
-```
-
-umgesetzt wird. Wenn man sich die exemplarische Darstellung der `for`&ndash;Schleife ansieht, ist es ziemlich offensichtlich, was implementiert werden muss.
-Dabei müssen wir zwischen zwei Arten von Objekten unterscheiden:
-Dem Container und damit dem iterierbaren Bereich auf der einen Seite (hier: `container`) und dem Iterator bzw. den Iteratoren andererseits (hier: `it` und `end`).
-
-Der iterierbare Bereich (*Container*) muss zwei Funktionen `begin()` und `end()` implementieren.
-Diese Funktionen geben jeweils Iteratorobjekte zurück. Das von `begin()` zurückgelieferte Iteratorobjekt steht für das erste Element in der Auflistung,
-das von `end()` für das letzte Element der Auflistung. 
-Hierauf gehen wir später noch näher ein, da eben genau dieses &ldquo;letzte Element&rdquo; nicht immer von vorneherein bekannt ist.
 
 # Lösung
 
@@ -659,6 +605,7 @@ bessere Fortschritte erzielen, würde ich mich über eine Nachricht freuen :-)
 [Listing 8]: #listing_08_josephusforwardlistimpl_implementation
 
 [Abbildung 1]:  #abbildung_1_application_overview
-[Abbildung 2]:  #abbildung_2_josephus_problem_linkedlist_solution
+[Abbildung 2]:  #abbildung_2_parallelprimes_output_01
+[Abbildung 3]:  #abbildung_3_parallelprimes_output_02
 
 <!-- End-of-File -->

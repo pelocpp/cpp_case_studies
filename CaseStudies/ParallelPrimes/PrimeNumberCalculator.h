@@ -4,18 +4,16 @@
 
 #pragma once
 
-constexpr size_t Minimum{ 2 };
-constexpr size_t Maximum{ 100 };
-constexpr std::ptrdiff_t ThreadCount{ 2 };
-// 25 primes
+/*
+ * Results:
+ * 1 .. 100:        25 prime numbers
+ * 1 .. 1'000:      168 prime numbers
+ * 1 .. 1'000'000:  78498 prime numbers
+ */
 
-//constexpr size_t Minimum{ 2 };
-//constexpr size_t Maximum{ 1000 };
-// 168 primes
-//
-//constexpr size_t Minimum{ 2 };
-//constexpr size_t Maximum{ 1'000'000 };
-// 78498 primes
+constexpr size_t Minimum{ 2 };
+constexpr size_t Maximum{ 100 };             //  1'000,  1'000'000
+constexpr std::ptrdiff_t ThreadCount{ 2 };   //  3, 4, 12
 
 class PrimeNumberCalculator
 {
@@ -24,10 +22,9 @@ private:
     size_t m_maximum{ Maximum };
     std::ptrdiff_t m_threadCount { ThreadCount };
 
-  //  std::latch m_done{ ThreadCount };
     std::atomic<size_t> m_next{ Minimum };
-
     std::atomic<size_t> m_count{};
+
     std::vector<size_t> m_primes;
     std::mutex          m_mutex;
 

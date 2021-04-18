@@ -170,6 +170,7 @@ void PrimeNumberCalculator::printResult()
             }
         };
     }
+    std::cout << std::endl;
 }
 
 void PrimeNumberCalculator::printHeader()
