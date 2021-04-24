@@ -8,6 +8,9 @@ der Zahlentheoretiker heutzutage auf eine zusätzliche Hilfestellung zurückgrei
 Wir wollen im Folgenden ein Programm entwickeln, das mit Hilfe mehrerer Threads zu zwei fest gegebenen
 natürlichen Zahlen *n* und *m* die Anzahl aller Primzahlen *p* mit *n* &leq; *p* &leq; *m* bestimmt.
 
+Für die Koordination der Threads setzen wir auf &ldquo;Hindernisse&rdquo; ein, also C++&ndash;20 `std::latch`-Objekte.
+Studieren Sie in dieser Anwendung, wie auf diese Weise die Primzahlensuche mit mehreren Threads koordinierbar ist.
+
 <!--more-->
 
 # Lernziele
@@ -86,15 +89,6 @@ In [Abbildung 3] finden Sie das Resultat aller Primzahlen im Bereich von 2 bis 1
 {{< figure src="/img/parallelprimes/ParallelPrimesOutput01.png" width="60%" >}}
 
 *Abbildung* 3: Ausgabe der Ergebnisse mit allen berechneten Primzahlen.
-
-
-// =====================================================================================
-
-
-TODO: Beschreiben warum die Futures notwending sind !!!!!!!!!
-
-// =====================================================================================
-
 
 # Lösung
 
@@ -281,158 +275,329 @@ der Klasse `PrimeNumberCalculator` vor:
 070:     printResult(m_primes.size());
 071: }
 072: 
-073: // =====================================================================================
-074: // helpers
-075: 
-076: void PrimeNumberCalculator::calcPrimesHelper()
-077: {
-078:     printHeader();
-079: 
-080:     size_t max{ m_maximum };  // upper prime number limit
-081:     size_t next{ m_next++ };  // next prime number candidate
-082:     size_t count{};           // thread-local counter - just for statistics
-083: 
-084:     while (next < max) {
-085: 
-086:         // test if candidate being prime 
-087:         if (isPrime(next)) {
-088:             ++m_count;  // atomic increment
-089:             ++count;
-090:         }
-091: 
-092:         // retrieve next prime number candidate
-093:         next = m_next++;
-094:     }
+073: void PrimeNumberCalculator::calcPrimesHelper()
+074: {
+075:     printHeader();
+076: 
+077:     size_t max{ m_maximum };  // upper prime number limit
+078:     size_t next{ m_next++ };  // next prime number candidate
+079:     size_t count{};           // thread-local counter - just for statistics
+080: 
+081:     while (next < max) {
+082: 
+083:         // test if candidate being prime 
+084:         if (isPrime(next)) {
+085:             ++m_count;  // atomic increment
+086:             ++count;
+087:         }
+088: 
+089:         // retrieve next prime number candidate
+090:         next = m_next++;
+091:     }
+092: 
+093:     printFooter(count);
+094: }
 095: 
-096:     printFooter(count);
-097: }
-098: 
-099: void PrimeNumberCalculator::calcPrimesHelperEx()
-100: {
-101:     printHeader();
-102: 
-103:     size_t max{ m_maximum };  // upper prime number limit
-104:     size_t next{ m_next++ };  // next prime number candidate
-105:     std::vector<size_t> primes;  // thread-local prime numbers container
-106: 
-107:     while (next < max) {
-108: 
-109:         // test if candidate being prime 
-110:         if (isPrime(next)) {
-111:             primes.push_back(next);
-112:         }
-113: 
-114:         // retrieve next prime number candidate
-115:         next = m_next++;
-116:     }
-117: 
-118:     if (primes.size() != 0) 
-119:     {
-120:         std::scoped_lock<std::mutex> lock{ m_mutex };
-121: 
-122:         std::vector<size_t> copy;
-123: 
-124:         std::swap(copy, m_primes);
-125: 
-126:         // no inplace algorithm
-127:         std::merge(
-128:             copy.begin(), 
-129:             copy.end(),
-130:             primes.begin(), 
-131:             primes.end(), 
-132:             std::back_inserter(m_primes)
-133:         );
-134:     }
+096: void PrimeNumberCalculator::calcPrimesHelperEx()
+097: {
+098:     printHeader();
+099: 
+100:     size_t max{ m_maximum };  // upper prime number limit
+101:     size_t next{ m_next++ };  // next prime number candidate
+102:     std::vector<size_t> primes;  // thread-local prime numbers container
+103: 
+104:     while (next < max) {
+105: 
+106:         // test if candidate being prime 
+107:         if (isPrime(next)) {
+108:             primes.push_back(next);
+109:         }
+110: 
+111:         // retrieve next prime number candidate
+112:         next = m_next++;
+113:     }
+114: 
+115:     if (primes.size() != 0) 
+116:     {
+117:         std::scoped_lock<std::mutex> lock{ m_mutex };
+118: 
+119:         std::vector<size_t> copy;
+120: 
+121:         std::swap(copy, m_primes);
+122: 
+123:         // no inplace algorithm
+124:         std::merge(
+125:             copy.begin(), 
+126:             copy.end(),
+127:             primes.begin(), 
+128:             primes.end(), 
+129:             std::back_inserter(m_primes)
+130:         );
+131:     }
+132: 
+133:     printFooter(primes.size());
+134: }
 135: 
-136:     printFooter(primes.size());
-137: }
-138: 
-139: bool PrimeNumberCalculator::isPrime(size_t number)
-140: {
-141:     // the smallest prime number is 2
-142:     if (number <= 2) {
-143:         return number == 2;
-144:     }
-145: 
-146:     // even numbers other than 2 are not prime
-147:     if (number % 2 == 0) {
-148:         return false;
-149:     }
-150: 
-151:     // check odd divisors from 3 to the square root of the number
-152:     size_t end{ static_cast<size_t>(ceil(std::sqrt(number))) };
-153:     for (size_t i{ 3 }; i <= end; i += 2) {
-154:         if (number % i == 0) {
-155:             return false;
-156:         }
-157:     }
-158: 
-159:     // found prime number
-160:     return true;
-161: }
-162: 
-163: void PrimeNumberCalculator::printResult(size_t count)
-164: {
-165:     std::cout 
-166:         << "From " << m_minimum << " to " << m_maximum << ": found " 
-167:         << count << " prime numbers." << std::endl;
-168: 
-169:     if (!m_primes.empty()) {
-170:         for (int columns{}; size_t prime : m_primes) {
-171:             std::cout << std::setw(5) << std::right << prime << " ";
-172:             if (++columns % 16 == 0) {
-173:                 std::cout << std::endl;
-174:             }
-175:         };
-176:     }
-177:     std::cout << std::endl;
-178: }
-179: 
-180: void PrimeNumberCalculator::printHeader()
-181: {
-182:     std::stringstream ss;
-183:     std::thread::id currentTID{ std::this_thread::get_id() };
-184:     ss << "[" << std::setw(5) << std::right << currentTID << "]: starting ..." << std::endl;
-185:     std::cout << ss.str();
-186:     ss.str("");
-187: }
-188: 
-189: void PrimeNumberCalculator::printFooter(size_t count)
-190: {
-191:     std::stringstream ss;
-192:     std::thread::id currentTID{ std::this_thread::get_id() };
-193:     ss << "[" << std::setw(5) << std::right << currentTID << "]: found " << count << '.' << std::endl;
-194:     std::cout << ss.str();
-195: }
+136: bool PrimeNumberCalculator::isPrime(size_t number)
+137: {
+138:     // the smallest prime number is 2
+139:     if (number <= 2) {
+140:         return number == 2;
+141:     }
+142: 
+143:     // even numbers other than 2 are not prime
+144:     if (number % 2 == 0) {
+145:         return false;
+146:     }
+147: 
+148:     // check odd divisors from 3 to the square root of the number
+149:     size_t end{ static_cast<size_t>(ceil(std::sqrt(number))) };
+150:     for (size_t i{ 3 }; i <= end; i += 2) {
+151:         if (number % i == 0) {
+152:             return false;
+153:         }
+154:     }
+155: 
+156:     // found prime number
+157:     return true;
+158: }
+159: 
+160: void PrimeNumberCalculator::printResult(size_t count)
+161: {
+162:     std::cout 
+163:         << "From " << m_minimum << " to " << m_maximum << ": found " 
+164:         << count << " prime numbers." << std::endl;
+165: 
+166:     if (!m_primes.empty()) {
+167:         for (int columns{}; size_t prime : m_primes) {
+168:             std::cout << std::setw(5) << std::right << prime << " ";
+169:             if (++columns % 16 == 0) {
+170:                 std::cout << std::endl;
+171:             }
+172:         };
+173:     }
+174:     std::cout << std::endl;
+175: }
+176: 
+177: void PrimeNumberCalculator::printHeader()
+178: {
+179:     std::stringstream ss;
+180:     std::thread::id currentTID{ std::this_thread::get_id() };
+181:     ss << "[" << std::setw(5) << std::right << currentTID << "]: starting ..." << std::endl;
+182:     std::cout << ss.str();
+183:     ss.str("");
+184: }
+185: 
+186: void PrimeNumberCalculator::printFooter(size_t count)
+187: {
+188:     std::stringstream ss;
+189:     std::thread::id currentTID{ std::this_thread::get_id() };
+190:     ss << "[" << std::setw(5) << std::right << currentTID << "]: found " << count << '.' << std::endl;
+191:     std::cout << ss.str();
+192: }
 ```
 
 *Listing* 2: Klasse `PrimeNumberCalculator`: Implementierung.
 
 > Einige Anmerkungen:
 
-In der `calcPrimes`-Methode ab Zeile 1 sind nun alle Tätigkeiten für das parallele Suchen nach Primzahlen zusammengefasst.
+  * In der `calcPrimes`-Methode ab Zeile 1 ([Listing 2]) sind nun alle Tätigkeiten für das parallele Suchen nach Primzahlen zusammengefasst.
+  In den Zeilen 13 bis 20 werden mit `std::async` eine Reihe von Threads gestartet, die sich auf die Suche nach Primzahlen begeben.
+  Wichtig ist Zeile 3: Hier kommt ein C++&ndash;20 Objekt des Typs `std::latch` zum Einsatz.
+  Frei übersetzt könnte man `std::latch` als *Hindernis* bezeichnen:
+  Mit dem Aufruf der `wait`-Methode an diesem Objekt stößt man auf ein Hindernis, man muss also warten.
+  Wie kann diese Blockade aufgelöst werden? Mit `count_down`-Aufrufen, die Sie in Zeile 10 vorfinden,
+  also am Ende eines `calcPrimesHelper`-Methodenaufrufs und damit nach einer abgeschlossenen Primzahlensuche &ndash; im Kontext eines Threads.
+  Damit sind wir schon bei den Details angelangt: Wie oft muss die Methode `count_down` aufgerufen werden,
+  um eine `wait`-Blockade aufzulösen. Vermutlich genauso oft, wie eine entsprechende Zählervariable
+  bei der Initialisierung des `std::latch`-Objekts vorbelegt wird:
 
-In den Zeilen 13 bis 20 werden mit std::async eine Reihe von Threads gestartet,
-die sich auf die Suche nach Primzahlen begeben.
+  ```cpp
+  std::latch done{ m_threadCount };
+  ```
 
-Wichtig ist Zeile 3: Hier kommt ein C++&ndash;20 Objekt des Typs std::latch zum Einsatz.
+  * In Zeile 19 wird der Rückgabewert von `std::async`, ein `std::future<void>`-Objekt, in einem `std::vector<std::future<void>>`-Objekt 
+  abgelegt. Man könnte dieses `std::future<void>`-Objekt verwenden, um mit seiner Hilfe Resultate vom Thread aus dem Thread
+  zum Erzeuger des Threads zu transportieren. In dieser Fallstudie habe ich aber einen anderen Weg gewählt,
+  die Threads legen ihre Resultate in thread-globalen Variablen ab, die via `std::atomic<T>`&ndash;Hüllen thread-sicher arbeiten.
+  Wozu ist es dann überhaupt erforderlich, den Rückgabewert von `std::async` wegzuspeichern?
+  Man könnte den Rückgabewert doch einfach ignorieren? Weit gefehlt, dem ist nicht so!
+  Jedes `std::future<void>`-Objekt besitzt einen Destruktor, der auf das Ende des beteiligten Threads wartet!
+  Ignoriert man dieses Objekt im Programm, so ist es zur Laufzeit dennoch präsent &ndash; in diesem Fall als
+  anonymes temporäres Objekt. Dies wiederum bedeutet, dass am Ende des Blocks (Zeile 20) der Destruktor dieses Objekts aufgerufen wird.
+  Die mittels `std::async` erzeugten Threads würden auf diese Weise alle sequentiell ausgeführt werden!
 
-Frei übersetzt könnte man std::latch als Hindernis bezeichnen:
-Mit dem Aufruf der wait-Methode an diesem Objekt stößt man auf ein Hindernis, man muss also warten.
-Wie kann diese Blockade aufgelöst werden? Mit count_down-Aufrufen, die Sie in Zeile 10 vorfinden,
-also am Ende eines calcPrimesHelper-Methodenaufrufs und damit nach einer abgeschlossenen Primzahlensuche &ndash; im Kontext eines Threads.
-Damit sind wir schon bei den Details angelangt: Wie oft muss  count_down aufgerufen werden, um eine wait-Blockade aufzulösen.
-Vermutlich genauso oft, wie eine entsprechende Zählervariable bei der Initialisierung des std::latch-Objekts vorbelegt wird:
+    Natürlich kann man trotzdem einen Ansatz wählen, der ohne `std::future<void>`-Objekte auskommt.
+    In diesem Fall muss man aber auch die `std::async`-Funktion umgehen,
+    eine Vorgehensweise mit `std::thread`-Objekten wäre dann das Mittel der Wahl, 
+    siehe hierzu die Methode `calcPrimesUsingThread` in den Zeilen 26 bis 45 von [Listing 2].
+
+  * Nun gehen wir näher auf Methode `calcPrimesHelperEx` (Zeilen 96 bis 134) ein.
+    Sie wird im Kontext eines Threads ausgeführt und sucht Primzahlen. Gefundene Primzahlen legt sie in einem 
+    `std::vector<size_t>`-Objekt ab, dass lokal in der `calcPrimesHelperEx`-Methode definiert ist, damit auf dem Laufzeitstack
+    eines Threads liegt und *nicht* vor dem konkurrierenden Zugriff anderer Threads zu schützen ist.
+
+    Bleibt noch die Frage zu beantworten, wie nach dem Ende der Berechnungen etwaige Ergebnisse vom Sekundärthread
+    zum Erzeugerthread gelangen? Jetzt wird es geringfügig komplizierter:
+    Im Instanzvariablenbereich der Klasse `PrimeNumberCalculator` liegt ein weiteres `std::vector<size_t>`-Objekt,
+    dass alle Ergebnisse nach dem Rechnen enthalten soll. Diese Objekt ist natürlich dem konkurrierenden Zugriff anderer Threads ausgesetzt,
+    deshalb kommt vor dem Zugriff ein `std::mutex`-Objekt ins Spiel.
+
+    Ganz RAII-*like* legen wir ein `std::scoped_lock<std::mutex>`-Objekt in einem Block an,
+    damit kümmert sich der Destruktor dieses Objekts um die Freigabe des `std::mutex`-Objekts nach erfolgtem Zugriff auf 
+    das globale Resultatobjekt.
+
+    Das Umkopieren der thread-lokalen Ergebnisse in das globale Objekt ist trickreich:
+    Ich möchte den `std::merge`-Algorithmus einsetzen.
+    Dieser arbeitet aber leider nicht *in-place*, das bedeutet, vor dem Zusammenführen der schon vorhandenen Ergebnisse
+    (globales `std::vector<size_t>`-Objekt) mit den neuen Ergebnissen (lokales `std::vector<size_t>`-Objekt) benötige ich eine Kopie der schon vorhandenen Ergebnisse (globales `std::vector<size_t>`-Objekt):
+    Das Kopieren eines `std::vector<size_t>`-Objekts ist eine zeitintensive Operation, die ich auf jeden Fall vermeiden möchte.
+    Studieren Sie deshalb das folgende Code-Fragment:
 
 ```cpp
-std::latch done{ m_threadCount };
+std::vector<size_t> copy;
+
+std::swap(copy, m_primes);
+
+std::merge(
+    copy.begin(), 
+    copy.end(),
+    primes.begin(), 
+    primes.end(), 
+    std::back_inserter(m_primes)
+);
 ```
 
+Mit der `std::swap`-Funktion vertausche ich den Inhalt zweier Objekt auf Basis der Verschiebesemantik.
+Ich vermeide es folglich, auf diese Weise das schon vorhandene Resultatobjekt (`m_primes`) zu kopieren!
+Nun kann der `std::merge`-Algorithmus auf den schon vorhandenen Ergebnissen (`copy`) und den neuen Ergebnissen (`primes`)
+eine neues, vermengtes Resultatobjekt (`m_primes`) erstellen &ndash; und dies alles ohne unnötige Kopieraktivitäten!
 
+Und noch ein Hinweis: Wenn Sie die Beschreibung des `std::merge`-Algorithmus genau gelesen haben, werden Sie festgestellt haben,
+dass die zu vermengenden Vektoren aufsteigend sortiert sein müssen. Vom schon vorhandene Resultatobjekt kann man
+dies vielleicht voraussetzen, aber wie sieht es mit dem lokalen `std::vector<size_t>`-Objekt aus?
+Dieses wird sukzessive mit `push_back`-Methodenaufrufen erstellt, die wiederum einen Zahlenbereich in aufsteigender Sortierung
+durchlaufen: Der lokale Resultatvektor liegt also auf Grund seiner Konstruktion automatisch sortiert vor.
 
+Nun kömmem wir ein `PrimeNumberCalculator`-Objekt bei der Arbeit betrachten:
 
+```cpp
+PrimeNumberCalculator calculator;
+calculator.minimum(2);
+calculator.maximum(100);
+calculator.threadCount(2);
+calculator.calcPrimes();
 
+calculator.minimum(2);
+calculator.maximum(1'000);
+calculator.threadCount(4);
+calculator.calcPrimes();
 
+calculator.minimum(2);
+calculator.maximum(1'000'000);
+calculator.threadCount(12);
+calculator.calcPrimes();
+```
+
+*Ausgabe*:
+
+```
+[ 2696]: starting ...
+[16832]: starting ...
+[ 2696]: found 25.
+[16832]: found 0.
+From 2 to 100: found 25 prime numbers.
+
+[16832]: starting ...
+[ 2696]: starting ...
+[ 2696]: found 61.
+[16832]: found 107.
+[ 2696]: starting ...
+[10464]: starting ...
+[ 2696]: found 0.
+[10464]: found 0.
+From 2 to 1000: found 168 prime numbers.
+
+[10464]: starting ...
+[ 2696]: starting ...
+[19792]: starting ...
+[16832]: starting ...
+[ 6152]: starting ...
+[16536]: starting ...
+[ 7268]: starting ...
+[11896]: starting ...
+[19636]: starting ...
+[16632]: starting ...
+[16060]: starting ...
+[16424]: starting ...
+[16632]: found 6261.
+[ 2696]: found 6490.
+[16832]: found 7168.
+[16060]: found 6125.
+[11896]: found 6655.
+[10464]: found 6539.
+[ 6152]: found 6303.
+[19636]: found 6127.
+[16424]: found 6097.
+[19792]: found 7302.
+[16536]: found 7173.
+[ 7268]: found 6258.
+From 2 to 1000000: found 78498 prime numbers.
+```
+
+Die Zahl in den eckigen Klammern ist die Thread-ID des jeweiligen Threads, der für die Ausgabe verantwortlich ist.
+Wenn wir die Primzahlen selbst berechnen wollen, müssen wir die Wertebereiche etwas kleiner wählen:
+
+```cpp
+PrimeNumberCalculator calculator;
+calculator.minimum(2);
+calculator.maximum(100);
+calculator.threadCount(4);
+calculator.calcPrimesEx();
+
+calculator.minimum(2);
+calculator.maximum(1'000);
+calculator.threadCount(4);
+calculator.calcPrimesEx();
+```
+
+*Ausgabe*:
+
+```
+[16108]: starting ...
+[17440]: starting ...
+[16108]: found 25.
+[17440]: found 0.
+[16108]: starting ...
+[20044]: starting ...
+[16108]: found 0.
+[20044]: found 0.
+From 2 to 100: found 25 prime numbers.
+    2     3     5     7    11    13    17    19    23    29    31    37    41    43    47    53
+   59    61    67    71    73    79    83    89    97
+
+[20044]: starting ...
+[16108]: starting ...
+[ 6388]: starting ...
+[17440]: starting ...
+[16108]: found 58.
+[17440]: found 0.
+[20044]: found 85.
+[ 6388]: found 25.
+
+From 2 to 1000: found 168 prime numbers.
+    2     3     5     7    11    13    17    19    23    29    31    37    41    43    47    53
+   59    61    67    71    73    79    83    89    97   101   103   107   109   113   127   131
+  137   139   149   151   157   163   167   173   179   181   191   193   197   199   211   223
+  227   229   233   239   241   251   257   263   269   271   277   281   283   293   307   311
+  313   317   331   337   347   349   353   359   367   373   379   383   389   397   401   409
+  419   421   431   433   439   443   449   457   461   463   467   479   487   491   499   503
+  509   521   523   541   547   557   563   569   571   577   587   593   599   601   607   613
+  617   619   631   641   643   647   653   659   661   673   677   683   691   701   709   719
+  727   733   739   743   751   757   761   769   773   787   797   809   811   821   823   827
+  829   839   853   857   859   863   877   881   883   887   907   911   919   929   937   941
+  947   953   967   971   977   983   991   997
+```
 
 <!-- Links Definitions -->
 
