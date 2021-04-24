@@ -2,20 +2,20 @@
 
 <!-- Parallele Berechnung von Primzahlen mit Hindernissen -->
 
-Die Suche nach Primzahlen &ndash; also Zahlen, die nur durch sich selbst und durch eins teilbar sind &ndash;  war lange Zeit
+Die Suche nach Primzahlen &ndash; also Zahlen, die nur durch sich selbst und durch 1 teilbar sind &ndash;  war lange Zeit
 eine der zentralsten Bestandteile der Zahlentheorie. Primzahlenjäger können neben den zahlreichen Erkenntnissen
 der Zahlentheoretiker heutzutage auf eine zusätzliche Hilfestellung zurückgreifen, den Computer.
 Wir wollen im Folgenden ein Programm entwickeln, das mit Hilfe mehrerer Threads zu zwei fest gegebenen
-natürlichen Zahlen *n* und *m* die Summe aller Primzahlen *p* mit *n* &leq; *p* &leq; *m* bestimmt.
+natürlichen Zahlen *n* und *m* die Anzahl aller Primzahlen *p* mit *n* &leq; *p* &leq; *m* bestimmt.
 
 <!--more-->
 
 # Lernziele
 
+  * `std::async` und `std::future<T>` in der Anwendung
   * Klasse `std::latch`
   * Atomare Operationen (`std::atomic<T>`)
   * Gegenseitiger Ausschluss (`std::mutex`)
-  * `std::async` und `std::future<T>` in der Anwendung
   * STL-Algorithmen `std::swap` und `std::merge`
   * Bereichsbasierte `for`-Wiederholungsschleife (Range-based `for`-Loop)
 
@@ -25,7 +25,7 @@ Für die Identifizierung einer natürlichen Zahl als Primzahl benutzen wir das e
 die Zahl &ndash; nennen wir sie *n* &ndash; der Reihe nach solange durch alle natürlichen Zahlen 2, 3, ... zu dividieren,
 bis entweder eine Division den Rest 0 zurückliefert (und damit ein Primfaktor gefunden wurde)
 oder aber der Dividend den Wert *n* annimmt. In diesem Fall besitzt die Zahl keine Primfaktoren, wir haben eine Primzahl gefunden.
-Natürlich genügt es, *n* nur durch all die Zahlen zu dividieren, die kleiner oder gleich als die Quadratwurzel von *n* sind.
+Natürlich genügt es, *n* nur durch all diejenigen Zahlen zu dividieren, die kleiner oder gleich als die Quadratwurzel von *n* sind.
 
 Zur Bestimmung der Primzahleigenschaft implementieren Sie eine statische Methode `isPrime`:
 
@@ -41,16 +41,15 @@ Das zentrale Datenobjekt stellt sicher, dass unter keinen Umständen zwei Sekund
 
 Im primären Thread der Anwendung finden nur verwaltungstechnische Tätigkeiten statt. Es werden also keine Primzahlen berechnet. Zu den Aufgaben des Primärthreads zählen:
 
-  * Verwaltung einer unteren und oberen Grenze n bzw. m aller zu untersuchenden Zahlen mit *n* &leq; *m*.
-  * Verwaltung der Anzahl der Sekundärthreads, die Primzahlen berechnen.
+  * Verwaltung einer unteren und oberen Grenze *n* bzw. *m* aller zu untersuchenden Zahlen mit *n* &leq; *m*.
+  * Verwaltung der Anzahl der Sekundärthreads, die Primzahlen suchen.
   * Anzeige der Anzahl der durch einen Sekundärthread gefundenen Primzahlen.
-  * Anzeige der Anzahl aller gefundenen Primzahlen eines bestimmten Bereichs.
+  * Anzeige der Anzahl aller gefundenen Primzahlen eines bestimmten Bereichs (Zusammenfassung).
 
 Ein Architekturbild zur Realisierung mit den zuvor skizzierten Realisierungsgedanken finden Sie in [Abbildung 1] vor.
 Auf der rechten Seite ist das zentrale Datenobjekt dargestellt (Klasse `PrimeNumberCalculator`).
 Mittels öffentlicher Eigenschaften lassen sich die obere und untere Grenze zum Suchen nach Primzahlen setzen.
-Die private Instanzvariable `m_next` kann nur intern im Objekt benutzt werden – und
-dies vorzugsweise nur von der öffentlichen Methode `calcPrimes`.
+Die private Instanzvariable `m_next` kann nur intern im Objekt benutzt werden.
 
 Auf der linken Seite erkennt man eine beliebige Anzahl von *n* Threads T<sub>1</sub>, ... T<sub>n</sub>, die jeder für sich mit Hilfe
 der `calcPrimes`-Methode auf der Suche nach Primzahlen sind. In der Realisierung von `calcPrimes` muss sichergestellt sein,
@@ -62,11 +61,10 @@ dass zwei (quasi-)parallele Aufrufe von `calcPrimes` niemals dieselbe Zahl analy
 
 *Abbildung* 1: Architektur einer parallelen Primzahlen-Anwendung.
 
-
 Die Ausgabe der Anwendung könnte wie in [Abbildung 2] gezeigt aussehen.
 Es sollten die IDs aller Threads ausgegeben werden, die sich an der Suche nach Primzahlen beteiligen &ndash;
 und auch die Anzahl der gefundenen Primzahlen, die jeder Thread separat berechnet hat.
-Die Summe aller Werte müsste dann den korrekten Summenwert aller Primzahlen in einem bestimmten Zahlenbereich widerspiegeln:
+Die Summe aller Werte müsste dann die korrekte Anzahl aller Primzahlen in einem bestimmten Zahlenbereich widerspiegeln:
 
 ###### {#abbildung_2_parallelprimes_output_01}
 
@@ -90,21 +88,6 @@ In [Abbildung 3] finden Sie das Resultat aller Primzahlen im Bereich von 2 bis 1
 *Abbildung* 3: Ausgabe der Ergebnisse mit allen berechneten Primzahlen.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // =====================================================================================
 
 
@@ -117,492 +100,346 @@ TODO: Beschreiben warum die Futures notwending sind !!!!!!!!!
 
 > Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
 
-## Klasse `CollatzIterator`
+Wie in der Aufgabenstellung gefordert, soll es in der Anwendung ein zentrales Datenobjekt geben,
+dessen Hauptaufgabe darin besteht, für rechenwillige Sekundärthreads den nächsten Kandidaten
+zur Überprüfung der Primzahleigenschaft bereitzustellen. Am einfachsten ist es, diese Variable in einer Klasse,
+nennen wir sie `PrimeNumberCalculator`, zu kapseln.
+Mit einer Methode `calcPrimes` können wir den jeweils aktuellen Kandidaten überprüfen.
+Gestalten wir die Methode `calcPrimes` zusätzlich thread-sicher, so lassen sich beliebig viele
+Threads mit der `calcPrimes`-Methode als Threadprozedur starten.
+Eine mögliche Spezifikation der `PrimeNumberCalculator`-Klasse entnehmen Sie [Tabelle 1]:
 
-Kommen wir jetzt auf die Iterator-Klasse zu sprechen. Vom obigen Code-Fragment können wir ableiten, dass die folgenden drei Operatoren vorhanden sein müssen:
+###### {#tabelle_1_class_primenumbercalculator}
 
-  * `operator*` &ndash; Dereferenzieren eines Iterator-Objekts (in Analogie zu einem C/C++&ndash;Zeiger).
-  * `operator++` &ndash; Inkrementiert das Iterator-Objekt, damit dieses auf das nächste Element im Container verweist &ndash; es genügt die Präfix-Version des Operators.
-  * `operator!=` &ndash; Überprüfung, ob die Wiederholungsschleife enden soll. Dies ist der Fall, wenn der Iterator dieselbe Position erreicht hat, die `end()` beschreibt.
+| Element | Beschreibung |
+| :---- | :---- |
+| *getter* `minimum()` | `size_t minimum() const;`<br/>Liefert das Minimum des zu untersuchenden Zahlenbereichs zurück. |
+| *getter* `maximum()` | `size_t maximum() const;`<br/>Liefert das Maximum des zu untersuchenden Zahlenbereichs zurück. |
+| *getter* `threadCount()` | `size_t threadCount() const;`<br/>Liefert die Anzahl der Threads zurück, die den Zahlenbereich analysieren. |
+| *setter* `minimum()` | `void minimum(size_t minimum);`<br/>Setzt das Minimum des zu untersuchenden Zahlenbereichs. |
+| *setter* `maximum()` | `void maximum(size_t minimum);`<br/>Setzt das Maximum des zu untersuchenden Zahlenbereichs. |
+| *setter* `threadCount()` | `void threadCount(size_t minimum);`<br/>Setzt die Anzahl der Threads, die den Zahlenbereich analysieren. || Methode `add()` | `void add(size_t elem);`<br/>Fügt ein Element in die Teilmenge ein. Diese Methode wird zum algorithmischen Erzeugen einer Teilmenge benötigt. |
+| Methode `calcPrimes` | `void calcPrimes();`<br/>Berechnet die Anzahl der Primzahlen in dem durch `minimum()` und `maximum()` definierten Zahlenbereich mit `threadCount()` Threads. |
 
-*Hinweis*:
-Mit diesen drei Operatoren lassen sich Iterator-Klassen implementieren,
-die im Kontext einer bereichsbasierten `for`-Wiederholungsschleife einsetzbar sind.
-Für andere STL-Algorithmen, wie zum Beispiel `std::find` oder `std::copy`, um nur zwei von ihnen exemplarisch zu nennen,
-sind zusätzliche Klassenelemente notwendig. Wir werden an anderer Stelle darauf näher eingehen.
+*Tabelle* 1: Wesentliche Elemente der Klasse `PrimeNumberCalculator`.
 
-Wie lässt sich nun eine Zahlenfolge und das Iteratorkonzept von C++ miteinander verbinden?
-In der Iteratorklasse ist die Realisierung in der Berechnung der Zahlenfolge unterzubringen.
-Der `++`&ndash;Operator ist diejenige Stelle, an der von einem Folgenglied zum nächsten weitergegangen wird.
-Mit dem `*`&ndash;Operator kann man auf das aktuelle Folgenglied zugreifen.
-Die Bestimmung des Iterationsendes obliegt dem `!=`&ndash;Operator.
-
-Instanzen der Iteratorklasse werden in der Regel von einer zweiten Klasse zur Verfügung gestellt, eben dem Container.
-Diese Klasse nimmt typischerweise die Initialisierungswerte für die Zahlenfolge entgegen und belegt damit die Iteratorenobjekte vor.
-Diese zweite Klasse &ndash; wir bezeichen sie als _Bereichs_&ndash; oder _Sequenzklasse_ &ndash; besitzt zwei Methoden `begin()` und `end()`,
-die als Rückgabewert ein Iteratorobjekt für das erste Folgenglied bzw. das Ende der Auflistung repräsentieren.
-Die Initialisierungswerte der Bereichsklasse gehen mehr oder weniger in die Iteratorenobjekt für Start und Ende der Zahlenfolge ein.
-
-Genug der allgemeinen Theorie, lassen Sie uns einen Blick auf die Iteratorklasse `CollatzIterator`
-zur Berechnung der teuflischen Folge werfen ([Listing 1]):
-
-###### {#listing_01_collatziterator_interface}
+Neben den in [Tabelle 1] beschriebenen öffentlichen Elementen der Klasse `PrimeNumberCalculator` besitzt diese
+eine private Instanzvariable `m_next`:
 
 ```cpp
-01: class CollatzIterator
-02: {
-03: public:
-04:     using iterator_category = std::forward_iterator_tag;
-05:     using value_type = int;
-06:     using difference_type = int;
-07:     using pointer = int*;
-08:     using reference = int&;
-09: 
-10: private:
-11:     int m_start{ 1 };
-12:     int m_current{ 1 };
-13:     int m_last{ };
+constexpr size_t Minimum{ 2 };
+...
+std::atomic<size_t> m_next{ Minimum };
+```
+
+Die Instanzvariable `m_next` verwaltet eine natürliche Zahl im Bereich von `minimum()` bis `maximum()`.
+Sie beschreibt die Zahl, die als nächstes zur Analyse durch einen Sekundärthread ansteht.
+Alle Zahlen von `minimum()`, `minimum()`+1, `minimum()`+2, ..., bis `m_next`-1
+sind bereits auf ihre Primzahleigenschaft hin untersucht worden.
+Die `m_next`-Variable ist privat definiert und kann nur durch die `calcPrimes`-Methode verändert (inkrementiert) werden.
+
+Die `calcPrimes`-Methode ist die zentrale Methode der Klasse `PrimeNumberCalculator`.
+Sie ist von allen Sekundärthreads als Threadprozedur zu benutzen, die sich auf die Suche nach Primzahlen machen.
+
+Es werden prinzipiell alle Zahlen im Bereich von `minimum()` bis `maximum()` untersucht.
+Der Übergang von einer Zahl zur nächsten erfolgt (thread-sicher!) an Hand der privaten Instanzvariablen `m_next`.
+Beachten Sie hierzu die Definition von `m_next`: Um ein thread-sicheres Inkrmentieren zu garantieren,
+wird diese Variable vom Typ `std::atomic<size_t>` definiert! Im Gegensatz zum `++`-Operator für Variablen des Typs `size_t`
+erfolgen `++`-Aufrufe an `std::atomic<T>`-Objekten thread-sicher.
+
+Wird die `calcPrimes`-Methode (quasi-)parallel von mehreren Threads ausgeführt,
+kann es also sein, dass &ndash; im Kontext eines Threads &ndash; gleich mehrere Zahlen übersprungen werden,
+wenn ein Wechsel zum nächsten Kandidaten ansteht. Die Zahlen dazwischen wurden in der Zwischenzeit
+bereits von den parallel agierenden Sekundärthreads angefordert und untersucht.
+
+
+In [Listing 1] (Schnittstelle) und [Listing 2] (Realisierung) finden Sie die Schnittstelle und Realisierung
+der Klasse `PrimeNumberCalculator` vor:
+
+###### {#listing_01_primenumbercalculator_decl}
+
+```cpp
+01: constexpr size_t Minimum{ 2 };
+02: constexpr size_t Maximum{ 100 };
+03: constexpr std::ptrdiff_t ThreadCount{ 2 };
+04: 
+05: class PrimeNumberCalculator
+06: {
+07: private:
+08:     size_t m_minimum{ Minimum };
+09:     size_t m_maximum{ Maximum };
+10:     std::ptrdiff_t m_threadCount { ThreadCount };
+11: 
+12:     std::atomic<size_t> m_next{ Minimum };
+13:     std::atomic<size_t> m_count{};
 14: 
-15: public:
-16:     // c'tors
-17:     CollatzIterator() = default;
-18:     CollatzIterator(int start);
-19: 
-20:     // operators
-21:     int operator*() const;
-22:     CollatzIterator& operator++();
-23:     bool operator!=(const CollatzIterator&) const;
-24: };
+15:     std::vector<size_t> m_primes;
+16:     std::mutex          m_mutex;
+17: 
+18: public:
+19:     // c'tors
+20:     PrimeNumberCalculator() = default;
+21: 
+22:     // getter / setter
+23:     size_t minimum() const { return m_minimum; }
+24:     size_t maximum() const { return m_maximum; }
+25:     size_t threadCount() const { return m_threadCount; }
+26:     void minimum(size_t minimum) { m_minimum = minimum; }
+27:     void maximum(size_t maximum) { m_maximum = maximum; }
+28:     void threadCount(size_t threadCount) { m_threadCount = threadCount; }
+29: 
+30:     // public interface
+31:     void calcPrimes();
+32:     void calcPrimesUsingThread();
+33:     void calcPrimesEx();
+34: 
+35: private:
+36:     void calcPrimesHelper();
+37:     void calcPrimesHelperEx();
+38:     void printResult(size_t);
+39: 
+40:     static bool isPrime(size_t number);
+41:     static void printHeader();
+42:     static void printFooter(size_t);
+43: };
 ```
 
-*Listing* 1: Klasse `CollatzIterator`: Definition.
+*Listing* 1: Klasse `PrimeNumberCalculator`: Definition.
 
-[Listing 1] demonstriert einige Neuerungen von C++. Da wären zum Beispiel Initialisierer für Instanzvariablen (Zeilen 11 bis 13).
-Mit ihrer Hilfe sollte es nicht mehr passieren, dass Instanzvariablen von Klassen ohne Vorbelegungswerte auftreten.
-Dieses Feature hat zur Folge, dass man nicht mehr zwingend den Default-Konstruktor einer Klasse ausprogrammieren muss.
-Mit der Kurzschreibweise in Zeile 17 ist erreicht, dass die Klasse einen Default-Konstruktor besitzt und die Instanzvariablen
-auf Basis ihrer jeweiligen Initialisierer vorbelegt werden.
-Die Zeilen 4 bis 8 bezeichnet man als *Iterator Traits* (zu Deutsch etwa *Iterator Spuren*),
-sie sind wichtig für die Integration des Iterators in die STL.
-Eine mögliche Realisierung der `CollatzIterator`-Klasse folgt in [Listing 2]:
-
-###### {#listing_02_collatziterator_implementation}
+###### {#listing_02_primenumbercalculator_impl}
 
 ```cpp
-01: // c'tor
-02: CollatzIterator::CollatzIterator(int start) : m_start{ start }, m_current{ start } {}
-03: 
-04: // operator(s)
-05: int CollatzIterator::operator*() const { return m_current; }
-06: 
-07: CollatzIterator& CollatzIterator::operator++()
-08: {
-09:     m_current = (m_current % 2 == 0)
-10:         ? m_current = m_current / 2
-11:         : m_current = 3 * m_current + 1;
-12: 
-13:     return *this;
-14: }
-15: 
-16: bool CollatzIterator::operator!=(const CollatzIterator& seq) const
-17: { 
-18:     return m_current != seq.m_current;
-19: }
+001: void PrimeNumberCalculator::calcPrimes()
+002: {
+003:     std::latch done{ m_threadCount };
+004:     std::vector<std::future<void>> tasks(m_threadCount);
+005:     m_next = m_minimum;
+006:     m_count = 0;
+007: 
+008:     auto worker = [&]() {
+009:         calcPrimesHelper();
+010:         done.count_down();
+011:     };
+012: 
+013:     for (size_t i{}; i != m_threadCount; ++i) {
+014: 
+015:         std::future<void> future{
+016:             std::async(std::launch::async, worker)
+017:         };
+018: 
+019:         tasks.push_back(std::move(future));
+020:     }
+021: 
+022:     done.wait();
+023:     printResult(m_count);
+024: }
+025: 
+026: void PrimeNumberCalculator::calcPrimesUsingThread()
+027: {
+028:     std::latch done{ m_threadCount };
+029:     m_next = m_minimum;
+030:     m_count = 0;
+031: 
+032:     for (size_t i{}; i != m_threadCount; ++i) {
+033: 
+034:         std::thread t{
+035:             [&]() {
+036:                 calcPrimesHelper();
+037:                 done.count_down();
+038:             }
+039:         };
+040:         t.detach();
+041:     }
+042: 
+043:     done.wait();
+044:     printResult(m_count);
+045: }
+046: 
+047: void PrimeNumberCalculator::calcPrimesEx()
+048: {
+049:     std::latch done{ m_threadCount };
+050:     std::vector<std::future<void>> tasks(m_threadCount);
+051:     m_next = m_minimum;
+052:     m_count = 0;
+053:     m_primes.clear();
+054: 
+055:     auto worker = [&]() {
+056:         calcPrimesHelperEx();
+057:         done.count_down();
+058:     };
+059: 
+060:     for (size_t i{}; i != m_threadCount; ++i) {
+061: 
+062:         std::future<void> future{
+063:             std::async(std::launch::async, worker)
+064:         };
+065: 
+066:         tasks.push_back(std::move(future));
+067:     }
+068: 
+069:     done.wait();
+070:     printResult(m_primes.size());
+071: }
+072: 
+073: // =====================================================================================
+074: // helpers
+075: 
+076: void PrimeNumberCalculator::calcPrimesHelper()
+077: {
+078:     printHeader();
+079: 
+080:     size_t max{ m_maximum };  // upper prime number limit
+081:     size_t next{ m_next++ };  // next prime number candidate
+082:     size_t count{};           // thread-local counter - just for statistics
+083: 
+084:     while (next < max) {
+085: 
+086:         // test if candidate being prime 
+087:         if (isPrime(next)) {
+088:             ++m_count;  // atomic increment
+089:             ++count;
+090:         }
+091: 
+092:         // retrieve next prime number candidate
+093:         next = m_next++;
+094:     }
+095: 
+096:     printFooter(count);
+097: }
+098: 
+099: void PrimeNumberCalculator::calcPrimesHelperEx()
+100: {
+101:     printHeader();
+102: 
+103:     size_t max{ m_maximum };  // upper prime number limit
+104:     size_t next{ m_next++ };  // next prime number candidate
+105:     std::vector<size_t> primes;  // thread-local prime numbers container
+106: 
+107:     while (next < max) {
+108: 
+109:         // test if candidate being prime 
+110:         if (isPrime(next)) {
+111:             primes.push_back(next);
+112:         }
+113: 
+114:         // retrieve next prime number candidate
+115:         next = m_next++;
+116:     }
+117: 
+118:     if (primes.size() != 0) 
+119:     {
+120:         std::scoped_lock<std::mutex> lock{ m_mutex };
+121: 
+122:         std::vector<size_t> copy;
+123: 
+124:         std::swap(copy, m_primes);
+125: 
+126:         // no inplace algorithm
+127:         std::merge(
+128:             copy.begin(), 
+129:             copy.end(),
+130:             primes.begin(), 
+131:             primes.end(), 
+132:             std::back_inserter(m_primes)
+133:         );
+134:     }
+135: 
+136:     printFooter(primes.size());
+137: }
+138: 
+139: bool PrimeNumberCalculator::isPrime(size_t number)
+140: {
+141:     // the smallest prime number is 2
+142:     if (number <= 2) {
+143:         return number == 2;
+144:     }
+145: 
+146:     // even numbers other than 2 are not prime
+147:     if (number % 2 == 0) {
+148:         return false;
+149:     }
+150: 
+151:     // check odd divisors from 3 to the square root of the number
+152:     size_t end{ static_cast<size_t>(ceil(std::sqrt(number))) };
+153:     for (size_t i{ 3 }; i <= end; i += 2) {
+154:         if (number % i == 0) {
+155:             return false;
+156:         }
+157:     }
+158: 
+159:     // found prime number
+160:     return true;
+161: }
+162: 
+163: void PrimeNumberCalculator::printResult(size_t count)
+164: {
+165:     std::cout 
+166:         << "From " << m_minimum << " to " << m_maximum << ": found " 
+167:         << count << " prime numbers." << std::endl;
+168: 
+169:     if (!m_primes.empty()) {
+170:         for (int columns{}; size_t prime : m_primes) {
+171:             std::cout << std::setw(5) << std::right << prime << " ";
+172:             if (++columns % 16 == 0) {
+173:                 std::cout << std::endl;
+174:             }
+175:         };
+176:     }
+177:     std::cout << std::endl;
+178: }
+179: 
+180: void PrimeNumberCalculator::printHeader()
+181: {
+182:     std::stringstream ss;
+183:     std::thread::id currentTID{ std::this_thread::get_id() };
+184:     ss << "[" << std::setw(5) << std::right << currentTID << "]: starting ..." << std::endl;
+185:     std::cout << ss.str();
+186:     ss.str("");
+187: }
+188: 
+189: void PrimeNumberCalculator::printFooter(size_t count)
+190: {
+191:     std::stringstream ss;
+192:     std::thread::id currentTID{ std::this_thread::get_id() };
+193:     ss << "[" << std::setw(5) << std::right << currentTID << "]: found " << count << '.' << std::endl;
+194:     std::cout << ss.str();
+195: }
 ```
 
-*Listing* 2: Klasse `CollatzIterator`: Implementierung.
+*Listing* 2: Klasse `PrimeNumberCalculator`: Implementierung.
 
-## Klasse `CollatzSequence`
+> Einige Anmerkungen:
 
-Nun benötigen wir noch eine Klasse für die Zahlenfolge, also die Containerklasse.
-Im Wesentlichen legt sie nur den Startwert für die Folge fest
-und stellt zwei Iteratorobjekte für Start und Ende der Zahlenfolge zur Verfügung ([Listing 3]):
+In der `calcPrimes`-Methode ab Zeile 1 sind nun alle Tätigkeiten für das parallele Suchen nach Primzahlen zusammengefasst.
 
-###### {#listing_03_collatzsequence_interface}
+In den Zeilen 13 bis 20 werden mit std::async eine Reihe von Threads gestartet,
+die sich auf die Suche nach Primzahlen begeben.
+
+Wichtig ist Zeile 3: Hier kommt ein C++&ndash;20 Objekt des Typs std::latch zum Einsatz.
+
+Frei übersetzt könnte man std::latch als Hindernis bezeichnen:
+Mit dem Aufruf der wait-Methode an diesem Objekt stößt man auf ein Hindernis, man muss also warten.
+Wie kann diese Blockade aufgelöst werden? Mit count_down-Aufrufen, die Sie in Zeile 10 vorfinden,
+also am Ende eines calcPrimesHelper-Methodenaufrufs und damit nach einer abgeschlossenen Primzahlensuche &ndash; im Kontext eines Threads.
+Damit sind wir schon bei den Details angelangt: Wie oft muss  count_down aufgerufen werden, um eine wait-Blockade aufzulösen.
+Vermutlich genauso oft, wie eine entsprechende Zählervariable bei der Initialisierung des std::latch-Objekts vorbelegt wird:
 
 ```cpp
-01: // forward declaration of iterator class
-02: class CollatzIterator;
-03: 
-04: class CollatzSequence
-05: {
-06: private:
-07:     int m_start{ 1 };
-08: 
-09: public:
-10:     // c'tor(s)
-11:     CollatzSequence() = default;
-12:     CollatzSequence(int start);
-13: 
-14:     // iterator support
-15:     CollatzIterator begin() const;
-16:     CollatzIterator end()   const;
-17: };
+std::latch done{ m_threadCount };
 ```
 
-*Listing* 3: Klasse `CollatzSequence`: Definition.
 
-Die `CollatzSequence`-Klassendefinition enthält keine Überraschungen bis auf eine Subtilität
-in Bezug auf die beiden Klassen `CollatzIterator` und `CollatzSequence`,
-die wir ansprechen müssen: Container- und Iteratorklassen sind &ndash; das liegt in der Natur der Sache &ndash; normalerweise
-eng miteinander verknüpft:
 
-  * Die Containerklasse muss die beiden Methoden `begin()` und `end()` implementieren. Diese beiden Methoden liefern Iteratorenobjekte zurück.
-  * Ein Iteratorobjekt kennt in der Regel seine Containerklasse, folglich muss im Iteratorobjekt eine Referenz (bzw. eine Zeigervariable) auf den dazugehörigen Container vorhanden sein.
 
-Diese Art des gegenseitigen Referenzierens hat zur Folge, dass wir den Container vor dem Iterator definieren müssen und umgekehrt.
-Darüber hinaus benötigt der Iterator normalerweise Zugriff auf (private) Containermethoden und Datenelemente,
-um seine Arbeit erledigen zu können.
-Aus diesem Grund lautet das typische Muster zum Definieren von Container- und Iteratorklassen wie folgt:
 
-  * Vorwärtsdeklaration der Iteratorklasse.
-  * Definition (Implementierung) der Containerklasse.
-  * Definition der Iteratorklasse als Freund (`friend`) in der Containerklasse.
-  * Definition (Implementierung) der Iteratorklasse.
 
-In unserem Anwendungsfall &ndash; Realisierung von Zahlenfolgen mit C++&ndash;Iteratoren &ndash; liegt der Iteration kein Container zugrunde.
-Alle Informationen zu den iterierenden Werten residieren in der Iteratorklasse, die Containerklasse muss also keine `friend`-Deklaration der Iteratorklasse haben ([Listing 4]):
-
-###### {#listing_04_collatzsequence_implementation}
-
-```cpp
-01: // c'tor(s)
-02: CollatzSequence::CollatzSequence(int start) : m_start{ start } {}
-03: 
-04: // iterator support
-05: CollatzIterator CollatzSequence::begin() const { return { m_start }; }
-06: CollatzIterator CollatzSequence::end()   const { return { 1 }; }
-
-```
-
-*Listing* 4: Klasse `CollatzSequence`: Implementierung.
-
-Das C++11&ndash;Sprachfeature der &ldquo;Uniform Initialization&rdquo; kann auch zusammen mit einer `return`-Anweisung auftreten.
-Betrachten Sie die beiden Zeilen 5 und 6 von [Listing 4]. Es steht auf Grund der Definition
-der Methoden `begin()` und `end()` fest, dass diese ein Objekt des Typs `CollatzIterator` zurückliefern müssen.
-Wozu dann
-
-```cpp
-return { CollatzIterator { m_start } };
-```
-
-bzw.
-
-```cpp
-return { CollatzIterator { 1 } };
-```
-
-schreiben, wenn die Information des Klassentyps `CollatzIterator` überflüssig ist bzw. dem Compiler bekannt ist.
-Nun können wir unsere erste teuflische Folge berechnen. Wir verzichten zunächst noch auf den Einsatz einer Containerklasse
-und testen ausschließlich Iteratorobjekte:
-
-```cpp
-CollatzIterator iter{ 7 };
-CollatzIterator end{ 1 };
-
-while (iter != end) {
-    std::cout << *iter << ' ';
-    ++iter;
-}
-```
-
-*Ausgabe*:
-
-```
-7 22 11 34 17 52 26 13 40 20 10 5 16 8 4 2
-```
-
-Wenn Sie die Ausgabe genau betrachten, können Sie einen kleinen Schönheitsfehler erkennen: Richtig erkannt, 
-die Folge sollte den Wert 1 als letztes Element und nicht die 2 haben.
-Dies ist nicht ganz trivial lösbar, aber wenn wir an zwei Stellen im Quellcode geschickt eingreifen, haben wir auch dieses Problem behoben:
-
-  * Beobachtung 1: In der Festlegung des Ende-Iteratorobjekts sind wir ein wenig gekniffen: Der Wert 1 ist eigentlich der einzig mögliche Wert,
-    der sich hier anbietet. Da er aber das Ende der Zahlenfolge ist, wird er von der Iteration ausgenommen, was wir vermeiden wollen.
-
-  * Beobachtung 2: Des Rätsels Lösung liegt an einer ganz anderen Stelle in der Iteratorklasse verborgen: Es ist der `operator!=`, den wir in einer ersten Version
-    seiner Realisierung etwas &ldquo;unterschätzt&rdquo; haben:  
-
-    ```cpp
-    bool CollatzIterator::operator!=(const CollatzIterator& seq) const
-    { 
-        return m_current != seq.m_current;
-    }
-    ```
-
-    Vergleichen wir den Wert von `m_current` mit dem Wert `seq.m_current` eines anderen Iteratorobjekts, ist es eigentlich schon zu spät:
-    Das Ende-Iteratorobjekt wartet hier mit dem Wert 1 auf, wir können das Element 1 in der Zahlenfolge so nicht mehr als gültigen Wert erklären.
-    Wollten wir den Wert 1 mit in die Zahlenfolge aufnehmen, dürfen wir beim Vergleich nicht den aktuellen Wert vergleichen,
-    sondern müssen hier quasi auf den Vorgänger von `m_current` zurückgreifen. Damit benötigen wir neben `m_current` noch eine zweite Instanzvariable `m_last`,
-    die den Vorgänger von `m_current` repräsentiert.
-
-  * Beobachtung 3: Für die beiden Operatoren `++` und `!=` benötigen wir eine geringfügig modifizierte Realisierung:
-
-    ```cpp
-    CollatzIterator& CollatzIterator::operator++()
-    {
-        m_last = m_current;
-    
-        m_current = (m_current % 2 == 0)
-            ? m_current = m_current / 2
-            : m_current = 3 * m_current + 1;
-    
-        return *this;
-    }
-    
-    bool CollatzIterator::operator!=(const CollatzIterator& seq) const
-    { 
-        return m_last != seq.m_current;
-    }
-    ```
-
-Wenn Sie diese Änderungen in der Implementierung der `CollatzIterator`-Klassen einbringen,
-werden Sie in der Ausgabe die 1 als letztes Element der Zahlenfolge vorfinden!
-
-Jetzt können wir eigentlich aus dem vollen Schöpfen und unsere Container- und Iteratorklasse gegen zahlreiche STL-Algorithmen testen.
-Wir fangen mit einer bereichsbasierten `for`-Wiederholungsschleife an. Diese benötigt die Container-Klasse
-unserer Realisierung (nicht die Iteratorklasse),
-die jeweiligen Iteratorobjekte werden &ndash; für uns nicht sichtbar &ndash; durch Anweisungen angefordert,
-die der Übersetzer generiert:
-
-```cpp
-CollatzSequence seq{ 17 };
-for (int n : seq) {
-    std::cout << n << ' ';
-}
-```
-
-*Ausgabe*:
-
-```
-17 52 26 13 40 20 10 5 16 8 4 2 1
-```
-
-Die bereichsbasierte `for`-Wiederholungsschleife erwartet am Containerobjekt &ndash; hier: Klasse `CollatzSequence` &ndash; 
-eine Implementierung der beiden Methoden `begin()` und `end()`. An den zurückgelieferten Objekten wiederum müssen die
-drei Operatoren `operator++()`, `operator!=()` und `operator*()` vorhanden sein. Anderfalls wäre ein derartiges Code-Fragment nicht übersetzungsfähig.
-
-Für die nachfolgenden Code-Fragmente muss die Iteratorklasse noch weitere Auskünfte bereitstellen.
-Wir sind beim Themenkreis der so genannten &ldquo;Iterator Traits&rdquo; &ndash; zu Deutsch etwa &ldquo;Iterator Spuren&rdquo; &ndash; angekommen.
-Die Anforderung lässt sich vergleichsweise einfach durch fünf `using`-Deklarationen erfüllen:
-
-```cpp
-using iterator_category = std::forward_iterator_tag;
-using value_type = int;
-using difference_type = int;
-using pointer = int*;
-using reference = int&;
-```
-
-## `CollatzIterator` und `CollatzSequence` im Zusammenspiel mit STL-Algorithmen
-
-Wir stellen als Erstes eine Anwendung des `std::copy`-Algorithmus vor:
-
-```cpp
-CollatzSequence seq{ 17 };
-std::ostream_iterator<int> out{ std::cout, "  " };
-std::copy(std::begin(seq), std::end(seq), out);
-```
-
-*Ausgabe*:
-
-```
-17  52  26  13  40  20  10  5  16  8  4  2  1
-```
-
-Wollten wir die Summe aller Folgenglieder bestimmen, kann man den Algorithmus `std::accumulate` anwenden. 
-Besitzt dieser keinen vierten Parameter und wird der dritte Parameter mit dem Wert 0 vorbelegt, erhalten wir die Summe
-der Elemente in der Aufzählung zurück:
-
-```cpp
-CollatzSequence seq{ 17 };
-int sum = std::accumulate(std::begin(seq), std::end(seq), 0);
-std::cout << sum << std::endl;
-```
-
-*Ausgabe*:
-
-```
-214
-```
-
-Ist nicht die Summe, sondern die Anzahl der Folgenglieder gesucht, erhalten wir die Anwort von dem Algorithmus `std::distance`:
-
-```cpp
-CollatzSequence seq{ 17 };
-int count = std::distance(std::begin(seq), std::end(seq));
-std::cout << count << std::endl;
-```
-
-*Ausgabe*:
-
-```
-13
-```
-
-*Hinweis*:
-Ohne eine entsprechenden Definition der &ldquo;Iterator Traits&rdquo; in der Klasse `CollatzIterator` ([Listing 1])
-ist der Algorithmus-Aufruf `std::distance` nicht übersetzungsfähig! 
-Die Fehlermeldung ist leider nicht einfach verständlich, bei genauem Hinsehen kann man erkennen,
-dass die zum Zählen der Elemente notwendige Information des Abstands zweier Elemente fehlt:
-
-```
-Failed to specialize function template ... std::iterator_traits<remove_cv<remove_reference<_Ty>::type>::type>>::difference_type
-```
-
-Um einen Standard-Vektor (`std::vector<>`) mit den Elementen der Zahlenfolge zu füllen, 
-bietet sich eine Kombination von `std::copy` mit `std::back_inserter` an:
-
-```cpp
-std::vector<int> numbers{ };
-CollatzSequence seq{ 7 };
-std::copy(std::begin(seq), std::end(seq), std::back_inserter(numbers));
-
-for (int number : numbers) {
-    std::cout << number << std::endl;
-}
-```
-
-*Ausgabe*:
-
-```
-7
-22
-11
-34
-17
-52
-26
-13
-40
-20
-10
-5
-16
-8
-4
-2
-1
-```
-
-Die letzte Ausgabe können wir &ndash; im Kontext des `std::accumulate` Algorithmus &ndash; etwas umfangreicher gestalten.
-Sie erinnnern sich: Das erste Mal hatten wir `std::accumulate` eingesetzt, um die Folgenglieder zu addieren.
-Dieses Mal verwenden wir `std::accumulate`, um als Resultat eine Zeichenkette zu erzeugen, die die Folgenglieder nach gewissen Vorgaben weiterverarbeitet:
-
-```cpp
-CollatzSequence seq{ 7 };
-
-std::string s = std::accumulate(
-    std::begin(seq),
-    std::end(seq),
-    std::string(""), // first element
-    [counter = 0] (const std::string& first, const auto& next) mutable {
-        counter++;
-        std::ostringstream ss;
-        ss << "[" << std::setfill('0') << std::setw(2) << counter << "]"
-            << ": " << std::setfill(' ') << std::setw(5)
-            << std::right << next << std::endl;
-
-        return first + ss.str();
-    }
-);
-
-std::cout << s << std::endl;
-```
-
-*Ausgabe*:
-
-```
-[01]:     7
-[02]:    22
-[03]:    11
-[04]:    34
-[05]:    17
-[06]:    52
-[07]:    26
-[08]:    13
-[09]:    40
-[10]:    20
-[11]:    10
-[12]:     5
-[13]:    16
-[14]:     8
-[15]:     4
-[16]:     2
-[17]:     1
-```
-
-# There&lsquo;s more
-
-In diesem Abschnitt bietet es sich an, eine Schwachstelle in der Definition der Iteratorklasse `CollatzIterator` zu beseitigen.
-Nicht jede Zahlenfolge muss Elemente des Typs `int` haben, `long`, `short`, `__int64` etc. wären auch geeignetete Kandidaten.
-Wir sind bei Templates angekommen: Eine Implementierung zweier Klassen `CollatzIteratorEx<T>` und `CollatzSequenceEx<T>`
-finden Sie unter [Github](https://github.com/pelocpp/cpp_case_studies.git) vor.
-
-# There&lsquo;s much more
-
-In C++ 20 wird ein neues Sprachkonzept, genannt *Concepts* eingeführt, eine clevere Vorgehensweise,
-um Restriktionen für Datentypen festzulegen, die eine Template-Funktion oder -klasse annehmen kann.
-Während Iteratorkategorien und -eigenschaften gleich bleiben, ändert sich die Art und Weise, *wie* Sie diese erzwingen:
-mit *Tags* bis C++ 17 (so wie wir es auch in dieser Fallstudie getan haben),
-mit *Concepts*  in C++ 20.
-
-Beispielsweise würden Sie anstelle des Tags `std::forward_iterator_tag` Ihren Iterator mit dem
-`std::forward_iterator`-*Konzept* markieren. Dieser neue Mechanismus hilft dabei,
-bessere Definitionen für Iteratoren zu erhalten
-und Fehlermeldungen des Compilers werden besser lesbarer.
-
-Im Augenblick ist die Umsetzung von *Concepts* und *Ranges* im Visual C++ Compiler noch nicht abgeschlossen,
-so dass ich eine Aktualisierung dieses Artikels noch in die (nahe) Zukunft verschiebe.
-Erste Schritte in diese Richtung werden vermutlich so aussehen, dass die Klasse `CollatzSequenceEx`
-in einen *Range* bzw. in eine *View* umzusetzen ist. Dazu gibt es eine Hilfsklasse `std::ranges::view_interface`:
-
-```cpp
-template <class T>
-class CollatzViewExEx : public std::ranges::view_interface<CollatzViewExEx<T>> {
-public:
-    CollatzViewExEx() = default;
-    CollatzViewExEx(T start) : m_start(start), m_begin(start), m_end () {}
-
-    auto begin() const { return m_begin; }
-    auto end() const { return m_end; }
-
-private:
-    T m_start;
-
-    CollatzIteratorEx<T> m_begin;
-    CollatzIteratorEx<T> m_end;
-};
-```
-
-Immerhin lässt sich mit diesem ersten kleinen Schritt bereits ein `CollatzViewExEx`-Objekt
-mit einer bereichsbasierten `for`-Wiederholungsschleife traversieren:
-
-```
-CollatzViewExEx view{ 7 };
-for (int n : view) {
-    std::cout << n << " - ";
-}
-```
-
-*Ausgabe*:
-
-```
-7 - 22 - 11 - 34 - 17 - 52 - 26 - 13 - 40 - 20 - 10 - 5 - 16 - 8 - 4 - 2 - 1 -
-```
-
-Sollten Sie mit den neuartigen C++ Konzepten bzgl. *Ranges* und *Concepts* (mit Visual C++)
-bessere Fortschritte erzielen, würde ich mich über eine Nachricht freuen :-)
 
 <!-- Links Definitions -->
 
-[Listing 1]: #listing_01_ijosephus_interface
-[Listing 2]: #listing_02_josephus_interface
-[Listing 3]: #listing_03_josephus_implementation
-[Listing 4]: #listing_04_josephusarrayimpl_interface
-[Listing 5]: #listing_05_josephusarrayimpl_implementation
-[Listing 6]: #listing_06_class_soldier
-[Listing 7]: #listing_07_josephusforwardlistimpl_interface
-[Listing 8]: #listing_08_josephusforwardlistimpl_implementation
+[Tabelle 1]: #tabelle_1_class_partialset
+
+[Listing 1]: #listing_01_primenumbercalculator_decl
+[Listing 2]: #listing_02_primenumbercalculator_impl
 
 [Abbildung 1]:  #abbildung_1_application_overview
 [Abbildung 2]:  #abbildung_2_parallelprimes_output_01

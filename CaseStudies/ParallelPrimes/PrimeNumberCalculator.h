@@ -35,19 +35,20 @@ public:
     // getter / setter
     size_t minimum() const { return m_minimum; }
     size_t maximum() const { return m_maximum; }
-    std::ptrdiff_t threadCount() const { return m_threadCount; }
+    size_t threadCount() const { return m_threadCount; }
     void minimum(size_t minimum) { m_minimum = minimum; }
     void maximum(size_t maximum) { m_maximum = maximum; }
     void threadCount(size_t threadCount) { m_threadCount = threadCount; }
 
     // public interface
     void calcPrimes();
+    void calcPrimesUsingThread();
     void calcPrimesEx();
 
 private:
     void calcPrimesHelper();
     void calcPrimesHelperEx();
-    void printResult();
+    void printResult(size_t);
 
     static bool isPrime(size_t number);
     static void printHeader();

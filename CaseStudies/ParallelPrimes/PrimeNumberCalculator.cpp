@@ -17,8 +17,9 @@
 void PrimeNumberCalculator::calcPrimes()
 {
     std::latch done{ m_threadCount };
-
     std::vector<std::future<void>> tasks(m_threadCount);
+    m_next = m_minimum;
+    m_count = 0;
 
     auto worker = [&]() {
         calcPrimesHelper();
@@ -34,17 +35,38 @@ void PrimeNumberCalculator::calcPrimes()
         tasks.push_back(std::move(future));
     }
 
-    // block until work is done
     done.wait();
+    printResult(m_count);
+}
 
-    printResult();
+void PrimeNumberCalculator::calcPrimesUsingThread()
+{
+    std::latch done{ m_threadCount };
+    m_next = m_minimum;
+    m_count = 0;
+
+    for (size_t i{}; i != m_threadCount; ++i) {
+
+        std::thread t{
+            [&]() {
+                calcPrimesHelper();
+                done.count_down();
+            }
+        };
+        t.detach();
+    }
+
+    done.wait();
+    printResult(m_count);
 }
 
 void PrimeNumberCalculator::calcPrimesEx()
 {
     std::latch done{ m_threadCount };
-
     std::vector<std::future<void>> tasks(m_threadCount);
+    m_next = m_minimum;
+    m_count = 0;
+    m_primes.clear();
 
     auto worker = [&]() {
         calcPrimesHelperEx();
@@ -60,10 +82,8 @@ void PrimeNumberCalculator::calcPrimesEx()
         tasks.push_back(std::move(future));
     }
 
-    // block until work is done
     done.wait();
-
-    printResult();
+    printResult(m_primes.size());
 }
 
 // =====================================================================================
@@ -156,11 +176,11 @@ bool PrimeNumberCalculator::isPrime(size_t number)
     return true;
 }
 
-void PrimeNumberCalculator::printResult()
+void PrimeNumberCalculator::printResult(size_t count)
 {
     std::cout 
         << "From " << m_minimum << " to " << m_maximum << ": found " 
-        << m_count << " prime numbers." << std::endl;
+        << count << " prime numbers." << std::endl;
 
     if (!m_primes.empty()) {
         for (int columns{}; size_t prime : m_primes) {
