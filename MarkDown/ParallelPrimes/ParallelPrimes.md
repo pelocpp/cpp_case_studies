@@ -1,6 +1,4 @@
-<!-- ParallelPrimes.md -->
-
-<!-- Parallele Berechnung von Primzahlen mit Hindernissen -->
+<!-- Parallele Berechnung von Primzahlen mit “Hindernissen” -->
 
 Die Suche nach Primzahlen &ndash; also Zahlen, die nur durch sich selbst und durch 1 teilbar sind &ndash;  war lange Zeit
 eine der zentralsten Bestandteile der Zahlentheorie. Primzahlenjäger können neben den zahlreichen Erkenntnissen
@@ -61,7 +59,7 @@ dass zwei (quasi-)parallele Aufrufe von `calcPrimes` niemals dieselbe Zahl analy
 
 ###### {#abbildung_1_application_overview}
 
-{{< figure src="/img/parallelprimes/MultiThreadingPrimeCalculatorArchitecture.png" width="60%" >}}
+{{< figure src="/img/parallelprimes/parallel_primes_architecture.svg" width="60%" >}}
 
 *Abbildung* 1: Architektur einer parallelen Primzahlen-Anwendung.
 
@@ -72,7 +70,7 @@ Die Summe aller Werte müsste dann die korrekte Anzahl aller Primzahlen in einem
 
 ###### {#abbildung_2_parallelprimes_output_01}
 
-{{< figure src="/img/parallelprimes/ParallelPrimesOutput01.png" width="60%" >}}
+{{< figure src="/img/parallelprimes/ParallelPrimesOutput01.png" width="80%" >}}
 
 *Abbildung* 2: Ausgabe der Ergebnisse in der Konsole.
 
@@ -87,7 +85,7 @@ In [Abbildung 3] finden Sie das Resultat aller Primzahlen im Bereich von 2 bis 1
 
 ###### {#abbildung_3_parallelprimes_output_02}
 
-{{< figure src="/img/parallelprimes/ParallelPrimesOutput01.png" width="60%" >}}
+{{< figure src="/img/parallelprimes/ParallelPrimesOutput01.png" width="80%" >}}
 
 *Abbildung* 3: Ausgabe der Ergebnisse mit allen berechneten Primzahlen.
 
@@ -409,7 +407,7 @@ siehe hierzu gleich Zeile 3 in [Listing 2]:
 
 *Listing* 2: Klasse `PrimeNumberCalculator`: Implementierung.
 
-> Einige Anmerkungen:
+Einige Anmerkungen:
 
   * In der `calcPrimes`-Methode ab Zeile 1 ([Listing 2]) sind nun alle Tätigkeiten für das parallele Suchen nach Primzahlen zusammengefasst.
     In den Zeilen 13 bis 20 werden mit `std::async` eine Reihe von Threads gestartet, die sich auf die Suche nach Primzahlen begeben.
@@ -422,9 +420,9 @@ siehe hierzu gleich Zeile 3 in [Listing 2]:
     um eine `wait`-Blockade aufzulösen. Vermutlich genauso oft, wie eine entsprechende Zählervariable
     bei der Initialisierung des korrespondierenden `std::latch`-Objekts vorbelegt wird:
 
-  ```cpp
-  std::latch done{ m_threadCount };
-  ```
+```cpp
+    std::latch done{ m_threadCount };
+```
 
   * In Zeile 19 wird der Rückgabewert von `std::async`, ein `std::future<void>`-Objekt, in einem `std::vector<std::future<void>>`-Objekt 
     abgelegt. Man könnte dieses `std::future<void>`-Objekt verwenden, um mit seiner Hilfe (Methode `get`) Resultate vom Thread aus dem Thread
@@ -436,7 +434,7 @@ siehe hierzu gleich Zeile 3 in [Listing 2]:
     Ignoriert man dieses Objekt im Programm, so ist es zur Laufzeit dennoch präsent &ndash; in diesem Fall als
     anonymes temporäres Objekt. Dies wiederum bedeutet, dass am Ende des Blocks (Zeile 20) der Destruktor dieses Objekts aufgerufen wird.
     Die mittels `std::async` erzeugten Threads würden auf diese Weise alle sequentiell ausgeführt werden!
-
+    
     Natürlich kann man trotzdem einen Ansatz wählen, der ohne `std::future<void>`-Objekte auskommt.
     In diesem Fall muss man aber auch die `std::async`-Funktion umgehen,
     eine Vorgehensweise mit `std::thread`-Objekten wäre dann das Mittel der Wahl. 
@@ -446,17 +444,17 @@ siehe hierzu gleich Zeile 3 in [Listing 2]:
     Sie wird im Kontext eines Threads ausgeführt und sucht Primzahlen. Gefundene Primzahlen legt sie in einem 
     `std::vector<size_t>`-Objekt ab, dass lokal in der `calcPrimesHelperEx`-Methode definiert ist, damit auf dem Laufzeitstack
     eines Threads liegt und *nicht* vor dem konkurrierenden Zugriff anderer Threads zu schützen ist.
-
+    
     Bleibt noch die Frage zu beantworten, wie nach dem Ende der Berechnungen etwaige Ergebnisse vom Sekundärthread
     zum Erzeugerthread gelangen? Jetzt wird es geringfügig komplizierter:
     Im Instanzvariablenbereich der Klasse `PrimeNumberCalculator` liegt ein weiteres `std::vector<size_t>`-Objekt,
-    dass alle Ergebnisse nach dem Rechnen enthalten soll. Diese Objekt ist natürlich dem konkurrierenden Zugriff anderer Threads ausgesetzt,
+    dass alle Ergebnisse nach dem Rechnen enthalten soll. Dieses Objekt ist natürlich dem konkurrierenden Zugriff anderer Threads ausgesetzt,
     deshalb kommt vor dem Zugriff ein `std::mutex`-Objekt ins Spiel.
-
+    
     Ganz RAII-*like* legen wir ein `std::scoped_lock<std::mutex>`-Objekt in einem Block an,
     damit kümmert sich der Destruktor dieses Objekts um die Freigabe des `std::mutex`-Objekts nach erfolgtem Zugriff auf 
     das globale Resultatobjekt.
-
+    
     Das Umkopieren der thread-lokalen Ergebnisse in das globale Objekt ist trickreich:
     Ich möchte den `std::merge`-Algorithmus einsetzen.
     Dieser arbeitet aber leider nicht *in-place*, das bedeutet, vor dem Zusammenführen der schon vorhandenen Ergebnisse
@@ -621,21 +619,21 @@ Abhilfe kann hier ein Verfahren schaffen, das von drei indischen Wissenschaftler
 > Der **AKS**-Primzahltest (auch bekannt unter dem Namen **Agrawal-Kayal-Saxena-Primzahltest**) ist ein deterministischer Algorithmus,
 > der für eine natürliche Zahl in polynomieller Laufzeit feststellt, ob sie prim ist oder nicht.
 
-In [AKS-Primzahltest](https://www.biancahoegel.de/mathe/verfahr/aks-primzahltest.html)
+In &ldquo;[AKS-Primzahltest](https://www.biancahoegel.de/mathe/verfahr/aks-primzahltest.html)&rdquo;
 finden Sie für diesen Algorithmus eine Notation in Pseudo-Code vor.
-
 Wer jetzt seitenweise komplizierte Ausdrücke oder mathematische Formeln vermutet,
 wird überrascht sein, wie einfach der Algorithmus aufgebaut ist.
 In gerade mal 13 Zeilen präsentiert sich das Werk der Informatiker.
 
-Zwar basiert der Algorithmus, wie andere moderne Suchalgorithmen für Primzahlen auch, auf einer Art *Fermat*-Test,
+Zwar basiert der Algorithmus, wie andere moderne Suchalgorithmen für Primzahlen auch, auf einer Variation eines *Fermat*-Tests,
 doch reduziert er zunächst einmal durch eine trickreiche Kombination vorangehender Proben
 die Zahl der Test-Durchläufe auf ein erträgliches Maß.
 
 Wenn Sie eine C++-Implementierung erstellt haben, lassen Sie mich es doch wissen:
 Ich freue mich über jede Zusendung. Und gleich noch eine Starthilfe vorweg:
-Möglicherweise, oder eigentlich ganz sicher, werden die zu untersuchenden Primzahlen nicht mehr durch `size_t`-Variablen darstellbar sein.
-Sehr große natürliche Zahlen, so wie sich durch `BigInteger`-Objekte aus der Fallstudie
+Möglicherweise, oder eigentlich ganz sicher, werden die zu untersuchenden Primzahlen
+nicht mehr durch `size_t`-Variablen darstellbar sein.
+Sehr große natürliche Zahlen, so wie sie durch `BigInteger`-Objekte aus der Fallstudie
 [Exakte Arithmetik ganzer Zahlen]({{< ref "/post/2021-04-10-biginteger" >}})
 dargestellt werden, könnten Unterstützung leisten :)
 

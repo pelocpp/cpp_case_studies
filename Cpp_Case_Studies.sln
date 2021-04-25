@@ -122,6 +122,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ParallelPrimes", "ParallelPrimes", "{7B332BDD-38AA-421E-8692-EB0792286EA5}"
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\ParallelPrimes\MultiThreadingPrimeCalculatorArchitecture.png = MarkDown\ParallelPrimes\MultiThreadingPrimeCalculatorArchitecture.png
+		MarkDown\ParallelPrimes\parallel_primes_architecture.svg = MarkDown\ParallelPrimes\parallel_primes_architecture.svg
 		MarkDown\ParallelPrimes\ParallelPrimes.md = MarkDown\ParallelPrimes\ParallelPrimes.md
 		MarkDown\ParallelPrimes\ParallelPrimesOutput01.png = MarkDown\ParallelPrimes\ParallelPrimesOutput01.png
 		MarkDown\ParallelPrimes\ParallelPrimesOutput02.png = MarkDown\ParallelPrimes\ParallelPrimesOutput02.png
