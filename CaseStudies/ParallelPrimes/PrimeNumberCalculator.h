@@ -20,7 +20,7 @@ class PrimeNumberCalculator
 private:
     size_t m_minimum{ Minimum };
     size_t m_maximum{ Maximum };
-    std::ptrdiff_t m_threadCount { ThreadCount };
+    ptrdiff_t m_threadCount { ThreadCount };
 
     std::atomic<size_t> m_next{ Minimum };
     std::atomic<size_t> m_count{};

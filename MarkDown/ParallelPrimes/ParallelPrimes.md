@@ -8,8 +8,8 @@ der Zahlentheoretiker heutzutage auf eine zusätzliche Hilfestellung zurückgrei
 Wir wollen im Folgenden ein Programm entwickeln, das mit Hilfe mehrerer Threads zu zwei fest gegebenen
 natürlichen Zahlen *n* und *m* die Anzahl aller Primzahlen *p* mit *n* &leq; *p* &leq; *m* bestimmt.
 
-Für die Koordination der Threads setzen wir auf &ldquo;Hindernisse&rdquo; ein, also C++&ndash;20 `std::latch`-Objekte.
-Studieren Sie in dieser Anwendung, wie auf diese Weise die Primzahlensuche mit mehreren Threads koordinierbar ist.
+Für die Koordination der Threads setzen wir &ldquo;Hindernisse&rdquo; ein, also C++&ndash;20 `std::latch`-Objekte.
+Studieren Sie in dieser Anwendung, wie die Primzahlensuche mit mehreren Threads auf diese Weise koordinierbar ist.
 
 <!--more-->
 
@@ -17,6 +17,7 @@ Studieren Sie in dieser Anwendung, wie auf diese Weise die Primzahlensuche mit m
 
   * `std::async` und `std::future<T>` in der Anwendung
   * Klasse `std::latch`
+  * RAII Entwurfsmuster
   * Atomare Operationen (`std::atomic<T>`)
   * Gegenseitiger Ausschluss (`std::mutex`)
   * STL-Algorithmen `std::swap` und `std::merge`
@@ -126,7 +127,7 @@ constexpr size_t Minimum{ 2 };
 std::atomic<size_t> m_next{ Minimum };
 ```
 
-Die Instanzvariable `m_next` verwaltet eine natürliche Zahl im Bereich von `minimum()` bis `maximum()`.
+Die Instanzvariable `m_next` verwaltet eine natürliche Zahl im Bereich von `minimum()` bis einschließlich `maximum()`.
 Sie beschreibt die Zahl, die als nächstes zur Analyse durch einen Sekundärthread ansteht.
 Alle Zahlen von `minimum()`, `minimum()`+1, `minimum()`+2, ..., bis `m_next`-1
 sind bereits auf ihre Primzahleigenschaft hin untersucht worden.
@@ -134,18 +135,14 @@ Die `m_next`-Variable ist privat definiert und kann nur durch die `calcPrimes`-M
 
 Die `calcPrimes`-Methode ist die zentrale Methode der Klasse `PrimeNumberCalculator`.
 Sie ist von allen Sekundärthreads als Threadprozedur zu benutzen, die sich auf die Suche nach Primzahlen machen.
-
-Es werden prinzipiell alle Zahlen im Bereich von `minimum()` bis `maximum()` untersucht.
-Der Übergang von einer Zahl zur nächsten erfolgt (thread-sicher!) an Hand der privaten Instanzvariablen `m_next`.
-Beachten Sie hierzu die Definition von `m_next`: Um ein thread-sicheres Inkrmentieren zu garantieren,
+Beachten Sie hierzu die Definition von `m_next`: Um ein thread-sicheres Inkrementieren zu garantieren,
 wird diese Variable vom Typ `std::atomic<size_t>` definiert! Im Gegensatz zum `++`-Operator für Variablen des Typs `size_t`
-erfolgen `++`-Aufrufe an `std::atomic<T>`-Objekten thread-sicher.
+erfolgen `++`-Aufrufe an `std::atomic<T>`-Objekten thread-sicher!
 
 Wird die `calcPrimes`-Methode (quasi-)parallel von mehreren Threads ausgeführt,
 kann es also sein, dass &ndash; im Kontext eines Threads &ndash; gleich mehrere Zahlen übersprungen werden,
 wenn ein Wechsel zum nächsten Kandidaten ansteht. Die Zahlen dazwischen wurden in der Zwischenzeit
 bereits von den parallel agierenden Sekundärthreads angefordert und untersucht.
-
 
 In [Listing 1] (Schnittstelle) und [Listing 2] (Realisierung) finden Sie die Schnittstelle und Realisierung
 der Klasse `PrimeNumberCalculator` vor:
@@ -162,7 +159,7 @@ der Klasse `PrimeNumberCalculator` vor:
 07: private:
 08:     size_t m_minimum{ Minimum };
 09:     size_t m_maximum{ Maximum };
-10:     std::ptrdiff_t m_threadCount { ThreadCount };
+10:     ptrdiff_t m_threadCount { ThreadCount };
 11: 
 12:     std::atomic<size_t> m_next{ Minimum };
 13:     std::atomic<size_t> m_count{};
@@ -197,6 +194,19 @@ der Klasse `PrimeNumberCalculator` vor:
 42:     static void printFooter(size_t);
 43: };
 ```
+
+Nicht alle Instanzvariablen der Klasse `PrimeNumberCalculator` aus [Listing 1] wurden bislang angesprochen:
+`m_count` (Zeile 13) und `m_primes` (Zeile 15) dienen dem Zweck, Resultate während der (quasi-)parallelen Berechnung
+aufzunehmen. Deshalb ist `m_count` mit einem Hüllenobjekt `std::atomic<size_t>` definiert,
+der Zugriff auf ein `std::vector<size_t>`-Objekt hingehen ist mit einem Mutex-Objekt zu schützen (`m_mutex`, Zeile 16).
+
+Die Anzahl der Threads wird durch `m_threadCount` festgelegt. Der Typ dieser Variablen muss laut Definition des Konstruktors
+der Klasse `std::latch` vorzeichenbehaftet sein, damit sind wir bei `ptrdiff_t` angekommen.
+
+`std::latch`-Objekte treten nicht in den Instanzvariablen der Klasse `PrimeNumberCalculator` in Erscheinung.
+Sie lassen sich nur einmal initialisieren und damit auch nicht wiederverwenden,
+aus diesen Gründen sind sie als lokale Variablen in Methoden einfacher hantierbar,
+siehe hierzu gleich Zeile 3 in [Listing 2]:
 
 *Listing* 1: Klasse `PrimeNumberCalculator`: Definition.
 
@@ -402,35 +412,35 @@ der Klasse `PrimeNumberCalculator` vor:
 > Einige Anmerkungen:
 
   * In der `calcPrimes`-Methode ab Zeile 1 ([Listing 2]) sind nun alle Tätigkeiten für das parallele Suchen nach Primzahlen zusammengefasst.
-  In den Zeilen 13 bis 20 werden mit `std::async` eine Reihe von Threads gestartet, die sich auf die Suche nach Primzahlen begeben.
-  Wichtig ist Zeile 3: Hier kommt ein C++&ndash;20 Objekt des Typs `std::latch` zum Einsatz.
-  Frei übersetzt könnte man `std::latch` als *Hindernis* bezeichnen:
-  Mit dem Aufruf der `wait`-Methode an diesem Objekt stößt man auf ein Hindernis, man muss also warten.
-  Wie kann diese Blockade aufgelöst werden? Mit `count_down`-Aufrufen, die Sie in Zeile 10 vorfinden,
-  also am Ende eines `calcPrimesHelper`-Methodenaufrufs und damit nach einer abgeschlossenen Primzahlensuche &ndash; im Kontext eines Threads.
-  Damit sind wir schon bei den Details angelangt: Wie oft muss die Methode `count_down` aufgerufen werden,
-  um eine `wait`-Blockade aufzulösen. Vermutlich genauso oft, wie eine entsprechende Zählervariable
-  bei der Initialisierung des `std::latch`-Objekts vorbelegt wird:
+    In den Zeilen 13 bis 20 werden mit `std::async` eine Reihe von Threads gestartet, die sich auf die Suche nach Primzahlen begeben.
+    Wichtig ist Zeile 3: Hier kommt ein C++&ndash;20 Objekt des Typs `std::latch` zum Einsatz.
+    Frei übersetzt könnte man `std::latch` als *Hindernis* bezeichnen:
+    Mit dem Aufruf der `wait`-Methode an diesem Objekt stößt man auf ein Hindernis, man muss also warten.
+    Wie kann diese Blockade aufgelöst werden? Mit `count_down`-Aufrufen, die Sie in Zeile 10 vorfinden,
+    also am Ende eines `calcPrimesHelper`-Methodenaufrufs und damit nach einer abgeschlossenen Primzahlensuche &ndash; im Kontext eines Threads.
+    Damit sind wir schon bei den Details angelangt: Wie oft muss die Methode `count_down` aufgerufen werden,
+    um eine `wait`-Blockade aufzulösen. Vermutlich genauso oft, wie eine entsprechende Zählervariable
+    bei der Initialisierung des korrespondierenden `std::latch`-Objekts vorbelegt wird:
 
   ```cpp
   std::latch done{ m_threadCount };
   ```
 
   * In Zeile 19 wird der Rückgabewert von `std::async`, ein `std::future<void>`-Objekt, in einem `std::vector<std::future<void>>`-Objekt 
-  abgelegt. Man könnte dieses `std::future<void>`-Objekt verwenden, um mit seiner Hilfe Resultate vom Thread aus dem Thread
-  zum Erzeuger des Threads zu transportieren. In dieser Fallstudie habe ich aber einen anderen Weg gewählt,
-  die Threads legen ihre Resultate in thread-globalen Variablen ab, die via `std::atomic<T>`&ndash;Hüllen thread-sicher arbeiten.
-  Wozu ist es dann überhaupt erforderlich, den Rückgabewert von `std::async` wegzuspeichern?
-  Man könnte den Rückgabewert doch einfach ignorieren? Weit gefehlt, dem ist nicht so!
-  Jedes `std::future<void>`-Objekt besitzt einen Destruktor, der auf das Ende des beteiligten Threads wartet!
-  Ignoriert man dieses Objekt im Programm, so ist es zur Laufzeit dennoch präsent &ndash; in diesem Fall als
-  anonymes temporäres Objekt. Dies wiederum bedeutet, dass am Ende des Blocks (Zeile 20) der Destruktor dieses Objekts aufgerufen wird.
-  Die mittels `std::async` erzeugten Threads würden auf diese Weise alle sequentiell ausgeführt werden!
+    abgelegt. Man könnte dieses `std::future<void>`-Objekt verwenden, um mit seiner Hilfe (Methode `get`) Resultate vom Thread aus dem Thread
+    zum Erzeuger des Threads zu transportieren. In dieser Fallstudie habe ich aber einen anderen Weg gewählt,
+    die Threads legen ihre Resultate in thread-globalen Variablen ab, die via `std::atomic<T>`&ndash;Hüllen thread-sicher arbeiten.
+    Wozu ist es dann überhaupt erforderlich, den Rückgabewert von `std::async` wegzuspeichern?
+    Man könnte den Rückgabewert doch einfach ignorieren? Weit gefehlt, dem ist nicht so!
+    Jedes `std::future<void>`-Objekt besitzt einen Destruktor, der auf das Ende des beteiligten Threads wartet!
+    Ignoriert man dieses Objekt im Programm, so ist es zur Laufzeit dennoch präsent &ndash; in diesem Fall als
+    anonymes temporäres Objekt. Dies wiederum bedeutet, dass am Ende des Blocks (Zeile 20) der Destruktor dieses Objekts aufgerufen wird.
+    Die mittels `std::async` erzeugten Threads würden auf diese Weise alle sequentiell ausgeführt werden!
 
     Natürlich kann man trotzdem einen Ansatz wählen, der ohne `std::future<void>`-Objekte auskommt.
     In diesem Fall muss man aber auch die `std::async`-Funktion umgehen,
-    eine Vorgehensweise mit `std::thread`-Objekten wäre dann das Mittel der Wahl, 
-    siehe hierzu die Methode `calcPrimesUsingThread` in den Zeilen 26 bis 45 von [Listing 2].
+    eine Vorgehensweise mit `std::thread`-Objekten wäre dann das Mittel der Wahl. 
+    Siehe hierzu die Methode `calcPrimesUsingThread` in den Zeilen 26 bis 45 von [Listing 2].
 
   * Nun gehen wir näher auf Methode `calcPrimesHelperEx` (Zeilen 96 bis 134) ein.
     Sie wird im Kontext eines Threads ausgeführt und sucht Primzahlen. Gefundene Primzahlen legt sie in einem 
@@ -468,18 +478,19 @@ std::merge(
 );
 ```
 
-Mit der `std::swap`-Funktion vertausche ich den Inhalt zweier Objekt auf Basis der Verschiebesemantik.
+Mit der `std::swap`-Funktion vertausche ich den Inhalt zweier Objekt auf Basis der *Verschiebesemantik*.
 Ich vermeide es folglich, auf diese Weise das schon vorhandene Resultatobjekt (`m_primes`) zu kopieren!
 Nun kann der `std::merge`-Algorithmus auf den schon vorhandenen Ergebnissen (`copy`) und den neuen Ergebnissen (`primes`)
 eine neues, vermengtes Resultatobjekt (`m_primes`) erstellen &ndash; und dies alles ohne unnötige Kopieraktivitäten!
 
 Und noch ein Hinweis: Wenn Sie die Beschreibung des `std::merge`-Algorithmus genau gelesen haben, werden Sie festgestellt haben,
 dass die zu vermengenden Vektoren aufsteigend sortiert sein müssen. Vom schon vorhandene Resultatobjekt kann man
-dies vielleicht voraussetzen, aber wie sieht es mit dem lokalen `std::vector<size_t>`-Objekt aus?
-Dieses wird sukzessive mit `push_back`-Methodenaufrufen erstellt, die wiederum einen Zahlenbereich in aufsteigender Sortierung
-durchlaufen: Der lokale Resultatvektor liegt also auf Grund seiner Konstruktion automatisch sortiert vor.
+dies vielleicht voraussetzen, aber wie sieht es mit dem lokalen `std::vector<size_t>`-Objekt `primes` aus?
+Dieses wird sukzessive mit `push_back`-Methodenaufrufen konstruiert,
+die sich aus der Traversierung eines Zahlenbereichs in aufsteigender Sortierung ergeben:
+Der lokale Resultatvektor liegt also auf Grund seiner Konstruktion automatisch sortiert vor.
 
-Nun kömmem wir ein `PrimeNumberCalculator`-Objekt bei der Arbeit betrachten:
+Nun können wir ein `PrimeNumberCalculator`-Objekt bei der Arbeit betrachten:
 
 ```cpp
 PrimeNumberCalculator calculator;
@@ -545,8 +556,8 @@ From 2 to 1000: found 168 prime numbers.
 From 2 to 1000000: found 78498 prime numbers.
 ```
 
-Die Zahl in den eckigen Klammern ist die Thread-ID des jeweiligen Threads, der für die Ausgabe verantwortlich ist.
-Wenn wir die Primzahlen selbst berechnen wollen, müssen wir die Wertebereiche etwas kleiner wählen:
+Die Zahlen in den eckigen Klammern sind Thread-IDs der jeweiligen Threads, die für die Ausgabe verantwortlich sind.
+Wenn wir die Primzahlen selbst berechnen wollen, sollten wir die Wertebereiche etwas kleiner wählen:
 
 ```cpp
 PrimeNumberCalculator calculator;
@@ -598,6 +609,35 @@ From 2 to 1000: found 168 prime numbers.
   829   839   853   857   859   863   877   881   883   887   907   911   919   929   937   941
   947   953   967   971   977   983   991   997
 ```
+
+# There&lsquo;s much more
+
+Ich habe es dieses Mal unterlassen, die Zeiten zu messen, die mein Programm bei der Primzahlensuche benötigt.
+Dies hatte auch einen guten Grund, den der von mir verwendete klassische Primzahlentest kommt bei größeren Zahlen
+doch ganz gehörig ins Schleudern.
+Abhilfe kann hier ein Verfahren schaffen, das von drei indischen Wissenschaftlern
+*Manindra Agrawal*, *Neeraj Kayal* und *Nitin Saxena* vom *Indian Institute of Technology* in Kanpur entdeckt wurde:
+
+> Der **AKS**-Primzahltest (auch bekannt unter dem Namen **Agrawal-Kayal-Saxena-Primzahltest**) ist ein deterministischer Algorithmus,
+> der für eine natürliche Zahl in polynomieller Laufzeit feststellt, ob sie prim ist oder nicht.
+
+In [AKS-Primzahltest](https://www.biancahoegel.de/mathe/verfahr/aks-primzahltest.html)
+finden Sie für diesen Algorithmus eine Notation in Pseudo-Code vor.
+
+Wer jetzt seitenweise komplizierte Ausdrücke oder mathematische Formeln vermutet,
+wird überrascht sein, wie einfach der Algorithmus aufgebaut ist.
+In gerade mal 13 Zeilen präsentiert sich das Werk der Informatiker.
+
+Zwar basiert der Algorithmus, wie andere moderne Suchalgorithmen für Primzahlen auch, auf einer Art *Fermat*-Test,
+doch reduziert er zunächst einmal durch eine trickreiche Kombination vorangehender Proben
+die Zahl der Test-Durchläufe auf ein erträgliches Maß.
+
+Wenn Sie eine C++-Implementierung erstellt haben, lassen Sie mich es doch wissen:
+Ich freue mich über jede Zusendung. Und gleich noch eine Starthilfe vorweg:
+Möglicherweise, oder eigentlich ganz sicher, werden die zu untersuchenden Primzahlen nicht mehr durch `size_t`-Variablen darstellbar sein.
+Sehr große natürliche Zahlen, so wie sich durch `BigInteger`-Objekte aus der Fallstudie
+[Exakte Arithmetik ganzer Zahlen]({{< ref "/post/2021-04-10-biginteger" >}})
+dargestellt werden, könnten Unterstützung leisten :)
 
 <!-- Links Definitions -->
 
