@@ -4,61 +4,24 @@
 
 #include <iostream>
 #include <vector>
-#include <atomic>
-#include <mutex> 
 
-#include "PrimeNumberCalculator.h"
+#include "GrayCodeCalculator.h"
 
 void Test_01()
 {
-    PrimeNumberCalculator calculator;
-    calculator.minimum(2);
-    calculator.maximum(100);
-    calculator.threadCount(2);
-    calculator.calcPrimes();
+    //GrayCodeCalculator calc;
+    std::vector<std::vector<bool>> codes = GrayCodeCalculator::calculate(5);
 
-    calculator.minimum(2);
-    calculator.maximum(1'000);
-    calculator.threadCount(4);
-    calculator.calcPrimes();
 
-    calculator.minimum(2);
-    calculator.maximum(1'000'000);
-    calculator.threadCount(12);
-    calculator.calcPrimes();
-}
+    std::cout << codes.size() << " 3-Bit-Gray-Codes found:" << std::endl;
 
-void Test_02()
-{
-    PrimeNumberCalculator calculator;
-    calculator.minimum(2);
-    calculator.maximum(100);
-    calculator.threadCount(2);
-    calculator.calcPrimesUsingThread();
+    GrayCodeCalculator::print(codes);
 
-    calculator.minimum(2);
-    calculator.maximum(1'000);
-    calculator.threadCount(4);
-    calculator.calcPrimesUsingThread();
 
-    calculator.minimum(2);
-    calculator.maximum(1'000'000);
-    calculator.threadCount(12);
-    calculator.calcPrimesUsingThread();
-}
-
-void Test_03()
-{
-    PrimeNumberCalculator calculator;
-    calculator.minimum(2);
-    calculator.maximum(100);
-    calculator.threadCount(4);
-    calculator.calcPrimesEx();
-
-    calculator.minimum(2);
-    calculator.maximum(1'000);
-    calculator.threadCount(4);
-    calculator.calcPrimesEx();
+    //calc.SetLength(5);
+    //codes = calc.Calculate();
+    //cout << calc.GetLength() << "-Bit-Gray-Code:" << endl;
+    //cout << codes << endl;
 }
 
 // =====================================================================================

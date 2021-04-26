@@ -3,213 +3,87 @@
 // =====================================================================================
 
 #include <iostream>
-#include <iomanip>
-#include <sstream>
+//#include <iomanip>
+//#include <sstream>
 #include <vector>
-#include <thread>
-#include <future>
-#include <atomic>
-#include <latch>
-#include <mutex> 
+#include <list>
+//#include <thread>
+//#include <future>
+//#include <atomic>
+//#include <latch>
+#include <algorithm> 
 
-#include "PrimeNumberCalculator.h"
+#include "GrayCodeCalculator.h"
 
-void PrimeNumberCalculator::calcPrimes()
+std::vector<std::vector<bool>> GrayCodeCalculator::calculate(size_t length)
 {
-    std::latch done{ m_threadCount };
-    std::vector<std::future<void>> tasks(m_threadCount);
-    m_next = m_minimum;
-    m_count = 0;
-
-    auto worker = [&]() {
-        calcPrimesHelper();
-        done.count_down();
-    };
-
-    for (size_t i{}; i != m_threadCount; ++i) {
-
-        std::future<void> future{
-            std::async(std::launch::async, worker)
-        };
-
-        tasks.push_back(std::move(future));
+    if (length == 1) {
+        return calculateRankOne();
     }
+    else {
+        std::vector<std::vector<bool>> tmp = calculate(length - 1);
 
-    done.wait();
-    printResult(m_count);
+        // allocate a new Gray Code list - twice a large
+        // TO BE DONE
+        // std::vector<std::vector<bool>> result(2 * tmp.size());
+        std::vector<std::vector<bool>> result;
+
+        // copy old entries ...
+        // std::for_each einbauen !!!!!
+        for (int i = 0; i < tmp.size(); i++) {
+            // ... and prefix old entry with '0'
+            std::vector<bool> v = tmp[i];
+            std::vector<bool> ex = v;
+            ex.insert(ex.begin(), false);
+            result.push_back(ex);
+        }
+
+        // mirror old entries ...
+        for (size_t i = tmp.size() - 1; i != (size_t)-1; --i) {
+            // ... and prefix old entry with '1'
+            std::vector<bool> v = tmp[i];
+            std::vector<bool> ex = v;
+            ex.insert(ex.begin(), true);
+            result.push_back(ex);
+        }
+
+        return result;
+    }
 }
 
-void PrimeNumberCalculator::calcPrimesUsingThread()
+std::vector<std::vector<bool>> GrayCodeCalculator::calculateRankOne()
 {
-    std::latch done{ m_threadCount };
-    m_next = m_minimum;
-    m_count = 0;
+    std::vector<std::vector<bool>> list;
 
-    for (size_t i{}; i != m_threadCount; ++i) {
+    // TODO: emplace back in list ?!?!?! Geht das ???
+    std::vector<bool> v0(1);
+    v0[0] = false;
+    list.push_back(std::move(v0));
 
-        std::thread t{
-            [&]() {
-                calcPrimesHelper();
-                done.count_down();
+    std::vector<bool> v1(1);
+    v1[0] = true;
+    list.push_back(std::move(v1));
+
+    // // TODO: list mit initialisierungs liste erstellen ....
+
+    return list;
+}
+
+void GrayCodeCalculator::print(std::vector<std::vector<bool>> result)
+{
+    std::for_each(std::begin(result), std::end(result), [](std::vector<bool> code) {
+        
+        std::for_each(std::begin(code), std::end(code), [](bool bit) {
+
+            std::cout << bit;
+
             }
-        };
-        t.detach();
-    }
-
-    done.wait();
-    printResult(m_count);
-}
-
-void PrimeNumberCalculator::calcPrimesEx()
-{
-    std::latch done{ m_threadCount };
-    std::vector<std::future<void>> tasks(m_threadCount);
-    m_next = m_minimum;
-    m_count = 0;
-    m_primes.clear();
-
-    auto worker = [&]() {
-        calcPrimesHelperEx();
-        done.count_down();
-    };
-
-    for (size_t i{}; i != m_threadCount; ++i) {
-
-        std::future<void> future{
-            std::async(std::launch::async, worker)
-        };
-
-        tasks.push_back(std::move(future));
-    }
-
-    done.wait();
-    printResult(m_primes.size());
-}
-
-// =====================================================================================
-// helpers
-
-void PrimeNumberCalculator::calcPrimesHelper()
-{
-    printHeader();
-
-    size_t max{ m_maximum };  // upper prime number limit
-    size_t next{ m_next++ };  // next prime number candidate
-    size_t count{};           // thread-local counter - just for statistics
-
-    while (next < max) {
-
-        // test if candidate being prime 
-        if (isPrime(next)) {
-            ++m_count;  // atomic increment
-            ++count;
-        }
-
-        // retrieve next prime number candidate
-        next = m_next++;
-    }
-
-    printFooter(count);
-}
-
-void PrimeNumberCalculator::calcPrimesHelperEx()
-{
-    printHeader();
-
-    size_t max{ m_maximum };  // upper prime number limit
-    size_t next{ m_next++ };  // next prime number candidate
-    std::vector<size_t> primes;  // thread-local prime numbers container
-
-    while (next < max) {
-
-        // test if candidate being prime 
-        if (isPrime(next)) {
-            primes.push_back(next);
-        }
-
-        // retrieve next prime number candidate
-        next = m_next++;
-    }
-
-    if (primes.size() != 0) 
-    {
-        std::scoped_lock<std::mutex> lock{ m_mutex };
-
-        std::vector<size_t> copy;
-
-        std::swap(copy, m_primes);
-
-        // no inplace algorithm
-        std::merge(
-            copy.begin(), 
-            copy.end(),
-            primes.begin(), 
-            primes.end(), 
-            std::back_inserter(m_primes)
         );
-    }
 
-    printFooter(primes.size());
-}
+        std::cout << std::endl;
 
-bool PrimeNumberCalculator::isPrime(size_t number)
-{
-    // the smallest prime number is 2
-    if (number <= 2) {
-        return number == 2;
-    }
-
-    // even numbers other than 2 are not prime
-    if (number % 2 == 0) {
-        return false;
-    }
-
-    // check odd divisors from 3 to the square root of the number
-    size_t end{ static_cast<size_t>(ceil(std::sqrt(number))) };
-    for (size_t i{ 3 }; i <= end; i += 2) {
-        if (number % i == 0) {
-            return false;
         }
-    }
-
-    // found prime number
-    return true;
-}
-
-void PrimeNumberCalculator::printResult(size_t count)
-{
-    std::cout 
-        << "From " << m_minimum << " to " << m_maximum << ": found " 
-        << count << " prime numbers." << std::endl;
-
-    if (!m_primes.empty()) {
-        for (int columns{}; size_t prime : m_primes) {
-            std::cout << std::setw(5) << std::right << prime << " ";
-            if (++columns % 16 == 0) {
-                std::cout << std::endl;
-            }
-        };
-    }
-    std::cout << std::endl;
-}
-
-void PrimeNumberCalculator::printHeader()
-{
-    std::stringstream ss;
-    std::thread::id currentTID{ std::this_thread::get_id() };
-    ss << "[" << std::setw(5) << std::right 
-       << currentTID << "]: starting ..." << std::endl;
-    std::cout << ss.str();
-    ss.str("");
-}
-
-void PrimeNumberCalculator::printFooter(size_t count)
-{
-    std::stringstream ss;
-    std::thread::id currentTID{ std::this_thread::get_id() };
-    ss << "[" << std::setw(5) << std::right << currentTID 
-       << "]: found " << count << '.' << std::endl;
-    std::cout << ss.str();
+    );
 }
 
 // =====================================================================================
