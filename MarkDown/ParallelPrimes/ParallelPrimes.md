@@ -391,18 +391,20 @@ siehe hierzu gleich Zeile 3 in [Listing 2]:
 178: {
 179:     std::stringstream ss;
 180:     std::thread::id currentTID{ std::this_thread::get_id() };
-181:     ss << "[" << std::setw(5) << std::right << currentTID << "]: starting ..." << std::endl;
-182:     std::cout << ss.str();
-183:     ss.str("");
-184: }
-185: 
-186: void PrimeNumberCalculator::printFooter(size_t count)
-187: {
-188:     std::stringstream ss;
-189:     std::thread::id currentTID{ std::this_thread::get_id() };
-190:     ss << "[" << std::setw(5) << std::right << currentTID << "]: found " << count << '.' << std::endl;
-191:     std::cout << ss.str();
-192: }
+181:     ss << "[" << std::setw(5) << std::right 
+182:        << currentTID << "]: starting ..." << std::endl;
+183:     std::cout << ss.str();
+184:     ss.str("");
+185: }
+186: 
+187: void PrimeNumberCalculator::printFooter(size_t count)
+188: {
+189:     std::stringstream ss;
+190:     std::thread::id currentTID{ std::this_thread::get_id() };
+191:     ss << "[" << std::setw(5) << std::right << currentTID 
+192:        << "]: found " << count << '.' << std::endl;
+193:     std::cout << ss.str();
+194: }
 ```
 
 *Listing* 2: Klasse `PrimeNumberCalculator`: Implementierung.

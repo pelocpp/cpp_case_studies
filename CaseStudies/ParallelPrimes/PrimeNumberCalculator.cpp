@@ -197,7 +197,8 @@ void PrimeNumberCalculator::printHeader()
 {
     std::stringstream ss;
     std::thread::id currentTID{ std::this_thread::get_id() };
-    ss << "[" << std::setw(5) << std::right << currentTID << "]: starting ..." << std::endl;
+    ss << "[" << std::setw(5) << std::right 
+       << currentTID << "]: starting ..." << std::endl;
     std::cout << ss.str();
     ss.str("");
 }
@@ -206,7 +207,8 @@ void PrimeNumberCalculator::printFooter(size_t count)
 {
     std::stringstream ss;
     std::thread::id currentTID{ std::this_thread::get_id() };
-    ss << "[" << std::setw(5) << std::right << currentTID << "]: found " << count << '.' << std::endl;
+    ss << "[" << std::setw(5) << std::right << currentTID 
+       << "]: found " << count << '.' << std::endl;
     std::cout << ss.str();
 }
 
