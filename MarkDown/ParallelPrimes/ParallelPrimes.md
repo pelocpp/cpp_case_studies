@@ -610,7 +610,7 @@ From 2 to 1000: found 168 prime numbers.
   947   953   967   971   977   983   991   997
 ```
 
-# There&lsquo;s much more
+# There&lsquo;s more
 
 Ich habe es dieses Mal unterlassen, die Zeiten zu messen, die mein Programm bei der Primzahlensuche benötigt.
 Dies hatte auch einen guten Grund, den der von mir verwendete klassische Primzahlentest kommt bei größeren Zahlen

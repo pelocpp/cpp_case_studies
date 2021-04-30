@@ -4,13 +4,17 @@
 
 #include <iostream>
 #include <list>
-#include <algorithm> 
+#include <algorithm>
+#include <stdexcept>
 
 #include "GrayCodeCalculator.h"
 
 std::list<std::list<bool>> GrayCodeCalculator::calculate(size_t length)
 {
-    if (length == 1) {
+    if (length == 0) {
+        throw std::invalid_argument("illegal length argument");
+    }
+    else if (length == 1) {
         return calculateRankOne();
     }
     else {
