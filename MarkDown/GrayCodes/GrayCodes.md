@@ -40,7 +40,7 @@ In [Abbildung 1] wird diese Eigenschaft am Beispiel des 4-Bit-Gray-Codes demonst
 
 ###### {#abbildung_1_gray_codes_four_bits}
 
-{{< figure src="/img/graycodes/GrayCodes01.png" width="80%" >}}
+{{< figure src="/img/graycodes/GrayCodes01.png" width="50%" >}}
 
 *Abbildung* 1: 4-Bit-Gray-Code.
 
