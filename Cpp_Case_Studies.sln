@@ -133,6 +133,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GrayCodes", "GrayCodes", "{685A8B16-4CF8-4AED-AAD8-097CCDC7D7EC}"
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\GrayCodes\GrayCodes.md = MarkDown\GrayCodes\GrayCodes.md
+		MarkDown\GrayCodes\GrayCodes01.png = MarkDown\GrayCodes\GrayCodes01.png
+		MarkDown\GrayCodes\GrayCodes02_Construction.png = MarkDown\GrayCodes\GrayCodes02_Construction.png
 	EndProjectSection
 EndProject
 Global

@@ -486,13 +486,18 @@ um das vierte Eulersche Problem zu lösen:
 01: class PalindromCalculator
 02: {
 03: public:
-04:     static std::tuple<std::optional<Number>, Number, size_t>
-05:         calcPalindrom(const Number&, size_t);
-06: 
-07:     static std::tuple<size_t, size_t, size_t> forthEulerProblem();
-08: };
-
+04:     PalindromCalculator() = delete;
+05: 
+06:     static std::tuple<std::optional<Number>, Number, size_t>
+07:         calcPalindrom(const Number&, size_t);
+08: 
+09:     static std::tuple<size_t, size_t, size_t> forthEulerProblem();
+10: };
 ```
+
+Ein Hinweis zu Zeile 4 von [Listing 3]: Da wir von der Klasse  `PalindromCalculator` keine Objekte anlegen wollen,
+fügen wir in die Klassendeklaration einen Hinweis ein (Schlüsselwort `delete` in Zeile 4)`, der zum Ausdruck bringt,
+dass der Standardkonstruktor dieser Klasse nicht zur Verfügung steht.
 
 *Listing* 3: Klasse `PalindromCalculator`: Definition.
 

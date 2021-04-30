@@ -3,25 +3,22 @@
 // =====================================================================================
 
 #include <iostream>
-#include <vector>
+#include <list>
 
 #include "GrayCodeCalculator.h"
 
 void Test_01()
 {
-    //GrayCodeCalculator calc;
-    std::vector<std::vector<bool>> codes = GrayCodeCalculator::calculate(5);
-
-
+    // testing 3-Bit-Gray-Codes
+    std::list<std::list<bool>> codes = GrayCodeCalculator::calculate(3);
     std::cout << codes.size() << " 3-Bit-Gray-Codes found:" << std::endl;
-
     GrayCodeCalculator::print(codes);
+    std::cout << std::endl;
 
-
-    //calc.SetLength(5);
-    //codes = calc.Calculate();
-    //cout << calc.GetLength() << "-Bit-Gray-Code:" << endl;
-    //cout << codes << endl;
+    // testing 5-Bit-Gray-Codes
+    codes = GrayCodeCalculator::calculate(5);
+    std::cout << codes.size() << " 5-Bit-Gray-Codes found:" << std::endl;
+    GrayCodeCalculator::print(codes);
 }
 
 // =====================================================================================

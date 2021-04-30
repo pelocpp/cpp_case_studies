@@ -7,6 +7,8 @@
 class PalindromCalculator
 {
 public:
+    PalindromCalculator() = delete;
+
     static std::tuple<std::optional<Number>, Number, size_t>
         calcPalindrom(const Number&, size_t);
 

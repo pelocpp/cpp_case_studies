@@ -8,18 +8,14 @@ class GrayCodeCalculator
 {
 public:
     // c'tors
-    // TODO: Dies auch bei den Palindromen nachziehen !!!!!!!!!!!!!!!!!!
     GrayCodeCalculator() = delete;
 
     // public interface
-    static std::vector<std::vector<bool>> calculate(size_t);
-    static void print(std::vector<std::vector<bool>>);
+    static std::list<std::list<bool>> calculate(size_t);
+    static void print(std::list<std::list<bool>>);
 
 private:
- //   std::vector<std::vector<bool>> calculate(size_t length);
-    static std::vector<std::vector<bool>> calculateRankOne();
-
-
+    static std::list<std::list<bool>> calculateRankOne();
 };
 
 // =====================================================================================

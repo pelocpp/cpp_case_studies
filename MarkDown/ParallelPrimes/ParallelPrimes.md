@@ -193,6 +193,8 @@ der Klasse `PrimeNumberCalculator` vor:
 43: };
 ```
 
+*Listing* 1: Klasse `PrimeNumberCalculator`: Definition.
+
 Nicht alle Instanzvariablen der Klasse `PrimeNumberCalculator` aus [Listing 1] wurden bislang angesprochen:
 `m_count` (Zeile 13) und `m_primes` (Zeile 15) dienen dem Zweck, Resultate während der (quasi-)parallelen Berechnung
 aufzunehmen. Deshalb ist `m_count` mit einem Hüllenobjekt `std::atomic<size_t>` definiert,
@@ -205,8 +207,6 @@ der Klasse `std::latch` vorzeichenbehaftet sein, damit sind wir bei `ptrdiff_t` 
 Sie lassen sich nur einmal initialisieren und damit auch nicht wiederverwenden,
 aus diesen Gründen sind sie als lokale Variablen in Methoden einfacher hantierbar,
 siehe hierzu gleich Zeile 3 in [Listing 2]:
-
-*Listing* 1: Klasse `PrimeNumberCalculator`: Definition.
 
 ###### {#listing_02_primenumbercalculator_impl}
 
