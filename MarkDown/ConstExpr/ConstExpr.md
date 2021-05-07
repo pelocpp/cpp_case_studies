@@ -23,7 +23,7 @@ Wir stellen einige signifikante Beispiele vor:
 Bei Deklaration einer Variablen mit dem Schlüsselwort `constexpr` wird diese zu einem konstanten Ausdruck:
 
 ```cpp
-constexpr double Pi = 3.14159265359;
+constexpr double Pi{ 3.14159265359 };
 ```
 
 Für Variablen, die mit `constexpr` definiert sind, gelten folgende Regeln, die mehr oder minder naheliegend oder einleuchtend sind:
@@ -68,8 +68,8 @@ zur Übersetzungszeit unterstützt:
 16:     // operators
 17:     friend constexpr Complex operator+(const Complex& x, const Complex& y)
 18:     {
-19:         double real = x.real() + y.real();
-20:         double imag = x.imag() + y.imag();
+19:         double real{ x.real() + y.real() };
+20:         double imag{ x.imag() + y.imag() };
 21:         return Complex{ real, imag };
 22:     }
 23: };
@@ -85,9 +85,9 @@ die vom Übersetzer erzeugt wurden:
 02: constexpr Complex c1{ 1.0, 2.0 };
 03: constexpr Complex c2{ 3.0, 3.0 };
 04: 
-05: constexpr double r1 = c1.real();
-06: constexpr Complex c3 = c1 + c2;
-07: constexpr double r2 = c3.real();
+05: constexpr double r1{ c1.real() };
+06: constexpr Complex c3{ c1 + c2 };
+07: constexpr double r2{ c3.real() };
 08:         
 09: std::cout << "Real: " << c3.real() << std::endl;
 10: std::cout << "Imag: " << c3.imag() << std::endl;
@@ -152,9 +152,9 @@ wir betrachten das letzte Beispiel einfach mit einer `Complex<double>`-Klasse:
 27:     constexpr Complex<double> c1{ 10.0, 20.0 };
 28:     constexpr Complex<double> c2{ 30.0, 30.0 };
 29: 
-30:     constexpr double r1 = c1.real();
-31:     constexpr Complex<double> c3 = c1 + c2;
-32:     constexpr double r2 = c3.real();
+30:     constexpr double r1{ c1.real() };
+31:     constexpr Complex<double> c3{ c1 + c2 };
+32:     constexpr double r2{ c3.real() };
 33: 
 34:     std::cout << "Real: " << c3.real() << std::endl;
 35:     std::cout << "Imag: " << c3.imag() << std::endl;
@@ -192,8 +192,8 @@ Damit sind wir bei C++-Funktionen angekommen, die der Übersetzer (auf dem Entwic
 und damit nicht auf dem Zielsystem, für das Maschinencode generiert wird.
 
 ```cpp
-01: constexpr size_t TableSize = 5;
-02: constexpr size_t Factor = 4;
+01: constexpr size_t TableSize{ 5 };
+02: constexpr size_t Factor{ 4 };
 03: 
 04: template<size_t F>
 05: constexpr auto powerTable = [] {
@@ -217,14 +217,20 @@ und damit nicht auf dem Zielsystem, für das Maschinencode generiert wird.
 23: 
 24: constexpr size_t sumUpPowerTable()
 25: {
-26:     size_t total{};
-27: 
-28:     for (size_t i{}; i != TableSize; ++i) {
-29:         total += powerTable<Factor>[i];
-30:     }
+26:     static_assert (powerTable<Factor>[0] == 1, "Value should be 1");
+27:     static_assert (powerTable<Factor>[1] == 16, "Value should be 16");
+28:     static_assert (powerTable<Factor>[2] == 81, "Value should be 81");
+29:     static_assert (powerTable<Factor>[3] == 256, "Value should be 256");
+30:     static_assert (powerTable<Factor>[4] == 625, "Value should be 625");
 31: 
-32:     return total;
-33: }
+32:     size_t total{};
+33: 
+34:     for (size_t i{}; i != TableSize; ++i) {
+35:         total += powerTable<Factor>[i];
+36:     }
+37: 
+38:     return total;
+39: }
 ```
 
 *Listing* 4: `constexpr`-Funktionen und -Lambda-Funktionen in der Praxis.
@@ -237,7 +243,7 @@ bei Spezialisierung (mit einem Faktor) aufgerufen wird: Der Bezeichner `powerTab
 steht also für das `std::array`-Objekt, dass von der Lambda-Funktion berechnet und zurückgeliefert wird. 
 
 Wo wird die Lambda-Templatefunktion spezialisiert und aufgerufen?
-Einen Aufruf finden wir in Zeile 29 vor: Spezialisiert mit einem `Factor` gleich 4 wird auf den Rückgabewert
+Einen Aufruf finden wir in Zeile 35 vor: Spezialisiert mit einem `Factor` gleich 4 wird auf den Rückgabewert
 &ndash; ein `std::array`-Objekt &ndash; mit dem Index-Operator `[]` auf die einzelnen Einträge des Arrays zugegriffen.
 Es ist also der Index-Operator `[]` ebenfalls eine `constexpr`-Funktion, um dies hervorzuheben.
 
@@ -327,16 +333,15 @@ Wir stellen gleich die Lösung vor, es folgen zahlreiche Hinweise:
 39: 
 40: void testCollatz()
 41: {
-42:     auto seq = makeCollatzSequence<13>{};
-43:     //CollatzSequence seq2 = makeCollatzSequence<9>{};
-44:     auto sequence = seq.elements;
+42:     auto seq1{ makeCollatzSequence<13>{} };
+43:     CollatzSequence seq2{ makeCollatzSequence<9>{} };
+44:     auto sequence{ seq1.elements };
 45: 
 46:     std::cout << "Size: " << sequence.size() << std::endl;
-47: 
-48:     std::for_each(std::rbegin(sequence), std::rend(sequence), [](const int elem) {
-49:         std::cout << "   Element: " << elem << std::endl;
-50:     });
-51: }
+47:     std::for_each(std::rbegin(sequence), std::rend(sequence), [](const int elem) {
+48:         std::cout << "   Element: " << elem << std::endl;
+49:     });
+50: }
 ```
 
 *Listing* 5: Initialisierung eines `std::array`-Objekts mit variadischen Templates.
@@ -519,16 +524,15 @@ Wir bleiben der Einfachheit halber bei *Collatz*-Folgen, berechnen diese aber nu
 13:     static constexpr std::array<size_t, sizeof ... (D)> table = { D... };
 14: };
 15: 
-16: auto squaresTable = Helper<13>::table;
+16: auto squaresTable{ Helper<13>::table };
 17: 
 18: void testCollatzInheritance()
 19: {
 20:     std::cout << "Size: " << squaresTable.size() << std::endl;
-21: 
-22:     for (size_t elem : squaresTable) {
-23:         std::cout << "   Element: " << elem << std::endl;
-24:     }
-25: }
+21:     for (size_t elem : squaresTable) {
+22:         std::cout << "   Element: " << elem << std::endl;
+23:     }
+24: }
 ```
 
 *Listing* 6: Initialisierung eines `std::array`-Objekts mit variadischen Templates und dem Prinzip der Vererbung.

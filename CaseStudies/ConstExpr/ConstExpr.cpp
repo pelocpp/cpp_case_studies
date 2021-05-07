@@ -8,6 +8,8 @@
 
 namespace ConstExprComplex {
 
+    constexpr double Pi{ 3.14159265359 };
+
     struct Complex
     {
     private:
@@ -26,8 +28,8 @@ namespace ConstExprComplex {
         // operators
         friend constexpr Complex operator+(const Complex& x, const Complex& y)
         {
-            double real = x.real() + y.real();
-            double imag = x.imag() + y.imag();
+            double real{ x.real() + y.real() };
+            double imag{ x.imag() + y.imag() };
             return Complex{ real, imag };
         }
     };
@@ -38,9 +40,9 @@ namespace ConstExprComplex {
         constexpr Complex c1{ 1.0, 2.0 };
         constexpr Complex c2{ 3.0, 3.0 };
 
-        constexpr double r1 = c1.real();
-        constexpr Complex c3 = c1 + c2;
-        constexpr double r2 = c3.real();
+        constexpr double r1{ c1.real() };
+        constexpr Complex c3{ c1 + c2 };
+        constexpr double r2{ c3.real() };
         
         std::cout << "Real: " << c3.real() << std::endl;
         std::cout << "Imag: " << c3.imag() << std::endl;
@@ -83,9 +85,9 @@ namespace ConstExprComplexTemplate {
         constexpr Complex<double> c1{ 10.0, 20.0 };
         constexpr Complex<double> c2{ 30.0, 30.0 };
 
-        constexpr double r1 = c1.real();
-        constexpr Complex<double> c3 = c1 + c2;
-        constexpr double r2 = c3.real();
+        constexpr double r1{ c1.real() };
+        constexpr Complex<double> c3{ c1 + c2 };
+        constexpr double r2{ c3.real() };
 
         std::cout << "Real: " << c3.real() << std::endl;
         std::cout << "Imag: " << c3.imag() << std::endl;
@@ -99,8 +101,8 @@ namespace ConstExprComplexTemplate {
 
 namespace ConstExprPow {
 
-    constexpr size_t TableSize = 5;
-    constexpr size_t Factor = 4;
+    constexpr size_t TableSize{ 5 };
+    constexpr size_t Factor{ 4 };
 
     template<size_t F>
     constexpr auto powerTable = [] {
@@ -124,11 +126,11 @@ namespace ConstExprPow {
 
     constexpr size_t sumUpPowerTable()
     {
-        static_assert (powerTable<Factor>[0] == 1, "Value should be ");
-        static_assert (powerTable<Factor>[1] == 16, "Value should be ");
-        static_assert (powerTable<Factor>[2] == 81, "Value should be ");
-        static_assert (powerTable<Factor>[3] == 256, "Value should be ");
-        static_assert (powerTable<Factor>[4] == 625, "Value should be ");
+        static_assert (powerTable<Factor>[0] == 1, "Value should be 1");
+        static_assert (powerTable<Factor>[1] == 16, "Value should be 16");
+        static_assert (powerTable<Factor>[2] == 81, "Value should be 81");
+        static_assert (powerTable<Factor>[3] == 256, "Value should be 256");
+        static_assert (powerTable<Factor>[4] == 625, "Value should be 625");
 
         size_t total{};
 
@@ -148,7 +150,7 @@ namespace ConstExprPow {
 
     void testPower_02()
     {
-        for (int index = 0; size_t elem : powerTable<Factor>) {
+        for (int index{}; size_t elem : powerTable<Factor>) {
             std::cout << "    " << ++index << ": " << elem << std::endl;
         }
 
@@ -206,12 +208,11 @@ namespace ConstExprCollatz {
 
     void testCollatz()
     {
-        auto seq1 = makeCollatzSequence<13>{};
-        //CollatzSequence seq2 = makeCollatzSequence<9>{};
-        auto sequence = seq1.elements;
+        auto seq1{ makeCollatzSequence<13>{} };
+        CollatzSequence seq2{ makeCollatzSequence<9>{} };
+        auto sequence{ seq1.elements };
 
         std::cout << "Size: " << sequence.size() << std::endl;
-
         std::for_each(std::rbegin(sequence), std::rend(sequence), [](const int elem) {
             std::cout << "   Element: " << elem << std::endl;
         });
@@ -235,12 +236,11 @@ namespace ConstExprCollatzInheritance {
         static constexpr std::array<size_t, sizeof ... (D)> table = { D... };
     };
 
-    auto squaresTable = Helper<13>::table;
+    auto squaresTable{ Helper<13>::table };
 
     void testCollatzInheritance()
     {
         std::cout << "Size: " << squaresTable.size() << std::endl;
-
         for (size_t elem : squaresTable) {
             std::cout << "   Element: " << elem << std::endl;
         }
