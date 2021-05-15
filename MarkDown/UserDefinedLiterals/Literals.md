@@ -1,9 +1,6 @@
 # Benutzerdefinierte Literale: Übersetzungszeit oder Laufzeit?
 
-## Motivation
-
-Durch Überladen des so genannten Literaloperators `operator""` lassen sich neue Formate 
-für benutzerdefinierte Literale definieren.
+Durch Überladen des so genannten Literaloperators `operator""` lassen sich neue Formate für benutzerdefinierte Literale definieren.
 Diese setzen sich aus einem Standard-Literal und einem benutzerdefinierten Suffix zusammen.
 Damit kann man in einem C++&ndash;Programm beispielsweise schreiben:
 
@@ -12,6 +9,21 @@ Damit kann man in einem C++&ndash;Programm beispielsweise schreiben:
 0xFF00FF_rgb
 10010101_b
 ```
+
+Wie sich benutzerdefinierte Literale in Ihrem Programm definieren lassen und welche Stolperfallen Sie dabei beachten sollten,
+können Sie in dieser Fallstudie nachlesen.
+
+<!--more-->
+
+# Lernziele
+
+  * Operatorliteral `operator""`
+  * &ldquo;Cooked&rdquo;- versus &ldquo;Raw&rdquo;-Form
+  * Schlüsselwort `constexpr`
+  * Anwendung von `static_assert`
+  * Variadische Templates
+
+# Einführung
 
 Es ist offensichtlich, dass benutzerdefinierte Literale die Lesbarkeit des Quellcodes steigern.
 Nicht ganz so offensichtlich ist die Fragestellung, wie mit möglichen Fehlern in benutzerdefinierten Literalen
@@ -25,8 +37,6 @@ dann sind die beiden Literale
 
 offensichtlich falsch. Wir stellen mehrere Ansätze zur Implementierung benutzerdefinierter Literale vor
 und gehen vertiefend auf den Aspekt der Fehlerbehandlung ein.
-
-## Einführung
 
 Wir wollen benutzerdefinierte Literale an Hand von zwei Beispielen betrachten.
 Zum einen wären das natürliche Zahlen im Binärformat, also beispielsweise `1010101_b`,

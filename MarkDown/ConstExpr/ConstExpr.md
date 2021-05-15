@@ -1,4 +1,4 @@
-# Being `constexpr` or not being `constexpr`: Konstante Ausdrücke in C++
+<!-- Being `constexpr` or not being `constexpr`: Konstante Ausdrücke in C++  -->
 
 Die Berechnung von Ausdrücken zur Übersetzungszeit wurde mit in C++&ndash;17 auf ein neues Niveau angehoben.
 Längst haben wir es nicht mehr mit nur konstanten Literalen oder einfachen Ausdrücken, bestehend aus einer Summation oder Multiklikation, zu tun.
@@ -8,6 +8,18 @@ zur Übersetzungszeit ausgeführt bzw. erzeugt werden.
 Von Interesse ist dieser Aspekt in der Anwendung zum Beispiel für die *Embedded Programmierung*, wenn es darum geht, 
 möglichst viele Daten vom Übersetzer berechnen zu lassen, um diese mit Hilfe des Kompilats in das *ROM* (*Read-Only-Memory*)
 einer speziellen Hardware zu packen.
+
+Welche Möglichkeiten sich mit `constexpr` in C++ 17 eröffnen, zeigen wir an einer Reihe von Beispielen in dieser Fallstudie auf.
+
+<!--more-->
+
+# Lernziele
+
+  * Schlüsselwort `constexpr`
+  * Anwendung von `static_assert`
+  * Variadische Templates
+
+# Einführung
 
 Die syntaktischen Einsatzmöglichkeiten konstanter Ausdrücke mit `constexpr` sind sehr vielfältiger Natur.
 Wir stellen einige signifikante Beispiele vor:
@@ -49,6 +61,8 @@ Klassen, deren Objekte zur Übersetzungszeit kreiert werden können,
 Als Beispiel betrachten wir eine Klasse `Complex` für komplexe Zahlen, die Operationen mit komplexen Zahlen 
 zur Übersetzungszeit unterstützt:
 
+###### {#listing_01_constexpr_complex_decl}
+
 ```cpp
 01: struct Complex
 02: {
@@ -80,6 +94,8 @@ zur Übersetzungszeit unterstützt:
 Mit folgenden Code-Fragment können wir die Klasse `Complex` testen und `Complex`-Objekte anlegen,
 die vom Übersetzer erzeugt wurden:
 
+###### {#listing_02_constexpr_complex_test}
+
 ```cpp
 01: constexpr Complex c0{ };
 02: constexpr Complex c1{ 1.0, 2.0 };
@@ -107,11 +123,13 @@ Evaluiert der boolesche Ausdruck zu `false`, wird die Zeichenkette als Fehlermel
 
 Mit einer ruhigen Hand und der Betrachtung von Tooltips kann man die Arbeit des Übersetzers auch von der Entwicklungsumgebung aus betrachten.
 Mit dem *Visual Studio* sieht, um wiederum beim letzten Beispiel zu verweilen,
-das Objekt `c3` so aus:
+das Objekt `c3` so aus ([Abbildung 1]):
 
-<img src="ConstExpr01.png" width="300">
+###### {#abbildung_1_intellisense}
 
-Abbildung 1: Ein `Complex`-Objekt, erzeugt vom Übersetzer.
+{{< figure src="/img/constexpr/ConstExpr01.png" width="50%" >}}
+
+*Abbildung* 1: Ein `Complex`-Objekt, erzeugt vom Übersetzer.
 
 ## Klassentemplate mit `constexpr` Konstruktoren
 
@@ -121,6 +139,8 @@ Sinnvollerweise lassen sich damit `Complex<T>`-Objekte erzeugen, deren Real- und
 dann entweder vom Typ `float` oder `double` ist.
 An der `constexpr`-Thematik gibt es keine Änderungen,
 wir betrachten das letzte Beispiel einfach mit einer `Complex<double>`-Klasse:
+
+###### {#listing_03_constexpr_complex_template_decl}
 
 ```cpp
 01: template <typename T>
@@ -191,6 +211,8 @@ Zahlenwerte aus einem Nachschlagewerk abtippen kann natürlich auch keine Lösung 
 Damit sind wir bei C++-Funktionen angekommen, die der Übersetzer (auf dem Entwicklungsrechner) ausführt,
 und damit nicht auf dem Zielsystem, für das Maschinencode generiert wird.
 
+###### {#listing_04_constexpr_complex_template_test}
+
 ```cpp
 01: constexpr size_t TableSize{ 5 };
 02: constexpr size_t Factor{ 4 };
@@ -257,13 +279,19 @@ Um es an einem Beispiel zu betrachten. Ein Aufruf der `sumUpPowerTable`-Funktion
 und einer Tabellengröße gleich 5 die Summe von 1 + 16 + 81 + 256 + 625 = 979 zurückliefern.
 Diesen (konstanten) Wert müssten wir im OpCode des Programms vorfinden:
 
-In Abbildung XXX &ndash; und bei Bedarf mit dem Calculator &ndash; können wir uns davon überzeugen:
+In [Abbildung 2] &ndash; und bei Bedarf mit dem Calculator &ndash; können wir uns davon überzeugen:
 Der hexadezimale Wert `3D3h` tritt in einer `MOV`-Instruktion auf, der Übersetzer hat tatsächlich alle Berechnungen zur 
 Übersetzungszeit vorgenommen:
 
 ```
 00007FF6F63F2C5A  mov         qword ptr [total],3D3h 
 ```
+
+###### {#abbildung_2_move_instruction}
+
+{{< figure src="/img/constexpr/ConstExpr02.png" width="50%" >}}
+
+*Abbildung* 2: Eine `MOV`-Instruktion mit dem Operanden `3D3h`, berechnet zur Übersetzungszeit.
 
 ## `constexpr`-`std::array`-Objekte, initialisiert mit variadischen Templates 
 
@@ -290,6 +318,8 @@ es kurz an einem Beispiel mit Startwert 13 festzumachen:
 Gesucht ist die Folge der Zahlen 13, 40, 20, 10, 5, 16, 8, 4, 2, 1.
 
 Wir stellen gleich die Lösung vor, es folgen zahlreiche Hinweise:
+
+###### {#listing_05_constexpr_collatz}
 
 ```cpp
 01: constexpr int collatz(int index)
@@ -402,9 +432,15 @@ Size: 9
 ```
 
 Es gibt mehrere Möglichkeiten, um die rekursive Definition von Templateklassen zu verfolgen:
-Die IntelliSense des Visual Stdio ist eine davon:
+Das *IntelliSense*-Feature des Visual Studio ist eine davon:
 
-BILD !!! Abbildung 
+BILD !!! Abbildung
+
+###### {#abbildung_3_recursive_template_definition}
+
+{{< figure src="/img/constexpr/ConstExpr03.png" width="50%" >}}
+
+*Abbildung* 1: XXX.
 
 Mein persönlicher Favorit hingegen ist das Tool [Cpp Insights](https://cppinsights.io/).
 Der Übersichtlichkeit halber habe ich den Output des Tools etwas umformatiert.
@@ -508,6 +544,8 @@ Diese Vorgehensweise kann man auch mittels Vererbung praktizieren.
 Ein Beispiel gefällig?
 Wir bleiben der Einfachheit halber bei *Collatz*-Folgen, berechnen diese aber nun wie folgt:
 
+###### {#listing_06_constexpr_collatz_inheritance}
+
 ```cpp
 01: constexpr int collatz(int index) {
 02:     return (index % 2 == 0) ? index / 2 : index * 3 + 1;
@@ -602,6 +640,8 @@ An die Stelle der *Collatz*-Zahlenfolge werden hier Lookup-Tabellen für CRC8-Ber
 Die Beispiele für `constexpr`-Funktionen und `constexpr`-Lambda-Funktionen sind in diesem Aufsatz erheblich anwendungsbezogener,
 siehe zum Beispiel die beiden Funktionen zur Erstellung und den Zugriff auf CRC8 Lookup Tabellen:
 
+###### {#listing_07_constexpr_crc8}
+
 ```cpp
 01: constexpr uint8_t MY_POLYNOM = 0x07;
 02: constexpr int TABLE_SIZE = 256;
@@ -633,3 +673,18 @@ siehe zum Beispiel die beiden Funktionen zur Erstellung und den Zugriff auf CRC8
 
 *Listing* 7: Erstellung einer CRC8 Lookup Tabelle.
 
+<!-- Links Definitions -->
+
+[Listing 1]: #listing_01_constexpr_complex_decl
+[Listing 2]: #listing_02_constexpr_complex_test
+[Listing 3]: #listing_03_constexpr_complex_template_decl
+[Listing 4]: #listing_04_constexpr_complex_template_test
+[Listing 5]: #listing_05_constexpr_collatz
+[Listing 6]: #listing_06_constexpr_collatz_inheritance
+[Listing 7]: #listing_07_constexpr_crc8
+
+[Abbildung 1]:  #abbildung_1_intellisense
+[Abbildung 2]:  #abbildung_2_move_instruction
+[Abbildung 3]:  #abbildung_3_recursive_template_definition
+
+<!-- End-of-File -->
