@@ -642,6 +642,8 @@ Found palindrom:
 
 Vielleicht finden Sie mit Hilfe dieses Lösungsvorschlags neue Weltrekorde :)
 
+<br/>
+
 <!-- Links Definitions -->
 
 [Tabelle 1]: #tabelle_1_class_number

@@ -625,6 +625,8 @@ Auch kann man sich eine Grundmenge aus Zeichen (`char`) vorstellen.
 Welche Änderungen sind an den beiden Klassen `PartialSet` und `PowerSet` vorzunehmen,
 um die Grundmenge mit unterschiedlichen integralen Datentypen definieren zu können?
 
+<br/>
+
 <!-- Links Definitions -->
 
 [Tabelle 1]: #tabelle_1_class_partialset

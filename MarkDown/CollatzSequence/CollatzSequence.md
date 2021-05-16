@@ -563,6 +563,8 @@ for (int n : view) {
 Sollten Sie mit den neuartigen C++ Konzepten bzgl. *Ranges* und *Concepts* (mit Visual C++)
 bessere Fortschritte erzielen, würde ich mich über eine Nachricht freuen :-)
 
+<br/>
+
 <!-- Links Definitions -->
 
 [Listing 1]: #listing_01_collatziterator_interface

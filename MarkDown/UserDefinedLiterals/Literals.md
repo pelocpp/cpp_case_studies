@@ -1,7 +1,8 @@
-# Benutzerdefinierte Literale: Übersetzungszeit oder Laufzeit?
+<!-- Benutzerdefinierte Literale: Übersetzungszeit oder Laufzeit? -->
 
-Durch Überladen des so genannten Literaloperators `operator""` lassen sich neue Formate für benutzerdefinierte Literale definieren.
-Diese setzen sich aus einem Standard-Literal und einem benutzerdefinierten Suffix zusammen.
+Durch Überladen des so genannten Literaloperators `operator""` lassen sich neue Formate
+für benutzerdefinierte Literale definieren. Diese setzen sich aus einem Standard-Literal
+und einem benutzerdefinierten Suffix zusammen.
 Damit kann man in einem C++&ndash;Programm beispielsweise schreiben:
 
 ```cpp
@@ -66,12 +67,12 @@ Ein &ldquo;Cooked&rdquo;-Literal-Operator `operator"" _km(long double)` besitzt 
 die Form `operator"" _km(const char*)`.
 Stehen beide Varianten zur Verfügung, wird die &ldquo;Cooked&rdquo;-Form bevorzugt. 
 
-In Tabelle 1 finden Sie einen Überblick vor:
+In [Tabelle 1] finden Sie einen Überblick vor:
 
 ###### {#tabelle_1_raw_versus_cooked}
 
 | Beschreibung | Syntax | Beispiel | Signatur Literaloperator |
-| :---- | :---- | :---- | :---- |
+| :---- | :---- | :---- | :-------------------------------- |
 | Zeichen | *Zeichen*_Suffix | `'?'_unit`| `operator"" _unit (char)` |
 | C-Zeichenkette | *Zeichenkette*_Suffix | `"ABCDEFGH"_unit`| `operator"" _unit (const char*, std::size_t)` |
 | Natürliche Zahl (*Raw*-Form) | *Integer*_Suffix | `123_unit` | `operator"" _unit (const char*)` |
@@ -81,13 +82,13 @@ In Tabelle 1 finden Sie einen Überblick vor:
 
 *Tabelle* 1: Möglichkeiten in der Definition des Literaloperators.
 
-*Bemerkung*: Der Rückgabewert des Literaloperators ist in Tabelle 1 mit Absicht weggelassen worden. Es liegt ja gerade in 
+*Bemerkung*: Der Rückgabewert des Literaloperators ist in [Tabelle 1] mit Absicht weggelassen worden. Es liegt ja gerade in 
 der Entscheidung der Implementierung des Literaloperators, auf welchen C++ Standarddatentyp bzw. auf welchen benutzerdefinierten Datentyp
 man das Literal abbilden möchte.
 
-Es folgen einige Hinweise zu Tabelle 1. Der Literaloperator für den Datentyp `char` besitzt die Form &ldquo;*Zeichen*_Suffix&rdquo;.
+Es folgen einige Hinweise zu [Tabelle 1]. Der Literaloperator für den Datentyp `char` besitzt die Form &ldquo;*Zeichen*_Suffix&rdquo;.
 Ein Beispiel dafür ist `'?'_unit`. In diesem Fall versucht der Übersetzer den Literaloperator für `operator"" _unit (char)` aufzurufen.
-Das Zeichen ist in dem konkreten Fall vom Typ `char`, es könnte aber auch `wchar_t`, `char16_t` und `char32_t` zum Zuge kommen.
+Das Zeichen ist in dem konkreten Fall vom Typ `char`, es könnten aber auch `wchar_t`, `char16_t` und `char32_t` zum Zuge kommen.
 
 Die gleichen Datentypen können als auch Basis für C-Zeichenketten verwendet werden,
 in der Tabelle kommt stellvertretend `char` zum Einsatz.
@@ -108,7 +109,9 @@ Andernfalls verwendet er die &ldquo;Cooked&rdquo;-Form.
 
 Wir stellen einen ersten Ansatz
 in der Realisierung eines benutzerdefinierten Literals für Binärformate in
-Listing 1 vor:
+[Listing 1] vor:
+
+###### {#listing_01_literals_binary}
 
 ```cpp
 01: template <typename T>
@@ -161,7 +164,7 @@ Listing 1 vor:
 
 *Listing* 1: &ldquo;Raw&rdquo;- und "Cooked" Version für das Suffix `_b`.
 
-Beide Versionen aus Listing 1 analysieren ein binäres Literal.
+Beide Versionen aus [Listing 1] analysieren ein binäres Literal.
 Die so genannte &ldquo;Cooked&ldquo;-Version bekommt ein `unsigned long long`-Literal übergeben.
 Dieses wird auf Korrektheit überprüft &ndash; nur die Ziffern 0 und 1 sind zulässig &ndash;
 und eine Umwandlung vom binären in das dezimale Format erfolgt.
@@ -198,8 +201,8 @@ Damit sind nun folgende Anweisungen übersetzungsfähig:
 ```
 
 Auf den ersten Blick sieht alles recht gut aus, das Beispielprogramm ist übersetzungsfähig
-und die Resultate sind korrekt. Bei näherer Betrachtung tuen sich allerdings 2 Merkwürdigkeiten &ndash;
-oder um es direkter zu sagen &ndash; Fehlerquellen auf:
+und die Resultate sind korrekt. Bei näherer Betrachtung tuen sich allerdings zwei Merkwürdigkeiten &ndash;
+oder um es direkter zu sagen &ndash; zwei Fehlerquellen auf:
 
 *Beobachtung* 1:
 
@@ -224,7 +227,7 @@ std::array<int, 11011_b> modern_array{};  // Error - doesn't compile
 ```
 
 Es wäre ja geradezu wünschenswert, das auch benutzerdefinierte Literale den Status von *Konstanten* haben, 
-das ist ja gerade der Sinn dieser Übung. Wir müssen aus diesem Grund die in Listing 1 vorgestelle Realisierung
+das ist ja gerade der Sinn dieser Übung. Wir müssen aus diesem Grund die in [Listing 1] vorgestellte Realisierung
 umstellen, das C++ Schlüsselwort `constexpr` ist die Lösung unseres Problems.
 Wenn wir ganz auf die Schnelle beide Operator-Implementierungen um das Schlüsselwort `constexpr` ergänzen,
 erhalten wir für die &ldquo;Raw&rdquo;-Version folgende Fehlermeldung:
@@ -232,10 +235,12 @@ erhalten wir für die &ldquo;Raw&rdquo;-Version folgende Fehlermeldung:
 
 Im Prinzip genommen ist diese Fehlermeldung nicht ganz überraschend:
 Nahezu alle Bibliotheksfunktionen bzw. die Methoden aus der STL sind eben nicht `constexpr` definiert,
-nur mit den reinen Sprachmitteln von C++ &ndash; `if`, `for`, `while`, ..., also Kontrollstrukturen und arithmetische Ausdrücke &ndash;
+nur mit den reinen Sprachmitteln von C++ &ndash; `if`, `for`, `while`, ..., also Kontrollstrukturen und arithmetischen Ausdrücke &ndash;
 lassen sich `constexpr`-taugliche Funktionen realisieren.
-Wir müssen deshalb in der in Listing 1 vorgestellen Realisierung die Bibliotheksfunktion `strlen`
+Wir müssen deshalb in der in [Listing 1] vorgestellten Realisierung die Bibliotheksfunktion `strlen`
 mit einer selbst geschriebenen Funktion `length` austauschen:
+
+###### {#listing_02_literals_binary_redesign}
 
 ```cpp
 01: template <typename T>
@@ -297,9 +302,9 @@ mit einer selbst geschriebenen Funktion `length` austauschen:
 
 *Listing* 2: &ldquo;Raw&rdquo;- und &ldquo;Cooked&rdquo;-Version für das Suffix `_b` als `constexpr` Variante.
 
-Wollen wir uns davon überzeugen, dass die Varianten aus *Listing* 2 zur Übersetzungszeit ausgeführt werden,
-müssen wir zunächst den Testrahmen anpassen! Es genügt nicht einfach, ein benutzerdefiniertes Literal gemaß der neuen 
-Implementierung zu verwenden. Die beteiligte Variable muss ebenfall als `constexpr` gekennzeichnet sein:
+Wollen wir uns davon überzeugen, dass die Varianten aus [Listing 2] zur Übersetzungszeit ausgeführt werden,
+müssen wir zunächst den Testrahmen anpassen! Es genügt nicht einfach, ein benutzerdefiniertes Literal gemäß der neuen 
+Implementierung zu verwenden. Die beteiligte Variable muss ebenfalls als `constexpr` gekennzeichnet sein:
 
 ```cpp
 constexpr size_t i{ 101_b };
@@ -312,7 +317,7 @@ constexpr size_t k{ "1010101"_b };
 std::cout << k << std::endl;
 ```
 
-Die Resultate stimmen mit denen von Listing 1 überein, nur: Wie könnnen wir erkennen oder nachweisen,
+Die Resultate stimmen mit denen von [Listing 1] überein, nur: Wie können wir erkennen oder nachweisen,
 dass die Auswertung der benutzerdefinierten Literale dieses Mal zur Übersetzungszeit erfolgte?
 Werfen wir deshalb einen Blick auf den Maschinencode: 
 Wenn wir im letzten Codefragment das Schlüsselwort  `constexpr` (drei Mal) weglassen,
@@ -373,13 +378,15 @@ constexpr size_t k{ "1234567"_b };
 
 wird nun vom Übersetzer abgewiesen, die Fehlermeldungen lauten *Expression did not evaluate to a constant: failure was caused by evaluating a throw sub-expression*.
 Falsche Literale werden jetzt zur Übersetzungszeit mit entsprechenden Fehlermeldungen erkannt &ndash; siehe dazu
-auch das IntelliSense-Feature der Visual Studio IDE:
+auch das IntelliSense-Feature der Visual Studio IDE in [Abbildung 1]:
 
-<img src="ConstexprLiterals.png" width="600">
+###### {#abbildung_1_literals_compile_time}
 
-Abbildung 1: Auswertung benutzerdefinierter Literale zur Übersetzungszeit.
+{{< figure src="/img/literals/ConstexprLiterals.png" width="80%" >}}
 
-Die folgenden Anweisungen nun ebenfalls übersetzungsfähig:
+*Abbildung* 1: Auswertung benutzerdefinierter Literale zur Übersetzungszeit.
+
+Die folgenden Anweisungen sind nun ebenfalls übersetzungsfähig:
 
 ```
 constexpr size_t i = 11011_b;             // compiles
@@ -389,7 +396,6 @@ std::array<int, 11011_b> modern_array{};  // compiles
 ```
 
 C++-Ausdrücke oder Variablendeklarationen, die konstante Literale erwarten, sind übersetzungsfähig!
-
 
 ## Noch eine Variante: *Literal Operator Templates*
 
@@ -406,7 +412,7 @@ constexpr size_t operator "" _b();
 
 Wir haben es also mit einem variadischen Template zu tun. Die Notation `char ...` bedeutet, dass das Template
 mit 0, 1, 2 oder mehreren Parametern des Typs `char` spezialisiert werden kann. Außer `char`
-gibt es in diesem Zusammenhang keine andere Möglichkeit, also Datentypen wie etwas `int` oder `short` sind
+gibt es in diesem Zusammenhang keine andere Möglichkeit, also Datentypen wie etwa `int` oder `short` sind
 hier nicht zulässig.
 Um es an einem Beispiel festzumachen: Das Literal `11011_b` ist gleichbedeutend mit einem Funktionsaufruf
 
@@ -419,7 +425,9 @@ seine einzelnen Bestandteile (ohne das Suffix `_b`) werden zur Spezialisierung d
 Dies wiederum ermöglicht die Analyse der einzelnen Bestandteile zur Übersetzungszeit,
 da die Templatespezialisierung mit den Templateparametern eben zur Übersetzungszeit vollzogen wird.
 
-Damit kommen wir in Listing 3 zur Möglichkeit, ein benutzerdefiniertes Literal als variadisches Template zu definieren:
+Damit kommen wir in [Listing 3] zur Möglichkeit, ein benutzerdefiniertes Literal als variadisches Template zu definieren:
+
+###### {#listing_03_literals_binary_variadic}
 
 ```cpp
 01: template <typename T>
@@ -536,7 +544,9 @@ void test()
 
 Das bislang betrachtete Beispiel eines benutzerdefinierten Literals beschränkte sich auf die Darstellung
 des elementaren Datentyps `size_t`. In einem zweiten Beispiel wenden wir die vermittelte Materie
-auf einen benutzerdefinierten Datentyp `Color` für RGB-Farben an (Listing 4):
+auf einen benutzerdefinierten Datentyp `Color` für RGB-Farben an ([Listing 4]):
+
+###### {#listing_04_literals_class_color}
 
 ```cpp
 01: class Color {
@@ -589,8 +599,10 @@ std::cout << black << std::endl;
 
 Nun gilt es Randfälle zu diskutieren: Sollen Schreibweisen wie `0xFF_rgb` oder `0b0101_rgb` ebenfalls erlaubt sein?
 Diese wenigen Beispiele zeigen bereits, dass eine umfassende Definition samt Realisierung von Farbwertliteralen
-nicht ganz trivial ist. Der nachfolgende Lösungsvorschlag deckt daher nur die &ldquo;naheliegenden&rdquo; Fälle ab (Listing 5).
+nicht ganz trivial ist. Der nachfolgende Lösungsvorschlag deckt daher nur die &ldquo;naheliegenden&rdquo; Fälle ab ([Listing 5]).
 Es ist natürlich Ihrer Kreativität überlassen, diese Lösung zu verfeinern und damit zu vervollständigen!
+
+###### {#listing_05_literals_color_operator}
 
 ```cpp
 01: constexpr Color operator"" _rgb(unsigned long long int value) {
@@ -679,12 +691,12 @@ Es ist natürlich Ihrer Kreativität überlassen, diese Lösung zu verfeinern und da
 
 *Listing* 5: Implementierung eines benutzerdefinierten Literals für RGB-Farbwerte.
 
-Beachten Sie in Listing 5: Das C++ Feature von `constexpr` wurde hier recht ausgiebig angewendet!
+Beachten Sie in [Listing 5]: Das C++ Feature von `constexpr` wurde hier recht ausgiebig angewendet!
 Alle beteiligten Funktionen `length`, `hex2int` und `hexstoi` werden zur Übersetzungszeit ausgeführt!
 
 ## There's much more
 
-Möchte man die Implementierung eines benutzerdefinierten Literals ganz pefekt gestalten,
+Möchte man die Implementierung eines benutzerdefinierten Literals ganz perfekt gestalten,
 muss man sich mit dem Zahlentrennzeichen (`'`) beschäftigen. Für die &ldquo;Cooked&rdquo;-Version ist nichts weiter
 zu berücksichtigen, der Übersetzer verarbeitet das Zahlentrennzeichen selbst:
 
@@ -694,7 +706,9 @@ constexpr size_t n{ 11'111'11_b };   // compiles
 
 Anders sieht es bei der &ldquo;Raw&rdquo;-Version aus: Hier muss der `const char*`-Parameter
 des Literaloperators das Zahlentrennzeichen explizit behandeln &ndash; und damit ignorieren.
-Zum Abschluss finden Sie in Listing 6 entsprechende Modifikationen in Bezug auf die Realisierung aus Listing 2 vor:
+Zum Abschluss finden Sie in [Listing 6] entsprechende Modifikationen in Bezug auf die Realisierung aus [Listing 2] vor:
+
+###### {#listing_06_literals_color_operator_with_improvements}
 
 ```cpp
 01: template <typename T>
@@ -744,10 +758,43 @@ Zum Abschluss finden Sie in Listing 6 entsprechende Modifikationen in Bezug auf 
 
 *Listing* 6: Realisierung eines *Literal Operator Templates* für binäre Literale inklusive Zahlentrennzeichen.
 
+Wir sind am Ende unserer Fallstudie angekommen, Variablendeklarationen der Gestalt
+
+```cpp
+constexpr size_t j{ "11'111'11"_b };
+constexpr size_t k{ "1000'1000'1000'1000'1000'1000'1000'1000"_b };
+```
+
+werden auf korrekte Werte zur Übersetzungszeit abgebildet.
+
+
 ## Literatur
 
-// https://akrzemi1.wordpress.com/2012/10/23/user-defined-literals-part-ii/
+Die Anregungen zu diesem Artikel stammen zum Teil aus
 
-// https://stackoverflow.com/questions/537303/binary-literals/538101#538101
+[Andrzej's C++ blog: User-defined literals](https://akrzemi1.wordpress.com/2012/10/23/user-defined-literals-part-ii/)
 
-// https://stackoverflow.com/questions/66813961/c-constexpr-constructor-for-colours
+Weitere Hinweise finden sich in
+
+[Stack Overflow: Binary literals?](https://stackoverflow.com/questions/537303/binary-literals/538101#538101)
+
+und
+
+[Stack Overflow: C++ constexpr constructor for colours](https://stackoverflow.com/questions/66813961/c-constexpr-constructor-for-colours)
+
+<br/>
+
+<!-- Links Definitions -->
+
+[Tabelle 1]: #tabelle_1_raw_versus_cooked
+
+[Listing 1]: #listing_01_literals_binary
+[Listing 2]: #listing_02_literals_binary_redesign
+[Listing 3]: #listing_03_literals_binary_variadic
+[Listing 4]: #listing_04_literals_class_color
+[Listing 5]: #listing_05_literals_color_operator
+[Listing 6]: #listing_06_literals_color_operator_with_improvements
+
+[Abbildung 1]: #abbildung_1_literals_compile_time
+
+<!-- End-of-File -->

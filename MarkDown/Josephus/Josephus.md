@@ -590,6 +590,8 @@ Der Legende nach stellte Josephus sich an die 16. Stelle und blieb damit als Vor
 Er konnte auf diese Weise den letzten, schwächeren Mann an der 31. Position überwältigen.
 Beide ergaben sich den Römern und konnten auf diese Weise ihr Leben retten.
 
+<br/>
+
 <!-- Links Definitions -->
 
 [Listing 1]: #listing_01_ijosephus_interface

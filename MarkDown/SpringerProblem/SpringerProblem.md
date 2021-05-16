@@ -790,6 +790,8 @@ Zum Vergleich können wir den Grad der Parallelisierung noch eine Ebene tiefer z
 
 Man sieht, dass sich die Mühen der Parallelisierung des Algorithmus gelohnt haben!
 
+<br/>
+
 <!-- Links Definitions -->
 
 [Tabelle 1]:    #tabelle_1_class_coordinate

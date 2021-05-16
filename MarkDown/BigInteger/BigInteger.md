@@ -1788,6 +1788,8 @@ Prime factorization of 44.100:
 Done.
 ```
 
+<br/>
+
 <!-- Links Definitions -->
 
 [Tabelle 1]: #tabelle_1_class_biginteger_ctors

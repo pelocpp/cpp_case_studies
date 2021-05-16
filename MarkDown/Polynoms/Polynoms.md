@@ -911,6 +911,8 @@ Mit *Concepts* kann man Restriktionen für Datentypen festzulegen, die eine Temp
 Definieren Sie Ihre Klasse `Polynom<T>` mit Hilfe von *Concepts* so, dass ausschließlich die drei Datentypen
 `float`, `double` und `long double` als Template-Argument in Betracht kommen!
 
+<br/>
+
 <!-- Links Definitions -->
 
 [Tabelle 1]: #tabelle_1_class_polynom_ctors

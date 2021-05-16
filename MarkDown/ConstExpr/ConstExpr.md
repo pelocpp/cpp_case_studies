@@ -1,7 +1,7 @@
-<!-- Being `constexpr` or not being `constexpr`: Konstante Ausdrücke in C++  -->
+<!-- Being constexpr or not being constexpr: Konstante Ausdrücke in C++  -->
 
 Die Berechnung von Ausdrücken zur Übersetzungszeit wurde mit in C++&ndash;17 auf ein neues Niveau angehoben.
-Längst haben wir es nicht mehr mit nur konstanten Literalen oder einfachen Ausdrücken, bestehend aus einer Summation oder Multiklikation, zu tun.
+Längst haben wir es nicht mehr mit nur konstanten Literalen oder einfachen Ausdrücken, bestehend aus einer Summation oder Multiplikation, zu tun.
 In C++&ndash;17 können zur Übersetzungszeit Variablen, Funktionen und auch ganze Klassen bzw. deren Objekte mit entsprechenden Konstruktoren
 zur Übersetzungszeit ausgeführt bzw. erzeugt werden.
 
@@ -9,7 +9,8 @@ Von Interesse ist dieser Aspekt in der Anwendung zum Beispiel für die *Embedded 
 möglichst viele Daten vom Übersetzer berechnen zu lassen, um diese mit Hilfe des Kompilats in das *ROM* (*Read-Only-Memory*)
 einer speziellen Hardware zu packen.
 
-Welche Möglichkeiten sich mit `constexpr` in C++ 17 eröffnen, zeigen wir an einer Reihe von Beispielen in dieser Fallstudie auf.
+Welche Möglichkeiten sich mit `constexpr` in C++ 17 eröffnen,
+zeigen wir an einer Reihe von Fallbeispielen in dieser Studie auf.
 
 <!--more-->
 
@@ -91,7 +92,7 @@ zur Übersetzungszeit unterstützt:
 
 *Listing* 1: Klasse `Complex` mit `constexpr` Konstruktoren.
 
-Mit folgenden Code-Fragment können wir die Klasse `Complex` testen und `Complex`-Objekte anlegen,
+Mit folgendem Code-Fragment können wir die Klasse `Complex` testen und `Complex`-Objekte anlegen,
 die vom Übersetzer erzeugt wurden:
 
 ###### {#listing_02_constexpr_complex_test}
@@ -118,16 +119,16 @@ die vom Übersetzer erzeugt wurden:
 
 Den Nachweis, dass der Übersetzer tatsächlich `Complex`-Objekte zur Übersetzungszeit anlegt,
 und dies mit korrekten Werten, nehmen wir mit `static_assert`-Deklarationen vor,
-siehe die Zeilen 13 bis 15. Eine `static_assert`-Deklarationen erwartet einen booleschen Ausdruck und eine Zeichenkette.
+siehe die Zeilen 13 bis 15. Eine `static_assert`-Deklaration erwartet einen booleschen Ausdruck und eine Zeichenkette.
 Evaluiert der boolesche Ausdruck zu `false`, wird die Zeichenkette als Fehlermeldung ausgegeben und die Übersetzung abgebrochen.
 
 Mit einer ruhigen Hand und der Betrachtung von Tooltips kann man die Arbeit des Übersetzers auch von der Entwicklungsumgebung aus betrachten.
 Mit dem *Visual Studio* sieht, um wiederum beim letzten Beispiel zu verweilen,
-das Objekt `c3` so aus ([Abbildung 1]):
+das Objekt `c3` wie in [Abbildung 1] gezeigt aus:
 
 ###### {#abbildung_1_intellisense}
 
-{{< figure src="/img/constexpr/ConstExpr01.png" width="50%" >}}
+{{< figure src="/img/constexpr/ConstExpr01.png" width="100%" >}}
 
 *Abbildung* 1: Ein `Complex`-Objekt, erzeugt vom Übersetzer.
 
@@ -186,7 +187,7 @@ wir betrachten das letzte Beispiel einfach mit einer `Complex<double>`-Klasse:
 41: }
 ```
 
-*Listing* 3: Klassetemplate `Complex` mit `constexpr` Konstruktoren.
+*Listing* 3: Klassentemplate `Complex` mit `constexpr` Konstruktoren.
 
 ## `constexpr`-Funktionen und `constexpr`-Lambda-Funktionen
 
@@ -267,7 +268,7 @@ steht also für das `std::array`-Objekt, dass von der Lambda-Funktion berechnet u
 Wo wird die Lambda-Templatefunktion spezialisiert und aufgerufen?
 Einen Aufruf finden wir in Zeile 35 vor: Spezialisiert mit einem `Factor` gleich 4 wird auf den Rückgabewert
 &ndash; ein `std::array`-Objekt &ndash; mit dem Index-Operator `[]` auf die einzelnen Einträge des Arrays zugegriffen.
-Es ist also der Index-Operator `[]` ebenfalls eine `constexpr`-Funktion, um dies hervorzuheben.
+Es ist also der Index-Operator `[]` ebenfalls eine `constexpr`-Funktion (Methode), um dies hervorzuheben.
 
 Bleiben wir bei der Funktion `sumUpPowerTable`. Sie soll exemplarisch veranschaulichen,
 dass `constexpr`-Variablen und -Funktionen gewissermaßen &ldquo;schachtelbar&rdquo; sind,
@@ -279,21 +280,17 @@ Um es an einem Beispiel zu betrachten. Ein Aufruf der `sumUpPowerTable`-Funktion
 und einer Tabellengröße gleich 5 die Summe von 1 + 16 + 81 + 256 + 625 = 979 zurückliefern.
 Diesen (konstanten) Wert müssten wir im OpCode des Programms vorfinden:
 
+###### {#abbildung_2_move_instruction}
+
+{{< figure src="/img/constexpr/ConstExpr02.png" width="100%" >}}
+
+*Abbildung* 2: Eine `MOV`-Instruktion mit dem Operanden `3D3h`, dessen Wert zur Übersetzungszeit berechnet wurde.
+
 In [Abbildung 2] &ndash; und bei Bedarf mit dem Calculator &ndash; können wir uns davon überzeugen:
 Der hexadezimale Wert `3D3h` tritt in einer `MOV`-Instruktion auf, der Übersetzer hat tatsächlich alle Berechnungen zur 
 Übersetzungszeit vorgenommen:
 
-```
-00007FF6F63F2C5A  mov         qword ptr [total],3D3h 
-```
-
-###### {#abbildung_2_move_instruction}
-
-{{< figure src="/img/constexpr/ConstExpr02.png" width="50%" >}}
-
-*Abbildung* 2: Eine `MOV`-Instruktion mit dem Operanden `3D3h`, berechnet zur Übersetzungszeit.
-
-## `constexpr`-`std::array`-Objekte, initialisiert mit variadischen Templates 
+## `constexpr`&ndash;`std::array`-Objekte, initialisiert mit variadischen Templates 
 
 Ein ganz anderer Ansatz für Berechnungen zur Übersetzungszeit tut sich mit variadischen Templates auf.
 Welchen Vorteil bietet dieser Lösungsansatz?
@@ -301,21 +298,20 @@ Prinzipiell müssen für die Initialisierung eines `constexpr`-Objekts die genutzt
 Jetzt hängt es davon ab, welcher C++&ndash;Sprachstandard in der Entwicklung zur Verfügung steht?
 Unter C++&ndash;14 ist der `[]`-Operator nicht `constexpr` (wohl aber in C++&ndash;17).
 Möchte man &ndash; aus welchen Gründen auch immer &ndash; ein `std::array`-Objekt mit einer Initialisierungsliste vorbelegen
-(also nicht mit imperativen Berechnung à la `constexpr`-Funktionen / -Lambda-Funktionen, die den `[]`-Operator verwenden),
+(also nicht mit einer imperativen Berechnung à la `constexpr`-Funktionen/-Lambda-Funktionen, die den `[]`-Operator verwenden),
 bietet sich ein Weg mit variadischen Templates an.
 
 Lassen Sie mich gleich in *medias res* gehen.
-An Hand eines Startwerts, der allerdings zur Übersetzungszeit bekannt sein muss, wollen wir eine Folge unbekannter Länge von Zahlen berechnen,
-also eine Zahlenfolge.
+An Hand eines Startwerts, der allerdings zur Übersetzungszeit bekannt sein muss, wollen wir eine Zahlenfolge unbekannter Länge berechnen.
 Um es noch einmal zu betonen:
 Der Übersetzer soll diese Zahlenfolge berechnen, nicht die Anweisungen des Maschinencodes des resultierenden Programms.
 Das Ergebnis der Zahlenfolge ist in einem `std::array`-Objekt abzulegen.
 
 Um die Zahlenfolge selbst einfach zu halten &ndash; die technischen Randbedingungen des Beispiels sind schon komplex genug &ndash; 
 legen wir die so genannte *Collatz*-Zahlenfolge zu Grunde. Die Zahlenfolge berechnet sich wie folgt:
-Ausgehend von einem beliebigen (positiven) Startwert *n* ist das nächste Folgenglied *n* / 2 bei geradem *n*, andernfalls 3 * *n* + 1. Um
+Ausgehend von einem beliebigen (positiven) Startwert *n* ist das nächste Folgenglied *n*&div;2 bei geradem *n*, andernfalls 3&times;*n* + 1. Um
 es kurz an einem Beispiel mit Startwert 13 festzumachen:
-Gesucht ist die Folge der Zahlen 13, 40, 20, 10, 5, 16, 8, 4, 2, 1.
+Gesucht ist die Folge der Zahlen 13, 40, 20, 10, 5, 16, 8, 4, 2, und schließlich 1.
 
 Wir stellen gleich die Lösung vor, es folgen zahlreiche Hinweise:
 
@@ -376,7 +372,7 @@ Wir stellen gleich die Lösung vor, es folgen zahlreiche Hinweise:
 
 *Listing* 5: Initialisierung eines `std::array`-Objekts mit variadischen Templates.
 
-Die Berechnung des nächsten Folgenglieds kann in einer Funktion (normale Funktion, Zeile 1 bis 4 oder Lambda-Funktion, Zeile 6 bis 9) erfolgen,
+Die Berechnung des nächsten Folgenglieds kann in einer normalen Funktion (Zeilen 1 bis 4) oder in einer Lambda-Funktion (Zeilen 6 bis 9) erfolgen,
 dies ist nicht weiter spektakulär.
 
 Nun definieren wir ein variadisches Klassentemplate `SequenceHelper` in Zeilen 19 und 20, zunächst syntaktisch in Gestalt einer Vorwärtsdeklaration.
@@ -393,11 +389,13 @@ Der Typ dieser Template-Klasse wird &ndash; mit Hilfe von `using` &ndash; in ein
 
 *Beachte*: Den Rückgabewerten von Funktionen entsprechen in der Meta-Programmierung `using`-Anweisungen (oder `typedef`-Anweisungen).
 
-> Um es auf den Punkt zu bringen: Die einzelnen Folgenglieder werden mit Hilfe einer (rekursiven) Klassentemplatedefinition 
+Um es auf den Punkt zu bringen:
+
+> Die einzelnen Folgenglieder werden mit Hilfe einer (rekursiven) Klassentemplatedefinition 
 auf eine variadische Templateparameterliste abgebildet.
 
 Rekursive Klassentemplatedefinitionen sind erlaubt, natürlich bedarf es wie bei jeder rekursiven Definition eines Abbruchkriteriums.
-Dieses finden wir in den Zeile 31 bis 35 vor: Dieses Klassentemplate erwartet in der Templateparameterliste an der ersten Stelle den Wert 1.
+Dieses finden wir in den Zeilen 31 bis 35 vor: Dieses Klassentemplate erwartet in der Templateparameterliste an der ersten Stelle den Wert 1.
 Wir erinnern uns: Eine *Collatz*-Folge terminiert, wenn der Wert 1 erreicht wird.
 Ist das Abbruchkriterium erreicht, kommt es zur Definition eines weiteren Datentyps mit dem Klassentemplate `CollatzSequence`.
 
@@ -407,11 +405,12 @@ und an einen Konstruktor der `std::array`-Klasse weitergereicht. Dieses `std::ar
 und kann über den Bezeichner `elements` angesprochen werden.
 
 In Zeile 15 ist eine weitere Subtilität verborgen: `std::array`-Objekte benötigen eine Längenangabe, die zur Übersetzungszeit bekannt sein muss.
-Okay, von welcher Länge reden wir hier genau? Gemeint die die Länge der Zahlenfolge,
+Okay, von welcher Länge reden wir hier genau? Gemeint ist die Länge der Zahlenfolge,
 sie stimmt mit der Anzahl der Elemente der variadischen Templateparameterliste überein.
 Diese wiederum kann zur Übersetzungszeit mit dem Operator `sizeof... ` abgefragt werden (Zeile 15)!
 
-> Damit können wir abschließend zusammenfassen:
+Damit können wir abschließend zusammenfassen:
+
 > Mit einer rekursiven Menge von Templateklassen lassen sich die Glieder einer Zahlenfolge
 zur Übersetzungszeit in einem Parameterpack zusammenstellen, das wiederum in eine Initialisierungsliste und damit 
 in ein `std::array`-Objekt umgebettet werden kann!
@@ -432,15 +431,13 @@ Size: 9
 ```
 
 Es gibt mehrere Möglichkeiten, um die rekursive Definition von Templateklassen zu verfolgen:
-Das *IntelliSense*-Feature des Visual Studio ist eine davon:
-
-BILD !!! Abbildung
+Das *IntelliSense*-Feature des Visual Studio ist eine davon ([Abbildung 3]):
 
 ###### {#abbildung_3_recursive_template_definition}
 
-{{< figure src="/img/constexpr/ConstExpr03.png" width="50%" >}}
+{{< figure src="/img/constexpr/ConstExpr03.png" width="100%" >}}
 
-*Abbildung* 1: XXX.
+*Abbildung* 3: Definition einer rekursiven Templateklasse an einem Beispiel.
 
 Mein persönlicher Favorit hingegen ist das Tool [Cpp Insights](https://cppinsights.io/).
 Der Übersichtlichkeit halber habe ich den Output des Tools etwas umformatiert.
@@ -538,7 +535,7 @@ schaffen wir es jetzt, die Templateparameter zur Initialisierung eines `std::arr
 
 ## `std::array`-Objekte und variadische Templates: Ein alternativer Ansatz
 
-Die rekursive Templatedefinition aus dem letzen Beispiel fußte auf dem Trick,
+Die rekursive Templatedefinition aus dem letzten Beispiel fußte auf dem Trick,
 die Definition eines Klassentemplates in Abhängigkeit von einem anderen Klassentemplate zu formulieren.
 Diese Vorgehensweise kann man auch mittels Vererbung praktizieren.
 Ein Beispiel gefällig?
@@ -624,7 +621,7 @@ std::array<unsigned long, 9> squaresTable =
 ```
 
 Damit wären wir am Ende unserer Betrachtungen angelegt. Ich hoffe, Sie haben einen Eindruck von der Mächtigkeit von `constexpr`
-in allen seinen Facetten gewonnen!
+in all seinen Facetten gewonnen!
 
 ## Literatur
 
@@ -633,11 +630,11 @@ Die Anregungen zu diesem Artikel stammen aus einem Aufsatz aus der Zeitschrift *
 Petrautzki, Dirk. &ldquo;Nachschlagewerk: C++-Metaprogrammierung mit Templates für eingebettete Systeme&rdquo;.
 *iX* Magazin für professionelle Informationstechnik, Mai 2021, S. 134 - 137.
 
-Materialien in elektronischer Form: https://github.com/Fraunhofer-IIS-ARC-WST
+Materialien in elektronischer Form: https://github.com/Fraunhofer-IIS-ARC-WST.
 
-An die Stelle der *Collatz*-Zahlenfolge werden hier Lookup-Tabellen für CRC8-Berechnungen zur Übersetzungszeit untersucht.
-
-Die Beispiele für `constexpr`-Funktionen und `constexpr`-Lambda-Funktionen sind in diesem Aufsatz erheblich anwendungsbezogener,
+An die Stelle der *Collatz*-Zahlenfolge werden hier Lookup-Tabellen für CRC8-Berechnungen zur Übersetzungszeit untersucht (*zyklische Redundanzprüfung*).
+Die Beispiele für `constexpr`-Funktionen und `constexpr`-Lambda-Funktionen
+sind in diesem Aufsatz erheblich anwendungsbezogener,
 siehe zum Beispiel die beiden Funktionen zur Erstellung und den Zugriff auf CRC8 Lookup Tabellen:
 
 ###### {#listing_07_constexpr_crc8}
@@ -670,6 +667,8 @@ siehe zum Beispiel die beiden Funktionen zur Erstellung und den Zugriff auf CRC8
 25:   return checksum;
 26: }
 ```
+
+<br/>
 
 *Listing* 7: Erstellung einer CRC8 Lookup Tabelle.
 

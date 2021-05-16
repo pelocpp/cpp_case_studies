@@ -810,6 +810,8 @@ _Ausgabe_:
 5 = 1 + 1 + 1 + 1 + 1
 ```
 
+<br/>
+
 <!-- Links Definitions -->
 
 [Tabelle 1]: #tabelle_1_class_partition

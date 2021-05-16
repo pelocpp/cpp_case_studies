@@ -639,6 +639,8 @@ Sehr große natürliche Zahlen, so wie sie durch `BigInteger`-Objekte aus der Fa
 [Exakte Arithmetik ganzer Zahlen]({{< ref "/post/2021-04-10-biginteger" >}})
 dargestellt werden, könnten Unterstützung leisten :)
 
+<br/>
+
 <!-- Links Definitions -->
 
 [Tabelle 1]: #tabelle_1_class_partialset
