@@ -353,8 +353,21 @@ namespace Literals_04
         return len;
     }
 
+    constexpr bool isHex(char ch)
+    {
+        if ((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f')) {
+            return true;
+        }
+
+        return false;
+    }
+
     constexpr uint8_t hex2int(char ch)
     {
+        if (!isHex(ch)) {
+            throw std::runtime_error("illegal hexadecimal digit");
+        }
+
         // transform hex character to 4-bit equivalent number
         uint8_t byte = ch;
         if (byte >= '0' and byte <= '9') {
@@ -430,6 +443,12 @@ namespace Literals_04
         std::cout << anotherWhite << std::endl;
         constexpr Color black = "0x000000"_rgb;
         std::cout << black << std::endl;
+    }
+
+    void test_04a_errors()
+    {
+        //constexpr Color col1 = 0x1FFFFFF_rgb;
+        //constexpr Color col2 = "0x00GG00"_rgb;
     }
 }
 
