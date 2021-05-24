@@ -627,72 +627,86 @@ Es ist natürlich Ihrer Kreativität überlassen, diese Lösung zu verfeinern und da
 20:     return len;
 21: }
 22: 
-23: constexpr uint8_t hex2int(char ch)
+23: constexpr bool isHex(char ch)
 24: {
-25:     // transform hex character to 4-bit equivalent number
-26:     uint8_t byte = ch;
-27:     if (byte >= '0' and byte <= '9') {
-28:         // byte = byte - '0';
-29:         byte -= '0';
-30:     }
-31:     else if (byte >= 'a' and byte <= 'f') {
-32:         // byte = byte - 'a' + 10;
-33:         byte -= ('a' - 10);
-34:     }
-35:     else if (byte >= 'A' and byte <= 'F') {
-36:         //byte = byte - 'A' + 10;
-37:         byte -= ('A' - 10);
-38:     }
-39:     return byte;
-40: }
-41: 
-42: constexpr size_t hexstoi(const char* str)
-43: {
-44:     int value{};
-45:     while (*str != '\0') {
-46:         // get current character, then increment
-47:         uint8_t byte = hex2int(*str);
-48:         ++str;
-49: 
-50:         // shift 4 to make space for new digit, and add the 4 bits of the new digit 
-51:         value = (value << 4) | (byte & 0xF);
-52:     }
-53:     return value;
-54: }
-55: 
-56: // literal operator ("raw" version)
-57: constexpr Color operator"" _rgb(const char* literal, size_t) {
-58: 
-59:     // tiny implementation - just parsing hexadecimal format
-60:     size_t len{ length(literal) };
-61:     if (len == 2 /* 0x */ + 6 /* FF FF FF */) {
+25:     if ((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f')) {
+26:         return true;
+27:     }
+28: 
+29:     return false;
+30: }
+31: 
+32: constexpr uint8_t hex2int(char ch)
+33: {
+34:     if (!isHex(ch)) {
+35:         throw std::runtime_error("illegal hexadecimal digit");
+36:     }
+37: 
+38:     // transform hex character to 4-bit equivalent number
+39:     uint8_t byte = ch;
+40:     if (byte >= '0' and byte <= '9') {
+41:         // byte = byte - '0';
+42:         byte -= '0';
+43:     }
+44:     else if (byte >= 'a' and byte <= 'f') {
+45:         // byte = byte - 'a' + 10;
+46:         byte -= ('a' - 10);
+47:     }
+48:     else if (byte >= 'A' and byte <= 'F') {
+49:         //byte = byte - 'A' + 10;
+50:         byte -= ('A' - 10);
+51:     }
+52:     return byte;
+53: }
+54: 
+55: constexpr size_t hexstoi(const char* str)
+56: {
+57:     int value{};
+58:     while (*str != '\0') {
+59:         // get current character, then increment
+60:         uint8_t byte = hex2int(*str);
+61:         ++str;
 62: 
-63:         char ar[3] = {};
-64:         char ag[3] = {};
-65:         char ab[3] = {};
-66: 
-67:         ar[0] = literal[2];
-68:         ar[1] = literal[3];
-69:         ag[0] = literal[4];
-70:         ag[1] = literal[5];
-71:         ab[0] = literal[6];
-72:         ab[1] = literal[7];
-73: 
-74:         uint8_t r = static_cast<uint8_t>(hexstoi(ar));
-75:         uint8_t g = static_cast<uint8_t>(hexstoi(ag));
-76:         uint8_t b = static_cast<uint8_t>(hexstoi(ab));
-77: 
-78:         return { r, g, b };
-79:     }
-80: 
-81:     return {};
-82: }
+63:         // shift 4 to make space for new digit, and add the 4 bits of the new digit 
+64:         value = (value << 4) | (byte & 0xF);
+65:     }
+66:     return value;
+67: }
+68: 
+69: // literal operator ("raw" version)
+70: constexpr Color operator"" _rgb(const char* literal, size_t) {
+71: 
+72:     // tiny implementation - just parsing hexadecimal format
+73:     size_t len{ length(literal) };
+74:     if (len == 2 /* 0x */ + 6 /* FF FF FF */) {
+75: 
+76:         char ar[3] = {};
+77:         char ag[3] = {};
+78:         char ab[3] = {};
+79: 
+80:         ar[0] = literal[2];
+81:         ar[1] = literal[3];
+82:         ag[0] = literal[4];
+83:         ag[1] = literal[5];
+84:         ab[0] = literal[6];
+85:         ab[1] = literal[7];
+86: 
+87:         uint8_t r = static_cast<uint8_t>(hexstoi(ar));
+88:         uint8_t g = static_cast<uint8_t>(hexstoi(ag));
+89:         uint8_t b = static_cast<uint8_t>(hexstoi(ab));
+90: 
+91:         return { r, g, b };
+92:     }
+93: 
+94:     return {};
+95: }
 ```
 
 *Listing* 5: Implementierung eines benutzerdefinierten Literals für RGB-Farbwerte.
 
 Beachten Sie in [Listing 5]: Das C++ Feature von `constexpr` wurde hier recht ausgiebig angewendet!
-Alle beteiligten Funktionen `length`, `hex2int` und `hexstoi` werden zur Übersetzungszeit ausgeführt!
+Alle beteiligten Funktionen `length`, `isHex`, `hex2int` und `hexstoi` werden zur Übersetzungszeit ausgeführt!
+Sowohl für Bereichsüberschreitungen als auch für falsche Hexadezimalwerte sind Fehlerüberprüfungen vorhanden.
 
 ## There's much more
 
