@@ -341,7 +341,7 @@ namespace Literals_04
         uint8_t g{ (uint8_t)((value & 0x00FF00) >>  8) };
         uint8_t b{ (uint8_t)((value & 0x0000FF) >>  0) };
 
-        return Color{ r, g, b };
+        return { r, g, b };
     }
 
     constexpr size_t length(const char* str)
@@ -371,15 +371,12 @@ namespace Literals_04
         // transform hex character to 4-bit equivalent number
         uint8_t byte = ch;
         if (byte >= '0' and byte <= '9') {
-            // byte = byte - '0';
             byte -= '0';
         }
         else if (byte >= 'a' and byte <= 'f') {
-            // byte = byte - 'a' + 10;
             byte -= ('a' - 10);
         }
         else if (byte >= 'A' and byte <= 'F') {
-            //byte = byte - 'A' + 10;
             byte -= ('A' - 10);
         }
         return byte;

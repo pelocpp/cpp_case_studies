@@ -615,7 +615,7 @@ Es ist natürlich Ihrer Kreativität überlassen, diese Lösung zu verfeinern und da
 08:     uint8_t g{ (uint8_t)((value & 0x00FF00) >>  8) };
 09:     uint8_t b{ (uint8_t)((value & 0x0000FF) >>  0) };
 10: 
-11:     return Color{ r, g, b };
+11:     return { r, g, b };
 12: }
 13: 
 14: constexpr size_t length(const char* str)
@@ -645,61 +645,58 @@ Es ist natürlich Ihrer Kreativität überlassen, diese Lösung zu verfeinern und da
 38:     // transform hex character to 4-bit equivalent number
 39:     uint8_t byte = ch;
 40:     if (byte >= '0' and byte <= '9') {
-41:         // byte = byte - '0';
-42:         byte -= '0';
-43:     }
-44:     else if (byte >= 'a' and byte <= 'f') {
-45:         // byte = byte - 'a' + 10;
-46:         byte -= ('a' - 10);
-47:     }
-48:     else if (byte >= 'A' and byte <= 'F') {
-49:         //byte = byte - 'A' + 10;
-50:         byte -= ('A' - 10);
-51:     }
-52:     return byte;
-53: }
-54: 
-55: constexpr size_t hexstoi(const char* str)
-56: {
-57:     int value{};
-58:     while (*str != '\0') {
-59:         // get current character, then increment
-60:         uint8_t byte = hex2int(*str);
-61:         ++str;
-62: 
-63:         // shift 4 to make space for new digit, and add the 4 bits of the new digit 
-64:         value = (value << 4) | (byte & 0xF);
-65:     }
-66:     return value;
-67: }
+41:         byte -= '0';
+42:     }
+43:     else if (byte >= 'a' and byte <= 'f') {
+44:         byte -= ('a' - 10);
+45:     }
+46:     else if (byte >= 'A' and byte <= 'F') {
+47:         byte -= ('A' - 10);
+48:     }
+49:     return byte;
+50: }
+51: 
+52: constexpr size_t hexstoi(const char* str)
+53: {
+54:     int value{};
+55:     while (*str != '\0') {
+56:         // get current character, then increment
+57:         uint8_t byte = hex2int(*str);
+58:         ++str;
+59: 
+60:         // shift 4 to make space for new digit, and add the 4 bits of the new digit 
+61:         value = (value << 4) | (byte & 0xF);
+62:     }
+63:     return value;
+64: }
+65: 
+66: // literal operator ("raw" version)
+67: constexpr Color operator"" _rgb(const char* literal, size_t) {
 68: 
-69: // literal operator ("raw" version)
-70: constexpr Color operator"" _rgb(const char* literal, size_t) {
-71: 
-72:     // tiny implementation - just parsing hexadecimal format
-73:     size_t len{ length(literal) };
-74:     if (len == 2 /* 0x */ + 6 /* FF FF FF */) {
-75: 
-76:         char ar[3] = {};
-77:         char ag[3] = {};
-78:         char ab[3] = {};
-79: 
-80:         ar[0] = literal[2];
-81:         ar[1] = literal[3];
-82:         ag[0] = literal[4];
-83:         ag[1] = literal[5];
-84:         ab[0] = literal[6];
-85:         ab[1] = literal[7];
-86: 
-87:         uint8_t r = static_cast<uint8_t>(hexstoi(ar));
-88:         uint8_t g = static_cast<uint8_t>(hexstoi(ag));
-89:         uint8_t b = static_cast<uint8_t>(hexstoi(ab));
+69:     // tiny implementation - just parsing hexadecimal format
+70:     size_t len{ length(literal) };
+71:     if (len == 2 /* 0x */ + 6 /* FF FF FF */) {
+72: 
+73:         char ar[3] = {};
+74:         char ag[3] = {};
+75:         char ab[3] = {};
+76: 
+77:         ar[0] = literal[2];
+78:         ar[1] = literal[3];
+79:         ag[0] = literal[4];
+80:         ag[1] = literal[5];
+81:         ab[0] = literal[6];
+82:         ab[1] = literal[7];
+83: 
+84:         uint8_t r = static_cast<uint8_t>(hexstoi(ar));
+85:         uint8_t g = static_cast<uint8_t>(hexstoi(ag));
+86:         uint8_t b = static_cast<uint8_t>(hexstoi(ab));
+87: 
+88:         return { r, g, b };
+89:     }
 90: 
-91:         return { r, g, b };
-92:     }
-93: 
-94:     return {};
-95: }
+91:     return {};
+92: }
 ```
 
 *Listing* 5: Implementierung eines benutzerdefinierten Literals für RGB-Farbwerte.
