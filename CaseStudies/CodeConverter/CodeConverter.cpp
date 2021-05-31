@@ -20,7 +20,7 @@ namespace Clipboard {
 
     const std::string_view Version =
         std::string_view(
-            "Code-Converter of C++ Code Snippets - Version 1.00 (09.01.2021)\n" 
+            "Code-Converter of C++ Code Snippets - Version 1.01 (31.05.2021)\n" 
             "Copyright (C) 2021 Peter Loos");
 
     // non RAII conformant solution
@@ -83,8 +83,11 @@ namespace Clipboard {
                 throw std::runtime_error("ERROR GetClipboardData!");
 
             m_text = static_cast<const char*>(GlobalLock(m_data));
-            if (m_text == nullptr)
+            if (m_text == nullptr) {
+                // take care of formerly allocated resources (!)
+                GlobalFree(m_data);
                 throw std::runtime_error("ERROR GlobalLock!");
+            }
         }
 
         // prevent copy semantics
@@ -118,8 +121,11 @@ namespace Clipboard {
                 throw std::runtime_error("ERROR GlobalAlloc!");
 
             m_text = static_cast<char*>(GlobalLock(m_data));
-            if (m_text == nullptr)
+            if (m_text == nullptr) {
+                // take care of formerly allocated resources (!)
+                GlobalFree(m_data);
                 throw std::runtime_error("ERROR GlobalLock!");
+            }
 
             // copy the text
             memcpy(m_text, text.c_str(), len);
