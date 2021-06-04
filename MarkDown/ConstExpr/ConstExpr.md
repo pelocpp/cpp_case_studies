@@ -65,7 +65,7 @@ zur Übersetzungszeit unterstützt:
 ###### {#listing_01_constexpr_complex_decl}
 
 ```cpp
-01: struct Complex
+01: class Complex
 02: {
 03: private:
 04:     double m_real;
@@ -145,7 +145,7 @@ wir betrachten das letzte Beispiel einfach mit einer `Complex<double>`-Klasse:
 
 ```cpp
 01: template <typename T>
-02: struct Complex
+02: class Complex
 03: {
 04: private:
 05:     T m_real;

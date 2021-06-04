@@ -10,7 +10,7 @@ namespace ConstExprComplex {
 
     constexpr double Pi{ 3.14159265359 };
 
-    struct Complex
+    class Complex
     {
     private:
         double m_real;
@@ -57,7 +57,7 @@ namespace ConstExprComplex {
 namespace ConstExprComplexTemplate {
 
     template <typename T>
-    struct Complex
+    class Complex
     {
     private:
         T m_real;
