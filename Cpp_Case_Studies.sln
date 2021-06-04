@@ -147,12 +147,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConstExpr", "ConstExpr", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConstExpr", "CaseStudies\ConstExpr\ConstExpr.vcxproj", "{FF71A2C3-63EB-4AB9-8352-9276C81A33ED}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UserDefinedLiterals", "CaseStudies\UserDefinedLiterals\UserDefinedLiterals.vcxproj", "{1CEE3207-E1E2-4970-A1AE-2CD067B8C691}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Literals", "CaseStudies\UserDefinedLiterals\UserDefinedLiterals.vcxproj", "{1CEE3207-E1E2-4970-A1AE-2CD067B8C691}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UserDefinedLiterals", "UserDefinedLiterals", "{A457ED8D-9B98-450B-B0B6-3503FF4BEA13}"
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\UserDefinedLiterals\ConstexprLiterals.png = MarkDown\UserDefinedLiterals\ConstexprLiterals.png
 		MarkDown\UserDefinedLiterals\Literals.md = MarkDown\UserDefinedLiterals\Literals.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FB56910E-926C-46F0-82F1-F667A414C564}"
+	ProjectSection(SolutionItems) = preProject
+		Readme.md = Readme.md
 	EndProjectSection
 EndProject
 Global
