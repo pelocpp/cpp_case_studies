@@ -151,8 +151,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Literals", "CaseStudies\Use
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Literals", "Literals", "{A457ED8D-9B98-450B-B0B6-3503FF4BEA13}"
 	ProjectSection(SolutionItems) = preProject
-		MarkDown\UserDefinedLiterals\ConstexprLiterals.png = MarkDown\UserDefinedLiterals\ConstexprLiterals.png
-		MarkDown\UserDefinedLiterals\Literals.md = MarkDown\UserDefinedLiterals\Literals.md
+		MarkDown\Literals\ConstexprLiterals.png = MarkDown\Literals\ConstexprLiterals.png
+		MarkDown\Literals\Literals.md = MarkDown\Literals\Literals.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FB56910E-926C-46F0-82F1-F667A414C564}"
