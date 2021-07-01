@@ -74,8 +74,8 @@ namespace Clipboard {
     class RAIIClipboardReader
     {
     public:
-        explicit RAIIClipboardReader() {
-
+        explicit RAIIClipboardReader() 
+        {
             RAIIClipboard clipboard;
 
             m_data = GetClipboardData(CF_TEXT);
