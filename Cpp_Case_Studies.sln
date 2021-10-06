@@ -164,6 +164,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HouseOfSantaClaus", "CaseSt
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MorseCalculator", "CaseStudies\MorseCalculator\MorseCalculator.vcxproj", "{563574D0-1331-4137-9117-BEBEA2555713}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HouseOfSantaClaus", "HouseOfSantaClaus", "{8CDFD450-A476-48BA-BCF6-98DAEEAB0137}"
+	ProjectSection(SolutionItems) = preProject
+		MarkDown\HouseOfSantaClaus\HouseOfSantaClaus.md = MarkDown\HouseOfSantaClaus\HouseOfSantaClaus.md
+		MarkDown\HouseOfSantaClaus\HouseSantaClaus_01.png = MarkDown\HouseOfSantaClaus\HouseSantaClaus_01.png
+		MarkDown\HouseOfSantaClaus\HouseSantaClaus_02.png = MarkDown\HouseOfSantaClaus\HouseSantaClaus_02.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MorseCalculator", "MorseCalculator", "{6D9ED670-1780-4055-8385-9D810B2E793A}"
+	ProjectSection(SolutionItems) = preProject
+		MarkDown\MorseCalculator\MorseCalculator.md = MarkDown\MorseCalculator\MorseCalculator.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -326,6 +338,8 @@ Global
 		{685A8B16-4CF8-4AED-AAD8-097CCDC7D7EC} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{AABA16D0-36A1-404C-833C-EE5A1449F0C3} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{A457ED8D-9B98-450B-B0B6-3503FF4BEA13} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{8CDFD450-A476-48BA-BCF6-98DAEEAB0137} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{6D9ED670-1780-4055-8385-9D810B2E793A} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}

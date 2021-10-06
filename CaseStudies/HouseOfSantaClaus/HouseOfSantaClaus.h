@@ -1,5 +1,5 @@
 // =====================================================================================
-// Coordinate.h
+// HouseOfSantaClaus.h
 // =====================================================================================
 
 #pragma once
@@ -21,10 +21,10 @@ public:
     size_t numberOfSolutions() const { return m_solutions.size(); }
 
 protected:
-    bool isSolution(int number);
     void addSolution(int number);
 
     // minimalistic 'template method' pattern
+    bool isSolution(int number); 
     virtual void numberToDigits(int number) = 0;
     virtual bool checkValidRangeOfDigits() = 0;
     virtual bool checkSelfLoops() = 0;
@@ -34,7 +34,6 @@ protected:
 private:
     void printSolution(std::ostream& os, int number) const;
 };
-
 
 // =====================================================================================
 // End-of-File
