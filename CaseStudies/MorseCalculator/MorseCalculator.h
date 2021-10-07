@@ -6,6 +6,8 @@
 
 // TODO: hmm, wie wäre es mit static ... alle Elemente dieser Klasse 
 
+//TODO: Die size von dem Alphabet constexpr ... um zu sehe, dass es funktioniert ...
+// Oder einzelne Einträge aus dem Alphabet
 
 namespace MorseExample {
 
@@ -64,10 +66,7 @@ namespace MorseExample {
         std::string encode(const std::string& message) const;
         std::string decode(const std::string& message) const;
     };
-
 }
-
-
 
 // =====================================================================================
 // End-of-File

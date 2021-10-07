@@ -97,57 +97,67 @@ namespace MorseExample {
 
         return result;
     }
+}
 
-    void test_023_x()
-    {
-        // small benchmark test
-        std::string s{ "" };
-        std::cout << s << std::endl;
+void test_01()
+{
+    using namespace MorseExample;
 
-        s.pop_back();
-        std::cout << s << std::endl;
-    }
+    // small benchmark test
+    std::string s{ "" };
+    std::cout << s << std::endl;
 
-    void test_023_a()
-    {
-        // accessing a single entry of the morse alphabet table
-        constexpr auto& entry = morseAlphabetTable[3];
-        std::cout << entry.first << ", " << entry.second << std::endl;
-    }
+    s.pop_back();
+    std::cout << s << std::endl;
+}
 
-    void test_023_b()
-    {
-        constexpr MorseCalculator calc;
-        std::string text{ "C IS BEAUTIFUL" };
-        std::string message = calc.encode(text);
-        std::cout << "Result: " << message << std::endl;
-    }
+void test_02()
+{
+    using namespace MorseExample;
 
-    void test_023_c()
-    {
-        constexpr MorseCalculator calc;
-        std::string message{
-            "- .... . / --.- ..- .. -.-. -.- / -... .-. --- .-- -. / "
-            "..-. --- -..- / .--- ..- -- .--. ... / --- ...- . .-. / "
-            "- .... . / .-.. .- --.. -.-- / -.. --- --."
-        };
-        std::string text = calc.decode(message);
-        std::cout << "Result: " << text << std::endl;
-    }
+    // accessing a single entry of the morse alphabet table
+    constexpr auto& entry = morseAlphabetTable[3];
+    std::cout << entry.first << ", " << entry.second << std::endl;
+}
 
-    void test_023_d()
-    {
-        constexpr MorseCalculator calc;
+void test_03()
+{
+    using namespace MorseExample;
 
-        // testing 'back and forth'
-        std::string text{ "The quick brown fox jumps over the lazy dog" };
-        std::cout << "Input: " << text << std::endl;
-        std::string message = calc.encode(text);
-        std::cout << "Morse message: " << message << std::endl;
+    constexpr MorseCalculator calc;
+    std::string text{ "C IS BEAUTIFUL" };
+    std::string message = calc.encode(text);
+    std::cout << "Result: " << message << std::endl;
+}
 
-        std::string original = calc.decode(message);
-        std::cout << "Result: " << original << std::endl;
-    }
+void test_04()
+{
+    using namespace MorseExample;
+
+    constexpr MorseCalculator calc;
+    std::string message{
+        "- .... . / --.- ..- .. -.-. -.- / -... .-. --- .-- -. / "
+        "..-. --- -..- / .--- ..- -- .--. ... / --- ...- . .-. / "
+        "- .... . / .-.. .- --.. -.-- / -.. --- --."
+    };
+    std::string text = calc.decode(message);
+    std::cout << "Result: " << text << std::endl;
+}
+
+void test_05()
+{
+    using namespace MorseExample;
+
+    constexpr MorseCalculator calc;
+
+    // testing 'back and forth'
+    std::string text{ "The quick brown fox jumps over the lazy dog" };
+    std::cout << "Input: " << text << std::endl;
+    std::string message = calc.encode(text);
+    std::cout << "Morse message: " << message << std::endl;
+
+    std::string original = calc.decode(message);
+    std::cout << "Result: " << original << std::endl;
 }
 
 // =====================================================================================
