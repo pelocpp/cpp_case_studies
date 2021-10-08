@@ -82,7 +82,7 @@ bool HouseOfSantaClausRanges::checkForDuplicateEdges()
     bool result = std::all_of(
         std::begin(edges),
         std::end(edges),
-        [&](auto& pair) {
+        [&](const auto& pair) {
             ++start;
             auto it = std::find(start, std::end(edges), pair);
             return (it == std::end(edges));

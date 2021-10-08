@@ -17,6 +17,7 @@ private:
 
 public:
     HouseOfSantaClaus() = default;
+    ~HouseOfSantaClaus() = default;
     virtual void solve() = 0;
     size_t numberOfSolutions() const { return m_solutions.size(); }
 
