@@ -4,67 +4,68 @@
 
 #pragma once
 
-// TODO: hmm, wie wäre es mit static ... alle Elemente dieser Klasse 
-
-//TODO: Die size von dem Alphabet constexpr ... um zu sehe, dass es funktioniert ...
-// Oder einzelne Einträge aus dem Alphabet
-
 namespace MorseExample {
+
+    using namespace std::literals::string_view_literals;
 
     using MorseAlphabet = std::array<std::pair<char, std::string_view>, 26>;
 
-    constexpr auto morseAlphabetTable = [] {
-
-        using namespace std::literals::string_view_literals;
-
-        MorseAlphabet alphabet{};
-
-        alphabet[0] = { 'A', ".-"sv };
-        alphabet[1] = { 'B', "-..."sv };
-        alphabet[2] = { 'C', "-.-."sv };
-        alphabet[3] = { 'D', "-.."sv };
-        alphabet[4] = { 'E', "."sv };
-        alphabet[5] = { 'F', "..-."sv };
-        alphabet[6] = { 'G', "--."sv };
-        alphabet[7] = { 'H', "...."sv };
-        alphabet[8] = { 'I', ".."sv };
-        alphabet[9] = { 'J', ".---"sv };
-        alphabet[10] = { 'K', "-.-"sv };
-        alphabet[11] = { 'L', ".-.."sv };
-        alphabet[12] = { 'M', "--"sv };
-        alphabet[13] = { 'N', "-."sv };
-        alphabet[14] = { 'O', "---"sv };
-        alphabet[15] = { 'P', ".--."sv };
-        alphabet[16] = { 'Q', "--.-"sv };
-        alphabet[17] = { 'R', ".-."sv };
-        alphabet[18] = { 'S', "..."sv };
-        alphabet[19] = { 'T', "-"sv };
-        alphabet[20] = { 'U', "..-"sv };
-        alphabet[21] = { 'V', "...-"sv };
-        alphabet[22] = { 'W', ".--"sv };
-        alphabet[23] = { 'X', "-..-"sv };
-        alphabet[24] = { 'Y', "-.--"sv };
-        alphabet[25] = { 'Z', "--.."sv };
-
-        return alphabet;
-    } ();
-
     class MorseCalculator
     {
-    private:
-        MorseAlphabet m_alphabet;
-
     public:
-        // c'tors
-        constexpr MorseCalculator() : m_alphabet{ morseAlphabetTable } {}
+        static std::string encode(const std::string& message);
+        static std::string decode(const std::string& message);
 
     private:
-        std::string charToMorse(char ch) const;
-        char morseToChar(const std::string& morse) const;
+        static std::string charToMorse(char ch);
+        static char morseToChar(const std::string& morse);
+
+        static constexpr MorseAlphabet m_alphabet
+        { {
+            { 'A', ".-"sv },
+            { 'B', "-..."sv },
+            { 'C', "-.-."sv },
+            { 'D', "-.."sv },
+            { 'E', "."sv },
+            { 'F', "..-."sv },
+            { 'G', "--."sv },
+            { 'H', "...."sv },
+            { 'I', ".."sv },
+            { 'J', ".---"sv },
+            { 'K', "-.-"sv },
+            { 'L', ".-.."sv },
+            { 'M', "--"sv },
+            { 'N', "-."sv },
+            { 'O', "---"sv },
+            { 'P', ".--."sv },
+            { 'Q', "--.-"sv },
+            { 'R', ".-."sv },
+            { 'S', "..."sv },
+            { 'T', "-"sv },
+            { 'U', "..-"sv },
+            { 'V', "...-"sv },
+            { 'W', ".--"sv },
+            { 'X', "-..-"sv },
+            { 'Y', "-.--"sv },
+            { 'Z', "--.."sv },
+        } } ;
 
     public:
-        std::string encode(const std::string& message) const;
-        std::string decode(const std::string& message) const;
+        static inline constexpr size_t size ()
+        {
+            return m_alphabet.size();
+        }
+
+        static inline constexpr std::pair<char, std::string_view> getEntry (const int index)
+        {
+            return m_alphabet[index];
+        }
+
+        template <int INDEX>
+        static inline constexpr std::pair<char, std::string_view> getEntry()
+        {
+            return m_alphabet[INDEX];
+        };
     };
 }
 

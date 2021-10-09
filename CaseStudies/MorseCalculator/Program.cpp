@@ -12,29 +12,67 @@
 
 #include "MorseCalculator.h"
 
-	// https://www.fluentcpp.com/2017/04/21/how-to-split-a-string-in-c/
+void test_01()
+{
+    using namespace MorseExample;
 
-// TODO: Ne Funktion einbauen, die via constexpr auf das Aplhabet zugreift ... um constexpre zu überprüfen ....
+    // retrieving size of morse alphabet table
+    constexpr auto size{ MorseCalculator::size() };
+    std::cout << "Size: " << size << std::endl;
 
-// TODO: In der Doku das Template Method Pattern haerausheben ....
+    // accessing a single entry of the morse alphabet table
+    constexpr auto entry{ MorseCalculator::getEntry(3) };
+    std::cout << entry.first << ", " << entry.second << std::endl;
 
-// TODO: Mögloicherweise die KLasse MorseAlphabet nur rein statiuc implmentieren ...
+    // accessing a single entry of the morse alphabet table
+    constexpr std::pair<char, std::string_view> entry2{ MorseCalculator::getEntry<5>() };
+    std::cout << entry2.first << ", " << entry2.second << std::endl;
+}
 
-extern void test_01();
-extern void test_02();
-extern void test_03();
-extern void test_04();
-extern void test_05();
+void test_02()
+{
+    using namespace MorseExample;
 
-#include "MorseCalculator.h"
+    std::string text{ "C IS BEAUTIFUL" };
+    std::string message{ MorseCalculator::encode(text) };
+    std::cout << "Result: " << message << std::endl;
+}
+
+void test_03()
+{
+    using namespace MorseExample;
+
+    std::string message{
+        "- .... . / --.- ..- .. -.-. -.- / -... .-. --- .-- -. / "
+        "..-. --- -..- / .--- ..- -- .--. ... / --- ...- . .-. / "
+        "- .... . / .-.. .- --.. -.-- / -.. --- --."
+    };
+    std::string text{ MorseCalculator::decode(message) };
+    std::cout << "Result: " << text << std::endl;
+}
+
+void test_04()
+{
+    using namespace MorseExample;
+
+    // testing 'back and forth'
+    std::string text{ "The quick brown fox jumps over the lazy dog" };
+    std::cout << "Input: " << text << std::endl;
+    std::string message{ MorseCalculator::encode(text) };
+    std::cout << "Morse message: " << std::endl << message << std::endl;
+
+    std::string original{ MorseCalculator::decode(message) };
+    std::cout << "Result: " << original << std::endl;
+}
 
 int main()
 {
-	test_01();
-	test_02();
-	test_03();
+	//test_01();
+	//test_02();
+	//test_03();
 	test_04();
-	test_05();
+
+    return 0;
 }
 
 // =====================================================================================
