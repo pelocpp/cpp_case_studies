@@ -106,58 +106,46 @@ definieren die Methoden aber als (statische) Klassenmethoden ([Listing 1]):
 14: 
 15:     static constexpr MorseAlphabet m_alphabet
 16:     { {
-17:         { 'A', ".-"sv },
-18:         { 'B', "-..."sv },
-19:         { 'C', "-.-."sv },
-20:         { 'D', "-.."sv },
-21:         { 'E', "."sv },
-22:         { 'F', "..-."sv },
-23:         { 'G', "--."sv },
-24:         { 'H', "...."sv },
-25:         { 'I', ".."sv },
-26:         { 'J', ".---"sv },
-27:         { 'K', "-.-"sv },
-28:         { 'L', ".-.."sv },
-29:         { 'M', "--"sv },
-30:         { 'N', "-."sv },
-31:         { 'O', "---"sv },
-32:         { 'P', ".--."sv },
-33:         { 'Q', "--.-"sv },
-34:         { 'R', ".-."sv },
-35:         { 'S', "..."sv },
-36:         { 'T', "-"sv },
-37:         { 'U', "..-"sv },
-38:         { 'V', "...-"sv },
-39:         { 'W', ".--"sv },
-40:         { 'X', "-..-"sv },
-41:         { 'Y', "-.--"sv },
-42:         { 'Z', "--.."sv },
-43:     } } ;
-44: 
-45: public:
-46:     static inline constexpr size_t size ()
-47:     {
-48:         return m_alphabet.size();
-49:     }
-50: 
-51:     static inline constexpr std::pair<char, std::string_view> getEntry (const int index)
-52:     {
-53:         return m_alphabet[index];
-54:     }
-55: 
-56:     template <int INDEX>
-57:     static inline constexpr std::pair<char, std::string_view> getEntry()
-58:     {
-59:         return m_alphabet[INDEX];
-60:     };
-61: };
+17:         { 'A', ".-"sv },   { 'B', "-..."sv },
+18:         { 'C', "-.-."sv }, { 'D', "-.."sv },
+19:         { 'E', "."sv },    { 'F', "..-."sv },
+20:         { 'G', "--."sv },  { 'H', "...."sv },
+21:         { 'I', ".."sv },   { 'J', ".---"sv },
+22:         { 'K', "-.-"sv },  { 'L', ".-.."sv },
+23:         { 'M', "--"sv },   { 'N', "-."sv },
+24:         { 'O', "---"sv },  { 'P', ".--."sv },
+25:         { 'Q', "--.-"sv }, { 'R', ".-."sv },
+26:         { 'S', "..."sv },  { 'T', "-"sv },
+27:         { 'U', "..-"sv },  { 'V', "...-"sv },
+28:         { 'W', ".--"sv },  { 'X', "-..-"sv },
+29:         { 'Y', "-.--"sv }, { 'Z', "--.."sv },
+30:     } } ;
+31: 
+32: public:
+33:     static inline constexpr size_t size ()
+34:     {
+35:         return m_alphabet.size();
+36:     }
+37: 
+38:     static inline constexpr std::pair<char, std::string_view> getEntry (const int index)
+39:     {
+40:         return m_alphabet[index];
+41:     }
+42: 
+43:     template <int INDEX>
+44:     static inline constexpr std::pair<char, std::string_view> getEntry()
+45:     {
+46:         return m_alphabet[INDEX];
+47:     };
+48: };
+
 ```
 
 *Listing* 1: Klasse `MorseCalculator`: Definition.
 
 Im Quellcode von [Listing 1] sind zwei weitere Subtilitäten verborgen, auf die ich aufmerksam machen möchte:
 
-  * In Zeile 16 und 43 sind jeweils zwei geschweifte Klammern notwendig, um das `std::array`-Objekt statisch initialisieren
+  * In Zeile 16 und 30 sind jeweils zwei geschweifte Klammern notwendig, um das `std::array`-Objekt statisch initialisieren
     zu können. Ich versuche, den Sachverhalt möglichst einfach zu erklären:
     Bei einem  `std::array`-Objekt kommt die so genannte *Aggregat*-*Initialisierung* zum Einsatz.
     Die Klasse `std::array` besitzt konzeptionell wierderum ein &ldquo;Built-in Array&rdquo;, das mit einer
@@ -167,7 +155,7 @@ Im Quellcode von [Listing 1] sind zwei weitere Subtilitäten verborgen, auf die 
 
   * Die Einträge des `std::array`-Objekts sind vom Typ `std::pair<char, std::string_view>`.
     Variablen des Typs  `std::string_view` lassen sich passgenau vorbelegen, wenn man an die Zeichenkettenkonstanten
-    noch das Suffix `sv` anhängt (siehe die Zeilen 17 bis 42 von [Listing 1])
+    noch das Suffix `sv` anhängt (siehe die Zeilen 17 bis 29 von [Listing 1])
 
 Um überprüfen zu können, dass der Inhalt des Morsealphabets tatsächlich zur Übersetzungszeit generiert wird,
 gibt es eine Methode `getEntry` (in zwei Überladungen).
