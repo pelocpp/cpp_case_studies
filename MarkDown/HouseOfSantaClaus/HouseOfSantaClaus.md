@@ -65,7 +65,7 @@ Wir erkennen am Beispiel von (1,5) auch, dass nicht jedes Knotenpaar eine gülti
 
 # Ein iterativer Lösungsansatz
 
-Wir betrachten in dieser Fallstudie einen iterativen Ansatz zur programmiersprachlichen Lösung der Aufgabe
+Wir betrachten in dieser Fallstudie einen iterativen Ansatz zur programmiersprachlichen Lösung der Fallstudie
 in zwei Implementierungsvarianten. Es gibt auch einen rekursiven Lösungsansatz,
 der geringe Kenntnisse aus der Graphentheorie voraussetzt, den wir hier aber nicht weiter verfolgen wollen.
 

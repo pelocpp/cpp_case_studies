@@ -26,7 +26,9 @@ namespace MorseExample {
             }
         );
 
-        return (it != std::end(m_alphabet)) ? std::string{ (*it).second } : std::string{};
+        return (it != std::end(m_alphabet))
+            ? std::string{ (*it).second }
+            : std::string{};
     }
 
     char MorseCalculator::morseToChar(const std::string& morse)
@@ -73,7 +75,8 @@ namespace MorseExample {
 
         std::string result{};
 
-        // splitting a stream with std::getline (delimiter needn't to be a white space)
+        // splitting a stream with std::getline
+        // (delimiter does't need to be a white space)
         std::istringstream tokenStream(tmp);
         while (std::getline(tokenStream, word, delimiter)) {
             words.push_back(word);

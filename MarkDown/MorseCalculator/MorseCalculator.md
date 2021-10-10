@@ -13,11 +13,12 @@ verschlüsseln bzw. entschlüsseln.
 
 # Lernziele
 
-  * `std::string_view`-Literale, Suffix &ldquo;sv&rdquo;
+  * Klasse `std::string_view`, `std::string_view`-Literale, Suffix &ldquo;sv&rdquo;
   * `constexpr`-Objekte
   * Lambda-Funktionen
   * STL-Algorithmen `std::begin`, `std::end`, `std::for_each`, `std::find_if`
   * STL-Klasse `std::array`
+  * `using` Direktive
   * Zerlegung von Zeichenketten (*string splitting*)
 
 # Einführung
@@ -43,8 +44,7 @@ Zuordnung einzelner Buchstaben zu den Punkten und Strichen ist in [Tabelle 1] ab
 | L | .-.. | Y | -.-- |
 | M | --   | Z | --.. |
 
-*Tabelle* 1: Die Verschlüsselung der Buchstaben im Morsealphabet.
-
+*Tabelle* 1: Verschlüsselung der Buchstaben im Morsealphabet.
 
 *Hinweis*: Beim Morsen wird zwischen zwei Buchstaben in einem Wort eine Pause eingeschoben.
 In der Implementierung von `encode` verwenden Sie dazu ein Leerzeichen (Blank `' '`). Für die
@@ -70,7 +70,7 @@ Result: -.-. /.. ... /-... . .- ..- - .. ..-. ..- .-..
 
 > Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
 
-Wir versuchen, in der Realisierung der Aufgabe einige Aspekte von *Modern C++* zu integrieren.
+Wir versuchen, in der Realisierung der Fallstudie einige Aspekte von *Modern C++* zu integrieren.
 Da wäre zum Beispiel das Morsealphabet. Es bietet sich an, diese Datenstruktur so zu konzipieren,
 dass ihr Inhalt bereits vom Übersetzer gebildet werden kann. Das Schlüsselwort `constexpr` kommt daher zum Einsatz &ndash;
 und ein Objekt der Klasse `std::array`, da dieses etliche `constexpr`-definierte Konstruktoren und Methoden besitzt:
@@ -148,14 +148,14 @@ Im Quellcode von [Listing 1] sind zwei weitere Subtilitäten verborgen, auf die 
   * In Zeile 16 und 30 sind jeweils zwei geschweifte Klammern notwendig, um das `std::array`-Objekt statisch initialisieren
     zu können. Ich versuche, den Sachverhalt möglichst einfach zu erklären:
     Bei einem  `std::array`-Objekt kommt die so genannte *Aggregat*-*Initialisierung* zum Einsatz.
-    Die Klasse `std::array` besitzt konzeptionell wierderum ein &ldquo;Built-in Array&rdquo;, das mit einer
+    Die Klasse `std::array` besitzt konzeptionell wiederum ein &ldquo;Built-in&rdquo; Array, das mit einer
     Initialisierungliste (`std::initializer_list`) vorbelegt wird. 
     Damit sind die inneren geschweiften Klammern für das `std::initializer_list`-Objekt,
-    die äußeren für die Aggregat-Initialisierung.
+    die äußeren für die Aggregat-Initialisierung notwendig.
 
   * Die Einträge des `std::array`-Objekts sind vom Typ `std::pair<char, std::string_view>`.
     Variablen des Typs  `std::string_view` lassen sich passgenau vorbelegen, wenn man an die Zeichenkettenkonstanten
-    noch das Suffix `sv` anhängt (siehe die Zeilen 17 bis 29 von [Listing 1])
+    noch das Suffix `sv` anhängt (siehe die Zeilen 17 bis 29 von [Listing 1]).
 
 Um überprüfen zu können, dass der Inhalt des Morsealphabets tatsächlich zur Übersetzungszeit generiert wird,
 gibt es eine Methode `getEntry` (in zwei Überladungen).
@@ -165,11 +165,10 @@ Die Realisierung der `getEntry`-Methode ist mit und ohne `template`-Technik mög
 Greift man auf die `template`-Technik zurück, ist der Alphabet-Index gleich dem Template-Parameter.
 Logischerweise muss dieser zur Übersetzungszeit bekannt sein.
 Die `getEntry`-Methoden ist in diesem Fall eine so genannte &ldquo;*Template Member Function*&rdquo;.
-Eine nicht-Template Klasse kann also Tempate Member Funktionen haben, wenn dies erwünscht ist.
+Eine Non-Template Klasse kann also Template Member Funktionen haben, wenn dies erwünscht ist.
 
 Die zweite Überladung der `getEntry`-Methode kommt ohne Template-Technik aus,
 mit dem Schlüsselwort `constexpr` alleine erreicht man auch das Ziel.
-
 Wir demonstrieren beide Überladungen der `getEntry`-Methode an einem Beispiel:
 
 ```cpp
@@ -206,118 +205,122 @@ Damit stellen wir in [Listing 2] die Implementierung der Klasse `MorseCalculator
 10:         }
 11:     );
 12: 
-13:     return (it != std::end(m_alphabet)) ? std::string{ (*it).second } : std::string{};
-14: }
-15: 
-16: char MorseCalculator::morseToChar(const std::string& morse)
-17: {
-18:     auto it = std::find_if(
-19:         std::begin(m_alphabet), 
-20:         std::end(m_alphabet),
-21:         [&](const auto& entry) {
-22:             return entry.second == morse;
-23:         }
-24:     );
-25: 
-26:     return (it != std::end(m_alphabet)) ? (*it).first : '\0';
-27: }
-28: 
-29: std::string MorseCalculator::encode(const std::string& message)
-30: {
-31:     std::string result;
-32: 
-33:     std::for_each(
-34:         std::begin(message),
-35:         std::end(message),
-36:         [&](const char ch) {
-37:             if (ch == ' ') {
-38:                 result.push_back('/');
-39:             }
-40:             else {
-41:                 std::string morse = charToMorse(ch);
-42:                 result.append(morse);
-43:                 result.push_back(' ');
-44:             }
-45:         }
-46:     );
-47: 
-48:     return result;
-49: }
-50: 
-51: std::string MorseCalculator::decode(const std::string& message)
-52: {
-53:     std::string tmp{ message };
-54:     char delimiter{ '/' };
-55:     std::vector<std::string> words;
-56:     std::string word;
-57: 
-58:     std::string result{};
+13:     return (it != std::end(m_alphabet))
+14:         ? std::string{ (*it).second }
+15:         : std::string{};
+16: }
+17: 
+18: char MorseCalculator::morseToChar(const std::string& morse)
+19: {
+20:     auto it = std::find_if(
+21:         std::begin(m_alphabet), 
+22:         std::end(m_alphabet),
+23:         [&](const auto& entry) {
+24:             return entry.second == morse;
+25:         }
+26:     );
+27: 
+28:     return (it != std::end(m_alphabet)) ? (*it).first : '\0';
+29: }
+30: 
+31: std::string MorseCalculator::encode(const std::string& message)
+32: {
+33:     std::string result;
+34: 
+35:     std::for_each(
+36:         std::begin(message),
+37:         std::end(message),
+38:         [&](const char ch) {
+39:             if (ch == ' ') {
+40:                 result.push_back('/');
+41:             }
+42:             else {
+43:                 std::string morse = charToMorse(ch);
+44:                 result.append(morse);
+45:                 result.push_back(' ');
+46:             }
+47:         }
+48:     );
+49: 
+50:     return result;
+51: }
+52: 
+53: std::string MorseCalculator::decode(const std::string& message)
+54: {
+55:     std::string tmp{ message };
+56:     char delimiter{ '/' };
+57:     std::vector<std::string> words;
+58:     std::string word;
 59: 
-60:     // splitting a stream with std::getline (delimiter needn't to be a white space)
-61:     std::istringstream tokenStream(tmp);
-62:     while (std::getline(tokenStream, word, delimiter)) {
-63:         words.push_back(word);
-64:     }
-65: 
-66:     std::for_each(
-67:         std::begin(words), 
-68:         std::end(words),
-69:         [&](const std::string& word) {
-70:             // splitting a stream with STL iterator interface 
-71:             std::istringstream iss(word);
-72:             auto begin = std::istream_iterator<std::string>{ iss };
-73:             auto end = std::istream_iterator<std::string>{};
-74: 
-75:             // constructs the container with the contents of the range
-76:             std::vector<std::string> letters{ begin, end };
+60:     std::string result{};
+61: 
+62:     // splitting a stream with std::getline
+63:     // (delimiter does't need to be a white space)
+64:     std::istringstream tokenStream(tmp);
+65:     while (std::getline(tokenStream, word, delimiter)) {
+66:         words.push_back(word);
+67:     }
+68: 
+69:     std::for_each(
+70:         std::begin(words), 
+71:         std::end(words),
+72:         [&](const std::string& word) {
+73:             // splitting a stream with STL iterator interface 
+74:             std::istringstream iss(word);
+75:             auto begin = std::istream_iterator<std::string>{ iss };
+76:             auto end = std::istream_iterator<std::string>{};
 77: 
-78:             std::for_each(
-79:                 std::begin(letters),
-80:                 std::end(letters), 
-81:                 [&](std::string morse) {
-82:                     char ch{ morseToChar(morse) };
-83:                     result.push_back(ch);
-84:                 }
-85:             );
-86: 
-87:             result.push_back(' ');
-88:         }
-89:     );
-90: 
-91:     return result;
-92: }
+78:             // constructs the container with the contents of the range
+79:             std::vector<std::string> letters{ begin, end };
+80: 
+81:             std::for_each(
+82:                 std::begin(letters),
+83:                 std::end(letters), 
+84:                 [&](std::string morse) {
+85:                     char ch{ morseToChar(morse) };
+86:                     result.push_back(ch);
+87:                 }
+88:             );
+89: 
+90:             result.push_back(' ');
+91:         }
+92:     );
+93: 
+94:     return result;
+95: }
 ```
 
 *Listing* 2: Klasse `MorseCalculator`: Implementierung.
 
-Die beiden Methoden `charToMorse` (Zeilen 1 bis 14) und `morseToChar` (Zeilen 16 bis 27)
+Die beiden Methoden `charToMorse` (Zeilen 1 bis 16) und `morseToChar` (Zeilen 18 bis 29) von [Listing 2]
 wandeln ein Zeichen des Alphabets in 
-die entsprechende Morsezeichenkette um oder umgekehrt. Ein `std::array` als Datenstruktur ist für 
+die entsprechende Morsezeichenkette um oder umgekehrt. Ein `std::array`-Objekt als Datenstruktur ist für 
 eine lineare Suche hier sicherlich nicht der ideale Kandidat, ein `std::map`-Objekt wäre besser geeignet.
 Ich habe mich letzten Endes dennoch für die `std::array`-Klasse aus zwei Gründen entschieden:
 Zum einen wollte ich die Morsealphabet&ndash;Datenstruktur zur Übersetzungszeit erzeugen.
-Hierzu bieten `std::map`-Objekte wenig oder eigentlich gar keine Unterstützung.
+Hierzu bieten `std::map`-Objekte wenig oder eigentlich gar keine Unterstützung an.
 Zum zweiten ist auch die `std::map`-Klasse nicht ganz die ideale Datenstruktur zum Suchen,
 da man auf Grund der Suche in beiden Richtungen (Buchstabe nach Morsezeichenkette und umgekehrt)
 eigentlich eine &ldquo;*Bi*&rdquo;Map Datenstruktur benötigen würde.
 
 Die Realisierung der `encode`-Methode verbirgt keine Stolpersteine.
 In der `decode`-Methode wird zweimal &ndash; auf unterschiedliche Weise &ndash; eine Zeichenkette in Teilzeichenketten zerlegt.
-In den Zeilen 61 bis 64 vollziehen wir dies mit einer speziellen Überladung der `std::getline`-Methode.
-Der Vorteil dieses Ansatzes ist, dass das Trennzeichen kein Blank zu sein hat (hier: Schrägstrich `'/'`).
+In den Zeilen 64 bis 67 vollziehen wir dies mit einer speziellen Überladung der `std::getline`-Methode.
+Der Vorteil dieses Ansatzes ist, dass das Trennzeichen kein Blank sein muss (hier: Schrägstrich `'/'`).
 Es wird eine Nachricht mit mehreren Wörtern in ihre einzelnen Worte zerlegt.
 Die zweite Zeichenkettenzerlegung zerlegt ein Wort in Morsedarstellung in die einzelnen Buchstaben.
 Hier tritt als Trennzeichen ein Blank in Erscheinung, wir können ein `std::istringstream`-Objekt
 mit zwei `std::istream_iterator<std::string>`-Objekten einsetzen.
-Eine spezielle Überladung der Konstruktoren der `std::vector`-Klasse besitzt zwei `std::istream_iterator<std::string>`-Objekt
+Eine spezielle Überladung der Konstruktoren der `std::vector`-Klasse besitzt
+zwei `std::istream_iterator<std::string>`-Objekte
 als Parameter und traversiert auf diese Weise das `std::istringstream`-Objekt, das dabei in seine einzelnen
-Bestandteile zerlegt wird. Dieser Ansatz setzt ein Blank als Trennzeichen voraus (Zeilen 71 bis 76).
+Bestandteile zerlegt wird. Dieser Ansatz setzt ein Blank als Trennzeichen voraus (Zeilen 74 bis 79).
 
-In den Zeilen 85 bis 104 können Sie eine Lambda-Funktion wahrnehmen, die in der Implementierung
-wiederum eine Lambda-Funktion enthält. Also einfacher formuliert: Wir haben eine geschachtelte Lambda-Funktion vorliegen.
+In den Zeilen 72 bis 91 können Sie eine Lambda-Funktion wahrnehmen, die in der Implementierung
+wiederum eine Lambda-Funktion enthält (Zeilen 84 bis 87). Also einfacher formuliert: Wir haben eine geschachtelte Lambda-Funktion vorliegen.
 Subtil hierbei ist, dass die innere Lambda-Funktion auf eine Variable `result` im *Closure*
 der äußeren, umgebenden `decode`-Methode zugreift. Es muss folglich in beiden *Capture*-*Clauses*
-der beiden Lambda-Funktionen via Referenz-Operator `&` der Zugriff ermöglicht werden.
+der Lambda-Funktionen via Referenz-Operator `&` der Zugriff ermöglicht werden.
 
 ## Ein Beispiel
 
@@ -360,7 +363,7 @@ entnommen.
 # There&lsquo;s more
 
 Der Einsatz eines `std::array`-Objekts ist für performantes  Chiffrieren und Dechiffrieren nicht die
-performanteste Lösung. Überlegen Sie, wie man eine *BiMap*-Klasse implementieren müsste,
+performanteste Lösung. Überlegen Sie, wie man eine *BiMap*-Klasse implementieren könnte,
 um laufzeit-optimalere Ergebnisse zu erzielen.
 
 <br/>
