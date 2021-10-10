@@ -10,6 +10,10 @@ vor.
 
 ### Aktueller Stand:
 
+### Oktober 2021
+
+  * Das Morsealphabet
+  * Das Haus des Nikolaus
 
 ### Mai 2021
 
