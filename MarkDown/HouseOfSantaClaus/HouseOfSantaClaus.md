@@ -13,11 +13,9 @@ Wie viele verschiedene Möglichkeiten gibt es, das Haus zu zeichnen?
 
 ###### {#abbildung_1_house_of_santa_claus}
 
-{{< figure src="/img/houseofsantaclaus/HouseSantaClaus_01.png" width="50%" >}}
+{{< figure src="/img/houseofsantaclaus/HouseSantaClaus_01.png" width="12%" >}}
 
 *Abbildung* 1: Das Haus des Nikolaus &ndash; als Spiel betrachtet.
-
-<img src="./HouseSantaClaus_01.png" alt="alt text" width="100"/>
 
 Entwerfen Sie geeignet ein oder mehrere C++&ndash;Klassen,
 um alle Lösungen des &ldquo;Haus des Nikolaus&rdquo;-Problems zu ermitteln.
@@ -53,8 +51,6 @@ für dessen Kanten keine Regelung besteht, in welcher Richtung sie durchlaufen w
 {{< figure src="/img/houseofsantaclaus/HouseSantaClaus_02.png" width="50%" >}}
 
 *Abbildung* 2: Das Haus des Nikolaus &ndash; von einem Mathematiker betrachtet.
-
-<img src="./HouseSantaClaus_02.png" alt="alt text" width="100"/>
 
 Damit haben wir die Aufgabenstellung auf die Frage reduziert,
 wieviele Wege es in einem bestimmten ungerichteten Graphen gibt, der jede Kante genau einmal traversiert.
