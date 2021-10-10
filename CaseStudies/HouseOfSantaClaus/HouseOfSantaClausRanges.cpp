@@ -50,15 +50,18 @@ bool HouseOfSantaClausRanges::checkSelfLoops()
 
 bool HouseOfSantaClausRanges::checkValidEdges()
 {
-    auto it = std::adjacent_find(std::begin(m_digits), std::end(m_digits), [](int a, int b) {
-
-        if ((a == 1 and b == 5) or (a == 5 and b == 1) or
-            (a == 2 and b == 5) or (a == 5 and b == 2)) {
-            return true;
+    auto it = std::adjacent_find(
+        std::begin(m_digits), 
+        std::end(m_digits), 
+        [](int a, int b) {
+            if ((a == 1 and b == 5) or (a == 5 and b == 1) or
+                (a == 2 and b == 5) or (a == 5 and b == 2)) {
+                return true;
+            }
+            else
+                return false;  
         }
-        else
-            return false;  
-    });
+    );
     return it == std::end(m_digits);
 }
 
@@ -66,13 +69,17 @@ bool HouseOfSantaClausRanges::checkForDuplicateEdges()
 {
     std::vector<std::pair<int, int>> edges;
 
-    // prevent warning 'discarding return value of function with 'nodiscard' attribute'
+    // prevent warning 'discarding return value
+    // of function with 'nodiscard' attribute'
     static_cast<void>(
         std::adjacent_find(
             std::begin(m_digits),
             std::end(m_digits),
             [&](int a, int b) {
-                edges.push_back((a < b) ? std::pair{ a, b } : std::pair{ b, a });
+                edges.push_back((a < b) 
+                    ? std::pair{ a, b }
+                    : std::pair{ b, a }
+                );
                 return false;
             }
         )

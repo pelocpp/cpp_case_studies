@@ -21,13 +21,13 @@ Wie viele verschiedene Möglichkeiten gibt es, das Haus zu zeichnen?</p>
 <p><em>Abbildung</em> 1: Das Haus des Nikolaus – als Spiel betrachtet.</p>
 <img src="./HouseSantaClaus_01.png" alt="alt text" width="100"/>
 <p>Entwerfen Sie geeignet ein oder mehrere C++–Klassen,
-um alles Lösungen des “Haus des Nikolaus”-Problems zu ermitteln.
+um alle Lösungen des “Haus des Nikolaus”-Problems zu ermitteln.
 Im Lösungsvorschlag finden Sie zwei Realisierungsansätze vor:</p>
 <ul>
 <li>eine klassische Realisierung (keine “Modern C++” Kenntnisse erforderlich)</li>
 <li>eine C++20 Realisierung mit “Ranges”</li>
 </ul>
-<p>Schreiben Sie ein Programm, das alle Möglichkeiten berechnet und in ansprechender Form auf der Konsole ausgibt.</p>
+<p>Schreiben Sie ein Programm, das alle Lösungen in ansprechender Form auf der Konsole ausgibt.</p>
 <!--more-->
 <h1 id="lernziele">Lernziele</h1>
 <ul>
@@ -36,7 +36,7 @@ Im Lösungsvorschlag finden Sie zwei Realisierungsansätze vor:</p>
 <li>STL-Algorithmus <code>std::adjacent_find</code></li>
 <li>STL-Algorithmus <code>std::all_of</code></li>
 <li>STL-Algorithmus <code>std::generate</code></li>
-<li>Lambdas (mit <code>mutable</code>)</li>
+<li>Lambda-Funktionen</li>
 </ul>
 <h1 id="einfuhrung">Einführung</h1>
 <p>Die Umsetzung der Fragestellung erfordert zunächst eine Analyse des geschilderten Problems mit der Zielsetzung,
@@ -209,10 +209,9 @@ Hierfür betrachten wir nachfolgend die beiden von <code>HouseOfSantaClaus</code
 <code>HouseOfSantaClausIterative</code> und <code>HouseOfSantaClausRanges</code>.
 Die Methode <code>isSolution</code> selbst ist die so genannte “Template Method”,
 ihre Realisierung ist fest in der Basisklasse <code>HouseOfSantaClaus</code> verankert.</p>
-<p>Die Implementierung des <code>&lt;&lt;</code>-Operators in den Zeilen XX bis XX (inklusive der Hilfsmethode <code>printSolution</code>)
+<p>Die Implementierung des <code>&lt;&lt;</code>-Operators in den Zeilen 41 bis 59 (inklusive der Hilfsmethode <code>printSolution</code>)
 von <a href="#listing_2_class_houseofsantaclaus_impl">Listing 2</a> führt zu folgender Darstellungsform berechneter Lösungen:</p>
 <pre><code>1-&gt;2-&gt;3-&gt;1-&gt;4-&gt;3-&gt;5-&gt;4-&gt;2
-...
 </code></pre>
 <p>Der Entwurf der Klasse <code>HouseOfSantaClaus</code> lässt es bereits erkennen:
 Abgeleitete Klassen müssen sich nur noch um die Berechnung der Lösungen kümmern,
@@ -314,26 +313,26 @@ die ausschließlich klassische Sprachmittel von C++ verwendet.</p>
 <p>Die Klasse <code>HouseOfSantaClausIterative</code> besteht aus zahlreichen Methoden,
 die sich mit der Analyse von Zahlen beschäftigen, um einen zulässigen Pfad im Nikolaushaus zu beschreiben.
 Im iterativen Ansatz spielen Zahlen eine Rolle, die ausschließlich aus den Ziffern 1 bis 5 bestehen,
-diese Überprüfung führt die Methode <code>checkValidRangeOfDigits</code> durch (Zeilen XX bis YY).
+diese Überprüfung führt die Methode <code>checkValidRangeOfDigits</code> durch (Zeilen 18 bis 25).
 Aufeinanderfolgende identische Ziffern in einer Zahl stellen keinen Pfad dar,
-hierzu gibt es eine Methode <code>checkSelfLoops</code> (Zeilen XX bis YY), die derlei Zahlen ausschließt.
+hierzu gibt es eine Methode <code>checkSelfLoops</code> (Zeilen 27 bis 34), die derlei Zahlen ausschließt.
 Da nicht alle Knoten des Nikolaushauses miteinander verbunden sind, wenden wir uns als Nächstes den unzulässigen Kanten zu.
-Durch die Methode <code>checkValidEdges</code> (Zeilen XX bis YY) wird sicher gestellt, dass Kanten zwischen
+Durch die Methode <code>checkValidEdges</code> (Zeilen 36 bis 50) wird sicher gestellt, dass Kanten zwischen
 den Knoten 1 und 5 bzw. 2 und 5 ausgeschlossen werden.
 Damit kommen wir zur letzten Hilfsmethode <code>checkForDuplicateEdges</code>, deren Implementierung nicht übermäßig schwer ist,
-dafür aber etwas trickreich erscheinen mag (Zeilen XX bis YY). Alle zulässigen Kanten dürfen in einem korrekten Pfad
+dafür aber etwas trickreich erscheinen mag (Zeilen 52 bis 67). Alle zulässigen Kanten dürfen in einem korrekten Pfad
 durch das Nikolaushaus nur genau einmal vorkommen.
 Durch zwei geschickt aufeinander abgestimmte <code>for</code>-Wiederholungsanweisungen wird dies durch
 die <code>checkForDuplicateEdges</code>-Methode überprüft.</p>
 <p>All die zuvor geschilderten Hilfsmethoden
 <code>checkValidRangeOfDigits</code>, <code>checkSelfLoops</code>,
 <code>checkValidEdges</code> und <code>checkForDuplicateEdges</code> greifen auf die einzelnen Ziffern einer Zahl der Einfachheit halber in einem Array angeordnet zu.
-Diesem Zweck dient die Hilfsmethode <code>numberToDigits</code> in den Zeilen XX bis YY. Damit besitzt die <code>isSolution</code>-Methode
-in den Zeilen XX bis YY alle Zutaten, um iterativ alle möglichen (Zahlen-)Kandidaten des Nikolaushauses zu überprüfen.
+Diesem Zweck dient die Hilfsmethode <code>numberToDigits</code> in den Zeilen 10 bis 16. Damit besitzt die <code>isSolution</code>-Methode
+in den Zeilen 1 bis 11 von <a href="#listing_2_class_houseofsantaclaus_impl">Listing 2</a> alle Zutaten, um iterativ alle möglichen (Zahlen-)Kandidaten des Nikolaushauses überprüfen zu können.
 Der Vorteil dieser Lösung ist, dass sie mit vergleichsweise einfachen programmiersprachlichen Hilfsmitteln implementierbar ist.</p>
 <p>In einer zweiten Realisierung setzen wir die Ranges-Bibliothek aus C++20 ein.
 Natürlich wollen wir damit einen Benefit erzielen, es soll die Bequemlichkeit und Mächtigkeit dieser Bibliothek
-an einem vergleichweise einfachen Beispiel veranschaulicht werden (<a href="#listing_5_class_houseofsantaclausranges_decl">Listing 5</a> und <a href="#listing_5_class_houseofsantaclausranges_decl">Listing 5</a>):</p>
+an einem vergleichsweise einfachen Beispiel veranschaulicht werden (<a href="#listing_5_class_houseofsantaclausranges_decl">Listing 5</a> und <a href="#listing_5_class_houseofsantaclausranges_decl">Listing 5</a>):</p>
 <h6 id="listing_5_class_houseofsantaclausranges_decl"></h6>
 <pre><code class="language-cpp">01: class HouseOfSantaClausRanges : public HouseOfSantaClaus
 02: {
@@ -396,60 +395,67 @@ an einem vergleichweise einfachen Beispiel veranschaulicht werden (<a href="#lis
 37: 
 38: bool HouseOfSantaClausRanges::checkValidEdges()
 39: {
-40:     auto it = std::adjacent_find(std::begin(m_digits), std::end(m_digits), [](int a, int b) {
-41: 
-42:         if ((a == 1 and b == 5) or (a == 5 and b == 1) or
-43:             (a == 2 and b == 5) or (a == 5 and b == 2)) {
-44:             return true;
-45:         }
-46:         else
-47:             return false;  
-48:     });
-49:     return it == std::end(m_digits);
-50: }
-51: 
-52: bool HouseOfSantaClausRanges::checkForDuplicateEdges()
-53: {
-54:     std::vector&lt;std::pair&lt;int, int&gt;&gt; edges;
-55: 
-56:     // prevent warning 'discarding return value of function with 'nodiscard' attribute'
-57:     static_cast&lt;void&gt;(
-58:         std::adjacent_find(
-59:             std::begin(m_digits),
-60:             std::end(m_digits),
-61:             [&amp;](int a, int b) {
-62:                 edges.push_back((a &lt; b) ? std::pair{ a, b } : std::pair{ b, a });
-63:                 return false;
-64:             }
-65:         )
-66:     );
-67: 
-68:     auto start = std::begin(edges);
-69:     bool result = std::all_of(
-70:         std::begin(edges),
-71:         std::end(edges),
-72:         [&amp;](const auto&amp; pair) {
-73:             ++start;
-74:             auto it = std::find(start, std::end(edges), pair);
-75:             return (it == std::end(edges));
-76:         }
-77:     );
-78: 
-79:     return result;
-80: }
+40:     auto it = std::adjacent_find(
+41:         std::begin(m_digits), 
+42:         std::end(m_digits), 
+43:         [](int a, int b) {
+44:             if ((a == 1 and b == 5) or (a == 5 and b == 1) or
+45:                 (a == 2 and b == 5) or (a == 5 and b == 2)) {
+46:                 return true;
+47:             }
+48:             else
+49:                 return false;  
+50:         }
+51:     );
+52:     return it == std::end(m_digits);
+53: }
+54: 
+55: bool HouseOfSantaClausRanges::checkForDuplicateEdges()
+56: {
+57:     std::vector&lt;std::pair&lt;int, int&gt;&gt; edges;
+58: 
+59:     // prevent warning 'discarding return value
+60:     // of function with 'nodiscard' attribute'
+61:     static_cast&lt;void&gt;(
+62:         std::adjacent_find(
+63:             std::begin(m_digits),
+64:             std::end(m_digits),
+65:             [&amp;](int a, int b) {
+66:                 edges.push_back((a &lt; b) 
+67:                     ? std::pair{ a, b }
+68:                     : std::pair{ b, a }
+69:                 );
+70:                 return false;
+71:             }
+72:         )
+73:     );
+74: 
+75:     auto start = std::begin(edges);
+76:     bool result = std::all_of(
+77:         std::begin(edges),
+78:         std::end(edges),
+79:         [&amp;](const auto&amp; pair) {
+80:             ++start;
+81:             auto it = std::find(start, std::end(edges), pair);
+82:             return (it == std::end(edges));
+83:         }
+84:     );
+85: 
+86:     return result;
+87: }
 </code></pre>
 <p><em>Listing</em> 6: Abstrakte Basisklasse <code>HouseOfSantaClausRanges</code>: Realisierung.</p>
-<p>Für das Aufspannen eines Zahlenbereichs kommt die Ansicht <code>std::views::iota</code> zum Einsatz (Zeile XX).
+<p>Für das Aufspannen eines Zahlenbereichs kommt die Ansicht <code>std::views::iota</code> zum Einsatz (Zeile 3).
 Den <code>find_if</code>-Algorithmus gibt es nun in zwei Überladungen:
 Zum einen aus der klassischen STL mit zwei Iteratorenobjekten als Parameter für den Anfang
 und das Ende des zu traversierenden Bereichs.
 Die zweite Überladung stammt aus der Ranges-Bibliothek und besitzt als ersten
-Parameter nur ein STL-Containerobjekt, das folglich komplett traversiert wird.</p>
+Parameter nur ein STL-Containerobjekt, das folglich komplett durchlaufen wird.</p>
 <p>Nicht alle STL-Algorithmen haben Einzug in den C++20 Standard gefunden.
-Aus diesem Grund müssen wir in den Zeilen XXX und YYY auf die Algorithmen
-<code>std::adjacent_find</code> und <code>std::generate</code> in ihrer klassischen Definition zurückgreifen.</p>
-<p>Vom Erfolg des Algorithmus können Sie sich an Hand der Ausgabe erzeugen,
-sie ist in beiden Fällen (klassisch / Ranges-Bibliothek) identisch:</p>
+Aus diesem Grund müssen wir in den Zeilen 13, 40, 58 und 76 auf die Algorithmen
+<code>std::adjacent_find</code>, <code>std::generate</code> und <code>std::all_of</code> in ihrer klassischen Definition zurückgreifen.</p>
+<p>Vom Erfolg des Algorithmus können wie uns an Hand der Ausgaben erzeugen,
+sie sind in beiden Fällen (klassisch/Ranges-Bibliothek) identisch:</p>
 <pre><code>Iterative:   611 msecs.
 1-&gt;2-&gt;3-&gt;1-&gt;4-&gt;3-&gt;5-&gt;4-&gt;2   1-&gt;2-&gt;3-&gt;1-&gt;4-&gt;5-&gt;3-&gt;4-&gt;2
 1-&gt;2-&gt;3-&gt;4-&gt;1-&gt;3-&gt;5-&gt;4-&gt;2   1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;3-&gt;1-&gt;4-&gt;2
