@@ -4,11 +4,11 @@
 
 Wir betrachten in dieser Fallstudie das Thema &ldquo;Expression Templates&rdquo; und damit in Zusammenhang stehend 
 die so genannte &ldquo;Lazy Evaluation&rdquo;.
-Auf einen einfachen Nenner gebracht sind &ldquo;Expression Templates&rdquo; eine Metaprogrammiertechnik.
-Sie verschieben die Aus­wertung von Ausdrücken in eine Funktion,
-die zu einem späteren Zeitpunkt ausgeführt wird. An dieser Stelle kommt der Aspekt der
-&ldquo;Lazy Evaluation&rdquo; ins Spiel, so wie man sie von vielen funktionalen Sprachen kennt.
-
+Auf einen einfachen Nenner gebracht: &ldquo;Expression Templates&rdquo; sind eine Technik aus dem
+Umfeld der Metaprogrammierung.
+Sie verschieben die Aus­wertung von Ausdrücken in eine separate Funktion,
+die zu einem späteren Zeitpunkt ausgeführt werden kann. An dieser Stelle wird der Begriff der
+&ldquo;Lazy Evaluation&rdquo; verständlich.
 Wir betrachten das Thema am Beispiel der Verknüpfung von Zeichenketten, also beispielsweise an einem Ausdruck in der Art
 
 ```cpp
@@ -24,32 +24,28 @@ die bei der klassischen Berechnung eines solchen Ausdrucks entstehen würden.
 
 # Lernziele
 
-  * TODO
-  * Klasse `std::string_view`, `std::string_view`-Literale, Suffix &ldquo;sv&rdquo;
-  * `constexpr`-Objekte
-  * Lambda-Funktionen
-  * STL-Algorithmen `std::begin`, `std::end`, `std::for_each`, `std::find_if`
-  * STL-Klasse `std::array`
-  * `using` Direktive
-  * Zerlegung von Zeichenketten (*string splitting*)
-
+  * Variadische Template Klassen
+  * Partielle und explizite Template Spezialisierung
+  * Folding Ausdrücke
+  * Prefektes Forwarding (`std::forward`)
+  * Klasse `std::string`, `std::string`-Literale, Suffix &ldquo;s&rdquo;
 
 # Einführung
 
 Der Einsatz von &ldquo;Expression Templates&rdquo; ist dann sinnvoll,
 wenn wir einen komplexen Ausdruck mit programmiersprachlichen Anweisungen auswerten wollen,
-aber die Berechnung von Teilergebnissen, die zur Berechnung des Endergebnisses notwendig sind,
-zu einer ineffizienten Laufzeit in der Auswertung des gesamten Ausdrucks führen.
+aber die Berechnung von Teilergebnissen, die zur Berechnung des Endergebnisses notwendig ist,
+zu einer ineffizienten Laufzeit in der Auswertung des gesamten Ausdrucks führt.
 
 Häufig kennen wir im Vorneherein viele oder alle Schritte eines Ausdrucks, den wir berechnen wollen.
-Trotzdem führt dies nicht immer zu der von uns gewünschten laufzeitmäßig optimalen Ausführungszeit.
-Wie ist diese widersprüchliche Aussage zu verstehen?
+Trotzdem führt dies nicht immer zu der von uns gewünschten laufzeitmäßig optimalen Ausführung.
+Warum eigentlich? Wie ist diese widersprüchliche Aussage zu verstehen?
 
 Betrachten wir einen in der Praxis sehr häufig auftretenden
 programmiersprachlichen Ausdruck, die Konkatenation von Zeichenketten:
 
 ```cpp
-std::string result = "123"s + "ABC"s + "456"s + "XYZ"s + "789"s;
+std::string result { "123"s + "ABC"s + "456"s + "XYZ"s + "789"s };
 ```
 
 Der vorstehende Ausdruck ist syntaktisch und semantisch korrekt,
@@ -60,18 +56,26 @@ Der `operator+` ist ein binärer, links-assoziativer Operator,
 damit ist der Ausdruck äquivalent zu
 
 ```cpp
-std::string result = (((("123"s + "ABC"s) + "456"s) + "XYZ"s) + "789"s);
+std::string result { (((("123"s + "ABC"s) + "456"s) + "XYZ"s) + "789"s) };
 ```
 
-Wenn der Teilausdruck `"123"s + "ABC"s` ausgeführt wurde, wird ein temporäres `std::string`-Objekt erzeugt.
+Wenn der Teilausdruck `"123"s + "ABC"s` ausgeführt wird, wird ein temporäres `std::string`-Objekt erzeugt.
 Für jeden der nachfolgenden `operator+`&ndash;Aufrufe wird an diesem Temporärobjekt
 ein entsprechender Aufruf der `append`-Methode abgesetzt mit den Operanden `"456"s`, `"XYZ"s` und `"789"s`.
-Diese Aufrufe kreieren alle wiederum ein neues, temporäres `std::string`-Objekt!
+Diese Aufrufe kreieren alle wiederum ein neues, temporäres `std::string`-Objekt,
+wie in [Abbildung 1] gezeigt wird.
+
+![alt text](expression_template_01.svg)
+
+###### {#abbildung_1_string_concatenation_classic}
+
+{{< figure src="/img/houseofsantaclaus/expression_template_01.svg" width="80%" >}}
+
+*Abbildung* 1: Erzeugung von temporären `std::string`-Objekten bei klassischer Zeichenkettenkonkatenation.
 
 Aus diesen Betrachtungen wird leicht ersichtlich, dass übermäßig viele Aufrufe an 
 die dynamische Speicherverwaltung einher gehen, wenn das Resultat eines `append`-Methodenaufrufs
 im aktuellen Teilzeichenkettenobjekt nicht mehr Platz findet.
-
 Es kosten nicht nur die vielen Aufrufe an die dynamische Speicherverwaltung Laufzeit,
 es finden auch viele unnötige Kopieroperationen statt, um eine temporär konstruierte Zeichenkette in
 den Speicherbereich eines größeren Zeichenkettenobjekts umzukopieren.
@@ -79,10 +83,8 @@ den Speicherbereich eines größeren Zeichenkettenobjekts umzukopieren.
 Dieses Vorgehensweise ist ineffizient.
 Es werden zahlreiche Speicherbereiche für die temporären Zeichenketten angelegt (und wieder freigegeben),
 die am endgültigen Resultat nicht direkt beteiligt sind. Man spricht hier auch von der so genannten
-&ldquo;eager&rdquo; Vorgehensweise (zu deutsch etwa &ldquo;gierig&rdquo;),
+&ldquo;eager&rdquo; (zu deutsch etwa &ldquo;gierig&rdquo;) Strategie,
 was eben nicht immer von Vorteil sein muss.
-
-![alt text](expression_template_01.svg)
 
 Es ergibt sich an dieser Stelle doch die folgende Fragestellung:
 Wenn wir die Menge der zu konkatenierenden Zeichenketten im Vorneherein kennen,
@@ -99,23 +101,28 @@ Dies lässt sich aber mit der klassischen Schreibweise nicht erzielen.
 # Ansatz mit &ldquo;Expression Templates&rdquo;
 
 An dieser Stelle kommen die so genannten &ldquo;Expression Templates&rdquo; ins Spiel
-(in manchen Aufsätzen zu diesem Thema auch &ldquo;Loop Unrolling&rdquo; als bezeichnet).
+(in manchen Aufsätzen zu diesem Thema auch mit dem Schlagwort &ldquo;Loop Unrolling&rdquo; bezeichnet).
 Ein &ldquo;Expression Template&rdquo; steht für einen Teilausdruck, der die beteiligten Operanden abspeichert,
 aber die Operation (noch) nicht ausführt! Man könnte hier auch von einem &ldquo;Proxy&rdquo;-Objekt sprechen,
 das für eine bestimmte Operation steht, die aber zu einem späteren Zeitpunkt ausgeführt wird.
 
 *Hinweis*: Für die Liebhaber von Software Entwurfsmustern erkennen wir (grob) an dieser Stelle gleich zwei Muster:
 Das *Command Pattern* und das *Proxy Pattern*. Ersteres kapselt die Operationen für deren &ldquo;lazy&rdquo; Ausführung.
-Zweiteres verlagert Operanden und Operator in ein separates Objekt, um die &ldquo;eagert&rdquo; Ausführung zu umgehen.
+Zweiteres verlagert Operanden und Operator in ein separates Objekt, um die &ldquo;eager&rdquo; Ausführung zu umgehen.
 
 Jetzt stehen wir nur noch vor dem Problem, dass wir es in den meisten Fällen nicht 
 mit der Konkatenation von zwei, sondern beliebig vielen Zeichenketten zu tun haben.
 Ein &ldquo;Expression Template&rdquo; wird deshalb als rekursive Datenstruktur definiert.
-Jedes solche Objekt enthält eine einzelne Teilzeichenkette und ein zweites Objekt, 
+Jedes solche Objekt enthält eine einzelne Teilzeichenkette und ein zweites Objekt (siehe [Abbildung 2]), 
 dass die restliche Teilzeichenkette beschreibt.
 
 ![alt text](expression_template_02.svg)
 
+###### {#abbildung_2_string_concatenation_with_expression_templates}
+
+{{< figure src="/img/houseofsantaclaus/expression_template_02.svg" width="80%" >}}
+
+*Abbildung* 1: Rekursive Datenstruktur eines &ldquo;Expression Template&rdquo;-Objekts.
 
 Der Vorteil einer rekursiven Datenstruktur ist, dass diese leicht traversierbar ist,
 wenn es um die nachgelagerte Berechnung des Resultatobjekts geht.
@@ -191,8 +198,8 @@ liegt ein Ansatz mit variadisches Templates nahe ([Listing 1]):
 
 Dieser Quellcode ist nicht ganz trivial, wir gehen nun auf die interessanten Stellen in [Listing 1] ein:
 
-In den Zeilen 1 und 2 wird das *Primary Template* `StringHelper` definiert,
-in den Zeilen XXX bis XXX folgt eine partielle Spezialisierung dieses Templates.
+In den Zeilen 2 und 3 wird das *Primary Template* `StringHelper` definiert,
+in den Zeilen 5 bis 50 folgt eine partielle Spezialisierung dieses Templates.
 
 Die `StringHelper`-Klasse besitzt zwei Instanzvariablen:
 
@@ -200,19 +207,20 @@ Die `StringHelper`-Klasse besitzt zwei Instanzvariablen:
   * `m_tail` &ndash; eine Spezialisierung der `StringHelper<>`-Klasse, die die übrigen Zeichenketten verwaltet.
 
 
-Man beachte, dass es sich in Zeile XXX *nicht* um eine rekursive Klassendefinition handelt.
+Man beachte, dass es sich in Zeile 9 *nicht* um eine rekursive Klassendefinition handelt.
 Haben wir es zum Beispiel mit einer Spzialisierung der Klasse `StringHelper<>` in der Ausprägung
 `StringHelper<std::string, std::string, std::string>` zu tun,
 dann ist in diesem Fall die Instanzvariable `m_tail` vom Typ `StringHelper<std::string, std::string>`!
 
-Die Methode size in den Zeilen XXX bis XXX berechnet die gesamte Länge aller beteiligten Zeichenketten.
+Die Methode `size` in den Zeilen 21 bis 24 berechnet die gesamte Länge aller beteiligten Zeichenketten.
 Die Methode ist rekursiv, sie startet mit der Längenberechnung von `m_data` und setzt ihre Arbeit dann
 rekursiv mit den restlichen Zeichenketten fort, die im Objekt `m_tail` abgelegt sind.
 
-Das tatsächliche Aneinanderhängen der Teilzeichenketten findet im Typkonvertierungsoperator `operator std::string()` statt.
+Das tatsächliche Aneinanderhängen der Teilzeichenketten findet
+im Typkonvertierungsoperator `operator std::string()` statt (Zeilen 33 bis 40).
 Dieser steht folglich für die viel zitierte &ldquo;Lazy Evaluation&rdquo;!
 Es findet eine Tyumwandlung von `StringHelper` nach `std::string` statt.
-Die Variable `result` von Zeile XXX ist die Resultatzeichenkette.
+Die Variable `result` von Zeile 36 ist die Resultatzeichenkette.
 Sie wird zu Beginn mit einer entsprechenden internen Länge angelegt, so dass keine weiteren
 Aufrufe an die dynamische Speicheranforderung erfolgen (siehe Methode `size()`).
 Die einzelnen Teilzeichenketten werden wiederum innerhalb der Methode `save` umkopiert.
@@ -235,12 +243,12 @@ umlenken. Der einfache Trick besteht darin, in die Folge von `operator+`&ndash;A
 ein leeres `StringHelper<>`-Objekt einzufügen! Eine einfache Umformulierung lautet nun
 
 ```cpp
-std::string result = StringHelper<>{} + "123"s + "ABC"s + "456"s + "XYZ"s + "789"s;
+std::string result{ StringHelper<>{} + "123"s + "ABC"s + "456"s + "XYZ"s + "789"s };
 ```
 
 `StringHelper<>{}` steht hier für ein &ldquo;leeres&rdquo; `StringHelper`-Objekt, 
 alle nachfolgenden `operator+`&ndash;Aufrufe kreieren eine verschachtelte (rekursive) `StringHelper`-Objektstruktur,
-wenn wir den `operator+` in der Template Klasse `StringHelper<>` wie in den Zeile XX bis YY gezeigt implementieren:
+wenn wir den `operator+` in der Template Klasse `StringHelper<>` wie in den Zeile 42 bis 49 gezeigt implementieren:
 
 ```cpp
 StringHelper<std::string, String, Strings...>
@@ -253,10 +261,10 @@ operator+(const std::string& next) const
 }
 ```
 
-Lassen Sie sich bei der Realisierung dieser Operators nicht verwirren:
-Der Operator liefert ein Objekt derselben Klassen zurück, zu der der Operator gehört!
+Lassen Sie sich bei der Realisierung dieses Operators nicht verwirren:
+Der Operator liefert ein Objekt derselbe Klassen zurück, zu der der Operator gehört!
 Das möglicherweise erwartete Reduzieren der Zeichenketten findet im Konstruktor der `StringHelper<>`-Klasse statt
-(Zeilen XX bis XX). Dieser Konstruktor besitzt die Schnittstelle
+(Zeilen 12 bis 14). Dieser Konstruktor besitzt die Schnittstelle
 
 ```cpp
 StringHelper(const String& data, StringHelper<Strings...> tail)
@@ -271,26 +279,26 @@ class StringHelper<String, Strings...>
 
 Folglich wird aus einer variablen langen Liste von *n* Zeichenketten eine erste Zeichenkette extrahiert,
 um damit die Rekursionsebene von *n* auf *n*-1 zu reduzieren!
-Die rekursive `StringHelper`-Objektstruktur darf wiederum nicht zu einer Endlos-Rekursion führen,
+Die rekursive `StringHelper`-Objektstruktur wiederum darf nicht zu einer Endlos-Rekursion führen,
 dazu ist die `StringHelper`-Klassendefinition mit einer weiteren (expliziten) Spezialisierung zu definieren ([Listing 2]):
 
 ###### {#listing_2_class_stringhelper_specialization}
 
 ```cpp
-template <>
-class StringHelper<> {
-public:
-    StringHelper() = default;
-
-    size_t size() const { return 0; }
-
-    void save(const std::string::iterator&) const {}
-
-    StringHelper<std::string> operator+(const std::string& next) const
-    {
-        return StringHelper<std::string>(next, *this);
-    }
-};
+01: template <>
+02: class StringHelper<> {
+03: public:
+04:     StringHelper() = default;
+05: 
+06:     size_t size() const { return 0; }
+07: 
+08:     void save(const std::string::iterator&) const {}
+09: 
+10:     StringHelper<std::string> operator+(const std::string& next) const
+11:     {
+12:         return StringHelper<std::string>(next, *this);
+13:     }
+14: };
 ```
 
 *Listing* 2: (Vollständige) Spezialisierung der Template Klasse `StringHelper`.
@@ -298,10 +306,45 @@ public:
 In dieser Klassendefinition liefert Methode `size` den Wert 0 zurück. Und ein Aufruf
 von `save` beendet ebenfalls eine zuvor begonnene rekursive `save`-Aufrufkaskade.
 
+Wenden wir die vorliegende Realisierung auf das Beispiel
+
+```cpp
+std::string result{ StringHelper<>{} + "123"s + "ABC"s + "456"s + "XYZ"s + "789"s };
+```
+
+anwenden, können wir die rekursiven Objektstrukturen auch gut im Debugger betrachten.
+
+In [Abbildung 3] erkennen wir rekursiv geschachtelte Objektstruktur:
+
+![alt text](ExpressionTree01.png)
+
+###### {#abbildung_3_string_concatenation_classic}
+
+{{< figure src="/img/houseofsantaclaus/expression_template_01.svg" width="80%" >}}
+
+*Abbildung* 1: Erzeugung von temporären `std::string`-Objekten bei klassischer Zeichenkettenkonkatenation.
+
+
+Um die Datentypen der beteiligten `m_tail`-Objkerte zweifelsfrei identifizieren zu können,
+können wir [Abbildung 4] ...
+
+![alt text](ExpressionTree02.png)
+
+###### {#abbildung_4_string_concatenation_classic}
+
+{{< figure src="/img/houseofsantaclaus/expression_template_01.svg" width="60%" >}}
+
+*Abbildung* 1: Erzeugung von temporären `std::string`-Objekten bei klassischer Zeichenkettenkonkatenation.
+
+
+WEITER: Den Text zu ABbiuldung 3 und 4 überprüfen !!!
+
+
+
 Natürlich ist es auch möglich, die Konkatenation von Zeichenketten mit &ldquo;Modern C++&rdquo;
 Sprachkonstrukten angenehmer zu schreiben: An die Stelle der Wiederholung des `+`-Operators könnten
 Funktionen mit einer variadischen Anzahl von Parametern einspringen:
-Ein *Folding*-Ausdruck tritt an die Stelle der wiederholten operator+&ndash;Aufrufe:
+Ein *Folding*-Ausdruck tritt somit an die Stelle der sich wiederholenden `operator+`&ndash;Aufrufe:
 
 ```cpp
 template<typename ... ARGS>
@@ -315,7 +358,7 @@ std::string concat(ARGS&& ... args)
 # Laufzeitvergleich
 
 Damit sollten wir nach all der Mühe einen Testrahmen betrachten, um zu guter Letzt 
-einen Vergleich der Laufzeiten betrachten zu können:
+einen Vergleich der Laufzeiten anstellen zu können:
 
 ```cpp
 void Test_Classic()
@@ -344,7 +387,7 @@ void Test_ExpressionTemplates()
 ```
 
 Bevor wir das Programm ausführen, ein letzter Hinweis:
-Die erhofften Ergebnisse erhalten wir (auf meinem Rechner und mit meiner Entwicklungsumgebung) nur,
+Die erhofften Ergebnisse erhalten wir (auf meinem Rechner und mit meiner Entwicklungsumgebung) nur dann,
 wenn wir das Programm im &ldquo;Release Modus&rdquo; ausführen. Damit zu den Laufzeiten:
 
 ```
@@ -357,8 +400,9 @@ wenn Performance eine Rolle spielt!
 
 # Die Realisierung und GCC
 
-Der Quellcode des Beispiels ist nicht mit GCC übersetzbar. Um ehrlich zu sein, ich bin eigentlich verwundert,
-dass er mit dem Visual C++ Compiler akzeoptiert wird. Das Problem ist eine einzige Zeile XXX von [Listing 1]:
+Der Quellcode von Klasse `StringHelper<>` aus [Listing 1] ist mit dem GNU C++ Compiler nicht übersetzbar.
+Um ehrlich zu sein, ich bin eigentlich verwundert,
+dass er vom Visual C++ Compiler akzeptiert wird. Das Problem ist eine einzige Zeile 17 von [Listing 1]:
 
 <pre>
 StringHelper(const String& data)
@@ -367,9 +411,9 @@ StringHelper(const String& data)
 </pre>
 
 Innerhalb der Klassendefinition von `StringHelper<String, Strings...>` wird bereits ein Objekt dieser Klasse
-mit einer bestimmten Spezialisierung erzeugt.
-
-Dies quittiert der GCC-Compiler mit der Fehlermeldung
+mit einer bestimmten Spezialisierung erzeugt. Auch wenn es sich hierbei um den Standard-Konstruktor handelt,
+in Zeile 17 ist die Klasse `StringHelper<>`noch nicht vollständig definiert.
+Der GCC quittiert dies mit der Fehlermeldung
 
 ```
 error: implicit instantiation of undefined template 'StringHelper<>'
@@ -379,7 +423,7 @@ Mit zwei Handgriffen kann man diesen Fehler beseitigen:
 
   * Die Definitionen der beiden Template Klassen `StringHelper<String, Strings...>` und `StringHelper<>` sind bzgl. ihrer Reihenfolge im Quellcode zu vertauschen.
   * Der `+`-Operator wird nicht in der Template Klasse `StringHelper<>` definiert, sondern seine Definition
-    wird als so genannte &ldquo;*out of class* Member Definition&rdquo; außerhalb der Template Definition angesiedelt:
+    wird als so genannte &ldquo;*Out of class* Member Definition&rdquo; außerhalb der Template Definition angesiedelt:
 
 ```
 StringHelper<std::string>
@@ -443,6 +487,8 @@ um laufzeit-optimalere Ergebnisse zu erzielen.
 
 <!-- Links Definitions -->
 
+[Abbildung 1]: #abbildung_1_house_of_santa_claus
+[Abbildung 2]: #abbildung_2_string_concatenation_with_expression_templates
 
 [Listing 1]: #listing_1_class_stringhelper
 [Listing 2]: #listing_2_class_stringhelper_specialization

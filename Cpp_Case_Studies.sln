@@ -183,6 +183,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExpressionTemplates", "Expr
 		MarkDown\ExpressionTemplates\expression_template_01.svg = MarkDown\ExpressionTemplates\expression_template_01.svg
 		MarkDown\ExpressionTemplates\expression_template_02.svg = MarkDown\ExpressionTemplates\expression_template_02.svg
 		MarkDown\ExpressionTemplates\ExpressionTemplates.md = MarkDown\ExpressionTemplates\ExpressionTemplates.md
+		MarkDown\ExpressionTemplates\ExpressionTree01.png = MarkDown\ExpressionTemplates\ExpressionTree01.png
+		MarkDown\ExpressionTemplates\ExpressionTree02.png = MarkDown\ExpressionTemplates\ExpressionTree02.png
 	EndProjectSection
 EndProject
 Global
