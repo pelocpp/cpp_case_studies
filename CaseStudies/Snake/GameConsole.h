@@ -44,7 +44,7 @@ private:
     // public interface: output
     void clear();
     void drawBorder();
-    void writeAt(char ch, COORD coord);
+    void writeAt(char ch, const COORD& coord);
 };
 
 // =====================================================================================

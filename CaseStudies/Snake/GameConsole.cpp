@@ -217,13 +217,12 @@ void GameConsole::drawBorder()
     }
  }
 
-void GameConsole::writeAt(char ch, COORD coord)
+void GameConsole::writeAt(char ch, const COORD& coord)
 {
     if (!::SetConsoleCursorPosition(m_hStdout, coord))
         return;
 
     char buf[]{ ch };
-    // buf[0] = ch;        // TODO Zeile löschen ...
     DWORD numCharsWritten;
     ::WriteConsole(m_hStdout, buf, 1, &numCharsWritten, (void*) 0);
 }

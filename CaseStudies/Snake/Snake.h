@@ -20,17 +20,17 @@ public:
 
     // public interface
     void draw(GameConsole & console) const;
-    void grow(COORD coord);
-    bool hits(COORD coord) const;
+    void grow(const COORD& coord);
+    bool hits(const COORD& coord) const;
     void move(Direction dir);
 
 private:
     // private helper methods
-    bool isBorderCollision(COORD coord);
+    bool isBorderCollision(const COORD& coord);
 };
 
  // helper function
- bool operator== (const COORD & coord1, const COORD & coord2);
+ bool operator== (const COORD& coord1, const COORD& coord2);
 
  // =====================================================================================
  // End-of-File

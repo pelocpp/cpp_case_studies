@@ -5,6 +5,8 @@
 #include <windows.h>
 #include <vector>
 #include <algorithm>
+#include <thread>
+#include <chrono>
 #include <random>
 
 #include "Direction.h"
@@ -22,7 +24,7 @@ Game::Game()
 // public interface
 void Game::play()
 {
-    Direction dir = m_console.isLastValidArrow();
+    Direction direction = m_console.isLastValidArrow();
 
     m_food.createCollisionFree(m_snake);
     while (true)
@@ -33,10 +35,10 @@ void Game::play()
         if (m_console.isInputAvailable())
         {
             m_console.readInput();
-            dir = m_console.isLastValidArrow();
+            direction = m_console.isLastValidArrow();
         }
 
-        m_snake.move(dir);
+        m_snake.move(direction);
 
         if (m_snake.hits(m_food.getPosition()))
         {
@@ -44,7 +46,7 @@ void Game::play()
             m_food.createCollisionFree(m_snake);
         }
 
-        ::Sleep(Pause);   // TODO: EIn anderes Sleep !!! std::thread !!!
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         if (m_console.isEscapeHit())
             break;
     }

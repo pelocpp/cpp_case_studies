@@ -17,9 +17,6 @@ Food::Food()
 {
     m_coord.X = -1;
     m_coord.Y = -1;
-
-    // init random generator
-   // ::srand((unsigned int) ::time((time_t*)0));
 }
 
 // public interface
@@ -29,15 +26,8 @@ void Food::createCollisionFree(const Snake & snake)
     while (true)
     {
         // create new food at random
-        //SHORT iX{ rand() % (GameConsole::Width - 2) };
-        //SHORT iY{ rand() % (GameConsole::Height - 2) };
-
-        // simulating still some calculation time ...
         SHORT iX{ m_device() % (GameConsole::Width - 2) };
         SHORT iY{ m_device() % (GameConsole::Height - 2) };
-
-
-
 
         tmp.X = iX + 1;
         tmp.Y = iY + 1;

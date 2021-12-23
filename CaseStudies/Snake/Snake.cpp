@@ -29,18 +29,18 @@ Snake::Snake()
 void Snake::draw(GameConsole& console) const
 {
     // clear snake's tail ...
-    COORD tail = m_tail[0];
+    COORD tail{ m_tail[0] };
     console.writeAt(' ', tail);
 
     // just draw element after head ...
-    COORD last = m_tail[m_tail.size() - 1];
+    COORD last{ m_tail[m_tail.size() - 1] };
     console.writeAt('*', last);
 
     // ... and head itself
     console.writeAt('O', m_head);
 }
 
-void Snake::grow(COORD coord)
+void Snake::grow(const COORD& coord)
 {
     // last head gets new begin of tail
     m_tail.insert(m_tail.begin(), m_head);
@@ -49,7 +49,7 @@ void Snake::grow(COORD coord)
     m_head = coord;
 }
 
-bool Snake::hits(COORD coord) const
+bool Snake::hits(const COORD& coord) const
 {
     for (size_t i{}; i != m_tail.size(); i++) {
         if (m_tail[i] == coord)
@@ -66,6 +66,7 @@ void Snake::move(Direction dir)
 {
     // calculate next head
     COORD next{ m_head };
+
     switch (dir)
     {
     case Direction::Right:
@@ -105,7 +106,7 @@ void Snake::move(Direction dir)
 }
 
 // private helper methods
-bool Snake::isBorderCollision(COORD coord)
+bool Snake::isBorderCollision(const COORD& coord)
 {
     // handle collision with border
     if (coord.X == 0 || coord.X == GameConsole::Width - 1)
