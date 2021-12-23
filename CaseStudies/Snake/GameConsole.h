@@ -5,17 +5,17 @@
 class GameConsole
 {
 public:
-    static const int Width = 40;
-    static const int Height = 10;
+    static constexpr int Width = 40;
+    static constexpr int Height = 10;
 
 private:
     // some classic 'box-drawing characters'
-    static const char Box_Left_Upper = ((char)201);
-    static const char Box_Right_Upper = ((char)187);
-    static const char Box_Left_Lower = ((char)200);
-    static const char Box_Right_Lower = ((char)188);
-    static const char Box_Horiz = ((char)205);
-    static const char Box_Vert = ((char)186);
+    static constexpr char Box_Left_Upper = ((char)201);   // TODO \xnn
+    static constexpr char Box_Right_Upper = ((char)187);
+    static constexpr char Box_Left_Lower = ((char)200);
+    static constexpr char Box_Right_Lower = ((char)188);
+    static constexpr char Box_Horiz = ((char)205);
+    static constexpr char Box_Vert = ((char)186);
 
 private:
     HANDLE m_hStdin;
@@ -31,20 +31,20 @@ private:
     ~GameConsole();
 
     // getter
-    bool InputAvailable();
-    bool IsEscapeHit();
+    bool isInputAvailable();
+    bool isEscapeHit() const;
 
     // public interface
-    void Setup();
+    void setup();
 
     // public interface: input
-    Direction LastValidArrow();
-    void ReadInput();
+    Direction isLastValidArrow() const;
+    void readInput();
 
     // public interface: output
-    void Clear();
-    void DrawBorder();
-    void WriteAt(char ch, COORD coord);
+    void clear();
+    void drawBorder();
+    void writeAt(char ch, COORD coord);
 };
 
 // =====================================================================================

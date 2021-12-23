@@ -1,11 +1,11 @@
 // =====================================================================================
-// XXX.h
+// Game.h
 // =====================================================================================
 
 class Game
 {
 private:
-    static const int Pause = 200;
+    static constexpr int Pause = 200;
 
 private:
     // member data
@@ -14,10 +14,11 @@ private:
     Food m_food;
 
 public:
-    Game();  // c'tor
+    // c'tor
+    Game();
 
     // public interface
-    void Play();
+    void play();
 };
 
 // =====================================================================================

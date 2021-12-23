@@ -1,21 +1,23 @@
 // =====================================================================================
-// XXX.h
+// Food.h
 // =====================================================================================
 
 class Food
 {
 private:
     COORD m_coord;
+    std::random_device m_device;
 
 public:
-    Food();  // c'tor
+    // c'tor
+    Food();  
 
     // getter
-    COORD Position();
+    COORD getPosition() const { return m_coord; };
 
     // public interface
-    void CreateCollisionFree(const Snake & snake);
-    void Draw(GameConsole & console);
+    void createCollisionFree(const Snake& snake);
+    void draw(GameConsole& console);
 };
 
 // =====================================================================================

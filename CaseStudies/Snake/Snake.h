@@ -1,41 +1,36 @@
 // =====================================================================================
-// XXX.h
+// Snake.h
 // =====================================================================================
-
 
 class Snake
 {
 private:
-    COORD m_head;   // head
-    COORD * m_tail;  // tail
-    int m_len;      // length of tail
+    static constexpr int InitialLength = 4;
+
+private:
+    COORD m_head;               // head
+    std::vector<COORD> m_tail;  // tail
 
 public:
-    // c'tors / d'tor
+    // c'tor
     Snake();
-    Snake(const Snake&);
-    ~Snake();
 
     // getter
-    COORD Head();
+    COORD getHead() const { return m_head; };
 
     // public interface
-    void Draw(GameConsole & console) const;
-    void Grow(COORD coord);
-    bool Hits(COORD coord) const;
-    void Move(Direction dir);
-
-    // assignment operator
-    Snake & operator= (const Snake & snake);
+    void draw(GameConsole & console) const;
+    void grow(COORD coord);
+    bool hits(COORD coord) const;
+    void move(Direction dir);
 
 private:
     // private helper methods
-    bool IsBorderCollision(COORD coord);
+    bool isBorderCollision(COORD coord);
 };
 
  // helper function
  bool operator== (const COORD & coord1, const COORD & coord2);
-
 
  // =====================================================================================
  // End-of-File

@@ -1,9 +1,11 @@
 // =====================================================================================
-// XXX.cpp
+// Food.cpp
 // =====================================================================================
 
 #include <windows.h>
-#include <time.h>   // TODO: Der kann dann mal weg
+#include <vector>
+#include <algorithm>
+#include <random>
 
 #include "Direction.h"
 #include "GameConsole.h"
@@ -17,29 +19,30 @@ Food::Food()
     m_coord.Y = -1;
 
     // init random generator
-    ::srand((unsigned int) ::time((time_t*)0));
-}
-
-// getter
-COORD Food::Position()
-{
-    return m_coord;
+   // ::srand((unsigned int) ::time((time_t*)0));
 }
 
 // public interface
-void Food::CreateCollisionFree(const Snake & snake)
+void Food::createCollisionFree(const Snake & snake)
 {
-    COORD tmp;
+    COORD tmp{};
     while (true)
     {
         // create new food at random
-        int iX = rand() % (GameConsole::Width - 2);
-        int iY = rand() % (GameConsole::Height - 2);
+        //SHORT iX{ rand() % (GameConsole::Width - 2) };
+        //SHORT iY{ rand() % (GameConsole::Height - 2) };
+
+        // simulating still some calculation time ...
+        SHORT iX{ m_device() % (GameConsole::Width - 2) };
+        SHORT iY{ m_device() % (GameConsole::Height - 2) };
+
+
+
 
         tmp.X = iX + 1;
         tmp.Y = iY + 1;
 
-        if (snake.Hits(tmp))
+        if (snake.hits(tmp))
             continue;
         else
             break;
@@ -48,9 +51,9 @@ void Food::CreateCollisionFree(const Snake & snake)
     m_coord = tmp;
 }
 
-void Food::Draw(GameConsole & console)
+void Food::draw(GameConsole& console)
 {
-    console.WriteAt('X', m_coord);
+    console.writeAt('X', m_coord);
 }
 
 // =====================================================================================

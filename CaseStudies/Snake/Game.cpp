@@ -1,8 +1,11 @@
 // =====================================================================================
-// XXX.cpp
+// Game.cpp
 // =====================================================================================
 
 #include <windows.h>
+#include <vector>
+#include <algorithm>
+#include <random>
 
 #include "Direction.h"
 #include "GameConsole.h"
@@ -13,40 +16,40 @@
 // c'tor
 Game::Game()
 {
-    m_console.Setup();
+    m_console.setup();
 }
 
 // public interface
-void Game::Play()
+void Game::play()
 {
-    Direction dir = m_console.LastValidArrow();
+    Direction dir = m_console.isLastValidArrow();
 
-    m_food.CreateCollisionFree(m_snake);
+    m_food.createCollisionFree(m_snake);
     while (true)
     {
-        m_food.Draw(m_console);
-        m_snake.Draw(m_console);
+        m_food.draw(m_console);
+        m_snake.draw(m_console);
 
-        if (m_console.InputAvailable())
+        if (m_console.isInputAvailable())
         {
-            m_console.ReadInput();
-            dir = m_console.LastValidArrow();
+            m_console.readInput();
+            dir = m_console.isLastValidArrow();
         }
 
-        m_snake.Move(dir);
+        m_snake.move(dir);
 
-        if (m_snake.Hits(m_food.Position()))
+        if (m_snake.hits(m_food.getPosition()))
         {
-            m_snake.Grow(m_food.Position());
-            m_food.CreateCollisionFree(m_snake);
+            m_snake.grow(m_food.getPosition());
+            m_food.createCollisionFree(m_snake);
         }
 
         ::Sleep(Pause);   // TODO: EIn anderes Sleep !!! std::thread !!!
-        if (m_console.IsEscapeHit())
+        if (m_console.isEscapeHit())
             break;
     }
 
-    m_console.Clear();
+    m_console.clear();
 }
 
 // =====================================================================================

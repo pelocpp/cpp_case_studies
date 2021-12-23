@@ -1,8 +1,11 @@
 // =====================================================================================
-// XXX.cpp
+// Snake.cpp
 // =====================================================================================
 
 #include <windows.h>
+#include <vector>
+#include <algorithm>
+#include <random>
 
 #include "Direction.h"
 #include "GameConsole.h"
@@ -12,83 +15,46 @@
 // c'tor
 Snake::Snake()
 {
-    m_len = 4;
-    m_tail = new COORD[m_len];
-
-    for (int i = 0; i < m_len; i++)
-    {
-        COORD coord;
-        coord.X = GameConsole::Width / 2 + i;
-        coord.Y = GameConsole::Height / 2;
-        m_tail[i] = coord;
+    for (uint16_t i = 0; i != InitialLength; i++) {
+        m_tail.emplace_back(
+           static_cast<SHORT> (GameConsole::Width / 2 + i),
+           static_cast<SHORT> (GameConsole::Height / 2)
+        );
     }
 
     m_head.X = GameConsole::Width / 2 + 4;
     m_head.Y = GameConsole::Height / 2;
 }
 
-Snake::Snake(const Snake & snake)
-{
-    m_head = snake.m_head;
-    m_tail = new COORD[snake.m_len];
-    for (int i = 0; i < snake.m_len; i++)
-        m_tail[i] = snake.m_tail[i];
-    m_len = snake.m_len;
-}
-
- // d'tor
-Snake::~Snake()
-{
-    delete[] m_tail;
-}
-
- // getter
-COORD Snake::Head()
-{
-    return m_head;
-}
-
-void Snake::Draw(GameConsole & console) const
+void Snake::draw(GameConsole& console) const
 {
     // clear snake's tail ...
     COORD tail = m_tail[0];
-    console.WriteAt(' ', tail);
+    console.writeAt(' ', tail);
 
     // just draw element after head ...
-    COORD last = m_tail[m_len - 1];
-    console.WriteAt('*', last);
+    COORD last = m_tail[m_tail.size() - 1];
+    console.writeAt('*', last);
 
     // ... and head itself
-    console.WriteAt('O', m_head);
+    console.writeAt('O', m_head);
 }
 
-void Snake::Grow(COORD coord)
+void Snake::grow(COORD coord)
 {
-    COORD * tmp = new COORD[m_len + 1];
-
-    // copy old coordinates in new buffer
-    for (int i = 0; i < m_len; i++)
-        tmp[i + 1] = m_tail[i];
-
     // last head gets new begin of tail
-    m_tail[0] = m_head;
+    m_tail.insert(m_tail.begin(), m_head);
 
     // set new head
     m_head = coord;
-
-    // delete old buffer
-    delete[] m_tail;
-
-    // and switch to new buffer
-    m_tail = tmp;
-    m_len++;
 }
 
-bool Snake::Hits(COORD coord) const
+bool Snake::hits(COORD coord) const
 {
-    for (int i = 0; i < m_len; i++)
+    for (size_t i{}; i != m_tail.size(); i++) {
         if (m_tail[i] == coord)
             return true;
+    }
 
     if (m_head == coord)
         return true;
@@ -96,10 +62,10 @@ bool Snake::Hits(COORD coord) const
     return false;
 }
 
-void Snake::Move(Direction dir)
+void Snake::move(Direction dir)
 {
     // calculate next head
-    COORD next = m_head;
+    COORD next{ m_head };
     switch (dir)
     {
     case Direction::Right:
@@ -123,23 +89,23 @@ void Snake::Move(Direction dir)
         break;
     }
 
-    if (this->IsBorderCollision(next))
+    if (this->isBorderCollision(next))
         return;  // don't move snake
 
-    if (this->Hits(next))
+    if (this->hits(next))
         return;  // don't move snake
 
     // move snake in-place
-    for (int i = 1; i < m_len; i++)
+    for (size_t i = 1; i != m_tail.size(); i++)
         m_tail[i - 1] = m_tail[i];
-    m_tail[m_len - 1] = m_head;
+    m_tail[m_tail.size() - 1] = m_head;
 
     // set new head
     m_head = next;
 }
 
 // private helper methods
-bool Snake::IsBorderCollision(COORD coord)
+bool Snake::isBorderCollision(COORD coord)
 {
     // handle collision with border
     if (coord.X == 0 || coord.X == GameConsole::Width - 1)
@@ -155,6 +121,7 @@ bool operator== (const COORD & coord1, const COORD & coord2)
 {
     return coord1.X == coord2.X && coord1.Y == coord2.Y;
 }
+
 // =====================================================================================
 // End-of-File
 // =====================================================================================

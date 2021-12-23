@@ -1,10 +1,15 @@
-// TODO: enum class Direction { Up, Down, Left, Right };
-// eigenes Header File
+// =====================================================================================
+// Program.cpp
+// =====================================================================================
 
-// =====================================================================================
-// XXX.cpp
-// =====================================================================================
+// TODO im text aufführen: aggregate initialization using designated initializers
+
+// TODO static constexpr char Box_Left_Upper = ((char)201);   // TODO \xnn
+
 #include <windows.h>
+#include <vector>
+#include <algorithm>
+#include <random>
 
 #include "Direction.h"
 #include "GameConsole.h"
@@ -15,11 +20,10 @@
 int main()
 {
     Game game;
-    game.Play();
+    game.play();
     return 0;
 }
 
 // =====================================================================================
 // End-of-File
 // =====================================================================================
-
