@@ -93,15 +93,13 @@ namespace ExpressionTemplatesStrings
     template<typename ... ARGS>
     std::string concatClassic(ARGS&& ... args)
     {
-        std::string result{ (... + std::forward<ARGS>(args)) };
-        return result;
+        return (... + std::forward<ARGS>(args));
     }
 
     template<typename ... ARGS>
     std::string concat(ARGS&& ... args)
     {
-        std::string result{ (StringHelper<>{} + ... + std::forward<ARGS>(args)) };
-        return result;
+        return (StringHelper<>{} + ... + std::forward<ARGS>(args));
     }
 }
 
@@ -182,15 +180,13 @@ namespace ExpressionTemplatesStrings_GCC
     template<typename ... ARGS>
     std::string concatClassic(ARGS&& ... args)
     {
-        std::string result{ (... + std::forward<ARGS>(args)) };
-        return result;
+        return (... + std::forward<ARGS>(args));
     }
 
     template<typename ... ARGS>
     std::string concat(ARGS&& ... args)
     {
-        std::string result{ (StringHelper<>{} + ... + std::forward<ARGS>(args)) };
-        return result;
+        return (StringHelper<>{} + ... + std::forward<ARGS>(args));
     }
 }
 

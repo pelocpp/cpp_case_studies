@@ -12,13 +12,13 @@ void Test_06_Benchmark();
 
 void Test_ExpressionTemplatesStrings()
 {
-    Test_01();
+    //Test_01();
     //Test_01_GCC();
     //Test_02();
     //Test_03_Possible_Error();
     //Test_04();
     //Test_05();
-    //Test_06_Benchmark();
+    Test_06_Benchmark();
 }
 
 int main()

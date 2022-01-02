@@ -1,11 +1,8 @@
 <!-- ExpressionTemplates.md -->
 
-# Expression Templates / Lazy Evaluation
-
 Wir betrachten in dieser Fallstudie das Thema &ldquo;Expression Templates&rdquo; und damit in Zusammenhang stehend 
-die so genannte &ldquo;Lazy Evaluation&rdquo;.
-Auf einen einfachen Nenner gebracht: &ldquo;Expression Templates&rdquo; sind eine Technik aus dem
-Umfeld der Metaprogrammierung.
+die Technik der genannten &ldquo;Lazy Evaluation&rdquo;.
+Auf einen einfachen Nenner gebracht: &ldquo;Expression Templates&rdquo; sind ein Anwendungsfall der Metaprogrammierung.
 Sie verschieben die Aus­wertung von Ausdrücken in eine separate Funktion,
 die zu einem späteren Zeitpunkt ausgeführt werden kann. An dieser Stelle wird der Begriff der
 &ldquo;Lazy Evaluation&rdquo; verständlich.
@@ -16,7 +13,7 @@ std::string result = "123"s + "ABC"s + "456"s + "XYZ"s + "789"s;
 ```
 
 Mit &ldquo;Expression Templates&rdquo; lernen Sie einen alternativen Ansatz kennen,
-diesen geschachtelten (arithmetischen) Ausdruck zu berechnen mit dem Vorteil,
+einen geschachtelten (arithmetischen) Ausdruck zu berechnen mit dem Vorteil,
 nahezu alle temporären Objekte zu vermeiden,
 die bei der klassischen Berechnung eines solchen Ausdrucks entstehen würden.
 
@@ -27,20 +24,19 @@ die bei der klassischen Berechnung eines solchen Ausdrucks entstehen würden.
   * Variadische Template Klassen
   * Partielle und explizite Template Spezialisierung
   * Folding Ausdrücke
-  * Prefektes Forwarding (`std::forward`)
+  * Perfektes Forwarding (`std::forward`)
   * Klasse `std::string`, `std::string`-Literale, Suffix &ldquo;s&rdquo;
 
 # Einführung
 
 Der Einsatz von &ldquo;Expression Templates&rdquo; ist dann sinnvoll,
 wenn wir einen komplexen Ausdruck mit programmiersprachlichen Anweisungen auswerten wollen,
-aber die Berechnung von Teilergebnissen, die zur Berechnung des Endergebnisses notwendig ist,
-zu einer ineffizienten Laufzeit in der Auswertung des gesamten Ausdrucks führt.
+aber die Berechnung von Teilergebnissen, die zur Berechnung des Endergebnisses notwendig sind,
+zu einer ineffizienten Laufzeit in der Auswertung des gesamten Ausdrucks führen.
 
 Häufig kennen wir im Vorneherein viele oder alle Schritte eines Ausdrucks, den wir berechnen wollen.
 Trotzdem führt dies nicht immer zu der von uns gewünschten laufzeitmäßig optimalen Ausführung.
 Warum eigentlich? Wie ist diese widersprüchliche Aussage zu verstehen?
-
 Betrachten wir einen in der Praxis sehr häufig auftretenden
 programmiersprachlichen Ausdruck, die Konkatenation von Zeichenketten:
 
@@ -65,11 +61,9 @@ ein entsprechender Aufruf der `append`-Methode abgesetzt mit den Operanden `"456
 Diese Aufrufe kreieren alle wiederum ein neues, temporäres `std::string`-Objekt,
 wie in [Abbildung 1] gezeigt wird.
 
-![alt text](expression_template_01.svg)
-
 ###### {#abbildung_1_string_concatenation_classic}
 
-{{< figure src="/img/houseofsantaclaus/expression_template_01.svg" width="80%" >}}
+{{< figure src="/img/expressiontemplates/expression_template_01.svg" width="80%" >}}
 
 *Abbildung* 1: Erzeugung von temporären `std::string`-Objekten bei klassischer Zeichenkettenkonkatenation.
 
@@ -86,7 +80,7 @@ die am endgültigen Resultat nicht direkt beteiligt sind. Man spricht hier auch 
 &ldquo;eager&rdquo; (zu deutsch etwa &ldquo;gierig&rdquo;) Strategie,
 was eben nicht immer von Vorteil sein muss.
 
-Es ergibt sich an dieser Stelle doch die folgende Fragestellung:
+Es ergibt sich an dieser Stelle die folgende Fragestellung:
 Wenn wir die Menge der zu konkatenierenden Zeichenketten im Vorneherein kennen,
 warum berechnen wir dann nicht die Länge der Resultatzeichenkette vorab,
 um damit all die unnötigen Aufrufe in die dynamische Speicherverwaltung zu umgehen.
@@ -114,15 +108,13 @@ Jetzt stehen wir nur noch vor dem Problem, dass wir es in den meisten Fällen ni
 mit der Konkatenation von zwei, sondern beliebig vielen Zeichenketten zu tun haben.
 Ein &ldquo;Expression Template&rdquo; wird deshalb als rekursive Datenstruktur definiert.
 Jedes solche Objekt enthält eine einzelne Teilzeichenkette und ein zweites Objekt (siehe [Abbildung 2]), 
-dass die restliche Teilzeichenkette beschreibt.
-
-![alt text](expression_template_02.svg)
+das die restliche Teilzeichenkette beschreibt.
 
 ###### {#abbildung_2_string_concatenation_with_expression_templates}
 
-{{< figure src="/img/houseofsantaclaus/expression_template_02.svg" width="80%" >}}
+{{< figure src="/img/expressiontemplates/expression_template_02.svg" width="80%" >}}
 
-*Abbildung* 1: Rekursive Datenstruktur eines &ldquo;Expression Template&rdquo;-Objekts.
+*Abbildung* 2: Rekursive Datenstruktur eines &ldquo;Expression Template&rdquo;-Objekts.
 
 Der Vorteil einer rekursiven Datenstruktur ist, dass diese leicht traversierbar ist,
 wenn es um die nachgelagerte Berechnung des Resultatobjekts geht.
@@ -137,7 +129,7 @@ Zusammenfassend kann man also festhalten, dass &ldquo;Expression Templates&rdquo
 
 Nun fehlt nur noch die Umsetzung der vorliegenden Theorie in den schnöden Alltag eines C++&ndash;Programms.
 Da wir es mit einer beliebige Anzahl von Teilzeichenketten zu tun haben,
-liegt ein Ansatz mit variadisches Templates nahe ([Listing 1]):
+liegt ein Ansatz mit variadischen Templates nahe ([Listing 1]):
 
 ###### {#listing_1_class_stringhelper}
 
@@ -197,7 +189,6 @@ liegt ein Ansatz mit variadisches Templates nahe ([Listing 1]):
 *Listing* 1: Template Klasse `StringHelper`.
 
 Dieser Quellcode ist nicht ganz trivial, wir gehen nun auf die interessanten Stellen in [Listing 1] ein:
-
 In den Zeilen 2 und 3 wird das *Primary Template* `StringHelper` definiert,
 in den Zeilen 5 bis 50 folgt eine partielle Spezialisierung dieses Templates.
 
@@ -205,7 +196,6 @@ Die `StringHelper`-Klasse besitzt zwei Instanzvariablen:
 
   * `m_data` &ndash; eine `std::string`-Referenz, die auf eine der beteiligten Teilzeichenketten verweist.
   * `m_tail` &ndash; eine Spezialisierung der `StringHelper<>`-Klasse, die die übrigen Zeichenketten verwaltet.
-
 
 Man beachte, dass es sich in Zeile 9 *nicht* um eine rekursive Klassendefinition handelt.
 Haben wir es zum Beispiel mit einer Spzialisierung der Klasse `StringHelper<>` in der Ausprägung
@@ -305,7 +295,6 @@ dazu ist die `StringHelper`-Klassendefinition mit einer weiteren (expliziten) Sp
 
 In dieser Klassendefinition liefert Methode `size` den Wert 0 zurück. Und ein Aufruf
 von `save` beendet ebenfalls eine zuvor begonnene rekursive `save`-Aufrufkaskade.
-
 Wenden wir die vorliegende Realisierung auf das Beispiel
 
 ```cpp
@@ -316,30 +305,20 @@ anwenden, können wir die rekursiven Objektstrukturen auch gut im Debugger betra
 
 In [Abbildung 3] erkennen wir rekursiv geschachtelte Objektstruktur:
 
-![alt text](ExpressionTree01.png)
-
 ###### {#abbildung_3_string_concatenation_classic}
 
-{{< figure src="/img/houseofsantaclaus/expression_template_01.svg" width="80%" >}}
+{{< figure src="/img/expressiontemplates/ExpressionTree01.png" width="80%" >}}
 
-*Abbildung* 1: Erzeugung von temporären `std::string`-Objekten bei klassischer Zeichenkettenkonkatenation.
+*Abbildung* 3: Erzeugung von temporären `std::string`-Objekten bei klassischer Zeichenkettenkonkatenation.
 
-
-Um die Datentypen der beteiligten `m_tail`-Objkerte zweifelsfrei identifizieren zu können,
-können wir [Abbildung 4] ...
-
-![alt text](ExpressionTree02.png)
+Um die Datentypen der beteiligten `m_tail`-Objekte zweifelsfrei identifizieren zu können,
+ziehen wir wiederum den Debugger zu Rate ([Abbildung 4]):
 
 ###### {#abbildung_4_string_concatenation_classic}
 
-{{< figure src="/img/houseofsantaclaus/expression_template_01.svg" width="60%" >}}
+{{< figure src="/img/expressiontemplates/ExpressionTree02.png" width="60%" >}}
 
-*Abbildung* 1: Erzeugung von temporären `std::string`-Objekten bei klassischer Zeichenkettenkonkatenation.
-
-
-WEITER: Den Text zu ABbiuldung 3 und 4 überprüfen !!!
-
-
+*Abbildung* 4: Ein Blick auf die konkreten Instanziierungen der Template Klasse `StringHelper`.
 
 Natürlich ist es auch möglich, die Konkatenation von Zeichenketten mit &ldquo;Modern C++&rdquo;
 Sprachkonstrukten angenehmer zu schreiben: An die Stelle der Wiederholung des `+`-Operators könnten
@@ -350,8 +329,7 @@ Ein *Folding*-Ausdruck tritt somit an die Stelle der sich wiederholenden `operat
 template<typename ... ARGS>
 std::string concat(ARGS&& ... args)
 {
-    std::string result{ (StringHelper<>{} + ... + std::forward<ARGS>(args)) };
-    return result;
+    return (StringHelper<>{} + ... + std::forward<ARGS>(args));
 }
 ```
 
@@ -438,50 +416,23 @@ StringHelper<>::operator+(const std::string& next) const
 
 Damit ist das vorliegende Beispiel auch unter dem GCC übersetzbar!
 
-
-
-
-WEITER: Ein Hinweis: Das Beispiel mit den Referenzen
-
-WEITER: Auch einen Screen SHot vom Debugger
-
-WEITER: Auch das Bild vom Buch übernehmen ...
-
-WEITER: Evtl. noch ein zweites Bild vom Buch machen ..
-
-WEITER: Dann das Beispiel mit a * b + c * d
-
-
-
-
-# Literatur
-
-// https://www.modernescpp.com/index.php/expression-templates
-
-//https://gieseanw.wordpress.com/2019/10/20/we-dont-need-no-stinking-expression-templates/
-
-// https://www.grimm-jaud.de/index.php/private-vortraege/17-expression-templates
-
-// https://www.linuxtopia.org/online_books/programming_books/c++_practical_programming/c++_practical_programming_132.html
-
-
 ## Literatur
 
-Die Anregungen zum Zerlegen von Zeichenketten stammen aus
+Im Folgenden habe ich einige interessante Artikel zum Thema &ldquo;Expression Templates&rdquo;
+zusammengestellt &ndash; darunter auch einige, die sie kritisch mit diesem Thema
+auseinandersetzen:
+ 
+[Expression Templates](https://www.modernescpp.com/index.php/expression-templates)
 
-[Jonathan Boccara, &ldquo;How to split a string in C++&rdquo;](https://www.fluentcpp.com/2017/04/21/how-to-split-a-string-in-c//).
+[We don’t need no stinking expression templates](https://gieseanw.wordpress.com/2019/10/20/we-dont-need-no-stinking-expression-templates/)
 
-Die Hinweise zum Initialisieren eines `std::array`-Objekts sind
+[Expression Templates](https://www.grimm-jaud.de/index.php/private-vortraege/17-expression-templates)
 
-[Stackoverflow, &ldquo;C++11: Correct std::array initialization?&rdquo;](https://stackoverflow.com/questions/14178264/c11-correct-stdarray-initialization/)
+[Thinking in C++ Volume 2 - Practical Programming](https://www.linuxtopia.org/online_books/programming_books/c++_practical_programming/c++_practical_programming_132.html)
 
-entnommen.  
-
-# There&lsquo;s more
-
-Der Einsatz eines `std::array`-Objekts ist für performantes  Chiffrieren und Dechiffrieren nicht die
-performanteste Lösung. Überlegen Sie, wie man eine *BiMap*-Klasse implementieren könnte,
-um laufzeit-optimalere Ergebnisse zu erzielen.
+Es fehlt ein letzter Literaturhinweis. Das Beispiel aus dieser Fallstudie 
+kann man in dem Buch &ldquo;Functional Programming in C++&rdquo; von Ivan Cukic
+[hier](https://www.amazon.de/Functional-Programming-C-Ivan-Cukic/dp/1617293814/) nachlesen. 
 
 <br/>
 
@@ -489,8 +440,11 @@ um laufzeit-optimalere Ergebnisse zu erzielen.
 
 [Abbildung 1]: #abbildung_1_house_of_santa_claus
 [Abbildung 2]: #abbildung_2_string_concatenation_with_expression_templates
+[Abbildung 3]: #abbildung_3_string_concatenation_classic
+[Abbildung 4]: #abbildung_4_string_concatenation_classic
 
 [Listing 1]: #listing_1_class_stringhelper
 [Listing 2]: #listing_2_class_stringhelper_specialization
 
 <!-- End-of-File -->
+
