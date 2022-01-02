@@ -10,6 +10,11 @@ vor.
 
 ### Aktueller Stand:
 
+### Januar 2022
+
+  * Expression Templates / Lazy Evaluation
+
+
 ### Oktober 2021
 
   * Das Morsealphabet
