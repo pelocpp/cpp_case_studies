@@ -40,10 +40,23 @@ void test01b()
     std::cout << tok3 << std::endl;
 }
 
+void test04a()
+{
+    //// sum of first ten numbers
+    //Scanner scanner;
+    //scanner.SetLine("0 1 2 3 4 5 6 7 8 9 + + + + + + + + +");
+
+    //TokenList postfix = scanner.ScanExpression();
+
+    //PostfixCalculator calc;
+    //int result = calc.Calculate(postfix);
+    //cout << "Result: " << result << endl;
+}
+
 
 int main()
 {
-
+    std::cout << "Result: " << std::endl;
     return 0;
 }
 
