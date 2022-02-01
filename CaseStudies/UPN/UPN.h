@@ -28,9 +28,9 @@ public:
     Token(TokenType type, int value);
 
     // getter
-    TokenType GetTokenType() { return m_type; }
-    OperatorType GetOperatorType() { return m_op; }
-    int getValue() { return m_value; }
+    TokenType getTokenType() const { return m_type; }
+    OperatorType getOperatorType() const { return m_op; }
+    int getValue() const { return m_value; }
   //  int GetPrecedence() { return m_precedence; }
 };
 
@@ -56,8 +56,8 @@ public:
     // public interface
     //bool hasMoreExpressions();
     //void readLine();
-    // std::list<Token> scan();
-    void scan();
+    std::list<Token> scan();
+
 };
 
 class PostfixCalculator

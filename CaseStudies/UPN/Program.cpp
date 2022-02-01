@@ -42,21 +42,35 @@ void test01b()
 
 void test04a()
 {
-    //// sum of first ten numbers
-    //Scanner scanner;
-    //scanner.SetLine("0 1 2 3 4 5 6 7 8 9 + + + + + + + + +");
+    // sum of first ten numbers
+    Scanner scanner;
+    scanner.setLine("2 3 *");
 
-    //TokenList postfix = scanner.ScanExpression();
+    std::list<Token> postfix = scanner.scan();
 
-    //PostfixCalculator calc;
-    //int result = calc.Calculate(postfix);
-    //cout << "Result: " << result << endl;
+    PostfixCalculator calc;
+    int result = calc.calculate(postfix);
+    std::cout << "Result: " << result << std::endl;
+}
+
+void test04b()
+{
+    // sum of first ten numbers
+    Scanner scanner;
+    scanner.setLine("0 1 2 3 4 5 6 7 8 9 + + + + + + + + +");
+
+    std::list<Token> postfix = scanner.scan();
+
+    PostfixCalculator calc;
+    int result = calc.calculate(postfix);
+    std::cout << "Result: " << result << std::endl;
 }
 
 
 int main()
 {
-    std::cout << "Result: " << std::endl;
+    std::cout << "UPN: " << std::endl;
+    test04a();
     return 0;
 }
 

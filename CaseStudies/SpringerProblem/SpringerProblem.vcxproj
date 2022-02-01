@@ -23,7 +23,7 @@
     <ProjectGuid>{B270B794-4390-43BB-BADA-0C9A1D1DA2A6}</ProjectGuid>
     <RootNamespace>SpringerProblem</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>KnightProblem</ProjectName>
+    <ProjectName>SpringerProblem</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

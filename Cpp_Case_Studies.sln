@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mandelbrot", "CaseStudies\M
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Polynom", "CaseStudies\Polynom\Polynom.vcxproj", "{5C18B9AE-9A65-4571-A11C-7F4478FB71EE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KnightProblem", "CaseStudies\SpringerProblem\SpringerProblem.vcxproj", "{B270B794-4390-43BB-BADA-0C9A1D1DA2A6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpringerProblem", "CaseStudies\SpringerProblem\SpringerProblem.vcxproj", "{B270B794-4390-43BB-BADA-0C9A1D1DA2A6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Permutations", "CaseStudies\Permutations\Permutations.vcxproj", "{253E3080-9F17-410A-927E-F3EDCA507077}"
 EndProject
@@ -195,6 +195,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Snake", "Snake", "{4D2EEB86
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UPN", "CaseStudies\UPN\UPN.vcxproj", "{824533B2-1467-43C2-A929-707A90427E63}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UPN", "UPN", "{F58A6861-7911-4123-95D4-3E2FCCAB356B}"
+	ProjectSection(SolutionItems) = preProject
+		MarkDown\UPN\UPN.md = MarkDown\UPN\UPN.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -386,6 +391,7 @@ Global
 		{6D9ED670-1780-4055-8385-9D810B2E793A} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{9B096D26-B5F2-4A82-9D5C-5BEAB2344D0C} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{4D2EEB86-E945-4A62-96A8-E6A212EA6B38} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{F58A6861-7911-4123-95D4-3E2FCCAB356B} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}

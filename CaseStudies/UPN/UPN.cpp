@@ -9,13 +9,14 @@
 
 #include "UPN.h"
 
-Token::Token() : m_type{ TokenType ::Null}, m_op{ OperatorType::NullOp } {}
-Token::Token(TokenType type) : m_type{ type }, m_op{ OperatorType::NullOp } {}
-Token::Token(TokenType type, OperatorType op) : m_type{ type }, m_op{ op } {}
+Token::Token() : m_type{ TokenType ::Null}, m_op{ OperatorType::NullOp }, m_value{ } {}
 
-// ?????????????????????
-// Token::Token(TokenType type, int value) : m_type{ TokenType::Null }, m_op{ OperatorType::NullOp } {}  
+Token::Token(TokenType type) : m_type{ type }, m_op{ OperatorType::NullOp }, m_value{ } {}
 
+Token::Token(TokenType type, OperatorType op) : m_type{ type }, m_op{ op }, m_value{ } {}
+
+// TODO ?????????????????????
+Token::Token(TokenType type, int value) : m_type{ TokenType::Operand }, m_op{ OperatorType::NullOp }, m_value{ value } {}
 
 std::ostream& operator<< (std::ostream& os, const Token& tok)
 {
@@ -52,7 +53,7 @@ std::ostream& operator<< (std::ostream& os, const Token& tok)
         break;
     }
 
-    os << ' ';
+    os << ' ';  // TODO ????????????????????? WOzu ???
     return os;
 }
 
@@ -67,7 +68,7 @@ int Scanner::length()
     return 0; //TODO ????
 }
 
-void Scanner::scan()
+std::list<Token> Scanner::scan()
 {
     for (size_t i{}; i != m_line.size(); ++i)
     {
@@ -154,6 +155,8 @@ void Scanner::scan()
         break;
         }
     }
+
+    return m_tokens;
 }
 
 
