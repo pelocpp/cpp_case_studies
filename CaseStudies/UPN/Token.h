@@ -1,5 +1,5 @@
 // =====================================================================================
-// UPN.h
+// Token.h
 // =====================================================================================
 
 #pragma once
@@ -31,51 +31,8 @@ public:
     TokenType getTokenType() const { return m_type; }
     OperatorType getOperatorType() const { return m_op; }
     int getValue() const { return m_value; }
-  //  int GetPrecedence() { return m_precedence; }
+    //  int GetPrecedence() { return m_precedence; }
 };
-
-class Scanner
-{
-    // Hmmmm, macht der wirklich Sinn ????
-    friend std::ostream& operator<< (std::ostream&, const Scanner&);
-
-private:
-    std::string m_line;
-
-    // ODER Std::vector ... oder std::forward_list ???
-    std::list<Token> m_tokens;
-
-public:
-    // c'tor(s)
-    //Scanner();
-
-    // setter
-    void setLine(const std::string&);
-    int length ();
-
-    // public interface
-    //bool hasMoreExpressions();
-    //void readLine();
-    std::list<Token> scan();
-
-};
-
-class PostfixCalculator
-{
-private:
-    std::stack<Token> m_stack;  // temporary stack of operands
-
-    // IntegerStack m_stack;  // temporary stack of operands
-
-public:
-    // c'tor
-
-    // public interface
-    int calculate(std::list<Token> postfix);
-    //int Calculate(TokenList postfix);
-    //int CalculateEx(TokenList postfix);
-};
-
 
 // =====================================================================================
 // End-of-File

@@ -21,9 +21,24 @@
     <ClCompile Include="UPN.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PostfixCalculator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scanner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Token.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UPN.h">
+    <ClInclude Include="Token.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scanner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PostfixCalculator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -139,11 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="PostfixCalculator.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="Scanner.cpp" />
+    <ClCompile Include="Token.cpp" />
     <ClCompile Include="UPN.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UPN.h" />
+    <ClInclude Include="PostfixCalculator.h" />
+    <ClInclude Include="Scanner.h" />
+    <ClInclude Include="Token.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
