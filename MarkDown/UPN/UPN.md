@@ -18,10 +18,12 @@ TO BE DONE, Reg Expr.
 
 # Lernziele - TO BE DONE
 
-  * Container `std::vector<int>`
-  * Klasse `std::string_view`
-  * Utility-Klassen `std::tuple` und `std::optional`
-  * Konstrukt `if constexpr`
+  * Container `std::stack<>`, `std::list<>`, `std::vector<>`
+  * Verkettung von Konstruktoren
+  * Datentyp `class enum`
+  * Iteratoren Konzept
+  * Reguläre Ausdrücke
+  * 
   * Einsatz von `std::reverse_iterator`
   * Verschiebesemantik mit `std::move`
   * STL-Algorithmen bzw. -Funktionen `std::for_each`, `std::find_if`, `std::begin`, `std::end`, `std::rbegin`, `std::rend`, `std::isdigit` und `std::remove`

@@ -146,7 +146,6 @@
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Scanner.cpp" />
     <ClCompile Include="Token.cpp" />
-    <ClCompile Include="UPN.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InfixToPostfixConverter.h" />
