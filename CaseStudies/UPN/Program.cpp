@@ -10,6 +10,7 @@
 #include "Token.h"
 #include "Scanner.h"
 #include "PostfixCalculator.h"
+#include "InfixToPostfixConverter.h"
 
 // TODO:
 // Geht das Scanning mit einem Reg Expr ?!?!?!
@@ -43,7 +44,7 @@ void test_02_02()
     std::cout << scanner << std::endl << std::endl;
 
     std::list<Token> tokens = scanner.scan();
-    for (Token token : tokens)
+    for (const Token& token : tokens)
         std::cout << "Token: " << token << std::endl;
 }
 
@@ -54,13 +55,13 @@ void test_03_01()
     scanner.set("1 2 - 3 -");
 
     std::list<Token> postfix = scanner.scan();
-    for (Token token : postfix) {
+    for (const Token& token : postfix) {
         std::cout << token << ' ';
     }
     std::cout << std::endl;
 
-    PostfixCalculator calc;
-    int result = calc.calc(postfix);
+    PostfixCalculator calculator;
+    int result = calculator.calc(postfix);
     std::cout << "Result: " << result << std::endl;
 }
 
@@ -83,7 +84,7 @@ void test_03_02()
 
     // print postfix notation to stdout
     std::cout << "Postfix Expression: " << std::endl;
-    for (Token token : tokens) {
+    for (const Token& token : tokens) {
         std::cout << token << ' ';
     }
     std::cout << std::endl;
@@ -103,8 +104,8 @@ void test_03_03()
 
     std::list<Token> postfix = scanner.scan();
 
-    PostfixCalculator calc;
-    int result = calc.calc(postfix);
+    PostfixCalculator calculator;
+    int result = calculator.calc(postfix);
     std::cout << "Result: " << result << std::endl;
 }
 
@@ -129,7 +130,7 @@ void test_03_04()
 
     // print postfix notation to stdout
     std::cout << "Postfix Expression: " << std::endl;
-    for (Token token : tokens) {
+    for (const Token& token : tokens) {
         std::cout << token << ' ';
     }
     std::cout << std::endl;
@@ -140,7 +141,170 @@ void test_03_04()
     std::cout << "Result: " << result << std::endl;
 }
 
+// =====================================================================================
 
+void test10_01()
+{
+    // infix expression: 5 + 7
+    std::list<Token> infix {
+        { TokenType::Operand, 5 },
+        { TokenType::Operator, OperatorType::AddOp },
+        { TokenType::Operand, 7 } 
+    };
+
+    // print postfix notation to stdout
+    std::cout << "Infix Expression: " << std::endl;
+    for (const Token& token : infix) {
+        std::cout << token << ' ';
+    }
+    std::cout << std::endl;
+
+    InfixToPostfixConverter conv;
+    std::list<Token> postfix = conv.convert(infix);
+
+    // print postfix notation to stdout
+    std::cout << "Postfix Expression: " << std::endl;
+    for (const Token& token : postfix) {
+        std::cout << token << ' ';
+    }
+    std::cout << std::endl;
+
+    PostfixCalculator calculator;
+    int result = calculator.calc(postfix);
+    std::cout << "Result: " << result << std::endl;
+}
+
+void test10_02()
+{
+    // infix expression: 2 * 3 / (2 - 1) + 5 * (4 - 1)
+    std::list<Token> infix{
+        { TokenType::Operand, 2 },
+        { TokenType::Operator, OperatorType::MulOp },
+        { TokenType::Operand, 3 },
+        { TokenType::Operator, OperatorType::DivOp },
+
+        { TokenType::LBracket },
+        { TokenType::Operand, 2 },
+        { TokenType::Operator, OperatorType::SubOp },
+        { TokenType::Operand, 1 },
+        { TokenType::RBracket },
+
+        { TokenType::Operator, OperatorType::AddOp },
+        { TokenType::Operand, 5 },
+        { TokenType::Operator, OperatorType::MulOp },
+
+        { TokenType::LBracket },
+        { TokenType::Operand, 4 },
+        { TokenType::Operator, OperatorType::SubOp },
+        { TokenType::Operand, 1 },
+        { TokenType::RBracket }
+    };
+
+    // print postfix notation to stdout
+    std::cout << "Infix Expression: " << std::endl;
+    for (const Token& token : infix) {
+        std::cout << token << ' ';
+    }
+    std::cout << std::endl;
+
+    InfixToPostfixConverter conv;
+    std::list<Token> postfix = conv.convert(infix);
+
+    // print postfix notation to stdout
+    std::cout << "Postfix Expression: " << std::endl;
+    for (const Token& token : postfix) {
+        std::cout << token << ' ';
+    }
+    std::cout << std::endl;
+
+    PostfixCalculator calculator;
+    int result = calculator.calc(postfix);
+    std::cout << "Result: " << result << std::endl;
+}
+
+void test10_03()
+{
+    Scanner scanner;
+    scanner.set("2 * 3 / (2 - 1) + 5 * (4 - 1)");
+    std::list<Token> infix = scanner.scan();
+
+    // print postfix notation to stdout
+    std::cout << "Infix Expression: " << std::endl;
+    for (const Token& token : infix) {
+        std::cout << token << ' ';
+    }
+    std::cout << std::endl << std::endl;
+
+    InfixToPostfixConverter conv;
+    std::list<Token> postfix = conv.convert(infix);
+
+    // print postfix notation to stdout
+    std::cout << "Postfix Expression: " << std::endl;
+    for (const Token& token : postfix) {
+        std::cout << token << ' ';
+    }
+    std::cout << std::endl;
+
+    PostfixCalculator calculator;
+    int result = calculator.calc(postfix);
+    std::cout << "Result: " << result << std::endl;
+}
+
+void test10_04()
+{
+    Scanner scanner;
+    scanner.set("2 * (4 + 5) / 3");
+    std::list<Token> infix = scanner.scan();
+
+    // print postfix notation to stdout
+    std::cout << "Infix Expression: " << std::endl;
+    for (const Token& token : infix) {
+        std::cout << token << ' ';
+    }
+    std::cout << std::endl;
+
+    InfixToPostfixConverter conv;
+    std::list<Token> postfix = conv.convert(infix);
+
+    // print postfix notation to stdout
+    std::cout << "Postfix Expression: " << std::endl;
+    for (const Token& token : postfix) {
+        std::cout << token << ' ';
+    }
+    std::cout << std::endl;
+
+    PostfixCalculator calculator;
+    int result = calculator.calc(postfix);
+    std::cout << "Result: " << result << std::endl;
+}
+
+void test10_05()
+{
+    Scanner scanner;
+    scanner.set("(3 + 7) / (4 - 2)");
+    std::list<Token> infix = scanner.scan();
+
+    // print postfix notation to stdout
+    std::cout << "Infix Expression: " << std::endl;
+    for (const Token& token : infix) {
+        std::cout << token << ' ';
+    }
+    std::cout << std::endl;
+
+    InfixToPostfixConverter conv;
+    std::list<Token> postfix = conv.convert(infix);
+
+    // print postfix notation to stdout
+    std::cout << "Postfix Expression: " << std::endl;
+    for (const Token& token : postfix) {
+        std::cout << token << ' ';
+    }
+    std::cout << std::endl;
+
+    PostfixCalculator calculator;
+    int result = calculator.calc(postfix);
+    std::cout << "Result: " << result << std::endl;
+}
 int main()
 {
     //test_01();
@@ -151,7 +315,13 @@ int main()
     //test_03_03();
     //test04();
     //test04_01();
-    test_03_04();
+    // test_03_04();
+
+    //test10_01();
+    //test10_02();
+    test10_03();
+    //test10_04();
+    //test10_05();
     return 0;
 }
 

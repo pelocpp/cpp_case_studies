@@ -11,14 +11,14 @@
 #include "Scanner.h"
 #include "PostfixCalculator.h"
 
-int PostfixCalculator::calc(const std::list<Token>& postfix)
+int PostfixCalculator::calc(std::list<Token> postfix)
 {
     std::stack<Token> m_stack;  // temporary stack of operands
 
    // std::list<Token>::iterator it;
 
     // for (it = postfix.cbegin(); it != postfix.cend(); it++)
-    for (Token tok : postfix)
+    for (const Token& tok : postfix)
     {
        // Token tok = *it;
 

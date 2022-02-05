@@ -17,11 +17,12 @@ private:
     TokenType m_type;    // classification of token
     OperatorType m_op;   // classification of operator (TokenType == Operator)
     int m_value;         // value of constant (TokenType == Constant)  // Könnte man mit Template machen ?!?!?
-  //  int m_precedence;    // precedence of this operator, if any 
-                         // TODO: wird m_precedence verwendet ???
+    size_t m_precedence;    // precedence of this operator, if any 
 
 public:
     // c'tor(s)
+    // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Diese 4 Konstruzktoren müssen via c'tor Redirecting umgeleitet werden !!!!!
     Token();
     Token(TokenType type);
     Token(TokenType type, OperatorType op);
@@ -31,7 +32,7 @@ public:
     TokenType getTokenType() const { return m_type; }
     OperatorType getOperatorType() const { return m_op; }
     int getValue() const { return m_value; }
-    //  int GetPrecedence() { return m_precedence; }
+    size_t getPrecedence() { return m_precedence; }
 };
 
 // =====================================================================================

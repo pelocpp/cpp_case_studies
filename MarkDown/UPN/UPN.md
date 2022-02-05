@@ -197,6 +197,22 @@ seine Postfix-Notation lautet `2 4 5 + * 3 /`:
 
 TODO: Abbildung
 
+upn_postfix_calculator
+
+
+<img src="upn_postfix_calculator.svg" width="700">
+
+Abbildung 1: Arbeitsweise des Postfix-Kalkulators an einem Beispiel.
+
+
+
+###### {#abbildung_1_literals_compile_time}
+
+{{< figure src="/img/literals/ConstexprLiterals.png" width="80%" >}}
+
+*Abbildung* 1: Auswertung benutzerdefinierter Literale zur Übersetzungszeit.
+
+
 Implementieren Sie eine Klasse `PostfixCalculator`, die im Wesentlichen nur eine zentrale
 Methode `calc` besitzt:
 
@@ -368,9 +384,141 @@ für den menschlichen Betrachter doch irgendwie ungewohnt ist. Damit sind wir be
 
 # Klasse `InfixToPostfixConverter` &ndash; *Infix*- nach *Postfix*-Konvertierung
 
-Siehe upn.pdf
+Wir gehen zum Abschluss auf einen Konverter für arithmetische Ausdrücke ein,
+der diese von der *Infix*- in die *Postfix*-Notation umwandelt. Damit kommen wir aus dem Dilemma heraus,
+dass die Betrachtung eines arithmetischen Ausdrucks in der *Postfix*-Notation doch etwas ungewohnt ist.
+Arithmetische Ausdrücke in der *Infix*-Notation können neben den Operatoren
+und ihren Operanden auch noch runde Klammern besitzen:
+
+```
+7 + 7 * 7
+3 * (5 + ((2 * 3) - 4))
+((28 + 2) * (2 / 4))
+```
+
+Mit den runden Klammern lassen sich die standardmäßig vorherrschenden Vorrangregeln (<quote>Punkt-vor-Strich</quote>) abändern.
+
+Ein Operator mit einem höheren Vorrang wird einem Operator mit einem niedrigeren Vorrang in der Ausführung vorgezogen,
+siehe [Abbildung 2].
+
+Da wir in dieser Klausur nur die vier Operatoren `+`, `-`, `*` und `/`
+zulassen, können wir den Aspekt des *Operatorenvorrangs* simpel auch als <quote>Punkt-vor-Strich</quote>-Regel titulieren.
+
+<img src="infixtopostfix_01.svg" width="700">
+
+Abbildung 2: Rangfolge der Operatoren.
+
+Erweitern Sie den Aufzählungstyp `TokenType` um zwei weitere symbolische Konstante
+`LBracket` und `RBracket`:
+
+```cpp
+enum TokenType { Operator, Operand, LBracket, RBracket, Null };</screen>
+```
+
+Erweitern Sie die Klasse `Scanner` so, dass sie korrekte *Infix*-Audrücke einliest.
+Dies bedeutet einzig und allein, dass der Scanner die zwei zusätzlichen Token `LBracket` und `RBracket` verstehen muss.
+
+Wir kommen nun auf den Algorithmus für die Konvertierung des arithmetischen Ausdruck
+von der *Infix*- in die *Postfix*-Notation zu sprechen.
+Für die Konvertierung kommen drei Datencontainer zum Einsatz:
+
+  * Klasse `TokenList` &ndash; Eingabeliste, die alle Operatoren, Operanden und runden Klammern
+    eines arithmetischen Ausdrucks in *Infix*-Notation enthält.
+  * Klasse `TokenList` &ndash; Ausgabeliste, die das Ergebnis der Umwandlung (Ausdruck in *Postfix*-Notation) aufnimmt.
+    Logischerweise ist diese Liste zu Beginn der Umwandlung leer.
+  * Klasse `TokenStack` &ndash; 
+    Während der Konvertierung benötigen wir für die temporäre Ablage von Eingabe-Elementen einen Stapel.
+    Dieser nimmt temporär während des Konvertierens Operatoren und Klammern auf.
+
+Wir sind bei der Beschreibung des Algorithmus angekommen.
+Die Liste der einzelnen `Token`-Objekte (Parameter `infix`) ist Objekt für Objekt
+zu traversieren, es lassen sich dabei fünf Fälle unterscheiden:
+
+  * Das nächstes Element ist ein Operand (Zahl):<br/>Zahl in *Postfix*-Liste einfügen.
+  * Das nächstes Element ist eine öffnende Klammer `(`:<br/>Klammer auf den temporären Stapel schieben.
+  * Das nächstes Element ist ein Operator:<br/>
+    Zuerst sind vom Stapel alle Operatoren mit gleicher oder höherer Priorität in die *Postfix*-Liste zu schieben,
+    bis eine öffnende Klammer `(` erreicht wird oder der Stapel leer ist
+    (oder ein Operator niedriger Priorität gekommen ist).
+    Abschließend wird der gefundene Operator auf den temporären Stapel geschoben.
+  * Das nächstes Element ist eine schließende Klammer `)`:<br/>
+    Alle Operatoren vom Stapel sind bis zur ersten öffnenden Klammer <quote>(</quote> vom Stapel
+    zu entfernen und in die *Postfix*-Liste zu schieben.
+    Die öffnende Klammer auf dem Stapel sowie die schließende Klammer
+    von der Eingabe sind zu verwerfen (sie werden nicht in die *Postfix*-Liste kopiert).
+  * Die Eingabe ist leer:<br/>Es werden alle Operatoren, die sich noch auf dem temporären Stapel befinden,
+    in die *Postfix*-Liste geschoben.
+
+Sollten Sie Probleme haben, den Algorithmus genau zu erfassen, gehen Sie am besten das folgende Beispiel in 
+[Abbildung 3] Zeile für Zeile durch.
+Es wird der arithmetische Ausdruck `(3 + 7) / (4 - 2)` konvertiert:
 
 
+<img src="infixtopostfix_02.svg" width="700">
+
+Abbildung 3: Algorithmus zur Umwandlung von arithmetischen Ausdrücken von der *Infix*- in die *Postfix*-Notation am Beispiel des Ausdrucks `(3 + 7) / (4 - 2)`.
+
+Implementieren Sie eine Klasse `InfixToPostfixConverter` mit der in
+[Tabelle 4] spezifizierten Methode `Convert`:
+
+###### {#tabelle_4_class_infix_to_postfix}
+
+| Element | Beschreibung |
+| :---- | :---- |
+| Methode `convert` | `TokenList Convert (const TokenList&amp; infix);`<br/>Konvertiert einen arithmetischen Ausdruck von der *Infix*-Notation (Parameter `infix`) in die *Postfix*-Notation (Rückgabewert). Beide Ausdrücke sind in Form eines `TokenList`-Objekts darzustellen. |
+
+*Tabelle* 2: Öffentliche Elemente der Klasse `TokenScanner`.
+
+Zum Testen Ihrer Realisierung finden Sie in <xref linkend="figure.infixtopostfix05" xrefstyle="template:Abbildung %n" />
+ein Beispiel eines komplexeren `Infix`-Ausdrucks vor:
+Es wird der arithmetische Ausdruck `2 * 3 / (2 - 1) + 5 * ( 4 - 1)`
+in die `Postfix`-Notation umgewandelt:
+
+<img src="infixtopostfix_01.svg" width="700">
+
+Abbildung 2: XXX
+
+Algorithmus zur Umwandlung von arithmetischen Ausdrücken von der `Infix`- in die `Postfix`-Notation
+am Beispiel des Ausdrucks `2 * 3 / (2 - 1) + 5 * ( 4 - 1)`
+
+Das erfolgreiche Zusammenspiel aller Klassen können Sie am folgenden Codefragment überprüfen:
+
+```
+Scanner scanner;
+scanner.SetLine ("2 * 3 / (2 - 1) + 5 * ( 4 - 1)");
+TokenList infix = scanner.ScanExpression ();
+
+cout &lt;&lt; "Infix Expression:   ";
+for (int i = 0; i &lt; infix.Count(); i ++)
+{
+    Token tok = infix[i];
+    cout &lt;&lt; tok;
+}
+cout &lt;&lt; endl;
+
+PostfixConverter conv;
+TokenList postfix = conv.Convert (infix);
+
+cout &lt;&lt; "Postfix Expression: ";
+for (int i = 0; i &lt; postfix.Count(); i ++)
+{
+    Token tok = postfix[i];
+    cout &lt;&lt; tok;
+}
+cout &lt;&lt; endl;
+
+PostfixCalculator calc;
+int result = calc.Calculate (postfix);
+cout &lt;&lt; "Result:             " &lt;&lt; result &lt;&lt; endl;</screen>
+```
+
+*Ausgabe*:
+
+```
+Infix Expression:   2 * 3 / ( 2 - 1 ) + 5 * ( 4 - 1 )
+Postfix Expression: 2 3 * 2 1 - / 5 4 1 - * +
+Result:             21
+```
 
 
 // ===========================================================================
@@ -397,6 +545,7 @@ um laufzeit-optimalere Ergebnisse zu erzielen.
 [Tabelle 1]: #tabelle_1_class_token_ctors
 [Tabelle 2]: #tabelle_2_class_token_scanner
 [Tabelle 3]: #tabelle_3_class_token_calculator
+[Tabelle 4]: #tabelle_4_class_infix_to_postfix
 
 
 
@@ -408,5 +557,11 @@ um laufzeit-optimalere Ergebnisse zu erzielen.
 [Listing 4]: #listing_04_palindromcalculator_implementation
 
 [Abbildung 1]:  #abbildung_1_schriftlichen_addition_01
+[Abbildung 2]:  #infixtopostfix_01
+
+
+
+
+
 
 <!-- End-of-File -->
