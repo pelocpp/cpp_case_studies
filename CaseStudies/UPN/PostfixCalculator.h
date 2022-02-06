@@ -11,11 +11,9 @@ private:
     std::stack<Token<T>> m_stack;  // temporary stack of operands
 
 public:
-    // c'tor
-
     // public interface
     template <typename Iter>
-    int calc(Iter begin, Iter end)
+    T calc(Iter begin, Iter end)
     {
         std::stack<Token<T>> m_stack;  // temporary stack of operands
 

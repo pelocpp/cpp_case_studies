@@ -8,25 +8,28 @@
 #include <stack>
 #include <string>
 #include <algorithm>
+#include <regex>
 
 #include "Token.h"
 #include "Scanner.h"
 #include "PostfixCalculator.h"
 #include "InfixToPostfixConverter.h"
 
-// TODO:
-// Geht das Scanning mit einem Reg Expr ?!?!?!
 
+// TODO: Modulo OPerator ergänzen ...
 
-using ValueType = long;
+    // TODO : testen, ob man das das Objekt verändern kann (also die Zeichenkette..=
+//const std::string& get() const {
+//    return m_line;
+//}
 
 // testing tokens
 void test_01()
 {
-    Token<ValueType> tok1{ TokenType::LBracket };
-    Token<ValueType> tok2{ TokenType::RBracket };
-    Token<ValueType> tok3{ TokenType::Operator, OperatorType::AddOp };
-    Token<ValueType> tok4{ TokenType::Operand, 12345 };
+    Token<size_t> tok1{ TokenType::LBracket };
+    Token<size_t> tok2{ TokenType::RBracket };
+    Token<size_t> tok3{ TokenType::Operator, OperatorType::AddOp };
+    Token<size_t> tok4{ TokenType::Operand, 12345 };
 
     std::cout << tok1 << std::endl;
     std::cout << tok2 << std::endl;
@@ -50,24 +53,45 @@ void test_01a()
 // testing scanner
 void test_02_01()
 {
-    Scanner<ValueType> scanner;
+    Scanner<size_t> scanner;
     scanner.set("1 2 *");
     std::cout << scanner.get() << std::endl;
 }
 
 void test_02_02()
 {
-    Scanner<ValueType> scanner;
+    Scanner<int> scanner;
     scanner.set("1 2 - 3 -");
     scanner.scan();
-    for (const auto& token : scanner)
+    for (const auto& token : scanner) {
         std::cout << "Token: " << token << std::endl;
+    }
+    scanner.scan_classic();
+    for (const auto& token : scanner) {
+        std::cout << "Token: " << token << std::endl;
+    }
 }
+
+void test_02_03()
+{
+    Scanner<int> scanner;
+    scanner.set("123 + 234 * (345 % 456 / 567) / 678 - 789");
+    scanner.scan();
+    for (const auto& token : scanner) {
+        std::cout << "Token: " << token << std::endl;
+    }
+    std::cout << std::endl;
+    scanner.scan_classic();
+    for (const auto& token : scanner) {
+        std::cout << "Token: " << token << std::endl;
+    }
+}
+
 
 // testing postfix calculator
 void test_03_01()
 {
-    Scanner<ValueType> scanner;
+    Scanner<long long> scanner;
     scanner.set("1 2 - 3 -");
 
     scanner.scan();
@@ -76,8 +100,8 @@ void test_03_01()
     }
     std::cout << std::endl;
 
-    PostfixCalculator<ValueType> calculator;
-    int result = calculator.calc(std::begin(scanner), std::end(scanner));
+    PostfixCalculator<long long> calculator;
+    auto result = calculator.calc(std::begin(scanner), std::end(scanner));
     std::cout << "Result: " << result << std::endl;
 }
 
@@ -85,13 +109,13 @@ void test_03_01()
 void test_03_02()
 {
     // postfix: 1 2 - 3 - (infix: 1 - 2 - 3)
-    Token<ValueType> t1{ TokenType::Operand, 1 };
-    Token<ValueType> t2{ TokenType::Operand, 2 };
-    Token<ValueType> t3{ TokenType::Operator, OperatorType::SubOp };
-    Token<ValueType> t4{ TokenType::Operand, 3 };
-    Token<ValueType> t5{ TokenType::Operator, OperatorType::SubOp };
+    Token<long long> t1{ TokenType::Operand, 1 };
+    Token<long long> t2{ TokenType::Operand, 2 };
+    Token<long long> t3{ TokenType::Operator, OperatorType::SubOp };
+    Token<long long> t4{ TokenType::Operand, 3 };
+    Token<long long> t5{ TokenType::Operator, OperatorType::SubOp };
 
-    std::list<Token<ValueType>> tokens;
+    std::list<Token<long long>> tokens;
     tokens.push_back(t1);
     tokens.push_back(t2);
     tokens.push_back(t3);
@@ -106,8 +130,8 @@ void test_03_02()
     std::cout << std::endl;
 
     // calculate result of postfix expression
-    PostfixCalculator<ValueType> calculator;
-    int result = calculator.calc(std::begin(tokens), std::end(tokens));
+    PostfixCalculator<long long> calculator;
+    auto result = calculator.calc(std::begin(tokens), std::end(tokens));
     std::cout << "Result: " << result << std::endl;
 }
 
@@ -327,21 +351,130 @@ void test10_05()
 
 
 
+void test_20_simple_regex()
+{
+    // simple example
+
+  //  std::regex re{ "\\(|\\)|+|\\-|*|/|[[digit]]+" };
+
+   // std::regex re{ "\\d+" };   // Geht
+   // std::regex re{ "[1-9][0-9]+" };   //  // Geht für 345345
+  //   std::regex re{ "([1-9][0-9]+)|\\*|\\+" };   // Geht für 345345 ODER + ODER -
+  //  std::regex re{ "^(([1-9][0-9]+)|\\*|\\+)+$" };   // Geht für 345345 UND + UND -
+    // std::regex re{ "^(([1-9][0-9]+)|\\+|\\-|\\*|\\/)+$" };   // Geht für ALLES OHNE KLAMMERN
+
+    // std::regex re{ "^([(]|[)])+$" };   // Geht für KLAMMERN
+
+     std::regex re{ "^(([1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/)+$" };   // Geht für ALLES OHNE KLAMMERN
+
+    // extract blanks !!!
+    std::string test{ "1+22*(4444-5555)" };
+
+    bool result{ std::regex_match(test, re) };
+    std::cout << std::boolalpha << test << ": " << result << std::endl;
+
+}
+
+void test_21_simple_regex()
+{
+    std::string s = "123 apples 456 oranges 789 bananas oranges bananas";
+
+    std::regex words_regex("[a-z]+");
+
+    for (std::sregex_iterator i = std::sregex_iterator(s.begin(), s.end(), words_regex);
+        i != std::sregex_iterator();
+        ++i)
+    {
+        std::smatch m = *i;
+        std::cout << m.str() << " at position " << m.position() << '\n';
+    }
+}
+
+void test_22_simple_regex()
+{
+    std::string s = "1 + 22 * ( 4444 - 5555)";
+
+    std::regex token_regex("([1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/");
+
+    auto rbegin = std::sregex_iterator(
+        std::begin(s),
+        std::end(s),
+        token_regex
+    );
+
+    auto rend = std::sregex_iterator();
+
+    while (rbegin != rend)
+    {
+        std::smatch m = *rbegin;
+        std::string token = m.str();
+
+        std::cout << "At position " << m.position() << ": " << token << std::endl;
+        ++rbegin;
+    }
+}
+
+void test_23_simple_regex()
+{
+    std::string s = "1+22*(4444-5555)";
+
+    std::regex regex("(([1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/)+");
+
+    std::smatch matches;
+
+    if (std::regex_search(s, matches, regex)) {
+
+        std::cout << "Match found\n";
+
+        for (size_t i = 0; i < matches.size(); ++i) {
+            std::cout << i << ": '" << matches[i].str() << "'\n";
+        }
+    }
+    else {
+        std::cout << "Match not found\n";
+    }
+}
+
+void test_24_simple_regex()
+{
+    std::string s = "1+22*(4444-5555)";
+
+    std::regex regex("([1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/");
+
+    std::smatch matches;
+
+    while (std::regex_search(s, matches, regex)) { //loop
+
+        std::cout << "A:" << matches[0] << std::endl;
+
+        s = matches.suffix(); //remove "192", then "168" ...
+    }
+}
+
+
 int main()
 {
-    test_01();
-    test_02_01();
-    test_02_02();
-    test_03_01();
-    test_03_02();
-    test_03_03();
-    test_03_04();
+    //test_01();
+    //test_02_01();
+    //test_02_02();
+    test_02_03();
+    //test_03_01();
+    //test_03_02();
+    //test_03_03();
+    //test_03_04();
 
-    test10_01();  //  TODO DIE KRACHT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    test10_02();
-    test10_03();
-    test10_04();
-    test10_05();
+    //test10_01();
+    //test10_02();
+    //test10_03();
+    //test10_04();
+    //test10_05();
+
+    //test_20_simple_regex();
+   //test_21_simple_regex();
+   //test_22_simple_regex();
+   //test_24_simple_regex();
+
+
     return 0;
 }
 

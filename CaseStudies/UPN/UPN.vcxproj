@@ -141,11 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="InfixToPostfixConverter.cpp" />
-    <ClCompile Include="PostfixCalculator.cpp" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Scanner.cpp" />
-    <ClCompile Include="Token.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InfixToPostfixConverter.h" />
