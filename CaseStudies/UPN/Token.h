@@ -23,18 +23,15 @@ private:
     // member data
     TokenType m_type;      // classification of token
     OperatorType m_op;     // classification of operator (TokenType == Operator)
-    T m_value;           // value of constant (TokenType == Constant)
+    T m_value;             // value of constant (TokenType == Constant)
     size_t m_precedence;   // precedence of this operator, if any 
 
 public:
     // c'tor(s)
     Token() : Token(TokenType::Null, OperatorType::NullOp, T{}) {}
-
     Token(TokenType type) : Token(type, OperatorType::NullOp, T{}) {}
-
-    Token(TokenType type, OperatorType op) : Token(type, op, T{}) {}
-
-    Token(TokenType type, T value) : Token(type, OperatorType::NullOp, value) {}
+    Token(OperatorType op) : Token(TokenType::Operator, op, T{}) {}
+    Token(T value) : Token(TokenType::Operand, OperatorType::NullOp, value) {}
 
     // getter
     TokenType getTokenType() const { return m_type; }
@@ -111,7 +108,6 @@ std::ostream& operator<< (std::ostream& os, const Token<T>& tok)
 
     return os;
 }
-
 
 // =====================================================================================
 // End-of-File

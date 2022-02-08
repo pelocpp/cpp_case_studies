@@ -8,28 +8,22 @@
 #include <stack>
 #include <string>
 #include <algorithm>
+#include <type_traits>
 #include <regex>
+#include <cmath>
 
 #include "Token.h"
 #include "Scanner.h"
 #include "PostfixCalculator.h"
 #include "InfixToPostfixConverter.h"
 
-
-// TODO: Modulo OPerator ergänzen ...
-
-    // TODO : testen, ob man das das Objekt verändern kann (also die Zeichenkette..=
-//const std::string& get() const {
-//    return m_line;
-//}
-
 // testing tokens
-void test_01()
+void test_01_01()
 {
     Token<size_t> tok1{ TokenType::LBracket };
     Token<size_t> tok2{ TokenType::RBracket };
-    Token<size_t> tok3{ TokenType::Operator, OperatorType::AddOp };
-    Token<size_t> tok4{ TokenType::Operand, 12345 };
+    Token<size_t> tok3{ OperatorType::AddOp };
+    Token<size_t> tok4{ 12345 };
 
     std::cout << tok1 << std::endl;
     std::cout << tok2 << std::endl;
@@ -37,12 +31,12 @@ void test_01()
     std::cout << tok4 << std::endl;
 }
 
-void test_01a()
+void test_01_02()
 {
     Token<int> tok1{ TokenType::LBracket };
     Token<int> tok2{ TokenType::RBracket };
-    Token<int> tok3{ TokenType::Operator, OperatorType::AddOp };
-    Token<int> tok4{ TokenType::Operand, 12345 };
+    Token<int> tok3{ OperatorType::AddOp };
+    Token<int> tok4{ 12345 };
 
     std::cout << tok1 << std::endl;
     std::cout << tok2 << std::endl;
@@ -87,7 +81,6 @@ void test_02_03()
     }
 }
 
-
 // testing postfix calculator
 void test_03_01()
 {
@@ -109,11 +102,11 @@ void test_03_01()
 void test_03_02()
 {
     // postfix: 1 2 - 3 - (infix: 1 - 2 - 3)
-    Token<long long> t1{ TokenType::Operand, 1 };
-    Token<long long> t2{ TokenType::Operand, 2 };
-    Token<long long> t3{ TokenType::Operator, OperatorType::SubOp };
-    Token<long long> t4{ TokenType::Operand, 3 };
-    Token<long long> t5{ TokenType::Operator, OperatorType::SubOp };
+    Token<long long> t1{ 1 };
+    Token<long long> t2{ 2 };
+    Token<long long> t3{ OperatorType::SubOp };
+    Token<long long> t4{ 3 };
+    Token<long long> t5{ OperatorType::SubOp };
 
     std::list<Token<long long>> tokens;
     tokens.push_back(t1);
@@ -150,13 +143,13 @@ void test_03_03()
 
 void test_03_04()
 {
-    Token<short> t1 { TokenType::Operand, 2 };
-    Token<short> t2 { TokenType::Operand, 4 };
-    Token<short> t3 { TokenType::Operand, 5 };
-    Token<short> t4 { TokenType::Operator, OperatorType::AddOp };
-    Token<short> t5 { TokenType::Operator, OperatorType::MulOp };
-    Token<short> t6 { TokenType::Operand, 3 };
-    Token<short> t7 { TokenType::Operator, OperatorType::DivOp };
+    Token<short> t1 { 2 };
+    Token<short> t2 { 4 };
+    Token<short> t3 { 5 };
+    Token<short> t4 { OperatorType::AddOp };
+    Token<short> t5 { OperatorType::MulOp };
+    Token<short> t6 { 3 };
+    Token<short> t7 { OperatorType::DivOp };
 
     std::list<Token<short>> tokens;
     tokens.push_back(t1);
@@ -180,17 +173,43 @@ void test_03_04()
     std::cout << "Result: " << result << std::endl;
 }
 
+void test_04_01()
+{
+    // createPowerOf2PostfixExpression
 
-//// =====================================================================================
-//
-void test10_01()
+    constexpr size_t MaxPower = 16;
+
+    for (size_t n{1}; n != MaxPower; ++n) {
+
+        // construct scan string for powers of '2'
+        std::string s{};
+        for (size_t i{}; i != n; ++i) {
+            s.append("2 ");
+        }
+        for (size_t i{}; i != n - 1; ++i) {
+            s.append("* ");
+        }
+
+        // compute value
+        Scanner<int> scanner;
+        scanner.set(s);
+        scanner.scan();
+
+        PostfixCalculator<int> calculator;
+        int result = calculator.calc(scanner.begin(), scanner.end());
+        std::cout << scanner.get() << " ==> " << result << std::endl;
+    }
+}
+
+// testing infix to postfix converter
+void test_10_01()
 {
     // infix expression: 5 + 7
     std::list<Token<int>> infix 
     {
-        { TokenType::Operand, 5 },
-        { TokenType::Operator, OperatorType::AddOp },
-        { TokenType::Operand, 7 } 
+        { 5 },
+        { OperatorType::AddOp },
+        { 7 } 
     };
 
     // print postfix notation to stdout
@@ -215,29 +234,29 @@ void test10_01()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test10_02()
+void test_10_02()
 {
     // infix expression: 2 * 3 / (2 - 1) + 5 * (4 - 1)
     std::list<Token<int>> infix{
-        { TokenType::Operand, 2 },
-        { TokenType::Operator, OperatorType::MulOp },
-        { TokenType::Operand, 3 },
-        { TokenType::Operator, OperatorType::DivOp },
+        { 2 },
+        { OperatorType::MulOp },
+        { 3 },
+        { OperatorType::DivOp },
 
         { TokenType::LBracket },
-        { TokenType::Operand, 2 },
-        { TokenType::Operator, OperatorType::SubOp },
-        { TokenType::Operand, 1 },
+        { 2 },
+        { OperatorType::SubOp },
+        { 1 },
         { TokenType::RBracket },
 
-        { TokenType::Operator, OperatorType::AddOp },
-        { TokenType::Operand, 5 },
-        { TokenType::Operator, OperatorType::MulOp },
+        { OperatorType::AddOp },
+        { 5 },
+        { OperatorType::MulOp },
 
         { TokenType::LBracket },
-        { TokenType::Operand, 4 },
-        { TokenType::Operator, OperatorType::SubOp },
-        { TokenType::Operand, 1 },
+        { 4 },
+        { OperatorType::SubOp },
+        { 1 },
         { TokenType::RBracket }
     };
 
@@ -263,14 +282,14 @@ void test10_02()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test10_03()
+void test_10_03()
 {
     Scanner<int> scanner;
     scanner.set("2 * 3 / (2 - 1) + 5 * (4 - 1)");
     scanner.scan();
 
     // print postfix notation to stdout
-    std::cout << "Infix Expression: " << std::endl;
+    std::cout << "Infix Expression:   ";
     for (const Token<int>& token : scanner) {
         std::cout << token << ' ';
     }
@@ -280,7 +299,7 @@ void test10_03()
     std::list<Token<int>> postfix = conv.convert(std::begin(scanner), std::end(scanner));
 
     // print postfix notation to stdout
-    std::cout << "Postfix Expression: " << std::endl;
+    std::cout << "Postfix Expression: ";
     for (const Token<int>& token : postfix) {
         std::cout << token << ' ';
     }
@@ -291,11 +310,10 @@ void test10_03()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test10_04()
+void test_10_04()
 {
     Scanner<int> scanner;
     scanner.set("2 * (4 + 5) / 3");
-    // std::list<Token<int>> infix = scanner.scan();
     scanner.scan();
 
     // print postfix notation to stdout
@@ -320,7 +338,7 @@ void test10_04()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test10_05()
+void test_10_05()
 {
     Scanner<int> scanner;
     scanner.set("(3 + 7) / (4 - 2)");
@@ -348,132 +366,61 @@ void test10_05()
     std::cout << "Result: " << result << std::endl;
 }
 
-
-
-
-void test_20_simple_regex()
+void test_10_06()
 {
-    // simple example
+    Scanner<double> scanner;
+    scanner.set("2 * (4 + 5) / 3");
+    scanner.scan();
 
-  //  std::regex re{ "\\(|\\)|+|\\-|*|/|[[digit]]+" };
-
-   // std::regex re{ "\\d+" };   // Geht
-   // std::regex re{ "[1-9][0-9]+" };   //  // Geht für 345345
-  //   std::regex re{ "([1-9][0-9]+)|\\*|\\+" };   // Geht für 345345 ODER + ODER -
-  //  std::regex re{ "^(([1-9][0-9]+)|\\*|\\+)+$" };   // Geht für 345345 UND + UND -
-    // std::regex re{ "^(([1-9][0-9]+)|\\+|\\-|\\*|\\/)+$" };   // Geht für ALLES OHNE KLAMMERN
-
-    // std::regex re{ "^([(]|[)])+$" };   // Geht für KLAMMERN
-
-     std::regex re{ "^(([1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/)+$" };   // Geht für ALLES OHNE KLAMMERN
-
-    // extract blanks !!!
-    std::string test{ "1+22*(4444-5555)" };
-
-    bool result{ std::regex_match(test, re) };
-    std::cout << std::boolalpha << test << ": " << result << std::endl;
-
-}
-
-void test_21_simple_regex()
-{
-    std::string s = "123 apples 456 oranges 789 bananas oranges bananas";
-
-    std::regex words_regex("[a-z]+");
-
-    for (std::sregex_iterator i = std::sregex_iterator(s.begin(), s.end(), words_regex);
-        i != std::sregex_iterator();
-        ++i)
-    {
-        std::smatch m = *i;
-        std::cout << m.str() << " at position " << m.position() << '\n';
+    // print postfix notation to stdout
+    std::cout << "Infix Expression: " << std::endl;
+    for (const Token<double>& token : scanner) {
+        std::cout << token << ' ';
     }
-}
+    std::cout << std::endl;
 
-void test_22_simple_regex()
-{
-    std::string s = "1 + 22 * ( 4444 - 5555)";
+    InfixToPostfixConverter<double> conv;
+    std::list<Token<double>> postfix = conv.convert(std::begin(scanner), std::end(scanner));
 
-    std::regex token_regex("([1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/");
-
-    auto rbegin = std::sregex_iterator(
-        std::begin(s),
-        std::end(s),
-        token_regex
-    );
-
-    auto rend = std::sregex_iterator();
-
-    while (rbegin != rend)
-    {
-        std::smatch m = *rbegin;
-        std::string token = m.str();
-
-        std::cout << "At position " << m.position() << ": " << token << std::endl;
-        ++rbegin;
+    // print postfix notation to stdout
+    std::cout << "Postfix Expression: " << std::endl;
+    for (const Token<double>& token : postfix) {
+        std::cout << token << ' ';
     }
+    std::cout << std::endl;
+
+    PostfixCalculator<double> calculator;
+    double result = calculator.calc(std::begin(postfix), std::end(postfix));
+    std::cout << "Result: " << result << std::endl;
 }
-
-void test_23_simple_regex()
-{
-    std::string s = "1+22*(4444-5555)";
-
-    std::regex regex("(([1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/)+");
-
-    std::smatch matches;
-
-    if (std::regex_search(s, matches, regex)) {
-
-        std::cout << "Match found\n";
-
-        for (size_t i = 0; i < matches.size(); ++i) {
-            std::cout << i << ": '" << matches[i].str() << "'\n";
-        }
-    }
-    else {
-        std::cout << "Match not found\n";
-    }
-}
-
-void test_24_simple_regex()
-{
-    std::string s = "1+22*(4444-5555)";
-
-    std::regex regex("([1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/");
-
-    std::smatch matches;
-
-    while (std::regex_search(s, matches, regex)) { //loop
-
-        std::cout << "A:" << matches[0] << std::endl;
-
-        s = matches.suffix(); //remove "192", then "168" ...
-    }
-}
-
 
 int main()
 {
-    //test_01();
-    //test_02_01();
-    //test_02_02();
+    // testing tokens
+    test_01_01();
+    test_01_02();
+
+    // testing scanner
+    test_02_01();
+    test_02_02();
     test_02_03();
-    //test_03_01();
-    //test_03_02();
-    //test_03_03();
-    //test_03_04();
 
-    //test10_01();
-    //test10_02();
-    //test10_03();
-    //test10_04();
-    //test10_05();
+    // testing postfix calculator
+    test_03_01();
+    test_03_02();
+    test_03_03();
+    test_03_04();
 
-    //test_20_simple_regex();
-   //test_21_simple_regex();
-   //test_22_simple_regex();
-   //test_24_simple_regex();
+    // createPowerOf2PostfixExpression
+    test_04_01();
 
+    // testing infix to postfix converter
+    test_10_01();
+    test_10_02();
+    test_10_03();
+    test_10_04();
+    test_10_05();
+    test_10_06();
 
     return 0;
 }

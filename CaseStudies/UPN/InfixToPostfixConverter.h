@@ -64,12 +64,11 @@ private:
 
     void processOperator(Token<T> next) {
         /**
-         * Move operators from the stack to the output buffer,
-         * as long as
+         * Move operators from the stack to the output buffer, as long as
          * - the incoming operator precedence is lower or equal to a stacked operator,
          * - no left parenthesis appears on the stack
          * - and the stack is not empty.
-         * The incomming operator is stacked.
+         * The incoming operator is stacked.
          */
         do
         {
@@ -206,33 +205,3 @@ private:
 // =====================================================================================
 // End-of-File
 // =====================================================================================
-
-
-//template <typename T>
-//class InfixToPostfixConverter
-//{
-//private:
-//    std::list<Token<T>> m_infix;          // infix expression (input)
-//    std::list<Token<T>> m_postfix;        // postfix expression (output)
-//    std::stack<Token<T>> m_stack;         // temporary stack of operators and brackets
-//
-//    Token<T> m_next;                      // current token
-//    std::list<Token<T>>::iterator m_it;   // iterator to address the infix list   // TODO SIehe Scanner mit using
-//
-//public:
-//    // public interface
-//    std::list<Token<T>> convert(const std::list<Token<T>>& infix);
-//
-//private:
-//    // helper methods
-//    void clear();
-//    Token nextToken();
-//
-//    void processOperand();
-//    void processOperator();
-//    void processLeftParenthesis();
-//    void processRightParenthesis();
-//    void processEndOfInput();
-//
-//    void dumpStacks();
-//};

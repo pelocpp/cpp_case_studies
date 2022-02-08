@@ -55,14 +55,19 @@ public:
                     result = leftValue / rightValue;
                     break;
                 case OperatorType::ModOp:
-                    result = leftValue % rightValue;
+                    if constexpr (std::is_integral<T>::value) {
+                        result = leftValue % rightValue;
+                    }
+                    else if constexpr (std::is_floating_point<T>::value) {
+                        result = std::fmod(leftValue, rightValue);
+                    }
                     break;
                 default:
                     break;
                 }
 
                 // push result to operand stack
-                Token<T> val{ TokenType::Operand, result };
+                Token<T> val{ result };
                 m_stack.push(val);
             }
         }

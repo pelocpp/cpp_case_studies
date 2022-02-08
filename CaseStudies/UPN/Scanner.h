@@ -8,7 +8,7 @@ template <typename T>
 class Scanner
 {
 private:
-    const std::string token_regex = "([1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/|\\%";
+    const std::string token_regex = "([0]|[1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/|\\%";
 
 public:
     using iterator = std::list<Token<T>>::iterator;
@@ -23,20 +23,13 @@ public:
     // c'tor
     Scanner() : m_line{}, m_token_regex{ token_regex } {}
      
-    // setter
-    void set(const std::string& line) {
-        m_line = line;
-    }
-
-    // TODO : testen, ob man das das Objekt verändern kann (also die Zeichenkette..=
-    const std::string& get() const {
-        return m_line;
-    }
+    // getter/setter
+    void set(const std::string& line) { m_line = line; }
+    const std::string& get() const { return m_line; }
 
     // iterator support
     iterator begin() { return m_tokens.begin(); }
     iterator end() { return m_tokens.end(); }
-
     const_iterator begin() const { return m_tokens.cbegin(); }
     const_iterator end() const { return m_tokens.cend(); }
 
@@ -72,30 +65,31 @@ public:
                 break;
 
             case '+':
-                tok = Token<T>{ TokenType::Operator, OperatorType::AddOp };
+                tok = Token<T>{ OperatorType::AddOp };
                 m_tokens.push_back(tok);
                 break;
 
             case '-':
-                tok = Token<T>{ TokenType::Operator, OperatorType::SubOp };
+                tok = Token<T>{ OperatorType::SubOp };
                 m_tokens.push_back(tok);
                 break;
 
             case '*':
-                tok = Token<T>{ TokenType::Operator, OperatorType::MulOp };
+                tok = Token<T>{ OperatorType::MulOp };
                 m_tokens.push_back(tok);
                 break;
 
             case '/':
-                tok = Token<T>{ TokenType::Operator, OperatorType::DivOp };
+                tok = Token<T>{ OperatorType::DivOp };
                 m_tokens.push_back(tok);
                 break;
 
             case '%':
-                tok = Token<T>{ TokenType::Operator, OperatorType::ModOp };
+                tok = Token<T>{ OperatorType::ModOp };
                 m_tokens.push_back(tok);
                 break;
 
+            case '0':
             case '1':
             case '2':
             case '3':
@@ -108,7 +102,7 @@ public:
             {
                 long long tmp{ stoll(token) };
                 T value{ static_cast<T>(tmp) };
-                tok = Token<T>{ TokenType::Operand, value };
+                tok = Token<T>{ value };
                 m_tokens.push_back(tok);
                 break;
             }
@@ -146,30 +140,31 @@ public:
                 break;
 
             case '+':
-                tok = Token<T>{ TokenType::Operator, OperatorType::AddOp };
+                tok = Token<T>{ OperatorType::AddOp };
                 m_tokens.push_back(tok);
                 break;
 
             case '-':
-                tok = Token<T>{ TokenType::Operator, OperatorType::SubOp };
+                tok = Token<T>{ OperatorType::SubOp };
                 m_tokens.push_back(tok);
                 break;
 
             case '*':
-                tok = Token<T>{ TokenType::Operator, OperatorType::MulOp };
+                tok = Token<T>{ OperatorType::MulOp };
                 m_tokens.push_back(tok);
                 break;
 
             case '/':
-                tok = Token<T>{ TokenType::Operator, OperatorType::DivOp };
+                tok = Token<T>{ OperatorType::DivOp };
                 m_tokens.push_back(tok);
                 break;
 
             case '%':
-                tok = Token<T>{ TokenType::Operator, OperatorType::ModOp };
+                tok = Token<T>{ OperatorType::ModOp };
                 m_tokens.push_back(tok);
                 break;
 
+            case '0':
             case '1':
             case '2':
             case '3':
@@ -190,7 +185,7 @@ public:
                 // adjust index
                 i--;
 
-                tok = Token<T>{ TokenType::Operand, value };
+                tok = Token<T>{ value };
                 m_tokens.push_back(tok);
                 break;
             }

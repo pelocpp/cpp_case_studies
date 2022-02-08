@@ -199,7 +199,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UPN", "UPN", "{F58A6861-7911-4123-95D4-3E2FCCAB356B}"
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\UPN\UPN.md = MarkDown\UPN\UPN.md
-		MarkDown\UPN\upn_postfix_calculator.svg = MarkDown\UPN\upn_postfix_calculator.svg
+		MarkDown\UPN\upn_postfix_calculator_01.svg = MarkDown\UPN\upn_postfix_calculator_01.svg
+		MarkDown\UPN\upn_postfix_calculator_02.svg = MarkDown\UPN\upn_postfix_calculator_02.svg
 	EndProjectSection
 EndProject
 Global

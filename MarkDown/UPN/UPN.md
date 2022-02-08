@@ -8,25 +8,18 @@ mathematische Ausdrücke ohne Vorrangregeln (Klammern) schreiben zu können.
 
 In dieser Fallstudie behandeln wir einen Taschenrechner für arithmetische Ausdrücke in UPN-Darstellung.
 
-TO BE DONE, Reg Expr.
-
-// TODO:
-// Geht das Scanning mit einem Reg Expr ?!?!?!
-
-
 <!--more-->
 
-# Lernziele - TO BE DONE
+# Lernziele
 
   * Container `std::stack<>`, `std::list<>`, `std::vector<>`
   * Verkettung von Konstruktoren
   * Datentyp `class enum`
+  * &ldquo;Range-Based&ldquo; `for`-Wiederholungsschleife
+  * Reguläre Ausdrücke (`std::sregex_iterator`, `smatch`)
   * Iteratoren Konzept
-  * Reguläre Ausdrücke
-  * 
-  * Einsatz von `std::reverse_iterator`
-  * Verschiebesemantik mit `std::move`
-  * STL-Algorithmen bzw. -Funktionen `std::for_each`, `std::find_if`, `std::begin`, `std::end`, `std::rbegin`, `std::rend`, `std::isdigit` und `std::remove`
+  * Type Traits (`std::is_integral<T>`, `std::is_floating_point<T>`)
+  * STL-Algorithmen bzw. -Funktionen `std::for_each`, `std::reverse`, `std::begin`, `std::end`, `std::prev`, `std::rbegin`, `std::rend`, `std::isdigit`
 
 # Einleitung
 
@@ -36,24 +29,24 @@ Operator seinem bzw. seinen Operanden folgt. Statt `1 + 2` (gewöhnliche Notatio
 `1 + 2 * 3` wird zu `1 2 3 * +`. Man sieht, daß keine Klammern mehr benötigt werden. Die UPN-Notation
 wird sogar von einigen Programmiersprachen wie Forth oder Postscript verwendet.
 
-Die Berechnung von Postfix-Ausdrücken ist prinzipiell viel leichter zu programmieren, als dies für
-Infix-Terme der Fall ist. Außerdem benötigt die *Postfix*-Notation keine Klammern oder Prioritäten der
+Die Berechnung von *Postfix*-Ausdrücken ist prinzipiell viel leichter zu programmieren, als dies für
+*Infix*-Terme der Fall ist. Außerdem benötigt die *Postfix*-Notation keine Klammern oder Prioritäten der
 Operatoren, da die Reihenfolge der Abarbeitung schon implizit durch den Ausdruck bestimmt wird.
-Ein weiterer Vorteil ist die schnellere Abarbeitung im Vergleich zur Infix-Darstellung.
+Ein weiterer Vorteil ist die schnellere Abarbeitung im Vergleich zur *Infix*-Darstellung.
 
 Der einzige Wehrmutstropfen im Gebrauch der *Postfix*-Notation liegt darin, dass diese Schreibweise
-recht unüblich ist. Man kann sicherlich keinem Anwender zumuten, dass er alle Eingaben in *Postfix*-Notation macht.
+recht unüblich ist. Man kann sicherlich keinem Anwender zumuten, dass er alle Eingaben in *Postfix*-Notation tätigt.
 Wir lösen dieses Problem in zwei Schritten:
 Zunächst betrachten wir die Berechnung eines arithmetischen Ausdrucks in *Postfix*-Notation.
 Im Anschluss daran gehen wir auf die Umwandlung eines arithmetischen Ausdrucks
 von der *Infix*-Notation in die *Postfix*-Notation ein.
-Auf die Weise kann ein Anwender arithmetische Ausdrücke in der für ihn leichter verständlichen Infix-Schreibweise eingeben,
+Auf die Weise kann ein Anwender arithmetische Ausdrücke in der für ihn leichter verständlichen *Infix*-Schreibweise eingeben,
 das Programm legt für die Berechnung die *Postfix*-Notation zu Grunde.
 
 # Klasse `Token`
 
 Arithmetische Ausdrücke in der Postfix-Schreibweise bestehen nur aus Operatoren und Operanden.
-Derartige Bestandteile eines arithmetischen Ausdrucks werden in der Informatik auch als `Token`
+Derartige Bestandteile eines arithmetischen Ausdrucks werden in der Informatik auch als *Token*
 bezeichnet. Definieren Sie zunächst in Ihrem Programm zur Unterscheidung der unterschiedlichen
 Tokenarten wie &ldquo;Operator&rdquo; oder &ldquo;Operand&rdquo; den folgenden Aufzählungstyp `TokenType`:
 
@@ -61,14 +54,12 @@ Tokenarten wie &ldquo;Operator&rdquo; oder &ldquo;Operand&rdquo; den folgenden A
 enum class TokenType { Null, Operator, Operand, LBracket, RBracket };
 ```
 
-Die symbolischen Konstanten `Operator` und `Operand` sind selbsterklärend. Die Konstante
-`Null` eignet sich zum Initialisieren von Variablen des `TokenType`-Typs.
+Die symbolischen Konstanten `Operator` und `Operand` sind selbsterklärend.
+Die zwei Konstanten `LBracket` und `RBracket` benötigen wir bei der Umwandlung von der *Infix*- in die *Postfix*-Darstellung.
+Die Konstante `Null` eignet sich zum Initialisieren von Variablen des `TokenType`-Typs.
 
-TO BE DONE: LBracket, RBracket
-
-Als Operatoren sehen
-wir in dieser Betrachtung die vier üblichen binären Operatoren `+`, `-`, `*` und `/` vor. Definieren Sie hierzu
-den Aufzählungstyp `OperatorType`:
+Als Operatoren sehen wir in dieser Betrachtung die fünf üblichen binären Operatoren `+`, `-`, `*`, `/` und `%` vor.
+Definieren Sie hierzu den Aufzählungstyp `OperatorType`:
 
 ```cpp
 enum class OperatorType { NullOp, AddOp, SubOp, MulOp, DivOp, ModOp };
@@ -83,12 +74,13 @@ innerhalb eines arithmetischen Ausdrucks in der *Postfix*-Notation ([Tabelle 1])
 | Element | Beschreibung |
 | :---- | :---- |
 | Standard-Konstruktor | `Token();`<br/>Der Standardkonstruktor erzeugt ein `Token`-Objekt mit entsprechenden *Null*-Werten. |
-| Benutzerdefinierter Konstruktor | `Token(TokenType type);`<br/>Der benutzerdefinierte Konstruktor legt ein Polynom mit den Koeffizienten einer variabel lange Liste von Koeffizienten an. Das erste Element des Arrays ist dem niederwertigsten Koeffizienten zuzuordnen, das letzte dem höchstwertigen. |
-| Benutzerdefinierter Konstruktor | `Token(TokenType type, OperatorType op);`<br/>Der benutzerdefinierte Konstruktor legt ein Polynom mit den Koeffizienten einer variabel lange Liste von Koeffizienten an. Das erste Element des Arrays ist dem niederwertigsten Koeffizienten zuzuordnen, das letzte dem höchstwertigen. |
-| Benutzerdefinierter Konstruktor | `Token(TokenType type, int value);`<br/>Der benutzerdefinierte Konstruktor legt ein Polynom mit den Koeffizienten einer variabel lange Liste von Koeffizienten an. Das erste Element des Arrays ist dem niederwertigsten Koeffizienten zuzuordnen, das letzte dem höchstwertigen. |
+| Benutzerdefinierter Konstruktor | `Token(TokenType type);`<br/>Der benutzerdefinierte Konstruktor legt ein `Token`-Objekt vom Typ `type` an. |
+| Benutzerdefinierter Konstruktor | `Token(OperatorType op);`<br/>Der benutzerdefinierte Konstruktor legt ein `Token`-Objekt vom Typ `TokenType::Operator` an, `op` spezifiziert den Operator. |
+| Benutzerdefinierter Konstruktor | `Token(int value);`<br/>Der benutzerdefinierte Konstruktor legt ein `Token`-Objekt vom Typ `TokenType::Operand` an, `value` beschreibt den Wert. |
 | *getter* `getTokenType()` | `TokenType getTokenType() const;`<br/>Liefert die Art des Tokens zurück &ndash; siehe dazu den Aufzählungstyp `TokenType`. |
 | *getter* `getOperatorType()` | `OperatorType getOperatorType() const;`<br/>Liefert für Token von der Art `Operator` den konkreten Operator zurück. Dieser wird durch den Aufzählungstyp `OperatorType` beschrieben. |
 | *getter* `getValue()` | `int getValue() const;`<br/>Liefert den numerischen Wert eines Tokens zurück.<br/>*Hinweis*: Diese Eigenschaft besitzt offensichtlich nur dann einen sinnvollen Wert, wenn die Art des Tokens den Wert `Operand` hat. |
+| *getter* `getPrecedence()` | `size_t getPrecedence() const;`<br/>Liefert den Vorrang eines Operators zurück.<br/>*Hinweis*: Diese Eigenschaft besitzt nur bei der Umwandlung eines arithmetischen Ausdrucks von der *Infix*- in die *Postfix*-Notation eine Rolle. |
 | Operator `<<` | `friend std::ostream& operator<< (std::ostream&, const Token&);`<br/>Gibt ein `Token`-Objekt auf der Konsole aus. |
 
 *Tabelle* 1: Öffentliche Elemente der Klasse `Token`.
@@ -131,9 +123,11 @@ folgt ([Tabelle 2]):
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Methode `setLine` | `void setLine(const std::string&);`<br/>Mit `setLine` wird ein korrekter arithmetischer Ausdruck in *Postfix*-Notation an das `TokenScanner`-Objekt übergeben. |
-| Methode `scan` | `std::list<Token> scan();`<br/>Eine im Objekt hinterlegte Zeichenkette wird mit der `scan`-Methode von links nach rechts durchlaufen und dabei in ihre `Token`-Bestandteile zerlegt. |
-| Operator `<<` | `friend std::ostream& operator<< (std::ostream&, const TokenScanner&);`<br/>Gibt die im *Scanner* hinterlegte Zeichenkette auf der Konsole aus. |
+| Methode `set` | `void set(const std::string&);`<br/>Mit `setLine` wird ein korrekter arithmetischer Ausdruck in *Postfix*-Notation an das `TokenScanner`-Objekt übergeben. |
+| Methode `get` | `const std::string& get() const;`<br/>`getLine` liefert die im `TokenScanner`-Objekt abgelegte Zeichenkette zurück. |
+| Methode `scan` | `void scan();`<br/>Eine im Objekt hinterlegte Zeichenkette wird mit der `scan`-Methode von links nach rechts durchlaufen und dabei in ihre `Token`-Bestandteile zerlegt. |
+| Methode `begin` | `iterator begin();`<br/>Das Resultat eines `scan`-Aufrufs kann durch eine Iteration über `Token`-Objekte abgerufen werden. `begin()` beschreibt den Anfang der Iteration. |
+| Methode `end` | `end begin();`<br/>Das Resultat eines `scan`-Aufrufs kann durch eine Iteration über `Token`-Objekte abgerufen werden. `end()` beschreibt das Ende der Iteration. |
 
 *Tabelle* 2: Öffentliche Elemente der Klasse `TokenScanner`.
 
@@ -155,17 +149,16 @@ Input: 1 2 *
 ```
 
 Das zweite Beispiel demonstriert die Zerlegung eines arithmetischen Ausdrucks in seine einzelnen
-Bestandteile. Die Zerlegung erfolgt in der `scan`-Methode, das Resultat wird in einem
-`std::list<Token>`-Objekt zurückgegeben und `Token`- für `Token`-Objekt auf der Konsole ausgegeben:
+Bestandteile. Die Zerlegung erfolgt in der `scan`-Methode, das Resultat wird
+durch eine &ldquo;Range-Based&ldquo; `for`-Wiederholungsschleife ausgegeben:
 
 ```cpp
-Scanner scanner;
+Scanner<int> scanner;
 scanner.set("1 2 - 3 -");
-std::cout << scanner << std::endl << std::endl;
-
-std::list<Token> tokens = scanner.scan();
-for (Token token : tokens)
+scanner.scan();
+for (const auto& token : scanner) {
     std::cout << "Token: " << token << std::endl;
+}
 ```
 
 *Ausgabe*:
@@ -198,21 +191,17 @@ nachvollziehen. Ausgangsbasis ist der arithmetische Ausdruck `2 * (4 + 5) / 3`,
 seine Postfix-Notation lautet `2 4 5 + * 3 /`:
 
 TODO: Abbildung
-
 upn_postfix_calculator
 
-
-<img src="upn_postfix_calculator.svg" width="700">
+<img src="upn_postfix_calculator_01.svg" width="700">
 
 Abbildung 1: Arbeitsweise des Postfix-Kalkulators an einem Beispiel.
 
-
-
-###### {#abbildung_1_literals_compile_time}
+###### {#abbildung_1_upn_postfix_calculator}
 
 {{< figure src="/img/literals/ConstexprLiterals.png" width="80%" >}}
 
-*Abbildung* 1: Auswertung benutzerdefinierter Literale zur Übersetzungszeit.
+*Abbildung* 1: Arbeitsweise des Postfix-Kalkulators an einem Beispiel.
 
 
 Implementieren Sie eine Klasse `PostfixCalculator`, die im Wesentlichen nur eine zentrale
@@ -222,11 +211,11 @@ Methode `calc` besitzt:
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Methode `calc` | `int calc(const std::list<Token>&);`<br/>Berechnet den Wert eines arithmetischen Ausdrucks in *Postfix*-Notation. Das Ergebnis ist vom Typ `int`, der Ausdruck wird durch eine Liste von `Token`-Objekten beschrieben. Der Ausdruck muss korrekt vorliegen. <br/>*Hinweis*: Bei der Division dürfen Sie die ganzzahlige Division zu Grunde legen. Auf diese Weise können Sie im Taschenrechner mit Zwischenergebnissen des Typs `int` arbeiten. |
+| Methode `calc` | `int calc(std::list<Token>::iterator begin, std::list<Token>::iterator end);`<br/>Berechnet den Wert eines arithmetischen Ausdrucks in *Postfix*-Notation. Das Ergebnis ist vom Typ `int`, der Ausdruck wird durch zwei `std::list<Token>::iterator`-Iteratorenobjekte beschrieben. Der Ausdruck muss korrekt vorliegen. |
 
-*Tabelle* 3: Öffentliche Elemente der Klasse `PostfixCalculator`.
+*Tabelle* 3: Öffentliches Element der Klasse `PostfixCalculator`.
 
-Unser erstes Beispiel testet ein `PostfixCalculator`-Objekt &ndash; und dies ohne Gebrauch
+Unser erstes Beispiel testet ein `PostfixCalculator`-Objekt &ndash; und dies &ndash; nebenbei bemerkt &ndash; ohne Gebrauch
 eines `Scanner`-Objekts. Man sieht an dem Beispiel, dass man das `std::list<Token>`-Objekt
 gewissermaßen auch &ldquo;händisch&rdquo; erstellen kann &ndash; wenn man es richtig konstruiert:
 
@@ -234,13 +223,13 @@ gewissermaßen auch &ldquo;händisch&rdquo; erstellen kann &ndash; wenn man es r
 
 ```cpp
 // postfix: 1 2 - 3 - (infix: 1 - 2 - 3)
-Token t1{ TokenType::Operand, 1 };
-Token t2{ TokenType::Operand, 2 };
-Token t3{ TokenType::Operator, OperatorType::SubOp };
-Token t4{ TokenType::Operand, 3 };
-Token t5{ TokenType::Operator, OperatorType::SubOp };
+Token<long long> t1{ 1 };
+Token<long long> t2{ 2 };
+Token<long long> t3{ OperatorType::SubOp };
+Token<long long> t4{ 3 };
+Token<long long> t5{ OperatorType::SubOp };
 
-std::list<Token> tokens;
+std::list<Token<long long>> tokens;
 tokens.push_back(t1);
 tokens.push_back(t2);
 tokens.push_back(t3);
@@ -249,14 +238,14 @@ tokens.push_back(t5);
 
 // print postfix notation to stdout
 std::cout << "Postfix Expression: " << std::endl;
-for (Token token : tokens) {
+for (const auto& token : tokens) {
     std::cout << token << ' ';
 }
 std::cout << std::endl;
 
 // calculate result of postfix expression
-PostfixCalculator calculator;
-int result = calculator.calc(tokens);
+PostfixCalculator<long long> calculator;
+auto result = calculator.calc(std::begin(tokens), std::end(tokens));
 std::cout << "Result: " << result << std::endl;
 ```
 
@@ -272,13 +261,12 @@ Noch ein zweites Beispiel &ndash; dieses Mal unter Verwendung eines `Scanner`-Ob
 
 ```cpp
 // sum of first ten numbers
-Scanner scanner;
+Scanner<int> scanner;
 scanner.set("0 1 2 3 4 5 6 7 8 9 + + + + + + + + +");
+scanner.scan_classic();
 
-std::list<Token> postfix = scanner.scan();
-
-PostfixCalculator calc;
-int result = calc.calc(postfix);
+PostfixCalculator<int> calculator;
+int result = calculator.calc(scanner.begin(), scanner.end());
 std::cout << "Result: " << result << std::endl;
 ```
 
@@ -288,95 +276,64 @@ std::cout << "Result: " << result << std::endl;
 Result: 45
 ```
 
-Noch ein drittes Beispiel:
-
-```cpp
-Token t1 { TokenType::Operand, 2 };
-Token t2 { TokenType::Operand, 4 };
-Token t3 { TokenType::Operand, 5 };
-Token t4 { TokenType::Operator, OperatorType::AddOp };
-Token t5 { TokenType::Operator, OperatorType::MulOp };
-Token t6 { TokenType::Operand, 3 };
-Token t7 { TokenType::Operator, OperatorType::DivOp };
-
-std::list<Token> tokens;
-tokens.push_back(t1);
-tokens.push_back(t2);
-tokens.push_back(t3);
-tokens.push_back(t4);
-tokens.push_back(t5);
-tokens.push_back(t6);
-tokens.push_back(t7);
-
-// print postfix notation to stdout
-std::cout << "Postfix Expression: " << std::endl;
-for (Token token : tokens) {
-    std::cout << token << ' ';
-}
-std::cout << std::endl;
-
-// calculate result of postfix expression
-PostfixCalculator calculator;
-int result = calculator.calc(tokens);
-std::cout << "Result: " << result << std::endl;
-```
-
-Ausgabe:
-
-```
-Postfix Expression:
-2 4 5 + * 3 /
-Result: 6
-```
-
-
 # Ein systematischer Test
 
 In der letzten Teilaufgabe haben Sie Ihre Implementierung hoffentlich mit einigen manuell erstellten
 Beispielen getestet. Ohne großen Aufwand ist es aber auch möglich, für bestimmte Testszenarien
-einen automatisierten Test zu erstellen. Ergänzen Sie zu diesem Zweck die Klasse Program (bzw. die
-Klasse, in der Sie Ihre Main-Methode abgelegt haben), um eine Methode CreatePowerOf2PostfixExpression:
+einen Test zu automatisieren. Ergänzen Sie zu diesem Zweck Ihr Programm
+um eine Testmethode `createPowerOf2PostfixExpression`:
 
 ```cpp
-private static String CreatePowerOf2PostfixExpression (int power);
+constexpr size_t MaxPower = 16;
+
+for (size_t n{1}; n != MaxPower; ++n) {
+
+    // construct scan string for powers of '2'
+    std::string s{};
+    for (size_t i{}; i != n; ++i) {
+        s.append("2 ");
+    }
+    for (size_t i{}; i != n - 1; ++i) {
+        s.append("* ");
+    }
+
+    // compute value
+    Scanner<int> scanner;
+    scanner.set(s);
+    scanner.scan();
+
+    PostfixCalculator<int> calculator;
+    int result = calculator.calc(scanner.begin(), scanner.end());
+    std::cout << scanner.get() << " ==> " << result << std::endl;
+}
 ```
 
-Ein Aufruf von CreatePowerOf2PostfixExpression mit dem Wert 3 liefert die Zeichenkette
-
-```
-2 2 2 * *
-```
-
-zurück, ein Aufruf mit dem Wert 16 die Zeichenkette
+Je nach Potenz wird eine Zeichenkette mit vielen Operanden `2` und Operator `*` gebildet,
+zum Beispiel
 
 ```
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * * * *
 ```
 
-Erstellen Sie nun eine Testmethode mit Hilfe der CreatePowerOf2PostfixExpression-Methode,
-um die ersten 50 Potenzen zur Basis 2 mit Ihrem Postfix-Taschenrechner zu berechnen. Die Ausgabe
-des Testprogramms sieht auf meinem Rechner für die ersten zwanzig Zweierpotenzen so aus:
+bei 16 Operanden. Die Ausgabe
+des Testprogramms sieht auf meinem Rechner für die ersten fünfzehn Zweierpotenzen so aus:
 
 ```
-2 ==> 2
-2 2 * ==> 4
-2 2 2 * * ==> 8
-2 2 2 2 * * * ==> 16
-2 2 2 2 2 * * * * ==> 32
-2 2 2 2 2 2 * * * * * ==> 64
-2 2 2 2 2 2 2 * * * * * * ==> 128
-2 2 2 2 2 2 2 2 * * * * * * * ==> 256
-2 2 2 2 2 2 2 2 2 * * * * * * * * ==> 512
-2 2 2 2 2 2 2 2 2 2 * * * * * * * * * ==> 1024
-2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * ==> 2048
-2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * ==> 4096
-2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * ==> 8192
-2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * * ==> 16384
-2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * * * ==> 32768
-2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * * * * ==> 65536
-2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * * * * * ==> 131072
-2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * * * * * * ==> 262144
-2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * * * * * * * ==> 524288
+2  ==> 2
+2 2 *  ==> 4
+2 2 2 * *  ==> 8
+2 2 2 2 * * *  ==> 16
+2 2 2 2 2 * * * *  ==> 32
+2 2 2 2 2 2 * * * * *  ==> 64
+2 2 2 2 2 2 2 * * * * * *  ==> 128
+2 2 2 2 2 2 2 2 * * * * * * *  ==> 256
+2 2 2 2 2 2 2 2 2 * * * * * * * *  ==> 512
+2 2 2 2 2 2 2 2 2 2 * * * * * * * * *  ==> 1024
+2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * *  ==> 2048
+2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * *  ==> 4096
+2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * *  ==> 8192
+2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * *  ==> 16384
+2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * * *  ==> 32768
 ```
 
 Mit dem vorliegenden Kalkulator haben Sie einen Rechenautomaten implementiert,
@@ -398,52 +355,38 @@ und ihren Operanden auch noch runde Klammern besitzen:
 ((28 + 2) * (2 / 4))
 ```
 
-Mit den runden Klammern lassen sich die standardmäßig vorherrschenden Vorrangregeln (<quote>Punkt-vor-Strich</quote>) abändern.
-
+Mit den runden Klammern lassen sich die standardmäßig vorherrschenden Vorrangregeln (&ldquo;Punkt-vor-Strich&ldquo;) abändern.
 Ein Operator mit einem höheren Vorrang wird einem Operator mit einem niedrigeren Vorrang in der Ausführung vorgezogen,
-siehe [Abbildung 2].
+siehe [Abbildung 2]. Da wir in dieser Klausur nur die fünf Operatoren `+`, `-`, `*`, `/` und `%`
+zulassen, können wir den Aspekt des *Operatorenvorrangs* simpel auch als &ldquo;Punkt-vor-Strich&ldquo;-Regel titulieren.
 
-Da wir in dieser Klausur nur die vier Operatoren `+`, `-`, `*` und `/`
-zulassen, können wir den Aspekt des *Operatorenvorrangs* simpel auch als <quote>Punkt-vor-Strich</quote>-Regel titulieren.
+<img src="upn_postfix_calculator_02.svg" width="350">
 
-<img src="infixtopostfix_01.svg" width="700">
+Abbildung 2: Rangfolge von arithmetischen Operatoren.
 
-Abbildung 2: Rangfolge der Operatoren.
-
-Erweitern Sie den Aufzählungstyp `TokenType` um zwei weitere symbolische Konstante
-`LBracket` und `RBracket`:
-
-```cpp
-enum TokenType { Operator, Operand, LBracket, RBracket, Null };</screen>
-```
-
-Erweitern Sie die Klasse `Scanner` so, dass sie korrekte *Infix*-Audrücke einliest.
-Dies bedeutet einzig und allein, dass der Scanner die zwei zusätzlichen Token `LBracket` und `RBracket` verstehen muss.
+###### {#abbildung_2_upn_operator_precedence}
 
 Wir kommen nun auf den Algorithmus für die Konvertierung des arithmetischen Ausdruck
 von der *Infix*- in die *Postfix*-Notation zu sprechen.
 Für die Konvertierung kommen drei Datencontainer zum Einsatz:
 
-  * Klasse `TokenList` &ndash; Eingabeliste, die alle Operatoren, Operanden und runden Klammern
-    eines arithmetischen Ausdrucks in *Infix*-Notation enthält.
-  * Klasse `TokenList` &ndash; Ausgabeliste, die das Ergebnis der Umwandlung (Ausdruck in *Postfix*-Notation) aufnimmt.
-    Logischerweise ist diese Liste zu Beginn der Umwandlung leer.
-  * Klasse `TokenStack` &ndash; 
-    Während der Konvertierung benötigen wir für die temporäre Ablage von Eingabe-Elementen einen Stapel.
+  * Klasse `std::list<Token>` &ndash; Eingabeliste, die alle Operatoren, Operanden und runden Klammern eines arithmetischen Ausdrucks in *Infix*-Notation enthält.
+  * Klasse `std::list<Token>` &ndash; Ausgabeliste, die das Ergebnis der Umwandlung (Ausdruck in *Postfix*-Notation) aufnimmt.
+  * Klasse `std::stack<Token>` &ndash; Während der Konvertierung benötigen wir für die temporäre Ablage von Eingabe-Elementen einen Stapel.
     Dieser nimmt temporär während des Konvertierens Operatoren und Klammern auf.
 
 Wir sind bei der Beschreibung des Algorithmus angekommen.
 Die Liste der einzelnen `Token`-Objekte (Parameter `infix`) ist Objekt für Objekt
 zu traversieren, es lassen sich dabei fünf Fälle unterscheiden:
 
-  * Das nächstes Element ist ein Operand (Zahl):<br/>Zahl in *Postfix*-Liste einfügen.
-  * Das nächstes Element ist eine öffnende Klammer `(`:<br/>Klammer auf den temporären Stapel schieben.
-  * Das nächstes Element ist ein Operator:<br/>
+  * Nächstes Element ist ein Operand (Zahl):<br/>Zahl in *Postfix*-Liste einfügen.
+  * Nächstes Element ist eine öffnende Klammer `(`:<br/>Klammer auf den temporären Stapel schieben.
+  * Nächstes Element ist ein Operator:<br/>
     Zuerst sind vom Stapel alle Operatoren mit gleicher oder höherer Priorität in die *Postfix*-Liste zu schieben,
     bis eine öffnende Klammer `(` erreicht wird oder der Stapel leer ist
-    (oder ein Operator niedriger Priorität gekommen ist).
+    oder eben ein Operator niedriger Priorität erreicht wurde.
     Abschließend wird der gefundene Operator auf den temporären Stapel geschoben.
-  * Das nächstes Element ist eine schließende Klammer `)`:<br/>
+  * Nächstes Element ist eine schließende Klammer `)`:<br/>
     Alle Operatoren vom Stapel sind bis zur ersten öffnenden Klammer <quote>(</quote> vom Stapel
     zu entfernen und in die *Postfix*-Liste zu schieben.
     Die öffnende Klammer auf dem Stapel sowie die schließende Klammer
@@ -452,13 +395,23 @@ zu traversieren, es lassen sich dabei fünf Fälle unterscheiden:
     in die *Postfix*-Liste geschoben.
 
 Sollten Sie Probleme haben, den Algorithmus genau zu erfassen, gehen Sie am besten das folgende Beispiel in 
-[Abbildung 3] Zeile für Zeile durch.
+Zeile für Zeile in der folgenden Testausgabe durch.
 Es wird der arithmetische Ausdruck `(3 + 7) / (4 - 2)` konvertiert:
 
-
-<img src="infixtopostfix_02.svg" width="700">
-
-Abbildung 3: Algorithmus zur Umwandlung von arithmetischen Ausdrücken von der *Infix*- in die *Postfix*-Notation am Beispiel des Ausdrucks `(3 + 7) / (4 - 2)`.
+```
+(  [(]                 []
+3  [(]                 [3]
++  [(, +]              [3]
+7  [(, +]              [3, 7]
+)  []                  [3, 7, +]
+/  [/]                 [3, 7, +]
+(  [/, (]              [3, 7, +]
+4  [/, (]              [3, 7, +, 4]
+-  [/, (, -]           [3, 7, +, 4]
+2  [/, (, -]           [3, 7, +, 4, 2]
+)  [/]                 [3, 7, +, 4, 2, -]
+   []                  [3, 7, +, 4, 2, -, /]
+```
 
 Implementieren Sie eine Klasse `InfixToPostfixConverter` mit der in
 [Tabelle 4] spezifizierten Methode `Convert`:
@@ -467,80 +420,728 @@ Implementieren Sie eine Klasse `InfixToPostfixConverter` mit der in
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Methode `convert` | `TokenList Convert (const TokenList&amp; infix);`<br/>Konvertiert einen arithmetischen Ausdruck von der *Infix*-Notation (Parameter `infix`) in die *Postfix*-Notation (Rückgabewert). Beide Ausdrücke sind in Form eines `TokenList`-Objekts darzustellen. |
+| Methode `convert` | `std::list<Token<T>> convert(std::list<Token>::iterator begin, std::list<Token>::iterator end);`<br/>Konvertiert einen arithmetischen Ausdruck von der *Infix*-Notation (Parameter `infix`) in die *Postfix*-Notation (Rückgabewert). Beide Ausdrücke sind in Form eines `TokenList`-Objekts darzustellen. |
 
-*Tabelle* 2: Öffentliche Elemente der Klasse `TokenScanner`.
+*Tabelle* 4: Öffentliches Element der Klasse `InfixToPostfixConverter`.
 
-Zum Testen Ihrer Realisierung finden Sie in <xref linkend="figure.infixtopostfix05" xrefstyle="template:Abbildung %n" />
-ein Beispiel eines komplexeren `Infix`-Ausdrucks vor:
-Es wird der arithmetische Ausdruck `2 * 3 / (2 - 1) + 5 * ( 4 - 1)`
-in die `Postfix`-Notation umgewandelt:
+*Hinweis*: Die Eingabeliste für Methode  `convert` (Arithmetischer Ausdruck in *Infix*-Notation) wird
+durch zwei Iteratoren-Objekte (Typ `std::list<Token>::iterator`) beschrieben.
 
-<img src="infixtopostfix_01.svg" width="700">
+Zum Testen Ihrer Realisierung betrachten wir jetzt ein Beispiel eines komplexeren `Infix`-Ausdrucks:
 
-Abbildung 2: XXX
-
-Algorithmus zur Umwandlung von arithmetischen Ausdrücken von der `Infix`- in die `Postfix`-Notation
-am Beispiel des Ausdrucks `2 * 3 / (2 - 1) + 5 * ( 4 - 1)`
+```
+2 * 3 / (2 - 1) + 5 * (4 - 1)
+```
 
 Das erfolgreiche Zusammenspiel aller Klassen können Sie am folgenden Codefragment überprüfen:
 
 ```
-Scanner scanner;
-scanner.SetLine ("2 * 3 / (2 - 1) + 5 * ( 4 - 1)");
-TokenList infix = scanner.ScanExpression ();
+Scanner<int> scanner;
+scanner.set("2 * 3 / (2 - 1) + 5 * (4 - 1)");
+scanner.scan();
 
-cout &lt;&lt; "Infix Expression:   ";
-for (int i = 0; i &lt; infix.Count(); i ++)
-{
-    Token tok = infix[i];
-    cout &lt;&lt; tok;
+// print postfix notation to stdout
+std::cout << "Infix Expression:   ";
+for (const Token<int>& token : scanner) {
+    std::cout << token << ' ';
 }
-cout &lt;&lt; endl;
+std::cout << std::endl << std::endl;
 
-PostfixConverter conv;
-TokenList postfix = conv.Convert (infix);
+InfixToPostfixConverter<int> conv;
+std::list<Token<int>> postfix = conv.convert(std::begin(scanner), std::end(scanner));
 
-cout &lt;&lt; "Postfix Expression: ";
-for (int i = 0; i &lt; postfix.Count(); i ++)
-{
-    Token tok = postfix[i];
-    cout &lt;&lt; tok;
+// print postfix notation to stdout
+std::cout << "Postfix Expression: ";
+for (const Token<int>& token : postfix) {
+    std::cout << token << ' ';
 }
-cout &lt;&lt; endl;
+std::cout << std::endl;
 
-PostfixCalculator calc;
-int result = calc.Calculate (postfix);
-cout &lt;&lt; "Result:             " &lt;&lt; result &lt;&lt; endl;</screen>
+PostfixCalculator<int> calculator;
+int result = calculator.calc(std::begin(postfix), std::end(postfix));
+std::cout << "Result: " << result << std::endl;
 ```
 
 *Ausgabe*:
 
 ```
-Infix Expression:   2 * 3 / ( 2 - 1 ) + 5 * ( 4 - 1 )
+Infix Expression:  2 * 3 / ( 2 - 1 ) + 5 * ( 4 - 1 )
 Postfix Expression: 2 3 * 2 1 - / 5 4 1 - * +
-Result:             21
+Result: 21
+```
+
+Die Zwischenschritte auf den drei Container-Objekte sehen dieses Mal so aus:
+
+```
+2  []                  [2]
+*  [*]                 [2]
+3  [*]                 [2, 3]
+/  [/]                 [2, 3, *]
+(  [/, (]              [2, 3, *]
+2  [/, (]              [2, 3, *, 2]
+-  [/, (, -]           [2, 3, *, 2]
+1  [/, (, -]           [2, 3, *, 2, 1]
+)  [/]                 [2, 3, *, 2, 1, -]
++  [+]                 [2, 3, *, 2, 1, -, /]
+5  [+]                 [2, 3, *, 2, 1, -, /, 5]
+*  [+, *]              [2, 3, *, 2, 1, -, /, 5]
+(  [+, *, (]           [2, 3, *, 2, 1, -, /, 5]
+4  [+, *, (]           [2, 3, *, 2, 1, -, /, 5, 4]
+-  [+, *, (, -]        [2, 3, *, 2, 1, -, /, 5, 4]
+1  [+, *, (, -]        [2, 3, *, 2, 1, -, /, 5, 4, 1]
+)  [+, *]              [2, 3, *, 2, 1, -, /, 5, 4, 1, -]
+   []                  [2, 3, *, 2, 1, -, /, 5, 4, 1, -, *, +]
 ```
 
 
-// ===========================================================================
+# Lösung
 
-TODO: Hmmm, die Methode calc könnte man auch mit einem Template umsetzen.
+> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
 
-// ===========================================================================
-// ===========================================================================
+Da mit Ausnahme des Hauptprogramms alle Klassen in der Lösung als Klassentemplates realisiert wurden,
+fällt die Unterscheidung in Header- und Realisierungsdatei weg &ndash; zumindest in dem von mir gewählten Ansatz.
+
+Es folgen in unmittelbarer Reihenfolge die Implementierungen
+der Klassen `Token<T>`,  `Scanner<T>`,  `PostfixCalculator<T>` und  `InfixToPostfixConverter<T>`.
+Auf Grund der sehr ausführlichen Aufgabenbeschreibung erübrigen sich weitere Hinweise zum Quellcode:
+
+
+###### {#listing_1_class_token}
+
+```cpp
+001: enum class TokenType { Null, Operator, Operand, LBracket, RBracket };
+002: 
+003: enum class OperatorType { NullOp, AddOp, SubOp, MulOp, DivOp, ModOp };
+004: 
+005: template <typename T>
+006: class Token;
+007: 
+008: template <typename T>
+009: std::ostream& operator<< (std::ostream&, const Token<T>&);
+010: 
+011: template <typename T>
+012: class Token
+013: {
+014:     friend std::ostream& operator<< <> (std::ostream&, const Token<T>&);
+015: 
+016: private:
+017:     // member data
+018:     TokenType m_type;      // classification of token
+019:     OperatorType m_op;     // classification of operator (TokenType == Operator)
+020:     T m_value;             // value of constant (TokenType == Constant)
+021:     size_t m_precedence;   // precedence of this operator, if any 
+022: 
+023: public:
+024:     // c'tor(s)
+025:     Token() : Token(TokenType::Null, OperatorType::NullOp, T{}) {}
+026:     Token(TokenType type) : Token(type, OperatorType::NullOp, T{}) {}
+027:     Token(OperatorType op) : Token(TokenType::Operator, op, T{}) {}
+028:     Token(T value) : Token(TokenType::Operand, OperatorType::NullOp, value) {}
+029: 
+030:     // getter
+031:     TokenType getTokenType() const { return m_type; }
+032:     OperatorType getOperatorType() const { return m_op; }
+033:     T getValue() const { return m_value; }
+034:     size_t getPrecedence() const { return m_precedence; }
+035: 
+036: private:
+037:     // general purpose c'tor
+038:     Token(TokenType type, OperatorType op, T value) 
+039:         : m_type{ type }, m_op{ op }, m_value{ value } 
+040:     {
+041:         switch (op)
+042:         {
+043:         case OperatorType::AddOp:
+044:         case OperatorType::SubOp:
+045:             m_precedence = 1;
+046:             break;
+047:         case OperatorType::MulOp:
+048:         case OperatorType::DivOp:
+049:         case OperatorType::ModOp:
+050:             m_precedence = 2;
+051:             break;
+052:         default:
+053:             m_precedence = 0;
+054:         }
+055:     }
+056: };
+057: 
+058: template <typename T>
+059: std::ostream& operator<< (std::ostream& os, const Token<T>& tok)
+060: {
+061:     switch (tok.m_type)
+062:     {
+063:     case TokenType::Operand:
+064:         os << tok.m_value;
+065:         break;
+066: 
+067:     case TokenType::Operator:
+068:         switch (tok.m_op)
+069:         {
+070:         case OperatorType::AddOp:
+071:             os << '+';
+072:             break;
+073:         case OperatorType::SubOp:
+074:             os << '-';
+075:             break;
+076:         case OperatorType::MulOp:
+077:             os << '*';
+078:             break;
+079:         case OperatorType::DivOp:
+080:             os << '/';
+081:             break;
+082:         case OperatorType::ModOp:
+083:             os << '%';
+084:             break;
+085:         case OperatorType::NullOp:
+086:             break;
+087:         }
+088:         break;
+089: 
+090:     case TokenType::LBracket:
+091:         os << '(';
+092:         break;
+093: 
+094:     case TokenType::RBracket:
+095:         os << ')';
+096:         break;
+097: 
+098:     default:
+099:         os << ' ';  // suited for debugging output
+100:         break;
+101:     }
+102: 
+103:     return os;
+104: }
+```
+
+*Listing* 1: Klassentemplate `Token<T>`
+
+
+
+###### {#listing_2_class_scanner}
+
+```cpp
+001: template <typename T>
+002: class Scanner
+003: {
+004: private:
+005:     const std::string token_regex = "([0]|[1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/|\\%";
+006: 
+007: public:
+008:     using iterator = std::list<Token<T>>::iterator;
+009:     using const_iterator = std::list<Token<T>>::const_iterator;
+010: 
+011: private:
+012:     std::string         m_line;
+013:     std::list<Token<T>> m_tokens;
+014:     std::regex          m_token_regex;
+015: 
+016: public:
+017:     // c'tor
+018:     Scanner() : m_line{}, m_token_regex{ token_regex } {}
+019:      
+020:     // getter/setter
+021:     void set(const std::string& line) { m_line = line; }
+022:     const std::string& get() const { return m_line; }
+023: 
+024:     // iterator support
+025:     iterator begin() { return m_tokens.begin(); }
+026:     iterator end() { return m_tokens.end(); }
+027:     const_iterator begin() const { return m_tokens.cbegin(); }
+028:     const_iterator end() const { return m_tokens.cend(); }
+029: 
+030:     // public interface
+031:     void scan()
+032:     {
+033:         m_tokens.clear();
+034: 
+035:         auto rbegin = std::sregex_iterator(
+036:             std::begin(m_line),
+037:             std::end(m_line),
+038:             m_token_regex
+039:         );
+040: 
+041:         auto rend = std::sregex_iterator();
+042: 
+043:         while (rbegin != rend)
+044:         {
+045:             std::smatch m = *rbegin;
+046:             std::string token = m.str();
+047: 
+048:             Token<T> tok{};
+049:             switch (token[0])
+050:             {
+051:             case '(':
+052:                 tok = Token<T>{ TokenType::LBracket };
+053:                 m_tokens.push_back(tok);
+054:                 break;
+055: 
+056:             case ')':
+057:                 tok = Token<T>{ TokenType::RBracket };
+058:                 m_tokens.push_back(tok);
+059:                 break;
+060: 
+061:             case '+':
+062:                 tok = Token<T>{ OperatorType::AddOp };
+063:                 m_tokens.push_back(tok);
+064:                 break;
+065: 
+066:             case '-':
+067:                 tok = Token<T>{ OperatorType::SubOp };
+068:                 m_tokens.push_back(tok);
+069:                 break;
+070: 
+071:             case '*':
+072:                 tok = Token<T>{ OperatorType::MulOp };
+073:                 m_tokens.push_back(tok);
+074:                 break;
+075: 
+076:             case '/':
+077:                 tok = Token<T>{ OperatorType::DivOp };
+078:                 m_tokens.push_back(tok);
+079:                 break;
+080: 
+081:             case '%':
+082:                 tok = Token<T>{ OperatorType::ModOp };
+083:                 m_tokens.push_back(tok);
+084:                 break;
+085: 
+086:             case '0':
+087:             case '1':
+088:             case '2':
+089:             case '3':
+090:             case '4':
+091:             case '5':
+092:             case '6':
+093:             case '7':
+094:             case '8':
+095:             case '9':
+096:             {
+097:                 long long tmp{ stoll(token) };
+098:                 T value{ static_cast<T>(tmp) };
+099:                 tok = Token<T>{ value };
+100:                 m_tokens.push_back(tok);
+101:                 break;
+102:             }
+103:             default:
+104:                 m_tokens.push_back(tok);
+105:                 break;
+106:             }
+107: 
+108:             ++rbegin;
+109:         }
+110:     }
+111: 
+112:     void scan_classic() 
+113:     {
+114:         m_tokens.clear();
+115: 
+116:         for (size_t i{}; i != m_line.size(); ++i)
+117:         {
+118:             char ch{ m_line[i] };
+119:             Token<T> tok{};
+120: 
+121:             switch (ch)
+122:             {
+123:             case ' ':
+124:                 continue;
+125: 
+126:             case '(':
+127:                 tok = Token<T>{ TokenType::LBracket };
+128:                 m_tokens.push_back(tok);
+129:                 break;
+130: 
+131:             case ')':
+132:                 tok = Token<T>{ TokenType::RBracket };
+133:                 m_tokens.push_back(tok);
+134:                 break;
+135: 
+136:             case '+':
+137:                 tok = Token<T>{ OperatorType::AddOp };
+138:                 m_tokens.push_back(tok);
+139:                 break;
+140: 
+141:             case '-':
+142:                 tok = Token<T>{ OperatorType::SubOp };
+143:                 m_tokens.push_back(tok);
+144:                 break;
+145: 
+146:             case '*':
+147:                 tok = Token<T>{ OperatorType::MulOp };
+148:                 m_tokens.push_back(tok);
+149:                 break;
+150: 
+151:             case '/':
+152:                 tok = Token<T>{ OperatorType::DivOp };
+153:                 m_tokens.push_back(tok);
+154:                 break;
+155: 
+156:             case '%':
+157:                 tok = Token<T>{ OperatorType::ModOp };
+158:                 m_tokens.push_back(tok);
+159:                 break;
+160: 
+161:             case '0':
+162:             case '1':
+163:             case '2':
+164:             case '3':
+165:             case '4':
+166:             case '5':
+167:             case '6':
+168:             case '7':
+169:             case '8':
+170:             case '9':
+171:             { 
+172:                 T value{};
+173:                 while (i != m_line.size() && std::isdigit(m_line[i]))
+174:                 {
+175:                     value = 10 * value + (m_line[i] - '0');
+176:                     ++i;
+177:                 }
+178: 
+179:                 // adjust index
+180:                 i--;
+181: 
+182:                 tok = Token<T>{ value };
+183:                 m_tokens.push_back(tok);
+184:                 break;
+185:             }
+186: 
+187:             default:
+188:                 m_tokens.push_back(tok);
+189:             }
+190:         }
+191:     }
+192: };
+```
+
+*Listing* 2: Klassentemplate `Scanner<T>`
+
+
+
+###### {#listing_3_class_postfix_calculator}
+
+```cpp
+01: template <typename T>
+02: class PostfixCalculator
+03: {
+04: private:
+05:     std::stack<Token<T>> m_stack;  // temporary stack of operands
+06: 
+07: public:
+08:     // public interface
+09:     template <typename Iter>
+10:     T calc(Iter begin, Iter end)
+11:     {
+12:         std::stack<Token<T>> m_stack;  // temporary stack of operands
+13: 
+14:         for (Iter it{ begin }; it != end; ++it)
+15:         {
+16:             Token<T> tok{ *it };
+17: 
+18:             if (tok.getTokenType() == TokenType::Operand)
+19:             {
+20:                 // push operand on temporary operand stack
+21:                 m_stack.push(tok);
+22:             }
+23:             else if (tok.getTokenType() == TokenType::Operator)
+24:             {
+25:                 // binary operator, retrieve operands from operand stack
+26:                 Token<T> right{ m_stack.top() };
+27:                 m_stack.pop();
+28: 
+29:                 Token<T> left{ m_stack.top() };
+30:                 m_stack.pop();
+31: 
+32:                 T rightValue{ right.getValue() };
+33:                 T leftValue{ left.getValue() };
+34:                 T result{};
+35: 
+36:                 OperatorType op{ tok.getOperatorType() };
+37:                 switch (op)
+38:                 {
+39:                 case OperatorType::AddOp:
+40:                     result = leftValue + rightValue;
+41:                     break;
+42:                 case OperatorType::SubOp:
+43:                     result = leftValue - rightValue;
+44:                     break;
+45:                 case OperatorType::MulOp:
+46:                     result = leftValue * rightValue;
+47:                     break;
+48:                 case OperatorType::DivOp:
+49:                     result = leftValue / rightValue;
+50:                     break;
+51:                 case OperatorType::ModOp:
+52:                     if constexpr (std::is_integral<T>::value) {
+53:                         result = leftValue % rightValue;
+54:                     }
+55:                     else if constexpr (std::is_floating_point<T>::value) {
+56:                         result = std::fmod(leftValue, rightValue);
+57:                     }
+58:                     break;
+59:                 default:
+60:                     break;
+61:                 }
+62: 
+63:                 // push result to operand stack
+64:                 Token<T> val{ result };
+65:                 m_stack.push(val);
+66:             }
+67:         }
+68: 
+69:         // retrieve result from stack
+70:         Token<T> result{ m_stack.top() };
+71:         m_stack.pop();
+72:         return result.getValue();
+73:     }
+74: };
+```
+
+*Listing* 3: Klassentemplate `PostfixCalculator<T>`
+
+Einen Hinweis zur Realisierung von [Listing 3] wollen wir nicht außer Acht lassen:
+Werfen Sie doch bitte einen Blick auf die Zeilen 52 bis 57.
+Der Modulo-Operator `%` ist nur für ganzzahlige
+Datentypen definiert. Würden Sie das Klassentemplate `PostfixCalculator<T>` mit `T` gleich `double`
+instanziieren, erhalten Sie einen Übersetzungsfehler!
+
+Modernes C++ mit *Type Traits* und den beiden Funktionstemplates `std::is_integral` 
+und `std::is_floating_point` bietet zusammen mit `if constexpr` die Lösung:
+Je nach dem welchen Datentyp für `T`  Sie wählen, entscheidet sich der Übersetzer dazu,
+nur einen der beiden Zweige des `if constexpr`-Konstrukts zu übersetzen.
+Auf diese Weise erhalten Sie funktionsfähige UPN-Recher des Typs `PostfixCalculator<int>` als auch `PostfixCalculator<double>`!
+
+
+###### {#listing_4_class_infix_postfix_converter}
+
+```cpp
+001: template <typename T>
+002: class InfixToPostfixConverter
+003: {
+004: private:
+005:     std::list<Token<T>> m_postfix;     // postfix expression (output)
+006:     std::stack<Token<T>> m_stack;      // temporary stack of operators and brackets
+007: 
+008: public:
+009:     // public interface
+010:     template <typename Iter>
+011:     std::list<Token<T>> convert(Iter begin, Iter end) {
+012:         clear();
+013: 
+014:         Token<T> next{};
+015:         if (begin != end) {
+016:             next = *begin;
+017:             ++begin;
+018:         }
+019: 
+020:         while (next.getTokenType() != TokenType::Null)
+021:         {
+022:             if (next.getTokenType() == TokenType::Operand)
+023:                 processOperand(next);
+024:             else if (next.getTokenType() == TokenType::Operator)
+025:                 processOperator(next);
+026:             else if (next.getTokenType() == TokenType::LBracket)
+027:                 processLeftParenthesis(next);
+028:             else if (next.getTokenType() == TokenType::RBracket)
+029:                 processRightParenthesis();
+030: 
+031:             dumpStacks(next);
+032: 
+033:             if (begin != end) {
+034:                 next = *begin;
+035:                 ++begin;
+036:             }
+037:             else {
+038:                 next = {};
+039:             }
+040:         }
+041: 
+042:         processEndOfInput();
+043:         dumpStacks(next);
+044: 
+045:         return m_postfix;
+046:     }
+047: 
+048: private:
+049:     // helper methods
+050:     void clear() {
+051:         m_postfix.clear();
+052:     }
+053: 
+054:     void processOperand(Token<T> next) {
+055:         // append operand to the postfix buffer
+056:         m_postfix.push_back(next);
+057:     }
+058: 
+059:     void processOperator(Token<T> next) {
+060:         /**
+061:          * Move operators from the stack to the output buffer, as long as
+062:          * - the incoming operator precedence is lower or equal to a stacked operator,
+063:          * - no left parenthesis appears on the stack
+064:          * - and the stack is not empty.
+065:          * The incoming operator is stacked.
+066:          */
+067:         do
+068:         {
+069:             if (m_stack.empty())
+070:                 break;
+071: 
+072:             // left parenthesis on stack encountered
+073:             Token<T> top = m_stack.top();
+074:             if (top.getTokenType() == TokenType::LBracket)
+075:                 break;
+076: 
+077:             if (next.getPrecedence() <= top.getPrecedence())
+078:             {
+079:                 m_stack.pop();
+080:                 m_postfix.push_back(top);
+081:             }
+082:             else {
+083:                 break;
+084:             }
+085:         } while (true);
+086: 
+087:         // stack incoming operator
+088:         m_stack.push(next);
+089:     }
+090: 
+091:     void processLeftParenthesis(Token<T> next) {
+092:         // push a left parenthesis onto the operator stack
+093:         m_stack.push(next);
+094:     }
+095: 
+096:     void processRightParenthesis()
+097:     {
+098:         // move operators from the stack to the output buffer, until a left 
+099:         // parenthesis appears on the stack (the left parenthesis is discarded)
+100:         do
+101:         {
+102:             Token<T> top = m_stack.top();
+103: 
+104:             if (top.getTokenType() == TokenType::LBracket)
+105:                 break;
+106: 
+107:             m_stack.pop();
+108:             m_postfix.push_back(top);
+109:         } while (true);
+110: 
+111:         // discard left parenthesis
+112:         m_stack.pop();
+113:     }
+114: 
+115:     void processEndOfInput() {
+116:         // copy remaining elements from operator stack to postfix buffer
+117:         while (!m_stack.empty())
+118:         {
+119:             Token<T> top = m_stack.top();
+120:             m_stack.pop();
+121:             m_postfix.push_back(top);
+122:         }
+123:     }
+124: 
+125:     void dumpStacks(Token<T> next) {
+126:         // dump latest token
+127:         std::cout << next << "  ";
+128: 
+129:         // output stack (not trivial, because stack has limited iterator support)
+130:         std::cout << "[";
+131:         if (m_stack.size() != 0) {
+132:             // need a copy of the stack
+133:             std::stack<Token<T>> stack{ m_stack };
+134:             std::vector<Token<T>> tmp{};
+135:             while (!stack.empty()) {
+136:                 Token<T> top = stack.top();
+137:                 stack.pop();
+138:                 tmp.push_back(top);
+139:             }
+140: 
+141:             std::reverse(
+142:                 std::begin(tmp),
+143:                 std::end(tmp)
+144:             );
+145: 
+146:             std::for_each(
+147:                 std::begin(tmp),
+148:                 std::prev(std::end(tmp)),
+149:                 [](const Token<T>& token) {
+150:                     std::cout << token << ", ";
+151:                 }
+152:             );
+153: 
+154:             const Token<T>& latest = tmp.back();
+155:             std::cout << latest;
+156:         }
+157:         std::cout << "]";
+158: 
+159:         // fill gap equally spaced
+160:         const size_t MaxDistance = 20;
+161:         size_t size = m_stack.size();
+162:         size_t count{};
+163: 
+164:         if (size == 0) {
+165:             count = MaxDistance - 2;
+166:         }
+167:         else if (size == 1) {
+168:             count = MaxDistance - 3;
+169:         }
+170:         else {
+171:             count = MaxDistance - (3 * size);
+172:         }
+173: 
+174:         for (size_t n{}; n != count; ++n) {
+175:             std::cout << " ";
+176:         }
+177: 
+178:         // output so far calculated tokens in postfix order
+179:         std::cout << '[';
+180:         if (m_postfix.size() != 0) {
+181: 
+182:             std::for_each(
+183:                 std::begin(m_postfix),
+184:                 std::prev(std::end(m_postfix)),
+185:                 [](const Token<T>& token) {
+186:                     std::cout << token << ", ";
+187:                 }
+188:             );
+189: 
+190:             const Token<T>& latest = m_postfix.back();
+191:             std::cout << latest;
+192:         }
+193: 
+194:         std::cout << ']';
+195:         std::cout << std::endl;
+196:     }
+197: };
+```
+
+*Listing* 4: Klassentemplate `InfixToPostfixConverter<T>`
+
 
 
 <br/>
 
 # There&lsquo;s more
 
-Der Einsatz eines `std::array`-Objekts ist für performantes  Chiffrieren und Dechiffrieren nicht die
-performanteste Lösung. Überlegen Sie, wie man eine *BiMap*-Klasse implementieren könnte,
-um laufzeit-optimalere Ergebnisse zu erzielen.
+Eine große Schwachstelle im Entwurf der Klasse `Token` aus [Tabelle 1] wird Ihnen sicherlich aufgefallen sein:
+Die Methode `getValue()`, die ein `Token`-Objekt der Ausprägung `TokenType::Operator` beschreibt,
+besitzt `int` als Ergebnisdatentyp:
+
+```cpp
+int getValue() const;
+```
+
+Dies sieht nun gar nicht nach wirklichem C++ aus, viel hübscher wäre es an dieser Stelle,
+den Rückgabetyp und überhaupt die gesamte Konzeption des UPN-Rechners datentyp-flexibel zu gestalten.
+Natürlich sind wir bei Templates angekommen:
+Realisieren Sie alle beteiligten Klassen in dieser Fallstudie als Klassentemplates.
+
+Neben integralen Datentypen wie `int`, `long` oder `long long` könnte der UPN-Kalkulator dann auch mit `double`-Werten rechnen.
+In diesem Fall müssten Sie aber den Scanner erweitern für den Fall, dass er richtige `double`-Konstanten einlesen kann.
+Das ist eine nicht ganz triviale Programmieraufgabe :)
 
 <br/>
-
 
 <!-- Links Definitions -->
 
@@ -549,21 +1150,12 @@ um laufzeit-optimalere Ergebnisse zu erzielen.
 [Tabelle 3]: #tabelle_3_class_token_calculator
 [Tabelle 4]: #tabelle_4_class_infix_to_postfix
 
+[Listing 1]: #listing_1_class_token
+[Listing 2]: #listing_2_class_scanner
+[Listing 3]: #listing_3_class_postfix_calculator
+[Listing 4]: #listing_4_class_infix_postfix_converter
 
-
-
-
-[Listing 1]: #listing_01_number_interface
-[Listing 2]: #listing_02_number_implementation
-[Listing 3]: #listing_03_palindromcalculator_interface
-[Listing 4]: #listing_04_palindromcalculator_implementation
-
-[Abbildung 1]:  #abbildung_1_schriftlichen_addition_01
-[Abbildung 2]:  #infixtopostfix_01
-
-
-
-
-
+[Abbildung 1]:  #abbildung_1_upn_postfix_calculator
+[Abbildung 2]:  #abbildung_2_upn_operator_precedence
 
 <!-- End-of-File -->
