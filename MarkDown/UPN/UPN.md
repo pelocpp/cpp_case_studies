@@ -7,6 +7,8 @@ umgekehrte polnische Notation wurde 1920 von dem Polen *Jan Lukasiewicz* erfunde
 mathematische Ausdrücke ohne Vorrangregeln (Klammern) schreiben zu können.
 
 In dieser Fallstudie behandeln wir einen Taschenrechner für arithmetische Ausdrücke in UPN-Darstellung.
+Reguläre Ausdrücke (`std::sregex_iterator`, `smatch`) und *Type Traits* (`std::is_integral`, `std::is_floating_point`)
+fließen neben anderen Modern C++&ndash;Sprachmitteln in der Implementierung mit ein.
 
 <!--more-->
 
@@ -103,12 +105,12 @@ std::cout << tok4 << std::endl;
 
 *Ausgabe*:
 
-```
+<pre>
 (
 )
 +
 12345
-```
+</pre>
 
 # Klasse `TokenScanner` &ndash; Zerlegung eines arithmetischen *Postfix*-Ausdrucks
 
@@ -123,8 +125,8 @@ folgt ([Tabelle 2]):
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Methode `set` | `void set(const std::string&);`<br/>Mit `setLine` wird ein korrekter arithmetischer Ausdruck in *Postfix*-Notation an das `TokenScanner`-Objekt übergeben. |
-| Methode `get` | `const std::string& get() const;`<br/>`getLine` liefert die im `TokenScanner`-Objekt abgelegte Zeichenkette zurück. |
+| Methode `set` | `void set(const std::string&);`<br/>Mit `set` wird ein korrekter arithmetischer Ausdruck in *Postfix*-Notation an das `TokenScanner`-Objekt übergeben. |
+| Methode `get` | `const std::string& get() const;`<br/>`get` liefert die im `TokenScanner`-Objekt abgelegte Zeichenkette zurück. |
 | Methode `scan` | `void scan();`<br/>Eine im Objekt hinterlegte Zeichenkette wird mit der `scan`-Methode von links nach rechts durchlaufen und dabei in ihre `Token`-Bestandteile zerlegt. |
 | Methode `begin` | `iterator begin();`<br/>Das Resultat eines `scan`-Aufrufs kann durch eine Iteration über `Token`-Objekte abgerufen werden. `begin()` beschreibt den Anfang der Iteration. |
 | Methode `end` | `end begin();`<br/>Das Resultat eines `scan`-Aufrufs kann durch eine Iteration über `Token`-Objekte abgerufen werden. `end()` beschreibt das Ende der Iteration. |
@@ -144,9 +146,9 @@ std::cout << scanner << std::endl;
 
 *Ausgabe*:
 
-```
+<pre>
 Input: 1 2 *
-```
+</pre>
 
 Das zweite Beispiel demonstriert die Zerlegung eines arithmetischen Ausdrucks in seine einzelnen
 Bestandteile. Die Zerlegung erfolgt in der `scan`-Methode, das Resultat wird
@@ -163,7 +165,7 @@ for (const auto& token : scanner) {
 
 *Ausgabe*:
 
-```
+<pre>
 Input: 1 2 - 3 -
 
 Token: 1
@@ -171,7 +173,7 @@ Token: 2
 Token: -
 Token: 3
 Token: -
-```
+</pre>
 
 # Klasse `PostfixCalculator` &ndash; Ein Taschenrechner für *Postfix*-Ausdrücke
 
@@ -190,22 +192,14 @@ Bei Unklarheiten können Sie die Arbeitsweise des *Postfix*-Kalkulators in [Abbi
 nachvollziehen. Ausgangsbasis ist der arithmetische Ausdruck `2 * (4 + 5) / 3`,
 seine Postfix-Notation lautet `2 4 5 + * 3 /`:
 
-TODO: Abbildung
-upn_postfix_calculator
-
-<img src="upn_postfix_calculator_01.svg" width="700">
-
-Abbildung 1: Arbeitsweise des Postfix-Kalkulators an einem Beispiel.
-
 ###### {#abbildung_1_upn_postfix_calculator}
 
-{{< figure src="/img/literals/ConstexprLiterals.png" width="80%" >}}
+{{< figure src="/img/upn_calculator/upn_postfix_calculator_01.svg" width="90%" >}}
 
-*Abbildung* 1: Arbeitsweise des Postfix-Kalkulators an einem Beispiel.
-
+*Abbildung* 1: Arbeitsweise des Postfix-Kalkulators an einem Beispiel betrachtet.
 
 Implementieren Sie eine Klasse `PostfixCalculator`, die im Wesentlichen nur eine zentrale
-Methode `calc` besitzt:
+Methode `calc` besitzt ([Tabelle 3]):
 
 ###### {#tabelle_3_class_token_calculator}
 
@@ -215,7 +209,7 @@ Methode `calc` besitzt:
 
 *Tabelle* 3: Öffentliches Element der Klasse `PostfixCalculator`.
 
-Unser erstes Beispiel testet ein `PostfixCalculator`-Objekt &ndash; und dies &ndash; nebenbei bemerkt &ndash; ohne Gebrauch
+Unser erstes Beispiel testet ein `PostfixCalculator`-Objekt &ndash; und dies, nebenbei bemerkt &ndash; ohne Gebrauch
 eines `Scanner`-Objekts. Man sieht an dem Beispiel, dass man das `std::list<Token>`-Objekt
 gewissermaßen auch &ldquo;händisch&rdquo; erstellen kann &ndash; wenn man es richtig konstruiert:
 
@@ -251,11 +245,11 @@ std::cout << "Result: " << result << std::endl;
 
 *Ausgabe*:
 
-```
+<pre>
 Postfix Expression:
 1 2 - 3 -
 Result: -4
-```
+</pre>
 
 Noch ein zweites Beispiel &ndash; dieses Mal unter Verwendung eines `Scanner`-Objekts:
 
@@ -272,9 +266,9 @@ std::cout << "Result: " << result << std::endl;
 
 *Ausgabe*:
 
-```
+<pre>
 Result: 45
-```
+</pre>
 
 # Ein systematischer Test
 
@@ -308,17 +302,17 @@ for (size_t n{1}; n != MaxPower; ++n) {
 }
 ```
 
-Je nach Potenz wird eine Zeichenkette mit vielen Operanden `2` und Operator `*` gebildet,
+Je nach Potenz wird eine Zeichenkette mit vielen Operanden (`2`) und Operatoren (`*`) gebildet,
 zum Beispiel
 
-```
+<pre>
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * * * *
-```
+</pre>
 
 bei 16 Operanden. Die Ausgabe
-des Testprogramms sieht auf meinem Rechner für die ersten fünfzehn Zweierpotenzen so aus:
+des Testprogramms sieht dann für die ersten fünfzehn Zweierpotenzen so aus:
 
-```
+<pre>
 2  ==> 2
 2 2 *  ==> 4
 2 2 2 * *  ==> 8
@@ -334,7 +328,7 @@ des Testprogramms sieht auf meinem Rechner für die ersten fünfzehn Zweierpoten
 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * *  ==> 8192
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * *  ==> 16384
 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 * * * * * * * * * * * * * *  ==> 32768
-```
+</pre>
 
 Mit dem vorliegenden Kalkulator haben Sie einen Rechenautomaten implementiert,
 der beliebige arithmetische Ausdrücke auf der Basis der vier Grundrechenarten beherrscht.
@@ -349,22 +343,22 @@ dass die Betrachtung eines arithmetischen Ausdrucks in der *Postfix*-Notation do
 Arithmetische Ausdrücke in der *Infix*-Notation können neben den Operatoren
 und ihren Operanden auch noch runde Klammern besitzen:
 
-```
+<pre>
 7 + 7 * 7
 3 * (5 + ((2 * 3) - 4))
 ((28 + 2) * (2 / 4))
-```
+</pre>
 
 Mit den runden Klammern lassen sich die standardmäßig vorherrschenden Vorrangregeln (&ldquo;Punkt-vor-Strich&ldquo;) abändern.
 Ein Operator mit einem höheren Vorrang wird einem Operator mit einem niedrigeren Vorrang in der Ausführung vorgezogen,
-siehe [Abbildung 2]. Da wir in dieser Klausur nur die fünf Operatoren `+`, `-`, `*`, `/` und `%`
+siehe [Abbildung 2]. Da wir in dieser Studie nur die fünf Operatoren `+`, `-`, `*`, `/` und `%`
 zulassen, können wir den Aspekt des *Operatorenvorrangs* simpel auch als &ldquo;Punkt-vor-Strich&ldquo;-Regel titulieren.
 
-<img src="upn_postfix_calculator_02.svg" width="350">
-
-Abbildung 2: Rangfolge von arithmetischen Operatoren.
-
 ###### {#abbildung_2_upn_operator_precedence}
+
+{{< figure src="/img/upn_calculator/upn_postfix_calculator_02.svg" width="45%" >}}
+
+*Abbildung* 2: Rangfolge von arithmetischen Operatoren.
 
 Wir kommen nun auf den Algorithmus für die Konvertierung des arithmetischen Ausdruck
 von der *Infix*- in die *Postfix*-Notation zu sprechen.
@@ -379,63 +373,59 @@ Wir sind bei der Beschreibung des Algorithmus angekommen.
 Die Liste der einzelnen `Token`-Objekte (Parameter `infix`) ist Objekt für Objekt
 zu traversieren, es lassen sich dabei fünf Fälle unterscheiden:
 
-  * Nächstes Element ist ein Operand (Zahl):<br/>Zahl in *Postfix*-Liste einfügen.
-  * Nächstes Element ist eine öffnende Klammer `(`:<br/>Klammer auf den temporären Stapel schieben.
-  * Nächstes Element ist ein Operator:<br/>
-    Zuerst sind vom Stapel alle Operatoren mit gleicher oder höherer Priorität in die *Postfix*-Liste zu schieben,
+  * Nächstes Element ist ein Operand (Zahl) &rarr; Zahl in *Postfix*-Liste einfügen.
+  * Nächstes Element ist eine öffnende Klammer `(` &rarr; Klammer auf den temporären Stapel schieben.
+  * Nächstes Element ist ein Operator &rarr; Zuerst sind vom Stapel alle Operatoren mit gleicher oder höherer Priorität in die *Postfix*-Liste zu schieben,
     bis eine öffnende Klammer `(` erreicht wird oder der Stapel leer ist
     oder eben ein Operator niedriger Priorität erreicht wurde.
     Abschließend wird der gefundene Operator auf den temporären Stapel geschoben.
-  * Nächstes Element ist eine schließende Klammer `)`:<br/>
-    Alle Operatoren vom Stapel sind bis zur ersten öffnenden Klammer <quote>(</quote> vom Stapel
+  * Nächstes Element ist eine schließende Klammer `)` &rarr; Alle Operatoren vom Stapel sind bis zur ersten öffnenden Klammer <quote>(</quote> vom Stapel
     zu entfernen und in die *Postfix*-Liste zu schieben.
     Die öffnende Klammer auf dem Stapel sowie die schließende Klammer
     von der Eingabe sind zu verwerfen (sie werden nicht in die *Postfix*-Liste kopiert).
-  * Die Eingabe ist leer:<br/>Es werden alle Operatoren, die sich noch auf dem temporären Stapel befinden,
+  * Die Eingabe ist leer &rarr; Es werden alle Operatoren, die sich noch auf dem temporären Stapel befinden,
     in die *Postfix*-Liste geschoben.
 
-Sollten Sie Probleme haben, den Algorithmus genau zu erfassen, gehen Sie am besten das folgende Beispiel in 
-Zeile für Zeile in der folgenden Testausgabe durch.
-Es wird der arithmetische Ausdruck `(3 + 7) / (4 - 2)` konvertiert:
+Sollten Sie Probleme haben, den Algorithmus genau zu erfassen, gehen Sie am besten das folgende Beispiel
+Zeile für Zeile in der Testausgabe durch. Es wird der arithmetische Ausdruck `(3 + 7) / (4 - 2)` konvertiert:
 
-```
-(  [(]                 []
-3  [(]                 [3]
-+  [(, +]              [3]
-7  [(, +]              [3, 7]
-)  []                  [3, 7, +]
-/  [/]                 [3, 7, +]
-(  [/, (]              [3, 7, +]
-4  [/, (]              [3, 7, +, 4]
--  [/, (, -]           [3, 7, +, 4]
-2  [/, (, -]           [3, 7, +, 4, 2]
-)  [/]                 [3, 7, +, 4, 2, -]
-   []                  [3, 7, +, 4, 2, -, /]
-```
+<pre>
+(    [(]                 []
+3    [(]                 [3]
++    [(, +]              [3]
+7    [(, +]              [3, 7]
+)    []                  [3, 7, +]
+/    [/]                 [3, 7, +]
+(    [/, (]              [3, 7, +]
+4    [/, (]              [3, 7, +, 4]
+-    [/, (, -]           [3, 7, +, 4]
+2    [/, (, -]           [3, 7, +, 4, 2]
+)    [/]                 [3, 7, +, 4, 2, -]
+     []                  [3, 7, +, 4, 2, -, /]
+</pre>
 
 Implementieren Sie eine Klasse `InfixToPostfixConverter` mit der in
-[Tabelle 4] spezifizierten Methode `Convert`:
+[Tabelle 4] spezifizierten Methode `convert`:
 
 ###### {#tabelle_4_class_infix_to_postfix}
 
 | Element | Beschreibung |
 | :---- | :---- |
-| Methode `convert` | `std::list<Token<T>> convert(std::list<Token>::iterator begin, std::list<Token>::iterator end);`<br/>Konvertiert einen arithmetischen Ausdruck von der *Infix*-Notation (Parameter `infix`) in die *Postfix*-Notation (Rückgabewert). Beide Ausdrücke sind in Form eines `TokenList`-Objekts darzustellen. |
+| Methode `convert` | `std::list<Token> convert(`<br/>`std::list<Token>::iterator begin, `<br/>`std::list<Token>::iterator end`<br/>`);`<br/>Konvertiert einen arithmetischen Ausdruck von der *Infix*-Notation (zwei Iteratoren `begin` und `end` zu einem `std::list<Token>`-Objekt) in die *Postfix*-Notation (Rückgabewert). |
 
 *Tabelle* 4: Öffentliches Element der Klasse `InfixToPostfixConverter`.
 
-*Hinweis*: Die Eingabeliste für Methode  `convert` (Arithmetischer Ausdruck in *Infix*-Notation) wird
+*Hinweis*: Die Eingabeliste für Methode  `convert` (arithmetischer Ausdruck in *Infix*-Notation) wird
 durch zwei Iteratoren-Objekte (Typ `std::list<Token>::iterator`) beschrieben.
-
 Zum Testen Ihrer Realisierung betrachten wir jetzt ein Beispiel eines komplexeren `Infix`-Ausdrucks:
 
-```
+<pre>
 2 * 3 / (2 - 1) + 5 * (4 - 1)
-```
+</pre>
 
 Das erfolgreiche Zusammenspiel aller Klassen können Sie am folgenden Codefragment überprüfen:
 
-```
+```cpp
 Scanner<int> scanner;
 scanner.set("2 * 3 / (2 - 1) + 5 * (4 - 1)");
 scanner.scan();
@@ -464,34 +454,34 @@ std::cout << "Result: " << result << std::endl;
 
 *Ausgabe*:
 
-```
+<pre>
 Infix Expression:  2 * 3 / ( 2 - 1 ) + 5 * ( 4 - 1 )
 Postfix Expression: 2 3 * 2 1 - / 5 4 1 - * +
 Result: 21
-```
+</pre>
 
-Die Zwischenschritte auf den drei Container-Objekte sehen dieses Mal so aus:
+Die Zwischenschritte auf den beteiligten Container-Objekte sehen dieses Mal so aus:
 
-```
-2  []                  [2]
-*  [*]                 [2]
-3  [*]                 [2, 3]
-/  [/]                 [2, 3, *]
-(  [/, (]              [2, 3, *]
-2  [/, (]              [2, 3, *, 2]
--  [/, (, -]           [2, 3, *, 2]
-1  [/, (, -]           [2, 3, *, 2, 1]
-)  [/]                 [2, 3, *, 2, 1, -]
-+  [+]                 [2, 3, *, 2, 1, -, /]
-5  [+]                 [2, 3, *, 2, 1, -, /, 5]
-*  [+, *]              [2, 3, *, 2, 1, -, /, 5]
-(  [+, *, (]           [2, 3, *, 2, 1, -, /, 5]
-4  [+, *, (]           [2, 3, *, 2, 1, -, /, 5, 4]
--  [+, *, (, -]        [2, 3, *, 2, 1, -, /, 5, 4]
-1  [+, *, (, -]        [2, 3, *, 2, 1, -, /, 5, 4, 1]
-)  [+, *]              [2, 3, *, 2, 1, -, /, 5, 4, 1, -]
-   []                  [2, 3, *, 2, 1, -, /, 5, 4, 1, -, *, +]
-```
+<pre>
+2    []                  [2]
+*    [*]                 [2]
+3    [*]                 [2, 3]
+/    [/]                 [2, 3, *]
+(    [/, (]              [2, 3, *]
+2    [/, (]              [2, 3, *, 2]
+-    [/, (, -]           [2, 3, *, 2]
+1    [/, (, -]           [2, 3, *, 2, 1]
+)    [/]                 [2, 3, *, 2, 1, -]
++    [+]                 [2, 3, *, 2, 1, -, /]
+5    [+]                 [2, 3, *, 2, 1, -, /, 5]
+*    [+, *]              [2, 3, *, 2, 1, -, /, 5]
+(    [+, *, (]           [2, 3, *, 2, 1, -, /, 5]
+4    [+, *, (]           [2, 3, *, 2, 1, -, /, 5, 4]
+-    [+, *, (, -]        [2, 3, *, 2, 1, -, /, 5, 4]
+1    [+, *, (, -]        [2, 3, *, 2, 1, -, /, 5, 4, 1]
+)    [+, *]              [2, 3, *, 2, 1, -, /, 5, 4, 1, -]
+     []                  [2, 3, *, 2, 1, -, /, 5, 4, 1, -, *, +]
+</pre>
 
 
 # Lösung
@@ -502,9 +492,8 @@ Da mit Ausnahme des Hauptprogramms alle Klassen in der Lösung als Klassentempla
 fällt die Unterscheidung in Header- und Realisierungsdatei weg &ndash; zumindest in dem von mir gewählten Ansatz.
 
 Es folgen in unmittelbarer Reihenfolge die Implementierungen
-der Klassen `Token<T>`,  `Scanner<T>`,  `PostfixCalculator<T>` und  `InfixToPostfixConverter<T>`.
-Auf Grund der sehr ausführlichen Aufgabenbeschreibung erübrigen sich weitere Hinweise zum Quellcode:
-
+der Klassen `Token`,  `Scanner`,  `PostfixCalculator` und  `InfixToPostfixConverter`,
+in [Listing 1] wenden wir uns Klasse `Token` zu:
 
 ###### {#listing_1_class_token}
 
@@ -617,7 +606,13 @@ Auf Grund der sehr ausführlichen Aufgabenbeschreibung erübrigen sich weitere H
 
 *Listing* 1: Klassentemplate `Token<T>`
 
+Ein Hinweis zu [Listing 1] und hier zu den Zeilen 5, 6, 8, 9 sowie 14 und 58 bis 104:
+Es ist nicht ganz trival, den `operator<<` in einem Klassentemplate zu implementieren.
+Der `<<`-Operator kann auf Grund seines ersten Parameters vom Typ `ostream&` nicht in der Klasse definiert werden.
+Aus diesem Grund sind einige Tricks anzuwenden, die es dennoch ermöglichen, für alle Templateinstanziierungen von `Token<T>`
+auch eine Überladung des dazugehörigen Operators `<<` zu haben.
 
+Damit sind wir auch schon bei der nächsten Klasse `Scanner` in [Listing 2] angekommen:
 
 ###### {#listing_2_class_scanner}
 
@@ -818,7 +813,45 @@ Auf Grund der sehr ausführlichen Aufgabenbeschreibung erübrigen sich weitere H
 
 *Listing* 2: Klassentemplate `Scanner<T>`
 
+Zum Parsen einer Zeichenkette mit einem arithmetischen Ausdruck in *Postfix*-Notation 
+finden Sie in [Listing 2] gleich zwei Lösungsansätze vor:
 
+  * Klassisches Zerlegen einer Zeichenkette in Manier eines Scanners für höhere Programmiersprachen.
+  * Zerlegen der Zeichenkette durch einen regulären Ausdruck.
+
+Auf den regulären Ausdruck gehen wir kurz ein:
+
+<pre>
+([0]|[1-9][0-9]*)|[(]|[)]|\\+|\\-|\\*|\\/|\\%
+</pre>
+
+Die zahlreichen Alternativen für die Token werden durch `|` voneinander getrennt.
+Token, die aus einem einzigen Zeichen bestehen &ndash; zum Beispiel der `+`-Operator oder eine runde Klammer `(` oder `)` &ndash; 
+sind direkt im Ausdruck platziert &ndash; allerdings mit einem führenden Backslash `\`,
+da einige dieser Zeichen (zum Beispiel das `+`) in einem regulären Ausdruck eine spezielle Bedeutung haben.
+Da wir uns wiederum im Kontext einer C-Zeichenkette befinden, wo das Backslash `\` eine besondere Bedeutung hat,
+müssen die UPN-Token folglich mit *zwei* Backslash-Zeichen eingeleitet werden, also zum Beispiel `\\+`.
+
+Das Scannen ganzer Zahlen ist mit einem regulären Ausdruck trivial:
+Wollen wir führende Nullen ausschließen, dann lautet der entsprechende Ausdruck
+
+<pre>
+[1-9][0-9]*
+</pre>
+
+Jetzt ist noch die Frage zu klären, ob die Zahl `0` ebenfalls zulässig sein soll. 
+Der soeben vorgestellte reguläre Ausdruck schließt die `0` ja gerade aus.
+Wir könnten das Zeichen `0` separat ergänzen, dann lautet der reguläre Ausdruck
+
+<pre>
+([0]|[1-9][0-9]*)
+</pre>
+
+Die einzelnen Bestandteile in der Analyse eines Ausdrucks in *Postfix*-Notation
+können elegant mit einem Iterator für reguläre Ausdrücke (`std::sregex_iterator`)
+erfasst werden, siehe hierzu die Details in [Listing 2].
+
+Damit sind wir bei der Klasse `PostfixCalculator` angekommen ([Listing 3]):
 
 ###### {#listing_3_class_postfix_calculator}
 
@@ -874,45 +907,54 @@ Auf Grund der sehr ausführlichen Aufgabenbeschreibung erübrigen sich weitere H
 49:                     result = leftValue / rightValue;
 50:                     break;
 51:                 case OperatorType::ModOp:
-52:                     if constexpr (std::is_integral<T>::value) {
-53:                         result = leftValue % rightValue;
-54:                     }
-55:                     else if constexpr (std::is_floating_point<T>::value) {
-56:                         result = std::fmod(leftValue, rightValue);
-57:                     }
-58:                     break;
-59:                 default:
-60:                     break;
-61:                 }
-62: 
-63:                 // push result to operand stack
-64:                 Token<T> val{ result };
-65:                 m_stack.push(val);
-66:             }
-67:         }
-68: 
-69:         // retrieve result from stack
-70:         Token<T> result{ m_stack.top() };
-71:         m_stack.pop();
-72:         return result.getValue();
-73:     }
-74: };
+52:                     static_assert (
+53:                         std::is_integral<T>::value or std::is_floating_point<T>::value,
+54:                         "Expected integral or floating-point type."
+55:                     );
+56:                     if constexpr (std::is_integral<T>::value) {
+57:                         result = leftValue % rightValue;
+58:                     }
+59:                     else if constexpr (std::is_floating_point<T>::value) {
+60:                         result = std::fmod(leftValue, rightValue);
+61:                     }
+62:                     break;
+63:                 default:
+64:                     break;
+65:                 }
+66: 
+67:                 // push result to operand stack
+68:                 Token<T> val{ result };
+69:                 m_stack.push(val);
+70:             }
+71:         }
+72: 
+73:         // retrieve result from stack
+74:         Token<T> result{ m_stack.top() };
+75:         m_stack.pop();
+76:         return result.getValue();
+77:     }
+78: };
 ```
 
 *Listing* 3: Klassentemplate `PostfixCalculator<T>`
 
 Einen Hinweis zur Realisierung von [Listing 3] wollen wir nicht außer Acht lassen:
-Werfen Sie doch bitte einen Blick auf die Zeilen 52 bis 57.
-Der Modulo-Operator `%` ist nur für ganzzahlige
+Werfen Sie doch bitte einen Blick auf die Zeilen 56 bis 61.
+Der Modulo-Operator `%` ist in C++ nur für ganzzahlige
 Datentypen definiert. Würden Sie das Klassentemplate `PostfixCalculator<T>` mit `T` gleich `double`
 instanziieren, erhalten Sie einen Übersetzungsfehler!
 
 Modernes C++ mit *Type Traits* und den beiden Funktionstemplates `std::is_integral` 
 und `std::is_floating_point` bietet zusammen mit `if constexpr` die Lösung:
-Je nach dem welchen Datentyp für `T`  Sie wählen, entscheidet sich der Übersetzer dazu,
+Je nachdem welchen Datentyp Sie für `T` wählen, entscheidet sich der Übersetzer dann,
 nur einen der beiden Zweige des `if constexpr`-Konstrukts zu übersetzen.
-Auf diese Weise erhalten Sie funktionsfähige UPN-Recher des Typs `PostfixCalculator<int>` als auch `PostfixCalculator<double>`!
+Auf diese Weise erhalten Sie funktionsfähige UPN-Recher
+des Typs `PostfixCalculator<int>` als auch `PostfixCalculator<double>`!
 
+Wenn Sie ganz auf Nummer sicher gehen wollen,
+können Sie mit einer `static_assert`-Anweisung (Zeilen 52 bis 55 in [Listing 3]) sicherstellen,
+dass das Klassentemplate `PostfixCalculator<T>` ausschließlich mit
+arithmetischen Datentypen (ganze Zahlen oder Gleitkommazahlen) instanziiert wird!
 
 ###### {#listing_4_class_infix_postfix_converter}
 
@@ -1117,8 +1159,6 @@ Auf diese Weise erhalten Sie funktionsfähige UPN-Recher des Typs `PostfixCalcul
 ```
 
 *Listing* 4: Klassentemplate `InfixToPostfixConverter<T>`
-
-
 
 <br/>
 

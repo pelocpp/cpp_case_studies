@@ -55,6 +55,10 @@ public:
                     result = leftValue / rightValue;
                     break;
                 case OperatorType::ModOp:
+                    static_assert (
+                        std::is_integral<T>::value or std::is_floating_point<T>::value,
+                        "Expected integral or floating-point type."
+                    );
                     if constexpr (std::is_integral<T>::value) {
                         result = leftValue % rightValue;
                     }
