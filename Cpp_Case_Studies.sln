@@ -203,6 +203,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UPN", "UPN", "{F58A6861-791
 		MarkDown\UPN\upn_postfix_calculator_02.svg = MarkDown\UPN\upn_postfix_calculator_02.svg
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Legendre", "CaseStudies\Legendre\Legendre.vcxproj", "{E78E4A91-3E6C-4D0D-8529-B9DACE3AFD46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -371,6 +373,14 @@ Global
 		{824533B2-1467-43C2-A929-707A90427E63}.Release|x64.Build.0 = Release|x64
 		{824533B2-1467-43C2-A929-707A90427E63}.Release|x86.ActiveCfg = Release|Win32
 		{824533B2-1467-43C2-A929-707A90427E63}.Release|x86.Build.0 = Release|Win32
+		{E78E4A91-3E6C-4D0D-8529-B9DACE3AFD46}.Debug|x64.ActiveCfg = Debug|x64
+		{E78E4A91-3E6C-4D0D-8529-B9DACE3AFD46}.Debug|x64.Build.0 = Debug|x64
+		{E78E4A91-3E6C-4D0D-8529-B9DACE3AFD46}.Debug|x86.ActiveCfg = Debug|Win32
+		{E78E4A91-3E6C-4D0D-8529-B9DACE3AFD46}.Debug|x86.Build.0 = Debug|Win32
+		{E78E4A91-3E6C-4D0D-8529-B9DACE3AFD46}.Release|x64.ActiveCfg = Release|x64
+		{E78E4A91-3E6C-4D0D-8529-B9DACE3AFD46}.Release|x64.Build.0 = Release|x64
+		{E78E4A91-3E6C-4D0D-8529-B9DACE3AFD46}.Release|x86.ActiveCfg = Release|Win32
+		{E78E4A91-3E6C-4D0D-8529-B9DACE3AFD46}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,10 +2,6 @@
 // Program.cpp
 // =====================================================================================
 
-#include <iostream>
-#include <string>
-#include <vector>
-
 void Test01_Collatz();
 void Test02_Collatz();
 void Test03_Collatz();
