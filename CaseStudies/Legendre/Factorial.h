@@ -16,7 +16,7 @@ private:
     size_t m_value;
 
 public:
-    // ctors
+    // c'tors
     Factorial();
     Factorial(size_t n);
 
@@ -30,10 +30,9 @@ public:
     void factorialIterative();
     PrimeDictionary factorialLegendre();
 
-    // private helper
 private:
+    // private helper
     static size_t factorialRecursive(size_t n);
-    //static bool IsPrime(long n);
     static bool isPrime(size_t);
 };
 

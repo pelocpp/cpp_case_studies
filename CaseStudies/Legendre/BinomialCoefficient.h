@@ -1,23 +1,36 @@
+// =====================================================================================
+// BinomialCoefficient.h
+// =====================================================================================
+
+#pragma once
+
 class BinomialCoefficient
 {
 private:
-	long m_n;
-	long m_k;
-	long m_value;
+	size_t m_n;
+	size_t m_k;
+	size_t m_value;
 
 public:
-	// ctors
+	// c'tors
 	BinomialCoefficient ();
-	BinomialCoefficient (long n, long k);
+	BinomialCoefficient (size_t, size_t);
 
 	// getter / setter
-	long GetUpperNumber();
-	long GetLowerNumber();
-	void SetUpperNumber(long n);
-	void SetLowerNumber(long n);
-	long GetValue();
+	size_t getUpperNumber() const;
+	size_t getLowerNumber() const;
+	void setUpperNumber(size_t n);
+	void setLowerNumber(size_t n);
+	size_t getValue() const;
 
 	// public interface
-	void Calculate ();
-	PrimeDictionary CalculateLegendre ();
+	void calculate ();
+	PrimeDictionary calculateLegendre () const;
 };
+
+// output
+std::ostream& operator<< (std::ostream&, const BinomialCoefficient&);
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================

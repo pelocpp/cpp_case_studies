@@ -4,8 +4,6 @@
 
 #include "PrimeDictionary.h"
 
-// TODO: Entscheiden --- fehlt da ein Clear ????
-
 // getter / setter
 size_t PrimeDictionary::getCount() const
 {
@@ -25,31 +23,18 @@ void PrimeDictionary::setValue(size_t key, size_t value)
 // public interface
 bool PrimeDictionary::insert (size_t key, size_t value)
 {
-    //// increment top of dictionary
-    //m_top ++;
-    //if (m_top >= m_count)
-    //    return false;
-
-    //// insert key and value
-    //m_keys[m_top] = key;
-    //m_values[m_top] = value;
-
     m_map[key] = value;
     return true;
 }
 
 void PrimeDictionary::reduce (const PrimeDictionary& dict)
 {
-    for (size_t i{}; i != dict.m_map.size(); ++i)
-    {
-        size_t key = dict.m_map.at(i);
+    for (const std::pair<size_t, size_t>& entry : dict.m_map) {
 
-        size_t expUpper = getValue (key);
-
-        size_t newExp = expUpper - dict.getValue (key);
-
-        // store result in upper map
-        setValue (key, newExp);
+        size_t key = entry.first;
+        size_t expUpper = getValue(key);
+        size_t newExp = expUpper - dict.getValue(key);
+        setValue(key, newExp);
     }
 }
 

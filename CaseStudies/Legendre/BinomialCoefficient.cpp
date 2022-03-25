@@ -1,66 +1,57 @@
-#include <iostream>
-using namespace std;
+// =====================================================================================
+// BinomialCoefficient.cpp
+// =====================================================================================
 
 #include "PrimeDictionary.h"
 #include "Factorial.h"
 #include "BinomialCoefficient.h"
 
-// ctors
-BinomialCoefficient::BinomialCoefficient ()
-{
-	m_n = 1;
-	m_k = 1;
-	m_value = 1;
-}
+// c'tors
+BinomialCoefficient::BinomialCoefficient() 
+    : m_n{ 1 }, m_k{ 1 }, m_value{ 1 } {}
 
-BinomialCoefficient::BinomialCoefficient (long n, long k)
-{
-	m_n = (n >= 1) ? n : 1;
-	m_k = (k >= 1) ? k : 1;
-	m_value = -1;
-}
+BinomialCoefficient::BinomialCoefficient (size_t n, size_t k) 
+    : m_n{ n }, m_k{ k }, m_value{ 0 } {}
 
 // getter / setter
-long BinomialCoefficient::GetUpperNumber()
+size_t BinomialCoefficient::getUpperNumber() const
 {
 	return m_n;
 }
 
-long BinomialCoefficient::GetLowerNumber()
+size_t BinomialCoefficient::getLowerNumber() const
 {
 	return m_k;
 }
 
-void BinomialCoefficient::SetUpperNumber(long n)
+void BinomialCoefficient::setUpperNumber(size_t n)
 {
-	m_n = (n >= 1) ? n : 1;
+    m_n = n;
 }
 
-void BinomialCoefficient::SetLowerNumber(long k)
+void BinomialCoefficient::setLowerNumber(size_t k)
 {
-	m_k = (k >= 1) ? k : 1;
+    m_k = k;
 }
 
-long BinomialCoefficient::GetValue()
+size_t BinomialCoefficient::getValue() const
 {
 	return m_value;
 }
 
 // public interface
-void BinomialCoefficient::Calculate ()
+void BinomialCoefficient::calculate ()
 {
-    if (m_k == 0 || m_k == m_n)
-    {
+    if (m_k == 0 || m_k == m_n) {
         m_value = 1;
     }
-    else
-    {
-        long a = 1, b = 1;
-        for (long i = m_n - m_k + 1; i <= m_n; i++)
+    else {
+        size_t a{ 1 }, b{ 1 };
+        for (size_t i{ m_n - m_k + 1 }; i <= m_n; ++i)
         {
             a *= i;
         }
-        for (int j = 1; j <= m_k; j++)
+        for (int j{ 1 }; j <= m_k; ++j)
         {
             b *= j;
         }
@@ -68,20 +59,37 @@ void BinomialCoefficient::Calculate ()
     }
 }
 
-PrimeDictionary BinomialCoefficient::CalculateLegendre ()
+PrimeDictionary BinomialCoefficient::calculateLegendre () const
 {
-	Factorial fUpper (m_n);
-	PrimeDictionary dictUpper = fUpper.factorialLegendre();
+    Factorial fUpper{ m_n };
+    PrimeDictionary dictUpper{ fUpper.factorialLegendre() };
 
-	Factorial fLower (m_k);
-	PrimeDictionary dictLower = fLower.factorialLegendre();
+	Factorial fLower{ m_k };
+	PrimeDictionary dictLower{ fLower.factorialLegendre() };
 
-	dictUpper.reduce (dictLower);
+	dictUpper.reduce(dictLower);
 
-	Factorial fUpperMinusLower (m_n - m_k);
-	PrimeDictionary dictUpperMinusLower = fUpperMinusLower.factorialLegendre();
+	Factorial fUpperMinusLower{ m_n - m_k };
+	PrimeDictionary dictUpperMinusLower{ fUpperMinusLower.factorialLegendre() };
 
-	dictUpper.reduce (dictUpperMinusLower);
+	dictUpper.reduce(dictUpperMinusLower);
 
 	return dictUpper;
 }
+
+// output
+std::ostream& operator<< (std::ostream& os, const BinomialCoefficient& coeff)
+{
+    os 
+        << "("
+        << coeff.getUpperNumber()
+        << ", "
+        << coeff.getLowerNumber()
+        << ")";
+
+    return os;
+}
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================
