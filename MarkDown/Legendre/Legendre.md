@@ -1,17 +1,18 @@
 <!-- Legendre.md -->
 
-Fakultäten, Binomialkoeffizienten und Herr Legendre
+# Fakultäten, Binomialkoeffizienten und Herr Legendre
 
 Die Fakultät ist in der Mathematik eine Funktion, die einer natürlichen Zahl *n* das Produkt
 aller natürlichen Zahlen kleiner und gleich dieser Zahl zuordnet: *n*! = 1 * 2 * 3 * … * *n*.
-In der Kombinatorik spielt die Fakultät eine große Rolle, weil *n*! die Anzahl der
+In der Kombinatorik spielt die Fakultät ebenfalls eine große Rolle, weil *n*! die Anzahl der
 Möglichkeiten ist, unterschiedliche Gegenstände der Reihe nach anzuordnen. 
 Bei diesen Überlegungen kommen Binomialkoeffizienten ins Spiel.
 
 Sowohl Fakultäten als auch Binomialkoeffizienten weisen eine unangenehme Eigenschaft auf:
 Ihre Werte können sehr schnell sehr groß werden &ndash; und sind damit in Variablen des Typs `long` oder `size_t`
 nicht mehr darstellbar. Ein Satz von Legendre verschafft hier Abhilfe:
-Der Satz befasst sich mit der Frage, wie oft ein Primfaktor in der Primfaktorzerlegung von *n*! für ein *n* &isinv; N vorkommt.
+Er befasst sich mit der Frage, wie oft ein Primfaktor in der Primfaktorzerlegung von *n*! für ein *n* &isinv; N vorkommt &ndash;
+um damit eine alternative Darstellung für Fakultäten und Binomialkoeffizienten zu ermöglichen, die das Problem das Überlaufs umgehen kann.
 
 Wir betrachten in dieser Fallstudie die Berechnung von Fakultäten und Binomialkoeffizienten sowohl in der 
 klassischen Definition als auch als Produkt von Primfaktorzerlegungen mit Hilfe des Satzes von Legendre.
@@ -28,16 +29,13 @@ klassischen Definition als auch als Produkt von Primfaktorzerlegungen mit Hilfe 
 
 Notiert wird die Fakultätsfunktion durch ein dem Argument nachgestelltes Ausrufezeichen,
 einer Schreibweise, die dem elsässischen Mathematiker Christian Kramp (1760 – 1826)
-zugeordnet wird. 
-
-Betrachten wir zur Veranschaulichung dieser Funktion
+zugeordnet wird. Betrachten wir zur Veranschaulichung dieser Funktion
 beispielsweise die drei Farben Rot, Grün und Blau. Wie viele Möglichkeiten gibt es, sie
 anzuordnen? Für die erste Position kommen alle drei Farben in Betracht. Ist die erste Farbe
 gesetzt, können nur noch zwei Farben um die zweite Position konkurrieren. Für die Belegung
 der Positionen 1 und 2 ergeben sich bei drei Farben also 3 * 2 Möglichkeiten. Für die letzte
 Position bleibt nur noch eine Farbe übrig, letztlich gilt für die Anzahl der
 Anordnungsmöglichkeiten somit 3 * 2 * 1 = 3! = 6.
-
 
 ## Teilaufgabe 1: Klasse `Factorial`
 
@@ -152,9 +150,13 @@ kommt nun der Satz von Legendre ins Spiel, er lautet:
 In der Primfaktorzerlegung von *n*! gilt für den Exponenten einer jeder
 Primzahl, die *n*! teilt:
 
-BILD
+###### {#abbildung_1_satz_von_legendre}
 
-Hierbei repräsentieren die senkrechten Klammern so genannte Gaußklammern; sie stehen für
+{{< figure src="/img/legendre/SatzVonLegendre.png" width="50%" >}}
+
+*Abbildung* 1: Der Satz von Legendre und Gaußklammern.
+
+Hierbei repräsentieren in [Abbildung 1] die senkrechten Klammern so genannte Gaußklammern; sie stehen für
 &ldquo;die größte ganze Zahl kleiner gleich *n*/*p*&rdquo;. Ferner beachte man: Von den Summanden |*n*/*p*<sup>i</sup>|
 sind nur endlich viele ungleich 0, nämlich die für alle *i* mit *p*<sup>i</sup> &leq; *n*.
 
@@ -195,9 +197,13 @@ Berechnung der Fakultät einer natürlichen Zahl in Partialbruchzerlegung durchz
 PrimeDictionary factorialLegendre ();
 ```
 
-Einen Pseudo-Code für den Satz von Legendre finden Sie in Abbildung 2 vor:
+Einen Pseudo-Code für den Satz von Legendre finden Sie in [Abbildung 2] vor:
 
-BILD
+###### {#abbildung_2_satz_von_legendre_pseudo_code}
+
+{{< figure src="/img/legendre/SatzVonLegendre.png" width="50%" >}}
+
+*Abbildung* 2: Satz von Legendre in Pseudo-Code-Darstellung.
 
 Folgendes Code-Fragment sollte ausführbar sein:
 
@@ -231,15 +237,23 @@ dass die Antwort allein durch die Anzahl der Fünfen bestimmt ist.
 Eine weitere Funktion aus dem Themenkreis der Kombinatorik ist der Binomialkoeffizient. Er
 gibt an, auf wie viele verschiedene Arten man *k* Objekte aus einer Menge von *n*
 verschiedenen Objekten auswählen kann – ohne Zurücklegen und ohne Beachtung der
-Reihenfolge. Die mathematische Formel zur Berechnung des Binomialkoeffizienten für 0 &leq; *n* und 0 <= *k* &leq; *n* lautet:
+Reihenfolge. Die mathematische Formel zur Berechnung des Binomialkoeffizienten für 0 &leq; *n* und 0 <= *k* &leq; *n* lautet wie folgt ([Abbildung 3]):
 
-BILD:
+###### {#abbildung_3_binomial_coefficient_definition}
+
+{{< figure src="/img/legendre/BinomialCoefficient.png" width="50%" >}}
+
+*Abbildung* 3: Definition eines Binomialkoeffizienten.
 
 Auf der linken Seite steht die Kurzschreibweise des Binomialkoeffizienten, gesprochen
 &ldquo;n über k&rdquo;. Auf der rechten Seite steht die Berechnung des Koeffizienten als Bruch mit drei
-Fakultäten. Wir verdeutlichen dies an zwei Beispielen:
+Fakultäten. Wir verdeutlichen dies an zwei Beispielen in [Abbildung 4]:
 
-BILD:
+###### {#abbildung_4_binomial_coefficient_definition_examples}
+
+{{< figure src="/img/legendre/BinomialCoefficient_TwoSamples.png" width="50%" >}}
+
+*Abbildung* 4: Zwei Beispiele für Binomialkoeffizienten.
 
 Der Binomialkoeffizient &ldquo;49 über 6&rdquo; entspricht damit beispielsweise der Anzahl der
 möglichen Ziehungen beim Lotto &ndash; nicht zu verwechseln mit der Treffer-Wahrscheinlichkeit
@@ -290,11 +304,13 @@ Um den Koeffizienten &ldquo;*n* über *k*&rdquo; auszurechnen, berechnen wir die
 und vereinfachen diese anschließend.
 Dazu werden wir eine Methode `reduce` einführen, die zwei `PrimeDictionary`-Objekte als
 Parameter hat und die Vereinfachung des ersten `PrimeDictionary`-Objekts um das zweite
-`PrimeDictionary`-Objekt durchführt. Dazu betrachten wir am besten ein Beispiel:
+`PrimeDictionary`-Objekt durchführt. Dazu betrachten wir am besten ein Beispiel in [Abbildung 5]:
 
-BILD:
+###### {#abbildung_5_binomial_coefficient_reduce_method}
 
-Vereinfachung zweier `PrimeDictionary`-Objekte.
+{{< figure src="/img/legendre/ReduceSample.png" width="100%" >}}
+
+*Abbildung* 5: Vereinfachung zweier `PrimeDictionary`-Objekte.
 
 Ergänzen Sie nun Klasse `PrimeDictionary` um eine Methode `reduce`:
 
@@ -376,6 +392,8 @@ Binomial (48, 24) = (2,2)(19,0)(11,0)(3,2)(13,1)(5,2)(7,0)(17,0)(23,0)(29,1)(31,
 
 > Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
 
+TO BE DONE ????????????????
+
 Wir versuchen, in der Realisierung der Fallstudie einige Aspekte von *Modern C++* zu integrieren.
 Da wäre zum Beispiel das Morsealphabet. Es bietet sich an, diese Datenstruktur so zu konzipieren,
 dass ihr Inhalt bereits vom Übersetzer gebildet werden kann. Das Schlüsselwort `constexpr` kommt daher zum Einsatz &ndash;
@@ -395,6 +413,12 @@ um laufzeit-optimalere Ergebnisse zu erzielen.
 <!-- Links Definitions -->
 
 [Tabelle 1]: #tabelle_1_class_primedictionary
+
+[Abbildung 1]: #abbildung_1_satz_von_legendre
+[Abbildung 2]: #abbildung_2_satz_von_legendre_pseudo_code
+[Abbildung 3]: #abbildung_3_binomial_coefficient_definition
+[Abbildung 4]: #abbildung_4_binomial_coefficient_definition_examples
+[Abbildung 5]: #abbildung_5_binomial_coefficient_reduce_method
 
 [Listing 1]: #listing_1_class_morsecalculator_decl
 [Listing 2]: #listing_2_class_morsecalculator_impl

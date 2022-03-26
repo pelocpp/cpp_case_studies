@@ -207,7 +207,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Legendre", "CaseStudies\Leg
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legendre", "Legendre", "{6B76BD33-F4E1-4FCD-BCAE-1AF713868BD4}"
 	ProjectSection(SolutionItems) = preProject
+		MarkDown\Legendre\BinomialCoefficient.png = MarkDown\Legendre\BinomialCoefficient.png
+		MarkDown\Legendre\BinomialCoefficient_TwoSamples.png = MarkDown\Legendre\BinomialCoefficient_TwoSamples.png
 		MarkDown\Legendre\Legendre.md = MarkDown\Legendre\Legendre.md
+		MarkDown\Legendre\PseudoCodeLegendre.png = MarkDown\Legendre\PseudoCodeLegendre.png
+		MarkDown\Legendre\ReduceSample.png = MarkDown\Legendre\ReduceSample.png
+		MarkDown\Legendre\SatzVonLegendre.png = MarkDown\Legendre\SatzVonLegendre.png
 	EndProjectSection
 EndProject
 Global
