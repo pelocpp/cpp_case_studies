@@ -6,20 +6,21 @@
 
 // c'tors
 Factorial::Factorial() : m_n{ 1 }, m_value{ 1 } {}
+
 Factorial::Factorial(size_t n) : m_n{ n }, m_value{ } {}
 
 // getter / setter
-size_t Factorial::getNumber() const
+size_t Factorial::get() const
 {
     return m_n;
 }
 
-void Factorial::setNumber(size_t n)
+void Factorial::set(size_t n)
 {
     m_n = n;
 }
 
-size_t Factorial::getValue() const
+size_t Factorial::value() const
 {
     return m_value;
 }
@@ -59,7 +60,7 @@ PrimeDictionary Factorial::factorialLegendre()
                 quo /= prime;
             }
 
-            result.insert(prime, exp);
+            result.set(prime, exp);
         }
 
         prime++;
@@ -81,7 +82,6 @@ bool Factorial::isPrime(size_t number)
         return number == 2;
     }
 
-    // even numbers other than 2 are not prime
     if (number % 2 == 0) {
         return false;
     }
@@ -94,7 +94,6 @@ bool Factorial::isPrime(size_t number)
         }
     }
 
-    // found prime number
     return true;
 }
 

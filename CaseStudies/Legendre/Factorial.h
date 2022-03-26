@@ -21,9 +21,9 @@ public:
     Factorial(size_t n);
 
     // getter / setter
-    size_t getNumber() const;
-    void setNumber(size_t);
-    size_t getValue() const;
+    size_t get() const;
+    void set(size_t);
+    size_t value() const;
 
     // public interface
     void factorialRecursive();

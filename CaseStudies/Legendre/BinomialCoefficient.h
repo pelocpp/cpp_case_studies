@@ -17,11 +17,11 @@ public:
 	BinomialCoefficient (size_t, size_t);
 
 	// getter / setter
-	size_t getUpperNumber() const;
-	size_t getLowerNumber() const;
-	void setUpperNumber(size_t n);
-	void setLowerNumber(size_t n);
-	size_t getValue() const;
+	size_t getUpper() const;
+	size_t getLower() const;
+	void setUpper(size_t n);
+	void setLower(size_t n);
+	size_t value() const;
 
 	// public interface
 	void calculate ();
