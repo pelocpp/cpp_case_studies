@@ -107,7 +107,7 @@ void Test11()
 {
     BinomialCoefficient coeff;
 
-    for (size_t i = 1; i != 10; ++i)
+    for (size_t i{ 1 }; i != 10; ++i)
     {
         coeff.setUpper(2 * i);
         coeff.setLower(i);
@@ -166,15 +166,15 @@ void Test13()
 
 int main()
 {
-    Test01();
-    Test02();
-    Test03();
-    Test04();
-    Test05();
-    Test06();
-    Test10();
-    Test11();
-    Test12();
+    //Test01();
+    //Test02();
+    //Test03();
+    //Test04();
+    //Test05();
+    //Test06();
+    //Test10();
+    //Test11();
+    //Test12();
     Test13();
 
     return 0;

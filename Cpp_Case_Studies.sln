@@ -205,6 +205,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UPN", "UPN", "{F58A6861-791
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Legendre", "CaseStudies\Legendre\Legendre.vcxproj", "{E78E4A91-3E6C-4D0D-8529-B9DACE3AFD46}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legendre", "Legendre", "{6B76BD33-F4E1-4FCD-BCAE-1AF713868BD4}"
+	ProjectSection(SolutionItems) = preProject
+		MarkDown\Legendre\Legendre.md = MarkDown\Legendre\Legendre.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -404,6 +409,7 @@ Global
 		{9B096D26-B5F2-4A82-9D5C-5BEAB2344D0C} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{4D2EEB86-E945-4A62-96A8-E6A212EA6B38} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{F58A6861-7911-4123-95D4-3E2FCCAB356B} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{6B76BD33-F4E1-4FCD-BCAE-1AF713868BD4} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}
