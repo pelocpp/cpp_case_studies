@@ -2,10 +2,6 @@
 // Program.cpp
 // =====================================================================================
 
-// Google: "Primfaktorzerlegung legendre"
-
-// https://userpages.uni-koblenz.de/~krapf/Sommersemester%202018/Proseminar%20Primzahlen/Ausarbeitung2.pdf
-
 #include <iostream>
 #include <iomanip>
 
@@ -19,9 +15,11 @@ void Test03();
 void Test04();
 void Test05();
 void Test06();
+void Test07();
+void Test08();
+void Test09();
 void Test10();
 void Test11();
-void Test12();
 
 void Test01()
 {
@@ -75,15 +73,20 @@ void Test04()
 
 void Test05()
 {
-    Factorial f(2012);
+    Factorial f(2022);
     PrimeDictionary primes = f.factorialLegendre();
-    std::cout << primes << std::endl;
-
     size_t numFactorsOf5 = primes.get(5);
     std::cout << "Factors of 5: " << numFactorsOf5 << "." << std::endl;
 }
 
 void Test06()
+{
+    Factorial f(100);
+    PrimeDictionary primes = f.factorialLegendre();
+    std::cout << "100! = " << std::endl << primes << std::endl;
+}
+
+void Test07()
 {
     Factorial f(10000);
     PrimeDictionary primes = f.factorialLegendre();
@@ -93,7 +96,7 @@ void Test06()
     std::cout << "Factors of 5: " << numFactorsOf5 << "." << std::endl;
 }
 
-void Test10()
+void Test08()
 {
     Factorial f1(10);
     PrimeDictionary dict1 = f1.factorialLegendre();
@@ -103,7 +106,7 @@ void Test10()
     std::cout << dict1 << std::endl;
 }
 
-void Test11()
+void Test09()
 {
     BinomialCoefficient coeff;
 
@@ -121,7 +124,7 @@ void Test11()
     }
 }
 
-void Test12()
+void Test10()
 {
     BinomialCoefficient coeff;
 
@@ -144,7 +147,7 @@ void Test12()
         << result << std::endl;
 }
 
-void Test13()
+void Test11()
 {
     BinomialCoefficient bin;
 
@@ -166,16 +169,17 @@ void Test13()
 
 int main()
 {
-    //Test01();
-    //Test02();
-    //Test03();
-    //Test04();
-    //Test05();
-    //Test06();
-    //Test10();
-    //Test11();
-    //Test12();
-    Test13();
+    Test01();
+    Test02();
+    Test03();
+    Test04();
+    Test05();
+    Test06();
+    Test07();
+    Test08();
+    Test09();
+    Test10();
+    Test11();
 
     return 0;
 }

@@ -210,6 +210,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Legendre", "Legendre", "{6B
 		MarkDown\Legendre\BinomialCoefficient.png = MarkDown\Legendre\BinomialCoefficient.png
 		MarkDown\Legendre\BinomialCoefficient_TwoSamples.png = MarkDown\Legendre\BinomialCoefficient_TwoSamples.png
 		MarkDown\Legendre\Legendre.md = MarkDown\Legendre\Legendre.md
+		MarkDown\Legendre\legendre_reduce_example.svg = MarkDown\Legendre\legendre_reduce_example.svg
 		MarkDown\Legendre\PseudoCodeLegendre.png = MarkDown\Legendre\PseudoCodeLegendre.png
 		MarkDown\Legendre\ReduceSample.png = MarkDown\Legendre\ReduceSample.png
 		MarkDown\Legendre\SatzVonLegendre.png = MarkDown\Legendre\SatzVonLegendre.png

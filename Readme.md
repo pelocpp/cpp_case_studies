@@ -10,6 +10,10 @@ vor.
 
 ### Aktueller Stand:
 
+### März 2022
+
+  * Fakultäten, Binomialkoeffizienten und Herr Legendre
+
 ### Februar 2022
 
   * Umgekehrte polnische Notation (UPN)

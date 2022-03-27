@@ -2,7 +2,6 @@
 // BinomialCoefficient.cpp
 // =====================================================================================
 
-#include "PrimeDictionary.h"
 #include "Factorial.h"
 #include "BinomialCoefficient.h"
 

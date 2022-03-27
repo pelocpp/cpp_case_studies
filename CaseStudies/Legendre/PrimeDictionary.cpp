@@ -29,8 +29,11 @@ void PrimeDictionary::reduce (const PrimeDictionary& dict)
 std::ostream& operator<< (std::ostream& os, const PrimeDictionary& dict)
 {
     // iterate and print keys and values using structured binding
-    for (const auto& [key, value] : dict.m_map) {
+    for (int k = 0; const auto & [key, value] : dict.m_map) {
         os << '(' << key << ',' << value << ')';
+        ++k;
+        if (k % 16 == 0)
+            os << '\n';
     }
 
     return os;
