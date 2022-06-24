@@ -1561,7 +1561,7 @@ std::chrono::system_clock::time_point begin{ std::chrono::system_clock::now() };
 BigInteger limit{ 500 };
 for (BigInteger n{ 2 }; n != limit; ++n) {
     if (BigPerfectNumbers::isPerfect(n)) {
-        std::cout << n << " is *prefect*" << std::endl;
+        std::cout << n << " is *perfect*" << std::endl;
     }
 }
 
@@ -1574,10 +1574,10 @@ std::cout << ticks << " seconds." << std::endl;
 *Ausgabe*:
 
 ```
-6 is *prefect*
-28 is *prefect*
-496 is *prefect*
-0.144654 seconds.
+6 is *perfect*
+28 is *perfect*
+496 is *perfect*
+0.144654 perfect.
 ```
 
 Allerdings sollte nicht verschwiegen werden, dass ich zur Ausführung des Programms den *Release*-Modus gewählt habe.
@@ -1607,7 +1607,7 @@ std::vector<BigInteger> candidates
 
 std::for_each(std::begin(candidates), std::end(candidates), [](const BigInteger& candidate) {
     if (BigPerfectNumbers::isPerfect(candidate)) {
-        std::cout << candidate << " is *prefect*" << std::endl;
+        std::cout << candidate << " is *perfect*" << std::endl;
     }
 });
 

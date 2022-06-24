@@ -408,7 +408,7 @@ void Test_01_PerfectNumbers()
 {
     for (size_t i{ 2 }; i != 10000; ++i) {
         if (BigPerfectNumbers::isPerfect(i)) {
-            std::cout << i << " is *prefect*" << std::endl;
+            std::cout << i << " is *perfect*" << std::endl;
         }
     }
 }
@@ -420,7 +420,7 @@ void Test_02_PerfectNumbers()
     BigInteger limit{ 500 };
     for (BigInteger n{ 2 }; n != limit; ++n) {
         if (BigPerfectNumbers::isPerfect(n)) {
-            std::cout << n << " is *prefect*" << std::endl;
+            std::cout << n << " is *perfect*" << std::endl;
         }
     }
 
@@ -451,7 +451,7 @@ void Test_03_PerfectNumbers()
 
     std::for_each(std::begin(candidates), std::end(candidates), [](const BigInteger& candidate) {
         if (BigPerfectNumbers::isPerfect(candidate)) {
-            std::cout << candidate << " is *prefect*" << std::endl;
+            std::cout << candidate << " is *perfect*" << std::endl;
         }
     });
 
