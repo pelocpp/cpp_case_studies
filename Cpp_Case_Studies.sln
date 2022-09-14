@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29806.167
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mandelbrot", "CaseStudies\Mandelbrot\Mandelbrot.vcxproj", "{4F91F4CC-C365-49F2-BF86-DE511738553A}"
 EndProject
@@ -15,10 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Permutations", "Permutation
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\Permutations\PermutationPseudeCode.png = MarkDown\Permutations\PermutationPseudeCode.png
 		MarkDown\Permutations\Permutations.adoc = MarkDown\Permutations\Permutations.adoc
+		MarkDown\Permutations\Permutations.md = MarkDown\Permutations\Permutations.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpringerProblem", "SpringerProblem", "{1BE26B8E-3A21-40D3-A0C6-2FF5EA62C8E4}"
 	ProjectSection(SolutionItems) = preProject
+		MarkDown\SpringerProblem\KnightsProblem_PseudoCode_01.png = MarkDown\SpringerProblem\KnightsProblem_PseudoCode_01.png
 		MarkDown\SpringerProblem\knight_moves_001.png = MarkDown\SpringerProblem\knight_moves_001.png
 		MarkDown\SpringerProblem\knight_moves_002.png = MarkDown\SpringerProblem\knight_moves_002.png
 		MarkDown\SpringerProblem\knight_moves_003.png = MarkDown\SpringerProblem\knight_moves_003.png
@@ -38,11 +40,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpringerProblem", "Springer
 		MarkDown\SpringerProblem\knight_moves_master_slave.svg = MarkDown\SpringerProblem\knight_moves_master_slave.svg
 		MarkDown\SpringerProblem\knight_moves_possible_moves.png = MarkDown\SpringerProblem\knight_moves_possible_moves.png
 		MarkDown\SpringerProblem\knight_moves_possible_moves.svg = MarkDown\SpringerProblem\knight_moves_possible_moves.svg
-		MarkDown\SpringerProblem\knight_moves_solution_tree.png = MarkDown\SpringerProblem\knight_moves_solution_tree.png
 		MarkDown\SpringerProblem\Knight_Moves_Solutions.png = MarkDown\SpringerProblem\Knight_Moves_Solutions.png
+		MarkDown\SpringerProblem\knight_moves_solution_tree.png = MarkDown\SpringerProblem\knight_moves_solution_tree.png
 		MarkDown\SpringerProblem\knight_moves_start.svg = MarkDown\SpringerProblem\knight_moves_start.svg
 		MarkDown\SpringerProblem\Knight_Problem_Single_Solution.png = MarkDown\SpringerProblem\Knight_Problem_Single_Solution.png
-		MarkDown\SpringerProblem\KnightsProblem_PseudoCode_01.png = MarkDown\SpringerProblem\KnightsProblem_PseudoCode_01.png
 		MarkDown\SpringerProblem\SpringerProblem.adoc = MarkDown\SpringerProblem\SpringerProblem.adoc
 		MarkDown\SpringerProblem\SpringerProblem.md = MarkDown\SpringerProblem\SpringerProblem.md
 	EndProjectSection
@@ -122,10 +123,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ParallelPrimes", "ParallelPrimes", "{7B332BDD-38AA-421E-8692-EB0792286EA5}"
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\ParallelPrimes\MultiThreadingPrimeCalculatorArchitecture.png = MarkDown\ParallelPrimes\MultiThreadingPrimeCalculatorArchitecture.png
-		MarkDown\ParallelPrimes\parallel_primes_architecture.svg = MarkDown\ParallelPrimes\parallel_primes_architecture.svg
 		MarkDown\ParallelPrimes\ParallelPrimes.md = MarkDown\ParallelPrimes\ParallelPrimes.md
 		MarkDown\ParallelPrimes\ParallelPrimesOutput01.png = MarkDown\ParallelPrimes\ParallelPrimesOutput01.png
 		MarkDown\ParallelPrimes\ParallelPrimesOutput02.png = MarkDown\ParallelPrimes\ParallelPrimesOutput02.png
+		MarkDown\ParallelPrimes\parallel_primes_architecture.svg = MarkDown\ParallelPrimes\parallel_primes_architecture.svg
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GrayCodes", "CaseStudies\GrayCodes\GrayCodes.vcxproj", "{5C1F783D-23A1-488D-B776-67E28B0CD1EB}"
@@ -180,11 +181,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExpressionTemplates", "Case
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExpressionTemplates", "ExpressionTemplates", "{9B096D26-B5F2-4A82-9D5C-5BEAB2344D0C}"
 	ProjectSection(SolutionItems) = preProject
-		MarkDown\ExpressionTemplates\expression_template_01.svg = MarkDown\ExpressionTemplates\expression_template_01.svg
-		MarkDown\ExpressionTemplates\expression_template_02.svg = MarkDown\ExpressionTemplates\expression_template_02.svg
 		MarkDown\ExpressionTemplates\ExpressionTemplates.md = MarkDown\ExpressionTemplates\ExpressionTemplates.md
 		MarkDown\ExpressionTemplates\ExpressionTree01.png = MarkDown\ExpressionTemplates\ExpressionTree01.png
 		MarkDown\ExpressionTemplates\ExpressionTree02.png = MarkDown\ExpressionTemplates\ExpressionTree02.png
+		MarkDown\ExpressionTemplates\expression_template_01.svg = MarkDown\ExpressionTemplates\expression_template_01.svg
+		MarkDown\ExpressionTemplates\expression_template_02.svg = MarkDown\ExpressionTemplates\expression_template_02.svg
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Snake", "CaseStudies\Snake\Snake.vcxproj", "{BA57FD52-A9E6-4BF1-A28E-CAC242810BC1}"
