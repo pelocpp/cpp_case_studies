@@ -252,7 +252,7 @@ operator+(const std::string& next) const
 ```
 
 Lassen Sie sich bei der Realisierung dieses Operators nicht verwirren:
-Der Operator liefert ein Objekt derselbe Klassen zurück, zu der der Operator gehört!
+Der Operator liefert ein Objekt derselben Klasse zurück, zu der der Operator gehört!
 Das möglicherweise erwartete Reduzieren der Zeichenketten findet im Konstruktor der `StringHelper<>`-Klasse statt
 (Zeilen 12 bis 14). Dieser Konstruktor besitzt die Schnittstelle
 
