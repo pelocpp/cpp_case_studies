@@ -111,8 +111,10 @@ void Test01_Permutation_Iteration()
 //https://www.fluentcpp.com/2018/05/08/std-iterator-deprecated/
 
 
-    std::sort(std::begin(q), std::end(q), [](auto a, auto b) -> bool { return true; });
-    std::cout << std::endl;
+    // DAs ist nicht übersetzungsfähig
+
+    //std::sort(std::begin(q), std::end(q), [](auto a, auto b) -> bool { return true; });
+    //std::cout << std::endl;
 
     // =======================================
 

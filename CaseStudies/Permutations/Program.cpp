@@ -49,14 +49,14 @@ int main()
 {
     // Test01_Permutation_Errors();
     //Test01_Permutation();
-    Test01_Permutation_Iteration();
+    // Test01_Permutation_Iteration();
     //Test02_PermutationArray();
     //Test02_PermutationArray_02();
     //Test03_PermutationCalculator();
     //Test03_PermutationCalculator_02();
     //Test04_PermutationEnumeration();
 
-    //Test01_Permutation_Ex_01();
+    Test01_Permutation_Ex_01();
     //Test01_Permutation_Ex_02();
     //Test02_PermutationArray_Ex();
     //Test03_PermutationCalculator_Ex_01();
