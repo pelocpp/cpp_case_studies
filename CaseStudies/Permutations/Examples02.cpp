@@ -15,9 +15,9 @@ void Test_PermutationContainer_01()
     Permutation<int> p({ 1, 2, 3, 4 });
     Permutation<int> q({ 4, 3, 2, 1 });
     std::cout << p << std::endl;
-    std::cout << q << std::endl << std::endl;
+    std::cout << q << std::endl;
 
-    PermutationContainer<int> container(2);
+    PermutationContainer<int> container{};
     container.insert(p);
     container.insert(q);
     std::cout << container << std::endl;
@@ -31,7 +31,8 @@ void Test_PermutationContainer_02()
     std::cout << p << std::endl;
     std::cout << q << std::endl << std::endl;
 
-    PermutationContainer<std::complex<double>> container(2);
+   // PermutationContainer<std::complex<double>> container(2);
+    PermutationContainer<std::complex<double>> container{};
     container.insert(p);
     container.insert(q);
 

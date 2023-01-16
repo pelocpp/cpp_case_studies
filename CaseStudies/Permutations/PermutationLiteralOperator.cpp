@@ -7,7 +7,7 @@
 
 #include "Permutation.h"
 
-// literal operator ("cooked" version)
+// literal operator
 Permutation<int> operator"" _perm(unsigned long long int value) {
 
     Permutation<int> p;

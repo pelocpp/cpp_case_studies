@@ -39,8 +39,8 @@ void Test_Permutation_01()
 void Test_Permutation_02()
 {
     std::cout << "Testing c'tor: " << std::endl;
-    Permutation<int> p({ 1, 2, 3, 4 });
-    std::cout << p << std::endl;
+    Permutation p({ 1, 2, 3, 4, 5 });
+    std::cout << p << " (Anzahl der Elemente: " << p.grade() << ')' << std::endl;
 
     std::cout << "Testing insertAtFront: " << std::endl;
     p.insertAtFront(0);
@@ -49,8 +49,8 @@ void Test_Permutation_02()
     std::cout << "Testing []-Operator: " << std::endl;
     for (size_t i{}; i != p.grade(); ++i)
     {
-        int ch = p[i];
-        std::cout << i << ": " << ch << std::endl;
+        int n = p[i];
+        std::cout << i << ": " << n << std::endl;
     }
 
     std::cout << "Testing removeAt: " << std::endl;
@@ -77,7 +77,7 @@ void Test_Permutation_03()
 void Test_Permutation_04()
 {
     Permutation<int> p({ 1, 2, 3, 4 });
-    for (auto n : p) {
+    for (int n : p) {
         std::cout << "Next Element: " << n << std::endl;
     }
 }

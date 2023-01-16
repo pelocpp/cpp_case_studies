@@ -17,21 +17,23 @@ private:
 public:
     // c'tors
     Permutation() = default;
-    Permutation(const std::initializer_list<T> list) : m_values{ list } {}
+    Permutation(std::initializer_list<T> list) : m_values{ list } {}
 
     // getter
     size_t grade() const { return m_values.size(); }
 
     // public interface
-    void insertAtFront(T ch) {
-        m_values.insert(m_values.begin(), ch);
+    void insertAtFront(T elem) {
+        m_values.insert(m_values.begin(), elem);
     }
 
-    Permutation<T> removeAt(size_t i) const {
+    Permutation<T> removeAt(size_t idx) const {
         std::vector<T> tmp{ m_values };
-        tmp.erase(tmp.begin() + i);
+        tmp.erase(tmp.begin() + idx);
         return { std::move(tmp) };
     }
+
+    std::vector<T> getValues() const { return m_values; }
 
     // operator(s)
     const T& operator[](size_t n) const {
@@ -39,14 +41,14 @@ public:
     };
 
     // iterator support
-    typename std::vector<T>::iterator begin() { return m_values.begin(); }
-    typename std::vector<T>::iterator end() { return m_values.end(); }
-
+    typename std::vector<T>::const_iterator begin() { return m_values.begin(); }
+    typename std::vector<T>::const_iterator end() { return m_values.end(); }
 
 private:
     Permutation(const std::vector<T>&& values) : m_values{ std::move(values) } {}
 };
 
+// user defined literal operator
 Permutation<int> operator"" _perm(unsigned long long int);
 
 template <typename T>

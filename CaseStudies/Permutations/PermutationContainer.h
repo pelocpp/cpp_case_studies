@@ -6,7 +6,7 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
+#include <list>
 
 #include "Permutation.h"
 
@@ -14,15 +14,11 @@ template <typename T>
 class PermutationContainer
 {
 private:
-    std::vector<Permutation<T>> m_container;
+    std::list<Permutation<T>> m_container;
 
 public:
     // c'tors/d'tor
     PermutationContainer() = default;
-
-    PermutationContainer(size_t size) {
-        m_container.reserve(size);
-    }
 
     // getter
     size_t count() const { return m_container.size(); }
@@ -38,23 +34,20 @@ public:
         }
     }
 
-    // operator(s)
-    Permutation<T> operator[] (size_t i) const {
-        return m_container[i];
-    }
-
     // iterator support
-    typename std::vector<Permutation<T>>::iterator begin() { return m_container.begin(); }
-    typename std::vector<Permutation<T>>::iterator end() { return m_container.end(); }
-
+    typename std::list<Permutation<T>>::iterator begin() { return m_container.begin(); }
+    typename std::list<Permutation<T>>::iterator end() { return m_container.end(); }
+    typename std::list<Permutation<T>>::const_iterator begin() const { return m_container.cbegin(); }
+    typename std::list<Permutation<T>>::const_iterator end() const { return m_container.cend(); }
 };
 
 template <typename T>
-inline std::ostream& operator<< (std::ostream& os, const PermutationContainer<T>& array) {
-    for (size_t i{}; i != array.count(); ++i)
-        os << array[i] << std::endl;
+inline std::ostream& operator<< (std::ostream& os, const PermutationContainer<T>& container) {
 
-    os << '[' << array.count() << " permutations]" << std::endl;
+    for (const auto& perm : container) {
+        os << perm << std::endl;
+    }
+    os << '[' << container.count() << " permutations]" << std::endl;
 
     return os;
 }
