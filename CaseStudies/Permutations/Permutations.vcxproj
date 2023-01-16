@@ -147,9 +147,9 @@
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="_Permutation.h" />
-    <ClInclude Include="_PermutationCalculatorExEx.h" />
-    <ClInclude Include="_PermutationContainer.h" />
+    <ClInclude Include="Permutation.h" />
+    <ClInclude Include="PermutationCalculator.h" />
+    <ClInclude Include="PermutationContainer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

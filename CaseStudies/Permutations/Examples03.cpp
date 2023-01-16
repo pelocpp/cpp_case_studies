@@ -8,26 +8,14 @@
 #include <algorithm>
 #include <complex>
 
-#include "_Permutation.h"
-#include "_PermutationContainer.h"
-#include "_PermutationCalculatorExEx.h"
+#include "Permutation.h"
+#include "PermutationContainer.h"
+#include "PermutationCalculator.h"
 
-//#include "PermutationArrayEx.h"
-//#include "PermutationCalculatorEx.h"
-
-void Test01_Permutation_ExEx_01();
-void Test02_PermutationContainer_ExEx();
-
-
-//void Test02_PermutationArray_Ex();
-//void Test03_PermutationCalculator_Ex_01();
-//void Test03_PermutationCalculator_Ex_02();
-//void Test04_PermutationEnumeration_Ex();
-
-void Test01_Permutation_ExEx_01()
+void Test_Permutation_01()
 {
     std::cout << "Testing c'tor: " << std::endl;
-    PermutationExEx<char> p{ 'A', 'B', 'C' };
+    Permutation<char> p{ 'A', 'B', 'C' };
     std::cout << p << std::endl;
 
     std::cout << "Testing insertAtFront: " << std::endl;
@@ -51,20 +39,20 @@ void Test01_Permutation_ExEx_01()
     }
 }
 
-void Test01_Permutation_ExEx_02()
+void Test_Permutation_02()
 {
     std::cout << "Testing c'tor: " << std::endl;
-    PermutationExEx<char> p{ 'A', 'B', 'C' };
+    Permutation<int> p({ 1, 2, 3, 4 });
     std::cout << p << std::endl;
 
     std::cout << "Testing insertAtFront: " << std::endl;
-    p.insertAtFront('Z');
+    p.insertAtFront(0);
     std::cout << p << std::endl;
 
     std::cout << "Testing []-Operator: " << std::endl;
     for (size_t i{}; i != p.grade(); ++i)
     {
-        char ch = p[i];
+        int ch = p[i];
         std::cout << i << ": " << ch << std::endl;
     }
 
@@ -78,11 +66,22 @@ void Test01_Permutation_ExEx_02()
     }
 }
 
-void Test02_PermutationContainer_ExEx()
+void Test_Permutation_03()
 {
-    PermutationExEx<int> p({ 1, 2, 3, 4 });
+    std::cout << "Testing Range-Based Loop: " << std::endl;
+    Permutation<int> p({ 1, 2, 3, 4, 5 });
     std::cout << p << std::endl;
-    PermutationExEx<int> q({ 4, 3, 2, 1 });
+
+    for (int element : p) {
+        std::cout << element << std::endl;
+    }
+}
+
+void Test_PermutationContainer_01()
+{
+    Permutation<int> p({ 1, 2, 3, 4 });
+    Permutation<int> q({ 4, 3, 2, 1 });
+    std::cout << p << std::endl;
     std::cout << q << std::endl << std::endl;
 
     PermutationContainer<int> container(2);
@@ -91,44 +90,52 @@ void Test02_PermutationContainer_ExEx()
     std::cout << container << std::endl;
 }
 
-void Test02_PermutationContainer_ExExEx()
+void Test_PermutationContainer_02()
 {
     using namespace std::complex_literals;
-    //PermutationExEx<std::complex<double>> p({ 1. + 2i, 3. + 4i, 5. + 6i });
-    //PermutationCalculatorExEx<std::complex<double>> calc;
-    //PermutationContainer<std::complex<double>> result = calc.calculate(p);
-    //std::cout << result << std::endl;
+    Permutation<std::complex<double>> p({ 1. + 2i, 3. + 4i, 5. + 6i });
+    Permutation<std::complex<double>> q({ 1. - 2i, 3. - 4i, 5. - 6i });
+    std::cout << p << std::endl;
+    std::cout << q << std::endl << std::endl;
 
-}
+    PermutationContainer<std::complex<double>> container(2);
+    container.insert(p);
+    container.insert(q);
 
-void Test03_PermutationCalculator_ExEx_01()
-{
-    //PermutationExEx<char> p{ 'A', 'B', 'C' };
-    //PermutationCalculatorExEx<char> calc;
-    //PermutationContainer<char> result = calc.calculate(p);
-    //std::cout << result << std::endl;
-}
-
-void Test03_PermutationCalculator_ExEx_02()
-{
-    //PermutationExEx<int> p({ 1, 2, 3, 4 });
-    //PermutationCalculatorExEx<int> calc;
-    //PermutationContainer<int> result = calc.calculate(p);
-    //std::cout << result << std::endl;
-}
-
-void Test04_PermutationEnumeration_ExEx()
-{
-    PermutationExEx<int> p({ 1, 2, 3, 4 });
-    for (auto n : p) {
-        std::cout << "Next Element: " << n << std::endl;
+    for (const Permutation<std::complex<double>>& p : container) {
+        std::cout << p << std::endl;
     }
 }
 
-void Test03_PermutationCalculator_ExEx_03()
+void Test_PermutationCalculator_01()
 {
-    PermutationExEx<int> p({ 1, 2, 3, 4 });
-    PermutationCalculatorExEx<int> calc;
+    Permutation<char> p{ 'A', 'B', 'C' };
+    PermutationCalculator<char> calc;
+    PermutationContainer<char> result = calc.calculate(p);
+    std::cout << result << std::endl;
+}
+
+void Test_PermutationCalculator_02()
+{
+    Permutation<int> p({ 1, 2, 3, 4 });
+    PermutationCalculator<int> calc;
+    PermutationContainer<int> result = calc.calculate(p);
+    std::cout << result << std::endl;
+}
+
+void Test_PermutationCalculator_03()
+{
+    using namespace std::complex_literals;
+    Permutation<std::complex<double>> p({ 1. + 2i, 3. + 4i, 5. + 6i });
+    PermutationCalculator<std::complex<double>> calc;
+    PermutationContainer<std::complex<double>> result = calc.calculate(p);
+    std::cout << result << std::endl;
+}
+
+void Test_PermutationCalculator_04()
+{
+    Permutation<int> p({ 1, 2, 3, 4 });
+    PermutationCalculator<int> calc;
     PermutationContainer<int> result = calc.calculate(p);
 
     for (const auto& perm : result) {
@@ -136,23 +143,14 @@ void Test03_PermutationCalculator_ExEx_03()
     }
 }
 
+void Test_PermutationEnumeration_01()
+{
+    Permutation<int> p({ 1, 2, 3, 4 });
+    for (auto n : p) {
+        std::cout << "Next Element: " << n << std::endl;
+    }
+}
 
-
-
-//void Test04_PermutationEnumeration_Ex()
-//{
-//    //Permutation p("ABCD");
-//    //PermutationCalculator calc;
-//    //calc.SetPermutation(p);
-//    //calc.Calculate();
-//
-//    //calc.Reset();
-//    //while (calc.MoveNext())
-//    //{
-//    //    Permutation q = calc.Current();
-//    //    std::cout << "Next Permutation: " << q << std::endl;
-//    //}
-//}
 
 // =====================================================================================
 // End-of-File

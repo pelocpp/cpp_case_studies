@@ -25,13 +25,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="_Permutation.h">
+    <ClInclude Include="Permutation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_PermutationContainer.h">
+    <ClInclude Include="PermutationContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_PermutationCalculatorExEx.h">
+    <ClInclude Include="PermutationCalculator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
