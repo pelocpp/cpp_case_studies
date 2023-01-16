@@ -11,15 +11,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Permutation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PermutationArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PermutationCalculator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -29,30 +20,18 @@
     <ClCompile Include="Examples02.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PermutationIterator.cpp">
+    <ClCompile Include="Examples03.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Permutation.h">
+    <ClInclude Include="_Permutation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PermutationArray.h">
+    <ClInclude Include="_PermutationContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PermutationCalculator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PermutationArrayEx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PermutationCalculatorEx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PermutationEx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PermutationIterator.h">
+    <ClInclude Include="_PermutationCalculatorExEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

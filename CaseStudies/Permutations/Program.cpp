@@ -22,48 +22,43 @@
 
 // TODO: noexcept
 
+// TODO: UDL User defined Literal :   123123_perm !!!
+
 // TODO: inline
 
 // TODO: Methoden in klein umbenennen
 
 // TODO: Der Iterator ist nicht default - constructable .... ist das schlimm ???
 
-void Test01_Permutation_Errors();
-void Test01_Permutation();
-void Test01_Permutation_Iteration();
-void Test02_PermutationArray();
-void Test02_PermutationArray_02();
-void Test03_PermutationCalculator();
-void Test03_PermutationCalculator_02();
-void Test04_PermutationEnumeration();
+// TODO: Das Thema mit den Templates und friend ist offen ... für mich ....
 
-void Test01_Permutation_Ex_01();
-void Test01_Permutation_Ex_02();
-void Test02_PermutationArray_Ex();
-void Test03_PermutationCalculator_Ex_01();
-void Test03_PermutationCalculator_Ex_02();
-void Test03_PermutationCalculator_Ex_03();
-void Test04_PermutationEnumeration_Ex();
+// TODO: Range Bases Loop für Permutation // für COntainer
+
+
+
+
+void Test01_Permutation_ExEx_01();
+void Test01_Permutation_ExEx_02();
+void Test02_PermutationContainer_ExEx();
+void Test03_PermutationCalculator_ExEx_01();
+void Test03_PermutationCalculator_ExEx_02();
+
+void Test04_PermutationEnumeration_ExEx();
+void Test03_PermutationCalculator_ExEx_03();
+void Test02_PermutationContainer_ExExEx();
 
 int main()
 {
-    // Test01_Permutation_Errors();
-    //Test01_Permutation();
-    // Test01_Permutation_Iteration();
-    //Test02_PermutationArray();
-    //Test02_PermutationArray_02();
-    //Test03_PermutationCalculator();
-    //Test03_PermutationCalculator_02();
-    //Test04_PermutationEnumeration();
+    //Test01_Permutation_ExEx_01();
+    //Test01_Permutation_ExEx_02();
+    //Test02_PermutationContainer_ExEx();
+    //Test03_PermutationCalculator_ExEx_01();
+   // Test03_PermutationCalculator_ExEx_02();
 
-    Test01_Permutation_Ex_01();
-    //Test01_Permutation_Ex_02();
-    //Test02_PermutationArray_Ex();
-    //Test03_PermutationCalculator_Ex_01();
-    //Test03_PermutationCalculator_Ex_02();
-    //Test03_PermutationCalculator_Ex_03();
-
-    //Test04_PermutationEnumeration_Ex();
+    //Test04_PermutationEnumeration_ExEx();
+  //  Test03_PermutationCalculator_ExEx_03();
+    //Test02_PermutationContainer_ExExEx();
+    Test03_PermutationCalculator_ExEx_03();
 
     return 0;
 }
