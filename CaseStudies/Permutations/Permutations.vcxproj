@@ -144,6 +144,8 @@
     <ClCompile Include="Examples01.cpp" />
     <ClCompile Include="Examples02.cpp" />
     <ClCompile Include="Examples03.cpp" />
+    <ClCompile Include="Examples04.cpp" />
+    <ClCompile Include="PermutationLiteralOperator.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>

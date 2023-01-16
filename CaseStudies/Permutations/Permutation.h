@@ -47,6 +47,7 @@ private:
     Permutation(const std::vector<T>&& values) : m_values{ std::move(values) } {}
 };
 
+Permutation<int> operator"" _perm(unsigned long long int);
 
 template <typename T>
 inline std::ostream& operator<< (std::ostream& os, const Permutation<T>& p) {

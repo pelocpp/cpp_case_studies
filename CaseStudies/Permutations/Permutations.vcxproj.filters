@@ -23,6 +23,12 @@
     <ClCompile Include="Examples03.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PermutationLiteralOperator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Examples04.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Permutation.h">
