@@ -256,7 +256,7 @@ Die Definition in [Tabelle 3] stellt im Prinzip nur eine Wiederholung dar:
 *Tabelle* 3: Methode `calculate` der Klasse `PermutationCalculator<T>`.
 
 Nachfolgend ein Beispiel, wie Sie das Klassen-Template `PermutationCalculator<T>` zur Berechnung von
-Permutationen einsetzen:
+Permutationen einsetzen können:
 
 
 ```cpp
@@ -280,14 +280,13 @@ std::cout << result << std::endl;
 ## Aufzählung von Permutationen
 
 Für den Anwender ist häufig &ndash; vor allem bei größeren Ergebnismengen &ndash; das einzelne Aufzählen der
-Ergebnisse komfortabler. Ergänzen Sie deshalb das Klassen-Tempalte `PermutationContainer<T>` um die
+Ergebnisse komfortabler. Ergänzen Sie deshalb das Klassen-Template `PermutationContainer<T>` um die
 Realisierung einer Aufzählungsschnittstelle.
 
 In C++ ist das Aufzählen im Prinzip durch das Konzept eines STL-Iterators bereits definiert.
-Je nachdem in welcher C++&ndash;Stilistik programmieren wollen,
-lässt sich das Ergebnis mit einer Anwendung des STL-Algorithmus `std::for_each`
-oder einer so genannten *Range-based for Loop* testen.
-
+Je nachdem, in welcher C++&ndash;Stilistik Sie programmieren wollen,
+lässt sich das Ergebnis einer Berechnung mit dem STL-Algorithmus `std::for_each`
+oder einer so genannten *Range-based for Loop* ausgeben.
 Wir betrachten beide Varianten an einem Beispiel:
 
 ```cpp
@@ -334,11 +333,12 @@ als Konstante formulieren:
 Permutation<int> p { 12345_perm };
 ```
 
-Realisieren Sie den Literal-Operator für die Klasse `Permutation<int>`.
+Realisieren Sie den Literal-Operator für die Klasse `Permutation<int>` mit dem Suffix `_perm`.
 Testen Sie Ihre Realisierung an folgendem Beispiel:
 
 ```cpp
-PermutationContainer<int> container { 
+PermutationContainer<int> container
+{ 
     123_perm, 132_perm, 213_perm, 231_perm, 312_perm,321_perm
 };
 
@@ -409,17 +409,24 @@ mit ein ([Listing 1]):
 35:     typename std::vector<T>::const_iterator end() { return m_values.end(); }
 36: 
 37: private:
-38:     Permutation(const std::vector<T>&& values) : m_values{ std::move(values) } {}
+38:     Permutation(std::vector<T>&& values) noexcept : m_values{ std::move(values) } {}
 39: };
 ```
 
 *Listing* 1: Klassen-Template `Permutation<T>`.
 
+Einige Anweisungen in [Listing 1] sollten wir näher betrachten:
 
-
-
-
-
+  * Zeilen 20 bis 24 &ndash; Das Entfernen eines Elements einer Permution soll in einem neuen `Permutation<T>`-Objekt
+    abgelegt werden. Hierzu wird in Zeile 21 ein temporäres `std::vector<T>`-Objekt benötigt.
+    Dieses soll mit der Verschiebe-Semantik (Verschiebe-Konstruktor) in ein neues `Permutation<T>`-Objekt
+    verschoben werden. Dazu haben wir in Zeile 38 einen Verschiebe-Konstruktor definiert.
+  * Zeile 26 &ndash; Die Methode `getValues` benötigen wir, wenn wir 
+    die `calculate`-Methode mit dem STL-Algorithmus `std::next_permutation` implementieren.
+  * Zeilen 34 und 35 &ndash; Die Aufzählungsschnittstelle des Klassen-Templates `Permutation<T>` kann einfach
+    realisiert werden, wenn das Iterieren auf ein unterlagertes STL-Containerobjekt
+    durchgereicht werden kann. In unserem Beispiel bedienen wir uns des `std::vector<T>`-Objekts
+    aus Zeile 5.
 
 
 ## Klassen-Template `PermutationContainer<T>`
@@ -549,9 +556,6 @@ mit ein ([Listing 1]):
 
 
 
-
-
-
 ## Literale für Permutationen
 
 ###### {#listing_04_permutation_udl}
@@ -572,7 +576,7 @@ mit ein ([Listing 1]):
 13: }
 ```
 
-*Listing* 4: Literal-Operator `operator""`.
+*Listing* 4: Literal-Operator `operator""` für das Suffix `_perm`.
 
 
 
@@ -582,7 +586,7 @@ mit ein ([Listing 1]):
 # There&lsquo;s more
 
 Vermutlich sind Sie schon einmal über das Akronym *DRY* gestolpert: *Don't Repeat Yourself*:
-Im Software Engineering bezeichnet damit ein Prinzip, das besagt, Redundanz zu vermeiden oder zumindest zu reduzieren.
+Im Software Engineering bezeichnet man damit ein Prinzip, das besagt, Redundanzen zu vermeiden oder zumindest zu reduzieren.
 Es handelt sich hierbei auch um ein Prinzip von Clean Code.
 
 Hätten wir die Betrachtung der Permutationen in dieser Fallstudie nicht zum Zwecke des Übens gestellt,

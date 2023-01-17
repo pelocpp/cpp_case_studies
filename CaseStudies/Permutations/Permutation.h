@@ -45,7 +45,7 @@ public:
     typename std::vector<T>::const_iterator end() { return m_values.end(); }
 
 private:
-    Permutation(const std::vector<T>&& values) : m_values{ std::move(values) } {}
+    Permutation(std::vector<T>&& values) noexcept : m_values{ std::move(values) } {}
 };
 
 // user defined literal operator
