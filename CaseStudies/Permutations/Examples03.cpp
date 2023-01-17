@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <complex>
+#include <algorithm>
 
 #include "Permutation.h"
 #include "PermutationContainer.h"
@@ -35,14 +36,29 @@ void Test_PermutationCalculator_03()
 
 void Test_PermutationCalculator_04()
 {
-    Permutation<int> p({ 1, 2, 3, 4 });
+    Permutation<int> p({ 1, 2, 3 });
     PermutationContainer<int> result = PermutationCalculator<int>::calculate(p);
+
     for (const auto& perm : result) {
         std::cout << "Next Permutation: " << perm << std::endl;
     }
 }
 
 void Test_PermutationCalculator_05()
+{
+    Permutation<int> p({ 1, 2, 3 });
+    PermutationContainer<int> result = PermutationCalculator<int>::calculate(p);
+
+    std::for_each(
+        std::begin(result),
+        std::end(result),
+        [](const auto& perm){
+            std::cout << "Next Permutation: " << perm << std::endl;
+        }
+    );
+}
+
+void Test_PermutationCalculator_06()
 {
     Permutation<char> p{ 'A', 'B', 'C' };
     PermutationContainer<char> result{};
@@ -52,7 +68,7 @@ void Test_PermutationCalculator_05()
     std::cout << result << std::endl;
 }
 
-void Test_PermutationCalculator_06()
+void Test_PermutationCalculator_07()
 {
     Permutation<int> p({ 1, 2, 3, 4 });
     PermutationContainer<int> result{};
