@@ -1,11 +1,11 @@
 <!-- Permutationen -->
 
 Ist eine Menge von _n_ Elementen gegeben, so bezeichnet man die möglichen Anordnungen
-aller dieser _n_ Elemente als Permutationen (lat. _permutare_: vertauschen).
+aller dieser _n_ Elemente als *Permutationen* (lat. _permutare_: vertauschen).
 Die Berechnung der Permutationen einer beliebigen Menge von Elementen
 steht im Mittelpunkt dieser Fallstudie.
 Als Elemente verwenden wir zunächst Zeichen, also `char`-Variablen.
-Dies sollte aber verallgemeinerbar sein, also auch für Variablen eines beliebigen Datentyps.
+Dies soll aber verallgemeinerbar sein, also auch für Variablen eines beliebigen Datentyps funktionieren.
 
 Für zwei Zeichen `A` und `B` gibt es nur die zwei Permutationen `AB` und `BA`.
 Drei Zeichen, angenommen `A`, `B` und `C`, können hingegen
@@ -37,12 +37,12 @@ Da wir für die Permutationen unterschiedliche Datentypen der einzelnen Elemente
 kommen bei der Realisierung Klassen-Templates ins Spiel.
 
 
-# Klasse `Permutation<T>`
+## Klasse `Permutation<T>`
 
 Die Klasse `Permutation` &ndash; genauer: `Permutation<T>` &ndash; benötigen wir,
 um eine einzelne Permutation darzustellen.
 Überlegen Sie, welcher Container der STL als Hilfestellung dafür geeignet sein könnte?
-Die Details zur Schnittstelle der Klasse `Permutation` sind in [Tabelle 1] zusammengestellt:
+Die Details zur Schnittstelle des Klassen-templates `Permutation<T>` sind in [Tabelle 1] zusammengestellt:
 
 ###### {#tabelle_1_class_permutation}
 
@@ -50,10 +50,10 @@ Die Details zur Schnittstelle der Klasse `Permutation` sind in [Tabelle 1] zusam
 | :---- | :---- |
 | Konstruktor | `Permutation();`<br/>Standardkonstruktor für ein `Permutation`-Objekt. |
 | Konstruktor | `Permutation(std::initializer_list<T> list);`<br/>Initialisiert ein `Permutation`-Objekt mit eine Reihe von Elementen des Typs `T`, die in einem `std::initializer_list<T>`-Objekt abgelegt sind. Sinnvollerweise sollten die Elemente alle voneinander verschieden sein. Sie brauchen das in Ihrer Implementierung aber nicht zu überprüfen. |
-| Methode `grade` | `size_t grade() const;`<br/>Liefert Wert zum Schlüssel `key` zurück. |
+| *getter*-Methode `grade` | `size_t grade() const;`<br/>Liefert die Anzahl der Elemente zurück, die im Permutations-Objekt abgelegt sind. Man spricht auch von der *Länge* bzw. vom *Grad* der Permutation. |
 | Methode `insertAtFront` | `void insertAtFront(T elem);`<br/>Das übergebene Element `elem` wird in der vorliegenden Permutation am *Anfang* eingefügt. Insbesondere wird der *Grad* der Permutation um Eins größer. |
 | Methode `removeAt` | `Permutation<T> removeAt(size_t i) const;`<br/>Die Methode entfernt ein Element an der Stelle `i` aus der vorliegenden Permutation. Das Ergebnis wird in einem neuen `Permutation<T>`-Objekt als Resultat der Methode zurüclgeliefert. Die Methode selbst ist mit `const` markiert, also das aktuelle Objekt bleibt unverändert. |
-| Methode `getValues` | `std::vector<T> getValues() const;`<br/>.Die Methode liefert die aktuellen Elemente der Permutation in einem `std::vector<T>`-Objekt zurück. |
+| Methode `getValues` | `std::vector<T> getValues() const;`<br/>Die Methode liefert die aktuellen Elemente der Permutation in einem `std::vector<T>`-Objekt zurück. |
 | Operator `[]` | `const T& operator[](size_t n) const;`<br/>Zugriffsoperator für das *i*.-te Element der Permutation. |
 
 *Tabelle* 1: Element der Klasse `Permutation<T>`.
@@ -92,9 +92,8 @@ std::cout << p << " (Anzahl der Elemente: " << p.grade() << ')' << std::endl;
 [1,2,3,4,5] (Anzahl der Elemente: 5)
 ```
 
-Man beachte in dem letzten Beispiel, dass der Template Parametertyp `T` &ndash; in diesem Beispiel `int` &ndash; 
+Man beachte im letzten Beispiel, dass der Template Parametertyp `T` &ndash; in diesem Beispiel `int` &ndash; 
 vom Übersetzer aus dem Datentyp der Parameter abgeleitet werden kann.
-
 Es folgt noch ein Beispiel zu den Methoden `insertAtFront`, `removeAt`
 und dem Index-Operator `oeprator[]`:
 
@@ -143,15 +142,14 @@ Testing removeAt:
 []
 ```
 
-# Klasse `PermutationContainer<T>`
+## Klasse `PermutationContainer<T>`
 
 Zum Abspeichern mehrerer `Permutation<T>`-Objekte konzipieren wir eine Klasse `PermutationContainer<T>`.
 Im Prinzip handelt es sich bei dieser Klasse um eine Hüllenklasse,
-die einen geeignet auszuwählendes STL-Container für eine beliebige Anzahl von `Permutation<T>`-Objekte kapselt.
+die einen geeignet auszuwählenden STL-Container für eine beliebige Anzahl von `Permutation<T>`-Objekte kapselt.
 Eine derartige Hüllenklasse ergibt Sinn,
-da wir neben den Standard-Methoden der STL-Container noch einige zusätzliche Hilfsmethoden benötigen,
-die speziell auf den Algorithmus zur Berechnung von Permutationen ausgelegt sind.
-
+da wir neben den Standard-Methoden des STL-Containers noch einige zusätzliche Hilfsmethoden benötigen,
+die speziell auf den Algorithmus zur Berechnung von Permutationen zugeschnitten sind.
 Damit werfen wir einen Blick auf [Tabelle 2]:
 
 ###### {#tabelle_2_class_permutation_container}
@@ -159,9 +157,9 @@ Damit werfen wir einen Blick auf [Tabelle 2]:
 | Element | Beschreibung |
 | :---- | :---- |
 | Konstruktor | `PermutationContainer();`<br/>Standardkonstruktor für ein `PermutationContainer`-Objekt. |
-| Methode `count` | `size_t count() const;`<br/>Liefert die Anzahl der `Permutation`-Elemente zurück, die im Objekt abgelegt sind. |
+| Methode `count` | `size_t count() const;`<br/>Liefert die Anzahl der `Permutation`-Objekte zurück, die im Objekt abgelegt sind. |
 | Methode `insert` | `void insert(const Permutation<T>& p);`<br/>Fügt ein `Permutation`-Objekt in das `PermutationContainer`-Objekt ein. |
-| Methode `insertAll` | `void insertAll(T elem);`<br/>. Ruft die Methode `insertAtFront` an allen `Permutation`-Objekten im vorliegenden `PermutationContainer`-Objekt mit dem Parameter `elem` auf.|
+| Methode `insertAll` | `void insertAll(T elem);`<br/>Ruft die Methode `insertAtFront` an allen `Permutation`-Objekten im vorliegenden `PermutationContainer`-Objekt mit dem Parameter `elem` auf.|
 
 *Tabelle* 2: Element der Klasse `PermutationContainer<T>`.
 
@@ -197,7 +195,7 @@ std::cout << container << std::endl;
 [2 permutations]
 ```
 
-# Algorithmus zur Berechnung von Permutationen
+## Algorithmus zur Berechnung von Permutationen
 
 Nun fehlt nur noch ein Algorithmus, um zu einer gegebenen Menge von Elementen alle Permutationen zu berechnen.
 Ein sehr einfacher &ndash; rekursiver &ndash; Algorithmus lässt sich in Worten so beschreiben,
@@ -245,7 +243,7 @@ image::PermutationPseudeCode.png[width=450]
 Wir sind fast am Ziel angekommen: Die im letzen Abschnitt beschriebene Methode `calculate` ordnen
 wir der Klasse `PermutationCalculator<T>` zu:
 
-# Klasse `PermutationCalculator<T>`
+## Klasse `PermutationCalculator<T>`
 
 Die Definition in [Tabelle 3] stellt im Prinzip nur eine Wiederholung dar:
 
@@ -279,7 +277,7 @@ std::cout << result << std::endl;
 [6 permutations]
 ```
 
-# Aufzählung von Permutationen
+## Aufzählung von Permutationen
 
 Für den Anwender ist häufig &ndash; vor allem bei größeren Ergebnismengen &ndash; das einzelne Aufzählen der
 Ergebnisse komfortabler. Ergänzen Sie deshalb das Klassen-Tempalte `PermutationContainer<T>` um die
@@ -327,7 +325,7 @@ Next Permutation: [3,1,2]
 Next Permutation: [3,2,1]
 ```
 
-# Literale für Permutationen
+## Literale für Permutationen
 
 Mit dem C++&ndash;Feature *User defined Literal* lassen sich Permutations-Objekte auch
 als Konstante formulieren:
