@@ -237,7 +237,7 @@ image::PermutationPseudeCode.png[width=450]
 
 *Abbildung* 1: Algorithmus zur Berechnung von Permutationen.
 
-<img src="PermutationPseudeCode.png" width="600">
+<img src="permutations_algorithm_02.svg" width="600">
 
 
 Wir sind fast am Ziel angekommen: Die im letzen Abschnitt beschriebene Methode `calculate` ordnen

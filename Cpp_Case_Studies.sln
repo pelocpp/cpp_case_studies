@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Permutations", "Permutation
 		MarkDown\Permutations\PermutationPseudeCode.png = MarkDown\Permutations\PermutationPseudeCode.png
 		MarkDown\Permutations\Permutations.adoc = MarkDown\Permutations\Permutations.adoc
 		MarkDown\Permutations\Permutations.md = MarkDown\Permutations\Permutations.md
+		MarkDown\Permutations\permutations_algorithm_01.svg = MarkDown\Permutations\permutations_algorithm_01.svg
+		MarkDown\Permutations\permutations_algorithm_02.svg = MarkDown\Permutations\permutations_algorithm_02.svg
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpringerProblem", "SpringerProblem", "{1BE26B8E-3A21-40D3-A0C6-2FF5EA62C8E4}"
