@@ -14,7 +14,7 @@ Permutation<int> operator"" _perm(unsigned long long int value) {
 
     while (value != 0) {
 
-        int rest{ value % 10 };
+        int rest{ static_cast<int>(value % 10) };
         p.insertAtFront(rest);
         value = value / 10;
     }

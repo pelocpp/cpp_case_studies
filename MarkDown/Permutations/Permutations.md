@@ -279,13 +279,13 @@ std::cout << result << std::endl;
 
 ## Aufzählung von Permutationen
 
-Für den Anwender ist häufig &ndash; vor allem bei größeren Ergebnismengen &ndash; das einzelne Aufzählen der
-Ergebnisse komfortabler. Ergänzen Sie deshalb das Klassen-Template `PermutationContainer<T>` um die
+Für den Anwender ist häufig &ndash; vor allem bei größeren Datenmengen &ndash; das einzelne Aufzählen der
+Daten komfortabler. Ergänzen Sie deshalb das Klassen-Template `PermutationContainer<T>` um die
 Realisierung einer Aufzählungsschnittstelle.
 
-In C++ ist das Aufzählen im Prinzip durch das Konzept eines STL-Iterators bereits definiert.
+In C++ ist das Aufzählen einer Menge von Werten im Prinzip durch das STL-Iteratorenkonzept bereits definiert.
 Je nachdem, in welcher C++&ndash;Stilistik Sie programmieren wollen,
-lässt sich das Ergebnis einer Berechnung mit dem STL-Algorithmus `std::for_each`
+lässt sich das Ergebnis einer Permutationen-Berechnung mit dem STL-Algorithmus `std::for_each`
 oder einer so genannten *Range-based for Loop* ausgeben.
 Wir betrachten beide Varianten an einem Beispiel:
 
@@ -329,7 +329,7 @@ Next Permutation: [3,2,1]
 Mit dem C++&ndash;Feature *User defined Literal* lassen sich Permutations-Objekte auch
 als Konstante formulieren:
 
-```
+```cpp
 Permutation<int> p { 12345_perm };
 ```
 
@@ -365,7 +365,7 @@ Permutation: [3,2,1]
 ## Klassen-Template `Permutation<T>`
 
 Kommen wir jetzt auf das Klassen-Template `Permutation<T>` zu sprechen.
-Wir realisieren alle Templates in dieser Fallstudie nach dem so genannten *Inclusion* Modell,
+Wir realisieren alle Templates in dieser Fallstudie nach dem so genannten *Inclusion* Modellprinzip,
 das heißt, wir fügen die Realisierung der Methoden in der Header-Datei
 mit ein ([Listing 1]):  
 
@@ -419,13 +419,13 @@ Einige Anweisungen in [Listing 1] sollten wir näher betrachten:
 
   * Zeilen 20 bis 24 &ndash; Das Entfernen eines Elements einer Permution soll in einem neuen `Permutation<T>`-Objekt
     abgelegt werden. Hierzu wird in Zeile 21 ein temporäres `std::vector<T>`-Objekt benötigt.
-    Dieses soll mit der Verschiebe-Semantik (Verschiebe-Konstruktor) in ein neues `Permutation<T>`-Objekt
-    verschoben werden. Dazu haben wir in Zeile 38 einen Verschiebe-Konstruktor definiert.
-  * Zeile 26 &ndash; Die Methode `getValues` benötigen wir, wenn wir 
+    Dieses soll mit der Verschiebe-Semantik in ein neues `Permutation<T>`-Objekt
+    verschoben werden. Dazu haben wir in Zeile 38 einen passenden Verschiebe-Konstruktor definiert.
+  * Zeile 26 &ndash; Die `getValues`-Methode benötigen wir, wenn wir 
     die `calculate`-Methode mit dem STL-Algorithmus `std::next_permutation` implementieren.
   * Zeilen 34 und 35 &ndash; Die Aufzählungsschnittstelle des Klassen-Templates `Permutation<T>` kann einfach
-    realisiert werden, wenn das Iterieren auf ein unterlagertes STL-Containerobjekt
-    durchgereicht werden kann. In unserem Beispiel bedienen wir uns des `std::vector<T>`-Objekts
+    dadurch realisiert werden, indem das Iterieren auf ein unterlagertes STL-Containerobjekt
+    durchgereicht wird. In unserem Beispiel bedienen wir uns hierzu der Iteratorschnittstelle des `std::vector<T>`-Objekts
     aus Zeile 5.
 
 
@@ -567,7 +567,7 @@ Einige Anweisungen in [Listing 1] sollten wir näher betrachten:
 04: 
 05:     while (value != 0) {
 06: 
-07:         int rest{ value % 10 };
+07:         int rest{ static_cast<int>(value % 10) };
 08:         p.insertAtFront(rest);
 09:         value = value / 10;
 10:     }
@@ -580,24 +580,20 @@ Einige Anweisungen in [Listing 1] sollten wir näher betrachten:
 
 
 
-
-
-
 # There&lsquo;s more
 
 Vermutlich sind Sie schon einmal über das Akronym *DRY* gestolpert: *Don't Repeat Yourself*:
 Im Software Engineering bezeichnet man damit ein Prinzip, das besagt, Redundanzen zu vermeiden oder zumindest zu reduzieren.
-Es handelt sich hierbei auch um ein Prinzip von Clean Code.
+Es handelt sich hierbei auch um ein Prinzip von *Clean Code*.
 
-Hätten wir die Betrachtung der Permutationen in dieser Fallstudie nicht zum Zwecke des Übens gestellt,
+Hätten wir die Betrachtung der Permutationen in dieser Fallstudie nicht zum Zwecke des Übens gemacht,
 müssten wir uns eingestehen, dass eine derartige Realisierung in der STL bereits vorhanden ist:
 
 [`std::next_permutation`](https://en.cppreference.com/w/cpp/algorithm/next_permutation)
 
 Ergänzen Sie Ihre Realisierung des Klassen-Template `PermutationCalculator<T>`
-um eine zweite Methode `calculateEx`, deren Realisierung den STL-Algorithmus `std::next_permutation` einsetzt.
+um eine zweite Methode `calculateEx`, deren Realisierung den STL-Algorithmus `std::next_permutation` verwendet.
 Vergleichen Sie die Resultate der beiden Realisierungen.
-
 
 <br/>
 
