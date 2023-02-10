@@ -27,19 +27,18 @@ void Test_Permutation_01()
     }
 
     std::cout << "Testing removeAt: " << std::endl;
-    while (true) {
+    do
+    {
         p = p.removeAt(0);
         std::cout << p << std::endl;
-        if (p.grade() == 0) {
-            break;
-        }
     }
+    while (p.grade() != 0);
 }
 
 void Test_Permutation_02()
 {
     std::cout << "Testing c'tor: " << std::endl;
-    Permutation p({ 1, 2, 3, 4, 5 });
+    Permutation p{ 1, 2, 3, 4, 5 };
     std::cout << p << " (Anzahl der Elemente: " << p.grade() << ')' << std::endl;
 
     std::cout << "Testing insertAtFront: " << std::endl;
@@ -66,7 +65,7 @@ void Test_Permutation_02()
 void Test_Permutation_03()
 {
     std::cout << "Testing Range-Based Loop: " << std::endl;
-    Permutation<int> p({ 1, 2, 3, 4, 5 });
+    Permutation<int> p{ 1, 2, 3, 4, 5 };
     std::cout << p << std::endl;
 
     for (int element : p) {
@@ -76,7 +75,7 @@ void Test_Permutation_03()
 
 void Test_Permutation_04()
 {
-    Permutation<int> p({ 1, 2, 3, 4 });
+    Permutation<int> p{ 1, 2, 3, 4 };
     for (int n : p) {
         std::cout << "Next Element: " << n << std::endl;
     }

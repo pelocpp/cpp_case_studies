@@ -12,7 +12,7 @@
 // testing user defined literal operator
 void Test_UDL_01()
 {
-    Permutation<int> p { 12345_perm };
+    Permutation<int> p{ 12345_perm };
     std::cout << p << std::endl;
 }
 

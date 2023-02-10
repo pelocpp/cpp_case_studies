@@ -12,8 +12,8 @@
 // testing permutations container
 void Test_PermutationContainer_01()
 {
-    Permutation<int> p({ 1, 2, 3, 4 });
-    Permutation<int> q({ 4, 3, 2, 1 });
+    Permutation<int> p{ 1, 2, 3, 4 };
+    Permutation<int> q{ 4, 3, 2, 1 };
     std::cout << p << std::endl;
     std::cout << q << std::endl;
 
@@ -26,8 +26,8 @@ void Test_PermutationContainer_01()
 void Test_PermutationContainer_02()
 {
     using namespace std::complex_literals;
-    Permutation<std::complex<double>> p({ 1. + 2i, 3. + 4i, 5. + 6i });
-    Permutation<std::complex<double>> q({ 1. - 2i, 3. - 4i, 5. - 6i });
+    Permutation<std::complex<double>> p{ 1. + 2i, 3. + 4i, 5. + 6i };
+    Permutation<std::complex<double>> q{ 1. - 2i, 3. - 4i, 5. - 6i };
     std::cout << p << std::endl;
     std::cout << q << std::endl << std::endl;
 
