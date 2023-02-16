@@ -215,11 +215,10 @@ mit den drei Ziffern 1, 2 und 3:
 
 ###### {#abbildung_1_permutations_recursive_strategy}
 
-{{< figure src="/img/josephus/PermutationPseudeCode.png" width="60%" >}}
+{{< figure src="/img/permutations/permutations_algorithm_01.svg" width="60%" >}}
 
 *Abbildung* 1: Rekursiver Algorithmus zur Bestimung von Permutationen.
 
-<img src="permutations_algorithm_01.svg" width="400">
 
 Mit Hilfe der Vorarbeiten der zwei Klassen `Permutation<T>` und `PermutationContainer<T>` ([Tabelle 1] und [Tabelle 2]) 
 können wir den vorgestellten Algorithmus etwas präziser formulieren: In [Abbildung 2] finden Sie
@@ -228,13 +227,12 @@ Pseudo-Code für eine Methode `calculate` vor:
 [caption="Abbildung {counter:figure}: ", title="Pseudo-Code der Methode `calculate`."]
 image::PermutationPseudeCode.png[width=450]
 
+
 ###### {#abbildung_2_permutations_algorithm}
 
-{{< figure src="/img/josephus/PermutationPseudeCode.png" width="60%" >}}
+{{< figure src="/img/permutations/permutations_algorithm_02.svg" width="80%" >}}
 
-*Abbildung* 1: Algorithmus zur Berechnung von Permutationen.
-
-<img src="permutations_algorithm_02.svg" width="600">
+*Abbildung* 2: Algorithmus zur Berechnung von Permutationen.
 
 
 Wir sind fast am Ziel angekommen: Die im letzen Abschnitt beschriebene Methode `calculate` ordnen
