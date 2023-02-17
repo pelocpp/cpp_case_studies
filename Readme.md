@@ -10,6 +10,12 @@ vor.
 
 ### Aktueller Stand:
 
+### Februar 2023
+
+  * Berechnung von Permutationen
+
+  * [Berechnung von Permutationen](/CaseStudies/Permutations/)
+
 ### März 2022
 
   * Fakultäten, Binomialkoeffizienten und Herr Legendre
