@@ -6,8 +6,6 @@
 
 #include <random>
 
-// #include <mutex>
-
 class Random
 {
 private:
@@ -16,9 +14,11 @@ private:
     static std::uniform_int_distribution<std::mt19937::result_type> m_dist6;
 
 public:
-    static std::mt19937::result_type getNext() {
-        return m_dist6(m_rng);
-    }
+    //static std::mt19937::result_type getNext() {
+    //    return m_dist6(m_rng);
+    //}
+
+    static std::mt19937::result_type getNext();
 };
 
 // ===========================================================================

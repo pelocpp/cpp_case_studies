@@ -1,10 +1,14 @@
 // ===========================================================================
-// enum PhilosopherState
+// Simulation.h
 // ===========================================================================
 
 #pragma once
 
-// enum class PhilosopherState { None, Thinking, Eating, Hungry };
+class Simulation
+{
+public:
+    static void simulation();
+};
 
 // ===========================================================================
 // End-of-File

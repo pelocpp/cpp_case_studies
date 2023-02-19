@@ -1,47 +1,31 @@
 // ===========================================================================
-// class Table
+// Table.h
 // ===========================================================================
 
 #pragma once
 
-class Table {
+#include <array>
+#include <atomic>
+
+#include "DiningPhilosophers.h"
+#include "Fork.h"
+
+class Table
+{
 private:
-    std::array<bool, NumPhilosophers> m_forks;
-    std::mutex m_mutex;
-    std::condition_variable m_condition;
+    std::array<Fork, NumPhilosophers> m_forks;
+    std::atomic<int> m_numForksInUse;
 
 public:
-    // c'tor
     Table();
 
-    // public interface
-    void demandForks(size_t seat);
-    void releaseForks(size_t seat);
-
-private:
-    // private helper methods / operators
-    std::string forksToString() const;
-    bool& operator[] (size_t index);
-};
-
-class TableEx {
-private:
-    std::array<bool, NumPhilosophers> m_forks;
-    std::mutex m_mutex;
-    std::condition_variable m_condition;
-
-public:
-    // c'tor
-    TableEx();
+    // index operator
+    Fork& operator[] (size_t index);
 
     // public interface
-    void demandForks(size_t seat);
-    void releaseForks(size_t seat);
-
-private:
-    // private helper methods / operators
-    std::string forksToString() const;
-    bool& operator[] (size_t index);
+    void incrementNumForks();
+    void decrementNumForks();
+    int numForks() const;
 };
 
 // ===========================================================================

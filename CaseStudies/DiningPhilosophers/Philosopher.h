@@ -1,82 +1,38 @@
 // ===========================================================================
-// class Philosopher
+// Philosopher.h
 // ===========================================================================
 
 #pragma once
 
-#include <mutex>
-#include <future>
-#include <random>
 
+#include <future>
 
 #include "Table.h"
 #include "Philosopher.h"
-#include "Table.h"
-#include "Table.h"
 
-
-class Philosopher {
+class Philosopher
+{
 private:
-    // dining philosophers utilities
-    Table& m_table;
-    int m_seat;
-    PhilosopherState m_state;
-    int m_activities;
-
-    // random utilities
-    static std::random_device device;
-    static std::mt19937 generator;
-    static std::uniform_int_distribution<int> distribution;
+    std::string       m_name;
+    Table&            m_table;
+    size_t            m_seat;   // 0 .. 4
 
     // threading utils
-    std::future<void> m_future;
-    bool m_running;
+    std::future<void> m_lifeThread;
+    bool              m_running;
 
 public:
-    // c'tor
-    Philosopher(Table& table, int seat);
+    // user-defined c'tor
+    Philosopher(std::string_view name, Table& table, size_t seat);
 
     // public interface
     void start();
     void stop();
-
-private:
-    // private helper methods
-    void run();
-    void thinking();
-    void hungry();
-    void eating();
-    void eatingDone();
-};
-
-class PhilosopherEx {
-private:
-    // dining philosophers utilities
-    std::string const name;
-    TableEx const& dinnertable;
-    //ForkEx& left_fork;
-    //ForkEx& right_fork;
-
-    std::thread       lifethread;
-    std::mt19937      rng{ std::random_device{}() };
-
-
-public:
-    // c'tor
-    PhilosopherEx(Table& table, int seat);
-
-    // public interface
-    void start();
-    void stop();
-
-private:
-    // private helper methods
-    void dine();
-    void run();
-    void thinking();
-    void hungry();
-    void eating();
-    void eatingDone();
+    void dine() const;
+    void eating() const;
+    void eatingDone() const;
+    void thinking() const;
+    void hungry() const;
 };
 
 // ===========================================================================

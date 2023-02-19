@@ -1,15 +1,18 @@
 // ===========================================================================
-// class Fork
+// Fork.h
 // ===========================================================================
 
 #pragma once
 
 #include <mutex>
 
-class ForkEx
+class Fork
 {
+private:
+    std::mutex m_mutex;
+
 public:
-    std::mutex mutex;
+    std::mutex& getMutex() { return m_mutex; }
 };
 
 // ===========================================================================

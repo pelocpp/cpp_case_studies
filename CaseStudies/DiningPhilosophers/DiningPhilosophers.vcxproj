@@ -128,11 +128,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Philosopher.cpp" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="ProgramEx.cpp" />
-    <ClCompile Include="ProgramExEx.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="Table.cpp" />
   </ItemGroup>
@@ -141,8 +140,8 @@
     <ClInclude Include="Fork.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Philosopher.h" />
-    <ClInclude Include="PhilosopherState.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="Simulation.h" />
     <ClInclude Include="Table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
