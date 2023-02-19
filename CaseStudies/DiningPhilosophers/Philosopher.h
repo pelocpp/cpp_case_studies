@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 #include <future>
 
 #include "Table.h"
@@ -13,9 +12,9 @@
 class Philosopher
 {
 private:
-    std::string       m_name;
-    Table&            m_table;
-    size_t            m_seat;   // 0 .. 4
+    std::string m_name;
+    Table&      m_table;
+    size_t      m_seat;
 
     // threading utils
     std::future<void> m_lifeThread;
