@@ -2,24 +2,11 @@
 // Simulation.cpp
 // ===========================================================================
 
-//#include <array>
-//#include <mutex>
-//#include <future>
-//#include <atomic>
-//#include <chrono>
-//#include <iostream>
-//#include <string>
-//#include <random>
-//#include <string_view>
-//
-
 #include "DiningPhilosophers.h"
 #include "Logger.h"
 #include "Table.h"
 #include "Philosopher.h"
 #include "Simulation.h"
-
-//#include "Random.h"
 
 void Simulation::simulation()
 {
