@@ -27,6 +27,7 @@ public:
     // public interface
     void start();
     void stop();
+
     void dine() const;
     void eating() const;
     void eatingDone() const;

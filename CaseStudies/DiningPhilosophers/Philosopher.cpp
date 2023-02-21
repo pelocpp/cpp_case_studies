@@ -5,6 +5,7 @@
 #include <array>
 #include <future>
 #include <string_view>
+#include <cassert>
 
 #include "Logger.h"
 #include "DiningPhilosophers.h"
@@ -57,6 +58,9 @@ void Philosopher::eating() const
         std::scoped_lock raii_lock{ leftFork.getMutex(), rightFork.getMutex() };
 
         // just for testing purposes
+        assert(m_table.numForks() == 0 || m_table.numForks() == 2 || m_table.numForks() == 4);
+
+        // tracing number of used forks
         m_table.incrementNumForks();
 
         Logger::log(
@@ -64,7 +68,7 @@ void Philosopher::eating() const
             ") [", m_table.numForks(), ']', " uses forks ", m_seat, " - ", (m_seat + 1) % 5
         );
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(Random::getNext() * 300));
+        std::this_thread::sleep_for(std::chrono::milliseconds(Random::getNext() * AverageSleepTimeEating));
 
         // just for testing purposes
         m_table.decrementNumForks();
@@ -82,7 +86,7 @@ void Philosopher::eatingDone() const
 void Philosopher::thinking() const
 {
     Logger::log(std::cout, m_name, " is thinking (at seat ", m_seat, ')');
-    std::this_thread::sleep_for(std::chrono::milliseconds(Random::getNext() * 100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(Random::getNext() * AverageSleepTimeThinking));
 }
 
 void Philosopher::hungry() const

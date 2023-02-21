@@ -1,10 +1,5 @@
 <!-- Dinierende Philosophen -->
 
-WEITER: Hmm, das Bild evtl.austauschen mit Literatur Angabe
-
-WEITER: ein assert einbauen ... und versuchen, einen Stresstest zu erzeugen
-
-
 Das Beispiel der dinierenden Philosophen ist eines der populärsten Standardprobleme
 aus dem Bereich der Parallelprogrammierung.
 Es erlaubt, die Kooperation der beteiligten Threads
@@ -45,7 +40,9 @@ Ist einer seiner benachbarten Glaubensbrüder gerade beim Essen, muss er warten.
 Sind beide Gabeln frei, kann er mit dem Essen beginnen. Nachdem er satt ist, legt er beide Gabeln zurück und denkt wieder.
 Die drei Zustände *denken*, *hungrig sein* und *essen* werden folglich ständig in dieser Reihenfolge durchlaufen.
 
-<img src="DiningPhilosophers.png" width="320">
+<img src="Dining_Philosophers.png" width="250" />
+
+<sup>Credits: gefunden in einem Artikel [&ldquo;Elixir, Erlang, and the Dining Philosophers&rdquo; von Tony Baker](https://spin.atomicobject.com/2012/10/31/elixir-erlang-and-the-dining-philosophers)</sup>.
 
 *Abbildung* 1: Die dinierenden Philosophen.
 
@@ -141,10 +138,12 @@ Die Nummer in den eckigen Klammern zu Beginn einer jeden Zeile stehen für eine 
 
 ## Klasse `Fork`
 
-Wir beginnen mit einigen Vorüberlegungen, wie sich der konkurrierende Zugriff
-zweier Philosophen auf eine Gabel korrekt gestalten lässt.
-Software-technisch ist für den konfliktfreien Zugriff auf ein kritisches Objekt die Klasse `std::mutex` das Mittel der Wahl.
-Mit den beiden Methoden `lock` und `unlock` kann man erreichen, dass kritische Code-Passagen
+Wir beginnen unsere Betrachtungen einer Umsetzung des Philosophenproblems in C++
+mit einigen Vorüberlegungen, wie sich der konkurrierende Zugriff
+zweier Philosophen auf eine Gabel konkret gestalten lässt.
+Softwaretechnisch ist für den konfliktfreien Zugriff auf ein kritisches Objekt bzw.
+auf eine kritische Folge von Anweisungen die Klasse `std::mutex` das Mittel der Wahl.
+Mit den beiden Methoden `lock` und `unlock` dieser Klasse kann man erreichen, dass kritische Code-Passagen
 zu einem bestimmten Zeitpunkt immer nur von einem Thread betreten (und verlassen) werden können.
 
 Jede Gabel (Klasse `Fork`) besitzt aus diesem Grund ein solches `std::mutex`-Objekt,
@@ -168,15 +167,14 @@ weitere Funktionalitäten sind für ein Gabelobjekt nicht notwendig ([Listing 1]
 
 ## Klasse `Table`
 
-Gemäß der Problemstellung liegen fünf Gabelobjekte auf dem Tisch der dinierenden Philosophen.
+Gemäß der Problemstellung liegen fünf Gabelobjekte auf dem Essenstisch.
 Wir modellieren deshalb eine Klasse `Table` mit fünf `Fork`-Objekten,
 die wir in einem `std::array`-Objekt ablegen.
-
 Da zu bestimmten Zeitpunkten auf ein Gabelobjekt zugegriffen wird, kapseln wir den Zugriff auf dieses Feld
-mit einer Überladung des `operator[]`-Operators.
+mit einer Überladung des Index-Operators `[]`.
 
-Die Sicherstellung, dass zu einem bestimmten Zeitpunkt nur eine Gabel aufgegriffen werden kann,
-erfolgt durch die Philosophen. Direkter formuliert: Der Tisch stellt Gabeln mit ` std::mutex`-Objekten zur Verfügung,
+Die Sicherstellung, dass zu einem bestimmten Zeitpunkt nur eine Gabel von einem Philosophen aufgegriffen werden kann,
+erfolgt durch die Philosophen-Objekte. Direkter formuliert: Der Tisch stellt Gabeln mit ` std::mutex`-Objekten zur Verfügung,
 der Aufruf der Methoden `lock` und `unlock` erfolgt durch die Initiative der Philosophen. 
 
 ###### {#listing_02_class_table_decl}
@@ -204,17 +202,16 @@ der Aufruf der Methoden `lock` und `unlock` erfolgt durch die Initiative der Phi
 *Listing* 2: Klasse `Table` &ndash; Spezifikation.
 
 Das Salz in der Suppe dieser Fallstudie ist natürlich die Beobachtung des Umstands, dass zu keinem Zeitpunkt der Simulation
-5 Gabeln zum Essen verwendet werden dürfen. Da ein Philosoph immer 2 Gabeln zum Essen benötigt,
-müssen folglich immer 1, 3, oder 5 freie Gabeln auf dem Tisch liegen. Sollten alle 5 Gabeln in Gebrauch sein,
+5 Gabeln gleichzeitig zum Essen verwendet werden. Da ein Philosoph immer 2 Gabeln zum Essen benötigt,
+müssen folglich stets eine, drei, oder fünf freie Gabeln auf dem Tisch liegen. Sollten alle fünf Gabeln in Gebrauch sein,
 haben wir einen Fehler in der Simulation.
 
 Um die Anzahl der in Gebrauch befindlichen Gabeln besser &ndash; und vor allem auch korrekt &ndash; beobachten zu können,
-haben wir das Tischobjekt um eine `int`-Variable `m_numForksInUse` ergänzt.
-
+haben wir das Tischobjekt noch um eine `int`-Variable `m_numForksInUse` ergänzt.
 Da die Aktivitäten eines Philosophen im Kontext eines Threads
 stattfinden (wir kommen darauf noch zu sprechen), muss der schreibende und lesende Zugriff auf diese `m_numForksInUse`-Variable *thread-sicher* sein.
 Damit sind wir beim Klassen-Template `std::atomic<T>` angekommen, siehe Zeile 5 von [Listing 2].
-Mit Hilfe dieser Klasse ist es möglich, den Wert von `m_numForksInUse` thread-sicher zu verändern.
+Mit Hilfe dieser Klasse ist es möglich, den Wert von `m_numForksInUse` thread-sicher &ndash; sprich *atomar* &ndash; zu verändern.
 
 Weiter geht es mit der Realisierung der Methoden aus [Listing 2]:
 
@@ -246,7 +243,7 @@ int Table::numForks() const {
 
 
 Man beachte in [Listing 3], dass stets zwei Gabeln von einem Philosophen aufgenommen bzw. abgelegt werden.
-Aus diesem Grund ist die Variable `m_numForksInUse` immer um den Wert 2 zu inkrementieren oder dekrementieren.
+Aus diesem Grund ist die Variable `m_numForksInUse` immer um den Wert 2 zu inkrementieren oder zu dekrementieren.
 
 Damit sind wir beim zentralen Punkt in der Anwendung angekommen, der Realisierung eines Philosophen:
 
@@ -257,19 +254,20 @@ sitzt an einem Tisch. Die Position am Tisch beschreiben wir mit einem
 Index, der Werte von 0 bis 4 annehmen kann. Die Position des Philosophen
 am Tisch spielt insofern eine Rolle, da auf diese Weise die beiden 
 Gabeln zu seiner linken und rechten Seite bestimmt sind.
-Also dem dritten Philosoph ist die dritte und vierte Gabel zugeordnet, etc.
+Also dem dritten Philosoph ist die dritte und vierte Gabel
+aus dem Feld `m_forks` (siehe Zeile 4 von [Listing 3]) zugeordnet, etc.
 
-Des weiteren kann ein Philosoph &ldquo;denken&rdquo;, &ldquo;hungrig sein&rdquo; und &ldquo;essen&rdquo;,
+Des Weiteren kann ein Philosoph &ldquo;denken&rdquo;, &ldquo;hungrig sein&rdquo; und &ldquo;essen&rdquo;,
 was wir mit entsprechenden Methoden `thinking`, `hungry` und `eating` simulieren.
 Die Methode `dine` wiederum bildet den gesamten Lebenszyklus
 eines Philosoph ab, den wir zur Laufzeit in einem Thread ausführen.
 
-Um einen Thread erzeugen zu können, bieten sich hierzu in C++ prinzipiell die Klasse `std::thread`
+Um einen Thread erzeugen zu können, bieten sich in C++ prinzipiell die Klasse `std::thread`
 oder das Funktionstemplate `std::async<T>` an. 
 Ich habe mich für die Variante mit `std::async` entschieden,
-es kommt in Folge dessen auch noch das Klassen-Template
+es kommt infolgedessen auch noch das Klassen-Template
 `std::future<T>` mit ins Spiel.
-Den Lebenszyklus eines Philosoph wollen wir explizit ´starten und beenden können,
+Den Lebenszyklus eines Philosophen wollen wir explizit starten und beenden können,
 diesem Zweck dienen die beiden Methoden `start` und `stop`. 
 Weitere Details in der Konzeption und Realisierung eines Philosophen stellen wir nun
 in [Listing 4] und [Listing 5] vor:
@@ -392,52 +390,54 @@ Wir fahren gleich mit der Realisierung der Methoden der `Philosopher`-Klasse for
 
 *Listing* 5: Klasse `Philosopher` &ndash; Realisierung.
 
-In Methode `start` ([Listing 4], Zeile 8) wird mit `std::async` der Lebenszyklus-Thread 
+In Methode `start` ([Listing 5], Zeile 8) wird mit `std::async` der Lebenszyklus-Thread 
 eines Philosophen erzeugt. Beendet wird der Thread durch Methode `stop`.
 Diese Methode verändert eine `bool`-Variable `m_running`,
 die den Philosophen veranlasst, den Speisetisch zu verlassen.
-
-Die Methoden `thinking`  und `hungry` sind trivial in ihrer Realisierung,
+Die Methoden `thinking` und `hungry` sind trivial in ihrer Realisierung,
 einzig und allein das Aufnehmen der beiden Gabeln zur linken und rechten 
 Seite eines Philosophen sollten wir näher betrachten, sprich die Methode `eating`:
 
-Um sinnbildlich betrachtet zwei Gabeln in die Hände nehmen zu können,
-ordnen wir einer jeden Gabel ein `std::mutex`-Objekt zu (siehe [Listing 1]).
-Das Aufnehmen einer Gabel als auch das Warten auf die Verfügbarkeit der Gabel,
+Um sinnbildlich betrachtet zwei Gabeln aufnehmen zu können,
+ordnen wir jeder Gabel ein `std::mutex`-Objekt zu (siehe [Listing 1]).
+Das Aufnehmen einer Gabel bzw. das Warten auf die Verfügbarkeit der Gabel,
 wenn diese gerade noch vom benachbarten Philosophen verwendet wird,
-ordnen wir einem Aufruf der `lock`-Methode am  `std::mutex`-Objekt zu.
-Liegt die Gabel auf dem Tisch (ist also verfügbar), kehrt ein Aufruf der `lock`-Methode sofort zurück &ndash; und versetzt folglich andere
-`lock`-Methodenaufrufe anderer Philosophen in einen Wartezustand. Ist die Gabel nicht verfügbar, blockiert
+entspricht somit einem Aufruf der `lock`-Methode dieses `std::mutex`-Objekts.
+Liegt die Gabel auf dem Tisch (ist also verfügbar), kehrt ein Aufruf der `lock`-Methode sofort zurück &ndash;
+und versetzt folglich andere `lock`-Methodenaufrufe
+benachbarter Philosophen in einen Wartezustand. Ist die Gabel nicht verfügbar, blockiert
 der `lock`-Methodenaufruf solange, bis die Gabel von einem anderen Philosophen abgelegt wird.
 
 Da wir zwei Gabeln zum Essen benötigen, müssten wir geschickt zwei `lock`-Methodenaufrufe am linken und rechten
 `Fork`-Objekt kaskadieren. Es geht aber auch anders &ndash; mit einer Kombination des RAII-Idioms
 und der Klasse `std::scoped_lock`.
-Das RAII-Idiom bedeutet zunächst einmal, um es kurz zu formulieren, dass die Verantwortung für die paarweisen Aufrufe
-von  `lock` und  `unlock` in die Obhut einer Hüllenklasse übergeben wird.
-Da der Einsatz eines Hüllenobjekts den Übergang von Funktionsaufrufen zur Objektorientierung bedeutet,
+Das RAII-Idiom bedeutet zunächst einmal (um es kurz zu formulieren),
+dass die Verantwortung für die paarweisen Aufrufe
+von `lock` und `unlock` in die Obhut einer Hüllenklasse übergeben werden.
+Da der Einsatz eines Hüllenobjekts den Übergang von Funktionsaufrufen zu objektorientierter Programmierung bedeutet,
 und damit insbesondere Konstruktoren und Destruktoren ins Spiel kommen,
-lassen sich nun  `lock`- und  `unlock`-Funktionsaufrufe deterministisch ausführen
+lassen sich auf diese Weise `lock`- und `unlock`-Funktionsaufrufe deterministisch ausführen
 (im Konstrukor bzw. Destruktor einer RAII-Hüllenklasse).
 Da ein Destruktoraufruf unabhängig von unerwartet eintretenden
-Ausnahmen oder anderen vorzeitigen Beendigungen von Kontrollstrukturen ist, lässt sich auf diese Weise 
-ein robustes Handling von `lock`- und korrespondierendem `unlock`-Funktionsaufruf erzielen.
+Ausnahmen oder anderen vorzeitigen Beendigungen von Kontrollstrukturen immer ausgeführt wird,
+lässt sich auf diese Weise 
+ein fehlerfreies Handling von `lock`- und korrespondierendem `unlock`-Funktionsaufruf erzielen.
 
 Bleibt noch die Wahl der RAII-Hüllenklasse zu betrachten: Hierfür bietet sich die C++&ndash;Standardklasse `std::scoped_lock` an.
 Sie besitzt inbesondere einen Konstruktor, der mehrere `std::mutex`-Objekte aufnehmen kann &ndash; 
-und damit den `lock`-Aufruf an mehreren `std::mutex`-Objekten im Konstruktor durchführt:
+und damit den `lock`-Aufruf an zwei (sogar mehreren) `std::mutex`-Objekten im Konstruktor durchführen kann:
 
 ```cpp
 std::scoped_lock raii_lock{ leftFork.getMutex(), rightFork.getMutex() };
 ```
 
-Wird diese Anweisung zur Laufzeit passert, kann man sagen, dass der dazugehötige Philosoph im Besitz der linken und rechten Gabel ist.
-Wird in Zeile 57 von [Listing 4] der geschachtelte Block verlassen, kommt es zum Destruktor-Aufruf des `std::scoped_lock`-Objekts.
-Es werden entsprechende `unlock`-Funktionsaufrufe an den beteiligten `std::mutex`-Objekten abgesetzt
-und in der Anschauung gesprochen kann man sagen,
+Wird diese Anweisung zur Laufzeit passiert, kann man sagen, dass der dazugehötige Philosoph im Besitz der linken und rechten Gabel ist.
+Wird in Zeile 57 von [Listing 5] der geschachtelte Block verlassen, kommt es zum Destruktor-Aufruf des `std::scoped_lock`-Objekts.
+Es werden entsprechende `unlock`-Funktionsaufrufe an den beteiligten `std::mutex`-Objekten abgesetzt.
+In der Anschauung gesprochen kann man dann sagen,
 dass der Philosoph gerade beide Gabeln wieder auf den Tisch zurückgelegt hat.
 
-Der gesamte Lebenszyklus eines Philosophen sieht damit quasi so aus:
+Der gesamte Lebenszyklus eines Philosophen sieht so aus:
 
 ```cpp
 while (m_running) {
@@ -448,18 +448,18 @@ while (m_running) {
 }
 ```
 
-Damit haben wir die interessanten Quellcode-Abschnitte von [Listing 4] studiert.
+Damit haben wir die interessanten Quellcode-Abschnitte von [Listing 5] studiert.
 
 
 ## Multithreading-sicheres Logging (Klasse `Logger`)
 
-In einer Multithreading-Anwendung kann für textuelle Ausgaben das `std::cout`-Objekt nicht ohne Weiteres verwendet werden.
+In einer Multithreading-Anwendung kann für textuelle Ausgaben das `std::cout`-Objekt nicht ohne Weiteres verwenden.
 `std::cout` ist ein globales Objekt, Methodenaufrufe an diesem Objekt im Kontext unterschiedlicher Threads führen
 zwar nicht zu einem Absturz, die Ausgaben können aber &ldquo;zerstückelt&rdquo;
-auf der Konsole erscheinen, zum Beispiel dann, wenn der `<<`-Operator kaskadiert verwendet wird.
+auf der Konsole auftreten, zum Beispiel dann, wenn der `<<`-Operator kaskadiert verwendet wird.
 
 Möchte man auf den Gebrauch des `<<`-Operators am `std::cout`-Objekt nicht verzichten,
-muss man die Argumente zunächst in einem separaten Objekt (vorzugsweise vom Typ `std::string`) zusammenfassen
+muss man die Argumente zunächst in einem einzigen, separaten Objekt (vorzugsweise vom Typ `std::string`) zusammenfassen
 und dieses dann mit nur einem Aufruf des `<<`-Operators auf die Konsole schieben.
 Das Zusammenfassen einer beliebigen Anzahl von Parametern (unterschiedlichen Typs) in ein einzelnes `std::string`-Objekt
 findet in der `log`-Methode (genauer: `logInternal`) der `Logger`-Klasse statt:
@@ -484,25 +484,26 @@ findet in der `log`-Methode (genauer: `logInternal`) der `Logger`-Klasse statt:
 *Listing* 6: Methode `logInternal` &ndash; Klasse `Logger`.
 
 
-Um eine beliege Anzahl von Aktualparametern unterschiedlichen Datentyps hantieren zu können,
-kommen in [Listing 6] *variadische Templates*, *Folding* und *Perfect Forwarding* zum Einsatz.
+In [Listing 6] kommen zur Verarbeitung einer beliebigen Anzahl von Parametern unterschiedlichen Datentyps
+*variadische Templates*, *Folding* und *Perfect Forwarding* zum Einsatz.
 Diese C++&ndash;Instrumente sind in ihrem Verständnis nicht ganz einfach, wir stellen sie deshalb 
-nur exemplarisch am Beispiel der `logInternal`-Methode von [Listing 6] vor.
+nur exemplarisch am Beispiel der `logInternal`-Methode aus [Listing 6] vor.
 
 Sollten Sie beim konsekutiven Einsatz des Streaming-Operators `<<` in Zeile 10 von [Listing 6] überrascht sein,
-dann beachten Sie bitte Folgendes: In Zeile 4 wird eine lokale Variable des Typs `std::stringstream` angelegt.
+dann beachten Sie bitte Folgendes: In Zeile 4 wird eine *lokale* Variable des Typs `std::stringstream` angelegt.
 Lokale Variablen werden auf dem *Stack* abgelegt, sie sind damit *nicht* dem konkurrierenden Zugriff mehrerer Threads ausgesetzt.
 
 Die Anweisungen in den Zeilen 4 bis 10 von [Listing 6] operieren folglich ausschließlich auf Daten,
 die auf dem Stack abgelegt sind! Einzig und allein in Zeile 11 wird der `<<`-Operator auf ein
 `std::ostream` angewendet, hinter dem sich ein globales Objekt, wie zum Beispiel `std::cout`, verbergen kann.
-Ein einmaliger `<<`-Aufruf an einem `std::ostream`-Objekt ist jedoch multithreading-sicher!
+Ein einmaliger `<<`-Aufruf an einem `std::ostream`-Objekt ist multithreading-sicher!
 
-In der `Logger`-Klasse finden sich noch einige andere Funktionalitäten vor. 
+In der `Logger`-Klasse finden sich noch einige andere Funktionalitäten vor &ndash;
+zum Beispiel zwei Funktionen `startWatch` und `stopWatchMicro` zum Messen der Ausführungszeit eines Programms. 
 So wird jedem Thread, der sich in C++ mit der Funktion `std::this_thread::get_id` identifizieren lässt,
-eine leichter lesbare ganze Zahl (1, 2, ...) zugeordnet. Damit wiederum sind die Ausgaben der 
+eine leichter lesbare ganze Zahl (1, 2, ...) zugeordnet. So sind die Ausgaben der 
 &ldquo;*Dining Philosophers*&rdquo;-Simulation besser lesbar.
-Den gesamten Quellcode der Klasse `Logger` finden Sie in [Listing 7] vor:
+Den gesamten Quellcode der Klasse `Logger` finden Sie in zum Abschluss dieser Betrachtungen in [Listing 7] vor:
 
 ###### {#listing_07_class_logger}
 
@@ -588,14 +589,21 @@ Den gesamten Quellcode der Klasse `Logger` finden Sie in [Listing 7] vor:
 *Listing* 7: Klasse `Logger`.
 
 
-
-
 # There&lsquo;s more
 
-Gray-Codes lassen sich sowohl mit einem rekursiven als auch mit einem iterativen Algorithmus berechnen.
-Versuchen Sie, an Hand der Beschreibung des Algorithmus in [Abbildung 2] eine iterative Realisierung in C++ umzusetzen.
-Die folgende [Anregung](https://www.geeksforgeeks.org/generate-n-bit-gray-codes/) könnte hierbei behilflich sein.
+Die vorgestellte Implementierung für das &rdquo;*Dining Philosophers*&rdquo;&ndash;Problem
+wurde mit modernen C++&ndash;Features wie Threads und Mutex-Objekten durchgeführt.
+Allerdings ist es bei dieser Realisierung dennoch möglich, dass die Philosophen verhungern,
+wenn man die Wartezeiten in den einzelnen Lebenszyklus-Methoden entfernt.
 
+Ein Algorithmus, der verhindert, dass die Philosophen verhungern, wurde von *K Mani Chandy* und *Jayadev Misra* vorgeschlagen.
+Eine Beschreibung des Algorithmus als auch eine Umsetzung in Java findet sich
+[hier](https://www.codeplanet.eu/tutorials/java/69-speisende-philosophen.html).
+Erstellen Sie eine alternative Realisierung des &rdquo;*Dining Philosophers*&rdquo;&ndash;Problems 
+nach den Ideen von *Mani Chandy* und *Jayadev Misra*.
+Benötigen Sie noch weitere Anregungen, finden Sie bei
+[Marius Bancila](https://mariusbancila.ro/blog/2017/01/20/dining-philosophers-in-c11-chandy-misra-algorithm)
+eine Hilfestellung!
 
 <br/>
 
@@ -611,8 +619,7 @@ Die folgende [Anregung](https://www.geeksforgeeks.org/generate-n-bit-gray-codes/
 [Listing 6]: #listing_06_class_logger_log_method
 [Listing 7]: #listing_07_class_logger
 
-[Abbildung 1]:  #abbildung_1_gray_codes_four_bits
-[Abbildung 2]:  #abbildung_2_gray_codes_construction
+[Abbildung 1]:  #XXX
+
 
 <!-- End-of-File -->
-
