@@ -225,6 +225,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DiningPhilosophers", "Dinin
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\DiningPhilosophers\DiningPhilosophers.md = MarkDown\DiningPhilosophers\DiningPhilosophers.md
 		MarkDown\DiningPhilosophers\DiningPhilosophers.png = MarkDown\DiningPhilosophers\DiningPhilosophers.png
+		MarkDown\DiningPhilosophers\Dining_Philosophers.png = MarkDown\DiningPhilosophers\Dining_Philosophers.png
 	EndProjectSection
 EndProject
 Global

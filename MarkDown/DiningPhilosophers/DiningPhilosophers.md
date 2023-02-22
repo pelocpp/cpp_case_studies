@@ -1,12 +1,15 @@
-<!-- Dinierende Philosophen -->
+<!-- Das Problem der dinierenden Philosophen -->
 
 Das Beispiel der dinierenden Philosophen ist eines der populärsten Standardprobleme
 aus dem Bereich der Parallelprogrammierung.
 Es erlaubt, die Kooperation der beteiligten Threads
 in einer lebendigen Simulation darzustellen.
 
-Wir stellen eine Standard-Lösung für dieses Problem vor und gehen vor allem auf die
-Klasse `std::mutex` und das RAII-Idiom näher ein.
+Wir stellen eine Standard-Lösung für dieses Problem vor und gehen dabei
+vor allem auf die Klasse `std::mutex` und das RAII-Idiom näher ein.
+Basiswerkzeuge zur nebenläufigen Programmierung in C++ wie `std::async`, `std::future`
+oder auch `std::scoped_lock` werden eingesetzt.
+
 
 <!--more-->
 
@@ -19,12 +22,12 @@ Klasse `std::mutex` und das RAII-Idiom näher ein.
   * `std::atomic`, `fetch_add` und `fetch_sub`
   * STL-Containerklasse `std::array`
   * Berechnung von Zufallszahlen (`std::random_device`, `std::mt19937` und `std::uniform_int_distribution`)
-  * Multithreading-sicheres Logging (Klasse `Logger`)
-  * Variadische Templates, Folding und *Perfect Forwarding* 
+  * Multithreadingsicheres Logging (Benutzerdefinierte Klasse `Logger`)
+  * Variadische Templates, *Folding* und *Perfect Forwarding* 
 
 # Einführung
 
-Das Problem ist das Folgende: In einem Kloster gibt es fünf Mönche, die sich der Philosophie widmen.
+Das Problem in dieser Fallstudie ist das Folgende: In einem Kloster gibt es fünf Mönche, die sich der Philosophie widmen.
 Jeder Philosoph wäre glücklich, wenn er nur denken könnte, aber gelegentlich ist auch der menschliche Trieb des Essens zu beachten.
 Somit kennt jeder Philosoph drei Beschäftigungen:
 
@@ -53,12 +56,12 @@ dass stets maximal zwei Philosophen gleichzeitig essen können und dass eine Gab
 In dieser Fallstudie wollen wir das Problem der dinierenden Philosophen in einer C++&ndash;Konsolen-Anwendung umsetzen.
 Im Mittelpunkt steht die Auseinandersetzung mit den Hilfsmittels des Multithreadings.
 Wie schon erwähnt geht es darum, dass der Zugriff auf eine Gabel durch die beiden benachbarten Philosophen
-korrekt erfolgt. Zwei Philosophen dürfen diesselbe Gabel nicht zu einem Zeitpunkt gleichzeitig aufnehmen, und:
-Ist ein Philosoph im Besitz einer Gabel, so legt er diese nach einer bestimmten Essenzeit wieder auf den Tisch zurück,
-so kann folglich vom benachbarten Philosophen aufgenommen werden.
+korrekt zu erfolgen hat. Zwei Philosophen dürfen dieselbe Gabel nicht zu einem Zeitpunkt gleichzeitig aufnehmen, und:
+Ist ein Philosoph im Besitz zweier Gabeln, so legt er diese nach einer bestimmten Essenzeit wieder auf den Tisch zurück,
+so dass diese von den benachbarten Philosophen aufgenommen werden können.
 
 
-In einer semi-grafischen Ausgabe können wir das Problem zum Beispiel auf diese Weise visualisieren:
+In einer semi-grafischen Ausgabe könnten wir das Problem beispielsweise auf diese Weise visualisieren:
 
 ```
 [1]: Dining Philosophers Simulation [TID=1]
@@ -128,8 +131,12 @@ In einer semi-grafischen Ausgabe können wir das Problem zum Beispiel auf diese 
 [1]: Simulation Done.
 ```
 
-Die Nummer in den eckigen Klammern zu Beginn einer jeden Zeile stehen für eine Thread-Id. 
+Derartige Ausgaben sind zwar nicht ganz so schön wie eine grafische Oberfläche,
+aber man kann &ndash; wenn man die einzelnen Zeile genau betrachtet &ndash; doch die relevanten Details
+im Ablauf der Verköstigung von fünf Mönchen gut erkennen.
 
+Wir stellen nun im Lösungsabschnitt der Reihe nach die relevanten C++&ndash;Klassen vor,
+die dieser Realisierung zu Grunde liegen.
 
 
 # Lösung
@@ -138,9 +145,8 @@ Die Nummer in den eckigen Klammern zu Beginn einer jeden Zeile stehen für eine 
 
 ## Klasse `Fork`
 
-Wir beginnen unsere Betrachtungen einer Umsetzung des Philosophenproblems in C++
-mit einigen Vorüberlegungen, wie sich der konkurrierende Zugriff
-zweier Philosophen auf eine Gabel konkret gestalten lässt.
+Wir beginnen unsere Betrachtungen in der Umsetzung des Philosophenproblems mit dem schwierigsten Abschnitt,
+nämlich wie sich der konkurrierende Zugriff zweier Philosophen auf eine Gabel in C++ gestalten lässt.
 Softwaretechnisch ist für den konfliktfreien Zugriff auf ein kritisches Objekt bzw.
 auf eine kritische Folge von Anweisungen die Klasse `std::mutex` das Mittel der Wahl.
 Mit den beiden Methoden `lock` und `unlock` dieser Klasse kann man erreichen, dass kritische Code-Passagen
@@ -174,8 +180,8 @@ Da zu bestimmten Zeitpunkten auf ein Gabelobjekt zugegriffen wird, kapseln wir d
 mit einer Überladung des Index-Operators `[]`.
 
 Die Sicherstellung, dass zu einem bestimmten Zeitpunkt nur eine Gabel von einem Philosophen aufgegriffen werden kann,
-erfolgt durch die Philosophen-Objekte. Direkter formuliert: Der Tisch stellt Gabeln mit ` std::mutex`-Objekten zur Verfügung,
-der Aufruf der Methoden `lock` und `unlock` erfolgt durch die Initiative der Philosophen. 
+erfolgt durch die Philosophen-Objekte. Anders formuliert: Der Tisch stellt Gabeln mit ` std::mutex`-Objekten zur Verfügung,
+der Aufruf der Methoden `lock` und `unlock` erfolgt indirekt durch die Initiative der Philosophen. 
 
 ###### {#listing_02_class_table_decl}
 
@@ -201,17 +207,18 @@ der Aufruf der Methoden `lock` und `unlock` erfolgt durch die Initiative der Phi
 
 *Listing* 2: Klasse `Table` &ndash; Spezifikation.
 
-Das Salz in der Suppe dieser Fallstudie ist natürlich die Beobachtung des Umstands, dass zu keinem Zeitpunkt der Simulation
-5 Gabeln gleichzeitig zum Essen verwendet werden. Da ein Philosoph immer 2 Gabeln zum Essen benötigt,
+Das Salz in der Suppe dieser Fallstudie ist natürlich die Beobachtung des Umstands,
+dass zu keinem Zeitpunkt der Simulation
+fünf Gabeln gleichzeitig zum Essen verwendet werden. Da ein Philosoph immer zwei Gabeln zum Essen benötigt,
 müssen folglich stets eine, drei, oder fünf freie Gabeln auf dem Tisch liegen. Sollten alle fünf Gabeln in Gebrauch sein,
-haben wir einen Fehler in der Simulation.
+haben wir einen Fehler in der Simulation vorliegen.
 
-Um die Anzahl der in Gebrauch befindlichen Gabeln besser &ndash; und vor allem auch korrekt &ndash; beobachten zu können,
+Um die Anzahl der in Gebrauch befindlichen Gabeln besser beobachten zu können,
 haben wir das Tischobjekt noch um eine `int`-Variable `m_numForksInUse` ergänzt.
 Da die Aktivitäten eines Philosophen im Kontext eines Threads
-stattfinden (wir kommen darauf noch zu sprechen), muss der schreibende und lesende Zugriff auf diese `m_numForksInUse`-Variable *thread-sicher* sein.
+stattfinden (wir kommen darauf noch zu sprechen), muss der schreibende und lesende Zugriff auf diese `m_numForksInUse`-Variable *threadsicher* sein.
 Damit sind wir beim Klassen-Template `std::atomic<T>` angekommen, siehe Zeile 5 von [Listing 2].
-Mit Hilfe dieser Klasse ist es möglich, den Wert von `m_numForksInUse` thread-sicher &ndash; sprich *atomar* &ndash; zu verändern.
+Mit Hilfe dieser Klasse ist es möglich, den Wert von `m_numForksInUse` threadsicher &ndash; sprich *atomar* &ndash; zu verändern.
 
 Weiter geht es mit der Realisierung der Methoden aus [Listing 2]:
 
@@ -261,12 +268,12 @@ Des Weiteren kann ein Philosoph &ldquo;denken&rdquo;, &ldquo;hungrig sein&rdquo;
 was wir mit entsprechenden Methoden `thinking`, `hungry` und `eating` simulieren.
 Die Methode `dine` wiederum bildet den gesamten Lebenszyklus
 eines Philosoph ab, den wir zur Laufzeit in einem Thread ausführen.
-
 Um einen Thread erzeugen zu können, bieten sich in C++ prinzipiell die Klasse `std::thread`
 oder das Funktionstemplate `std::async<T>` an. 
 Ich habe mich für die Variante mit `std::async` entschieden,
 es kommt infolgedessen auch noch das Klassen-Template
 `std::future<T>` mit ins Spiel.
+
 Den Lebenszyklus eines Philosophen wollen wir explizit starten und beenden können,
 diesem Zweck dienen die beiden Methoden `start` und `stop`. 
 Weitere Details in der Konzeption und Realisierung eines Philosophen stellen wir nun
@@ -304,7 +311,7 @@ in [Listing 4] und [Listing 5] vor:
 
 *Listing* 4: Klasse `Philosopher` &ndash; Spezifikation.
 
-Wir fahren gleich mit der Realisierung der Methoden der `Philosopher`-Klasse fort:
+Wir fahren gleich mit der Realisierung der Methoden der `Philosopher`-Klasse aus [Listing 4] fort:
 
 ###### {#listing_05_class_philosopher_impl}
 
@@ -394,6 +401,7 @@ In Methode `start` ([Listing 5], Zeile 8) wird mit `std::async` der Lebenszyklus
 eines Philosophen erzeugt. Beendet wird der Thread durch Methode `stop`.
 Diese Methode verändert eine `bool`-Variable `m_running`,
 die den Philosophen veranlasst, den Speisetisch zu verlassen.
+Softwaretechnisch gesehen ist ein Thread dann beendet, wenn seine Threadprozedur verlassen wurde.
 Die Methoden `thinking` und `hungry` sind trivial in ihrer Realisierung,
 einzig und allein das Aufnehmen der beiden Gabeln zur linken und rechten 
 Seite eines Philosophen sollten wir näher betrachten, sprich die Methode `eating`:
@@ -413,7 +421,7 @@ Da wir zwei Gabeln zum Essen benötigen, müssten wir geschickt zwei `lock`-Meth
 und der Klasse `std::scoped_lock`.
 Das RAII-Idiom bedeutet zunächst einmal (um es kurz zu formulieren),
 dass die Verantwortung für die paarweisen Aufrufe
-von `lock` und `unlock` in die Obhut einer Hüllenklasse übergeben werden.
+von `lock` und `unlock` in die Obhut einer Hüllenklasse übergeben wird.
 Da der Einsatz eines Hüllenobjekts den Übergang von Funktionsaufrufen zu objektorientierter Programmierung bedeutet,
 und damit insbesondere Konstruktoren und Destruktoren ins Spiel kommen,
 lassen sich auf diese Weise `lock`- und `unlock`-Funktionsaufrufe deterministisch ausführen
@@ -437,7 +445,7 @@ Es werden entsprechende `unlock`-Funktionsaufrufe an den beteiligten `std::mutex
 In der Anschauung gesprochen kann man dann sagen,
 dass der Philosoph gerade beide Gabeln wieder auf den Tisch zurückgelegt hat.
 
-Der gesamte Lebenszyklus eines Philosophen sieht so aus:
+Der gesamte Lebenszyklus eines Philosophen (sprich die Threadprozedur) sieht damit so aus:
 
 ```cpp
 while (m_running) {
@@ -453,16 +461,16 @@ Damit haben wir die interessanten Quellcode-Abschnitte von [Listing 5] studiert.
 
 ## Multithreading-sicheres Logging (Klasse `Logger`)
 
-In einer Multithreading-Anwendung kann für textuelle Ausgaben das `std::cout`-Objekt nicht ohne Weiteres verwenden.
+In einer Multithreading-Anwendung kann für textuelle Ausgaben das `std::cout`-Objekt nicht ohne Weiteres verwendet werden.
 `std::cout` ist ein globales Objekt, Methodenaufrufe an diesem Objekt im Kontext unterschiedlicher Threads führen
 zwar nicht zu einem Absturz, die Ausgaben können aber &ldquo;zerstückelt&rdquo;
 auf der Konsole auftreten, zum Beispiel dann, wenn der `<<`-Operator kaskadiert verwendet wird.
 
 Möchte man auf den Gebrauch des `<<`-Operators am `std::cout`-Objekt nicht verzichten,
 muss man die Argumente zunächst in einem einzigen, separaten Objekt (vorzugsweise vom Typ `std::string`) zusammenfassen
-und dieses dann mit nur einem Aufruf des `<<`-Operators auf die Konsole schieben.
+und dieses dann mit nur einem einzigen Aufruf des `<<`-Operators auf die Konsole schieben.
 Das Zusammenfassen einer beliebigen Anzahl von Parametern (unterschiedlichen Typs) in ein einzelnes `std::string`-Objekt
-findet in der `log`-Methode (genauer: `logInternal`) der `Logger`-Klasse statt:
+findet in der `logInternal`-Methode der `Logger`-Klasse statt:
 
 ###### {#listing_06_class_logger_log_method}
 
@@ -491,18 +499,20 @@ nur exemplarisch am Beispiel der `logInternal`-Methode aus [Listing 6] vor.
 
 Sollten Sie beim konsekutiven Einsatz des Streaming-Operators `<<` in Zeile 10 von [Listing 6] überrascht sein,
 dann beachten Sie bitte Folgendes: In Zeile 4 wird eine *lokale* Variable des Typs `std::stringstream` angelegt.
-Lokale Variablen werden auf dem *Stack* abgelegt, sie sind damit *nicht* dem konkurrierenden Zugriff mehrerer Threads ausgesetzt.
+Lokale Variablen werden auf dem *Stack* abgelegt, sie sind damit *nicht* dem konkurrierenden Zugriff mehrerer Threads ausgesetzt,
+da jedem Thread ein exklusives Stück des Stacks zugewiesen wird. 
 
 Die Anweisungen in den Zeilen 4 bis 10 von [Listing 6] operieren folglich ausschließlich auf Daten,
 die auf dem Stack abgelegt sind! Einzig und allein in Zeile 11 wird der `<<`-Operator auf ein
 `std::ostream` angewendet, hinter dem sich ein globales Objekt, wie zum Beispiel `std::cout`, verbergen kann.
-Ein einmaliger `<<`-Aufruf an einem `std::ostream`-Objekt ist multithreading-sicher!
+Ein einmaliger `<<`-Aufruf an einem `std::ostream`-Objekt aber ist multithreading-sicher!
 
 In der `Logger`-Klasse finden sich noch einige andere Funktionalitäten vor &ndash;
-zum Beispiel zwei Funktionen `startWatch` und `stopWatchMicro` zum Messen der Ausführungszeit eines Programms. 
-So wird jedem Thread, der sich in C++ mit der Funktion `std::this_thread::get_id` identifizieren lässt,
+zum Beispiel zwei Funktionen `startWatch` und `stopWatch` zum Messen der Ausführungszeit eines Programms. 
+Ferner wird jedem Thread, der sich in C++ mit der Funktion `std::this_thread::get_id` identifizieren lässt,
 eine leichter lesbare ganze Zahl (1, 2, ...) zugeordnet. So sind die Ausgaben der 
 &ldquo;*Dining Philosophers*&rdquo;-Simulation besser lesbar.
+
 Den gesamten Quellcode der Klasse `Logger` finden Sie in zum Abschluss dieser Betrachtungen in [Listing 7] vor:
 
 ###### {#listing_07_class_logger}
@@ -597,10 +607,10 @@ Allerdings ist es bei dieser Realisierung dennoch möglich, dass die Philosophen
 wenn man die Wartezeiten in den einzelnen Lebenszyklus-Methoden entfernt.
 
 Ein Algorithmus, der verhindert, dass die Philosophen verhungern, wurde von *K Mani Chandy* und *Jayadev Misra* vorgeschlagen.
-Eine Beschreibung des Algorithmus als auch eine Umsetzung in Java findet sich
+Eine Beschreibung des Algorithmus als auch eine Umsetzung in Java finden sich
 [hier](https://www.codeplanet.eu/tutorials/java/69-speisende-philosophen.html).
 Erstellen Sie eine alternative Realisierung des &rdquo;*Dining Philosophers*&rdquo;&ndash;Problems 
-nach den Ideen von *Mani Chandy* und *Jayadev Misra*.
+nach den Ideen von *K Mani Chandy* und *Jayadev Misra*.
 Benötigen Sie noch weitere Anregungen, finden Sie bei
 [Marius Bancila](https://mariusbancila.ro/blog/2017/01/20/dining-philosophers-in-c11-chandy-misra-algorithm)
 eine Hilfestellung!
