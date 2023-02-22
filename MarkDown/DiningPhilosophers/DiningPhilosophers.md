@@ -46,7 +46,7 @@ Die drei Zustände *denken*, *hungrig sein* und *essen* werden folglich ständig
 
 ###### {#abbildung_1_dining_philosophers}
 
-{{< figure src="/img/permutations/Dining_Philosophers.png" width="25%" >}}
+{{< figure src="/img/diningphilosophers/Dining_Philosophers.png" width="25%" >}}
 
 <sup>Credits: gefunden in einem Artikel [&ldquo;Elixir, Erlang, and the Dining Philosophers&rdquo; von Tony Baker](https://spin.atomicobject.com/2012/10/31/elixir-erlang-and-the-dining-philosophers)</sup>.
 
