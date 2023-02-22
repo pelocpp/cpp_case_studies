@@ -43,11 +43,15 @@ Ist einer seiner benachbarten Glaubensbrüder gerade beim Essen, muss er warten.
 Sind beide Gabeln frei, kann er mit dem Essen beginnen. Nachdem er satt ist, legt er beide Gabeln zurück und denkt wieder.
 Die drei Zustände *denken*, *hungrig sein* und *essen* werden folglich ständig in dieser Reihenfolge durchlaufen.
 
-<img src="Dining_Philosophers.png" width="250" />
+
+###### {#abbildung_1_dining_philosophers}
+
+{{< figure src="/img/permutations/Dining_Philosophers.png" width="25%" >}}
 
 <sup>Credits: gefunden in einem Artikel [&ldquo;Elixir, Erlang, and the Dining Philosophers&rdquo; von Tony Baker](https://spin.atomicobject.com/2012/10/31/elixir-erlang-and-the-dining-philosophers)</sup>.
 
 *Abbildung* 1: Die dinierenden Philosophen.
+
 
 Eine Lösung dieses Problems gestattet es, dass jederzeit so viele Philosophen wie möglich essen können
 und dass keiner der Philosophen verhungert. Man kann sich leicht überlegen, 
@@ -621,15 +625,14 @@ eine Hilfestellung!
 
 [Tabelle 1]: #tabelle_1_class_graycodescalculator
 
-[Listing 1]: #listing_01_class_fork
-[Listing 2]: #listing_02_class_table_decl
-[Listing 3]: #listing_03_class_table_impl
-[Listing 4]: #listing_04_class_philosopher_decl
-[Listing 5]: #listing_05_class_philosopher_impl
-[Listing 6]: #listing_06_class_logger_log_method
-[Listing 7]: #listing_07_class_logger
+[Listing 1]:    #listing_01_class_fork
+[Listing 2]:    #listing_02_class_table_decl
+[Listing 3]:    #listing_03_class_table_impl
+[Listing 4]:    #listing_04_class_philosopher_decl
+[Listing 5]:    #listing_05_class_philosopher_impl
+[Listing 6]:    #listing_06_class_logger_log_method
+[Listing 7]:    #listing_07_class_logger
 
-[Abbildung 1]:  #XXX
-
+[Abbildung 1]:  #abbildung_1_dining_philosophers
 
 <!-- End-of-File -->
