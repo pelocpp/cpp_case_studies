@@ -70,7 +70,7 @@ namespace MandelbrotBasisVersion {
         return std::complex<T>(
             XMIN + (XMAX - XMIN) * x / maxWidth,
             YMAX + (YMIN - YMAX) * y / maxHeight
-            );
+        );
     }
 
     void Mandelbrot::paint(HDC hDC) {
@@ -307,9 +307,11 @@ namespace MandelbrotBasisVersion {
         return numPixels;
     }
 
-    long Mandelbrot::computeSequence(std::complex<float> point)
+    
+    template <typename T>
+    long Mandelbrot::computeSequence(std::complex<T> point)
     {
-        std::complex<float> c(0.0);
+        std::complex<T> c(0.0);
 
         long count = 0;
         while (count < Mandelbrot::NumColors && std::abs(c) < Mandelbrot::Limit) {
@@ -325,17 +327,18 @@ namespace MandelbrotBasisVersion {
         m_hDC = ::GetDC(m_hWnd);
     }
 
-    void Mandelbrot::addPixel(Pixel pixel) {
+    void Mandelbrot::addPixel(Pixel pixel)
+    {
         std::scoped_lock<std::mutex> lock(m_mutex);
-        m_pixels.push(pixel);
 
+        m_pixels.push(pixel);
         if (m_pixels.size() > 10) {
             m_conditionPixelsAvailable.notify_one();   // wakeup drawing thread
         }
     }
 
     void Mandelbrot::notify() {
-       // std::scoped_lock<std::mutex> lock(g_mutex);
+        std::scoped_lock<std::mutex> lock(m_mutex);
         m_conditionPixelsAvailable.notify_one();   // wakeup drawing thread
     }
 
@@ -375,11 +378,9 @@ namespace MandelbrotBasisVersion {
         return numPixels;
     }
 
-    long Mandelbrot::drawPixel() {
+    void Mandelbrot::drawPixel() {
 
         ::OutputDebugString(L"> drawPixel Begin\n");
-
-        long numPixels = 0;
 
         while (true) {
 
@@ -393,9 +394,13 @@ namespace MandelbrotBasisVersion {
                 }
             );
 
+            //// premature end of drawing
+            //if (m_abort == true) {
+            //    break;
+            //}
+
             WCHAR szText[32];
-            wsprintf(szText,
-                L"Variante 06: painting %lld pixel\n", m_pixels.size());
+            wsprintf(szText, L"Variante 06: painting %d pixel\n", (int) m_pixels.size());
             ::OutputDebugString(szText);
 
             if (m_pixels.size() > 0) {
@@ -411,8 +416,6 @@ namespace MandelbrotBasisVersion {
         }
 
         ::OutputDebugString(L"< drawPixel Begin\n");
-
-        return numPixels;
     }
 
     void Mandelbrot::startCalculationThread() {
@@ -422,7 +425,7 @@ namespace MandelbrotBasisVersion {
             for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
 
                 using namespace std::placeholders;
-                std::packaged_task<long(RECT, long, long)> task{
+                std::packaged_task<long(RECT, long, long)> task {
                     std::bind(&Mandelbrot::computePixel, this, _1, _2, _3)
                 };
                 std::future<long> future = task.get_future();
@@ -449,12 +452,12 @@ namespace MandelbrotBasisVersion {
 
     void Mandelbrot::startDrawingThread() {
 
-        std::packaged_task<long()> task {
+        std::packaged_task<void()> task {
             std::bind(&Mandelbrot::drawPixel, this)
         };
 
         m_DrawingFuture = task.get_future();
-      //  m_DrawingTask = std::move (task);
+        //m_DrawingTask = std::move (task);
 
         std::thread t(std::move(task));
         t.detach();

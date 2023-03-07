@@ -116,6 +116,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static Mandelbrot mandelbrot;
+
     MandelbrotVersion version = mandelbrot.getVersion();
     if (version == MandelbrotVersion::ProducerConsumerBasedApproach) {
         mandelbrot.setHWND(hWnd);
@@ -207,17 +208,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             ::OutputDebugString(L"< WM_PAINT\n");
         }
         else if (mandelbrot.getVersion() == MandelbrotVersion::ProducerConsumerBasedApproach) {
-            ::OutputDebugString(L"WM_PAINT Anfang\n");
+            ::OutputDebugString(L"> WM_PAINT Anfang\n");
             ::ValidateRect(hWnd, NULL);
             //PAINTSTRUCT ps;
             //HDC hdc = BeginPaint(hWnd, &ps);
             //::EndPaint(hWnd, &ps);
-            ::OutputDebugString(L"WM_PAINT Ende\n");
+            ::OutputDebugString(L"< WM_PAINT Ende\n");
         }
     }
     break;
     case WM_DESTROY:
-        ::OutputDebugString(L"< WM_DESTROY\n");
+        ::OutputDebugString(L"> WM_DESTROY\n");
 
         if (mandelbrot.getVersion() == MandelbrotVersion::RectanglesParallelNonBlocking) {
 
@@ -231,8 +232,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             ::OutputDebugString(L"< WM_DESTROY\n");
         }
+        else if (mandelbrot.getVersion() == MandelbrotVersion::ProducerConsumerBasedApproach) {
+            mandelbrot.setAbort(true);
+        }
         ::PostQuitMessage(0);
         break;
+
+    //case WM_QUIT:
+    //    ::OutputDebugString(L"> WM_DESTROY\n");
+    //    ::OutputDebugString(L"< WM_DESTROY\n");
+    //    break;
+
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }

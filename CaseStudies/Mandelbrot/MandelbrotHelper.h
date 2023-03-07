@@ -32,8 +32,8 @@ namespace MandelbrotBasisVersion {
 
     class MandelbrotRectangles {
     public:
-        static constexpr size_t NUM_ROWS = 1;  
-        static constexpr size_t NUM_COLS = 1;  
+        static constexpr size_t NUM_ROWS = 2;  
+        static constexpr size_t NUM_COLS = 2;  
         static constexpr size_t NUM_RECTS = (NUM_ROWS * NUM_COLS);
     }; 
 
@@ -44,6 +44,9 @@ namespace MandelbrotBasisVersion {
 
         static const int WindowHeight = 450;
         static const int WindowWidth = 500;
+
+        //static const int WindowHeight = 150;
+        //static const int WindowWidth = 100;
 
     private:
         MandelbrotVersion m_version;
@@ -77,7 +80,7 @@ namespace MandelbrotBasisVersion {
         std::deque<std::packaged_task<long(RECT, long, long)>> m_CalculationTasks;
         std::deque<std::future<long>> m_CalculationFutures;
         std::packaged_task<long()> m_DrawingTask;
-        std::future<long> m_DrawingFuture;
+        std::future<void> m_DrawingFuture;
 
     public:
         // c'tor
@@ -115,7 +118,7 @@ namespace MandelbrotBasisVersion {
         void addPixel(Pixel);
         void notify();
         long computePixel(RECT rect, long maxWidth, long maxHeight);
-        long drawPixel();
+        void drawPixel();
         void startCalculationThread();
         void startDrawingThread();
 
@@ -128,7 +131,8 @@ namespace MandelbrotBasisVersion {
         template <typename T = float, typename MANDELBROT_COORDINATES>
         std::complex<T> getComplex(long x, long y, long max_x, long max_y);
 
-        long computeSequence(std::complex<float> point);
+        template <typename T = float>
+        long computeSequence(std::complex<T> point);
     };
 };
 
