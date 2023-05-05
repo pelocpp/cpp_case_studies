@@ -37,13 +37,13 @@ namespace VariadicGenericFolding_01 {
     };
 
     template<typename ... TArgs>
-    auto tf1(TArgs ... args) {
+    auto func1(TArgs ... args) {
         // some code to use args 
         // some code to use Ts   
     };
 
     template<typename ... TArgs>
-    auto tf2(TArgs ... args) {
+    auto func2(TArgs ... args) {
         std::cout << sizeof...(TArgs) << std::endl;
         std::cout << sizeof...(args) << std::endl;
     };
@@ -56,11 +56,11 @@ namespace VariadicGenericFolding_01 {
         l2(1, 2, 3);
         l2('1', 123, 987.654, std::string{ "xyz" }, 10.0F);
 
-        tf1(1, 2, 3);
-        tf1('1', 123, 987.654, std::string{ "xyz" }, 10.0F);
+        func1(1, 2, 3);
+        func1('1', 123, 987.654, std::string{ "xyz" }, 10.0F);
 
-        tf2(1, 2, 3);
-        tf2('1', 123, 987.654, std::string{ "xyz" }, 10.0F);
+        func2(1, 2, 3);
+        func2('1', 123, 987.654, std::string{ "xyz" }, 10.0F);
     }
 }
 
