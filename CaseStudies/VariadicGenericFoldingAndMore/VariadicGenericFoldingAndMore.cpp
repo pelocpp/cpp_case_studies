@@ -326,6 +326,8 @@ namespace VariadicGenericFolding_10 {
 
 namespace VariadicGenericFolding_11 {
 
+    // higher order functions
+
     auto timesTwo = [](auto x) {
         return 2 * x;
     };
@@ -358,6 +360,8 @@ namespace VariadicGenericFolding_11 {
 
 namespace VariadicGenericFolding_12 {
 
+    // nested function calls
+
     auto timesTwo = [](auto x) {
         return 2 * x;
     };
@@ -372,6 +376,8 @@ namespace VariadicGenericFolding_12 {
 // =====================================================================================
 
 namespace VariadicGenericFolding_13 {
+    
+    // nested function calls: preparation of a higher order function
 
     auto timesTwo = [](auto x) {
         return 2 * x;
@@ -417,6 +423,8 @@ namespace VariadicGenericFolding_13 {
 
 namespace VariadicGenericFolding_14 {
 
+    // nested function calls with the help of a higher order function
+
     auto combine(auto func)
     {
         return func;
@@ -458,6 +466,8 @@ namespace VariadicGenericFolding_14 {
 // =====================================================================================
 
 namespace VariadicGenericFolding_16 {
+
+    // XXXX
 
     //template <typename T, typename ...Ts>
     //auto combine(T t, Ts ...ts)

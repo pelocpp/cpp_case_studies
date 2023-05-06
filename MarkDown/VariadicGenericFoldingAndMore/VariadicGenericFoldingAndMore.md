@@ -478,39 +478,29 @@ in dessen Rumpf wir mit `if constexpr` und `sizeof...` eine Fallunterscheidung e
 
 *Listing* 8: Dasselbe Beispiel in Lambda-Funktionsschreibweise &ndash; dieses Mal korrekt (C++ 17).
 
+## Funktionale Programmierung mit C++
 
-// NOCH NICHT SO GUT AB HIER
-
-// ## Lambda-Funktionen als Parameter für andere Funkionen
-
-// ## Functional Programming with Nested Lambdas 
-
-## Funktionelle Programmierung mit C++
-
-Anonyme Funktionen oder Lambdas wurden in C++ 11 als
+Anonyme Funktionen oder auch als Lambdas bezeichnet wurden in C++ 11 als
 praktische, leichtgewichtige Syntax zum Erstellen kurzlebiger Funktionen eingeführt.
 
 Was nicht unmittelbar zu erkennen war:
 Mit Hilfe derartiger Lambda Funktionen lassen sich nun auch
 Konzepte der *funktionalen Programmierung* in C++ formulieren.
 
-Das bedeutet nicht, dass C++ auf einer Ebene wie zum Beispiel Haskell oder F# steht.
+Ich will damit nicht zum Ausdruck bringen, dass C++ auf einer Ebene wie zum Beispiel *Haskell* oder *F#* steht.
 Aber zwei zentrale Konzepte der funktionalen Programmierung &ndash;
 *Currying* und *Funktionen höherer Ordnung* &ndash; können wir nun auch mit C++ Hilfsmitteln schreiben.
+
 Was verstehen wir hierunter eigentlich:
 
   * *Currying* &ndash; Beschreibt die Transformation einer Funktion mit mehreren Argumenten in eine Folge von Funktionen mit einem Argument.
      Es wird ein Aufruf einer Funktion *f(a, b, c, ...)* in einen Aufruf *f(a)(b)(c)...* umgewandelt.
 
-  * *Funktionen höherer Ordnung* &ndash; Funktionen höherer Ordnung dienen zur Schachtelung von Funktionen.
-     Als Eingabe-Parameter von Funktionen werden wiederum Funktionen verwendet.
-
   * *Funktionen höherer Ordnung* &ndash; Zu den Merkmalen der funktionalen Programmierung gehört das Übergeben von Funktionen als Parameter an andere Funktionen
   und das Zurückgeben neuer Funktionen als Ergebnis!
-  Eine Funktion höherer Ordnung besitzt eine oder mehrere Funktionen als Argumente und gibt möglicherweise auch eine Funktion als Ergebnis zurück.
+  Eine Funktion höherer Ordnung besitzt eine oder mehrere Funktionen als Argument und gibt möglicherweise auch eine Funktion als Ergebnis zurück.
 
-
-*Bemerkung*: Das viel zitierte *Currying* hat nichts mit Gerichten der asiatischen und japanischen Küche zu tun.
+*Bemerkung*: Das viel zitierte *Currying* hat nichts mit Gerichten der asiatischen oder japanischen Küche zu tun.
 Vielmehr ist der Name auf einen US-amerikanischen Logiker und Mathematiker namens *Haskell Brooks Curry* zurückzuführen.
 
 ### *Currying*  
@@ -526,7 +516,6 @@ Wir starten gleich mit einem Beispiel einer generischen Funktion:
 ```
 
 *Listing* 9: Ein Beispiel für das *Currying*.
-
 
 Triviel zu erkennen ist in *Listing* 9, dass `genericIncrementer` ein Lambda Objekt ist.
 Nur welchen Rückgabetyp hat `genericIncrementer`?
@@ -553,6 +542,10 @@ auto incrementByTen{ genericIncrementer(10) };
 einen Wert in der Capture Clause (hier`10`) bereitstellt.
 Natürlich können wir das Lambda Objekt `incrementByTen` aufrufen:
 
+Ein Merkmal des *Currying* ist es, dass wir auf diese Weise eine Vielzahl solcher Lambda Funktionen
+erzeugen können. `incrementByTen`, `incrementByOne`, etc., nur um ihre Phantasie etwas anzuregen. 
+
+
 ```cpp
 auto result{ incrementByTen(5) };
 std::cout << "Result: " << result << std::endl;     // "Result: 15"
@@ -561,7 +554,7 @@ std::cout << "Result: " << result << std::endl;     // "Result: 15"
 In der Konsole erhalten wir den Wert `15` als Ergebnis.
 Damit sollte das Prinzip des Curryings verständlich geworden sein:
 &ldquo;Wir zerlegen eine Funktion,
-die mehrere Argumente verwendet, in eine Reihe von Funktionen zerlegen,
+die mehrere Argumente verwendet, in eine Reihe mehrerer Funktionen,
 die jeweils nur ein Argument verwenden.&rdquo;
 
 Moment mal! Wo hatten wir in unseren bisherigen Beispiel den Aufruf mit den &ldquo;vielen&rdquo; Argumenten?
@@ -572,7 +565,7 @@ auto result{ genericIncrementer(10)(5) };  // ==> "Result: 15"
 ```
 
 Wir sprachen schon über den Rückgabetyp von `genericIncrementer`.
-Der Gebrauch des `auto`&ndash;Schlüsselworts verleitet zu leicht lesbarem Quellcode &ndash;
+Der Gebrauch des `auto`&ndash;Schlüsselworts verleitet zu leichter lesbarem Quellcode &ndash;
 und sollte von einem versierten C++ Entwickler auch bevorzugt werden!
 
 Ist &ndash; wiederum vor dem Hintergrund der guten Lesbarkeit des Quellcodes betrachtet &ndash;
@@ -597,21 +590,14 @@ In *Listing* 10 erkennt man durch schnelles Lesen nun, dass in den Zeilen 1 und 
 aufrufbare Objekte (*Callables*) definiert werden &ndash;
 und damit keine elementaren Variablen.
 
-
-## Functional Programming with Nested Lambdas 
-
-https://stackoverflow.com/questions/36314/what-is-currying
-
-https://sebastianviereck.de/funktionale-programmierung-mit-javascript/
-
 ### Funktionen höherer Ordnung
 
 Eine Funktion höherer Ordnung ist eine Funktion,
 die mindestens eine der folgenden Anforderungen erfüllt:
 
-  * Sie akzeptiert eine Funktion als Argument
-  * Sie gibt eine neue Funktion zurück
-
+  * Sie akzeptiert eine Funktion als Argument.
+  * Sie gibt eine neue Funktion zurück.
+  
 Auch hier starten wir gleich mit einem Beispiel:
 
 ```cpp
@@ -638,7 +624,7 @@ Auch hier starten wir gleich mit einem Beispiel:
 
 *Listing* 11: Beispiel einer Funktion höherer Ordnung.
 
-Funktion `power` besitzt als ersten Parameter (Zeile 5) einen Formaparameter namens `func`
+Funktion `power` besitzt als ersten Parameter (Zeile 5) einen Formalparameter namens `func`
 vom Typ `auto`.
 Wir sollten uns bewusst sein, dass wir aus Zeile 5 nicht schlau werden können,
 worum es sich bei `func` eigentlich handelt.
@@ -648,18 +634,20 @@ In Zeile 11 wird es nun konkreter: Auf Grund der Quellcode-Fragments
 func(result);
 ```
 
-muss es sich um etwas &ldquo;*Aufrufbares*&rdquo; handeln, also ein *Callable* im C++&ndash;Jargon.
+muss es sich bei `func` um etwas &ldquo;*Aufrufbares*&rdquo; handeln, also ein *Callable* im C++&ndash;Jargon.
 Es sind die runden Klammern nach `func`, die den Compiler auf diese Fährte führen.
-Wie es schon mehrere Male angesprochen wurde:
-Auch wann man landläufig von Lambda Funktionen spricht, haben wir es mit Objekten zu tun.
-Objekte wiederum lassen sich als Paramter an anderen Funktionen übergeben,
+Es wurde schon mehrere Male angesprochen:
+Auch wann man landläufig von Lambda Funktionen spricht, haben wir es mit *Objekten* zu tun.
+Oder noch etwas krasser: Lambda Funktionen sind keine Funktionen.
+
+Objekte hingegen lassen sich als Parameter an andere Funktionen übergeben,
 damit betrachten wir Zeile 17 in *Listing* 11:
 
 ```cpp
 auto result = power(timesTwo, 5);
 ```
 
-Es wird eine Funktion mit Lambda Objekt `timesTwo` aufgerufen,
+Es wird eine Funktion mit dem Lambda Objekt `timesTwo` aufgerufen,
 das Lambda Objekt gelangt im Rumpf von `power` zur Ausführung.
 Folglich ist `power` eine Funktion höherer Ordnung.
 
@@ -688,7 +676,6 @@ Jetzt betrachten wir das folgende Anwendungsbeispiel:
 
 *Listing* 12: Aufruf einer Funktion höherer Ordnung mit unterschiedlichen Funktionen.
 
-
 *Ausgabe*:
 
 ```
@@ -698,9 +685,8 @@ power: 243
 
 ### Verschachtelte Funktionsaufrufe generischer Funktionen
 
-Das Beispiel aus *Listing* 12 hätten wir auch ohne Funktion `power` und damit ohne eine Funktion höherer Ordnung
-reslisieren können, um Beispiel so:
-
+Das Beispiel aus *Listing* 12 hätten wir auch ohne Funktion `power` und damit ohne
+eine Funktion höherer Ordnung realisieren können, zum Beispiel so:
 
 ```cpp
 01: void test_variadic_generic_folding_01()
@@ -710,22 +696,33 @@ reslisieren können, um Beispiel so:
 05: }
 ```
 
-*Listing* 13: Verschachtelte Funktionsaufrufe generischer Funktionen
+*Listing* 13: Verschachtelte Funktionsaufrufe generischer Funktionen.
 
 In Zeile 3 von *Listing* 13 finden wir &ndash; einen nahezu klassischen &ndash; geschachtelten Funktionsaufruf vor.
-Dieses Mal haben wir bei den Parametern mit `int`-Werten zu tun, also keine Funktion höherer Ordnung.
+Dieses Mal haben wir es bei den Parametern mit `int`-Werten zu tun, also wir haben es nicht
+mit einer Funktion höherer Ordnung zu tun.
 
-Okay, ich vermute mal, Sie werden sagen: Das ginge vielleicht auch etwas &ldquo;akademischer&rdquo;,
-wobwi ich ws Ihnwn überlasse, ein  geignetet WOrt zu finden.
+Okay, ich vermute mal, Sie werden sagen: Das ginge vielleicht auch etwas &ldquo;akademischer&rdquo; oder &ldquo;eleganter&rdquo;,
+wobei ich es Ihnen überlasse, ein geignetes Wort für den von mir angestrebten Sachverhalt zu finden.
 
 Die Formulierung eines geschachtelten Funktionsaufrufs ist bisweilen immer etwas mühsam,
-man man die schließenden runden Klammern am Ende des Ausdrucks exakt zählen.
+man muss die schließenden runden Klammern am Ende des Ausdrucks genau zählen.
 
-&ldquo;We can do better&rdquo;: Wie wäre es mit einer separaten Funtktion combine 
-&ndash; und wie sollte es anders sein: eine Funktion höherer Ordnung  &ndash; die über das Parameter Pack übergebne werden
-und verschachtelt aufgerufen werden.
+&ldquo;We can do better&rdquo;: Wie wäre es mit einer separaten Funktion `combine` 
+&ndash; und wie sollte es anders sein: einer Funktion höherer Ordnung,
+deren Argumente (Lambda Objekte) über das Parameter Pack übergeben werden
+und von `combine` verschachtelt aufgerufen werden.
 
-Das wollen wir von der Idee her ebtrachtet betzt ewtas genauer ansehen:
+Das war jetzt vielleicht etwas viel auf einmal,
+fagen wir es etwas langsamer in *Listing* 14 an:
+Hier wollen wir meine Idee einer Funktion  `combine` zunächst einmal von der Konzeption 
+her gesehen betrachten:
+
+WEITER   Uniform Init....
+
+Kommendes Listing kompakter !!!
+
+Grammatik
 
 
 
@@ -769,10 +766,9 @@ Das wollen wir von der Idee her ebtrachtet betzt ewtas genauer ansehen:
 37: }
 ```
 
-*Listing* 14: Hilfsfunktion `combine` für den verschachtelten Funktionsaufruf.
+*Listing* 14: Diverses Überladungen einer Hilfsfunktion `combine` für den verschachtelten Funktionsaufruf.
 
-
-Lassen Sie mich aus *Listing* 14 Hilfsfunktion `combine` aus den Zeilen 9 bis 15 herauspicken:
+Lassen Sie mich aus *Listing* 14 die Überladung von `combine` aus den Zeilen 9 bis 15 herauspicken:
 
 ```cpp
 auto combine(auto func1, auto func2)
@@ -868,4 +864,10 @@ Ich bin am Ende meiner Ausführungen abgekommen! Ich hoffe, es hat Ihnen etwas Fr
 welche neuen Programmierstile und -paradigmen zur Verfügung stehen.
 
 FEHLR: LITERATUR
+
+## Functional Programming with Nested Lambdas 
+
+https://stackoverflow.com/questions/36314/what-is-currying
+
+https://sebastianviereck.de/funktionale-programmierung-mit-javascript/
 
