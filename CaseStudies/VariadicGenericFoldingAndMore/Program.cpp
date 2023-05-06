@@ -43,13 +43,7 @@ namespace VariadicGenericFolding_11 {
     void test_variadic_generic_folding_01();
 }
 
-
 namespace VariadicGenericFolding_12 {
-    void test_variadic_generic_folding_01();
-}
-
-
-namespace VariadicGenericFolding_13 {
     void test_variadic_generic_folding_01();
 }
 
@@ -58,7 +52,7 @@ namespace VariadicGenericFolding_14 {
     void test_variadic_generic_folding_01();
 }
 
-namespace VariadicGenericFolding_15 {
+namespace VariadicGenericFolding_13 {
     void test_variadic_generic_folding_01();
 }
 
@@ -68,33 +62,34 @@ namespace VariadicGenericFolding_16 {
 
 int main()
 {
-    VariadicGenericFolding_01::test_variadic_generic_folding_01();
-    VariadicGenericFolding_01::test_variadic_generic_folding_02();
+    //VariadicGenericFolding_01::test_variadic_generic_folding_01();
+    //VariadicGenericFolding_01::test_variadic_generic_folding_02();
 
-    VariadicGenericFolding_02::test_variadic_generic_folding_01();
-    VariadicGenericFolding_02::test_variadic_generic_folding_02();
-    VariadicGenericFolding_02::test_variadic_generic_folding_03();
+    //VariadicGenericFolding_02::test_variadic_generic_folding_01();
+    //VariadicGenericFolding_02::test_variadic_generic_folding_02();
+    //VariadicGenericFolding_02::test_variadic_generic_folding_03();
 
-    VariadicGenericFolding_02::test_variadic_generic_folding_04();
-    VariadicGenericFolding_02::test_variadic_generic_folding_05();
+    //VariadicGenericFolding_02::test_variadic_generic_folding_04();
+    //VariadicGenericFolding_02::test_variadic_generic_folding_05();
 
-    VariadicGenericFolding_03::test_variadic_generic_folding_01();
+    //VariadicGenericFolding_03::test_variadic_generic_folding_01();
 
-    VariadicGenericFolding_04::test_variadic_generic_folding_01();
+    //VariadicGenericFolding_04::test_variadic_generic_folding_01();
 
-    VariadicGenericFolding_05::test_variadic_generic_folding_01();
+    //VariadicGenericFolding_05::test_variadic_generic_folding_01();
 
-    VariadicGenericFolding_10::test_variadic_generic_folding_01();
-    VariadicGenericFolding_10::test_variadic_generic_folding_02();
-    VariadicGenericFolding_10::test_variadic_generic_folding_03();
+    //VariadicGenericFolding_10::test_variadic_generic_folding_01();
+    //VariadicGenericFolding_10::test_variadic_generic_folding_02();
+    //VariadicGenericFolding_10::test_variadic_generic_folding_03();
 
-    VariadicGenericFolding_11::test_variadic_generic_folding_01();
-    VariadicGenericFolding_12::test_variadic_generic_folding_01();
+    //VariadicGenericFolding_11::test_variadic_generic_folding_01();
 
-    VariadicGenericFolding_13::test_variadic_generic_folding_01();
+   // VariadicGenericFolding_12::test_variadic_generic_folding_01();
+  //  VariadicGenericFolding_14::test_variadic_generic_folding_01();
+    //VariadicGenericFolding_15::test_variadic_generic_folding_01();
+    // VariadicGenericFolding_13::test_variadic_generic_folding_01();
+
     VariadicGenericFolding_14::test_variadic_generic_folding_01();
-    VariadicGenericFolding_15::test_variadic_generic_folding_01();
-    VariadicGenericFolding_16::test_variadic_generic_folding_01();
 
     return 0;
 }

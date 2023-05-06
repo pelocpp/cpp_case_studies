@@ -8,9 +8,11 @@
 #include <cmath>
 #include <functional>
 
-// ==============================================
+// =====================================================================================
 
 namespace VariadicGenericFolding_01 {
+
+    // generic, variadic function and parameter pack
 
     auto f1(auto ... args) {
         // some code to use args  
@@ -64,9 +66,11 @@ namespace VariadicGenericFolding_01 {
     }
 }
 
-// ==============================================
+// =====================================================================================
 
 namespace VariadicGenericFolding_02 {
+
+    // generic, variadic function, parameter pack and folding
 
     auto sum(auto ... args) {
         return (... + args);     // (((arg1+ arg2) + arg3) + ...)
@@ -115,11 +119,11 @@ namespace VariadicGenericFolding_02 {
     }
 }
 
-// ==============================================
-
+// =====================================================================================
 
 namespace VariadicGenericFolding_03 {
 
+    // passing parameter pack to another function
 
     auto sum(auto ... args) {
         return (args + ...);
@@ -137,11 +141,12 @@ namespace VariadicGenericFolding_03 {
     }
 }
 
-// ==============================================
+// =====================================================================================
 
-// looping about a parameter pack
 
 namespace VariadicGenericFolding_04 {
+
+    // looping about a parameter pack
 
     auto doSomethingWithParameterPack1(auto ... args) {
 
@@ -196,10 +201,14 @@ namespace VariadicGenericFolding_04 {
     }
 }
 
-// ==============================================
-
+// =====================================================================================
 
 namespace VariadicGenericFolding_05 {
+
+    // recursive parameter pack expansion
+
+    // -----------------------------
+    // using generic function syntax
 
     // end of recursion: one parameter left
     auto sum(auto elem) {
@@ -211,7 +220,7 @@ namespace VariadicGenericFolding_05 {
         return first + sum (args ...);
     }
 
-    // ---------------------
+    // -----------------------------
     // using template syntax
 
     // end of recursion: one parameter left
@@ -226,7 +235,7 @@ namespace VariadicGenericFolding_05 {
         return first + sum2(args ...);
     }
 
-    // ---------------------
+    // -----------------------------
     // using lambda syntax
 
     // NOTE: "Overloading" is not possible
@@ -245,7 +254,7 @@ namespace VariadicGenericFolding_05 {
     //};
 
 
-    // But:
+    // but:
     auto sum3 = [](auto first, auto ... args) {
 
         if constexpr (sizeof... (args) == 0) {
@@ -270,9 +279,11 @@ namespace VariadicGenericFolding_05 {
     }
 }
 
-// ==============================================
+// =====================================================================================
 
 namespace VariadicGenericFolding_10 {
+
+    // currying
 
     auto genericIncrementer = [] (auto x) {
         return [=] (auto y) {
@@ -311,40 +322,23 @@ namespace VariadicGenericFolding_10 {
     }
 }
 
+// =====================================================================================
+
 namespace VariadicGenericFolding_11 {
-
-    auto square = [] (auto x) {
-        return x * x;
-    };
-
-    auto power = [](auto x, size_t n) {
-        auto result{ x };
-
-        for (size_t i{ 1 }; i < n; ++i) {
-            result *= x;
-        } 
-
-        return result;
-    };
-
-    void test_variadic_generic_folding_01()
-    {
-        auto twoPowerFive = power(2, 5);
-        std::cout << "power(2, 5): " << twoPowerFive << std::endl;
-    }
-}
-
-namespace VariadicGenericFolding_12 {
 
     auto timesTwo = [](auto x) {
         return 2 * x;
     };
 
-    auto powerByTwo = [](auto x, size_t n) {
-        auto result{ x };
+    auto timesThree = [](auto x) {
+        return 3 * x;
+    };
 
-        for (size_t i{ 1 }; i < n; ++i) {
-            result = timesTwo(result);
+    auto power = [](auto func, size_t n) {
+        auto result{ 1 };
+
+        for (size_t i{ 1 }; i <= n; ++i) {
+            result = func(result);
         }
 
         return result;
@@ -352,12 +346,17 @@ namespace VariadicGenericFolding_12 {
 
     void test_variadic_generic_folding_01()
     {
-        auto twoPowerFive = powerByTwo(2, 5);
-        std::cout << "twoPowerFive: " << twoPowerFive << std::endl;
+        auto result = power(timesTwo, 5);
+        std::cout << "power: " << result << std::endl;
+
+        result = power(timesThree, 5);
+        std::cout << "power: " << result << std::endl;
     }
 }
 
-namespace VariadicGenericFolding_13 {
+// =====================================================================================
+
+namespace VariadicGenericFolding_12 {
 
     auto timesTwo = [](auto x) {
         return 2 * x;
@@ -365,13 +364,100 @@ namespace VariadicGenericFolding_13 {
 
     void test_variadic_generic_folding_01()
     {
-        auto twoPowerFive = timesTwo(timesTwo(timesTwo(timesTwo(2))));  // 2*2*2*2*2
-        std::cout << "twoPowerFive: " << twoPowerFive << std::endl;
+        auto result = timesTwo(timesTwo(timesTwo(timesTwo(1))));    // 2*2*2*2
+        std::cout << "Result: " << result << std::endl;
     }
 }
 
+// =====================================================================================
+
+namespace VariadicGenericFolding_13 {
+
+    auto timesTwo = [](auto x) {
+        return 2 * x;
+    };
+
+    auto combine(auto func) {
+        return func;
+    }
+
+    auto combine(auto func1, auto func2)
+    {
+        return [&](auto ... parameters) {
+            auto result = func1(func2(parameters...));
+            return result;
+        };
+    }
+
+    auto combine(auto func1, auto func2, auto func3)
+    {
+        return [&](auto ... parameters) {
+            auto result = func1(func2(func3(parameters ...)));
+            return result;
+        };
+    }
+
+    auto combine(auto func1, auto func2, auto func3, auto func4)
+    {
+        return [&](auto ... parameters) {
+            auto result = func1(func2(func3(func4(parameters ...))));
+            return result;
+        };
+    }
+
+    void test_variadic_generic_folding_01()
+    {
+        auto result = combine(timesTwo, timesTwo, timesTwo, timesTwo)(1);  // 2*2*2*2
+        std::cout << "combine: " << result << std::endl;
+    }
+}
+
+// =====================================================================================
+
 
 namespace VariadicGenericFolding_14 {
+
+    auto combine(auto func)
+    {
+        return func;
+    }
+
+    auto combine(auto func, auto ... funcs)
+    {
+        return [&](auto ... parameters) {
+            return func(combine(funcs ...) (parameters ...));
+        };
+    }
+
+    auto timesTwo = [](auto x) {
+        return 2 * x;
+    };
+
+    void test_variadic_generic_folding_01()
+    {
+        //auto twoPowerFive = combine(timesTwo, timesTwo, timesTwo)(2);  // 2*2*2*2
+        //std::cout << "twoPowerFive: " << twoPowerFive << std::endl;
+
+        auto result = combine(
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo
+        )(1);
+
+        std::cout << "result: " << result << std::endl;
+    }
+}
+
+// =====================================================================================
+
+namespace VariadicGenericFolding_16 {
 
     //template <typename T, typename ...Ts>
     //auto combine(T t, Ts ...ts)
@@ -420,103 +506,8 @@ namespace VariadicGenericFolding_14 {
     }
 }
 
-namespace VariadicGenericFolding_15 {
 
-    auto combine(auto func)
-    {
-        return func;
-    }
-
-    auto combine(auto func, auto ... funcs)
-    {
-        return [&] (auto ... parameters) {
-            return func(combine(funcs ...) (parameters ...));
-        };
-    }
-
-    auto timesTwo = [](auto x) {
-        return 2 * x;
-    };
-
-    void test_variadic_generic_folding_01()
-    {
-        auto twoPowerFive = combine(timesTwo, timesTwo, timesTwo)(2);  // 2*2*2*2
-        std::cout << "twoPowerFive: " << twoPowerFive << std::endl;
-    }
-}
-
-namespace VariadicGenericFolding_16 {
-
-    auto combine(auto func) {
-        return func;
-    }
-
-    auto combine(auto func1, auto func2)
-    {
-        return [&](auto ... parameters) {
-            auto result = func1(func2(parameters...));
-            return result;
-        };
-    }
-
-    auto combine(auto func1, auto func2, auto func3)
-    {
-        return [&](auto ... parameters) {
-            auto result = func1(func2(func3(parameters ...)));
-            return result;
-        };
-    }
-
-    auto timesTwo = [](auto x) {
-        return 2 * x;
-    };
-
-    void test_variadic_generic_folding_01()
-    {
-        auto twoPowerFive = combine(timesTwo, timesTwo, timesTwo)(2);  // 2*2*2*2
-        std::cout << "twoPowerFive: " << twoPowerFive << std::endl;
-    }
-}
-
-
-// ==============================================
-
-
-
-
-// ==============================================
-
-void test_variadic_generic_folding()
-{
-    // VariadicGenericFolding_01::test_variadic_generic_folding_01();
-    // VariadicGenericFolding_01::test_variadic_generic_folding_02();
-
-    // VariadicGenericFolding_02::test_variadic_generic_folding_01();
-    //VariadicGenericFolding_02::test_variadic_generic_folding_02();
-    //VariadicGenericFolding_02::test_variadic_generic_folding_03();
-
-    // VariadicGenericFolding_02::test_variadic_generic_folding_04();
-    // VariadicGenericFolding_02::test_variadic_generic_folding_05();
-
-    // VariadicGenericFolding_03::test_variadic_generic_folding_01();
-
-    // VariadicGenericFolding_04::test_variadic_generic_folding_01();
-
-    // VariadicGenericFolding_05::test_variadic_generic_folding_01();
-
-    //VariadicGenericFolding_10::test_variadic_generic_folding_01();
-    //VariadicGenericFolding_10::test_variadic_generic_folding_02();
-    // VariadicGenericFolding_10::test_variadic_generic_folding_03();
-
-    //VariadicGenericFolding_11::test_variadic_generic_folding_01();
-    //VariadicGenericFolding_12::test_variadic_generic_folding_01();
-
-    //VariadicGenericFolding_13::test_variadic_generic_folding_01();
-    VariadicGenericFolding_14::test_variadic_generic_folding_01();
-    VariadicGenericFolding_15::test_variadic_generic_folding_01();
-    VariadicGenericFolding_16::test_variadic_generic_folding_01();
-}
-
+// =====================================================================================
 
 
 // =====================================================================================
