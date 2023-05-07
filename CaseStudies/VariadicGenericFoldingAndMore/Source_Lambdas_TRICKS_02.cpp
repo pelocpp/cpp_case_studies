@@ -14,15 +14,6 @@
 
 // ==============================================
 
-// https://www.cppstories.com/2020/08/c-lambda-week-some-tricks.html/
-
-// https://www.cppstories.com/2020/07/lambdas5ex.html/
-
-// https://iamsorush.com/posts/cpp-variadic-template/
-
-// https://iamsorush.com/posts/cpp-meta-function/#introduction
-
-
 
 
 // ==============================================
