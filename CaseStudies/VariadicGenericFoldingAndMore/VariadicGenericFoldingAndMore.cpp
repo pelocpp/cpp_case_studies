@@ -390,30 +390,27 @@ namespace VariadicGenericFolding_13 {
     auto combine(auto func1, auto func2)
     {
         return [&](auto ... parameters) {
-            auto result = func1(func2(parameters...));
-            return result;
+            return func1(func2(parameters...));
         };
     }
 
     auto combine(auto func1, auto func2, auto func3)
     {
         return [&](auto ... parameters) {
-            auto result = func1(func2(func3(parameters ...)));
-            return result;
+            return func1(func2(func3(parameters ...)));
         };
     }
 
     auto combine(auto func1, auto func2, auto func3, auto func4)
     {
         return [&](auto ... parameters) {
-            auto result = func1(func2(func3(func4(parameters ...))));
-            return result;
+            return func1(func2(func3(func4(parameters ...))));
         };
     }
 
     void test_variadic_generic_folding_01()
     {
-        auto result = combine(timesTwo, timesTwo, timesTwo, timesTwo)(1);  // 2*2*2*2
+        auto result{ combine(timesTwo, timesTwo, timesTwo, timesTwo)(1) };  // 2*2*2*2
         std::cout << "combine: " << result << std::endl;
     }
 }
@@ -443,9 +440,6 @@ namespace VariadicGenericFolding_14 {
 
     void test_variadic_generic_folding_01()
     {
-        //auto twoPowerFive = combine(timesTwo, timesTwo, timesTwo)(2);  // 2*2*2*2
-        //std::cout << "twoPowerFive: " << twoPowerFive << std::endl;
-
         auto result = combine(
             timesTwo,
             timesTwo,
@@ -465,38 +459,17 @@ namespace VariadicGenericFolding_14 {
 
 // =====================================================================================
 
-namespace VariadicGenericFolding_16 {
+namespace VariadicGenericFolding_15 {
 
-    // XXXX
+    // same as before: using template syntax
 
-    //template <typename T, typename ...Ts>
-    //auto combine(T t, Ts ...ts)
-    //{
-    //    if constexpr (sizeof...(ts) > 0)
-    //    {
-    //        return [&](auto ...parameters) {
-    //            // return t(concat(ts...)(parameters...));
-
-    //            auto result = t(concat(ts...) (parameters...));
-
-    //            return result;
-    //        };
-    //    }
-    //    else
-    //    {
-    //        return t;
-    //    }
-    //}
-
-    auto combine(auto func, auto ... funcs)
+    template <typename T, typename ...TRest>
+    auto combine(T func, TRest ... funcs)
     {
         if constexpr (sizeof...(funcs) > 0)
         {
-            return [&] (auto ... parameters) {
-                return func(combine(funcs ...) (parameters ...));
-
-                //auto result = t(concat(ts...) (parameters...));
-                //return result;
+            return [&](auto ...parameters) {
+                return func(combine(funcs ...)(parameters...));
             };
         }
         else
@@ -511,14 +484,22 @@ namespace VariadicGenericFolding_16 {
 
     void test_variadic_generic_folding_01()
     {
-        auto twoPowerFive = combine(timesTwo, timesTwo, timesTwo, timesTwo)(2);  // 2*2*2*2*2
-        std::cout << "twoPowerFive: " << twoPowerFive << std::endl;
+        auto result = combine(
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo,
+            timesTwo
+        )(1);
+
+        std::cout << "result: " << result << std::endl;
     }
 }
-
-
-// =====================================================================================
-
 
 // =====================================================================================
 // End-of-File

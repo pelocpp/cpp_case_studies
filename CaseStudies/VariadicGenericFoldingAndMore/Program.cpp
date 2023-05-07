@@ -48,15 +48,16 @@ namespace VariadicGenericFolding_12 {
 }
 
 
-namespace VariadicGenericFolding_14 {
-    void test_variadic_generic_folding_01();
-}
-
 namespace VariadicGenericFolding_13 {
     void test_variadic_generic_folding_01();
 }
 
-namespace VariadicGenericFolding_16 {
+
+namespace VariadicGenericFolding_14 {
+    void test_variadic_generic_folding_01();
+}
+
+namespace VariadicGenericFolding_15 {
     void test_variadic_generic_folding_01();
 }
 
@@ -90,6 +91,7 @@ int main()
     // VariadicGenericFolding_13::test_variadic_generic_folding_01();
 
     VariadicGenericFolding_14::test_variadic_generic_folding_01();
+    VariadicGenericFolding_15::test_variadic_generic_folding_01();
 
     return 0;
 }

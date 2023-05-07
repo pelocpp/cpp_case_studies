@@ -221,7 +221,7 @@ std::cout << "SumOfRoots: " << sum << std::endl;
 SumOfRoots: 5
 ```
 
-## Parameter Packs an andere Funktionen weiterreichen
+## Parameter Pack an andere Funktionen weiterreichen
 
 Eine Funktion kann ihr Parameter Pack an eine andere Funktion weiterreichen:
 
@@ -738,37 +738,34 @@ Grammatik
 09: auto combine(auto func1, auto func2)
 10: {
 11:     return [&](auto ... parameters) {
-12:         auto result = func1(func2(parameters...));
-13:         return result;
-14:     };
-15: }
-16: 
-17: auto combine(auto func1, auto func2, auto func3)
-18: {
-19:     return [&](auto ... parameters) {
-20:         auto result = func1(func2(func3(parameters ...)));
-21:         return result;
-22:     };
-23: }
-24: 
-25: auto combine(auto func1, auto func2, auto func3, auto func4)
-26: {
-27:     return [&](auto ... parameters) {
-28:         auto result = func1(func2(func3(func4(parameters ...))));
-29:         return result;
-30:     };
-31: }
-32: 
-33: void test_variadic_generic_folding_01()
-34: {
-35:     auto result = combine(timesTwo, timesTwo, timesTwo, timesTwo)(1);  // 2*2*2*2
-36:     std::cout << "combine: " << result << std::endl;
-37: }
+12:         return func1(func2(parameters...));
+13:     };
+14: }
+15: 
+16: auto combine(auto func1, auto func2, auto func3)
+17: {
+18:     return [&](auto ... parameters) {
+19:         return func1(func2(func3(parameters ...)));
+20:     };
+21: }
+22: 
+23: auto combine(auto func1, auto func2, auto func3, auto func4)
+24: {
+25:     return [&](auto ... parameters) {
+26:         return func1(func2(func3(func4(parameters ...))));
+27:     };
+28: }
+29: 
+30: void test_variadic_generic_folding_01()
+31: {
+32:     auto result{ combine(timesTwo, timesTwo, timesTwo, timesTwo)(1) };  // 2*2*2*2
+33:     std::cout << "combine: " << result << std::endl;
+34: }
 ```
 
 *Listing* 14: Diverses Überladungen einer Hilfsfunktion `combine` für den verschachtelten Funktionsaufruf.
 
-Lassen Sie mich aus *Listing* 14 die Überladung von `combine` aus den Zeilen 9 bis 15 herauspicken:
+Lassen Sie mich aus *Listing* 14 die Überladung von `combine` aus den Zeilen 9 bis 14 herauspicken:
 
 ```cpp
 auto combine(auto func1, auto func2)
@@ -780,26 +777,47 @@ auto combine(auto func1, auto func2)
 }
 ```
 
-Funktion `combine` besitzt zwei Funktionsobjekte aus Parameter: Die beiden Funktionen ``  und ``
-werden verschachtelt aufgerifen), aber nicht unmittelbar, sondern für den  verschachtelten Funktionsaufruf wird ein Lamda Objjet
-erstellt , dass via return zurückgegebn wird.
+Funktion `combine` besitzt zwei Funktionsobjekte `func1`  und `func2` als Parameter:
 
-Viel interssanter ist die Frage, wie eignetlich die Parameter parameters in due Hilfsfunktion `combine` gelangen?
-EInfache Antwort: Überhaupt nicht! Die Parameter sind beim Aufruf des rurückgegebene. Funktionsaufruf bereitszutellem,
-und das in unserem Beispiel am Ende von Zeile der Fall &ndash; hier mit dem Wert `1`.
-Da es sich um ein Parameter Pack Handelt, können dies aber auch mehrere Parameter sein.
-Die Thematik &ldquo;*Parameter Packs an andere Funktionen weiterreichen*&rdquo; hattenw wir bereits betrachtet.
+Der verschachtelte Aufruf wird in einem inneren Lambda Objekt durchgeführt,
+der Ergebniswert wird via `return` zurückgegeben.
+In Listing 14 habe ich den verschachtelten Aufruf als Argument in der `return`&ndash;Anweisung platziert,
+damit wird das Ganze noch ein wenig kompakter.
 
-Zugegeben, nach BEtrachten des QUellcodes aus *Listing* 13: werden SIe sich sicherlich fragen,
+Aber Vorsicht: Die tatsächliche Ausführung des verschachtelten Funktionsaufrufs
+findet nicht im Kontext von `combine` statt: `combine` liefert als Ergebnis ein Lambda Objekt zurück!
+
+///
+dass via `return` zurückgegeben wird.
+Also Vorsicht: Der verschachtelte Aufruf wird nicht beim Aufruf von 
+
+Die beiden Funktionen `func1` und `func2`
+werden verschachtelt aufgerufen, aber nicht unmittelbar,
+sondern für den verschachtelten Funktionsaufruf wird ein Lamda Objekt
+erstellt , dass via `return` zurückgegebn wird.
+///
+
+Viel interessanter ist die Frage, wie eigentlich die Parameter `parameters` in die
+Hilfsfunktion `combine` gelangen?
+Einfache Antwort: Überhaupt nicht! Die Parameter sind beim Aufruf des zurückgegebenen
+Lamda Objekts bereitszutellen,
+und das in unserem Beispiel am Ende von Zeile 32 der Fall &ndash; hier mit dem Wert `1`.
+Da es sich um ein Parameter Pack handelt, könnten dies auch mehrere Parameter sein.
+Die Thematik &ldquo;*Parameter Pack an andere Funktionen weiterreichen*&rdquo;
+hatten wir bereits betrachtet.
+
+Zugegeben, nach dem Studium des Quellcodes aus *Listing* 14 werden Sie sich sicherlich fragen,
 wo bei den vielen Überladungen der `combine` Hilfsfunktion ein Vorteil liegt?
-Vielleicht erahnen Sie es schon: &ldquo;We can do more better&rdquo;!
-Und damit sind wir am Ende dieser Fallstudio anhekommen:
+Vielleicht erahnen Sie es schon: &ldquo;We can do much more better&rdquo;!
+Und damit sind beim letzten Thema dieser Fallstudio angekommen.
 
 ## Betrachtung einer generischen Funktionen höherer Ordnung mit rekursiver Parameter Pack Expansion
 
-Ich weiß, diese Überschrift kann man eigentlich nicht ernst nehmen, aber es war ja das Ziel dieser Fallstudio,
-möglichst viele Konzepte von &ldquo;Modern C++&ldquo; in geschickten Kombinationen zu studieren:
+Ich weiß, diese Überschrift sollte man nicht ernst nehmen, aber es war ja das Ziel dieser Fallstudie,
+möglichst viele Konzepte von &ldquo;Modern C++&ldquo; in geschickten Kombinationen darzulegen.
 
+Die vielen Überladungen der  `combine` Hilfsfunktion lassen sich auf eine reduzieren,
+wenn man das Parameter Pack rekursiv auspackt:
 
 
 ```cpp
@@ -818,23 +836,25 @@ möglichst viele Konzepte von &ldquo;Modern C++&ldquo; in geschickten Kombination
 
 *Listing* 15: Beispiel einer generischen Funktion höherer Ordnung für den verschachtelten Funktionsaufruf.
 
-Mit den geleistenen Vorarbeiten sollte es nicht so schwer sein, diesen QUellcode zu verstehen.
+Mit den geleistenen Vorarbeiten sollte es nicht so schwer sein,
+den Quellcode aus *Listing* 15 zu verstehen.
 
-In Zeile finden wir einen rekursoven AUfruf der Funktion `combine` vor.
-Diese nimmt ein Parameter Pack entgegen, aber Vorsicht: Das Pack `funcs` ist quasi schon um ein Funktionsobjekt redurziert,
-das erste Funktionsobjekt `func` tritt in ERscheinung, um das Ergebnis des rekursoven AUfruf entgehenzunehmen.
+In Zeile 9 finden wir einen rekursiven Aufruf der Funktion `combine` vor.
+Diese nimmt ein Parameter Pack entgegen, aber Achtung: Das Pack `funcs` ist quasi schon um ein Funktionsobjekt reduziert.
+Das erste Funktionsobjekt `func` tritt in Erscheinung, um das Ergebnis des rekursiven Aufrufs entgehenzunehmen.
 
-Da wird dieses Beispiel mit der rekursiver Parameter Pack Expansion betrachten, benötogen wir nich eine Überladung der
-`combine`-Funktion, die die Rekrsion abbricht: Siehe hierzu die Zeilen 1 bis 4.
+Da wir ein Beispiel mit der rekursiver Parameter Pack Expansion betrachten,
+benötigen wir noch eine Überladung der `combine`-Funktion,
+die die Rekursion abbricht: Siehe hierzu die Zeilen 1 bis 4.
 
-ZUm ABschluss präsentieren wir noch ein Anwedungsbeispiuel, um Funktion `combine` audzurfuen:
+Zum Abschluss präsentieren wir ein Anwendungsbeispiel, um Funktion `combine` aufzurufen:
 
 ```cpp
 auto timesTwo = [](auto x) {
     return 2 * x;
 };
 
-void test_variadic_generic_folding_01()
+void test()
 {
     auto result = combine(
         timesTwo, 
@@ -860,8 +880,9 @@ void test_variadic_generic_folding_01()
 result: 1024
 ```
 
-Ich bin am Ende meiner Ausführungen abgekommen! Ich hoffe, es hat Ihnen etwas Freude bereitet, zu verfolgen,
-welche neuen Programmierstile und -paradigmen zur Verfügung stehen.
+Ich bin am Ende meiner Ausführungen abgekommen! Ich hoffe, es hat Ihnen etwas Spaß bereitet,
+zu verfolgen, welche neuen Möglichkeiten bzgl. Programmierstil und -paradigmen in Modern C++
+zur Verfügung stehen.
 
 FEHLR: LITERATUR
 
