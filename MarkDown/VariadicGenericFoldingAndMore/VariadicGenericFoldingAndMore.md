@@ -464,6 +464,10 @@ in dessen Rumpf wird mit `if constexpr` und `sizeof...` eine Fallunterscheidung 
 ```
 *Listing* 8: Dasselbe Beispiel in Lambda-Funktionsschreibweise &ndash; dieses Mal korrekt (C++ 17).
 
+*Bemerkung*: Der Quellcode aus *Listing* 8 ist mit GCC nicht übersetzungsfähig.
+Die Fehlermeldung lautet in Zeile 7: &ldquo;*Error: use of 'sum' before deduction of 'auto'*&ldquo;.
+Wenn Sie eine Idee haben, wie man diesen Fehler beseitigen kann, würde ich mich über eine Nachricht sehr freuen.
+
 ## Funktionale Programmierung mit C++
 
 Anonyme Funktionen &ndash; auch als Lambdas bezeichnet &ndash; wurden in C++ 11 als
