@@ -240,18 +240,18 @@ namespace VariadicGenericFolding_05 {
 
     // NOTE: "Overloading" is not possible
     // https://stackoverflow.com/questions/58700542/overload-a-lambda-function
-    //The // lambdas are anonymous functors(i.e.unnamed function objects), and not simple functions.
-    //Therefore, overloading those objects not possible.
+    // The // lambdas are anonymous functors(i.e.unnamed function objects), and not simple functions.
+    // Therefore, overloading those objects not possible.
 
     // end of recursion: one parameter left
-    //auto sum3 = [](auto elem) {
+    // auto sum3 = [](auto elem) {
     //    return elem;
-    //};
+    // };
 
     // recursive case: 2 or more parameters
-    //auto sum3 = [](auto first, auto ... args) {
+    // auto sum3 = [](auto first, auto ... args) {
     //    return first + sum3(args ...);
-    //};
+    // };
 
 
     // but:
@@ -336,7 +336,7 @@ namespace VariadicGenericFolding_11 {
         return 3 * x;
     };
 
-    auto power = [](auto func, size_t n) {
+    auto repeat = [](auto func, size_t n) {
         auto result{ 1 };
 
         for (size_t i{ 1 }; i <= n; ++i) {
@@ -348,11 +348,11 @@ namespace VariadicGenericFolding_11 {
 
     void test_variadic_generic_folding_01()
     {
-        auto result = power(timesTwo, 5);
-        std::cout << "power: " << result << std::endl;
+        auto result = repeat(timesTwo, 5);
+        std::cout << "repeat: " << result << std::endl;
 
-        result = power(timesThree, 5);
-        std::cout << "power: " << result << std::endl;
+        result = repeat(timesThree, 5);
+        std::cout << "repeat: " << result << std::endl;
     }
 }
 

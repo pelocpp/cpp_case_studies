@@ -24,13 +24,8 @@ Programmiersprache C++ gefunden:
 Sicherlich muss man all diese Konzepte erst einmal alleinstehend für sich betrachten,
 um sie zu erfassen und zu verstehen.
 
-Interessanter wird es, wenn man diese Techniken miteinander verknüpft!
-
-Genau dies wollen wir an einer Reihe von Beispielen näher betrachten.
-Erst auf diese Weise kann man erkennen, in welche Richtung sich die Stilistik entwickelt.
-
-Im Mittelpunkt der folgenden Beispiele soll der Ansatz stehen, mehrere dieser Techniken miteinander zu verknüpfen.
-Erst auf diese Weise kann man erkennen, welche Pfade die Stilistik eines &ldquo;Modern C++&ldquo; Programms einschlägt.
+In einem zweiten Schritt kommt es dann darauf an, diese Techniken miteinander zu verknüpfen!
+Genau dies wollen wir an einer Reihe von Beispielen in dieser Fallstudie näher betrachten.
 
 ## Variadische Funktionen und Parameter Packs
 
@@ -38,7 +33,7 @@ Variadische Templates gehören zu den mächtigsten Erweiterungen von C++ ab der Ve
 Diese Art der Schreibweise von Klassen und Funktionen
 kann statt einer vorgegebenen &ndash; und damit festen &ndash; Anzahl 
 von Argumenten (Datentypen, Parameter) eine beliebige Menge annehmen.
-Darüberhinaus kann der Datentyp dieser Argumente in einem konkreten Anwendungsfall
+Darüber hinaus kann der Datentyp dieser Argumente in einem konkreten Anwendungsfall
 dann unterschiedlich sein.
 Abgelegt werden die Argumente in einem so genannten *Parameter Pack*.
 
@@ -142,7 +137,7 @@ std::cout << "Summe: " << result << std::endl;  // "Summe: 15"
 ```
 
 Interessanterweise lässt sich die variadische Funktion `sum` auch mit Werten
-untschiedlichen Typs und auch mit nicht-arithmetischen Werten aufrufen, also zum Beispiel
+unterschiedlichen Typs und auch mit nicht-arithmetischen Werten aufrufen, also zum Beispiel
 mit `std::string`&ndash;Objekten. Im Falle von nicht-arithmetischen Datentypen ist es aber
 erforderlich, dass die jeweilige Klasse den `+`&ndash;Operator unterstützt.
 Bei Variablen unterschiedlichen Datentyps wird das Ergebnis nach den üblichen C/C++
@@ -167,8 +162,8 @@ Concatenation: ABCDEFGHI
 
 Noch ein etwas anwendungsbezogeneres Beispiel:
 Die euklidische *Norm* eines *n*-dimensionalen Vektors
-ist definiert als
-der Wurzel aus der Summe der Betragsquadrate aller Komponenten des Vektors.
+ist definiert als die Wurzel aus der Summe der Betragsquadrate
+aller Komponenten des Vektors.
 Stellen wir die Elemente eines  *n*-dimensionalen Vektors in einem Parameter Pack
 zusammen, kann man eine Funktion `norm` so definieren:
 
@@ -231,8 +226,8 @@ auto sum(auto ... args) {
 }
 
 auto average(auto ... args) {
-    auto result{ sum(args...) };
-    return result / sizeof... (args);
+    auto result{ sum(args ...) };
+    return result / sizeof ... (args);
 }
 ```
 
@@ -252,7 +247,6 @@ Average: 5
 ## Zugriff auf die Elemente eines Parameter Packs: Folding zum Zweiten
 
 Mit Hilfe von Folding Ausdrücken kann man die Elemente eines Parameter Packs verarbeiten.
-
 Manchmal möchte man aber pro Element eine Verarbeitung anstoßen, die sich nicht nur
 auf die Anwendung eines einzelnen Operators beschränkt.
 Wir sind noch einmal bei der Fragestellung angekommen,
@@ -265,7 +259,7 @@ Das &ldquo;*Folding over a Comma*&rdquo;.
 
 Ja, Sie haben es richtig gelesen: Wir wenden das Folding für den Komma-Operator `,` an.
 Um es wahrheitsgemäßer zu sagen: Am Komma-Operator sind wir eigentlich überhaupt nicht interessiert,
-aber mit seiner Hilfe schaffen wir es aber, ein Parameter Pack Element für Element auszupacken!
+aber mit seiner Hilfe schaffen wir es, ein Parameter Pack Element für Element auszupacken!
 
 Es ist Zeit für ein Beispiel! Ich stelle im Folgenden
 eine Funktion `doSomethingWithParameterPack` in mehreren Schreibweisen vor.
@@ -286,7 +280,6 @@ Die erste Variation sollte in puncto Lesbarkeit die beste sein:
 11:     ( printElem(args) , ... );
 12: }
 ```
-
 *Listing* 1: &ldquo;*Folding over a Comma*&rdquo;.
 
 Betrachten Sie in diesem Code-Fragment Zeile 11: Hier finden wir den diskutierten Folding-Ausdruck vor:
@@ -316,14 +309,13 @@ diese auch als &ldquo;*Instanzvariable*&rdquo; der inneren Lambda-Funktion `prin
 09:     ( printElem(args) , ... );
 10: }
 ```
-
 *Listing* 2: Lambda-Funktion mit Instanzvariable.
 
 Die Zählvariable `i` tritt nun in Zeile 3 von *Listing* 2 in Erscheinung.
 Die Lambda-Funktion muss nun um das Schlüsselwort `mutable` ergänzt werden,
 da nur dann die Zählvariable `i` modifiziert werden darf (Entfernen der `constness` des Aufrufoperators `()`).
 
-Schon mal etwas von einem *IIFE* gehört. Okay, die Abkürzung verrate îch Ihnen:
+Schon mal etwas von *IIFE* gehört? Okay, die Abkürzung verrate ich Ihnen:
 *Immediately Invoked Functional Expression*.
 Man versteht hierunter die Inline-Definition einer Lambda-Funktion mit unmittelbarem Aufruf!
 
@@ -340,14 +332,13 @@ Man versteht hierunter die Inline-Definition einer Lambda-Funktion mit unmittelb
 10:     ( [&] { ++i; printElemToConsole(i, args); } () , ... );
 11: }
 ```
-
 *Listing* 3: *IIFE* an einem Beispiel gezeigt.
 
 In *Listing* 3 werfen wir unser Augenmerk auf Zeile 10: Das entscheidende Symbol sind hier die
 runden Klammern `()` nach der Inline-Definition der Lambda-Funktion
 
 ```cpp
-[&] { ++i; printElemToConsole(i, args); }
+[&] { ++i; printElemToConsole(i, args); } ()
 ```
 
 Durch eben diese runden Klammern kommt es zum Aufruf der Lambda-Funktion!
@@ -366,10 +357,9 @@ Diese Realisierung ist am schwersten lesbar. Meiner Vorstellung von gutem Softwa
 05:     ([&] { ++i; std::cout << "Element " << i << ": " << args << std::endl; } () , ... );
 06: }
 ```
-
 *Listing* 4: &ldquo;*Folding over a Comma*&rdquo; in minimalistischer Schreibweise.
 
-In *Listing* 4 finden wie die innere Lambda-Funktion als Argument des Folding Ausdrucks vor &ndash; garniert mit
+In *Listing* 4 finden wir die innere Lambda-Funktion als Argument des Folding Ausdrucks vor &ndash; garniert mit
 einem unmittelbaren Aufruf (*IIFE*).
 
 
@@ -399,7 +389,6 @@ Damit sind wir bei C++ 11 und rekursiven, variadischen Funktionen angekommen:
 08:     return first + sum (args ...);
 09: }
 ```
-
 *Listing* 5: Beispiel einer rekursiven Parameter Pack Expansion.
 
 Beachten Sie in *Listing* 5 zunächst Zeile 7: Der Trick in der Rekursion liegt darin, dass
@@ -413,7 +402,7 @@ allerdings mit einem Parameter weniger.
 Für diejenigen Leser, die eine exakte Formulierung bevorzugen: Eigentlich haben wir es in Zeile 8
 nicht mit einem rekursiven Funktionsaufruf zu tun, sondern mit dem Aufruf einer Überladung der `sum`-Funktion.
 Der Aufruf von `sum` in Zeile 8 erfolgt mit einem Parameter weniger, es handelt sich also streng genommen nicht
-um einen rekursiven Aufruf. Ich überlassen es Ihnen, welche Formulierung Sie bevorzugen wollen.
+um einen rekursiven Aufruf. Ich überlasse es Ihnen, welche Formulierung Sie bevorzugen wollen.
 
 Das Beispiel aus *Listing* 5 demonstriert ein Beispiel für generische Funktionen.
 Wir hätten es auch mit Funktionstemplates realisieren können:
@@ -432,7 +421,6 @@ Wir hätten es auch mit Funktionstemplates realisieren können:
 10:     return first + sum(args ...);
 11: }
 ```
-
 *Listing* 6: Dasselbe Beispiel in Template Syntax Schreibweise.
 
 Der Vollständigkeit halber noch die Schreibweise mit Lambda-Funktionen:
@@ -448,11 +436,10 @@ Der Vollständigkeit halber noch die Schreibweise mit Lambda-Funktionen:
 08:     return first + sum(args ...);
 09: };
 ```
+*Listing* 7: Dasselbe Beispiel in der Lambda-Funktionsschreibweise.
 
-*Listing* 7: Dasselbe Beispiel in Lambda-Funktionsschreibweise.
-
-Vorsicht: Der Quellcode aus *Listing* 7 ist **nicht** übersetzungsfähig.
-Es wird suggiert, dass wir es wie in *Listing* 5 oder *Listing* 6
+*Vorsicht*: Der Quellcode aus *Listing* 7 ist **nicht** übersetzungsfähig.
+Es wird suggeriert, dass wir es wie in *Listing* 5 oder *Listing* 6
 mit einer Überladung von zwei Funktionen zu tun haben.
 
 Lambdas sind anonyme Funktoren (d.h. unbenannte Funktionsobjekte bzw. unbenannte aufrufbare Objekte)
@@ -462,7 +449,7 @@ Daher ist ein Überladen dieser Objekte nicht möglich.
 
 Wenn wir wieder zum C++ 17 Sprachumfang wechseln, können wir den Fehler beseitigen.
 Offensichtlich geht eine Realisierung nur mit einem Aufrufoperator,
-in dessen Rumpf wir mit `if constexpr` und `sizeof...` eine Fallunterscheidung einbauen:
+in dessen Rumpf wird mit `if constexpr` und `sizeof...` eine Fallunterscheidung eingebaut:
 
 ```cpp
 01: auto sum = [](auto first, auto ... args) {
@@ -475,20 +462,19 @@ in dessen Rumpf wir mit `if constexpr` und `sizeof...` eine Fallunterscheidung e
 08:     }
 09: };
 ```
-
 *Listing* 8: Dasselbe Beispiel in Lambda-Funktionsschreibweise &ndash; dieses Mal korrekt (C++ 17).
 
 ## Funktionale Programmierung mit C++
 
-Anonyme Funktionen oder auch als Lambdas bezeichnet wurden in C++ 11 als
+Anonyme Funktionen &ndash; auch als Lambdas bezeichnet &ndash; wurden in C++ 11 als
 praktische, leichtgewichtige Syntax zum Erstellen kurzlebiger Funktionen eingeführt.
-
 Was nicht unmittelbar zu erkennen war:
 Mit Hilfe derartiger Lambda Funktionen lassen sich nun auch
 Konzepte der *funktionalen Programmierung* in C++ formulieren.
 
-Ich will damit nicht zum Ausdruck bringen, dass C++ auf einer Ebene wie zum Beispiel *Haskell* oder *F#* steht.
-Aber zwei zentrale Konzepte der funktionalen Programmierung &ndash;
+Ich will damit nicht zum Ausdruck bringen, dass &ldquo;Modern C++&ldquo; auf einer Ebene
+wie zum Beispiel *Haskell* oder *F#* steht.
+Aber das eine oder andere zentrale Konzepte der funktionalen Programmierung &ndash; wie zum Beispiel
 *Currying* und *Funktionen höherer Ordnung* &ndash; können wir nun auch mit C++ Hilfsmitteln schreiben.
 
 Was verstehen wir hierunter eigentlich:
@@ -496,7 +482,7 @@ Was verstehen wir hierunter eigentlich:
   * *Currying* &ndash; Beschreibt die Transformation einer Funktion mit mehreren Argumenten in eine Folge von Funktionen mit einem Argument.
      Es wird ein Aufruf einer Funktion *f(a, b, c, ...)* in einen Aufruf *f(a)(b)(c)...* umgewandelt.
 
-  * *Funktionen höherer Ordnung* &ndash; Zu den Merkmalen der funktionalen Programmierung gehört das Übergeben von Funktionen als Parameter an andere Funktionen
+  * *Funktionen höherer Ordnung* &ndash; Darunter versteht man das Übergeben von Funktionen als Parameter an andere Funktionen
   und das Zurückgeben neuer Funktionen als Ergebnis!
   Eine Funktion höherer Ordnung besitzt eine oder mehrere Funktionen als Argument und gibt möglicherweise auch eine Funktion als Ergebnis zurück.
 
@@ -514,10 +500,9 @@ Wir starten gleich mit einem Beispiel einer generischen Funktion:
 04:     };
 05: };
 ```
-
 *Listing* 9: Ein Beispiel für das *Currying*.
 
-Triviel zu erkennen ist in *Listing* 9, dass `genericIncrementer` ein Lambda Objekt ist.
+Trivial zu erkennen ist in *Listing* 9, dass `genericIncrementer` ein Lambda Objekt ist.
 Nur welchen Rückgabetyp hat `genericIncrementer`?
 Hierzu müssen wir schon etwas genauer hinschauen:
 Nach der `return`&ndash;Anweisung im Rumpf steht der Ausdruck
@@ -539,17 +524,16 @@ auto incrementByTen{ genericIncrementer(10) };
 ```
 
 `incrementByTen` ist folglich ein Lambda Objekt, das für das innere Lambda Objekt
-einen Wert in der Capture Clause (hier`10`) bereitstellt.
+einen Wert in der Capture Clause (hier: `10`) bereitstellt.
 Natürlich können wir das Lambda Objekt `incrementByTen` aufrufen:
-
-Ein Merkmal des *Currying* ist es, dass wir auf diese Weise eine Vielzahl solcher Lambda Funktionen
-erzeugen können. `incrementByTen`, `incrementByOne`, etc., nur um ihre Phantasie etwas anzuregen. 
-
 
 ```cpp
 auto result{ incrementByTen(5) };
 std::cout << "Result: " << result << std::endl;     // "Result: 15"
 ```
+Ein Merkmal des *Currying* ist es, dass wir auf diese Weise eine Vielzahl solcher Lambda Funktionen
+erzeugen können. Zum Beispiel ein `incrementByTen`, ein `incrementByOne`, etc.,
+nur um ihre Phantasie etwas anzuregen. 
 
 In der Konsole erhalten wir den Wert `15` als Ergebnis.
 Damit sollte das Prinzip des Curryings verständlich geworden sein:
@@ -557,7 +541,7 @@ Damit sollte das Prinzip des Curryings verständlich geworden sein:
 die mehrere Argumente verwendet, in eine Reihe mehrerer Funktionen,
 die jeweils nur ein Argument verwenden.&rdquo;
 
-Moment mal! Wo hatten wir in unseren bisherigen Beispiel den Aufruf mit den &ldquo;vielen&rdquo; Argumenten?
+Moment mal! Wo hatten wir in unseren bisherigen Beispielen den Aufruf mit den &ldquo;vielen&rdquo; Argumenten?
 Diesen Aufruf sollten wir nachreichen:
 
 ```cpp
@@ -568,10 +552,10 @@ Wir sprachen schon über den Rückgabetyp von `genericIncrementer`.
 Der Gebrauch des `auto`&ndash;Schlüsselworts verleitet zu leichter lesbarem Quellcode &ndash;
 und sollte von einem versierten C++ Entwickler auch bevorzugt werden!
 
-Ist &ndash; wiederum vor dem Hintergrund der guten Lesbarkeit des Quellcodes betrachtet &ndash;
+Ist &ndash; wiederum vor dem Hintergrund der leichter Lesbarkeit des Quellcodes diskutiert &ndash;
 der tatsächlich vorliegende Datentyp jedoch nicht einfach eruierbar,
 sollte oder könnte man auf `auto` auch verzichten und den tatsächlich vorliegenden Datentyp verwenden.
-Ein Leser ihres Quellcodes wird Ihnen sicherlich dafür dankbar ein. Aber entscheiden Sie doch selbst:
+Ein Leser Ihres Quellcodes wird Ihnen sicherlich dafür dankbar sein. Aber entscheiden Sie doch selbst:
 
 ```cpp
 01: std::function<int(int)> incrementByTen{ genericIncrementer(10) };
@@ -583,7 +567,6 @@ Ein Leser ihres Quellcodes wird Ihnen sicherlich dafür dankbar ein. Aber entsche
 07: result = incrementByFive(10);
 08: std::cout << "Result: " << result << std::endl;
 ```
-
 *Listing* 10: Lambda-Objekte, durch `std::function<int(int)>` definiert.
 
 In *Listing* 10 erkennt man durch schnelles Lesen nun, dass in den Zeilen 1 und 6
@@ -605,7 +588,7 @@ Auch hier starten wir gleich mit einem Beispiel:
 02:     return 2 * x;
 03: };
 04: 
-05: auto power = [](auto func, size_t n) {
+05: auto repeat = [](auto func, size_t n) {
 06:     auto result{ 1 };
 07: 
 08:     for (size_t i{ 1 }; i <= n; ++i) {
@@ -617,75 +600,70 @@ Auch hier starten wir gleich mit einem Beispiel:
 14: 
 15: void test()
 16: {
-17:     auto result = power(timesTwo, 5);
-18:     std::cout << "power: " << result << std::endl;
+17:     auto result = repeat(timesTwo, 5);
+18:     std::cout << "repeat: " << result << std::endl;
 19: }
 ```
-
 *Listing* 11: Beispiel einer Funktion höherer Ordnung.
 
-Funktion `power` besitzt als ersten Parameter (Zeile 5) einen Formalparameter namens `func`
+Funktion `repeat` besitzt als ersten Parameter (Zeile 5) einen Formalparameter namens `func`
 vom Typ `auto`.
 Wir sollten uns bewusst sein, dass wir aus Zeile 5 nicht schlau werden können,
 worum es sich bei `func` eigentlich handelt.
-In Zeile 11 wird es nun konkreter: Auf Grund der Quellcode-Fragments
+In Zeile 9 wird es nun konkreter: Auf Grund der Quellcode-Fragments
 
 ```cpp
 func(result);
 ```
-
 muss es sich bei `func` um etwas &ldquo;*Aufrufbares*&rdquo; handeln, also ein *Callable* im C++&ndash;Jargon.
 Es sind die runden Klammern nach `func`, die den Compiler auf diese Fährte führen.
 Es wurde schon mehrere Male angesprochen:
-Auch wann man landläufig von Lambda Funktionen spricht, haben wir es mit *Objekten* zu tun.
+Auch wenn man landläufig von Lambda Funktionen spricht, haben wir es mit *Objekten* zu tun.
 Oder noch etwas krasser: Lambda Funktionen sind keine Funktionen.
 
 Objekte hingegen lassen sich als Parameter an andere Funktionen übergeben,
 damit betrachten wir Zeile 17 in *Listing* 11:
 
 ```cpp
-auto result = power(timesTwo, 5);
+auto result = repeat(timesTwo, 5);
 ```
+Es wird die Funktion `repeat` mit dem Lambda Objekt `timesTwo` aufgerufen,
+das Lambda Objekt gelangt im Rumpf von `repeat` zur Ausführung.
+Folglich ist `repeat` eine Funktion höherer Ordnung.
 
-Es wird eine Funktion mit dem Lambda Objekt `timesTwo` aufgerufen,
-das Lambda Objekt gelangt im Rumpf von `power` zur Ausführung.
-Folglich ist `power` eine Funktion höherer Ordnung.
-
-Die Flexibilität einer Funktion höherer Ordnung verstehen wir vielleicht erst dann wirklich,
-wenn wir `power` mit unterschiedlichen Funktionen aufrufen.
-Spendieren wir neben `timesTwo`  doch noch eine weiterer Funktion `timesThree`:
+Die Flexibilität einer Funktion höherer Ordnung verstehen wir vielleicht erst wirklich dann,
+wenn wir `repeat` mit unterschiedlichen Funktionen aufrufen.
+Spendieren wir neben `timesTwo`  doch noch eine weitere Funktion `timesThree`:
 
 ```cpp
 auto timesThree = [](auto x) {
     return 3 * x;
 };
 ```
-
 Jetzt betrachten wir das folgende Anwendungsbeispiel:
 
 ```cpp
 01: void test_variadic_generic_folding_01()
 02: {
-03:     auto result = power(timesTwo, 5);
-04:     std::cout << "power: " << result << std::endl;
+03:     auto result = repeat(timesTwo, 5);
+04:     std::cout << "repeat: " << result << std::endl;
 05: 
-06:     result = power(timesThree, 5);
-07:     std::cout << "power: " << result << std::endl;
+06:     result = repeat(timesThree, 5);
+07:     std::cout << "repeat: " << result << std::endl;
 08: }
 ```
-
 *Listing* 12: Aufruf einer Funktion höherer Ordnung mit unterschiedlichen Funktionen.
 
 *Ausgabe*:
 
 ```
-power: 32
-power: 243
+repeat: 32
+repeat: 243
 ```
 
 ### Verschachtelte Funktionsaufrufe generischer Funktionen
 
-Das Beispiel aus *Listing* 12 hätten wir auch ohne Funktion `power` und damit ohne
+Das Beispiel aus *Listing* 12 hätten wir auch ohne Funktion `repeat` und damit ohne
 eine Funktion höherer Ordnung realisieren können, zum Beispiel so:
 
 ```cpp
@@ -695,16 +673,15 @@ eine Funktion höherer Ordnung realisieren können, zum Beispiel so:
 04:     std::cout << "Result: " << result << std::endl;
 05: }
 ```
-
 *Listing* 13: Verschachtelte Funktionsaufrufe generischer Funktionen.
 
 In Zeile 3 von *Listing* 13 finden wir &ndash; einen nahezu klassischen &ndash; geschachtelten Funktionsaufruf vor.
-Dieses Mal haben wir es bei den Parametern mit `int`-Werten zu tun, also wir haben es nicht
+Dieses Mal liegen bei den Parametern `int`-Werte vor, also haben wir es nicht
 mit einer Funktion höherer Ordnung zu tun.
 
-Okay, ich vermute mal, Sie werden sagen: Das ginge vielleicht auch etwas &ldquo;akademischer&rdquo; oder &ldquo;eleganter&rdquo;,
-wobei ich es Ihnen überlasse, ein geignetes Wort für den von mir angestrebten Sachverhalt zu finden.
-
+Okay, ich vermute mal, Sie werden sagen:
+Das ginge vielleicht auch etwas &ldquo;eleganter&rdquo;,
+wobei ich es Ihnen überlasse, ein geeignetes Wort für den von mir angestrebten Sachverhalt zu finden.
 Die Formulierung eines geschachtelten Funktionsaufrufs ist bisweilen immer etwas mühsam,
 man muss die schließenden runden Klammern am Ende des Ausdrucks genau zählen.
 
@@ -714,17 +691,9 @@ deren Argumente (Lambda Objekte) über das Parameter Pack übergeben werden
 und von `combine` verschachtelt aufgerufen werden.
 
 Das war jetzt vielleicht etwas viel auf einmal,
-fagen wir es etwas langsamer in *Listing* 14 an:
+fangen wir in es *Listing* 14 etwas langsamer an:
 Hier wollen wir meine Idee einer Funktion  `combine` zunächst einmal von der Konzeption 
 her gesehen betrachten:
-
-WEITER   Uniform Init....
-
-Kommendes Listing kompakter !!!
-
-Grammatik
-
-
 
 ```cpp
 01: auto timesTwo = [](auto x) {
@@ -762,8 +731,7 @@ Grammatik
 33:     std::cout << "combine: " << result << std::endl;
 34: }
 ```
-
-*Listing* 14: Diverses Überladungen einer Hilfsfunktion `combine` für den verschachtelten Funktionsaufruf.
+*Listing* 14: Diverse Überladungen einer Hilfsfunktion `combine` für einen verschachtelten Funktionsaufruf.
 
 Lassen Sie mich aus *Listing* 14 die Überladung von `combine` aus den Zeilen 9 bis 14 herauspicken:
 
@@ -776,40 +744,30 @@ auto combine(auto func1, auto func2)
     };
 }
 ```
-
 Funktion `combine` besitzt zwei Funktionsobjekte `func1`  und `func2` als Parameter:
 
 Der verschachtelte Aufruf wird in einem inneren Lambda Objekt durchgeführt,
-der Ergebniswert wird via `return` zurückgegeben.
+der Ergebniswert wird mit `return` zurückgegeben.
 In Listing 14 habe ich den verschachtelten Aufruf als Argument in der `return`&ndash;Anweisung platziert,
 damit wird das Ganze noch ein wenig kompakter.
 
 Aber Vorsicht: Die tatsächliche Ausführung des verschachtelten Funktionsaufrufs
 findet nicht im Kontext von `combine` statt: `combine` liefert als Ergebnis ein Lambda Objekt zurück!
 
-///
-dass via `return` zurückgegeben wird.
-Also Vorsicht: Der verschachtelte Aufruf wird nicht beim Aufruf von 
-
-Die beiden Funktionen `func1` und `func2`
-werden verschachtelt aufgerufen, aber nicht unmittelbar,
-sondern für den verschachtelten Funktionsaufruf wird ein Lamda Objekt
-erstellt , dass via `return` zurückgegebn wird.
-///
-
 Viel interessanter ist die Frage, wie eigentlich die Parameter `parameters` in die
 Hilfsfunktion `combine` gelangen?
 Einfache Antwort: Überhaupt nicht! Die Parameter sind beim Aufruf des zurückgegebenen
-Lamda Objekts bereitszutellen,
-und das in unserem Beispiel am Ende von Zeile 32 der Fall &ndash; hier mit dem Wert `1`.
+Lambda Objekts bereitzustellen,
+und das ist in unserem Beispiel am Ende von Zeile 32 der Fall &ndash; hier mit dem Wert `1`.
 Da es sich um ein Parameter Pack handelt, könnten dies auch mehrere Parameter sein.
 Die Thematik &ldquo;*Parameter Pack an andere Funktionen weiterreichen*&rdquo;
 hatten wir bereits betrachtet.
 
 Zugegeben, nach dem Studium des Quellcodes aus *Listing* 14 werden Sie sich sicherlich fragen,
-wo bei den vielen Überladungen der `combine` Hilfsfunktion ein Vorteil liegt?
-Vielleicht erahnen Sie es schon: &ldquo;We can do much more better&rdquo;!
-Und damit sind beim letzten Thema dieser Fallstudio angekommen.
+wo bei den vielen Überladungen der `combine` Hilfsfunktion noch ein Vorteil liegt?
+Vielleicht erahnen Sie es schon: &ldquo;Again we can do better&rdquo;!
+
+Und damit sind wir beim letzten Abschnitt dieser Fallstudie angekommen.
 
 ## Betrachtung einer generischen Funktionen höherer Ordnung mit rekursiver Parameter Pack Expansion
 
@@ -817,7 +775,7 @@ Ich weiß, diese Überschrift sollte man nicht ernst nehmen, aber es war ja das Zi
 möglichst viele Konzepte von &ldquo;Modern C++&ldquo; in geschickten Kombinationen darzulegen.
 
 Die vielen Überladungen der  `combine` Hilfsfunktion lassen sich auf eine reduzieren,
-wenn man das Parameter Pack rekursiv auspackt:
+wenn man das Parameter Pack rekursiv auspackt &ndash; siehe *Listing* 15:
 
 
 ```cpp
@@ -833,21 +791,19 @@ wenn man das Parameter Pack rekursiv auspackt:
 10:     };
 11: }
 ```
-
 *Listing* 15: Beispiel einer generischen Funktion höherer Ordnung für den verschachtelten Funktionsaufruf.
 
-Mit den geleistenen Vorarbeiten sollte es nicht so schwer sein,
+Mit den geleisteten Vorarbeiten sollte es nicht so schwer sein,
 den Quellcode aus *Listing* 15 zu verstehen.
-
 In Zeile 9 finden wir einen rekursiven Aufruf der Funktion `combine` vor.
 Diese nimmt ein Parameter Pack entgegen, aber Achtung: Das Pack `funcs` ist quasi schon um ein Funktionsobjekt reduziert.
-Das erste Funktionsobjekt `func` tritt in Erscheinung, um das Ergebnis des rekursiven Aufrufs entgehenzunehmen.
+Das erste Funktionsobjekt `func` wird aufgerufen, um das Ergebnis des rekursiven Aufrufs entgegenzunehmen.
 
-Da wir ein Beispiel mit der rekursiver Parameter Pack Expansion betrachten,
+Da wir ein Beispiel mit rekursiver Parameter Pack Expansion betrachten,
 benötigen wir noch eine Überladung der `combine`-Funktion,
-die die Rekursion abbricht: Siehe hierzu die Zeilen 1 bis 4.
+die die Rekursion abbricht: Siehe hierzu die Zeilen 1 bis 4 von *Listing* 15.
 
-Zum Abschluss präsentieren wir ein Anwendungsbeispiel, um Funktion `combine` aufzurufen:
+Zum Abschluss präsentieren wir ein Anwendungsbeispiel, um einen Aufruf der Funktion `combine` zu demonstrieren:
 
 ```cpp
 auto timesTwo = [](auto x) {
@@ -873,18 +829,17 @@ void test()
 }
 ```
 
-
 *Ausgabe*:
 
 ```
 result: 1024
 ```
 
-Ich bin am Ende meiner Ausführungen abgekommen! Ich hoffe, es hat Ihnen etwas Spaß bereitet,
-zu verfolgen, welche neuen Möglichkeiten bzgl. Programmierstil und -paradigmen in Modern C++
+Ich bin am Ende meiner Ausführungen angekommen! Ich hoffe, es hat Ihnen etwas Spaß bereitet,
+zu verfolgen, welche neuen Möglichkeiten bzgl. Programmierstil und -paradigmen in &ldquo;Modern C++&ldquo;
 zur Verfügung stehen.
 
-FEHLR: LITERATUR
+FEHLT: LITERATUR
 
 ## Functional Programming with Nested Lambdas 
 
