@@ -1,12 +1,9 @@
-# Variadisch + Folding = Generisch + Rekursiv: Wie bitte?
+<!-- VariadicGenericFoldingAndMore.md -->
+
+// Variadisch + Folding = Generisch + Rekursiv: Wie bitte?
 
 // Projektname:  VariadicGenericFoldingAndMore
 
-## TO BE DONE
-
-// WEITER: Concepts... Beispiel 
-
-// Logisches AND und OR
 
 ## Einleitung
 
@@ -20,6 +17,13 @@ Programmiersprache C++ gefunden:
  * Parameter Packs
  * Rekursive Parameter Pack Expansion
  * *IIFE* 
+
+###### {#abbildung_1_but_why}
+
+{{< figure src="/img/legendre/SatzVonLegendre.png" width="50%" >}}
+
+*Abbildung* 1: Der Satz von Legendre mit Gaußklammern.
+
 
 Sicherlich muss man all diese Konzepte erst einmal alleinstehend für sich betrachten,
 um sie zu erfassen und zu verstehen.
@@ -265,6 +269,7 @@ Es ist Zeit für ein Beispiel! Ich stelle im Folgenden
 eine Funktion `doSomethingWithParameterPack` in mehreren Schreibweisen vor.
 Die erste Variation sollte in puncto Lesbarkeit die beste sein:
 
+###### {#listing_1_folding_over_a_comma}
 
 ```cpp
 01: auto doSomethingWithParameterPack(auto ... args) {
@@ -296,6 +301,7 @@ Wie versprochen, nun einige Alternativen zur Gestaltung des Quellcodes von Funkt
 Sollten Sie sich in Zeile 3 an der lokalen Variablen `i` stören, so könnte man
 diese auch als &ldquo;*Instanzvariable*&rdquo; der inneren Lambda-Funktion `printElem` definieren:
 
+###### {#listing_2_lambda_with_instance_variable}
 
 ```cpp
 01: auto doSomethingWithParameterPack(auto ... args) {
@@ -318,6 +324,8 @@ da nur dann die Zählvariable `i` modifiziert werden darf (Entfernen der `constne
 Schon mal etwas von *IIFE* gehört? Okay, die Abkürzung verrate ich Ihnen:
 *Immediately Invoked Functional Expression*.
 Man versteht hierunter die Inline-Definition einer Lambda-Funktion mit unmittelbarem Aufruf!
+
+###### {#listing_3_lambda_and_iife}
 
 ```cpp
 01: auto doSomethingWithParameterPack(auto ... args) {
@@ -349,6 +357,8 @@ Für alle Anhänger des Minimalismus gerne auch eine abschließende Variante ohne
 Hilfsfunktion. Ich nehme es aber gleich vorweg:
 Diese Realisierung ist am schwersten lesbar. Meiner Vorstellung von gutem Software-Quellcode entspricht sie nicht!
 
+###### {#listing_4_folding_over_a_comma_minimalistic}
+
 ```cpp
 01: auto doSomethingWithParameterPack(auto ... args) {
 02: 
@@ -377,6 +387,8 @@ auto sum(auto ... args) {
 
 Es schadet aber auch nichts, wenn man C++ Quellcode älterer C++ Versionen lesen kann.
 Damit sind wir bei C++ 11 und rekursiven, variadischen Funktionen angekommen:
+
+###### {#listing_5_recursive_parameter_pack_expansion}
 
 ```cpp
 01: // end of recursion: one parameter left
@@ -407,6 +419,8 @@ um einen rekursiven Aufruf. Ich überlasse es Ihnen, welche Formulierung Sie bevo
 Das Beispiel aus *Listing* 5 demonstriert ein Beispiel für generische Funktionen.
 Wir hätten es auch mit Funktionstemplates realisieren können:
 
+###### {#listing_6_templates_syntax_notation}
+
 
 ```cpp
 01: // end of recursion: one parameter left
@@ -424,6 +438,8 @@ Wir hätten es auch mit Funktionstemplates realisieren können:
 *Listing* 6: Dasselbe Beispiel in Template Syntax Schreibweise.
 
 Der Vollständigkeit halber noch die Schreibweise mit Lambda-Funktionen:
+
+###### {#listing_7_lambda_syntax_notation_wrong}
 
 ```cpp
 01: // end of recursion: one parameter left
@@ -450,6 +466,8 @@ Daher ist ein Überladen dieser Objekte nicht möglich.
 Wenn wir wieder zum C++ 17 Sprachumfang wechseln, können wir den Fehler beseitigen.
 Offensichtlich geht eine Realisierung nur mit einem Aufrufoperator,
 in dessen Rumpf wird mit `if constexpr` und `sizeof...` eine Fallunterscheidung eingebaut:
+
+###### {#listing_8_lambda_syntax_notation_correct}
 
 ```cpp
 01: auto sum = [](auto first, auto ... args) {
@@ -496,6 +514,8 @@ Vielmehr ist der Name auf einen US-amerikanischen Logiker und Mathematiker namen
 ### *Currying*
 
 Wir starten gleich mit einem Beispiel einer generischen Funktion:
+
+###### {#listing_9_currying}
 
 ```cpp
 01: auto genericIncrementer = [] (auto x) {
@@ -561,6 +581,8 @@ der tatsächlich vorliegende Datentyp jedoch nicht einfach eruierbar,
 sollte oder könnte man auf `auto` auch verzichten und den tatsächlich vorliegenden Datentyp verwenden.
 Ein Leser Ihres Quellcodes wird Ihnen sicherlich dafür dankbar sein. Aber entscheiden Sie doch selbst:
 
+###### {#listing_10_std_function_explained}
+
 ```cpp
 01: std::function<int(int)> incrementByTen{ genericIncrementer(10) };
 02: 
@@ -586,6 +608,8 @@ die mindestens eine der folgenden Anforderungen erfüllt:
   * Sie gibt eine neue Funktion zurück.
   
 Auch hier starten wir gleich mit einem Beispiel:
+
+###### {#listing_11_high_order_function}
 
 ```cpp
 01: auto timesTwo = [](auto x) {
@@ -646,6 +670,8 @@ auto timesThree = [](auto x) {
 ```
 Jetzt betrachten wir das folgende Anwendungsbeispiel:
 
+###### {#listing_12_high_order_function_with_different_functions}
+
 ```cpp
 01: void test_variadic_generic_folding_01()
 02: {
@@ -669,6 +695,8 @@ repeat: 243
 
 Das Beispiel aus *Listing* 12 hätten wir auch ohne Funktion `repeat` und damit ohne
 eine Funktion höherer Ordnung realisieren können, zum Beispiel so:
+
+###### {#listing_13_nested_generic_functions}
 
 ```cpp
 01: void test_variadic_generic_folding_01()
@@ -698,6 +726,8 @@ Das war jetzt vielleicht etwas viel auf einmal,
 fangen wir in es *Listing* 14 etwas langsamer an:
 Hier wollen wir meine Idee einer Funktion `combine` zunächst einmal von der Konzeption 
 her gesehen betrachten:
+
+###### {#listing_14_combine_simple_explained}
 
 ```cpp
 01: auto timesTwo = [](auto x) {
@@ -779,6 +809,7 @@ möglichst viele Konzepte von &ldquo;Modern C++&ldquo; in möglichst geschickten K
 Die vielen Überladungen der `combine` Hilfsfunktion lassen sich auf eine reduzieren,
 wenn man das Parameter Pack rekursiv auspackt &ndash; siehe *Listing* 15:
 
+###### {#listing_15_generic_combine_high_order_function}
 
 ```cpp
 01: auto combine(auto func)
@@ -863,19 +894,23 @@ Der Parameter der beiden Prädikatsfunktionen muss vom Typ `std::string` sein,
 weitere Qualifizierungen mit `const` oder `&` spielen in diesem Zusammenhang keine Rolle.
 Der Rückgabetyp muss `bool` sein, was von den beiden Funktionen `beginsWith` und `endsWith` erfüllt wird.
 
-Die beiden Lambdaobjekte `beginsWith` und `endsWith` sind
-einfache &ldquo;filtrierende&rdquo; Prädikatsfunktionen um
-Zeichenketten zu finden, die entweder mit `a` beginnen und mit `b` enden.
+Die beiden Lambda Objekte `beginsWith` und `endsWith` sind
+einfache &ldquo;filtrierende&rdquo; Prädikatsfunktionen, um
+Zeichenketten zu finden, die entweder mit `a` beginnen bzw. mit `b` enden.
 
 Wir könnten diese beiden Funktionen in der Tat direkt als Argument für `std::copy_if` verwenden.
 Aber dann suchen wir halt nur nach Zeichenketten, die entweder mit `a` beginnen oder mit `b` enden.
-Wie gehen wir vor, wenn wir beide  &ndash; oder sogar noch weitere &ndash; Funktionen verwenden wollten,
-deren jeweilige Ergebnisse mit entsprechenden logischen Operationen zu verknüpfen sind?
+Wie gehen wir vor, wenn wir beide  &ndash; oder sogar noch weitere &ndash; Prädikatsfunktionen verwenden wollen,
+deren jeweilige Ergebnisse dann mit entsprechenden logischen Operationen zu verknüpfen sind?
 
 Wenn wir diesen Ideenansatz weiter verfolgen, sind wir wieder bei einer Funktion in der Art `combine`
-angekommen, die sowohl die einzelnen unäre Prädikatsfunktionen als auch eine weitere Funktion 
+angekommen, die sowohl die einzelnen unären Prädikatsfunktionen als auch eine weitere Funktion 
 &ndash; nennen wir sie zum Beispiel `boolAnd` &ndash; entgegennimmt,
-die sich um die logische Verknüpfung der Teilergebnisse der Prädikatsfunktionen kümmert:
+die sich um die logische Verknüpfung der Teilergebnisse der Prädikatsfunktionen abschließend kümmert.
+Und wenn das alles noch nicht ausreichend ist: Das Ergebnis dieser Funktion soll als Argument für `std::copy_if`
+herhalten können:
+
+###### {#listing_16_second_generic_combine_high_order_function}
 
 ```cpp
 01: auto combine(const auto& binaryFunc, auto pred1, auto pred2)
@@ -919,23 +954,24 @@ die sich um die logische Verknüpfung der Teilergebnisse der Prädikatsfunktionen 
 axyzb ab
 ```
 
-In den Zeilen 1 bis 6 von *Listing* 16 finden Sie ein Lambdaobjekt namens `combine` vor.
-Diese Funktion gibt wiederum ein Lambdaobjekt zurück,
-dessen Verwendung für den `copy_if`-Algorithmus gedacht ist.
+In den Zeilen 1 bis 6 von *Listing* 16 finden Sie ein Lambda Objekt namens `combine` vor.
+Dieses Funktionsobjekt gibt wiederum ein Lambda Objekt zurück,
+dessen Verwendung für den `std::copy_if`-Algorithmus gedacht ist.
 
-Die `combine`-Funktion benötigt drei Funktionsparameter &ndash; eine binäre Konjunktion
-und zwei Prädikatsfunktionen &ndash; und gibt ein Lambdaobjekt zurück,
-das die Konjunktion mit den zwei Prädikatsfunktionen aufruft.
+Die `combine`-Funktion benötigt folglich drei Funktionsparameter: eine binäre Konjunktion
+und zwei Prädikatsfunktionen. Zurückgegeben wird ein Lambda Objekt,
+in dessen Rumpf die Konjunktion mit den zwei Prädikatsfunktionen gebildet wird.
 
 Wir wäre es mit einer kleinen Übungsaufgabe?
-Im Quellcode von *Listing* 16 wurde das `auto`-Schlüssenwort recht intensiv eingesetzt.
+Im Quellcode von *Listing* 16 wurde das `auto`-Schlüsselwort sicherlich recht intensiv eingesetzt.
 Ist Ihnen wirklich an jeder Stelle des Quellcodes klar, welcher Datentyp
 vom Compiler tatsächlich abgeleitet wird?
 Versuchen Sie doch einmal, das Beispiel aus *Listing* 16 ohne `auto` zu programmieren.
-
 Ich will die Spannung nicht weiter aufrecht halten,
-in *Listing* 17 finden Sie eine äquivalente Implementierung des Beispeis vor &ndash;
-ohne `auto`:
+in *Listing* 17 finden Sie eine äquivalente Implementierung des Beispiels aus *Listing* 16 vor &ndash;
+nur ohne Verwendung von `auto`:
+
+###### {#listing_17_second_generic_combine_high_order_function_without_auto}
 
 ```cpp
 01: template <typename T>
@@ -1003,7 +1039,7 @@ ohne `auto`:
 63: }
 ```
 
-*Listing* 17: Das Anwendungsbeispiel, implementiert ohne den Gebrauch des `auto`-Schlüsselworts.
+*Listing* 17: Das Anwendungsbeispiel aus *Listing* 16, implementiert ohne Gebrauch von `auto`.
 
 *Ausgabe*:
 
@@ -1012,8 +1048,8 @@ axyzb aaa bbb ab
 axyzb ab
 ```
 
-Sie können nun selbst vergleichen, wie sich die Stilistik von C++&ndash;Programmen im Erscheinungsbild gewandelt hat.
-Und es sollte auch Ihre Entscheidung sein, welche der modernen C++ Bausteine Sie in Ihren eigenen Quellcode intergrieren.
+Sie können nun selbst vergleichen, wie sich die Stilistik von C++&ndash;Programmen im Erscheinungsbild der Jahre gewandelt hat.
+Und es sollte nach wie vor Ihre Entscheidung sein, welche der modernen C++ Bausteine Sie in Ihren eigenen Quellcode integrieren.
 
 ## Ausblick
 
@@ -1022,33 +1058,35 @@ Ich bin am Ende meiner Ausführungen angekommen! Ich hoffe, es hat Ihnen etwas Sp
 zu verfolgen, welche neuen Möglichkeiten bzgl. Programmierstil und -paradigmen in &ldquo;Modern C++&ldquo;
 zur Verfügung stehen.
 
-FEHLT: LITERATUR
 
-## Functional Programming with Nested Lambdas 
+<br/>
 
-https://stackoverflow.com/questions/36314/what-is-currying
+## Literatur
 
-https://sebastianviereck.de/funktionale-programmierung-mit-javascript/
+Einige Beispiele und Anregungen zu dieser Fallstudie stammen aus dem Aufsatz
+&ldquo;[What are C++ variadic templates and fold expressions?](https://iamsorush.com/posts/cpp-variadic-template/)&rdquo;
+(abgerufen am 8. Mai 2023).
 
+Auch wurden Anregungen durch das Buch 
 
+  * Bill Weinmann, &ldquo;*C++ Cookbook (1th Edition)*&rdquo;.</br>
+    Verlag Packt (27. Mai 2022), 450 Seiten. Sprache: Englisch. ISBN-13: 978-1-80324-871-4, ISBN-10: 1803248718.
 
-// https://www.cppstories.com/2020/08/c-lambda-week-some-tricks.html/
+gegeben.
 
-// https://www.cppstories.com/2020/07/lambdas5ex.html/
-
-// https://iamsorush.com/posts/cpp-variadic-template/
-
-// https://iamsorush.com/posts/cpp-meta-function/#introduction
-
-
-
-// ==============================================
-
-// https://www.cppstories.com/2020/08/c-lambda-week-some-tricks.html/
-
-// https://iamsorush.com/posts/cpp-variadic-template/
-
-// https://iamsorush.com/posts/cpp-meta-function/#introduction
+<br/>
 
 
-// https://iamsorush.com/posts/concepts-cpp/
+<!-- Links Definitions -->
+
+[Abbildung 1]: #abbildung_1_but_why
+
+
+[Listing 1]: #listing_01_primedictionary_decl
+[Listing 2]: #listing_01_primedictionary_impl
+[Listing 3]: #listing_03_factorial_decl
+[Listing 4]: #listing_03_factorial_impl
+[Listing 5]: #listing_05_binomialcoefficient_decl
+[Listing 6]: #listing_06_binomialcoefficient_impl
+
+<!-- End-of-File -->
