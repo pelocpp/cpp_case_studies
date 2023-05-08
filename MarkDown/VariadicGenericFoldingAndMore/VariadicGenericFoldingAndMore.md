@@ -164,7 +164,7 @@ Noch ein etwas anwendungsbezogeneres Beispiel:
 Die euklidische *Norm* eines *n*-dimensionalen Vektors
 ist definiert als die Wurzel aus der Summe der Betragsquadrate
 aller Komponenten des Vektors.
-Stellen wir die Elemente eines  *n*-dimensionalen Vektors in einem Parameter Pack
+Stellen wir die Elemente eines *n*-dimensionalen Vektors in einem Parameter Pack
 zusammen, kann man eine Funktion `norm` so definieren:
 
 ```cpp
@@ -493,7 +493,7 @@ Was verstehen wir hierunter eigentlich:
 *Bemerkung*: Das viel zitierte *Currying* hat nichts mit Gerichten der asiatischen oder japanischen Küche zu tun.
 Vielmehr ist der Name auf einen US-amerikanischen Logiker und Mathematiker namens *Haskell Brooks Curry* zurückzuführen.
 
-### *Currying*  
+### *Currying*
 
 Wir starten gleich mit einem Beispiel einer generischen Funktion:
 
@@ -637,7 +637,7 @@ Folglich ist `repeat` eine Funktion höherer Ordnung.
 
 Die Flexibilität einer Funktion höherer Ordnung verstehen wir vielleicht erst wirklich dann,
 wenn wir `repeat` mit unterschiedlichen Funktionen aufrufen.
-Spendieren wir neben `timesTwo`  doch noch eine weitere Funktion `timesThree`:
+Spendieren wir neben `timesTwo` doch noch eine weitere Funktion `timesThree`:
 
 ```cpp
 auto timesThree = [](auto x) {
@@ -696,7 +696,7 @@ und von `combine` verschachtelt aufgerufen werden.
 
 Das war jetzt vielleicht etwas viel auf einmal,
 fangen wir in es *Listing* 14 etwas langsamer an:
-Hier wollen wir meine Idee einer Funktion  `combine` zunächst einmal von der Konzeption 
+Hier wollen wir meine Idee einer Funktion `combine` zunächst einmal von der Konzeption 
 her gesehen betrachten:
 
 ```cpp
@@ -748,7 +748,7 @@ auto combine(auto func1, auto func2)
     };
 }
 ```
-Funktion `combine` besitzt zwei Funktionsobjekte `func1`  und `func2` als Parameter:
+Funktion `combine` besitzt zwei Funktionsobjekte `func1` und `func2` als Parameter:
 
 Der verschachtelte Aufruf wird in einem inneren Lambda Objekt durchgeführt,
 der Ergebniswert wird mit `return` zurückgegeben.
@@ -771,14 +771,12 @@ Zugegeben, nach dem Studium des Quellcodes aus *Listing* 14 werden Sie sich sich
 wo bei den vielen Überladungen der `combine` Hilfsfunktion noch ein Vorteil liegt?
 Vielleicht erahnen Sie es schon: &ldquo;Again we can do better&rdquo;!
 
-Und damit sind wir beim letzten Abschnitt dieser Fallstudie angekommen.
-
 ## Betrachtung einer generischen Funktionen höherer Ordnung mit rekursiver Parameter Pack Expansion
 
 Ich weiß, diese Überschrift sollte man nicht ernst nehmen, aber es war ja das Ziel dieser Fallstudie,
-möglichst viele Konzepte von &ldquo;Modern C++&ldquo; in geschickten Kombinationen darzulegen.
+möglichst viele Konzepte von &ldquo;Modern C++&ldquo; in möglichst geschickten Kombinationen darzulegen.
 
-Die vielen Überladungen der  `combine` Hilfsfunktion lassen sich auf eine reduzieren,
+Die vielen Überladungen der `combine` Hilfsfunktion lassen sich auf eine reduzieren,
 wenn man das Parameter Pack rekursiv auspackt &ndash; siehe *Listing* 15:
 
 
@@ -807,7 +805,7 @@ Da wir ein Beispiel mit rekursiver Parameter Pack Expansion betrachten,
 benötigen wir noch eine Überladung der `combine`-Funktion,
 die die Rekursion abbricht: Siehe hierzu die Zeilen 1 bis 4 von *Listing* 15.
 
-Zum Abschluss präsentieren wir ein Anwendungsbeispiel, um einen Aufruf der Funktion `combine` zu demonstrieren:
+Wir präsentieren ein Anwendungsbeispiel, um einen Aufruf der Funktion `combine` zu demonstrieren:
 
 ```cpp
 auto timesTwo = [](auto x) {
@@ -838,6 +836,187 @@ void test()
 ```
 result: 1024
 ```
+
+## Kombination von Prädikatsfunktionen mit logischer Konjunktion und Disjunktion
+
+Möglicherweise ist mir der letzte Abschnitt doch etwas zu theoretisch geraten.
+Wir wollen das Ganze um ein weiteres Beispiel ergänzen &ndash; es geht um den STL
+Algorithmus `std::copy_if`.
+Im letzten Parameter erwartet `std::copy_if` eine unäre Prädikatsfunktion, die
+auf jedes Element des zu Grunde liegenden Containers angewendet wird und je nach Betrachtung
+`true` oder `false` zurückgibt. 
+
+Wenn wir einen Container mit Zeichenketten (`std::string`) nehmen,
+könnten unäre Prädikatsfunktionen so aussehen:
+
+```cpp
+auto beginsWith = [](const std::string& s) {
+    return s.find(std::string{ "a" }) == 0;
+};
+
+auto endsWith = [](const std::string& s) {
+    return s.rfind(std::string{ "b" }) == s.length() - 1;
+};
+```
+
+Der Parameter der beiden Prädikatsfunktionen muss vom Typ `std::string` sein,
+weitere Qualifizierungen mit `const` oder `&` spielen in diesem Zusammenhang keine Rolle.
+Der Rückgabetyp muss `bool` sein, was von den beiden Funktionen `beginsWith` und `endsWith` erfüllt wird.
+
+Die beiden Lambdaobjekte `beginsWith` und `endsWith` sind
+einfache &ldquo;filtrierende&rdquo; Prädikatsfunktionen um
+Zeichenketten zu finden, die entweder mit `a` beginnen und mit `b` enden.
+
+Wir könnten diese beiden Funktionen in der Tat direkt als Argument für `std::copy_if` verwenden.
+Aber dann suchen wir halt nur nach Zeichenketten, die entweder mit `a` beginnen oder mit `b` enden.
+Wie gehen wir vor, wenn wir beide  &ndash; oder sogar noch weitere &ndash; Funktionen verwenden wollten,
+deren jeweilige Ergebnisse mit entsprechenden logischen Operationen zu verknüpfen sind?
+
+Wenn wir diesen Ideenansatz weiter verfolgen, sind wir wieder bei einer Funktion in der Art `combine`
+angekommen, die sowohl die einzelnen unäre Prädikatsfunktionen als auch eine weitere Funktion 
+&ndash; nennen wir sie zum Beispiel `boolAnd` &ndash; entgegennimmt,
+die sich um die logische Verknüpfung der Teilergebnisse der Prädikatsfunktionen kümmert:
+
+```cpp
+01: auto combine(const auto& binaryFunc, auto pred1, auto pred2)
+02: {
+03:     return [=] (auto param) {
+04:         return binaryFunc(pred1(param), pred2(param));
+05:     };
+06: };
+07: 
+08: auto boolAnd = [](auto left, auto right) {
+09:     return left && right;
+10: };
+11: 
+12: void test_variadic_generic_folding_01()
+13: {
+14:     std::vector <std::string> strings {
+15:         "axyzb", "bxyza", "C++", "is", "wonderful", "ab"
+16:     };
+17: 
+18:     std::vector <std::string> result;
+19: 
+20:     std::copy_if (
+21:         strings.begin(),
+22:         strings.end(),
+23:         std::back_inserter(result),
+24:         combine(boolAnd, beginsWith, endsWith)
+25:     );
+26: 
+27:     for (const auto& s : result) {
+28:         std::cout << s << " ";
+29:     }
+30: 
+31:     std::cout << std::endl;
+32: }
+```
+*Listing* 16: Anwendungsbeispiel für Kombination von Prädikatsfunktionen.
+
+*Ausgabe*:
+
+```
+axyzb ab
+```
+
+In den Zeilen 1 bis 6 von *Listing* 16 finden Sie ein Lambdaobjekt namens `combine` vor.
+Diese Funktion gibt wiederum ein Lambdaobjekt zurück,
+dessen Verwendung für den `copy_if`-Algorithmus gedacht ist.
+
+Die `combine`-Funktion benötigt drei Funktionsparameter &ndash; eine binäre Konjunktion
+und zwei Prädikatsfunktionen &ndash; und gibt ein Lambdaobjekt zurück,
+das die Konjunktion mit den zwei Prädikatsfunktionen aufruft.
+
+Wir wäre es mit einer kleinen Übungsaufgabe?
+Im Quellcode von *Listing* 16 wurde das `auto`-Schlüssenwort recht intensiv eingesetzt.
+Ist Ihnen wirklich an jeder Stelle des Quellcodes klar, welcher Datentyp
+vom Compiler tatsächlich abgeleitet wird?
+Versuchen Sie doch einmal, das Beispiel aus *Listing* 16 ohne `auto` zu programmieren.
+
+Ich will die Spannung nicht weiter aufrecht halten,
+in *Listing* 17 finden Sie eine äquivalente Implementierung des Beispeis vor &ndash;
+ohne `auto`:
+
+```cpp
+01: template <typename T>
+02: std::function<bool(T)> combine(
+03:     std::function<bool(bool, bool)> binaryFunc,
+04:     std::function<bool(T)> pred1,
+05:     std::function<bool(T)> pred2)
+06: {
+07:     return [=](T arg) {
+08:         return binaryFunc(pred1(arg), pred2(arg));
+09:     };
+10: };
+11: 
+12: std::function<bool(std::string)> beginsWith = [](const std::string& s) {
+13:     return s.find(std::string{ "a" }) == 0;
+14: };
+15: 
+16: std::function<bool(std::string)> endsWith = [](const std::string& s) {
+17:     return s.rfind(std::string{ "b" }) == s.length() - 1;
+18: };
+19: 
+20: std::function<bool(bool, bool)> boolAnd = [](bool left, bool right) {
+21:     return left && right;
+22: };
+23: 
+24: std::function<bool(bool, bool)> boolOr = [](bool left, bool right) {
+25:     return left || right;
+26: };
+27: 
+28: void test_variadic_generic_folding_01()
+29: {
+30:     std::vector <std::string> strings { 
+31:         "axyzb", "bxyza", "aaa", "bbb", "C++", "is", "wonderful", "ab"
+32:     };
+33: 
+34:     std::vector <std::string> result;
+35: 
+36:     std::copy_if(
+37:         strings.begin(),
+38:         strings.end(),
+39:         std::back_inserter(result),
+40:         combine(boolOr, beginsWith, endsWith)
+41:     );
+42: 
+43:     for (const std::string& s : result) {
+44:         std::cout << s << " ";
+45:     }
+46: 
+47:     std::cout << std::endl;
+48: 
+49:     result.clear();
+50: 
+51:     std::copy_if(
+52:         strings.begin(),
+53:         strings.end(),
+54:         std::back_inserter(result),
+55:         combine(boolAnd, beginsWith, endsWith)
+56:     );
+57: 
+58:     for (const std::string& s : result) {
+59:         std::cout << s << " ";
+60:     }
+61: 
+62:     std::cout << std::endl;
+63: }
+```
+
+*Listing* 17: Das Anwendungsbeispiel, implementiert ohne den Gebrauch des `auto`-Schlüsselworts.
+
+*Ausgabe*:
+
+```
+axyzb aaa bbb ab
+axyzb ab
+```
+
+Sie können nun selbst vergleichen, wie sich die Stilistik von C++&ndash;Programmen im Erscheinungsbild gewandelt hat.
+Und es sollte auch Ihre Entscheidung sein, welche der modernen C++ Bausteine Sie in Ihren eigenen Quellcode intergrieren.
+
+## Ausblick
+
 
 Ich bin am Ende meiner Ausführungen angekommen! Ich hoffe, es hat Ihnen etwas Spaß bereitet,
 zu verfolgen, welche neuen Möglichkeiten bzgl. Programmierstil und -paradigmen in &ldquo;Modern C++&ldquo;

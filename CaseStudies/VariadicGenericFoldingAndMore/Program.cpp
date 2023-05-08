@@ -102,7 +102,7 @@ int main()
     //VariadicGenericFolding_14::test_variadic_generic_folding_01();
     //VariadicGenericFolding_15::test_variadic_generic_folding_01();
 
-  //  VariadicGenericFolding_16::test_variadic_generic_folding_01();
+    //VariadicGenericFolding_16::test_variadic_generic_folding_01();
 
     VariadicGenericFolding_17::test_variadic_generic_folding_01();
 
