@@ -1,7 +1,5 @@
 <!-- VariadicGenericFoldingAndMore.md -->
 
-## Einleitung
-
 Beginnend mit C++ 11 haben eine Reihe von neuen Sprachfeatures Einzug in die
 Programmiersprache C++ gefunden, die wir in ihrer Gesamtheit unter dem
 Begriff **C++ 20** subsumieren können:
