@@ -10,9 +10,14 @@ vor.
 
 ### Aktueller Stand:
 
+### Mai 2023
+
+  * [Variadisch + Generisch = Generisch + Rekursion: Wie bitte?](/CaseStudies/VariadicGenericFoldingAndMore)
+
 ### Februar 2023
 
   * [Berechnung von Permutationen](/CaseStudies/Permutations)
+  * [Das Problem der dinierenden Philosophen](/CaseStudies/DiningPhilosophers)
 
 ### März 2022
 
