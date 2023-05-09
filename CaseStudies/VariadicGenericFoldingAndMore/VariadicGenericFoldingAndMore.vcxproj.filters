@@ -22,12 +22,4 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Source_Lambdas_TRICKS_02.cpp">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="Source_Lambdas_TRICKS_01.cpp">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
 </Project>

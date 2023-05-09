@@ -232,6 +232,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VariadicGenericFoldingAndMo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VariadicGenericFoldingAndMore", "VariadicGenericFoldingAndMore", "{2DDFFDA7-2653-429D-A673-C39608F1C998}"
 	ProjectSection(SolutionItems) = preProject
+		MarkDown\VariadicGenericFoldingAndMore\but_why.jpg = MarkDown\VariadicGenericFoldingAndMore\but_why.jpg
 		MarkDown\VariadicGenericFoldingAndMore\VariadicGenericFoldingAndMore.md = MarkDown\VariadicGenericFoldingAndMore\VariadicGenericFoldingAndMore.md
 	EndProjectSection
 EndProject

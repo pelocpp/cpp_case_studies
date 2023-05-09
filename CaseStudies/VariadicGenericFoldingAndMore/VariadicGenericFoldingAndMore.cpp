@@ -4,8 +4,6 @@
 
 #include <iostream>
 #include <string>
-#include <type_traits>
-#include <cmath>
 #include <functional>
 #include <algorithm>
 
@@ -143,7 +141,6 @@ namespace VariadicGenericFolding_03 {
 }
 
 // =====================================================================================
-
 
 namespace VariadicGenericFolding_04 {
 
@@ -552,71 +549,71 @@ namespace VariadicGenericFolding_16 {
 
 namespace VariadicGenericFolding_17 {
 
-    // combine predicates with logical conjunction
+    // combine predicates with logical conjunction - no keyword auto used
 
-template <typename T>
-std::function<bool(T)> combine(
-    std::function<bool(bool, bool)> binaryFunc,
-    std::function<bool(T)> pred1,
-    std::function<bool(T)> pred2)
-{
-    return [=](T arg) {
-        return binaryFunc(pred1(arg), pred2(arg));
-    };
-};
-
-std::function<bool(std::string)> beginsWith = [](const std::string& s) {
-    return s.find(std::string{ "a" }) == 0;
-};
-
-std::function<bool(std::string)> endsWith = [](const std::string& s) {
-    return s.rfind(std::string{ "b" }) == s.length() - 1;
-};
-
-std::function<bool(bool, bool)> boolAnd = [](bool left, bool right) {
-    return left && right;
-};
-
-std::function<bool(bool, bool)> boolOr = [](bool left, bool right) {
-    return left || right;
-};
-
-void test_variadic_generic_folding_01()
-{
-    std::vector <std::string> strings { 
-        "axyzb", "bxyza", "aaa", "bbb", "C++", "is", "wonderful", "ab"
+    template <typename T>
+    std::function<bool(T)> combine(
+        std::function<bool(bool, bool)> binaryFunc,
+        std::function<bool(T)> pred1,
+        std::function<bool(T)> pred2)
+    {
+        return [=](T arg) {
+            return binaryFunc(pred1(arg), pred2(arg));
+        };
     };
 
-    std::vector <std::string> result;
+    std::function<bool(std::string)> beginsWith = [](const std::string& s) {
+        return s.find(std::string{ "a" }) == 0;
+    };
 
-    std::copy_if(
-        strings.begin(),
-        strings.end(),
-        std::back_inserter(result),
-        combine(boolOr, beginsWith, endsWith)
-    );
+    std::function<bool(std::string)> endsWith = [](const std::string& s) {
+        return s.rfind(std::string{ "b" }) == s.length() - 1;
+    };
 
-    for (const std::string& s : result) {
-        std::cout << s << " ";
+    std::function<bool(bool, bool)> boolAnd = [](bool left, bool right) {
+        return left && right;
+    };
+
+    std::function<bool(bool, bool)> boolOr = [](bool left, bool right) {
+        return left || right;
+    };
+
+    void test_variadic_generic_folding_01()
+    {
+        std::vector <std::string> strings { 
+            "axyzb", "bxyza", "aaa", "bbb", "C++", "is", "wonderful", "ab"
+        };
+
+        std::vector <std::string> result;
+
+        std::copy_if(
+            strings.begin(),
+            strings.end(),
+            std::back_inserter(result),
+            combine(boolOr, beginsWith, endsWith)
+        );
+
+        for (const std::string& s : result) {
+            std::cout << s << " ";
+        }
+
+        std::cout << std::endl;
+
+        result.clear();
+
+        std::copy_if(
+            strings.begin(),
+            strings.end(),
+            std::back_inserter(result),
+            combine(boolAnd, beginsWith, endsWith)
+        );
+
+        for (const std::string& s : result) {
+            std::cout << s << " ";
+        }
+
+        std::cout << std::endl;
     }
-
-    std::cout << std::endl;
-
-    result.clear();
-
-    std::copy_if(
-        strings.begin(),
-        strings.end(),
-        std::back_inserter(result),
-        combine(boolAnd, beginsWith, endsWith)
-    );
-
-    for (const std::string& s : result) {
-        std::cout << s << " ";
-    }
-
-    std::cout << std::endl;
-}
 }
 
 // =====================================================================================

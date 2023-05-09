@@ -130,8 +130,6 @@
   <ItemGroup>
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="VariadicGenericFoldingAndMore.cpp" />
-    <None Include="Source_Lambdas_TRICKS_01.cpp" />
-    <None Include="Source_Lambdas_TRICKS_02.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
