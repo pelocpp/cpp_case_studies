@@ -37,10 +37,10 @@ Dazu benötigen wir eine Reihe von konkreten Beispielen, um eine entsprechende Mo
  * Zugriff auf die Elemente eines Parameter Packs: Folding zum Zweiten
  * Rekursive Parameter Pack Expansion
  * Funktionale Programmierung mit C++
-   *  *Currying*
-   *  Funktionen höherer Ordnung
+   * *Currying*
+   * Funktionen höherer Ordnung
  * Verschachtelte Funktionsaufrufe generischer Funktionen
- * Betrachtung einer generischen Funktionen höherer Ordnung mit rekursiver Parameter Pack Expansion
+ * Betrachtung einer generischen Funktion höherer Ordnung mit rekursiver Parameter Pack Expansion
  * Kombination von Prädikatsfunktionen mit logischer Konjunktion und Disjunktion
 
 Und damit stürzen wir uns gleich in das Epizentrum von C++ 20: Funktionen, an denen
@@ -64,7 +64,7 @@ Eine einfache *variadische Funktion* kann wie folgt definiert werden:
 
 ```cpp
 auto f(auto ... args) {
-    // some code to use args  
+    // some code to use args
 }
 ```
 
@@ -821,7 +821,7 @@ Zugegeben, nach dem Studium des Quellcodes aus [Listing 14] werden Sie sich sich
 wo bei den vielen Überladungen der `combine` Hilfsfunktion noch ein Vorteil liegt?
 Vielleicht erahnen Sie es schon: &ldquo;Again we can do better&rdquo;!
 
-## Betrachtung einer generischen Funktionen höherer Ordnung mit rekursiver Parameter Pack Expansion
+## Betrachtung einer generischen Funktion höherer Ordnung mit rekursiver Parameter Pack Expansion
 
 Ich weiß, diese Überschrift sollte man nicht ernst nehmen, aber es war ja das Ziel dieser Fallstudie,
 möglichst viele Konzepte von &ldquo;Modern C++&ldquo; in möglichst geschickten Kombinationen darzulegen.
@@ -920,15 +920,15 @@ Zeichenketten zu finden, die entweder mit `a` beginnen bzw. mit `b` enden.
 
 Wir könnten diese beiden Funktionen in der Tat direkt als Argument für `std::copy_if` verwenden.
 Aber dann suchen wir halt nur nach Zeichenketten, die entweder mit `a` beginnen oder mit `b` enden.
-Wie gehen wir vor, wenn wir beide  &ndash; oder sogar noch weitere &ndash; Prädikatsfunktionen verwenden wollen,
+Wie gehen wir vor, wenn wir beide &ndash; oder sogar noch weitere &ndash; Prädikatsfunktionen verwenden wollen,
 deren jeweilige Ergebnisse dann mit entsprechenden logischen Operationen zu verknüpfen sind?
 
-Wenn wir diesen Ideenansatz weiter verfolgen, sind wir wieder bei einer Funktion in der Art `combine`
+Wenn wir diesen Ansatz weiter verfolgen, sind wir wieder bei einer Funktion in der Art `combine`
 angekommen, die sowohl die einzelnen unären Prädikatsfunktionen als auch eine weitere Funktion 
 &ndash; nennen wir sie zum Beispiel `boolAnd` &ndash; entgegennimmt,
 die sich um die logische Verknüpfung der Teilergebnisse der Prädikatsfunktionen abschließend kümmert.
 Und wenn das alles noch nicht ausreichend ist: Das Ergebnis dieser Funktion soll als Argument für `std::copy_if`
-herhalten können:
+tauglich sein:
 
 ###### {#listing_16_second_generic_combine_high_order_function}
 
@@ -985,11 +985,11 @@ in dessen Rumpf die Konjunktion mit den zwei Prädikatsfunktionen gebildet wird.
 Wir wäre es mit einer kleinen Übungsaufgabe?
 Im Quellcode von [Listing 16] wurde das `auto`-Schlüsselwort sicherlich recht intensiv eingesetzt.
 Ist Ihnen wirklich an jeder Stelle des Quellcodes klar, welcher Datentyp
-vom Compiler tatsächlich abgeleitet wird?
+vom Compiler abgeleitet wird?
 Versuchen Sie doch einmal, das Beispiel aus [Listing 16] ohne `auto` zu programmieren.
 Ich will die Spannung nicht weiter aufrecht halten,
 in [Listing 17] finden Sie eine äquivalente Implementierung des Beispiels aus [Listing 16] vor &ndash;
-nur ohne Verwendung von `auto`:
+dieses Mal ohne Verwendung von `auto`:
 
 ###### {#listing_17_second_generic_combine_high_order_function_without_auto}
 
@@ -1075,7 +1075,7 @@ Und es sollte nach wie vor Ihre Entscheidung sein, welche der modernen C++ Baust
 
 
 Ich bin am Ende meiner Ausführungen angekommen! Ich hoffe, es hat Ihnen etwas Spaß bereitet,
-zu verfolgen, welche neuen Möglichkeiten &ldquo;Modern C++&ldquo;
+zu verfolgen, welche neuen Möglichkeiten in &ldquo;Modern C++&ldquo;
 zur Verfügung stehen.
 
 
@@ -1119,5 +1119,7 @@ gegeben.
 [Listing 15]: #listing_15_generic_combine_high_order_function
 [Listing 16]: #listing_16_second_generic_combine_high_order_function
 [Listing 17]: #listing_17_second_generic_combine_high_order_function_without_auto
+
+<!-- End-of-Content -->
 
 <!-- End-of-File -->
