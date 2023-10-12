@@ -1,3 +1,7 @@
+// =====================================================================================
+// Program.cpp // Kettenrechnen
+// =====================================================================================
+
 //#include <iostream>
 //#include <iomanip>
 //#include <string>
@@ -12,7 +16,7 @@
 //#include <chrono>
 
 #include "ChainArithmetic.h"
-#include "Token.h"
+// #include "Token.h"
 
 namespace ChainArithmetic_STL {
 
@@ -33,3 +37,7 @@ namespace ChainArithmetic_STL {
         void calc(auto ... args);
     };
 }
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================
