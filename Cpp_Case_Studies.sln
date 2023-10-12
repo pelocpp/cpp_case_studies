@@ -236,6 +236,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VariadicGenericFoldingAndMo
 		MarkDown\VariadicGenericFoldingAndMore\VariadicGenericFoldingAndMore.md = MarkDown\VariadicGenericFoldingAndMore\VariadicGenericFoldingAndMore.md
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kettenrechnen", "CaseStudies\Kettenrechnen\Kettenrechnen.vcxproj", "{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -428,6 +430,14 @@ Global
 		{5457754B-3897-4CFA-A9A3-FAD28E9833EF}.Release|x64.Build.0 = Release|x64
 		{5457754B-3897-4CFA-A9A3-FAD28E9833EF}.Release|x86.ActiveCfg = Release|Win32
 		{5457754B-3897-4CFA-A9A3-FAD28E9833EF}.Release|x86.Build.0 = Release|Win32
+		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Debug|x64.ActiveCfg = Debug|x64
+		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Debug|x64.Build.0 = Debug|x64
+		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Debug|x86.ActiveCfg = Debug|Win32
+		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Debug|x86.Build.0 = Debug|Win32
+		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Release|x64.ActiveCfg = Release|x64
+		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Release|x64.Build.0 = Release|x64
+		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Release|x86.ActiveCfg = Release|Win32
+		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
