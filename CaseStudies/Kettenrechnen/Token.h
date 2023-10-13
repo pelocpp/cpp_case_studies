@@ -19,7 +19,7 @@ std::ostream& operator<< (std::ostream&, const Token<T>&);
 template <typename T>
 class Token
 {
-    friend std::ostream& operator<< <> (std::ostream&, const Token<T>&);
+   friend std::ostream& operator<< <> (std::ostream&, const Token<T>&);
 
 private:
     // member data
@@ -48,42 +48,42 @@ private:
         : m_type{ type }, m_op{ op }, m_value{ value } {}
 };
 
-//template <typename T>
-//std::ostream& operator<< (std::ostream& os, const Token<T>& tok)
-//{
-//    switch (tok.m_type)
-//    {
-//    case TokenType::Operand:
-//        os << tok.m_value;
-//        break;
-//
-//    case TokenType::Operator:
-//        switch (tok.m_op)
-//        {
-//        case OperatorType::AddOp:
-//            os << '+';
-//            break;
-//        case OperatorType::SubOp:
-//            os << '-';
-//            break;
-//        case OperatorType::MulOp:
-//            os << '*';
-//            break;
-//        case OperatorType::DivOp:
-//            os << '/';
-//            break;
-//        case OperatorType::NullOp:
-//            break;
-//        }
-//        break;
-//
-//    default:
-//        os << ' ';  // suited for debugging output
-//        break;
-//    }
-//
-//    return os;
-//}
+template <typename T>
+std::ostream& operator<< (std::ostream& os, const Token<T>& tok)
+{
+    switch (tok.m_type)
+    {
+    case TokenType::Operand:
+        os << tok.m_value;
+        break;
+
+    case TokenType::Operator:
+        switch (tok.m_op)
+        {
+        case OperatorType::AddOp:
+            os << '+';
+            break;
+        case OperatorType::SubOp:
+            os << '-';
+            break;
+        case OperatorType::MulOp:
+            os << '*';
+            break;
+        case OperatorType::DivOp:
+            os << '/';
+            break;
+        case OperatorType::NullOp:
+            break;
+        }
+        break;
+
+    default:
+        os << ' ';  // suited for debugging output
+        break;
+    }
+
+    return os;
+}
 
 // =====================================================================================
 // End-of-File

@@ -134,16 +134,13 @@
     <ClInclude Include="ChainCalculatorClassic.h" />
     <ClInclude Include="ChainCalculatorRegex.h" />
     <ClInclude Include="ChainCalculatorModern.h" />
-    <ClInclude Include="xxx.h" />
+    <ClInclude Include="ChainExpressionGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChainCalculatorClassic.cpp" />
-    <ClCompile Include="ChainCalculatorSTL.cpp" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Kettenrechnen.cpp" />
     <ClCompile Include="ChainCalculatorRegex.cpp" />
-    <ClCompile Include="ChainCalculatorModern.cpp" />
-    <ClCompile Include="xxx.cpp" />
+    <ClCompile Include="ChainExpressionGenerator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

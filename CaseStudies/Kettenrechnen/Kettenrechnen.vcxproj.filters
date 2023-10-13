@@ -33,18 +33,12 @@
     <ClInclude Include="ChainCalculatorModern.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="xxx.h">
+    <ClInclude Include="ChainExpressionGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Kettenrechnen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ChainCalculatorSTL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChainCalculatorClassic.cpp">
@@ -53,10 +47,7 @@
     <ClCompile Include="ChainCalculatorRegex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ChainCalculatorModern.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xxx.cpp">
+    <ClCompile Include="ChainExpressionGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

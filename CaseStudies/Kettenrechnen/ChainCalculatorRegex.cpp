@@ -1,3 +1,7 @@
+// =====================================================================================
+// ChainCalculatorRegex.cpp
+// =====================================================================================
+
 #include "ChainCalculatorRegex.h"
 
 namespace ChainArithmetic_Regex {
@@ -86,6 +90,7 @@ namespace ChainArithmetic_Regex {
         }
     }
 
+    // private helper method
     Token<OperandType> ChainCalculatorRegex::getNextToken(std::sregex_iterator iter)
     {
         std::smatch match{ *iter };
@@ -138,3 +143,7 @@ namespace ChainArithmetic_Regex {
         return tok;
     }
 }
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================

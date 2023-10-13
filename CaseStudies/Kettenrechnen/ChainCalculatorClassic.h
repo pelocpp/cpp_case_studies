@@ -1,17 +1,9 @@
-//#include <iostream>
-//#include <iomanip>
-//#include <string>
-//#include <algorithm>
-//#include <list>
-//#include <numeric>
-//#include <type_traits>
-//#include <stdexcept>
-//#include <regex>
-//#include <random>
-//#include <variant>
-//#include <chrono>
+// =====================================================================================
+// ChainCalculatorClassic.h
+// =====================================================================================
 
-// Diese beiden Includes weg ... die müssen in den jeweiligen h files drin sein ...
+#pragma once
+
 #include "ChainArithmetic.h"
 #include "Token.h"
 
@@ -20,7 +12,7 @@ namespace ChainArithmetic_Classic {
     class ChainCalculatorClassic
     {
     private:
-        OperandType  m_result;          // long long: Hmmm, geht das irgendwie anders  // evtl.  std::commmon_type
+        OperandType  m_result;
         OperatorType m_nextOperator;
         std::string::iterator m_begin;
         std::string::iterator m_end;
@@ -36,6 +28,11 @@ namespace ChainArithmetic_Classic {
         void calc(std::string expression);
 
     private:
+        // private helper method
         Token<OperandType> getNextToken();
     };
 }
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================

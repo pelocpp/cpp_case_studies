@@ -2,13 +2,10 @@
 // Program.cpp // Kettenrechnen
 // =====================================================================================
 
-
-// TO BE DONE: Nochmal mit GCC
-
 #include <iostream>
 #include <iomanip>
 
-// #include "ChainCalculatorSTL.h"
+#include "ChainExpressionGenerator.h"
 
 #include "ChainCalculatorClassic.h"
 #include "ChainCalculatorSTL.h"
@@ -23,57 +20,18 @@ void test_chain_arithmetic_03();
 void test_chain_arithmetic_04();
 void test_chain_arithmetic_05();
 void test_chain_arithmetic_06();
-void test_chain_arithmetic_07();
 void test_chain_arithmetic_10();
 
-//void test_chain_arithmetic_00()
-//{
-//    using namespace ChainArithmetic_ExpressionGenerator;
-//
-//    auto result{ ChainArithmeticHelper::createExpression(30) };
-//
-//    std::cout << "Expression:" << std::endl << result << std::endl;
-//}
+void test_chain_arithmetic_00()
+{
+    using namespace ChainArithmetic_ExpressionGenerator;
+
+    auto result{ ChainExpressionGenerator::createExpression(30) };
+
+    std::cout << "Expression:" << std::endl << result << std::endl;
+}
 
 void test_chain_arithmetic_01()
-{
-    using namespace ChainArithmetic_Modern;
-
-    ChainCalculatorModern chain{};
-
-    chain.calc(10, '+', 20, '+', 30);
-    auto result{ chain.getResult() };
-    std::cout << "Result: " << result << std::endl;
-
-    chain.calc(10, '+', 20, '-', 5, '*', 3, '/', 5);
-    result = chain.getResult();
-    std::cout << "Result: " << result << std::endl;
-
-    chain.calc(10, '-', 5, '*', 3, '+', 35, '/', 10);
-    result = chain.getResult();
-    std::cout << "Result: " << result << std::endl;
-}
-
-void test_chain_arithmetic_02()
-{
-    using namespace ChainArithmetic_Regex;
-
-    ChainCalculatorRegex chain{};
-
-    chain.calc("10 + 20 + 30");
-    auto result{ chain.getResult() };
-    std::cout << "Result: " << result << std::endl;
-
-    chain.calc("10 + 20 -  5 * 3 / 5");  // 10 + 20 -  5 * 3 / 5 == 15
-    result = chain.getResult();
-    std::cout << "Result: " << result << std::endl;
-
-    chain.calc("10 - 5 * 3 + 35 / 10");   //   10 - 5 * 3 + 35 / 10 == 5
-    result = chain.getResult();
-    std::cout << "Result: " << result << std::endl;
-}
-
-void test_chain_arithmetic_03()
 {
     using namespace ChainArithmetic_Classic;
 
@@ -92,7 +50,26 @@ void test_chain_arithmetic_03()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test_chain_arithmetic_04()
+void test_chain_arithmetic_02()
+{
+    using namespace ChainArithmetic_STL;
+
+    ChainCalculatorSTL chain{};
+
+    chain.calc(10, '+', 20, '+', 30);
+    auto result{ chain.getResult() };
+    std::cout << "Result: " << result << std::endl;
+
+    chain.calc(10, '+', 20, '-', 5, '*', 3, '/', 5);
+    result = chain.getResult();
+    std::cout << "Result: " << result << std::endl;
+
+    chain.calc(10, '-', 5, '*', 3, '+', 35, '/', 10);
+    result = chain.getResult();
+    std::cout << "Result: " << result << std::endl;
+}
+
+void test_chain_arithmetic_03()
 {
     using namespace ChainArithmetic_Regex;
 
@@ -102,28 +79,47 @@ void test_chain_arithmetic_04()
     auto result{ chain.getResult() };
     std::cout << "Result: " << result << std::endl;
 
-    chain.calc("10 + 20 -  5 * 3 / 5");  // 10 + 20 -  5 * 3 / 5 == 15
+    chain.calc("10 + 20 -  5 * 3 / 5");
     result = chain.getResult();
     std::cout << "Result: " << result << std::endl;
 
-    chain.calc("10 - 5 * 3 + 35 / 10");   //   10 - 5 * 3 + 35 / 10 == 5
+    chain.calc("10 - 5 * 3 + 35 / 10");
     result = chain.getResult();
     std::cout << "Result: " << result << std::endl;
 }
 
-//void test_chain_arithmetic_05()
-//{
-//    using namespace ChainArithmetic_ExpressionGenerator;
-//    using namespace ChainArithmetic_Regex;
-//
-//    auto expression{ ChainArithmeticHelper::createExpression(5) };
-//    std::cout << "Expression: " << expression << std::endl;
-//
-//    ChainCalculator chain{};
-//    chain.calc(expression);
-//    auto result{ chain.getResult() };
-//    std::cout << "Result: " << result << std::endl;
-//}
+void test_chain_arithmetic_04()
+{
+    using namespace ChainArithmetic_Modern;
+
+    ChainCalculatorModern chain{};
+
+    chain.calc(10, '+', 20, '+', 30);
+    auto result{ chain.getResult() };
+    std::cout << "Result: " << result << std::endl;
+
+    chain.calc(10, '+', 20, '-', 5, '*', 3, '/', 5);
+    result = chain.getResult();
+    std::cout << "Result: " << result << std::endl;
+
+    chain.calc(10, '-', 5, '*', 3, '+', 35, '/', 10);
+    result = chain.getResult();
+    std::cout << "Result: " << result << std::endl;
+}
+
+void test_chain_arithmetic_05()
+{
+    using namespace ChainArithmetic_ExpressionGenerator;
+    using namespace ChainArithmetic_Regex;
+
+    auto expression{ ChainExpressionGenerator::createExpression(5) };
+    std::cout << "Expression: " << expression << std::endl;
+
+    ChainCalculatorRegex chain{};
+    chain.calc(expression);
+    auto result{ chain.getResult() };
+    std::cout << "Result: " << result << std::endl;
+}
 
 void test_chain_arithmetic_06()
 {
@@ -171,6 +167,18 @@ void test_chain_arithmetic_10()
     }
 
     {
+        ChainArithmetic_STL::ChainCalculatorSTL chain{};
+
+        const auto startTime{ std::chrono::high_resolution_clock::now() };
+        for (size_t i{}; i != MaxIteration; ++i) {
+            chain.calc(2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '-', 1);
+        }
+        const auto endTime{ std::chrono::high_resolution_clock::now() };
+
+        printResults("STL:     ", startTime, endTime);
+    }
+
+    {
         ChainArithmetic_Regex::ChainCalculatorRegex chain{};
         std::string expression{ "2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 - 1" };
 
@@ -181,18 +189,6 @@ void test_chain_arithmetic_10()
         const auto endTime{ std::chrono::high_resolution_clock::now() };
 
         printResults("Regex:   ", startTime, endTime);
-    }
-
-    {
-        ChainArithmetic_STL::ChainCalculatorSTL chain{};
-
-        const auto startTime{ std::chrono::high_resolution_clock::now() };
-        for (size_t i{}; i != MaxIteration; ++i) {
-            chain.calc(2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '-', 1);
-        }
-        const auto endTime{ std::chrono::high_resolution_clock::now() };
-
-        printResults("STL:     ", startTime, endTime);
     }
 
     {
@@ -208,22 +204,6 @@ void test_chain_arithmetic_10()
     }
 }
 
-void test_chain_arithmetic_07()
-{
-    ChainArithmetic_STL::ChainCalculatorSTL chain{};
-    chain.calc(10, '+', 20, '+', 30);
-    auto result{ chain.getResult() };
-    std::cout << "Result: " << result << std::endl;
-
-    chain.calc(10, '+', 20, '-', 5, '*', 3, '/', 5);
-    result = chain.getResult();
-    std::cout << "Result: " << result << std::endl;
-
-    chain.calc(10, '-', 5, '*', 3, '+', 35, '/', 10);
-    result = chain.getResult();
-    std::cout << "Result: " << result << std::endl;
-}
-
 int main()
 {
     test_chain_arithmetic_00();
@@ -233,7 +213,6 @@ int main()
     test_chain_arithmetic_04();
     test_chain_arithmetic_05();
     test_chain_arithmetic_06();
-    test_chain_arithmetic_07();
     test_chain_arithmetic_10();
 
     return 0;
