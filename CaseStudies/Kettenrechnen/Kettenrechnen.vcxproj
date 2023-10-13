@@ -131,10 +131,19 @@
     <ClInclude Include="ChainArithmetic.h" />
     <ClInclude Include="ChainCalculatorSTL.h" />
     <ClInclude Include="Token.h" />
+    <ClInclude Include="ChainCalculatorClassic.h" />
+    <ClInclude Include="ChainCalculatorRegex.h" />
+    <ClInclude Include="ChainCalculatorModern.h" />
+    <ClInclude Include="xxx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChainCalculatorClassic.cpp" />
+    <ClCompile Include="ChainCalculatorSTL.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Kettenrechnen.cpp" />
+    <ClCompile Include="ChainCalculatorRegex.cpp" />
+    <ClCompile Include="ChainCalculatorModern.cpp" />
+    <ClCompile Include="xxx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

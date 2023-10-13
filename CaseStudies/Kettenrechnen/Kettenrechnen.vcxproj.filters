@@ -24,12 +24,39 @@
     <ClInclude Include="ChainCalculatorSTL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ChainCalculatorClassic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChainCalculatorRegex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChainCalculatorModern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xxx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Kettenrechnen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChainCalculatorSTL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChainCalculatorClassic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChainCalculatorRegex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChainCalculatorModern.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xxx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
