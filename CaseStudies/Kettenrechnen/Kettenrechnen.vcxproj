@@ -128,7 +128,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ChainArithmetic.h" />
     <ClInclude Include="ChainCalculatorSTL.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="ChainCalculatorClassic.h" />

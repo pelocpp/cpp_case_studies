@@ -2,6 +2,9 @@
 // Program.cpp // Kettenrechnen
 // =====================================================================================
 
+
+// TO BE DONE: Mit gcc nochmal überprüfen !!!
+
 #include <iostream>
 #include <iomanip>
 
@@ -133,6 +136,43 @@ void test_chain_arithmetic_06()
     chainModern.calc(2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '-', 1);
     result = chainModern.getResult();
     std::cout << "Result: " << result << std::endl;
+}
+
+void test_chain_arithmetic_07()
+{
+    //ChainArithmetic_Regex::ChainCalculatorRegex chain{};
+    //std::string expression{ "2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 - 1" };
+    //chain.calc(expression);
+    //auto result{ chain.getResult() };
+    //std::cout << "Result: " << result << std::endl;
+
+    //ChainArithmetic_Modern::ChainCalculatorModern chainModern{};
+    //chainModern.calc(2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '-', 1);
+    //result = chainModern.getResult();
+    //std::cout << "Result: " << result << std::endl;
+
+    //Token() : Token(TokenType::Null, OperatorType::NullOp, T{}) {}
+
+    //Token(TokenType type) : Token(type, OperatorType::NullOp, T{}) {}
+
+    //Token(OperatorType op) : Token(TokenType::Operator, op, T{}) {}
+
+    //Token(T value) : Token(TokenType::Operand, OperatorType::NullOp, value) {}
+
+    // =====================================================================================
+
+    Token<int> tok1{};
+    Token<int> tok2{ TokenType::Operand };
+    Token<int> tok3{ OperatorType::AddOp };
+
+
+    // Token<OperandType>{ OperatorType::AddOp };
+
+    std::cout << "Token 1: " << tok1 << std::endl;
+    std::cout << "Token 2: " << tok2 << std::endl;
+    std::cout << "Token 3: " << tok3 << std::endl;
+
+
 }
 
 void printResults(

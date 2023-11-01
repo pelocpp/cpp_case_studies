@@ -7,7 +7,6 @@
 #include <type_traits>
 #include <concepts>
 
-#include "ChainArithmetic.h"
 #include "Token.h"
 
 namespace ChainArithmetic_Modern {
@@ -42,7 +41,7 @@ namespace ChainArithmetic_Modern {
             // initialize parsing state
             m_expectedOperator = false;
 
-            ( calc(args) , ...);
+            ( calc(args) , ... );
 
             // last argument should be a operand
             if (m_expectedOperator == false) {

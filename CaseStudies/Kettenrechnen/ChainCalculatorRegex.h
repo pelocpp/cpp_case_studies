@@ -7,7 +7,6 @@
 #include <string>
 #include <regex>
 
-#include "ChainArithmetic.h"
 #include "Token.h"
 
 namespace ChainArithmetic_Regex {

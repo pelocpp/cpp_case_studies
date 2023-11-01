@@ -10,6 +10,8 @@ enum class TokenType { Null, Operator, Operand };
 
 enum class OperatorType { NullOp, AddOp, SubOp, MulOp, DivOp };
 
+using OperandType = signed long long;
+
 template <typename T>
 class Token;
 
@@ -19,7 +21,10 @@ std::ostream& operator<< (std::ostream&, const Token<T>&);
 template <typename T>
 class Token
 {
-   friend std::ostream& operator<< <> (std::ostream&, const Token<T>&);
+    // Warum wird das nicht gebraucht ??????????????????????????????????
+    friend std::ostream& operator<< <> (std::ostream&, const Token<T>&);
+
+    // wird nirgends aufgerufen !!!!!!!!!!!!!!!!!!!!!!!!!!
 
 private:
     // member data

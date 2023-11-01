@@ -8,7 +8,6 @@
 #include <vector>
 #include <concepts>
 
-#include "ChainArithmetic.h"
 #include "Token.h"
 
 namespace ChainArithmetic_STL {

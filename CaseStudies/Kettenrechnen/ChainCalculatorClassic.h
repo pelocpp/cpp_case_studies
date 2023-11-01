@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "ChainArithmetic.h"
 #include "Token.h"
 
 namespace ChainArithmetic_Classic {
@@ -14,8 +13,8 @@ namespace ChainArithmetic_Classic {
     private:
         OperandType  m_result;
         OperatorType m_nextOperator;
-        std::string::iterator m_begin;
-        std::string::iterator m_end;
+        std::string::const_iterator m_begin;
+        std::string::const_iterator m_end;
 
     public:
         // c'tors

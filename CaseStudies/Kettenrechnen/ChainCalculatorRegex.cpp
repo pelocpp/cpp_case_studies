@@ -29,6 +29,7 @@ namespace ChainArithmetic_Regex {
                 m_tokens_regex
             }
         };
+
         auto end{ std::sregex_iterator{} };
 
         // need state variable to control correct syntax of chain expression

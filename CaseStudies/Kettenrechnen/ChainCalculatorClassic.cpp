@@ -84,10 +84,10 @@ namespace ChainArithmetic_Classic {
 
     Token<OperandType> ChainCalculatorClassic::getNextToken()
     {
-        char ch{ *m_begin };
         Token<OperandType> tok{};
 
         // sip blanks, if any ...
+        char ch{ *m_begin };
         if (ch == ' ') {
 
             ++m_begin;
