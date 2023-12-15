@@ -21,7 +21,7 @@ namespace ChainArithmetic_Classic {
         ChainCalculatorClassic();
 
         // getter
-        auto getResult() { return m_result; }
+        auto getResult() const { return m_result; }
 
         // public interface
         void calc(std::string expression);

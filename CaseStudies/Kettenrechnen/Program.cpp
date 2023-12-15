@@ -2,11 +2,11 @@
 // Program.cpp // Kettenrechnen
 // =====================================================================================
 
-
 // TO BE DONE: Mit gcc nochmal überprüfen !!!
 
 #include <iostream>
 #include <iomanip>
+#include <chrono>
 
 #include "ChainExpressionGenerator.h"
 
@@ -27,6 +27,32 @@ void test_chain_arithmetic_10();
 
 void test_chain_arithmetic_00()
 {
+    Token<int> tok{};
+    std::cout << "Token: " << tok << std::endl;
+
+    Token<OperandType> tok10{ OperatorType::AddOp };
+    Token<OperandType> tok11{ OperatorType::SubOp };
+    Token<OperandType> tok12{ OperatorType::MulOp };
+    Token<OperandType> tok13{ OperatorType::DivOp };
+
+    std::cout << "Token 10: " << tok10 << std::endl;
+    std::cout << "Token 11: " << tok11 << std::endl;
+    std::cout << "Token 12: " << tok12 << std::endl;
+    std::cout << "Token 13: " << tok13 << std::endl;
+
+    Token<size_t> tok20{ 0 };
+    Token<size_t> tok21{ 1 };
+    Token<size_t> tok22{ 1'000 };
+    Token<size_t> tok23{ 1'000'000 };
+
+    std::cout << "Token 20: " << tok20 << std::endl;
+    std::cout << "Token 21: " << tok21 << std::endl;
+    std::cout << "Token 22: " << tok22 << std::endl;
+    std::cout << "Token 23: " << tok23 << std::endl;
+}
+
+void test_chain_arithmetic_01()
+{
     using namespace ChainArithmetic_ExpressionGenerator;
 
     auto result{ ChainExpressionGenerator::createExpression(30) };
@@ -34,7 +60,7 @@ void test_chain_arithmetic_00()
     std::cout << "Expression:" << std::endl << result << std::endl;
 }
 
-void test_chain_arithmetic_01()
+void test_chain_arithmetic_02()
 {
     using namespace ChainArithmetic_Classic;
 
@@ -44,7 +70,7 @@ void test_chain_arithmetic_01()
     auto result{ chain.getResult() };
     std::cout << "Result: " << result << std::endl;
 
-    chain.calc("10 + 20 -  5 * 3 / 5");  // 10 + 20 -  5 * 3 / 5 == 15
+    chain.calc("10 + 20 -  5 * 3 / 5");  // 10 + 20 - 5 * 3 / 5 == 15
     result = chain.getResult();
     std::cout << "Result: " << result << std::endl;
 
@@ -53,7 +79,7 @@ void test_chain_arithmetic_01()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test_chain_arithmetic_02()
+void test_chain_arithmetic_03()
 {
     using namespace ChainArithmetic_STL;
 
@@ -72,7 +98,7 @@ void test_chain_arithmetic_02()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test_chain_arithmetic_03()
+void test_chain_arithmetic_04()
 {
     using namespace ChainArithmetic_Regex;
 
@@ -91,7 +117,7 @@ void test_chain_arithmetic_03()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test_chain_arithmetic_04()
+void test_chain_arithmetic_05()
 {
     using namespace ChainArithmetic_Modern;
 
@@ -110,7 +136,7 @@ void test_chain_arithmetic_04()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test_chain_arithmetic_05()
+void test_chain_arithmetic_06()
 {
     using namespace ChainArithmetic_ExpressionGenerator;
     using namespace ChainArithmetic_Regex;
@@ -124,7 +150,7 @@ void test_chain_arithmetic_05()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test_chain_arithmetic_06()
+void test_chain_arithmetic_07()
 {
     ChainArithmetic_Regex::ChainCalculatorRegex chain{};
     std::string expression{ "2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 - 1" };
@@ -138,42 +164,6 @@ void test_chain_arithmetic_06()
     std::cout << "Result: " << result << std::endl;
 }
 
-void test_chain_arithmetic_07()
-{
-    //ChainArithmetic_Regex::ChainCalculatorRegex chain{};
-    //std::string expression{ "2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 - 1" };
-    //chain.calc(expression);
-    //auto result{ chain.getResult() };
-    //std::cout << "Result: " << result << std::endl;
-
-    //ChainArithmetic_Modern::ChainCalculatorModern chainModern{};
-    //chainModern.calc(2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '-', 1);
-    //result = chainModern.getResult();
-    //std::cout << "Result: " << result << std::endl;
-
-    //Token() : Token(TokenType::Null, OperatorType::NullOp, T{}) {}
-
-    //Token(TokenType type) : Token(type, OperatorType::NullOp, T{}) {}
-
-    //Token(OperatorType op) : Token(TokenType::Operator, op, T{}) {}
-
-    //Token(T value) : Token(TokenType::Operand, OperatorType::NullOp, value) {}
-
-    // =====================================================================================
-
-    Token<int> tok1{};
-    Token<int> tok2{ TokenType::Operand };
-    Token<int> tok3{ OperatorType::AddOp };
-
-
-    // Token<OperandType>{ OperatorType::AddOp };
-
-    std::cout << "Token 1: " << tok1 << std::endl;
-    std::cout << "Token 2: " << tok2 << std::endl;
-    std::cout << "Token 3: " << tok3 << std::endl;
-
-
-}
 
 void printResults(
     std::string tag,
@@ -253,6 +243,7 @@ int main()
     test_chain_arithmetic_04();
     test_chain_arithmetic_05();
     test_chain_arithmetic_06();
+    test_chain_arithmetic_07();
     test_chain_arithmetic_10();
 
     return 0;

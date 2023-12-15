@@ -238,6 +238,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VariadicGenericFoldingAndMo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kettenrechnen", "CaseStudies\Kettenrechnen\Kettenrechnen.vcxproj", "{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kettenrechnen", "Kettenrechnen", "{623D5C7D-D84D-4D90-89F3-8B4083CA308A}"
+	ProjectSection(SolutionItems) = preProject
+		MarkDown\Kettenrechnen\Kettenrechnen.md = MarkDown\Kettenrechnen\Kettenrechnen.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -464,6 +469,7 @@ Global
 		{6B76BD33-F4E1-4FCD-BCAE-1AF713868BD4} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{D513C91D-9276-4E42-A48A-A6F62AD27750} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{2DDFFDA7-2653-429D-A673-C39608F1C998} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{623D5C7D-D84D-4D90-89F3-8B4083CA308A} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}

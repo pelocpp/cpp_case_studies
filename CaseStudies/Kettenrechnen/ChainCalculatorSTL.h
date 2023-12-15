@@ -1,5 +1,5 @@
 // =====================================================================================
-// Program.cpp // Kettenrechnen
+// ChainCalculatorSTL.h
 // =====================================================================================
 
 #include <iostream>
@@ -26,7 +26,7 @@ namespace ChainArithmetic_STL {
         {}
 
         // getter
-        auto getResult() { return m_result; }
+        auto getResult() const { return m_result; }
 
         // public interface
         void calc(std::integral auto ... args)

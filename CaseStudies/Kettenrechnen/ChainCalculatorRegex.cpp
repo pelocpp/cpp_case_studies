@@ -22,7 +22,7 @@ namespace ChainArithmetic_Regex {
         m_nextOperator = OperatorType::NullOp;
 
         // setup scanner
-        auto begin{
+        auto begin {
             std::sregex_iterator {
                 expression.begin(),
                 expression.end(),
@@ -33,7 +33,7 @@ namespace ChainArithmetic_Regex {
         auto end{ std::sregex_iterator{} };
 
         // need state variable to control correct syntax of chain expression
-        bool m_expectedOperator{ false };
+        auto m_expectedOperator{ false };
 
         while (begin != end) {
 

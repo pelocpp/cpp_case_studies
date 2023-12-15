@@ -26,7 +26,7 @@ namespace ChainArithmetic_Classic {
         m_end = expression.end();
 
         // need state variable to control correct syntax of chain expression
-        bool m_expectedOperator{ false };
+        auto m_expectedOperator{ false };
 
         while (m_begin != m_end) {
 
@@ -86,7 +86,7 @@ namespace ChainArithmetic_Classic {
     {
         Token<OperandType> tok{};
 
-        // sip blanks, if any ...
+        // skip blanks, if any ...
         char ch{ *m_begin };
         if (ch == ' ') {
 

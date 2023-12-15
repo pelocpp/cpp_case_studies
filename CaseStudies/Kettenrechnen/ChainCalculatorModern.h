@@ -3,6 +3,7 @@
 // =====================================================================================
 
 #pragma once
+
 #include <iostream>
 #include <type_traits>
 #include <concepts>
@@ -27,7 +28,7 @@ namespace ChainArithmetic_Modern {
         {}
 
         // getter
-        auto getResult() { return m_result; }
+        auto getResult() const { return m_result; }
 
     public:
         void calc(std::integral auto ... args)
