@@ -5,27 +5,24 @@
 Mit dem Kettenrechnen kehren wir zu den Ursprüngen unserer Grundschulzeit zurück.
 Für diejenigen unter Ihnen, die dieses Thema aus Ihrem Gedächtnis verdrängt haben:
 
-Jede Kettenrechnung beginnt mit einer normalen Rechenaufgabe (z.B. &ldquo;1+3&rdquo;).
+Jede Kettenrechnung beginnt mit einer normalen Rechenaufgabe (z.B. &ldquo;1 + 3&rdquo;).
 Das Resultat muss im Gedächtnis behalten werden,
-denn es folgt eine weitere Operation (z.B. &ldquo;*5&rdquo;),
+denn es folgt eine weitere Operation (z.B. &ldquo;* 5&rdquo;),
 welche jeweils zum vorhergehenden Resultat gerechnet werden muss.
 Das neue Zwischenresultat merkt man sich ebenfalls wieder für die nächste Operation usw. usw.
 So verlängert sich die &ldquo;Rechenkette&rdquo; immer weiter.
 
-Im Beispiel
+Im Beispiel `1 + 3 * 5 - 2 * 2 - 8 / 2` sollte man 14 als Endergebnis erhalten.
 
-```
-1 + 3 * 5 - 2 * 2 - 8 / 2
-```
-
-sollte man 14 als Endergebnis erhalten.
-
-Entwickeln Sie eine Funktion `compute`, die eine Kettenrechnung als Parameter übergeben bekommt
+Entwickeln Sie eine Funktion `calc`, die eine Kettenrechnung als Parameter übergeben bekommt
 und ihr Resultat zurückliefert:
 
 ```cpp
 int calc (std::string chain);
 ```
+
+Offensichtlich führen viele Wege zum Ziel einer ansprechenden Realisierung. Im Lösungsteil finden Sie
+Lösungsansätze vor, die generische Funktionen, heterogene STL-Container, reguläre Ausdrücke und vieles mehr anwenden.
 
 <!--more-->
 
@@ -116,7 +113,7 @@ abwechselnd auftreten, am Anfang und Ende sollte ebenfalls ein Operand vorhanden
 Der klassische Lösungsansatz zeichnet sich vielleicht nicht gerade durch Einfallsreichtum aus,
 ich wollte ihn jedoch wegen des Zeitvergleichs mit an Bord haben:
 
-Klasse *ChainCalculatorClassic* &ndash; Schnittstelle:
+###### {#listing_1_class_chaincalculatorclassic_decl}
 
 ```cpp
 01: class ChainCalculatorClassic
@@ -143,6 +140,9 @@ Klasse *ChainCalculatorClassic* &ndash; Schnittstelle:
 22: };
 ```
 
+*Listing* 1: Klasse `ChainCalculatorClassic`: Schnittstelle.
+
+
 Die Realisierung der Methode `getNextToken` weist Ähnlichkeiten zu entsprechenden Methode
 in der lexikalischen Analyse eines programmiersprachlichen Quelltextes auf.
 
@@ -157,10 +157,9 @@ Danach kann eine konsekutive Folge weiterer Zeichen im Bereich von `0` bis `9` s
 bis in der Zeichenkette ein anderes Zeichen vorliegt (zum Beispiel ein Leerzeichen `_` oder ein Operator).
 
 Weitere Details in der Realisierung der `getNextToken`-Methode 
-entnehen Sie bitte LISTING XXX:
+entnehen Sie bitte [Listing 2]:
 
-Klasse *ChainCalculatorClassic* &ndash; Realisierung:
-
+###### {#listing_2_class_chaincalculatorclassic_impl}
 
 ```cpp
 001: // c'tors
@@ -309,6 +308,10 @@ Klasse *ChainCalculatorClassic* &ndash; Realisierung:
 144: }
 ```
 
+*Listing* 2: Klasse `ChainCalculatorClassic`: Realisierung.
+
+
+
 *Beispiel*:
 
 ```cpp
@@ -317,16 +320,17 @@ Klasse *ChainCalculatorClassic* &ndash; Realisierung:
 *Ausgabe*:
 
 
+```
+```
 
 
 ## Lösungsansatz mit regulären Ausdrücken
 
-In manchen Abschnitten weist die letzte Lösung doch gewisse Umständlichkeiten auf, oder
-um es präziser zu sagen: Da könnte man das eine oder andere besser machen.
+In manchen Abschnitten weist die letzte Lösung doch gewisse Umständlichkeiten auf, oder,
+um es präziser zu sagen: Da könnte man das eine oder andere auch besser machen.
 
 Reguläre Ausdrücke sind das probate Mittel, um Zeichenketten zu zerlegen
 und ihre Inhalte zu extrahieren. Mit &ldquo;Inhalten&rdquo; sind hier Operatoren und Operanden gemeint.
-
 In der vorgestellten Lösung finden Sie den regulären Ausdruck
 
 ```
@@ -335,21 +339,28 @@ In der vorgestellten Lösung finden Sie den regulären Ausdruck
 
 vor. Mit seiner Hilfe zerlegen wir eine Kettenrechnung in Operatoren und Operanden.
 
-Das Zerlegen des Ergenisses in Folge der Anwendung eines regulären Ausdrucks
-lässt sich ganz C++&ndsh;konform mit Iteratoren-Objekten bewerkstelligen:
+Das Zerlegen des Ergebnisses in Folge der Anwendung eines regulären Ausdrucks
+lässt sich ganz C++&ndash;konform mit Iteratoren-Objekten bewerkstelligen:
 Es kommen zwei `std::sregex_iterator`-Objekte zum Einsatz.
 
 
-Klasse *ChainCalculatorRegex* &ndash; Schnittstelle:
+###### {#listing_3_class_chaincalculatorregex_decl}
 
 ```cpp
 ```
 
-Klasse *ChainCalculatorRegex* &ndash; Realisierung:
+*Listing* 3: Klasse `ChainCalculatorRegex`: Schnittstelle.
 
+
+Wir fahren gleich mit der Realisierung fort:
+
+###### {#listing_4_class_chaincalculatorregex_impl}
 
 ```cpp
 ```
+
+*Listing* 4: Klasse `ChainCalculatorRegex`: Realisierung.
+
 
 
 *Beispiel*:
@@ -368,10 +379,10 @@ Mit den beiden Klassen `std::vector` und `std::variant` lassen sich interessante
 Anwendungen schreiben. Zum Einen ist ein `std::vector`-Objekt ein homogener Container,
 mit der Klasse `std::variant` kommt hier etwas Farbe ins Spiel.
 
-Also wenn wir einen Container des Typs `std::vector<std::variant<T ...>>`
-betrachten, dann schaffen wir es auf diese Weise, Daten unterschiedlichen Typs
+Also wenn wir einen Container des Typs `std::vector<std::variant<TArgs ...>>`
+betrachten (`TArgs ...` steht für eine Liste von Datentypen),
+dann schaffen wir es auf diese Weise, Daten unterschiedlichen Typs
 in einem `std::vector`-Objekt abzulegen.
-
 Der einzige Unterschied zu den bisherigen Lösungsansätzen besteht darin,
 dass wir die Schnittstelle der `calc`-Methode anpassen müssen:
 
@@ -381,21 +392,23 @@ An Stelle von
 void calc(std::string expression);
 ```
 
-haben wir nun folgende Signatur:
+benötigen wir nun folgende Signatur:
 
 
 ```cpp
 void calc(std::integral auto ... args)
 ```
 
-Hier sind gleich zwei Änderungen vorhanden: Mit `auto ... args` ist ein so genanntes
+Hier sind gleich zwei Beobachtungen interessant: Mit `auto ... args` ist ein so genanntes
 *Parameter Pack* beim Aufruf bereitzustellen, also eine beliebig lange Liste von Parametern,
-die unterschiedlichen Typs sein dürfen. In einer zweiten Modifikation 
-unterwerden wir uns bzgl. der Parameter dem Konzept `std::integral`.
+die sogar unterschiedlichen Typs sein dürfen.
+In einer zusätzlichen Annotation &ndash; genauer gesagt: Einschränkung auf Basis eines C++ *Concepts* &ndash;
+unterwerfen wir die möglichen Aktualparameter dem Konzept `std::integral`.
 
-In einer Kettenrechung schlagen wir hier zwei Fliegen mit einer Klappe:
-Die Operatoren sind vom Typ `char`, zumindest in aktuellen Festlegung.
-Die Operanden sind vom Typ `int`.
+In einer Kettenrechnung schlagen wir hier zwei Fliegen mit einer Klappe:
+Die Operatoren sind vom Typ `char`, zumindest in der aktuellen Festlegung.
+Die Operanden wiederum sind vom Typ `int`, also sowohl Operatoren und Operanden lassen sich durch
+das `std::integral`&ndash;Requirement gut erfassen.
 
 Im Gegensatz zu den bisherigen Lösungen sieht ein Aufruf der `calc`-Methode
 nun so aus:
@@ -405,14 +418,14 @@ chain.calc(10, '+', 20, '+', 30);
 ```
 
 Sowohl die Operanden als auch die Operatoren sind nun fein säuberlich zu trennen.
-Dies kann man möglicherweise als nachteilig gegenüber der Notation mit einem `std::string`-Objekt ansehen,
-auf der anderen Seite eröffnen sich aber viele neue Möglichkeiten,
-zum Beispiel im Einsatz von *Parameter Packs*.
+Dies kann man möglicherweise als nachteilig gegenüber der Notation mit einem `std::string`-Objekt ansehen.
+Auf der anderen Seite eröffnen sich jetzt aber viele neue Möglichkeiten, um auf moderen C++&ndash;Sprachmittel
+zurückgreifen zu können, wie zum Beispiel den Einsatz von *Parameter Packs* oder *generischen Funktionen*.
 
 Der Clou in diesem Lösungsansatz besteht nun darin,
 dass eine beliebig lange Liste von Operanden und Operatoren
-an der `calc`-Methodenaufrufschnittstelle eingepackt und anschießend
-im Kontruktor eines `std::vector<std::variant<char, int>>`-Objekts
+an der `calc`-Methodenaufrufschnittstelle eingepackt und anschließend
+im Konstruktor eines `std::vector<std::variant<char, int>>`-Objekts
 wieder ausgepackt wird.
 
 Um es noch einfacher zu sagen: Ohne jeglichen Programmieraufwand von unserer Seite
@@ -422,35 +435,326 @@ wird eine Liste von Parametern, wie etwa
 10, '+', 20, '+', 30
 ```
 
-in einem `std::vector<std::variant<char, int>>`-Objekt abgelegt.
-
-Dieses Objekt durchlaufen wir nun mit einem Aufruf von `std::accumulate`:
+in einem `std::vector<std::variant<char, int>>`-Objekt abgelegt:
 
 
-An Hand von Metaprogramming-Techniken im Umfeld der *Type Traits* 
-extrahieren wir aus dem `std::vector<std::variant<char, int>>`-Objekt 
-alternierend `char`- (Operatoren) und  `int`-Variablen (Operanden).
+```cpp
+01: void calc(std::integral auto ... args) // pack parameters
+02: {
+03:     static_assert(sizeof ... (args) > 0);
+04:     ...
+05: 
+06:     // unpack parameters
+07:     std::vector<std::variant<char, OperandType>> expression{ args ... };
+```
 
-Die Struktur eines  `std::accumulate`-Funktionsaufrufs eignet sich in geradezu idealerweise dazu,
-die einzelnen Schritte einer Kettenrechnung Schritt für Schritt auszuführen.
+Dieses Objekt durchlaufen wir nun mit einem Aufruf des STL-Algorithmus `std::accumulate`:
 
 
-## Lösungsansatz mit Modern C++
+An Hand von Metaprogramming-Techniken aus dem Baukasten der *Type Traits* 
+extrahieren wir (mit Hilfe von `std::is_same`)aus dem `std::vector<std::variant<char, int>>`-Objekt 
+alternierend `char`&ndash; und `int`&ndash;Variablen (Operatoren bzw. Operanden).
+
+Die Struktur eines `std::accumulate`-Funktionsaufrufs eignet sich in geradezu idealerweise dazu,
+die einzelnen Etappen einer Kettenrechnung Schritt für Schritt durchzuführen.
+
+Da wir in der Realisierung dieses Mal generische Methoden verwenden (man könnte auch *Member Function Templates* sagen),
+sind Klassenschnittstelle und -realisierung in einer Datei zusammengefasst:
 
 
+###### {#listing_5_class_chaincalculatorstl_impl}
 
-Die beiden Methoden `encode` und `decode` haben eher den Charakter einer Funktion.
-Wir siedeln ihre Realisierung zwar in einer Klasse `MorseCalculator` an,
-definieren die Methoden aber als (statische) Klassenmethoden ([Listing 1]):
+```cpp
+001: class ChainCalculatorSTL
+002: {
+003: private:
+004:     OperandType  m_result;
+005:     OperatorType m_nextOperator;
+006: 
+007: public:
+008:     // c'tors
+009:     ChainCalculatorSTL() :
+010:         m_result{},
+011:         m_nextOperator{ OperatorType::NullOp }
+012:     {}
+013: 
+014:     // getter
+015:     auto getResult() const { return m_result; }
+016: 
+017:     // public interface
+018:     void calc(std::integral auto ... args)
+019:     {
+020:         static_assert(sizeof ... (args) > 0);
+021: 
+022:         // reset calculator
+023:         m_result = 0;
+024:         m_nextOperator = OperatorType::NullOp;
+025: 
+026:         // unpack parameters
+027:         std::vector<std::variant<char, OperandType>> expression{ args ... };
+028: 
+029:         // need state variable to control correct syntax of chain expression
+030:         bool expectedOperator{ false };
+031: 
+032:         OperatorType nextOperator{};
+033: 
+034:         m_result = std::accumulate(
+035:             std::begin(expression),
+036:             std::end(expression),
+037:             static_cast<OperandType>(0), // first element
+038:             [&](OperandType element, const auto& next) mutable
+039:             {
+040:                 OperandType result{ element };
+041: 
+042:                 std::visit(
+043: 
+044:                     [&](const auto& value) {
+045: 
+046:                         using ElemType = decltype (value);
+047: 
+048:                         using ElemTypeWithoutReference =
+049:                             typename std::remove_reference<ElemType>::type;
+050: 
+051:                         using ElemTypeWithoutReferenceAndConst =
+052:                             typename std::remove_const<ElemTypeWithoutReference>::type;
+053: 
+054:                         if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, char>::value == true)
+055:                         {
+056:                             // store next operator
+057:                             switch (value)
+058:                             {
+059:                             case '+':
+060:                                 nextOperator = OperatorType::AddOp;
+061:                                 break;
+062: 
+063:                             case '-':
+064:                                 nextOperator = OperatorType::SubOp;
+065:                                 break;
+066: 
+067:                             case '*':
+068:                                 nextOperator = OperatorType::MulOp;
+069:                                 break;
+070: 
+071:                             case '/':
+072:                                 nextOperator = OperatorType::DivOp;
+073:                                 break;
+074:                             }
+075: 
+076:                             // toggle parsing state
+077:                             expectedOperator = !expectedOperator;
+078:                         }
+079: 
+080:                         if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, OperandType>::value == true)
+081:                         {
+082:                             // check parsing state
+083:                             if (expectedOperator == true) {
+084:                                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operand");
+085:                             }
+086: 
+087:                             switch (nextOperator)
+088:                             {
+089:                             case OperatorType::NullOp:
+090:                                 result = value;
+091:                                 break;
+092:                             case OperatorType::AddOp:
+093:                                 result = element + value;
+094:                                 break;
+095:                             case OperatorType::SubOp:
+096:                                 result = element - value;
+097:                                 break;
+098:                             case OperatorType::MulOp:
+099:                                 result = element * value;
+100:                                 break;
+101:                             case OperatorType::DivOp:
+102:                                 result = element / value;
+103:                                 break;
+104:                             }
+105: 
+106:                             // toggle parsing state
+107:                             expectedOperator = !expectedOperator;
+108:                         }
+109:                     },
+110:                     next
+111:                 );
+112: 
+113:                 return result;
+114:             }
+115:         );
+116: 
+117:         // last argument should be a operand
+118:         if (expectedOperator == false) {
+119:             throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+120:         }
+121:     }
+122: };
+```
 
-###### {#listing_1_class_morsecalculator_decl}
+*Listing* 5: Klasse `ChainCalculatorSTL`: Schnittstelle und Realisierung.
+
+
+*Beispiel*:
 
 ```cpp
 ```
 
-*Listing* 1: Klasse `MorseCalculator`: Definition.
+*Ausgabe*:
 
-Im Quellcode von [Listing 1] sind zwei weitere Subtilitäten verborgen, auf die ich aufmerksam machen möchte:
+
+
+## Lösungsansatz mit Modern C++
+
+Im letzten Lösungsansatz haben wir ein `std::vector<std::variant<char, int>>`-Objekt
+mit `std::accumulate` traviersiert. Das Stichwort `std::accumulate` sollte uns an die Technologie 
+der zu Grunde liegenden Technik erinnern: Das so genannte *Folding*.
+
+Die Kettenrechnung ist zunächst an die `calc`-Methode (wie im letzten Schritt gezeigt)
+in einem *Parameter Pack* zu übergeben. Dieses muss nun natürlich irgendwann entpackt werden,
+dieses Mal im Kontext eines Folding-Ausdrucks
+(es kommt also *kein* `std::vector<std::variant<char, int>>`-Objekt zum Einsatz):
+
+```cpp
+01: void calc(std::integral auto ... args)
+02: {
+03:     ...
+04: 
+05:     // folding expression
+06:     ( eval(args) , ... );
+```
+
+Die `eval`-Methode implementieren wir als generische Methode:
+
+```cpp
+void eval (std::integral auto arg);
+```
+
+Da sie im zuvor gezeigten *Folding Expression* sowohl für Operatoren als auch Operanden aufgerufen wird,
+muss diese eine Fallunterscheidung durchführen. Es kommen wieder die Techniken des Metaprogramming zum Einsatz:
+
+```cpp
+01: // private helper method
+02: void eval (std::integral auto arg)
+03: {
+04:     using Type = decltype(arg);
+05: 
+06:     if constexpr (std::is_same<Type, char>::value == true)
+07:     { ...
+08:     }
+09: 
+10:     if constexpr (std::is_integral<Type>::value == true && !std::same_as<Type, char>)
+11:     { ...
+12:     }
+13: }
+```
+
+Damit sollte die Implementierung in ihren Grundzügen ausreichend vorbereitet sein:
+
+
+###### {#listing_6_class_chaincalculatorstl_impl}
+
+```cpp
+01: class ChainCalculatorModern
+02: {
+03: private:
+04:     OperandType m_result;
+05:     char m_nextOperator;
+06:     bool m_expectedOperator;
+07: 
+08: public:
+09:     // c'tors
+10:     ChainCalculatorModern () :
+11:         m_result{},
+12:         m_nextOperator{ '?' },
+13:         m_expectedOperator{ false }
+14:     {}
+15: 
+16:     // getter
+17:     auto getResult() const { return m_result; }
+18: 
+19: public:
+20:     void calc(std::integral auto ... args)
+21:     {
+22:         static_assert(sizeof ... (args) > 0);
+23: 
+24:         // reset calculator
+25:         m_result = 0;
+26:         m_nextOperator = '?';
+27: 
+28:         // initialize parsing state
+29:         m_expectedOperator = false;
+30: 
+31:         ( eval(args) , ... );
+32: 
+33:         // last argument should be a operand
+34:         if (m_expectedOperator == false) {
+35:             throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+36:         }
+37:     }
+38: 
+39: private:
+40:     // private helper method
+41:     void eval (std::integral auto arg)
+42:     {
+43:         using Type = decltype(arg);
+44: 
+45:         if constexpr (std::is_same<Type, char>::value == true)
+46:         {
+47:             // check parsing state
+48:             if (m_expectedOperator == false) {
+49:                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+50:             }
+51: 
+52:             // store next operator
+53:             m_nextOperator = arg;
+54: 
+55:             // toggle parsing state
+56:             m_expectedOperator = !m_expectedOperator;
+57:         }
+58: 
+59:         if constexpr (std::is_integral<Type>::value == true && !std::same_as<Type, char>)
+60:         {
+61:             // check parsing state
+62:             if (m_expectedOperator == true) {
+63:                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operand");
+64:             }
+65: 
+66:             switch (m_nextOperator)
+67:             {
+68:             case '?':
+69:                 m_result = arg;
+70:                 break;
+71:             case '+':
+72:                 m_result = m_result + arg;
+73:                 break;
+74:             case '-':
+75:                 m_result = m_result - arg;
+76:                 break;
+77:             case '*':
+78:                 m_result = m_result * arg;
+79:                 break;
+80:             case '/':
+81:                 m_result = m_result / arg;
+82:                 break;
+83:             }
+84: 
+85:             // toggle parsing state
+86:             m_expectedOperator = !m_expectedOperator;
+87:         }
+88:     }
+89: };
+```
+
+*Listing* 6: Klasse `ChainCalculatorModern`: Schnittstelle und Realisierung.
+
+
+*Beispiel*:
+
+```cpp
+```
+
+*Ausgabe*:
+
+
+
 
 ## Literatur
 

@@ -42,7 +42,7 @@ namespace ChainArithmetic_Modern {
             // initialize parsing state
             m_expectedOperator = false;
 
-            ( calc(args) , ... );
+            ( eval(args) , ... );
 
             // last argument should be a operand
             if (m_expectedOperator == false) {
@@ -52,7 +52,7 @@ namespace ChainArithmetic_Modern {
 
     private:
         // private helper method
-        void calc(std::integral auto arg)
+        void eval (std::integral auto arg)
         {
             using Type = decltype(arg);
 

@@ -37,7 +37,7 @@ namespace ChainArithmetic_STL {
             m_result = 0;
             m_nextOperator = OperatorType::NullOp;
 
-            // unpack paramerters
+            // unpack parameters
             std::vector<std::variant<char, OperandType>> expression{ args ... };
 
             // need state variable to control correct syntax of chain expression
