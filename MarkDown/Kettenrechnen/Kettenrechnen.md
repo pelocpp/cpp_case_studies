@@ -5,22 +5,25 @@ Für diejenigen unter Ihnen, die dieses Thema aus Ihrem Gedächtnis verdrängt h
 
 Jede Kettenrechnung beginnt mit einer normalen Rechenaufgabe (z.B. &ldquo;1+3&rdquo;).
 Das Resultat muss im Gedächtnis behalten werden,
-denn es folgt eine weitere Operation (z.B. &ldquo;+3&rdquo;),
+denn es folgt eine weitere Operation (z.B. &ldquo;*5&rdquo;),
 welche jeweils zum vorhergehenden Resultat gerechnet werden muss.
-Das neue Zwischenresultat merkt man sich ebenfalls wieder für die nächste Operation usw.
-So verlängert sich die &ldquo;Rechen-Kette&rdquo; immer weiter.
+Das neue Zwischenresultat merkt man sich ebenfalls wieder für die nächste Operation usw. usw.
+So verlängert sich die &ldquo;Rechenkette&rdquo; immer weiter.
 
-*Beispiel*: 
+Im Beispiel
 
-1+3 (= 4), + 3 (= 7), -2 (=5), * 2 (=10), -8 (=2), /2 (=1).
+```
+1 + 3 * 5 - 2 * 2 - 8 / 2
+```
 
-Dieses Beispiel würde man als richtige Kettenrechnung so formulieren:
+sollte man 14 als Endergebnis erhalten.
 
-1 + 3 + 3 - 2 * 2 - 8 / 2
+Entwickeln Sie eine Funktion `compute`, die eine Kettenrechnung als Parameter übergeben bekommt
+und ihr Resultat zurückliefert:
 
-
-// =====================================
-
+```cpp
+int calc (std::string chain);
+```
 
 <!--more-->
 
@@ -36,25 +39,27 @@ Dieses Beispiel würde man als richtige Kettenrechnung so formulieren:
 
 # Einführung
 
-Wir machen ferner die Beobachtung, dass die vier Grundrechenarten ohne Operatorenvorrang
+Wir klären noch einige Details zum Kettenrechnen vorab:
+Ja, wir machen ferner die Beobachtung, dass die vier Grundrechenarten ohne Operatorenvorrang
 auszuwerten sind, das heißt also, dass die Regel &ldquo;Punkt vor Strich&rdquo; nicht gilt.
 
 Auch gibt es keine Klammern. Sie würden ja die Reihenfolge der Auswertung von Rechnungen
 beeinflussen.
 
 Die Zahlen sind generell aus dem Bereich der positiven und negativen natürlichen Zahlen und der Null zu wählen.
-Division finden statt, sie liefern als Ergebnis das Resultat der ganzzahligen Division,
+Division finden statt, sie liefern als Ergebnis das Resultat der ganzzahligen Division zurück,
 ein möglicher Rest geht also verloren.
 
-Eine Rechenkette kann beliebig lang sein.
+Und schließlich: Eine Rechenkette kann beliebig lang sein, zumindest so lang, dass sie in
+Objekten des Typs `std::string` Platz findet.
 
-An dem folgenden Beispiel können Sie erkennen, wie das Programm ablaufen sollte:
+Am folgenden Beispiel können Sie erkennen, wie das Programm ablaufen sollte:
 
 ```cpp
-01: void test_chain_arithmetic()
+01: void test()
 02: {
 03:     ChainCalculatorClassic chain{};
-04:     chain.calc("10 + 20 + 30");
+04:     chain.calc("1 + 3 * 5 - 2 * 2 - 8 / 2");
 05:     auto result{ chain.getResult() };
 06:     std::cout << "Result: " << result << std::endl;
 07: }
@@ -66,29 +71,39 @@ An dem folgenden Beispiel können Sie erkennen, wie das Programm ablaufen sollte
 Result: 60
 ```
 
-Im Lösungsteil stellen wir vier unterschiedliche Lösungsansätze vor:
+Wir haben der Lösung einen gewissen objekt-orientierten Touch gegeben:
+Es kommt eine Klasse `ChainCalculatorClassic` zum Einsatz,
+Methode `calc` kümmert sich um das Kettenrechnen,
+ein Ergebnis kann durch die *getter*-Methode `getResult` abgeholt werden.
 
-  * Klassisches C++ (im wesentlich unter Verwendung der Klassen `std::string` und `std::string::const_iterator`)
-  * Einsatz von regulären Ausdrücken
-  * Einsatz von Hilfsmitteln aus der STL (STL-Klassen `std::vector` und `std::variant`)
-  * Mit generischen Funktionen und Parameter Packs
+Jetzt wird es ein wenig interessanter: Wir stellen im Lösungsteil
+gleich vier unterschiedliche Lösungsansätze vor:
 
+  * Klassisches C++ &ndash; im wesentlich unter Verwendung der Klassen `std::string` und `std::string::const_iterator`.
+  * Einsatz von regulären Ausdrücken.
+  * Einsatz von Hilfsmitteln aus der STL (STL-Klassen `std::vector` und `std::variant`).
+  * Einsatz von generischen Methoden und Parameter Packs.
 
+Das ganze garnieren wir zum Abschluss mit einer Messung der Programmlaufzeiten.
+  
 # Lösung
 
 > Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
 
 Natürlich würde zur Lösung der gestellten Aufgabe auch ein Lösungsansatz genügen.
-Es war aber auch meine Neugierde, einen Blick auf die Laufzeit der Lösung zu werden.
-Und damit wollte ich eine Brücke von der klassischen Vorgehensweise bis hin zu Modern C++ schlagen.
+Es war aber auch meine Neugierde geweckt, einen Blick auf die Laufzeiten
+der unterschiedlichen Lösungsansätze zu werfen.
+
+Und ich konnte auf diese Weise eine Brücke von der klassischen Vorgehensweise bis hin zu Modern C++ Konzepten schlagen.
 
 
 ## Lösungsansatz mit klassischem C++
 
 Diese Lösung kommt im wesentlichen nur mit einem Objekt der Klasse `std::string` aus.
-Die Rechenkette wird als `std::string`-Objekt an eine entsprechende Methode durchgereicht.
+Die Rechenkette wird als `std::string`-Objekt an eine entsprechende `calc`-Methode durchgereicht.
 Mit geeigneten Iteratoren-Objekten eines `std::string`-Objekts wird die Rechenkette traversiert,
-es werden Operanden und Operatoren nahezu &ldquo;manuell&rdquo; aus der Rechenkette extrahiert.
+es werden Operanden und Operatoren gewissermaßen &ldquo;manuell&rdquo; aus der Rechenkette extrahiert
+und zeitgleich die Kettenrechnung durchgeführt.
 
 Mit einer recht simplen Fehlerüberprüfung wird darauf geachtet, dass Operanden und Operatoren
 abwechselnd auftreten, am Anfang und Ende sollte ebenfalls ein Operand vorhanden sein.
