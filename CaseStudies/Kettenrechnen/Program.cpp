@@ -240,14 +240,14 @@ void test_chain_arithmetic_10()
 
 int main()
 {
-    //test_chain_arithmetic_00();
-    //test_chain_arithmetic_01();
-    //test_chain_arithmetic_02();
-    //test_chain_arithmetic_03();
-    //test_chain_arithmetic_04();
-    //test_chain_arithmetic_05();
-    //test_chain_arithmetic_06();
-    //test_chain_arithmetic_07();
+    test_chain_arithmetic_00();
+    test_chain_arithmetic_01();
+    test_chain_arithmetic_02();
+    test_chain_arithmetic_03();
+    test_chain_arithmetic_04();
+    test_chain_arithmetic_05();
+    test_chain_arithmetic_06();
+    test_chain_arithmetic_07();
     test_chain_arithmetic_10();
 
     return 0;
