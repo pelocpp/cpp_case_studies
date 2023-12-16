@@ -15,7 +15,7 @@ namespace ChainArithmetic_Regex {
     {}
 
     // public interface
-    void ChainCalculatorRegex::calc(std::string expression)
+    void ChainCalculatorRegex::calc(const std::string& expression)
     {
         // reset calculator
         m_result = 0;

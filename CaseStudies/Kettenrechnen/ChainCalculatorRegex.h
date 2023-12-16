@@ -28,7 +28,7 @@ namespace ChainArithmetic_Regex {
         auto getResult() const { return m_result; }
 
         // public interface
-        void calc(std::string expression);
+        void calc(const std::string& expression);
 
     private:
         // private helper method

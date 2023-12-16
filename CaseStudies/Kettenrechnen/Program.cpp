@@ -156,15 +156,15 @@ void test_chain_arithmetic_06()
 
 void test_chain_arithmetic_07()
 {
-    ChainArithmetic_Regex::ChainCalculatorRegex chain{};
-    std::string expression{ "2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 - 1" };
-    chain.calc(expression);
-    auto result{ chain.getResult() };
-    std::cout << "Result: " << result << std::endl;
+    //ChainArithmetic_Regex::ChainCalculatorRegex chain{};
+    //std::string expression{ "2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 - 1" };
+    //chain.calc(expression);
+    //auto result{ chain.getResult() };
+    //std::cout << "Result: " << result << std::endl;
 
     ChainArithmetic_Modern::ChainCalculatorModern chainModern{};
     chainModern.calc(2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '-', 1);
-    result = chainModern.getResult();
+    auto result = chainModern.getResult();
     std::cout << "Result: " << result << std::endl;
 }
 
@@ -185,7 +185,7 @@ void printResults(
 
 void test_chain_arithmetic_10()
 {
-    constexpr int MaxIteration = 1'000;
+    constexpr int MaxIteration = 100'000;
 
     {
         ChainArithmetic_Classic::ChainCalculatorClassic chain{};
@@ -242,13 +242,13 @@ int main()
 {
     //test_chain_arithmetic_00();
     //test_chain_arithmetic_01();
-    test_chain_arithmetic_02();
+    //test_chain_arithmetic_02();
     //test_chain_arithmetic_03();
     //test_chain_arithmetic_04();
     //test_chain_arithmetic_05();
     //test_chain_arithmetic_06();
     //test_chain_arithmetic_07();
-    //test_chain_arithmetic_10();
+    test_chain_arithmetic_10();
 
     return 0;
 }

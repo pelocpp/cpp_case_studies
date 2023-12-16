@@ -15,7 +15,7 @@ namespace ChainArithmetic_Classic {
     {}
 
     // public interface
-    void ChainCalculatorClassic::calc(std::string expression)
+    void ChainCalculatorClassic::calc(const std::string& expression)
     {
         // reset calculator
         m_result = 0;

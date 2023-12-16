@@ -132,7 +132,7 @@ ich wollte ihn jedoch wegen des Zeitvergleichs mit an Bord haben:
 14:     auto getResult() const { return m_result; }
 15: 
 16:     // public interface
-17:     void calc(std::string expression);
+17:     void calc(const std::string& expression);
 18: 
 19: private:
 20:     // private helper method
@@ -171,7 +171,7 @@ entnehen Sie bitte [Listing 2]:
 007: {}
 008: 
 009: // public interface
-010: void ChainCalculatorClassic::calc(std::string expression)
+010: void ChainCalculatorClassic::calc(const std::string& expression)
 011: {
 012:     // reset calculator
 013:     m_result = 0;
@@ -311,16 +311,19 @@ entnehen Sie bitte [Listing 2]:
 *Listing* 2: Klasse `ChainCalculatorClassic`: Realisierung.
 
 
-
 *Beispiel*:
 
 ```cpp
+ChainCalculatorClassic chain{};
+chain.calc("10 + 20 + 30");
+auto result{ chain.getResult() };
+std::cout << "Result: " << result << std::endl;
 ```
 
 *Ausgabe*:
 
-
 ```
+Result: 60
 ```
 
 
@@ -347,6 +350,28 @@ Es kommen zwei `std::sregex_iterator`-Objekte zum Einsatz.
 ###### {#listing_3_class_chaincalculatorregex_decl}
 
 ```cpp
+01: class ChainCalculatorRegex
+02: {
+03: private:
+04:     OperandType  m_result;
+05:     OperatorType m_nextOperator;
+06:     std::string  m_regex;
+07:     std::regex   m_tokens_regex;
+08: 
+09: public:
+10:     // c'tors
+11:     ChainCalculatorRegex();
+12: 
+13:     // getter
+14:     auto getResult() const { return m_result; }
+15: 
+16:     // public interface
+17:     void calc(const std::string& expression);
+18: 
+19: private:
+20:     // private helper method
+21:     Token<OperandType> getNextToken(std::sregex_iterator iter);
+22: };
 ```
 
 *Listing* 3: Klasse `ChainCalculatorRegex`: Schnittstelle.
@@ -357,20 +382,162 @@ Wir fahren gleich mit der Realisierung fort:
 ###### {#listing_4_class_chaincalculatorregex_impl}
 
 ```cpp
+001: // c'tors
+002: ChainCalculatorRegex::ChainCalculatorRegex() :
+003:     m_result{},
+004:     m_nextOperator{ OperatorType::NullOp },
+005:     m_regex{ "([1-9][0-9]*)|\\+|\\-|\\*|\\/" },
+006:     m_tokens_regex{ m_regex }
+007: {}
+008: 
+009: // public interface
+010: void ChainCalculatorRegex::calc(const std::string& expression)
+011: {
+012:     // reset calculator
+013:     m_result = 0;
+014:     m_nextOperator = OperatorType::NullOp;
+015: 
+016:     // setup scanner
+017:     auto begin {
+018:         std::sregex_iterator {
+019:             expression.begin(),
+020:             expression.end(),
+021:             m_tokens_regex
+022:         }
+023:     };
+024: 
+025:     auto end{ std::sregex_iterator{} };
+026: 
+027:     // need state variable to control correct syntax of chain expression
+028:     auto m_expectedOperator{ false };
+029: 
+030:     while (begin != end) {
+031: 
+032:         Token<OperandType> tok{ getNextToken(begin) };
+033: 
+034:         if (tok.getTokenType() == TokenType::Operator)
+035:         {
+036:             if (m_expectedOperator == false) {
+037:                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+038:             }
+039: 
+040:             // store next operator
+041:             m_nextOperator = tok.getOperatorType();
+042: 
+043:             // toggle parsing state
+044:             m_expectedOperator = !m_expectedOperator;
+045:         }
+046:         else if (tok.getTokenType() == TokenType::Operand)
+047:         {
+048:             if (m_expectedOperator == true) {
+049:                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operand");
+050:             }
+051: 
+052:             OperandType value{ tok.getValue() };
+053: 
+054:             switch (m_nextOperator)
+055:             {
+056:             case OperatorType::NullOp:
+057:                 m_result = value;
+058:                 break;
+059:             case OperatorType::AddOp:
+060:                 m_result = m_result + value;
+061:                 break;
+062:             case OperatorType::SubOp:
+063:                 m_result = m_result - value;
+064:                 break;
+065:             case OperatorType::MulOp:
+066:                 m_result = m_result * value;
+067:                 break;
+068:             case OperatorType::DivOp:
+069:                 m_result = m_result / value;
+070:                 break;
+071:             }
+072: 
+073:             // toggle parsing state
+074:             m_expectedOperator = !m_expectedOperator;
+075:         }
+076: 
+077:         ++begin;
+078:     }
+079: 
+080:     // last argument should be a operand
+081:     if (m_expectedOperator == false) {
+082:         throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+083:     }
+084: }
+085: 
+086: // private helper method
+087: Token<OperandType> ChainCalculatorRegex::getNextToken(std::sregex_iterator iter)
+088: {
+089:     std::smatch match{ *iter };
+090: 
+091:     std::string s{ match.str() };
+092: 
+093:     Token<OperandType> tok{};
+094: 
+095:     switch (s[0])
+096:     {
+097:     case '+':
+098:         tok = Token<OperandType>{ OperatorType::AddOp };
+099:         // std::cout << '+' << std::endl;
+100:         break;
+101: 
+102:     case '-':
+103:         tok = Token<OperandType>{ OperatorType::SubOp };
+104:         // std::cout << '-' << std::endl;
+105:         break;
+106: 
+107:     case '*':
+108:         tok = Token<OperandType>{ OperatorType::MulOp };
+109:         // std::cout << '*' << std::endl;
+110:         break;
+111: 
+112:     case '/':
+113:         tok = Token<OperandType>{ OperatorType::DivOp };
+114:         // std::cout << '/' << std::endl;
+115:         break;
+116: 
+117:     case '0':
+118:     case '1':
+119:     case '2':
+120:     case '3':
+121:     case '4':
+122:     case '5':
+123:     case '6':
+124:     case '7':
+125:     case '8':
+126:     case '9':
+127:     {
+128:         OperandType value{ stoll(s) };
+129:         tok = Token<OperandType>{ value };
+130:         break;
+131:     }
+132:     default:
+133:         break;
+134:     }
+135: 
+136:     return tok;
+137: }
 ```
 
 *Listing* 4: Klasse `ChainCalculatorRegex`: Realisierung.
 
 
-
 *Beispiel*:
 
 ```cpp
+ChainCalculatorRegex chain{};
+chain.calc("10 + 20 -  5 * 3 / 5");
+auto result = chain.getResult();
+std::cout << "Result: " << result << std::endl;
 ```
 
 *Ausgabe*:
 
-
+```
+Result: 15
+```
 
 
 ## Lösungsansatz mit STL
@@ -389,7 +556,7 @@ dass wir die Schnittstelle der `calc`-Methode anpassen müssen:
 An Stelle von
 
 ```cpp
-void calc(std::string expression);
+void calc(const std::string& expression);
 ```
 
 benötigen wir nun folgende Signatur:
@@ -595,10 +762,17 @@ sind Klassenschnittstelle und -realisierung in einer Datei zusammengefasst:
 *Beispiel*:
 
 ```cpp
+ChainCalculatorSTL chain{};
+chain.calc(10, '-', 5, '*', 3, '+', 35, '/', 10);
+auto result = chain.getResult();
+std::cout << "Result: " << result << std::endl;
 ```
 
 *Ausgabe*:
 
+```
+Result: 5
+```
 
 
 ## Lösungsansatz mit Modern C++
@@ -649,7 +823,7 @@ muss diese eine Fallunterscheidung durchführen. Es kommen wieder die Techniken 
 Damit sollte die Implementierung in ihren Grundzügen ausreichend vorbereitet sein:
 
 
-###### {#listing_6_class_chaincalculatorstl_impl}
+###### {#listing_6_class_chaincalculatormodern_impl}
 
 ```cpp
 01: class ChainCalculatorModern
@@ -749,44 +923,127 @@ Damit sollte die Implementierung in ihren Grundzügen ausreichend vorbereitet se
 *Beispiel*:
 
 ```cpp
+ChainArithmetic_Modern::ChainCalculatorModern chainModern{};
+chainModern.calc(2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '-', 1);
+auto result = chainModern.getResult();
+std::cout << "Result: " << result << std::endl;
 ```
 
 *Ausgabe*:
 
+```
+Result: 1023
+```
+
+## Ein Zeitvergleich
+
+Ich habe einen kleinen Vergleichstest geschrieben, um die vier vorgestellten Lösungsansätze bzgl.
+ihrer Laufzeit vergleichen zu können. Okay, ich muss zugeben, dass die Realisierungen auch von der Aufrufschnittstelle
+her unterschiedlich sind: Zwei der vorgestellten Lösungen erwarten ein `std::string`-Objekt,
+die anderen beiden ein *Parameter Pack*. In diesem sind die Operatoren und Operanden bereits fein säuberlich aufgeteilt,
+die anderen beiden Verfahren haben den Zusatzaufwand, ein `std::string`-Objekt zu zerlegen.
+
+Auf der anderen Seite muss man aber auch konstatieren, dass bei Gebrauchs eines Parameter Packs *viele* Parameter
+an die `calc`-Funktion zu übergeben sind, bei einem `std::string`-Objekt ist es ein einziger Parameter.
+
+Damit auf in den Wettkampf: Unser Vergleichsprogramm sieht so aus:
+
+```cpp
+01: void test_chain_arithmetic_10()
+02: {
+03:     constexpr int MaxIteration = 100'000;
+04: 
+05:     {
+06:         ChainArithmetic_Classic::ChainCalculatorClassic chain{};
+07:         std::string expression{ "2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 - 1" };
+08: 
+09:         const auto startTime{ std::chrono::high_resolution_clock::now() };
+10:         for (size_t i{}; i != MaxIteration; ++i) {
+11:             chain.calc(expression);
+12:         }
+13:         const auto endTime{ std::chrono::high_resolution_clock::now() };
+14: 
+15:         printResults("Classic: ", startTime, endTime);
+16:     }
+17: 
+18:     {
+19:         ChainArithmetic_STL::ChainCalculatorSTL chain{};
+20: 
+21:         const auto startTime{ std::chrono::high_resolution_clock::now() };
+22:         for (size_t i{}; i != MaxIteration; ++i) {
+23:             chain.calc(2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '-', 1);
+24:         }
+25:         const auto endTime{ std::chrono::high_resolution_clock::now() };
+26: 
+27:         printResults("STL:     ", startTime, endTime);
+28:     }
+29: 
+30:     {
+31:         ChainArithmetic_Regex::ChainCalculatorRegex chain{};
+32:         std::string expression{ "2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 - 1" };
+33: 
+34:         const auto startTime{ std::chrono::high_resolution_clock::now() };
+35:         for (size_t i{}; i != MaxIteration; ++i) {
+36:             chain.calc(expression);
+37:         }
+38:         const auto endTime{ std::chrono::high_resolution_clock::now() };
+39: 
+40:         printResults("Regex:   ", startTime, endTime);
+41:     }
+42: 
+43:     {
+44:         ChainArithmetic_Modern::ChainCalculatorModern chain{};
+45: 
+46:         const auto startTime{ std::chrono::high_resolution_clock::now() };
+47:         for (size_t i{}; i != MaxIteration; ++i) {
+48:             chain.calc(2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '-', 1);
+49:         }
+50:         const auto endTime{ std::chrono::high_resolution_clock::now() };
+51: 
+52:         printResults("Modern:  ", startTime, endTime);
+53:     }
+54: }
+```
 
 
+*Ausgabe*:
 
-## Literatur
+```
+Classic: 21.316500000 msecs.
+STL:     10.596700000 msecs.
+Regex:   3476.643000000 msecs.
+Modern:  0.000100000 msecs.
+```
 
-Die Anregungen zum Zerlegen von Zeichenketten stammen aus
-
-[Jonathan Boccara, &ldquo;How to split a string in C++&rdquo;](https://www.fluentcpp.com/2017/04/21/how-to-split-a-string-in-c//).
-
-Die Hinweise zum Initialisieren eines `std::array`-Objekts sind
-
-[Stackoverflow, &ldquo;C++11: Correct std::array initialization?&rdquo;](https://stackoverflow.com/questions/14178264/c11-correct-stdarray-initialization/)
-
-entnommen.  
+Wie interpretieren Sie das Ergebnis? Nun gut, dass die Variante mit den regulären Ausdrücken auf dem letzten Platz landet,
+damit hatte ich fast gerechnet. Die klassische Variante schlägt sich dazu gesehen im Vergleich recht gut,
+auch das ist für mich nicht wirklich überraschend. Dass allerdings die Variante mit *Parameter Packs* und *Folding* so
+gut abschneidet, dass überrascht mich schon. Wie sehen die Resultate auf Ihrem Rechner aus?
 
 # There&lsquo;s more
+
+Tja, eine Idee ist mir da während der Erstellens des Textes gekommen.
+Das `constexpr`-Sprachmittel ist ja der &ldquo;letzte Schrei&rdquo;, um es etwas salopp auszudrücken.
+Hmm, wie sieht es eigentlich damit aus, eine Kettenrechnung vom Übersetzer durchführen zu lassen?
+
+Habe ich ihr Interesse geweckt?
 
 
 constexpr ....
 
 Spielverderber 
 
-
-Der Einsatz eines `std::array`-Objekts ist für performantes  Chiffrieren und Dechiffrieren nicht die
-performanteste Lösung. Überlegen Sie, wie man eine *BiMap*-Klasse implementieren könnte,
-um laufzeit-optimalere Ergebnisse zu erzielen.
-
 <br/>
 
 <!-- Links Definitions -->
 
-[Tabelle 1]: #tabelle_1_morsealphabet
-
-[Listing 1]: #listing_1_class_morsecalculator_decl
-[Listing 2]: #listing_2_class_morsecalculator_impl
+[Listing 1]: #listing_1_class_chaincalculatorclassic_decl}
+[Listing 2]: #listing_2_class_chaincalculatorclassic_impl}
+[Listing 3]: #listing_3_class_chaincalculatorregex_decl}
+[Listing 4]: #listing_4_class_chaincalculatorregex_impl}
+[Listing 5]: #listing_5_class_chaincalculatorstl_impl}
+[Listing 6]: #listing_6_class_chaincalculatormodern_impl}
 
 <!-- End-of-File -->
+
+
