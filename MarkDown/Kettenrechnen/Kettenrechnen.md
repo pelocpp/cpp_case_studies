@@ -1,5 +1,7 @@
 <!-- Kettenrechnen.md -->
 
+# Kettenrechnen
+
 Mit dem Kettenrechnen kehren wir zu den Ursprüngen unserer Grundschulzeit zurück.
 Für diejenigen unter Ihnen, die dieses Thema aus Ihrem Gedächtnis verdrängt haben:
 
@@ -40,14 +42,17 @@ int calc (std::string chain);
 # Einführung
 
 Wir klären noch einige Details zum Kettenrechnen vorab:
-Ja, wir machen ferner die Beobachtung, dass die vier Grundrechenarten ohne Operatorenvorrang
+Ja, wir machen die Beobachtung, dass die vier Grundrechenarten ohne Operatorenvorrang
 auszuwerten sind, das heißt also, dass die Regel &ldquo;Punkt vor Strich&rdquo; nicht gilt.
-
 Auch gibt es keine Klammern. Sie würden ja die Reihenfolge der Auswertung von Rechnungen
 beeinflussen.
 
-Die Zahlen sind generell aus dem Bereich der positiven und negativen natürlichen Zahlen und der Null zu wählen.
-Division finden statt, sie liefern als Ergebnis das Resultat der ganzzahligen Division zurück,
+Die Zahlen sind generell aus dem Bereich der *ganzen* Zahlen zu wählen,
+es treten also positive und negative Zahlen in Erscheinung.
+Die Null als Operand schließen wir aus, auch wollen wir führende Nullen wie `0100` nicht zulassen.
+Als Zwischenergebnis in der Berechnung einer Rechenkette kann der Wert 0 sehr wohl auftreten. 
+
+Divisionen finden statt, sie liefern als Ergebnis das Resultat der *ganzzahligen* Division zurück,
 ein möglicher Rest geht also verloren.
 
 Und schließlich: Eine Rechenkette kann beliebig lang sein, zumindest so lang, dass sie in
@@ -68,13 +73,13 @@ Am folgenden Beispiel können Sie erkennen, wie das Programm ablaufen sollte:
 *Ausgabe*:
 
 ```
-Result: 60
+Result: 14
 ```
 
-Wir haben der Lösung einen gewissen objekt-orientierten Touch gegeben:
+Wir haben der Lösung einen gewissen objektorientierten Touch veröiehen:
 Es kommt eine Klasse `ChainCalculatorClassic` zum Einsatz,
-Methode `calc` kümmert sich um das Kettenrechnen,
-ein Ergebnis kann durch die *getter*-Methode `getResult` abgeholt werden.
+eine Methode `calc` kümmert sich um das Kettenrechnen und
+das Ergebnis kann durch die *getter*-Methode `getResult` abgeholt werden.
 
 Jetzt wird es ein wenig interessanter: Wir stellen im Lösungsteil
 gleich vier unterschiedliche Lösungsansätze vor:
@@ -84,17 +89,17 @@ gleich vier unterschiedliche Lösungsansätze vor:
   * Einsatz von Hilfsmitteln aus der STL (STL-Klassen `std::vector` und `std::variant`).
   * Einsatz von generischen Methoden und Parameter Packs.
 
-Das ganze garnieren wir zum Abschluss mit einer Messung der Programmlaufzeiten.
-  
-# Lösung
-
-> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
+Das Ganze garnieren wir zum Abschluss mit einer Messung der Programmlaufzeiten.
 
 Natürlich würde zur Lösung der gestellten Aufgabe auch ein Lösungsansatz genügen.
 Es war aber auch meine Neugierde geweckt, einen Blick auf die Laufzeiten
 der unterschiedlichen Lösungsansätze zu werfen.
 
 Und ich konnte auf diese Weise eine Brücke von der klassischen Vorgehensweise bis hin zu Modern C++ Konzepten schlagen.
+  
+# Lösung
+
+> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
 
 
 ## Lösungsansatz mit klassischem C++
@@ -137,6 +142,22 @@ Klasse *ChainCalculatorClassic* &ndash; Schnittstelle:
 21:     Token<OperandType> getNextToken();
 22: };
 ```
+
+Die Realisierung der Methode `getNextToken` weist Ähnlichkeiten zu entsprechenden Methode
+in der lexikalischen Analyse eines programmiersprachlichen Quelltextes auf.
+
+Signifikante Stellen in der Analyse der Eingabe-Zeichenkette sind die Anfangszeichen von Operatoren
+und Operatoren. Operatoren sind einfach zu erkennen, da sie durch ein einzelnes Zeichen `+`, `-`, `*` und `/` definiert sind.
+In anderen Programmiersprachen gibt es Operatoren wie etwa `++` oder `!=`,
+also Operatoren bestehend aus mehreren Zeichen. Mit dieser Problematik sind wir 
+bei unseren Rechenketten nicht konfrontiert.
+
+Operanden müssen wiederum mit einem Zeichen im Bereich von `1` bis `9` anfangen.
+Danach kann eine konsekutive Folge weiterer Zeichen im Bereich von `0` bis `9` solange folgen,
+bis in der Zeichenkette ein anderes Zeichen vorliegt (zum Beispiel ein Leerzeichen `_` oder ein Operator).
+
+Weitere Details in der Realisierung der `getNextToken`-Methode 
+entnehen Sie bitte LISTING XXX:
 
 Klasse *ChainCalculatorClassic* &ndash; Realisierung:
 
@@ -300,44 +321,123 @@ Klasse *ChainCalculatorClassic* &ndash; Realisierung:
 
 ## Lösungsansatz mit regulären Ausdrücken
 
-In manchen Abschnitten weist die letzte Lösung doch gewisse Umsändlichkeiten auf, oder
-um es anders zu sagen: Da könnte man das eine oder andere besser machen.
+In manchen Abschnitten weist die letzte Lösung doch gewisse Umständlichkeiten auf, oder
+um es präziser zu sagen: Da könnte man das eine oder andere besser machen.
 
-Reguläre Ausdrücke sind das probate Mittel, um Zeichenkette zu zerlegen. 
-Das wollen wir auch machen .
+Reguläre Ausdrücke sind das probate Mittel, um Zeichenketten zu zerlegen
+und ihre Inhalte zu extrahieren. Mit &ldquo;Inhalten&rdquo; sind hier Operatoren und Operanden gemeint.
+
+In der vorgestellten Lösung finden Sie den regulären Ausdruck
+
+```
+([1-9][0-9]*)|\\+|\\-|\\*|\\/
+```
+
+vor. Mit seiner Hilfe zerlegen wir eine Kettenrechnung in Operatoren und Operanden.
+
+Das Zerlegen des Ergenisses in Folge der Anwendung eines regulären Ausdrucks
+lässt sich ganz C++&ndsh;konform mit Iteratoren-Objekten bewerkstelligen:
+Es kommen zwei `std::sregex_iterator`-Objekte zum Einsatz.
+
+
+Klasse *ChainCalculatorRegex* &ndash; Schnittstelle:
+
+```cpp
+```
+
+Klasse *ChainCalculatorRegex* &ndash; Realisierung:
+
+
+```cpp
+```
+
+
+*Beispiel*:
+
+```cpp
+```
+
+*Ausgabe*:
+
+
 
 
 ## Lösungsansatz mit STL
 
 Mit den beiden Klassen `std::vector` und `std::variant` lassen sich interessante
 Anwendungen schreiben. Zum Einen ist ein `std::vector`-Objekt ein homogener Container,
-
 mit der Klasse `std::variant` kommt hier etwas Farbe ins Spiel.
 
-WEITER ..................
+Also wenn wir einen Container des Typs `std::vector<std::variant<T ...>>`
+betrachten, dann schaffen wir es auf diese Weise, Daten unterschiedlichen Typs
+in einem `std::vector`-Objekt abzulegen.
 
-            // unpack paramerters
+Der einzige Unterschied zu den bisherigen Lösungsansätzen besteht darin,
+dass wir die Schnittstelle der `calc`-Methode anpassen müssen:
 
-             std::vector<std::variant<char, O
+An Stelle von
+
+```cpp
+void calc(std::string expression);
+```
+
+haben wir nun folgende Signatur:
+
+
+```cpp
+void calc(std::integral auto ... args)
+```
+
+Hier sind gleich zwei Änderungen vorhanden: Mit `auto ... args` ist ein so genanntes
+*Parameter Pack* beim Aufruf bereitzustellen, also eine beliebig lange Liste von Parametern,
+die unterschiedlichen Typs sein dürfen. In einer zweiten Modifikation 
+unterwerden wir uns bzgl. der Parameter dem Konzept `std::integral`.
+
+In einer Kettenrechung schlagen wir hier zwei Fliegen mit einer Klappe:
+Die Operatoren sind vom Typ `char`, zumindest in aktuellen Festlegung.
+Die Operanden sind vom Typ `int`.
+
+Im Gegensatz zu den bisherigen Lösungen sieht ein Aufruf der `calc`-Methode
+nun so aus:
+
+```cpp
+chain.calc(10, '+', 20, '+', 30);
+```
+
+Sowohl die Operanden als auch die Operatoren sind nun fein säuberlich zu trennen.
+Dies kann man möglicherweise als nachteilig gegenüber der Notation mit einem `std::string`-Objekt ansehen,
+auf der anderen Seite eröffnen sich aber viele neue Möglichkeiten,
+zum Beispiel im Einsatz von *Parameter Packs*.
+
+Der Clou in diesem Lösungsansatz besteht nun darin,
+dass eine beliebig lange Liste von Operanden und Operatoren
+an der `calc`-Methodenaufrufschnittstelle eingepackt und anschießend
+im Kontruktor eines `std::vector<std::variant<char, int>>`-Objekts
+wieder ausgepackt wird.
+
+Um es noch einfacher zu sagen: Ohne jeglichen Programmieraufwand von unserer Seite
+wird eine Liste von Parametern, wie etwa
+
+```
+10, '+', 20, '+', 30
+```
+
+in einem `std::vector<std::variant<char, int>>`-Objekt abgelegt.
+
+Dieses Objekt durchlaufen wir nun mit einem Aufruf von `std::accumulate`:
+
+
+An Hand von Metaprogramming-Techniken im Umfeld der *Type Traits* 
+extrahieren wir aus dem `std::vector<std::variant<char, int>>`-Objekt 
+alternierend `char`- (Operatoren) und  `int`-Variablen (Operanden).
+
+Die Struktur eines  `std::accumulate`-Funktionsaufrufs eignet sich in geradezu idealerweise dazu,
+die einzelnen Schritte einer Kettenrechnung Schritt für Schritt auszuführen.
 
 
 ## Lösungsansatz mit Modern C++
 
 
-
-
-Wir versuchen, in der Realisierung der Fallstudie einige Aspekte von *Modern C++* zu integrieren.
-Da wäre zum Beispiel das Morsealphabet. Es bietet sich an, diese Datenstruktur so zu konzipieren,
-dass ihr Inhalt bereits vom Übersetzer gebildet werden kann. Das Schlüsselwort `constexpr` kommt daher zum Einsatz &ndash;
-und ein Objekt der Klasse `std::array`, da dieses etliche `constexpr`-definierte Konstruktoren und Methoden besitzt:
-
-```cpp
-using MorseAlphabet = std::array<std::pair<char, std::string_view>, 26>;
-```
-
-Die vielen Zeichenketten des Morsealphabets könnte man herkömmlich betrachtet in `std::string`-Objekten ablegen.
-Da es sich aber ausschließlich um konstante Zeichenketten handelt, auf die wir nur lesend zugreifen,
-können wir die C++17&ndash;Klasse `std::string_view` einsetzen. 
 
 Die beiden Methoden `encode` und `decode` haben eher den Charakter einer Funktion.
 Wir siedeln ihre Realisierung zwar in einer Klasse `MorseCalculator` an,
@@ -351,114 +451,6 @@ definieren die Methoden aber als (statische) Klassenmethoden ([Listing 1]):
 *Listing* 1: Klasse `MorseCalculator`: Definition.
 
 Im Quellcode von [Listing 1] sind zwei weitere Subtilitäten verborgen, auf die ich aufmerksam machen möchte:
-
-  * In Zeile 16 und 30 sind jeweils zwei geschweifte Klammern notwendig, um das `std::array`-Objekt statisch initialisieren
-    zu können. Ich versuche, den Sachverhalt möglichst einfach zu erklären:
-    Bei einem  `std::array`-Objekt kommt die so genannte *Aggregat*-*Initialisierung* zum Einsatz.
-    Die Klasse `std::array` besitzt konzeptionell wiederum ein &ldquo;Built-in&rdquo; Array, das mit einer
-    Initialisierungliste (`std::initializer_list`) vorbelegt wird. 
-    Damit sind die inneren geschweiften Klammern für das `std::initializer_list`-Objekt,
-    die äußeren für die Aggregat-Initialisierung notwendig.
-
-  * Die Einträge des `std::array`-Objekts sind vom Typ `std::pair<char, std::string_view>`.
-    Variablen des Typs  `std::string_view` lassen sich passgenau vorbelegen, wenn man an die Zeichenkettenkonstanten
-    noch das Suffix `sv` anhängt (siehe die Zeilen 17 bis 29 von [Listing 1]).
-
-Um überprüfen zu können, dass der Inhalt des Morsealphabets tatsächlich zur Übersetzungszeit generiert wird,
-gibt es eine Methode `getEntry` (in zwei Überladungen).
-Beide Überladungen müssen `inline` in der Klasse `MorseCalculator` vorhanden sein,
-dies ist dem statischen Charakter der Methoden geschuldet.
-Die Realisierung der `getEntry`-Methode ist mit und ohne `template`-Technik möglich.
-Greift man auf die `template`-Technik zurück, ist der Alphabet-Index gleich dem Template-Parameter.
-Logischerweise muss dieser zur Übersetzungszeit bekannt sein.
-Die `getEntry`-Methoden ist in diesem Fall eine so genannte &ldquo;*Template Member Function*&rdquo;.
-Eine Non-Template Klasse kann also Template Member Funktionen haben, wenn dies erwünscht ist.
-
-Die zweite Überladung der `getEntry`-Methode kommt ohne Template-Technik aus,
-mit dem Schlüsselwort `constexpr` alleine erreicht man auch das Ziel.
-Wir demonstrieren beide Überladungen der `getEntry`-Methode an einem Beispiel:
-
-```cpp
-// accessing a single entry of the morse alphabet table
-constexpr auto entry{ MorseCalculator::getEntry(3) };
-std::cout << entry.first << ", " << entry.second << std::endl;
-
-// accessing a single entry of the morse alphabet table
-constexpr std::pair<char, std::string_view> entry2{ MorseCalculator::getEntry<5>() };
-std::cout << entry2.first << ", " << entry2.second << std::endl;
-```
-
-*Ausgabe*:
-
-```
-D, -..
-F, ..-.
-```
-
-Damit stellen wir in [Listing 2] die Implementierung der Klasse `MorseCalculator` vor:
-
-###### {#listing_2_class_morsecalculator_impl}
-
-```cpp
-```
-
-*Listing* 2: Klasse `MorseCalculator`: Implementierung.
-
-Die beiden Methoden `charToMorse` (Zeilen 1 bis 16) und `morseToChar` (Zeilen 18 bis 29) von [Listing 2]
-wandeln ein Zeichen des Alphabets in 
-die entsprechende Morsezeichenkette um oder umgekehrt. Ein `std::array`-Objekt als Datenstruktur ist für 
-eine lineare Suche hier sicherlich nicht der ideale Kandidat, ein `std::map`-Objekt wäre besser geeignet.
-Ich habe mich letzten Endes dennoch für die `std::array`-Klasse aus zwei Gründen entschieden:
-Zum einen wollte ich die Morsealphabet&ndash;Datenstruktur zur Übersetzungszeit erzeugen.
-Hierzu bieten `std::map`-Objekte wenig oder eigentlich gar keine Unterstützung an.
-Zum zweiten ist auch die `std::map`-Klasse nicht ganz die ideale Datenstruktur zum Suchen,
-da man auf Grund der Suche in beiden Richtungen (Buchstabe nach Morsezeichenkette und umgekehrt)
-eigentlich eine &ldquo;*Bi*&rdquo;Map Datenstruktur benötigen würde.
-
-Die Realisierung der `encode`-Methode verbirgt keine Stolpersteine.
-In der `decode`-Methode wird zweimal &ndash; auf unterschiedliche Weise &ndash; eine Zeichenkette in Teilzeichenketten zerlegt.
-In den Zeilen 64 bis 67 vollziehen wir dies mit einer speziellen Überladung der `std::getline`-Methode.
-Der Vorteil dieses Ansatzes ist, dass das Trennzeichen kein Blank sein muss (hier: Schrägstrich `'/'`).
-Es wird eine Nachricht mit mehreren Wörtern in ihre einzelnen Worte zerlegt.
-Die zweite Zeichenkettenzerlegung zerlegt ein Wort in Morsedarstellung in die einzelnen Buchstaben.
-Hier tritt als Trennzeichen ein Blank in Erscheinung, wir können ein `std::istringstream`-Objekt
-mit zwei `std::istream_iterator<std::string>`-Objekten einsetzen.
-Eine spezielle Überladung der Konstruktoren der `std::vector`-Klasse besitzt
-zwei `std::istream_iterator<std::string>`-Objekte
-als Parameter und traversiert auf diese Weise das `std::istringstream`-Objekt, das dabei in seine einzelnen
-Bestandteile zerlegt wird. Dieser Ansatz setzt ein Blank als Trennzeichen voraus (Zeilen 74 bis 79).
-
-In den Zeilen 72 bis 91 können Sie eine Lambda-Funktion wahrnehmen, die in der Implementierung
-wiederum eine Lambda-Funktion enthält (Zeilen 84 bis 87). Also einfacher formuliert: Wir haben eine geschachtelte Lambda-Funktion vorliegen.
-Subtil hierbei ist, dass die innere Lambda-Funktion auf eine Variable `result` im *Closure*
-der äußeren, umgebenden `decode`-Methode zugreift. Es muss folglich in beiden *Capture*-*Clauses*
-der Lambda-Funktionen via Referenz-Operator `&` der Zugriff ermöglicht werden.
-
-## Ein Beispiel
-
-Wir schließen die Erläuterungen zur Realisierung mit einem Beispiel ab:
-
-```cpp
-// testing 'back and forth'
-std::string text{ "The quick brown fox jumps over the lazy dog" };
-std::cout << "Input: " << text << std::endl;
-std::string message{ MorseCalculator::encode(text) };
-std::cout << "Morse message: " << std::endl << message << std::endl;
-
-std::string original{ MorseCalculator::decode(message) };
-std::cout << "Result: " << original << std::endl;
-```
-
-*Ausgabe*:
-
-```
-Input: The quick brown fox jumps over the lazy dog
-Morse message:
-- .... . /--.- ..- .. -.-. -.- /-... .-. --- .-- -. /
-..-. --- -..- /.--- ..- -- .--. ... /--- ...- . .-. /
-- .... . /.-.. .- --.. -.-- /-.. --- --.
-Result: THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG
-```
 
 ## Literatur
 
