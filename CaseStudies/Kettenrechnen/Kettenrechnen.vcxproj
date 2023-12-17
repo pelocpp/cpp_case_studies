@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChainCalculatorClassic.cpp" />
+    <ClCompile Include="ChainXXX.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="ChainCalculatorRegex.cpp" />
     <ClCompile Include="ChainExpressionGenerator.cpp" />

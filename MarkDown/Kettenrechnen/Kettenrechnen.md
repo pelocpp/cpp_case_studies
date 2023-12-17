@@ -33,7 +33,9 @@ Lösungsansätze vor, die generische Funktionen, heterogene STL-Container, regul
   * Reguläre Ausdrücke (`std::std::regex`, `std::sregex_iterator`)
   * STL-Algorithmus `std::accumulate`
   * Schlüsselwort `auto`
+  * Metaprogramming / *Type Traits*
   * Generische Funktionen
+  * *Parameter Packs*
   * Zerlegung von Zeichenketten (*string splitting*)
 
 # Einführung
@@ -73,13 +75,13 @@ Am folgenden Beispiel können Sie erkennen, wie das Programm ablaufen sollte:
 Result: 14
 ```
 
-Wir haben der Lösung einen gewissen objektorientierten Touch veröiehen:
+Wir haben der Lösung einen gewissen objektorientierten Touch verliehen:
 Es kommt eine Klasse `ChainCalculatorClassic` zum Einsatz,
 eine Methode `calc` kümmert sich um das Kettenrechnen und
 das Ergebnis kann durch die *getter*-Methode `getResult` abgeholt werden.
 
 Jetzt wird es ein wenig interessanter: Wir stellen im Lösungsteil
-gleich vier unterschiedliche Lösungsansätze vor:
+gleich vier unterschiedliche Realisierungsansätze vor:
 
   * Klassisches C++ &ndash; im wesentlich unter Verwendung der Klassen `std::string` und `std::string::const_iterator`.
   * Einsatz von regulären Ausdrücken.
@@ -88,9 +90,9 @@ gleich vier unterschiedliche Lösungsansätze vor:
 
 Das Ganze garnieren wir zum Abschluss mit einer Messung der Programmlaufzeiten.
 
-Natürlich würde zur Lösung der gestellten Aufgabe auch ein Lösungsansatz genügen.
+Natürlich würde zur Lösung der gestellten Aufgabe auch ein Realisierungsansatz genügen.
 Es war aber auch meine Neugierde geweckt, einen Blick auf die Laufzeiten
-der unterschiedlichen Lösungsansätze zu werfen.
+der unterschiedlichen Vorgehensweisen in der Realisierung zu werfen.
 
 Und ich konnte auf diese Weise eine Brücke von der klassischen Vorgehensweise bis hin zu Modern C++ Konzepten schlagen.
   
@@ -111,7 +113,7 @@ Mit einer recht simplen Fehlerüberprüfung wird darauf geachtet, dass Operanden
 abwechselnd auftreten, am Anfang und Ende sollte ebenfalls ein Operand vorhanden sein.
 
 Der klassische Lösungsansatz zeichnet sich vielleicht nicht gerade durch Einfallsreichtum aus,
-ich wollte ihn jedoch wegen des Zeitvergleichs mit an Bord haben:
+ich wollte ihn jedoch wegen eines Zeitvergleichs mit an Bord haben:
 
 ###### {#listing_1_class_chaincalculatorclassic_decl}
 
@@ -330,9 +332,9 @@ Result: 60
 ## Lösungsansatz mit regulären Ausdrücken
 
 In manchen Abschnitten weist die letzte Lösung doch gewisse Umständlichkeiten auf, oder,
-um es präziser zu sagen: Da könnte man das eine oder andere auch besser machen.
+um es deutlicher zu sagen: Da könnte man das eine oder andere auch besser machen.
 
-Reguläre Ausdrücke sind das probate Mittel, um Zeichenketten zu zerlegen
+*Reguläre Ausdrücke* sind das probate Mittel, um Zeichenketten zu zerlegen
 und ihre Inhalte zu extrahieren. Mit &ldquo;Inhalten&rdquo; sind hier Operatoren und Operanden gemeint.
 In der vorgestellten Lösung finden Sie den regulären Ausdruck
 
@@ -342,9 +344,10 @@ In der vorgestellten Lösung finden Sie den regulären Ausdruck
 
 vor. Mit seiner Hilfe zerlegen wir eine Kettenrechnung in Operatoren und Operanden.
 
-Das Zerlegen des Ergebnisses in Folge der Anwendung eines regulären Ausdrucks
-lässt sich ganz C++&ndash;konform mit Iteratoren-Objekten bewerkstelligen:
-Es kommen zwei `std::sregex_iterator`-Objekte zum Einsatz.
+Das Zerlegen der Eingabe in Folge der Anwendung eines regulären Ausdrucks
+lässt sich ganz C++&ndash;konform mit Iteratoren-Objekten bewerkstelligen,
+es kommen zwei `std::sregex_iterator`-Objekte zum Einsatz, siehe die Details in [Listing 4].
+Wir werden in [Listing 3] zunächst einen Blick auf die Schnittstelle der Klasse `ChainCalculatorRegex`:
 
 
 ###### {#listing_3_class_chaincalculatorregex_decl}
@@ -543,15 +546,15 @@ Result: 15
 ## Lösungsansatz mit STL
 
 Mit den beiden Klassen `std::vector` und `std::variant` lassen sich interessante
-Anwendungen schreiben. Zum Einen ist ein `std::vector`-Objekt ein homogener Container,
+Anwendungen schreiben. Zum Einen ist ein `std::vector`-Objekt ein homogener STL-Container,
 mit der Klasse `std::variant` kommt hier etwas Farbe ins Spiel.
 
 Also wenn wir einen Container des Typs `std::vector<std::variant<TArgs ...>>`
-betrachten (`TArgs ...` steht für eine Liste von Datentypen),
+betrachten (`TArgs ...` stehe hier für eine Liste von mehreren Datentypen),
 dann schaffen wir es auf diese Weise, Daten unterschiedlichen Typs
 in einem `std::vector`-Objekt abzulegen.
 Der einzige Unterschied zu den bisherigen Lösungsansätzen besteht darin,
-dass wir die Schnittstelle der `calc`-Methode anpassen müssen:
+dass wir die Schnittstelle der `calc`-Methode ändern müssen:
 
 An Stelle von
 
@@ -584,16 +587,16 @@ nun so aus:
 chain.calc(10, '+', 20, '+', 30);
 ```
 
-Sowohl die Operanden als auch die Operatoren sind nun fein säuberlich zu trennen.
+Sowohl die Operanden als auch die Operatoren sind fein säuberlich zu trennen.
 Dies kann man möglicherweise als nachteilig gegenüber der Notation mit einem `std::string`-Objekt ansehen.
-Auf der anderen Seite eröffnen sich jetzt aber viele neue Möglichkeiten, um auf moderen C++&ndash;Sprachmittel
+Auf der anderen Seite eröffnen sich jetzt aber viele neue Möglichkeiten, um auf moderne C++&ndash;Sprachmittel
 zurückgreifen zu können, wie zum Beispiel den Einsatz von *Parameter Packs* oder *generischen Funktionen*.
 
-Der Clou in diesem Lösungsansatz besteht nun darin,
+Der Clou in diesem Lösungsansatz besteht darin,
 dass eine beliebig lange Liste von Operanden und Operatoren
 an der `calc`-Methodenaufrufschnittstelle eingepackt und anschließend
 im Konstruktor eines `std::vector<std::variant<char, int>>`-Objekts
-wieder ausgepackt wird.
+wieder ausgepackt wird!
 
 Um es noch einfacher zu sagen: Ohne jeglichen Programmieraufwand von unserer Seite
 wird eine Liste von Parametern, wie etwa
@@ -608,25 +611,24 @@ in einem `std::vector<std::variant<char, int>>`-Objekt abgelegt:
 ```cpp
 01: void calc(std::integral auto ... args) // pack parameters
 02: {
-03:     static_assert(sizeof ... (args) > 0);
-04:     ...
-05: 
-06:     // unpack parameters
-07:     std::vector<std::variant<char, OperandType>> expression{ args ... };
+03:     ...
+04: 
+05:     // unpack parameters
+06:     std::vector<std::variant<char, int>> expression{ args ... };
 ```
 
-Dieses Objekt durchlaufen wir nun mit einem Aufruf des STL-Algorithmus `std::accumulate`:
-
+Dieses Objekt durchlaufen wir nun mit einem Aufruf des STL-Algorithmus `std::accumulate`, die Details 
+hierzu finden Sie in [Listing 5] vor.
 
 An Hand von Metaprogramming-Techniken aus dem Baukasten der *Type Traits* 
-extrahieren wir (mit Hilfe von `std::is_same`)aus dem `std::vector<std::variant<char, int>>`-Objekt 
-alternierend `char`&ndash; und `int`&ndash;Variablen (Operatoren bzw. Operanden).
+extrahieren wir (mit Hilfe von `std::is_same`) aus dem `std::vector<std::variant<char, int>>`-Objekt 
+alternierend `char`- und `int`-Variablen (Operatoren bzw. Operanden).
 
 Die Struktur eines `std::accumulate`-Funktionsaufrufs eignet sich in geradezu idealerweise dazu,
 die einzelnen Etappen einer Kettenrechnung Schritt für Schritt durchzuführen.
-
-Da wir in der Realisierung dieses Mal generische Methoden verwenden (man könnte auch *Member Function Templates* sagen),
-sind Klassenschnittstelle und -realisierung in einer Datei zusammengefasst:
+Da wir in der Realisierung dieses Mal generische Methoden verwenden
+(man könnte auch *Member Function Templates* sagen),
+sind Klassenschnittstelle und -realisierung in einer einzigen Datei zusammengefasst:
 
 
 ###### {#listing_5_class_chaincalculatorstl_impl}
@@ -778,13 +780,15 @@ Result: 5
 ## Lösungsansatz mit Modern C++
 
 Im letzten Lösungsansatz haben wir ein `std::vector<std::variant<char, int>>`-Objekt
-mit `std::accumulate` traviersiert. Das Stichwort `std::accumulate` sollte uns an die Technologie 
-der zu Grunde liegenden Technik erinnern: Das so genannte *Folding*.
+mit `std::accumulate` traversiert. Das Stichwort `std::accumulate` sollte uns
+an die zu Grunde liegende Technologie erinnern: Wir haben es mit dem so genannten *Folding* zu tun.
 
-Die Kettenrechnung ist zunächst an die `calc`-Methode (wie im letzten Schritt gezeigt)
-in einem *Parameter Pack* zu übergeben. Dieses muss nun natürlich irgendwann entpackt werden,
-dieses Mal im Kontext eines Folding-Ausdrucks
-(es kommt also *kein* `std::vector<std::variant<char, int>>`-Objekt zum Einsatz):
+Die Kettenrechnung wird in der nun folgenden Realisierung zunächst
+an die `calc`-Methode (wie im letzten Schritt gezeigt) in einem *Parameter Pack* übergeben.
+
+Dieses muss innerhalb der `calc`-Methode natürlich irgendwie entpackt werden,
+dieses Mal im Kontext eines *Folding*-Ausdrucks (*folding expression*).
+Es kommt also *kein* `std::vector<std::variant<char, int>>`-Objekt ins Spiel:
 
 ```cpp
 01: void calc(std::integral auto ... args)
@@ -802,25 +806,25 @@ void eval (std::integral auto arg);
 ```
 
 Da sie im zuvor gezeigten *Folding Expression* sowohl für Operatoren als auch Operanden aufgerufen wird,
-muss diese eine Fallunterscheidung durchführen. Es kommen wieder die Techniken des Metaprogramming zum Einsatz:
+muss die `eval`-Methode eine Fallunterscheidung durchführen.
+Es kommen wieder die Techniken des *Metaprogrammings* zum Einsatz:
 
 ```cpp
-01: // private helper method
-02: void eval (std::integral auto arg)
-03: {
-04:     using Type = decltype(arg);
-05: 
-06:     if constexpr (std::is_same<Type, char>::value == true)
-07:     { ...
-08:     }
-09: 
-10:     if constexpr (std::is_integral<Type>::value == true && !std::same_as<Type, char>)
-11:     { ...
-12:     }
-13: }
+01: void eval (std::integral auto arg)
+02: {
+03:     using Type = decltype(arg);
+04: 
+05:     if constexpr (std::is_same<Type, char>::value == true)
+06:     { ...
+07:     }
+08: 
+09:     if constexpr (std::is_integral<Type>::value == true && !std::same_as<Type, char>)
+10:     { ...
+11:     }
+12: }
 ```
 
-Damit sollte die Implementierung in ihren Grundzügen ausreichend vorbereitet sein:
+Damit sollte die in [Listing 6] folgende Implementierung in ihren Grundzügen ausreichend vorbereitet sein:
 
 
 ###### {#listing_6_class_chaincalculatormodern_impl}
@@ -938,10 +942,10 @@ Result: 1023
 ## Ein Zeitvergleich
 
 Ich habe einen kleinen Vergleichstest geschrieben, um die vier vorgestellten Lösungsansätze bzgl.
-ihrer Laufzeit vergleichen zu können. Okay, ich muss zugeben, dass die Realisierungen auch von der Aufrufschnittstelle
+ihrer Laufzeit zu vergleichen. Okay, ich muss zugeben, dass die Realisierungen auch von der Aufrufschnittstelle
 her unterschiedlich sind: Zwei der vorgestellten Lösungen erwarten ein `std::string`-Objekt,
-die anderen beiden ein *Parameter Pack*. In diesem sind die Operatoren und Operanden bereits fein säuberlich aufgeteilt,
-die anderen beiden Verfahren haben den Zusatzaufwand, ein `std::string`-Objekt zu zerlegen.
+die anderen beiden ein *Parameter Pack* als Parameter. In einem *Parameter Pack* sind die Operatoren und Operanden bereits fein säuberlich aufgeteilt,
+die anderen beiden Verfahren haben den Zusatzaufwand, ein `std::string`-Objekt zerlegen zu müssen.
 
 Auf der anderen Seite muss man aber auch konstatieren, dass bei Gebrauchs eines Parameter Packs *viele* Parameter
 an die `calc`-Funktion zu übergeben sind, bei einem `std::string`-Objekt ist es ein einziger Parameter.
@@ -1016,15 +1020,18 @@ Modern:  0.000100000 msecs.
 ```
 
 Wie interpretieren Sie das Ergebnis? Nun gut, dass die Variante mit den regulären Ausdrücken auf dem letzten Platz landet,
-damit hatte ich fast gerechnet. Die klassische Variante schlägt sich dazu gesehen im Vergleich recht gut,
-auch das ist für mich nicht wirklich überraschend. Dass allerdings die Variante mit *Parameter Packs* und *Folding* so
-gut abschneidet, dass überrascht mich schon. Wie sehen die Resultate auf Ihrem Rechner aus?
+damit hatte ich gerechnet. Die klassische Variante schlägt sich dazu gesehen im Vergleich recht gut,
+auch das ist für mich nicht wirklich überraschend. Dass allerdings die Variante mit *Parameter Packs* und *Folding*
+so dermaßen gut abschneidet, finde ich schon interessant.
+
+
+Wie sehen die Resultate auf Ihrem Rechner aus?
 
 # There&lsquo;s more
 
-Tja, eine Idee ist mir da während der Erstellens des Textes gekommen.
-Das `constexpr`-Sprachmittel ist ja der &ldquo;letzte Schrei&rdquo;, um es etwas salopp auszudrücken.
-Hmm, wie sieht es eigentlich damit aus, eine Kettenrechnung vom Übersetzer durchführen zu lassen?
+Tja, eine Idee ist mir da während des Schreibens des Textes gekommen.
+Das `constexpr`-Sprachfeature ist ja der &ldquo;letzte Schrei&rdquo;, um es etwas salopp auszudrücken.
+Hmm, wie sieht es eigentlich damit aus, Kettenrechnungen vom Übersetzer durchführen zu lassen?
 
 Habe ich ihr Interesse geweckt?
 
