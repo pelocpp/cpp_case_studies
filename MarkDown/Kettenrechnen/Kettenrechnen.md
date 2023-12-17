@@ -158,10 +158,92 @@ Operanden müssen wiederum mit einem Zeichen im Bereich von `1` bis `9` anfangen
 Danach kann eine konsekutive Folge weiterer Zeichen im Bereich von `0` bis `9` solange folgen,
 bis in der Zeichenkette ein anderes Zeichen vorliegt (zum Beispiel ein Leerzeichen `_` oder ein Operator).
 
-Weitere Details in der Realisierung der `getNextToken`-Methode 
-entnehen Sie bitte [Listing 2]:
+Eine Klasse `Token`, die bzgl. Operanden einen beliebigen integralen Datentyp verwenden kann,
+haben wir als Klassentemplate definiert ([Listing 2]):
 
-###### {#listing_2_class_chaincalculatorclassic_impl}
+###### {#listing_2_class_token_impl}
+
+```cpp
+01: enum class TokenType { Null, Operator, Operand };
+02: 
+03: enum class OperatorType { NullOp, AddOp, SubOp, MulOp, DivOp };
+04: 
+05: using OperandType = signed long long;
+06: 
+07: template <typename T>
+08: class Token
+09: {
+10: private:
+11:     // member data
+12:     TokenType     m_type;     // classification of token
+13:     OperatorType  m_op;       // classification of operator (TokenType == Operator)
+14:     T             m_value;    // value of constant (TokenType == Operand)
+15: 
+16: public:
+17:     // c'tor(s)
+18:     Token() 
+19:         : m_type{ TokenType::Null }, m_op{ OperatorType::NullOp }, m_value{ T{} } 
+20:     {}
+21: 
+22:     Token(OperatorType op) 
+23:         : m_type{ TokenType::Operator }, m_op{ op }, m_value{ T{} }
+24:     {}
+25: 
+26:     Token(T value)
+27:         : m_type { TokenType::Operand }, m_op{ OperatorType::NullOp }, m_value{ value }
+28:     {}
+29: 
+30:     // getter
+31:     TokenType getTokenType() const { return m_type; }
+32:     OperatorType getOperatorType() const { return m_op; }
+33:     T getValue() const { return m_value; }
+34: };
+35: 
+36: template <typename T>
+37: std::ostream& operator<< (std::ostream& os, const Token<T>& tok)
+38: {
+39:     switch (tok.getTokenType())
+40:     {
+41:     case TokenType::Operand:
+42:         os << tok.getValue();
+43:         break;
+44: 
+45:     case TokenType::Operator:
+46:         switch (tok.getOperatorType())
+47:         {
+48:         case OperatorType::AddOp:
+49:             os << '+';
+50:             break;
+51:         case OperatorType::SubOp:
+52:             os << '-';
+53:             break;
+54:         case OperatorType::MulOp:
+55:             os << '*';
+56:             break;
+57:         case OperatorType::DivOp:
+58:             os << '/';
+59:             break;
+60:         case OperatorType::NullOp:
+61:             break;
+62:         }
+63:         break;
+64: 
+65:     default:
+66:         os << ' ';
+67:         break;
+68:     }
+69: 
+70:     return os;
+71: }
+```
+
+*Listing* 2: Klassentemplate Token<T>: Schnittstelle und Realisierung.
+
+Damit kommen wir zurück zur Klasse `ChainCalculatorClassic`,
+weitere Details in der Realisierung der `getNextToken`-Methode 
+entnehmen Sie bitte [Listing 3]:
+
+###### {#listing_3_class_chaincalculatorclassic_impl}
 
 ```cpp
 001: // c'tors
@@ -310,7 +392,7 @@ entnehen Sie bitte [Listing 2]:
 144: }
 ```
 
-*Listing* 2: Klasse `ChainCalculatorClassic`: Realisierung.
+*Listing* 3: Klasse `ChainCalculatorClassic`: Realisierung.
 
 
 *Beispiel*:
@@ -346,11 +428,11 @@ vor. Mit seiner Hilfe zerlegen wir eine Kettenrechnung in Operatoren und Operand
 
 Das Zerlegen der Eingabe in Folge der Anwendung eines regulären Ausdrucks
 lässt sich ganz C++&ndash;konform mit Iteratoren-Objekten bewerkstelligen,
-es kommen zwei `std::sregex_iterator`-Objekte zum Einsatz, siehe die Details in [Listing 4].
-Wir werden in [Listing 3] zunächst einen Blick auf die Schnittstelle der Klasse `ChainCalculatorRegex`:
+es kommen zwei `std::sregex_iterator`-Objekte zum Einsatz, siehe die Details in [Listing 5].
+Wir werden in [Listing 4] zunächst einen Blick auf die Schnittstelle der Klasse `ChainCalculatorRegex`:
 
 
-###### {#listing_3_class_chaincalculatorregex_decl}
+###### {#listing_4_class_chaincalculatorregex_decl}
 
 ```cpp
 01: class ChainCalculatorRegex
@@ -377,12 +459,12 @@ Wir werden in [Listing 3] zunächst einen Blick auf die Schnittstelle der Klasse
 22: };
 ```
 
-*Listing* 3: Klasse `ChainCalculatorRegex`: Schnittstelle.
+*Listing* 4: Klasse `ChainCalculatorRegex`: Schnittstelle.
 
 
 Wir fahren gleich mit der Realisierung fort:
 
-###### {#listing_4_class_chaincalculatorregex_impl}
+###### {#listing_5_class_chaincalculatorregex_impl}
 
 ```cpp
 001: // c'tors
@@ -524,7 +606,7 @@ Wir fahren gleich mit der Realisierung fort:
 137: }
 ```
 
-*Listing* 4: Klasse `ChainCalculatorRegex`: Realisierung.
+*Listing* 5: Klasse `ChainCalculatorRegex`: Realisierung.
 
 
 *Beispiel*:
@@ -631,7 +713,7 @@ Da wir in der Realisierung dieses Mal generische Methoden verwenden
 sind Klassenschnittstelle und -realisierung in einer einzigen Datei zusammengefasst:
 
 
-###### {#listing_5_class_chaincalculatorstl_impl}
+###### {#listing_6_class_chaincalculatorstl_impl}
 
 ```cpp
 001: class ChainCalculatorSTL
@@ -758,7 +840,7 @@ sind Klassenschnittstelle und -realisierung in einer einzigen Datei zusammengefa
 122: };
 ```
 
-*Listing* 5: Klasse `ChainCalculatorSTL`: Schnittstelle und Realisierung.
+*Listing* 6: Klasse `ChainCalculatorSTL`: Schnittstelle und Realisierung.
 
 
 *Beispiel*:
@@ -824,10 +906,10 @@ Es kommen wieder die Techniken des *Metaprogrammings* zum Einsatz:
 12: }
 ```
 
-Damit sollte die in [Listing 6] folgende Implementierung in ihren Grundzügen ausreichend vorbereitet sein:
+Damit sollte die in [Listing 7] folgende Implementierung in ihren Grundzügen ausreichend vorbereitet sein:
 
 
-###### {#listing_6_class_chaincalculatormodern_impl}
+###### {#listing_7_class_chaincalculatormodern_impl}
 
 ```cpp
 01: class ChainCalculatorModern
@@ -921,7 +1003,7 @@ Damit sollte die in [Listing 6] folgende Implementierung in ihren Grundzügen au
 89: };
 ```
 
-*Listing* 6: Klasse `ChainCalculatorModern`: Schnittstelle und Realisierung.
+*Listing* 7: Klasse `ChainCalculatorModern`: Schnittstelle und Realisierung.
 
 
 *Beispiel*:
@@ -1045,12 +1127,11 @@ Spielverderber
 <!-- Links Definitions -->
 
 [Listing 1]: #listing_1_class_chaincalculatorclassic_decl}
-[Listing 2]: #listing_2_class_chaincalculatorclassic_impl}
-[Listing 3]: #listing_3_class_chaincalculatorregex_decl}
-[Listing 4]: #listing_4_class_chaincalculatorregex_impl}
-[Listing 5]: #listing_5_class_chaincalculatorstl_impl}
-[Listing 6]: #listing_6_class_chaincalculatormodern_impl}
+[Listing 2]: #listing_2_class_token_impl}
+[Listing 3]: #listing_3_class_chaincalculatorclassic_impl}
+[Listing 4]: #listing_4_class_chaincalculatorregex_decl}
+[Listing 5]: #listing_5_class_chaincalculatorregex_impl}
+[Listing 6]: #listing_6_class_chaincalculatorstl_impl}
+[Listing 7]: #listing_7_class_chaincalculatormodern_impl}
 
 <!-- End-of-File -->
-
-

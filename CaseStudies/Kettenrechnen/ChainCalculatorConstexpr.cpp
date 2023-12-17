@@ -1,94 +1,44 @@
 // =====================================================================================
-// ChainCalculator_Constexpr.cpp
+// ChainCalculatorConstexpr.cpp
 // =====================================================================================
 
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <chrono>
+#include "ChainCalculatorConstexpr.h"
 
-namespace ChainArithmetic_XXX {
+namespace ChainArithmetic_Constexpr {
 
-    enum class TokenType { Null, Operator, Operand };
-
-    enum class OperatorType { NullOp, AddOp, SubOp, MulOp, DivOp };
-
-    using OperandType = signed long long;
-
-    class Token
-    {
-    private:
-        // member data
-        TokenType     m_type;     // classification of token
-        OperatorType  m_op;       // classification of operator (TokenType == Operator)
-        OperandType   m_value;    // value of constant (TokenType == Operand)
-
-    public:
-        // c'tor(s)
-        constexpr Token()
-            : m_type{ TokenType::Null }, m_op{ OperatorType::NullOp }, m_value{ OperandType{} }
-        {}
-
-        constexpr Token(OperatorType op)
-            : m_type{ TokenType::Operator }, m_op{ op }, m_value{ OperandType{} }
-        {}
-
-        constexpr Token(OperandType value)
-            : m_type{ TokenType::Operand }, m_op{ OperatorType::NullOp }, m_value{ value }
-        {}
-
-        // getter
-        constexpr TokenType getTokenType() const { return m_type; }
-        constexpr OperatorType getOperatorType() const { return m_op; }
-        constexpr OperandType getValue() const { return m_value; }
-    };
-
-    class ChainCalculatorConstexpr
-    {
-    private:
-       //mutable OperandType  m_result;
-       // mutable OperatorType m_nextOperator;
-        //mutable std::string::const_iterator m_begin;
-        //mutable std::string::const_iterator m_end;
-
-        // mutable const char* m_pos;
-
-    public:
-        // c'tors
-        constexpr ChainCalculatorConstexpr();
-
-        // public interface
-        constexpr OperandType calc(const char* expression) const;
-
-    private:
-        // private helper methods
-        constexpr bool isDigit(const char) const;
-        constexpr Token getNextToken(const char** ) const;
-    };
-
-    // c'tors
-    constexpr ChainCalculatorConstexpr::ChainCalculatorConstexpr() 
-        // m_nextOperator{ OperatorType::NullOp },
-    //m_begin{},
-    //m_end{}
+    // c'tor(s)
+    constexpr Token::Token()
+        : m_type{ TokenType::Null },
+        m_op{ OperatorType::NullOp },
+        m_value{ OperandType{} }
     {}
 
+    constexpr Token::Token(OperatorType op)
+        : m_type{ TokenType::Operator },
+        m_op{ op }, 
+        m_value{ OperandType{} }
+    {}
+
+    constexpr Token::Token(OperandType value)
+        : m_type{ TokenType::Operand },
+        m_op{ OperatorType::NullOp },
+        m_value{ value }
+    {}
+
+    // getter
+    constexpr TokenType Token::getTokenType() const { return m_type; }
+    constexpr OperatorType Token::getOperatorType() const { return m_op; }
+    constexpr OperandType Token::getValue() const { return m_value; }
+
     // public interface
-    constexpr OperandType ChainCalculatorConstexpr::calc(const char* expression) const
+    constexpr OperandType ChainCalculatorConstexpr::calc(const char* expression)
     {
         // reset calculator
         OperandType result{};
         OperatorType nextOperator{ OperatorType::NullOp };
 
-        const char* pos;
-
-        result = 0;
-        nextOperator = OperatorType::NullOp;
-
         // setup scanner
-        pos = expression;
-        //m_begin = expression.begin();
-        //m_end = expression.end();
+        const char* pos = expression;
 
         // need state variable to control correct syntax of chain expression
         auto m_expectedOperator{ false };
@@ -149,12 +99,12 @@ namespace ChainArithmetic_XXX {
         return result;
     }
 
-    constexpr bool ChainCalculatorConstexpr::isDigit(const char ch) const {
+    constexpr bool ChainCalculatorConstexpr::isDigit(const char ch) {
 
         return (ch >= '0' && ch <= '9') ? true : false;
     }
 
-    constexpr Token ChainCalculatorConstexpr::getNextToken(const char** pos) const
+    constexpr Token ChainCalculatorConstexpr::getNextToken(const char** pos)
     {
         Token tok{};
 
@@ -224,36 +174,40 @@ namespace ChainArithmetic_XXX {
     }
 }
 
-void test_chain_arithmetic_XX()
+void test_chain_arithmetic_20()
 {
-    using namespace ChainArithmetic_XXX;
+    using namespace ChainArithmetic_Constexpr;
 
     constexpr Token tok1{ OperatorType::AddOp };
     constexpr Token tok2{ 123 };
 
-
     constexpr ChainCalculatorConstexpr chain;
 
-    chain.calc("10 + 20 + 30");
-    
-    constexpr OperandType result = chain.calc("1 + 3 * 5 - 2 * 2 - 8 / 2");
-  //  constexpr OperandType result = chain.calc("1 + 30");
+    constexpr OperandType result1 = ChainCalculatorConstexpr::calc(
+        "10 + 20 + 30"
+    );
+    static_assert(result1 == 60);
 
-    std::cout << "Result: " << result << std::endl;
+    constexpr OperandType result2 = ChainCalculatorConstexpr::calc(
+        "1 + 3 * 5 - 2 * 2 - 8 / 2"
+    );
+    static_assert(result2 == 14);
 
-    //chain.calc("1 + 3 * 5 - 2 * 2 - 8 / 2");
-    //result = chain.getResult();
-    //std::cout << "Result: " << result << std::endl;
+    constexpr OperandType result3 = ChainCalculatorConstexpr::calc(
+        "10 + 20 -  5 * 3 / 5"
+    );
+    static_assert(result3 == 15);
 
-    //chain.calc("10 + 20 -  5 * 3 / 5");  // 10 + 20 - 5 * 3 / 5 == 15
-    //result = chain.getResult();
-    //std::cout << "Result: " << result << std::endl;
+    constexpr OperandType result4 = ChainCalculatorConstexpr::calc(
+        "10 - 5 * 3 + 35 / 10"
+    );
+    static_assert(result4 == 5);
 
-    //chain.calc("10 - 5 * 3 + 35 / 10");   //   10 - 5 * 3 + 35 / 10 == 5
-    //result = chain.getResult();
-    //std::cout << "Result: " << result << std::endl;
+    constexpr OperandType result5 = ChainCalculatorConstexpr::calc(
+        "2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 - 1"
+    );
+    static_assert(result5 == 1023);
 }
-
 
 // =====================================================================================
 // End-of-File
