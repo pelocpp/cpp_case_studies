@@ -27,7 +27,9 @@ namespace ChainArithmetic_Constexpr {
 
     // getter
     constexpr TokenType Token::getTokenType() const { return m_type; }
+
     constexpr OperatorType Token::getOperatorType() const { return m_op; }
+
     constexpr OperandType Token::getValue() const { return m_value; }
 
     // public interface

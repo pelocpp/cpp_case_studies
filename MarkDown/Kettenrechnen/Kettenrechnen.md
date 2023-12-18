@@ -4,7 +4,6 @@
 
 Mit dem Kettenrechnen kehren wir zu den Ursprüngen unserer Grundschulzeit zurück.
 Für diejenigen unter Ihnen, die dieses Thema aus Ihrem Gedächtnis verdrängt haben:
-
 Jede Kettenrechnung beginnt mit einer normalen Rechenaufgabe (z.B. &ldquo;1 + 3&rdquo;).
 Das Resultat muss im Gedächtnis behalten werden,
 denn es folgt eine weitere Operation (z.B. &ldquo;* 5&rdquo;),
@@ -41,8 +40,8 @@ Lösungsansätze vor, die generische Funktionen, heterogene STL-Container, regul
 # Einführung
 
 Wir klären noch einige Details zum Kettenrechnen vorab:
-Ja, wir machen die Beobachtung, dass die vier Grundrechenarten ohne Operatorenvorrang
-auszuwerten sind, das heißt also, dass die Regel &ldquo;Punkt vor Strich&rdquo; nicht gilt.
+Wir halten fest, dass die vier Grundrechenarten ohne Operatorenvorrang
+auszuwerten sind. Die Regel &ldquo;Punkt vor Strich&rdquo; gilt also nicht.
 Auch gibt es keine Klammern. Sie würden ja die Reihenfolge der Auswertung von Rechnungen
 beeinflussen.
 
@@ -60,7 +59,7 @@ Objekten des Typs `std::string` Platz findet.
 Am folgenden Beispiel können Sie erkennen, wie das Programm ablaufen sollte:
 
 ```cpp
-01: void test()
+01: void main()
 02: {
 03:     ChainCalculatorClassic chain{};
 04:     chain.calc("1 + 3 * 5 - 2 * 2 - 8 / 2");
@@ -80,13 +79,12 @@ Es kommt eine Klasse `ChainCalculatorClassic` zum Einsatz,
 eine Methode `calc` kümmert sich um das Kettenrechnen und
 das Ergebnis kann durch die *getter*-Methode `getResult` abgeholt werden.
 
-Jetzt wird es ein wenig interessanter: Wir stellen im Lösungsteil
-gleich vier unterschiedliche Realisierungsansätze vor:
+Wir stellen im Lösungsteil gleich vier unterschiedliche Realisierungsansätze vor:
 
   * Klassisches C++ &ndash; im wesentlich unter Verwendung der Klassen `std::string` und `std::string::const_iterator`.
   * Einsatz von regulären Ausdrücken.
   * Einsatz von Hilfsmitteln aus der STL (STL-Klassen `std::vector` und `std::variant`).
-  * Einsatz von generischen Methoden und Parameter Packs.
+  * Einsatz von generischen Methoden und *Parameter Packs*.
 
 Das Ganze garnieren wir zum Abschluss mit einer Messung der Programmlaufzeiten.
 
@@ -94,7 +92,7 @@ Natürlich würde zur Lösung der gestellten Aufgabe auch ein Realisierungsansat
 Es war aber auch meine Neugierde geweckt, einen Blick auf die Laufzeiten
 der unterschiedlichen Vorgehensweisen in der Realisierung zu werfen.
 
-Und ich konnte auf diese Weise eine Brücke von der klassischen Vorgehensweise bis hin zu Modern C++ Konzepten schlagen.
+Und wir können auf diese Weise eine Brücke von der klassischen Vorgehensweise bis hin zu Modern C++ Konzepten schlagen.
   
 # Lösung
 
@@ -145,21 +143,23 @@ ich wollte ihn jedoch wegen eines Zeitvergleichs mit an Bord haben:
 *Listing* 1: Klasse `ChainCalculatorClassic`: Schnittstelle.
 
 
-Die Realisierung der Methode `getNextToken` weist Ähnlichkeiten zu entsprechenden Methode
+Die Realisierung der Methode `getNextToken` weist Ähnlichkeiten zu entsprechenden Methoden
 in der lexikalischen Analyse eines programmiersprachlichen Quelltextes auf.
 
-Signifikante Stellen in der Analyse der Eingabe-Zeichenkette sind die Anfangszeichen von Operatoren
-und Operatoren. Operatoren sind einfach zu erkennen, da sie durch ein einzelnes Zeichen `+`, `-`, `*` und `/` definiert sind.
+Signifikante Positionen in der Analyse der Eingabe-Zeichenkette sind die Anfangszeichen von Operatoren
+und Operanden. Operatoren sind einfach zu erkennen, da sie durch ein einzelnes Zeichen `+`, `-`, `*` und `/` definiert sind.
 In anderen Programmiersprachen gibt es Operatoren wie etwa `++` oder `!=`,
 also Operatoren bestehend aus mehreren Zeichen. Mit dieser Problematik sind wir 
 bei unseren Rechenketten nicht konfrontiert.
 
-Operanden müssen wiederum mit einem Zeichen im Bereich von `1` bis `9` anfangen.
+Operanden wiederum müssen mit einem Zeichen im Bereich von `1` bis `9` anfangen.
 Danach kann eine konsekutive Folge weiterer Zeichen im Bereich von `0` bis `9` solange folgen,
 bis in der Zeichenkette ein anderes Zeichen vorliegt (zum Beispiel ein Leerzeichen `_` oder ein Operator).
+Natürlich dürfen es insgesamt nur so viele Ziffern sein, dass es nicht zu einem Überlauf
+in der Zahlendarstellung kommt.
 
-Eine Klasse `Token`, die bzgl. Operanden einen beliebigen integralen Datentyp verwenden kann,
-haben wir als Klassentemplate definiert ([Listing 2]):
+Eine Klasse `Token`, die als Klassentemplate einen beliebigen integralen Datentyp
+für den Wert eines Operanden verwenden kann, stellen wir in [Listing 2] vor:
 
 ###### {#listing_2_class_token_impl}
 
@@ -175,9 +175,9 @@ haben wir als Klassentemplate definiert ([Listing 2]):
 09: {
 10: private:
 11:     // member data
-12:     TokenType     m_type;     // classification of token
-13:     OperatorType  m_op;       // classification of operator (TokenType == Operator)
-14:     T             m_value;    // value of constant (TokenType == Operand)
+12:     TokenType     m_type;   // classification of token
+13:     OperatorType  m_op;     // classification of operator (TokenType == Operator)
+14:     T             m_value;  // value of constant (TokenType == Operand)
 15: 
 16: public:
 17:     // c'tor(s)
@@ -198,43 +198,6 @@ haben wir als Klassentemplate definiert ([Listing 2]):
 32:     OperatorType getOperatorType() const { return m_op; }
 33:     T getValue() const { return m_value; }
 34: };
-35: 
-36: template <typename T>
-37: std::ostream& operator<< (std::ostream& os, const Token<T>& tok)
-38: {
-39:     switch (tok.getTokenType())
-40:     {
-41:     case TokenType::Operand:
-42:         os << tok.getValue();
-43:         break;
-44: 
-45:     case TokenType::Operator:
-46:         switch (tok.getOperatorType())
-47:         {
-48:         case OperatorType::AddOp:
-49:             os << '+';
-50:             break;
-51:         case OperatorType::SubOp:
-52:             os << '-';
-53:             break;
-54:         case OperatorType::MulOp:
-55:             os << '*';
-56:             break;
-57:         case OperatorType::DivOp:
-58:             os << '/';
-59:             break;
-60:         case OperatorType::NullOp:
-61:             break;
-62:         }
-63:         break;
-64: 
-65:     default:
-66:         os << ' ';
-67:         break;
-68:     }
-69: 
-70:     return os;
-71: }
 ```
 
 *Listing* 2: Klassentemplate Token<T>: Schnittstelle und Realisierung.
@@ -462,7 +425,7 @@ Wir werden in [Listing 4] zunächst einen Blick auf die Schnittstelle der Klasse
 *Listing* 4: Klasse `ChainCalculatorRegex`: Schnittstelle.
 
 
-Wir fahren gleich mit der Realisierung fort:
+Wir fahren gleich mit der Realisierung der Klasse `ChainCalculatorRegex` in [Listing 5] fort:
 
 ###### {#listing_5_class_chaincalculatorregex_impl}
 
@@ -700,7 +663,7 @@ in einem `std::vector<std::variant<char, int>>`-Objekt abgelegt:
 ```
 
 Dieses Objekt durchlaufen wir nun mit einem Aufruf des STL-Algorithmus `std::accumulate`, die Details 
-hierzu finden Sie in [Listing 5] vor.
+hierzu finden Sie in [Listing 6] vor.
 
 An Hand von Metaprogramming-Techniken aus dem Baukasten der *Type Traits* 
 extrahieren wir (mit Hilfe von `std::is_same`) aus dem `std::vector<std::variant<char, int>>`-Objekt 
@@ -1115,12 +1078,8 @@ Tja, eine Idee ist mir da während des Schreibens des Textes gekommen.
 Das `constexpr`-Sprachfeature ist ja der &ldquo;letzte Schrei&rdquo;, um es etwas salopp auszudrücken.
 Hmm, wie sieht es eigentlich damit aus, Kettenrechnungen vom Übersetzer durchführen zu lassen?
 
-Habe ich ihr Interesse geweckt?
-
-
-constexpr ....
-
-Spielverderber 
+Habe ich ihr Interesse geweckt? Im Lösungsteil der Aufgabe finden Sie eine `constexpr`-Realisierung
+für Kettenrechnungen vor!
 
 <br/>
 
