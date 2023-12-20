@@ -516,7 +516,7 @@ Konzepte der *funktionalen Programmierung* in C++ formulieren.
 
 Ich will damit nicht zum Ausdruck bringen, dass &ldquo;Modern C++&ldquo; auf einer Ebene
 wie zum Beispiel *Haskell* oder *F#* steht.
-Aber das eine oder andere zentrale Konzepte der funktionalen Programmierung &ndash; wie zum Beispiel
+Aber das eine oder andere zentrale Konzept der funktionalen Programmierung &ndash; wie zum Beispiel
 *Currying* und *Funktionen höherer Ordnung* &ndash; können wir nun auch mit C++ Hilfsmitteln schreiben.
 
 Was verstehen wir hierunter eigentlich:
@@ -596,7 +596,7 @@ Wir sprachen schon über den Rückgabetyp von `genericIncrementer`.
 Der Gebrauch des `auto`&ndash;Schlüsselworts verleitet zu leichter lesbarem Quellcode &ndash;
 und sollte von einem versierten C++ Entwickler auch bevorzugt werden!
 
-Ist &ndash; wiederum vor dem Hintergrund der leichter Lesbarkeit des Quellcodes diskutiert &ndash;
+Ist &ndash; wiederum vor dem Hintergrund der leichteren Lesbarkeit des Quellcodes diskutiert &ndash;
 der tatsächlich vorliegende Datentyp jedoch nicht einfach eruierbar,
 sollte oder könnte man auf `auto` auch verzichten und den tatsächlich vorliegenden Datentyp verwenden.
 Ein Leser Ihres Quellcodes wird Ihnen sicherlich dafür dankbar sein. Aber entscheiden Sie doch selbst:

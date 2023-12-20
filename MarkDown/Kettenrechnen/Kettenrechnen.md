@@ -11,7 +11,7 @@ welche jeweils zum vorhergehenden Resultat gerechnet werden muss.
 Das neue Zwischenresultat merkt man sich ebenfalls wieder für die nächste Operation usw. usw.
 So verlängert sich die &ldquo;Rechenkette&rdquo; immer weiter.
 
-Im Beispiel `1 + 3 * 5 - 2 * 2 - 8 / 2` sollte man 14 als Endergebnis erhalten.
+Im Beispiel der Kettenrechnung `1 + 3 * 5 - 2 * 2 - 8 / 2` sollte man 14 als Endergebnis erhalten.
 
 Entwickeln Sie eine Funktion `calc`, die eine Kettenrechnung als Parameter übergeben bekommt
 und ihr Resultat zurückliefert:
