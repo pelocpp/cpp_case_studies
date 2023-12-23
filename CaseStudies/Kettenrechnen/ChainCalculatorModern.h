@@ -31,7 +31,7 @@ namespace ChainArithmetic_Modern {
         auto getResult() const { return m_result; }
 
     public:
-        void calc(std::integral auto ... args)
+        void calc(std::integral auto&& ... args)
         {
             static_assert(sizeof ... (args) > 0);
 
@@ -46,7 +46,7 @@ namespace ChainArithmetic_Modern {
 
             // last argument should be a operand
             if (m_expectedOperator == false) {
-                throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+                throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
             }
         }
 
@@ -60,7 +60,7 @@ namespace ChainArithmetic_Modern {
             {
                 // check parsing state
                 if (m_expectedOperator == false) {
-                    throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+                    throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
                 }
 
                 // store next operator
@@ -74,7 +74,7 @@ namespace ChainArithmetic_Modern {
             {
                 // check parsing state
                 if (m_expectedOperator == true) {
-                    throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operand");
+                    throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operand");
                 }
 
                 switch (m_nextOperator)

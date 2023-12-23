@@ -1,23 +1,20 @@
 <!-- Kettenrechnen.md -->
 
-# Kettenrechnen
-
 Mit dem Kettenrechnen kehren wir zu den Ursprüngen unserer Grundschulzeit zurück.
 Für diejenigen unter Ihnen, die dieses Thema aus Ihrem Gedächtnis verdrängt haben:
 Jede Kettenrechnung beginnt mit einer normalen Rechenaufgabe (z.B. &ldquo;1 + 3&rdquo;).
 Das Resultat muss im Gedächtnis behalten werden,
 denn es folgt eine weitere Operation (z.B. &ldquo;* 5&rdquo;),
-welche jeweils zum vorhergehenden Resultat gerechnet werden muss.
+welche jeweils zum vorhergehenden Resultat gerechnet wird.
 Das neue Zwischenresultat merkt man sich ebenfalls wieder für die nächste Operation usw. usw.
 So verlängert sich die &ldquo;Rechenkette&rdquo; immer weiter.
-
 Im Beispiel der Kettenrechnung `1 + 3 * 5 - 2 * 2 - 8 / 2` sollte man 14 als Endergebnis erhalten.
 
 Entwickeln Sie eine Funktion `calc`, die eine Kettenrechnung als Parameter übergeben bekommt
 und ihr Resultat zurückliefert:
 
 ```cpp
-int calc (std::string chain);
+int calc (const std::string& chain);
 ```
 
 Offensichtlich führen viele Wege zum Ziel einer ansprechenden Realisierung. Im Lösungsteil finden Sie
@@ -87,7 +84,6 @@ Wir stellen im Lösungsteil gleich vier unterschiedliche Realisierungsansätze v
   * Einsatz von generischen Methoden und *Parameter Packs*.
 
 Das Ganze garnieren wir zum Abschluss mit einer Messung der Programmlaufzeiten.
-
 Natürlich würde zur Lösung der gestellten Aufgabe auch ein Realisierungsansatz genügen.
 Es war aber auch meine Neugierde geweckt, einen Blick auf die Laufzeiten
 der unterschiedlichen Vorgehensweisen in der Realisierung zu werfen.
@@ -108,7 +104,7 @@ es werden Operanden und Operatoren gewissermaßen &ldquo;manuell&rdquo; aus der 
 und zeitgleich die Kettenrechnung durchgeführt.
 
 Mit einer recht simplen Fehlerüberprüfung wird darauf geachtet, dass Operanden und Operatoren
-abwechselnd auftreten, am Anfang und Ende sollte ebenfalls ein Operand vorhanden sein.
+abwechselnd auftreten, am Anfang und Ende der Rechenkette sollte ebenfalls ein Operand vorhanden sein.
 
 Der klassische Lösungsansatz zeichnet sich vielleicht nicht gerade durch Einfallsreichtum aus,
 ich wollte ihn jedoch wegen eines Zeitvergleichs mit an Bord haben:
@@ -200,7 +196,7 @@ für den Wert eines Operanden verwenden kann, stellen wir in [Listing 2] vor:
 34: };
 ```
 
-*Listing* 2: Klassentemplate Token<T>: Schnittstelle und Realisierung.
+*Listing* 2: Klassentemplate `Token<T>`: Schnittstelle und Realisierung.
 
 Damit kommen wir zurück zur Klasse `ChainCalculatorClassic`,
 weitere Details in der Realisierung der `getNextToken`-Methode 
@@ -238,7 +234,7 @@ entnehmen Sie bitte [Listing 3]:
 027:         if (tok.getTokenType() == TokenType::Operator)
 028:         {
 029:             if (m_expectedOperator == false) {
-030:                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+030:                 throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
 031:             }
 032: 
 033:             // store next operator
@@ -250,7 +246,7 @@ entnehmen Sie bitte [Listing 3]:
 039:         else if (tok.getTokenType() == TokenType::Operand)
 040:         {
 041:             if (m_expectedOperator == true) {
-042:                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operand");
+042:                 throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operand");
 043:             }
 044: 
 045:             OperandType value{ tok.getValue() };
@@ -281,7 +277,7 @@ entnehmen Sie bitte [Listing 3]:
 070: 
 071:     // last argument should be a operand
 072:     if (m_expectedOperator == false) {
-073:         throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+073:         throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
 074:     }
 075: }
 076: 
@@ -378,9 +374,9 @@ Result: 60
 
 In manchen Abschnitten weist die letzte Lösung doch gewisse Umständlichkeiten auf, oder,
 um es deutlicher zu sagen: Da könnte man das eine oder andere auch besser machen.
-
 *Reguläre Ausdrücke* sind das probate Mittel, um Zeichenketten zu zerlegen
 und ihre Inhalte zu extrahieren. Mit &ldquo;Inhalten&rdquo; sind hier Operatoren und Operanden gemeint.
+
 In der vorgestellten Lösung finden Sie den regulären Ausdruck
 
 ```
@@ -392,7 +388,7 @@ vor. Mit seiner Hilfe zerlegen wir eine Kettenrechnung in Operatoren und Operand
 Das Zerlegen der Eingabe in Folge der Anwendung eines regulären Ausdrucks
 lässt sich ganz C++&ndash;konform mit Iteratoren-Objekten bewerkstelligen,
 es kommen zwei `std::sregex_iterator`-Objekte zum Einsatz, siehe die Details in [Listing 5].
-Wir werden in [Listing 4] zunächst einen Blick auf die Schnittstelle der Klasse `ChainCalculatorRegex`:
+Wir werfen in [Listing 4] zunächst einen Blick auf die Schnittstelle der Klasse `ChainCalculatorRegex`:
 
 
 ###### {#listing_4_class_chaincalculatorregex_decl}
@@ -466,7 +462,7 @@ Wir fahren gleich mit der Realisierung der Klasse `ChainCalculatorRegex` in [Lis
 034:         if (tok.getTokenType() == TokenType::Operator)
 035:         {
 036:             if (m_expectedOperator == false) {
-037:                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+037:                 throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
 038:             }
 039: 
 040:             // store next operator
@@ -478,7 +474,7 @@ Wir fahren gleich mit der Realisierung der Klasse `ChainCalculatorRegex` in [Lis
 046:         else if (tok.getTokenType() == TokenType::Operand)
 047:         {
 048:             if (m_expectedOperator == true) {
-049:                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operand");
+049:                 throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operand");
 050:             }
 051: 
 052:             OperandType value{ tok.getValue() };
@@ -511,7 +507,7 @@ Wir fahren gleich mit der Realisierung der Klasse `ChainCalculatorRegex` in [Lis
 079: 
 080:     // last argument should be a operand
 081:     if (m_expectedOperator == false) {
-082:         throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+082:         throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
 083:     }
 084: }
 085: 
@@ -591,8 +587,8 @@ Result: 15
 ## Lösungsansatz mit STL
 
 Mit den beiden Klassen `std::vector` und `std::variant` lassen sich interessante
-Anwendungen schreiben. Zum Einen ist ein `std::vector`-Objekt ein homogener STL-Container,
-mit der Klasse `std::variant` kommt hier etwas Farbe ins Spiel.
+Anwendungen schreiben. Prinzipiell ist ein `std::vector`-Objekt ein homogener STL-Container,
+mit der Klasse `std::variant` kommt hier jedoch etwas Farbe ins Spiel.
 
 Also wenn wir einen Container des Typs `std::vector<std::variant<TArgs ...>>`
 betrachten (`TArgs ...` stehe hier für eine Liste von mehreren Datentypen),
@@ -611,18 +607,25 @@ benötigen wir nun folgende Signatur:
 
 
 ```cpp
-void calc(std::integral auto ... args)
+void calc(std::integral auto&& ... args)
 ```
 
-Hier sind gleich zwei Beobachtungen interessant: Mit `auto ... args` ist ein so genanntes
+Hier sind gleich zwei Beobachtungen interessant: Mit `auto&& ... args` ist ein so genanntes
 *Parameter Pack* beim Aufruf bereitzustellen, also eine beliebig lange Liste von Parametern,
 die sogar unterschiedlichen Typs sein dürfen.
 In einer zusätzlichen Annotation &ndash; genauer gesagt: Einschränkung auf Basis eines C++ *Concepts* &ndash;
 unterwerfen wir die möglichen Aktualparameter dem Konzept `std::integral`.
 
-In einer Kettenrechnung schlagen wir hier zwei Fliegen mit einer Klappe:
+Beim genauen Betrachten der `calc`-Schnittstelle erkennen Sie, dass wir die Formulierung `auto&&` gewählt haben.
+`auto&&` steht für eine *Universal Referenz* eines Elements im Kontext von generischem Code (hier: generische Funktion).
+Vereinfacht formuliert bedeutet dies nicht weiter als:
+
+  * Wenn `auto&&` mit einem *LValue* initialisiert wird, verhält sich die Referenz wie eine *LValue* Referenz.
+  * Wenn `auto&&` mit einem *RValue* initialisiert wird, verhält sich die Referenz wie eine *RValue* Referenz.
+
+In einer Kettenrechnung schlagen wir mit Parametern unterschiedlichen Typs gleich zwei Fliegen mit einer Klappe:
 Die Operatoren sind vom Typ `char`, zumindest in der aktuellen Festlegung.
-Die Operanden wiederum sind vom Typ `int`, also sowohl Operatoren und Operanden lassen sich durch
+Die Operanden wiederum sind vom Typ `int`. Also sowohl Operatoren und Operanden lassen sich durch
 das `std::integral`&ndash;Requirement gut erfassen.
 
 Im Gegensatz zu den bisherigen Lösungen sieht ein Aufruf der `calc`-Methode
@@ -643,7 +646,7 @@ an der `calc`-Methodenaufrufschnittstelle eingepackt und anschließend
 im Konstruktor eines `std::vector<std::variant<char, int>>`-Objekts
 wieder ausgepackt wird!
 
-Um es noch einfacher zu sagen: Ohne jeglichen Programmieraufwand von unserer Seite
+Um es noch einfacher zu sagen: Ohne jeglichen Programmieraufwand
 wird eine Liste von Parametern, wie etwa
 
 ```
@@ -654,7 +657,7 @@ in einem `std::vector<std::variant<char, int>>`-Objekt abgelegt:
 
 
 ```cpp
-01: void calc(std::integral auto ... args) // pack parameters
+01: void calc(std::integral auto&& ... args) // pack parameters
 02: {
 03:     ...
 04: 
@@ -696,7 +699,7 @@ sind Klassenschnittstelle und -realisierung in einer einzigen Datei zusammengefa
 015:     auto getResult() const { return m_result; }
 016: 
 017:     // public interface
-018:     void calc(std::integral auto ... args)
+018:     void calc(std::integral auto&& ... args)
 019:     {
 020:         static_assert(sizeof ... (args) > 0);
 021: 
@@ -732,7 +735,7 @@ sind Klassenschnittstelle und -realisierung in einer einzigen Datei zusammengefa
 051:                         using ElemTypeWithoutReferenceAndConst =
 052:                             typename std::remove_const<ElemTypeWithoutReference>::type;
 053: 
-054:                         if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, char>::value == true)
+054:                         if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, char>::value)
 055:                         {
 056:                             // store next operator
 057:                             switch (value)
@@ -758,11 +761,11 @@ sind Klassenschnittstelle und -realisierung in einer einzigen Datei zusammengefa
 077:                             expectedOperator = !expectedOperator;
 078:                         }
 079: 
-080:                         if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, OperandType>::value == true)
+080:                         if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, OperandType>::value)
 081:                         {
 082:                             // check parsing state
 083:                             if (expectedOperator == true) {
-084:                                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operand");
+084:                                 throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operand");
 085:                             }
 086: 
 087:                             switch (nextOperator)
@@ -797,7 +800,7 @@ sind Klassenschnittstelle und -realisierung in einer einzigen Datei zusammengefa
 116: 
 117:         // last argument should be a operand
 118:         if (expectedOperator == false) {
-119:             throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+119:             throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
 120:         }
 121:     }
 122: };
@@ -830,13 +833,12 @@ an die zu Grunde liegende Technologie erinnern: Wir haben es mit dem so genannte
 
 Die Kettenrechnung wird in der nun folgenden Realisierung zunächst
 an die `calc`-Methode (wie im letzten Schritt gezeigt) in einem *Parameter Pack* übergeben.
-
-Dieses muss innerhalb der `calc`-Methode natürlich irgendwie entpackt werden,
-dieses Mal im Kontext eines *Folding*-Ausdrucks (*folding expression*).
+Es muss innerhalb der `calc`-Methode natürlich irgendwie entpackt werden,
+dieses Mal machen wir das im Kontext eines *Folding*-Ausdrucks (*Folding Expression*).
 Es kommt also *kein* `std::vector<std::variant<char, int>>`-Objekt ins Spiel:
 
 ```cpp
-01: void calc(std::integral auto ... args)
+01: void calc(std::integral auto&& ... args)
 02: {
 03:     ...
 04: 
@@ -894,7 +896,7 @@ Damit sollte die in [Listing 7] folgende Implementierung in ihren Grundzügen au
 17:     auto getResult() const { return m_result; }
 18: 
 19: public:
-20:     void calc(std::integral auto ... args)
+20:     void calc(std::integral auto&& ... args)
 21:     {
 22:         static_assert(sizeof ... (args) > 0);
 23: 
@@ -909,7 +911,7 @@ Damit sollte die in [Listing 7] folgende Implementierung in ihren Grundzügen au
 32: 
 33:         // last argument should be a operand
 34:         if (m_expectedOperator == false) {
-35:             throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+35:             throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
 36:         }
 37:     }
 38: 
@@ -923,7 +925,7 @@ Damit sollte die in [Listing 7] folgende Implementierung in ihren Grundzügen au
 46:         {
 47:             // check parsing state
 48:             if (m_expectedOperator == false) {
-49:                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+49:                 throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
 50:             }
 51: 
 52:             // store next operator
@@ -937,7 +939,7 @@ Damit sollte die in [Listing 7] folgende Implementierung in ihren Grundzügen au
 60:         {
 61:             // check parsing state
 62:             if (m_expectedOperator == true) {
-63:                 throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operand");
+63:                 throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operand");
 64:             }
 65: 
 66:             switch (m_nextOperator)
@@ -972,7 +974,7 @@ Damit sollte die in [Listing 7] folgende Implementierung in ihren Grundzügen au
 *Beispiel*:
 
 ```cpp
-ChainArithmetic_Modern::ChainCalculatorModern chainModern{};
+ChainCalculatorModern chainModern{};
 chainModern.calc(2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '*', 2, '-', 1);
 auto result = chainModern.getResult();
 std::cout << "Result: " << result << std::endl;
@@ -987,7 +989,7 @@ Result: 1023
 ## Ein Zeitvergleich
 
 Ich habe einen kleinen Vergleichstest geschrieben, um die vier vorgestellten Lösungsansätze bzgl.
-ihrer Laufzeit zu vergleichen. Okay, ich muss zugeben, dass die Realisierungen auch von der Aufrufschnittstelle
+ihrer Laufzeiten zu vergleichen. Okay, ich muss zugeben, dass die Realisierungen auch von der Aufrufschnittstelle
 her unterschiedlich sind: Zwei der vorgestellten Lösungen erwarten ein `std::string`-Objekt,
 die anderen beiden ein *Parameter Pack* als Parameter. In einem *Parameter Pack* sind die Operatoren und Operanden bereits fein säuberlich aufgeteilt,
 die anderen beiden Verfahren haben den Zusatzaufwand, ein `std::string`-Objekt zerlegen zu müssen.
@@ -1000,7 +1002,7 @@ Damit auf in den Wettkampf: Unser Vergleichsprogramm sieht so aus:
 ```cpp
 01: void test_chain_arithmetic_10()
 02: {
-03:     constexpr int MaxIteration = 100'000;
+03:     constexpr int MaxIteration = 100000;
 04: 
 05:     {
 06:         ChainArithmetic_Classic::ChainCalculatorClassic chain{};
@@ -1065,17 +1067,16 @@ Modern:  0.000100000 msecs.
 ```
 
 Wie interpretieren Sie das Ergebnis? Nun gut, dass die Variante mit den regulären Ausdrücken auf dem letzten Platz landet,
-damit hatte ich gerechnet. Die klassische Variante schlägt sich dazu gesehen im Vergleich recht gut,
-auch das ist für mich nicht wirklich überraschend. Dass allerdings die Variante mit *Parameter Packs* und *Folding*
-so dermaßen gut abschneidet, finde ich schon interessant.
-
+kommt für mich nicht überraschend. Die klassische Variante schlägt sich dazu gesehen im Vergleich recht gut,
+auch damit hatte ich gerechnet. Dass allerdings die Variante mit *Parameter Packs* und *Folding*
+so dermaßen gut abschneidet, finde ich schon eine recht interessante Beobachtung!
 
 Wie sehen die Resultate auf Ihrem Rechner aus?
 
 # There&lsquo;s more
 
 Tja, eine Idee ist mir da während des Schreibens des Textes gekommen.
-Das `constexpr`-Sprachfeature ist ja der &ldquo;letzte Schrei&rdquo;, um es etwas salopp auszudrücken.
+Das `constexpr`-Sprachfeature ist ja zur Zeit der &ldquo;letzte Schrei&rdquo;, um es etwas salopp auszudrücken.
 Hmm, wie sieht es eigentlich damit aus, Kettenrechnungen vom Übersetzer durchführen zu lassen?
 
 Habe ich ihr Interesse geweckt? Im Lösungsteil der Aufgabe finden Sie eine `constexpr`-Realisierung
@@ -1085,12 +1086,12 @@ für Kettenrechnungen vor!
 
 <!-- Links Definitions -->
 
-[Listing 1]: #listing_1_class_chaincalculatorclassic_decl}
-[Listing 2]: #listing_2_class_token_impl}
-[Listing 3]: #listing_3_class_chaincalculatorclassic_impl}
-[Listing 4]: #listing_4_class_chaincalculatorregex_decl}
-[Listing 5]: #listing_5_class_chaincalculatorregex_impl}
-[Listing 6]: #listing_6_class_chaincalculatorstl_impl}
-[Listing 7]: #listing_7_class_chaincalculatormodern_impl}
+[Listing 1]: #listing_1_class_chaincalculatorclassic_decl
+[Listing 2]: #listing_2_class_token_impl
+[Listing 3]: #listing_3_class_chaincalculatorclassic_impl
+[Listing 4]: #listing_4_class_chaincalculatorregex_decl
+[Listing 5]: #listing_5_class_chaincalculatorregex_impl
+[Listing 6]: #listing_6_class_chaincalculatorstl_impl
+[Listing 7]: #listing_7_class_chaincalculatormodern_impl
 
 <!-- End-of-File -->

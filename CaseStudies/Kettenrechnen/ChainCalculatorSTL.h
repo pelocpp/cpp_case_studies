@@ -29,7 +29,7 @@ namespace ChainArithmetic_STL {
         auto getResult() const { return m_result; }
 
         // public interface
-        void calc(std::integral auto ... args)
+        void calc(std::integral auto&& ... args)
         {
             static_assert(sizeof ... (args) > 0);
 
@@ -65,7 +65,7 @@ namespace ChainArithmetic_STL {
                             using ElemTypeWithoutReferenceAndConst =
                                 typename std::remove_const<ElemTypeWithoutReference>::type;
 
-                            if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, char>::value == true)
+                            if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, char>::value)
                             {
                                 // store next operator
                                 switch (value)
@@ -91,11 +91,11 @@ namespace ChainArithmetic_STL {
                                 expectedOperator = !expectedOperator;
                             }
 
-                            if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, OperandType>::value == true)
+                            if constexpr (std::is_same<ElemTypeWithoutReferenceAndConst, OperandType>::value)
                             {
                                 // check parsing state
                                 if (expectedOperator == true) {
-                                    throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operand");
+                                    throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operand");
                                 }
 
                                 switch (nextOperator)
@@ -130,7 +130,7 @@ namespace ChainArithmetic_STL {
 
             // last argument should be a operand
             if (expectedOperator == false) {
-                throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+                throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
             }
         }
     };

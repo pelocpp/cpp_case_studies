@@ -52,7 +52,7 @@ namespace ChainArithmetic_Constexpr {
             if (tok.getTokenType() == TokenType::Operator)
             {
                 if (m_expectedOperator == false) {
-                    throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+                    throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
                 }
 
                 // store next operator
@@ -64,7 +64,7 @@ namespace ChainArithmetic_Constexpr {
             else if (tok.getTokenType() == TokenType::Operand)
             {
                 if (m_expectedOperator == true) {
-                    throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operand");
+                    throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operand");
                 }
 
                 OperandType value{ tok.getValue() };
@@ -95,7 +95,7 @@ namespace ChainArithmetic_Constexpr {
 
         // last argument should be a operand
         if (m_expectedOperator == false) {
-            throw std::runtime_error("Wrong Syntax in expression: Expected Arithmetic Operator");
+            throw std::runtime_error("Wrong Syntax: Expected Arithmetic Operator");
         }
 
         return result;
