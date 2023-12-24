@@ -243,6 +243,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kettenrechnen", "Kettenrech
 		MarkDown\Kettenrechnen\Kettenrechnen.md = MarkDown\Kettenrechnen\Kettenrechnen.md
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PythagoreanTriangles", "CaseStudies\PythagoreanTriangles\PythagoreanTriangles.vcxproj", "{3F80F249-5D11-477E-BA69-A394E1E1D9E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -443,6 +445,14 @@ Global
 		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Release|x64.Build.0 = Release|x64
 		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Release|x86.ActiveCfg = Release|Win32
 		{3312EB48-FE56-4A9C-AB82-091A7C3BFAE3}.Release|x86.Build.0 = Release|Win32
+		{3F80F249-5D11-477E-BA69-A394E1E1D9E8}.Debug|x64.ActiveCfg = Debug|x64
+		{3F80F249-5D11-477E-BA69-A394E1E1D9E8}.Debug|x64.Build.0 = Debug|x64
+		{3F80F249-5D11-477E-BA69-A394E1E1D9E8}.Debug|x86.ActiveCfg = Debug|Win32
+		{3F80F249-5D11-477E-BA69-A394E1E1D9E8}.Debug|x86.Build.0 = Debug|Win32
+		{3F80F249-5D11-477E-BA69-A394E1E1D9E8}.Release|x64.ActiveCfg = Release|x64
+		{3F80F249-5D11-477E-BA69-A394E1E1D9E8}.Release|x64.Build.0 = Release|x64
+		{3F80F249-5D11-477E-BA69-A394E1E1D9E8}.Release|x86.ActiveCfg = Release|Win32
+		{3F80F249-5D11-477E-BA69-A394E1E1D9E8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
