@@ -35,5 +35,8 @@
     <ClInclude Include="ThreadsafeStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StackProxy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

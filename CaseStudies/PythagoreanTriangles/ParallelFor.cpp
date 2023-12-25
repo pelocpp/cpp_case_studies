@@ -15,8 +15,6 @@ void callableWrapper(Callable callable, size_t start, size_t end) {
     if (Verbose) {
         std::stringstream ss{};
         ss << "TID:  " << std::this_thread::get_id() << "\t[" << start << " - " << end << "]\n";
-
-        // Logger::log(std::cout, "TID: ", std::this_thread::get_id());
         std::cout << ss.str();
     }
 
@@ -35,7 +33,7 @@ void parallel_for(
 
 
     // JUST FOR TESTING
-    //numThreads = 4;
+    // numThreads = 4;
 
 
     size_t numElements = to - from + 1;

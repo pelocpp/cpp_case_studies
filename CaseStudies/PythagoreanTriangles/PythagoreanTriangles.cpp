@@ -151,12 +151,6 @@ public:
         }
     }
 };
-//
-//std::string s1{ std::format("Total: {} pythagorean triples\n", m_total) };
-//std::string s2{ std::format("Found: {} triangles at circumference {}\n",
-//    m_maxNumber, m_maxCircumference) };
-
-
 
 void test_pythagorean_triples_01 ()
 {
@@ -172,11 +166,8 @@ void test_pythagorean_triples_01 ()
     {
         ScopedTimer watch{};
 
-        // calculate sequential
         // calculator.calculateSeq(1000);
-
-        // calculate concurrent
-        calculator.calculatePar(1000, true);
+        calculator.calculatePar(1000, false);
     }
 
     std::cout << calculator.toString();

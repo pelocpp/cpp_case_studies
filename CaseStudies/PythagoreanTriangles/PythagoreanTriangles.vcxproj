@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="ParallelFor.h" />
     <ClInclude Include="ScopedTimer.h" />
+    <ClInclude Include="StackProxy.h" />
     <ClInclude Include="ThreadsafeStack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
