@@ -9,17 +9,18 @@
 Und wieder steht etwas Schulmathematik auf dem Programm, dieses Mal geht es um &bdquo;rechtwinklige Dreiecke&rdquo;
 Für derartige Rechtecke gibt es den Satz von Pythagoras, er trifft eine Aussage für die drei Seitenlängen eines solchen Dreiecks.
 
-Wir wollen im Folgenden nur solche Rechtecke betrachten, deren Seitenlängen ganzzahlig sind. 
+Wir wollen im Folgenden nur solche Rechtecke betrachten, deren Seitenlängen ganzzahlig sind.
+
 Schreiben Sie ein C++&ndash;Programm, das für folgende Fragestellung eine Antwort findet:
 
 Für welchen Umfang *p* mit *p* <= 2000 ist die Anzahl der verschiedenen rechwinkligen Dreiecke
 mit ganzzahligen Seitenlängen *a*, *b* und *c* am größten?
 
 
-Hinweis: Die Aufgabenstellung stammt aus dem Repository &ldquo;Project Euler&rdquo;:
+Hinweis: Die Aufgabenstellung stammt aus dem Repository &bdquo;Project Euler&rdquo;:
 *Project Euler* ist eine englischsprachige Website. Sie enthält eine Reihe von Problemstellungen,
 die mithilfe von Mathematik und Programmierung gelöst werden können. Die Aufgabenstellung dieser Fallstudie
-finden Sie unter &ldquo;Problem 39&rdquo;.
+finden Sie unter &bdquo;Problem 39&rdquo;.
 
 e sich sicherlich auch kürzer und direkter erzielen, nur würden wir dabei keinen Lerneffekt erreichen.
 
@@ -89,7 +90,7 @@ Diese Eigenschaft kommt vielen Anwendungen zu Gute, wie wir beispielsweise an ei
 Würde ein Inkrementalgeber eine herkömmliche Binärzahl (im Zweier-Komplement) als Position liefern,
 also etwa `0101` für 5 und `0110` für 6, dann gäbe es ein Problem,
 wenn nicht alle Bits absolut gleichzeitig ihre Wertigkeit ändern.
-In diesem Fall könnten &ldquo;Phantomwerte&rdquo; wie `0100` (4) oder `0111` (7) auftreten.
+In diesem Fall könnten &bdquo;Phantomwerte&rdquo; wie `0100` (4) oder `0111` (7) auftreten.
 Der Gray-Code hat dieses Problem nicht, da sich benachbarte Werte nur in einem Bit unterscheiden.
 In [Abbildung 1] wird diese Eigenschaft am Beispiel des 4-Bit-Gray-Codes demonstriert:
 
@@ -112,7 +113,7 @@ In [Abbildung 2] finden Sie die sukzessive Erzeugung des 1-, 2- und 3-Bit-Gray-C
 
 *Abbildung* 2: Bildung des Gray-Codes durch Spiegelung und Bitergänzung.
 
-Erstellen Sie eine &ldquo;Modern C++&rdquo;&ndash;Anwendung, die möglichst einfallsreich alle Gray-Codes
+Erstellen Sie eine &bdquo;Modern C++&rdquo;&ndash;Anwendung, die möglichst einfallsreich alle Gray-Codes
 für ein beliebiges *n* berechnet. Orientieren Sie sich in Ihrer Realisierung an den Details von [Tabelle 1]:
 
 ###### {#tabelle_1_class_graycodescalculator}

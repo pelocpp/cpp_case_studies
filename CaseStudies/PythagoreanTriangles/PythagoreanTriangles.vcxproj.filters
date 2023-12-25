@@ -15,14 +15,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PythagoreanTriangles.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ParallelFor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PythagoreanTriple.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PythagoreanTripleCalculator.h">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -32,10 +35,7 @@
     <ClInclude Include="ScopedTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ThreadsafeStack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StackProxy.h">
+    <ClInclude Include="PythagoreanTriple.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

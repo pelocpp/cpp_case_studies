@@ -130,13 +130,13 @@
   <ItemGroup>
     <ClCompile Include="ParallelFor.cpp" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="PythagoreanTriangles.cpp" />
+    <ClCompile Include="PythagoreanTripleCalculator.h" />
+    <ClCompile Include="PythagoreanTriple.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ParallelFor.h" />
+    <ClInclude Include="PythagoreanTriple.h" />
     <ClInclude Include="ScopedTimer.h" />
-    <ClInclude Include="StackProxy.h" />
-    <ClInclude Include="ThreadsafeStack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

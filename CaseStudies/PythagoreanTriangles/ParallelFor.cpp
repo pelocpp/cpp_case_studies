@@ -30,16 +30,9 @@ void parallel_for(
     // calculate number of threads to use
     size_t numThreadsHint{ std::thread::hardware_concurrency() };
     size_t numThreads{ (numThreadsHint == 0) ? 8 : numThreadsHint };
-
-
-    // JUST FOR TESTING
-    // numThreads = 4;
-
-
     size_t numElements = to - from + 1;
     size_t batchSize{ numElements / numThreads };
     size_t batchRemainder{ numElements % numThreads };
-
 
     // allocate vector of uninitialized thread objects
     std::vector<std::thread> threads;

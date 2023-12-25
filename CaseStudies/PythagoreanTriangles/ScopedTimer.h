@@ -7,8 +7,6 @@
 #include <iostream>
 #include <chrono>
 
-#pragma once
-
 class ScopedTimer
 {
 private:
