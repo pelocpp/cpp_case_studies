@@ -245,6 +245,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kettenrechnen", "Kettenrech
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PythagoreanTriangles", "CaseStudies\PythagoreanTriangles\PythagoreanTriangles.vcxproj", "{3F80F249-5D11-477E-BA69-A394E1E1D9E8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PythagoreanTriangles", "PythagoreanTriangles", "{DBA94A0D-EC4B-4F08-A68F-158BA5AFD1D3}"
+	ProjectSection(SolutionItems) = preProject
+		MarkDown\PythagoreanTriangles\PythagoreanTriangles.md = MarkDown\PythagoreanTriangles\PythagoreanTriangles.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -480,6 +485,7 @@ Global
 		{D513C91D-9276-4E42-A48A-A6F62AD27750} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{2DDFFDA7-2653-429D-A673-C39608F1C998} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{623D5C7D-D84D-4D90-89F3-8B4083CA308A} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{DBA94A0D-EC4B-4F08-A68F-158BA5AFD1D3} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}
