@@ -148,22 +148,10 @@ public:
     std::string toString()
     {
         std::stringstream ss{};
-
         ss << "Total: " << m_store.size() << " pythagorean triples\n";
-        ss << "Found: " << m_store.count() << " triangles at circumference " << m_store.circumference();
-
-
-
-      //  ss << "TID:  " << std::this_thread::get_id() << "\t[" << start << " - " << end << "]\n";
-       // std::cout << ss.str();
+        ss << "Found: " << m_store.count() 
+            << " triangles at circumference " << m_store.circumference();
         return ss.str();
-
-
-        //std::string s1 { std::format("Total: {} pythagorean triples\n", m_store.size()) };
-        //std::string s2 { std::format("Found: {} triangles at circumference {}\n",
-        //    m_store.count(), m_store.circumference()) };
-
-        //return s1 + s2;
     }
 
     // helper method
@@ -175,9 +163,7 @@ public:
             return;
 
         PythagoreanTriple triple{};
-
         size_t lastCircumference{};
-
         while (! stack.empty()) {
 
             triple = stack.top();

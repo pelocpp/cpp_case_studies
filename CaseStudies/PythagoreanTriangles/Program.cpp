@@ -10,15 +10,15 @@ static void test_pythagorean_triples_01()
 {
     std::cout << "Main: " << std::this_thread::get_id() << std::endl;
 
-    constexpr size_t Max = 5000;
+    constexpr size_t Max = 2000;
 
-    //PythagoreanTripleCalculator seqCalc;
-    //{
-    //    ScopedTimer watch{};
-    //    seqCalc.calculateSeq(Max);
-    //}
-    //std::cout << seqCalc.toString() << std::endl;
-    //std::cout << "Done." << std::endl << std::endl;
+    PythagoreanTripleCalculator seqCalc;
+    {
+        ScopedTimer watch{};
+        seqCalc.calculateSeq(Max);
+    }
+    std::cout << seqCalc.toString() << std::endl;
+    std::cout << "Done." << std::endl << std::endl;
 
     using ThreadsafeStack = ThreadsafeDataStore<PythagoreanTriple>;
     PythagoreanTripleCalculator<ThreadsafeStack> parCalc;
