@@ -10,6 +10,11 @@ vor.
 
 ### Aktueller Stand:
 
+
+### Dezember 2023
+
+  * [Kettenrechnen](/CaseStudies/Kettenrechnen)
+
 ### Mai 2023
 
   * [Variadisch + Generisch = Generisch + Rekursion: Wie bitte?](/CaseStudies/VariadicGenericFoldingAndMore)

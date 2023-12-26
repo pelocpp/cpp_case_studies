@@ -15,6 +15,7 @@
 #include "ParallelFor.h"
 #include "PythagoreanTriple.h"
 
+
 template <typename T>
 class SimpleDataStore
 {
@@ -30,7 +31,7 @@ public:
     size_t count() const { return m_count; }
     size_t circumference() const { return m_circumference; }
 
-    void add (size_t count, size_t circ, size_t a, size_t b, size_t c) {
+    void add(size_t count, size_t a, size_t b, size_t c) {
 
         // store triple
         m_triples.emplace(a, b, c);
@@ -39,7 +40,7 @@ public:
         if (count > m_count)
         {
             m_count = count;
-            m_circumference = circ;
+            m_circumference = a + b + c;
         }
     }
 
@@ -65,7 +66,7 @@ public:
     size_t count() const { return m_count; }
     size_t circumference() const { return m_circumference; }
 
-    void add (size_t count, size_t circ, size_t a, size_t b, size_t c) {
+    void add (size_t count, size_t a, size_t b, size_t c) {
 
         const std::lock_guard<std::mutex> guard(m_mutex);
 
@@ -76,7 +77,7 @@ public:
         if (count > m_count)
         {
             m_count = count;
-            m_circumference = circ;
+            m_circumference = a + b + c;
         }
     }
 
@@ -138,7 +139,7 @@ private:
 
                     // found a pythagorean triple
                     count++;
-                    m_store.add (count, circ, a, b, c);
+                    m_store.add(count, a, b, c);
                 }
             }
         }
@@ -164,6 +165,7 @@ public:
 
         PythagoreanTriple triple{};
         size_t lastCircumference{};
+
         while (! stack.empty()) {
 
             triple = stack.top();

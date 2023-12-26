@@ -618,7 +618,7 @@ unterwerfen wir die möglichen Aktualparameter dem Konzept `std::integral`.
 
 Beim genauen Betrachten der `calc`-Schnittstelle erkennen Sie, dass wir die Formulierung `auto&&` gewählt haben.
 `auto&&` steht für eine *Universal Referenz* eines Elements im Kontext von generischem Code (hier: generische Funktion).
-Vereinfacht formuliert bedeutet dies nicht weiter als:
+Vereinfacht formuliert bedeutet dies nichts weiter als:
 
   * Wenn `auto&&` mit einem *LValue* initialisiert wird, verhält sich die Referenz wie eine *LValue* Referenz.
   * Wenn `auto&&` mit einem *RValue* initialisiert wird, verhält sich die Referenz wie eine *RValue* Referenz.

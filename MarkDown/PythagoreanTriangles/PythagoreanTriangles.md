@@ -2,12 +2,6 @@
 
 # Rechtwinklige Dreiecke und `parallel_for`
 
-// TODO: Geht das was mit genrate .... oder siehe auch das Collatz - Pronlem ....
-
-// TODO: Das Triple machen wir doch mit einem std::tuple
-
-// TODO : Ab 23 gibt es eine thread sichere Ausgabe !!!
-
 Und wieder steht etwas Schulmathematik auf dem Programm, dieses Mal geht es um &bdquo;rechtwinklige Dreiecke&rdquo;.
 Für derartige Rechtecke gibt es den Satz des Pythagoras,
 er fällt eine Aussage für die Seitenlängen eines solchen Dreiecks.
@@ -46,7 +40,7 @@ Als Kathete werden die beiden kürzeren Seiten in einem rechtwinkligen Dreieck b
 
 
 
-###### {#abbildung_1_gray_codes_four_bits}
+###### {#abbildung_1_right_triangle}
 
 <img src="RightTriangle.png" width="400">
 
@@ -150,7 +144,7 @@ Die Realisierung der Konstuktoren und der beiden Methoden `circumference` und `t
 Damit sind wir schon bei der Berechnung der Dreiecke angekommen.
 In einem sehr einfachen Ansatz ziehen wir drei geeignete `for`-Wiederholungsanweisungen auf,
 um am Ende mit den beiden Bedingungen, die sich durch den &bdquo;Satz das Pythagoras&rdquo; und den &bdquo;Umfang des Dreiecks&rdquo; ergeben,
-Treffer zu suchen. Eine grobe Skizze eine Klasse `PythagoreanTripleCalculator`
+Treffer zu suchen. Eine grobe Skizze einer Klasse `PythagoreanTripleCalculator`
 zeigt [Listing 3] auf:
 
 
@@ -190,7 +184,7 @@ zeigt [Listing 3] auf:
 30: 
 31:                     // found a pythagorean triple
 32:                     count++;
-33:                     m_store.add (count, circ, a, b, c);
+33:                     m_store.add (count, a, b, c);
 34:                 }
 35:             }
 36:         }
@@ -201,15 +195,15 @@ zeigt [Listing 3] auf:
 *Listing* 3: Klasse `PythagoreanTripleCalculator`: Grobe Skizzierung.
 
 In den Zeilen 25 bis 36 von [Listing 3] erkennen wir den *Brute-Force*&ndash;Ansatz in der Berechnung
-der geeigneten Dreiecke. Wenngleich diese Vorhegehensweise nicht recht elegant aussehen man,
+der geeigneten Dreiecke. Wenngleich diese Vorgehensweise nicht recht elegant aussehen mag,
 bietet sie jedoch eine Option für den Einstieg in eine parallele Berechnung.
 
-Die äußerste `for`-Wiederholungsanweisung nimmt sich mit dem Wert einer Dreiecksseite *a* an.
-Diese Wiederholungen für alle möglichen Wert von *a* könnte man auch gleichzeitig (also *quasi*- oder *echt*-parallel) abarbeiten.
+Die äußerste `for`-Wiederholungsanweisung nimmt sich dem Wert einer Dreiecksseite *a* an.
+Diese Wiederholungen für alle möglichen Werte von *a* könnte man auch gleichzeitig (also *quasi*- oder *echt*-parallel) abarbeiten.
 Damit sind wir bei der Realisierung einer `parallel_for`-Funktion angekommen.
 
 Wenn wir im C++&ndash;Baukasten die Klasse `std::thread` als auch `std::function` herausgreifen,
-lässt sich damit ein `parallel_for` vergleichweise realisieren ([Listing 4]):
+lässt sich damit ein `parallel_for` vergleichweise umsetzen ([Listing 4]):
 
 ###### {#listing_4_function_parallel_for}
 
@@ -283,8 +277,323 @@ lässt sich damit ein `parallel_for` vergleichweise realisieren ([Listing 4]):
 *Listing* 4: Funktion `parallel_for`.
 
 Aauf einige markante Stellen von [Listing 4] sollten wir näher eingehen.
+In den Zeilen 38 bis 40 wird ein Thread-Objekt erzeugt. Thread-Objekte sind nicht kopierbar, aber verschiebbar.
+Um sie in einem `std::vector<std::thread>`-Container aufheben zu können, verschieben wir die deshalb mit
+`std::move` in den Container `threads`. Sinn und Zweck dieser Vorgehensweise ist, dass wir am Ende
+der `parallel_for`-Funktion auf das Ende aller erzeugten Threads warten wollen. Dies tun wir in
+den Zeilen 58 bis 62. In Zeile 61 wird demonstriert, wie man bei Gebrauch des `std::for_each`-Algorithmus
+auf alle Objekte des traviersierten Containers die Aufruf der `std::thread::join`-Methode anwenden kann.
 
-WEITER: Thread erzeugen ....
+Die Threads innerhalb der `parallel_for`-Funktion werden im ersten Parameter mit der `callableWrapper`-Funktion versorgt.
+Diese Funktion finden wir in den Zeilen 3 bis 12 vor. Im Prinzip hätte man sich den Umweg über
+diese Funktion auch sparen können. Ich wollte aber zu Testzwecken bestimmte Trace-Ausgaben
+pro gestartetem Thread ergänzend hinzufügen. Etwas formaler betrachtet könnte man sagen,
+dass hier das *Intercepting Filter Pattern* zum Zuge kommt. Dieses beschäftigt sich mit
+der Vor- und Nachbearbeitung von Methodenaufrufen.
+
+Die im wesentlichen parallel auszuführende Funktion wird an `parallel_for` im Parameter `callable` übergegeben.
+Dieser Parameter ist so definiert:
+
+```cpp
+using Callable = std::function<void(size_t start, size_t end)>;
+```
+
+Damit kommt die Klasse `std::function` zum Vorschein. Sie dient dem Zweck, alles,
+was man in C++ &bdquo;aufrufen&rdquo; kann, zu kapseln. `std::function`-Objekte sind also Allzweck-Hüllenobjekte
+für polymorphe Funktionen.
+
+Die Schnittstelle des `std::function`-Objekts muss zwei Parameter `start` und `end`
+des Typs `size_t` entgegennehmen können. Darunter verbirgt sich die Idee,
+dass bei einer `for`-Schleife mit beispielsweise 100.000 Wiederholungen nicht 100.000 Threads erzeugt werden.
+Die Vorgehensweise ist eine andere: Zunächst wird mit einem Aufruf von `std::thread::hardware_concurrency` eruiert,
+welche tatsächliche, maximale Anzahl von Threads ganz konkret auf dem aktuellem Rechner anbieten würden.
+Hiervon ausgehend wird der Bereich der `for`-Schleife nun in Untergruppen von Wiederholungen aufgeteilt.
+Jede Untergruppe soll dabei von einem Thread ausgeführt werden. Dies wiederum hat zur Folge,
+dass der Parameter `callable` nicht nur die auszuführende Funktion an sich beschreibt,
+sondern auch eine bestimmte Anzahl von Ausführungen in einem Teilbereich der gesamten `for`-Schleife durchführt.
+
+Und noch ein letzter Hinweis zu den Zeilen 52 und 53 von [Listing 4]:
+Für die letzte Untergruppe spendieren wir keinen eigenen Thread, Funktion `callable` (bzw. `callableWrapper`)
+wird synchron im aktuellen Thread ausgeführt. Dies kann man als eine minimale Optimierung ansehen,
+um auch den Hauptthread der Anwendung in die Rechenarbeit mit einzubeziehen.
+
+Damit kommen wir noch einmal auf die Skizzierung einer Funktion `calculate` zurück,
+wie sie von `parallel_for` ausgeführt werden soll:
+
+```cpp
+01: void calculate(size_t circ)
+02: {
+03:     for (size_t count{}, a{ 1 }; a <= circ; ++ a) {
+04: 
+05:         for (size_t b{ a }; b <= circ; ++ b) {
+06: 
+07:             if (size_t c{ circ - a - b }; a * a + b * b == c * c) {
+08: 
+09:                 // found a pythagorean triple
+10:                 count++;
+11:                 m_store.add (count, circ, a, b, c);
+12:             }
+13:         }
+14:     }
+15: }
+```
+
+Der Parameter `circ` (Abkürzung von `circumference`) steht für einen konkreten Umfang des Dreiecks.
+Die zwei geschachtelten `for`-Wiederholungsschleifen als auch die innerste `if`-Anweisung sind
+selbsterklärend, nur: Wie sieht es mit dem Abspeichern eines gefundenen Dreiecks in der Container-Variablen
+`m_store` aus? Richtig erkannt: Die Funktion `calculate` kann bzw. soll im Kontext unterschiedlicher Threads
+ausgeführt werden! Alle Parameter und lokalen Variablen (`circ`, `count`, `a`, `b`, `c`) liegen am Stack,
+sie sind vor dem Zugriff unterschiedlicher Threads sicher!
+Einzig und allein das Containerobjekt `m_store` wird von allen Threads gemeinsam genutzt.
+
+Auf der anderen Seite möchte ich das ganze Programm auch mit nur einem Thread ausführen können,
+jedwede Synchronisationsmechanismen wären damit überflüssig und würden die Laufzeit der Programms nur
+verschlechtern.
+
+Ich habe diese Beobachtungen zum Anlass genommen, das *Policy-Based Design* Entwurfsmuster einzusetzen.
+&bdquo;Policies&rdquo; stellen Schnittstellen für konfigurierbare Belange einer Klasse dar.
+
+Die Konfigurierbarkeit der Klasse `PythagoreanTripleCalculator` wird nun so vorgenommen,
+dass der Datenspeicher `m_store` nur über einen Template-Parameter (hier: `TStore`) beschrieben wird,
+also nicht fest kodiert ist. Es werden zwei Realisierungen einer Datenspeicherklasse vorgenommen
+(threadsicher und nicht threadsicher), um für alle Belange einer `PythagoreanTripleCalculator`-Klasse
+laufzeitoptimal gerüstet zu sein:
+
+###### {#listing_5_policy_based_design_classes}
+
+```cpp
+01: template <typename T>
+02: class SimpleDataStore
+03: {
+04: private:
+05:     size_t m_count;
+06:     size_t m_circumference;
+07:     std::stack<T> m_triples;
+08: 
+09: public:
+10:     SimpleDataStore() : m_count{}, m_circumference{} {}
+11: 
+12:     size_t size() const { return m_triples.size(); }
+13:     size_t count() const { return m_count; }
+14:     size_t circumference() const { return m_circumference; }
+15: 
+16:     void add(size_t count, size_t a, size_t b, size_t c) {
+17: 
+18:         // store triple
+19:         m_triples.emplace(a, b, c);
+20: 
+21:         // update search indices
+22:         if (count > m_count)
+23:         {
+24:             m_count = count;
+25:             m_circumference = a + b + c;
+26:         }
+27:     }
+28: 
+29:     std::stack<T> data() {
+30:         return m_triples;
+31:     }
+32: };
+33: 
+34: template <typename T>
+35: class ThreadsafeDataStore
+36: {
+37: private:
+38:     size_t m_count;
+39:     size_t m_circumference;
+40:     std::stack<T> m_triples;
+41: 
+42:     mutable std::mutex m_mutex;
+43: 
+44: public:
+45:     ThreadsafeDataStore() : m_count{}, m_circumference{} {}
+46: 
+47:     size_t size() const { return m_triples.size(); }
+48:     size_t count() const { return m_count; }
+49:     size_t circumference() const { return m_circumference; }
+50: 
+51:     void add (size_t count, size_t a, size_t b, size_t c) {
+52: 
+53:         const std::lock_guard<std::mutex> guard(m_mutex);
+54: 
+55:         // store triple
+56:         m_triples.emplace(a, b, c);
+57: 
+58:         // update search indices
+59:         if (count > m_count)
+60:         {
+61:             m_count = count;
+62:             m_circumference = a + b + c;
+63:         }
+64:     }
+65: 
+66:     std::stack<T> data() {
+67:         const std::lock_guard<std::mutex> guard(m_mutex);
+68:         return m_triples;
+69:     }
+70: };
+```
+
+*Listing* 5: Zwei Klassen `SimpleDataStore` und `ThreadsafeDataStore`.
+
+Klasse `SimpleDataStore` aus [Listing 5] besitzt eine Methode `add` zum Hinzufügen eines Dreiecks.
+Neben den Seitenlängen des Dreiecks wird auch eine Zählervariable `count` an den Datenspeicher
+mit übergeben, um die Anzahl der gefundenen Dreiecke festzuhalten.
+
+Die Klasse `ThreadsafeDataStore` besitzt dieselbe öffentliche Schnittstelle wir Klasse `SimpleDataStore`,
+nur mit dem Unterschied, dass ihre Methoden threadsicher sind! Zu diesem Zweck
+werden ein `std::mutex`-Objekt und eine Hüllenklasse `std::lock_guard` eingesetzt.
+
+Zum Abschluss dieser Erläuterungen stellen wir die Klasse `PythagoreanTripleCalculator` 
+noch einmal im Ganzen vor. Beachten Sie beim Template-Parameter `TStore`:
+Es findet hierbei um eine Anwendung des *Policy-Based Design* Entwurfsmusters.
+In der Voreinstellung wird der Kalkulator mit einer nicht-threadsicheren Datenspeicherklasse
+(hier: `SimpleDataStore<PythagoreanTriple>`) ausgestattet.
+Dies kann aber durch Verwendung der `ThreadsafeDataStore<PythagoreanTriple>`-Klasse geändert werden:
+
+###### {#listing_6_class_pythagorean_triple_calculator}
+
+```cpp
+01: template <typename TStore = SimpleDataStore<PythagoreanTriple>>
+02: class PythagoreanTripleCalculator
+03: {
+04: private:
+05:     TStore m_store;
+06: 
+07: public:
+08:     // c'tor
+09:     PythagoreanTripleCalculator() = default;
+10: 
+11:     // getter
+12:     size_t triplesCount() { return m_store.size(); }
+13: 
+14:     // public sequential interface
+15:     void calculateSeq(size_t max)
+16:     {
+17:         for (size_t circ{ 3 }; circ < max; ++circ) {
+18:             calculate(circ);
+19:         }
+20:     }
+21: 
+22:     // public concurrent interface
+23:     void calculatePar(size_t maximum, bool useThreads = true)
+24:     {
+25:         parallel_for(
+26:             3,
+27:             maximum,
+28:             [this](size_t start, size_t end) {
+29:                 calculateRange(start, end);
+30:             },
+31:             useThreads
+32:         );
+33:     }
+34: 
+35: private:
+36:     void calculateRange(size_t start, size_t end)
+37:     {
+38:         for (size_t i{ start }; i != end; ++i) {
+39:             calculate(i);
+40:         }
+41:     }
+42: 
+43:     void calculate(size_t circ)
+44:     {
+45:         for (size_t count{}, a{ 1 }; a <= circ; ++ a) {
+46: 
+47:             for (size_t b{ a }; b <= circ; ++ b) {
+48: 
+49:                 if (size_t c{ circ - a - b }; a * a + b * b == c * c) {
+50: 
+51:                     // found a pythagorean triple
+52:                     count++;
+53:                     m_store.add(count, a, b, c);
+54:                 }
+55:             }
+56:         }
+57:     }
+58: 
+59: public:
+60:     std::string toString()
+61:     {
+62:         std::stringstream ss{};
+63:         ss << "Total: " << m_store.size() << " pythagorean triples\n";
+64:         ss << "Found: " << m_store.count() 
+65:             << " triangles at circumference " << m_store.circumference();
+66:         return ss.str();
+67:     }
+68: };
+```
+
+*Listing* 6: Vollständige Realisierung der Klasse `PythagoreanTripleCalculator`.
+
+Sicherlich sind Sie gespannt zu erfahren, ob sich der Aufwand für eine Parallelisierung des *Project Euler Problems 39*
+auch gelohnt hat. Wir testen unsere Realisierung am Beispiel mit einem maximalen Umfang von 3000.
+Es liegt das Testprogramm aus [Listing 7] zu Grunde:
+
+
+###### {#listing_7_test}
+
+```cpp
+01: static void test_pythagorean_triples()
+02: {
+03:     std::cout << "Main: " << std::this_thread::get_id() << std::endl;
+04: 
+05:     constexpr size_t Max = 1000;
+06: 
+07:     PythagoreanTripleCalculator seqCalc;
+08:     {
+09:         ScopedTimer watch{};
+10:         seqCalc.calculateSeq(Max);
+11:     }
+12:     std::cout << seqCalc.toString() << std::endl;
+13:     std::cout << "Done." << std::endl << std::endl;
+14: 
+15:     using ThreadsafeStack = ThreadsafeDataStore<PythagoreanTriple>;
+16:     PythagoreanTripleCalculator<ThreadsafeStack> parCalc;
+17:     {
+18:         ScopedTimer watch{};
+19:         parCalc.calculatePar(Max);
+20:     }
+21:     std::cout << parCalc.toString() << std::endl;
+22:     std::cout << "Done." << std::endl;
+23: }
+```
+
+*Listing* 7: Testrahmen für Klasse `PythagoreanTripleCalculator`.
+
+
+*Ausgabe*:
+
+```
+Main: 7920
+Elapsed time: 9515 [milliseconds]
+Total: 1201 pythagorean triples
+Found: 12 triangles at circumference 2520
+Done.
+
+TID:  7920      [2808 - 3000]
+TID:  14340     [3 - 190]
+TID:  1768      [377 - 564]
+TID:  17188     [564 - 751]
+TID:  16520     [938 - 1125]
+TID:  5700      [190 - 377]
+TID:  6964      [751 - 938]
+TID:  2324      [1125 - 1312]
+TID:  8920      [1312 - 1499]
+TID:  17004     [1499 - 1686]
+TID:  18408     [1686 - 1873]
+TID:  10532     [1873 - 2060]
+TID:  17608     [2060 - 2247]
+TID:  14412     [2247 - 2434]
+TID:  8812      [2434 - 2621]
+TID:  11196     [2621 - 2808]
+Elapsed time: 1962 [milliseconds]
+Total: 1201 pythagorean triples
+Found: 12 triangles at circumference 2520
+Done.
+```
+
+
 
 
 # There&lsquo;s more
@@ -297,16 +606,15 @@ Die folgende [Anregung](https://www.geeksforgeeks.org/generate-n-bit-gray-codes/
 
 <!-- Links Definitions -->
 
-[Tabelle 1]: #tabelle_1_class_graycodescalculator
-
 [Listing 1]: #listing_1_class_pythagorean_triple_decl
 [Listing 2]: #listing_2_class_pythagorean_triple_impl
 [Listing 3]: #listing_3_class_pythagorean_triple_calculator
 [Listing 4]: #listing_4_function_parallel_for
+[Listing 5]: #listing_5_policy_based_design_classes
+[Listing 6]: #listing_6_class_pythagorean_triple_calculator
+[Listing 7]: #listing_7_test
 
 
-[Abbildung 1]:  #abbildung_1_gray_codes_four_bits
-[Abbildung 2]:  #abbildung_2_gray_codes_construction
+[Abbildung 1]: #abbildung_1_right_triangle
 
 <!-- End-of-File -->
-

@@ -10,7 +10,7 @@ static void test_pythagorean_triples_01()
 {
     std::cout << "Main: " << std::this_thread::get_id() << std::endl;
 
-    constexpr size_t Max = 2000;
+    constexpr size_t Max = 3000;
 
     PythagoreanTripleCalculator seqCalc;
     {
