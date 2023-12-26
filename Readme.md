@@ -11,6 +11,10 @@ vor.
 ### Aktueller Stand:
 
 
+### Januar 2024
+
+  * [Rechtwinklige Dreiecke und `parallel_for`](/CaseStudies/PythagoreanTriangles)
+
 ### Dezember 2023
 
   * [Kettenrechnen](/CaseStudies/Kettenrechnen)

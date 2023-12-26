@@ -2,7 +2,7 @@
 
 # Rechtwinklige Dreiecke und `parallel_for`
 
-Und wieder steht etwas Schulmathematik auf dem Programm, dieses Mal geht es um &bdquo;rechtwinklige Dreiecke&rdquo;.
+Und wieder steht etwas Schulmathematik auf dem Programm, dieses Mal geht es um rechtwinklige Dreiecke.
 Für derartige Dreiecke gibt es den Satz des Pythagoras,
 er fällt eine Aussage zu den Seitenlängen eines solchen Dreiecks.
 Wir wollen im Folgenden nur solche Dreiecke betrachten, deren Seitenlängen ganzzahlig sind.
@@ -11,13 +11,14 @@ Schreiben Sie ein C++&ndash;Programm, das für folgende Fragestellung eine Antwo
 Für welchen Umfang *p* mit *p* <= 2000 ist die Anzahl der verschiedenen rechwinkligen Dreiecke
 mit ganzzahligen Seitenlängen *a*, *b* und *c* am größten?
 
-Hinweis: Die Aufgabenstellung stammt aus dem Repository &bdquo;Project Euler&rdquo;:
-[*Project Euler*](https://projecteuler.net/) ist eine englischsprachige Website. Sie enthält eine Reihe von Problemstellungen,
-die mithilfe von Mathematik und Programmierung gelöst werden können. Die Aufgabenstellung dieser Fallstudie
-finden Sie unter &bdquo;Problem 39&rdquo;.
+*Hinweis*: Die Aufgabenstellung stammt aus dem Repository &bdquo;Project Euler&rdquo;:
+[*Project Euler*](https://projecteuler.net/) ist eine englischsprachige Website, sie enthält eine Reihe von Problemstellungen,
+die mit Hilfe von Mathematik und Programmierung gelöst werden können. Die Aufgabenstellung dieser Fallstudie
+finden Sie unter &bdquo;Problem 39&rdquo; vor.
 
-Der Schwerpunkt der Aufgabe liegt in der Betrachtung eines parallelen Lösungsansatzes. Mit Hilfe der Klassen
-`std::thread`, `std::function`, `std::mutex` und `std::lock_guard` gehen
+Welche Parallelisierungsansätze sind für diese Aufgabenstellung denkbar?
+Implementieren Sie einen parallelen Algorithmus und vergleichen Sie die Laufzeiten der beiden Varianten.
+Mit Hilfe der Klassen `std::thread`, `std::function`, `std::mutex` und `std::lock_guard` gehen
 wir auf eine Realisierung einer Funktion `parallel_for` ein.
 
 <!--more-->
@@ -25,11 +26,11 @@ wir auf eine Realisierung einer Funktion `parallel_for` ein.
 # Lernziele
 
   * Klassen `std::thread`, `std::function`, `std::mutex` und `std::lock_guard`
-  * Container `std::vector`
-  * `if`- und `for`-Anweisung mit *Initializer*
-  * Algorithmen `std::for_each`, `std::begin`, `std::end`
+  * Container `std::vector`, `std::array`
+  * `if`- und `for`-Anweisungen mit *Initializer*
+  * Algorithmus `std::for_each`
   * Lambda-Funktionen mit Zugriffsklausel
-  * Utility `std::mem_fn`
+  * Utility-Funktion `std::mem_fn`
 
 # Einführung
 
@@ -37,8 +38,6 @@ Für rechtwinklige Dreiecke gibt es den *Satz des Pythagoras*. Dieser besagt, da
 für die drei Seiten *a*, *b* und *c* die Beziehung *a*<sup>2</sup> + *b*<sup>2</sup> = *c*<sup>2</sup> gilt.
 Dabei steht *c* für die Hypotenuse, sie ist die längste Seite eines rechtwinkligen Dreiecks und liegt dem rechten Winkel gegenüber.
 Als Kathete werden die beiden kürzeren Seiten in einem rechtwinkligen Dreieck bezeichnet.
-
-
 
 ###### {#abbildung_1_right_triangle}
 
@@ -50,10 +49,8 @@ RightTriangle.png
 
 *Abbildung* 1: Rechtwinkliges Dreick mit Hypotenuse und Katheten.
 
-
 Der Umfang *p* (engl: *perimeter* oder *circumference*) eines rechwinkligen Dreieckes
 berechnet sich zu *p* = *a* + *b* + *c*. 
-
 Das &bdquo;Problem 39&rdquo; aus dem *Project Euler* lautet nun:
 Für welchen Umfang *p* mit *p* <= 2000 ist die Anzahl der verschiedenen rechwinkligen Dreiecke
 mit ganzzahligen Seitenlängen *a*, *b* und *c* am größten?
@@ -63,7 +60,7 @@ Betrachten wir den Umfang *p* = 120:
 Die drei Tripel { 20, 48, 52 }, { 24, 45, 51 } und { 30, 40, 50 } sind die einzigen drei Tripel,
 die mit ganzzahligen Werten ein rechtwinkliges Dreieck des Umfangs *p* = 120 beschreiben.
 
-## Hinweise
+## Hinweis
 
 Mit Hilfe der beiden Gleichungen *a*<sup>2</sup> + *b*<sup>2</sup> = *c*<sup>2</sup> und *p* = *a* + *b* + *c* lässt
 sich auf recht einfache Weise eine Methode mit einigen wenigen geschachtelten Kontrollstrukturen entwerfen,
@@ -72,17 +69,10 @@ die alle in Frage kommenden Tripel (*a*, *b*, *c*) berechnet.
 
 ## Parallelisierung der Lösung
 
-Welche Parallelisierungsansätze sind für diese Aufgabenstellung denkbar?
-Implementieren Sie einen parallelen Algorithmus und vergleichen Sie die Laufzeiten der beiden Varianten.
-
 Die im letzen Abschnitt erwähnten Kontrollstrukturen &ndash; wir reden da offensichtlich von `for`-Wiederholungsschleifen &ndash; 
 kann man auf Basis einer `parallel_for`-Kontrollstrukturen parallelisieren.
 Einziger Wehrmutstropfen dieser Idee: In der STL gibt es eine derartige Funktion nicht, 
 aber es bereitet keine große Mühe, eine solche Funktion selber zu schreiben.
-
-
-
-
 
 # Lösung
 
@@ -90,7 +80,7 @@ aber es bereitet keine große Mühe, eine solche Funktion selber zu schreiben.
 
 Wir beginnen mit den Dreiecken. Da wir bei Bedarf die berechneten Dreiecke auch ausgeben wollen,
 müssen wir diese in einer geeigneten Datenstruktur festhalten. Es kommen hier im Prinzip die beiden Möglichkeiten
-eines `std::tuple`-Objekts oder einen Strukur in Betracht. Ich habe mich für die klassische Vorgehensweise
+eines `std::tuple`-Objekts oder einer Strukur in Betracht. Ich habe mich für die klassische Vorgehensweise
 mit einer Struktur entschieden ([Listing 1]): 
 
 ###### {#listing_1_class_pythagorean_triple_decl}
@@ -196,14 +186,13 @@ zeigt [Listing 3] auf:
 
 In den Zeilen 25 bis 36 von [Listing 3] erkennen wir den *Brute-Force*&ndash;Ansatz in der Berechnung
 der geeigneten Dreiecke. Wenngleich diese Vorgehensweise nicht recht elegant aussehen mag,
-bietet sie jedoch eine Option für den Einstieg in eine parallele Berechnung.
+bietet sie jedoch Potential für den Einstieg in eine parallele Berechnung.
 
 Die äußerste `for`-Wiederholungsanweisung nimmt sich dem Wert einer Dreiecksseite *a* an.
 Diese Wiederholungen für alle möglichen Werte von *a* könnte man auch gleichzeitig (also *quasi*- oder *echt*-parallel) abarbeiten.
 Damit sind wir bei der Realisierung einer `parallel_for`-Funktion angekommen.
-
 Wenn wir im C++&ndash;Baukasten die Klasse `std::thread` als auch `std::function` herausgreifen,
-lässt sich damit ein `parallel_for` vergleichweise umsetzen ([Listing 4]):
+lässt sich damit ein `parallel_for` vergleichweise einfach umsetzen ([Listing 4]):
 
 ###### {#listing_4_function_parallel_for}
 
@@ -276,13 +265,14 @@ lässt sich damit ein `parallel_for` vergleichweise umsetzen ([Listing 4]):
 
 *Listing* 4: Funktion `parallel_for`.
 
-Aauf einige markante Stellen von [Listing 4] sollten wir näher eingehen.
-In den Zeilen 38 bis 40 wird ein Thread-Objekt erzeugt. Thread-Objekte sind nicht kopierbar, aber verschiebbar.
-Um sie in einem `std::vector<std::thread>`-Container aufheben zu können, verschieben wir die deshalb mit
-`std::move` in den Container `threads`. Sinn und Zweck dieser Vorgehensweise ist, dass wir am Ende
+Auf einige markante Stellen von [Listing 4] sollten wir näher eingehen.
+In den Zeilen 38 bis 40 wird ein Thread-Objekt erzeugt. Thread-Objekte sind nicht kopierbar, aber verschiebbar,
+deshalb der Einsatz von `std::move`.
+Um die Thread-Objekte in einem `std::vector<std::thread>`-Container aufbewahren zu können,
+verschieben wir sie deshalb mit `std::move` in den Container `threads`. Sinn und Zweck dieser Vorgehensweise ist, dass wir am Ende
 der `parallel_for`-Funktion auf das Ende aller erzeugten Threads warten wollen. Dies tun wir in
 den Zeilen 58 bis 62. In Zeile 61 wird demonstriert, wie man bei Gebrauch des `std::for_each`-Algorithmus
-auf alle Objekte des traviersierten Containers die Aufruf der `std::thread::join`-Methode anwenden kann.
+auf alle Objekte des traversierten Containers die Aufruf der `std::thread::join`-Methode anwenden kann.
 
 Die Threads innerhalb der `parallel_for`-Funktion werden im ersten Parameter mit der `callableWrapper`-Funktion versorgt.
 Diese Funktion finden wir in den Zeilen 3 bis 12 vor. Im Prinzip hätte man sich den Umweg über
@@ -303,10 +293,10 @@ was man in C++ &bdquo;aufrufen&rdquo; kann, zu kapseln. `std::function`-Objekte 
 für polymorphe Funktionen.
 
 Die Schnittstelle des `std::function`-Objekts muss zwei Parameter `start` und `end`
-des Typs `size_t` entgegennehmen können. Darunter verbirgt sich die Idee,
-dass bei einer `for`-Schleife mit beispielsweise 100.000 Wiederholungen nicht 100.000 Threads erzeugt werden.
+des Typs `size_t` entgegennehmen können. Dahinter verbirgt sich die Idee,
+dass bei einer `for`-Schleife mit beispielsweise 100.000 Wiederholungen nicht 100.000 Threads erzeugt werden können.
 Die Vorgehensweise ist eine andere: Zunächst wird mit einem Aufruf von `std::thread::hardware_concurrency` eruiert,
-welche tatsächliche, maximale Anzahl von Threads ganz konkret auf dem aktuellem Rechner anbieten würden.
+welche tatsächliche, maximale Anzahl von Threads sich ganz konkret auf dem aktuellen Rechner anbieten würde.
 Hiervon ausgehend wird der Bereich der `for`-Schleife nun in Untergruppen von Wiederholungen aufgeteilt.
 Jede Untergruppe soll dabei von einem Thread ausgeführt werden. Dies wiederum hat zur Folge,
 dass der Parameter `callable` nicht nur die auszuführende Funktion an sich beschreibt,
@@ -315,7 +305,7 @@ sondern auch eine bestimmte Anzahl von Ausführungen in einem Teilbereich der ge
 Und noch ein letzter Hinweis zu den Zeilen 52 und 53 von [Listing 4]:
 Für die letzte Untergruppe spendieren wir keinen eigenen Thread, Funktion `callable` (bzw. `callableWrapper`)
 wird synchron im aktuellen Thread ausgeführt. Dies kann man als eine minimale Optimierung ansehen,
-um auch den Hauptthread der Anwendung in die Rechenarbeit mit einzubeziehen.
+um auch den Hauptthread der Anwendung mit in die Rechenarbeit einzubeziehen.
 
 Damit kommen wir noch einmal auf die Skizzierung einer Funktion `calculate` zurück,
 wie sie von `parallel_for` ausgeführt werden soll:
@@ -340,7 +330,7 @@ wie sie von `parallel_for` ausgeführt werden soll:
 
 Der Parameter `circ` (Abkürzung von `circumference`) steht für einen konkreten Umfang des Dreiecks.
 Die zwei geschachtelten `for`-Wiederholungsschleifen als auch die innerste `if`-Anweisung sind
-selbsterklärend, nur: Wie sieht es mit dem Abspeichern eines gefundenen Dreiecks in der Container-Variablen
+selbsterklärend. Nur: Wie sieht es mit dem Abspeichern eines gefundenen Dreiecks in der Container-Variablen
 `m_store` aus? Richtig erkannt: Die Funktion `calculate` kann bzw. soll im Kontext unterschiedlicher Threads
 ausgeführt werden! Alle Parameter und lokalen Variablen (`circ`, `count`, `a`, `b`, `c`) liegen am Stack,
 sie sind vor dem Zugriff unterschiedlicher Threads sicher!
@@ -354,7 +344,7 @@ Ich habe diese Beobachtungen zum Anlass genommen, das *Policy-Based Design* Entw
 &bdquo;Policies&rdquo; stellen Schnittstellen für konfigurierbare Belange einer Klasse dar.
 
 Die Konfigurierbarkeit der Klasse `PythagoreanTripleCalculator` wird nun so vorgenommen,
-dass der Datenspeicher `m_store` nur über einen Template-Parameter (hier: `TStore`) beschrieben wird,
+dass der Datenspeicher `m_store` über einen Template-Parameter (hier: `TStore`) beschrieben wird,
 also nicht fest kodiert ist. Es werden zwei Realisierungen einer Datenspeicherklasse vorgenommen
 (threadsicher und nicht threadsicher), um für alle Belange einer `PythagoreanTripleCalculator`-Klasse
 laufzeitoptimal gerüstet zu sein:
@@ -446,7 +436,7 @@ werden ein `std::mutex`-Objekt und eine Hüllenklasse `std::lock_guard` eingeset
 
 Zum Abschluss dieser Erläuterungen stellen wir die Klasse `PythagoreanTripleCalculator` 
 noch einmal im Ganzen vor. Beachten Sie beim Template-Parameter `TStore`:
-Es findet hierbei um eine Anwendung des *Policy-Based Design* Entwurfsmusters.
+Es findet hier eine Anwendung des *Policy-Based Design* Entwurfsmusters statt.
 In der Voreinstellung wird der Kalkulator mit einer nicht-threadsicheren Datenspeicherklasse
 (hier: `SimpleDataStore<PythagoreanTriple>`) ausgestattet.
 Dies kann aber durch Verwendung der `ThreadsafeDataStore<PythagoreanTriple>`-Klasse geändert werden:
@@ -527,7 +517,7 @@ Dies kann aber durch Verwendung der `ThreadsafeDataStore<PythagoreanTriple>`-Kla
 *Listing* 6: Vollständige Realisierung der Klasse `PythagoreanTripleCalculator`.
 
 Sicherlich sind Sie gespannt zu erfahren, ob sich der Aufwand für eine Parallelisierung des *Project Euler Problems 39*
-auch gelohnt hat. Wir testen unsere Realisierung am Beispiel mit einem maximalen Umfang von 3000.
+auch gelohnt hat. Wir testen unsere Realisierung am Beispiel mit einem maximalen Umfang von 2000.
 Es liegt das Testprogramm aus [Listing 7] zu Grunde:
 
 
@@ -538,7 +528,7 @@ Es liegt das Testprogramm aus [Listing 7] zu Grunde:
 02: {
 03:     std::cout << "Main: " << std::this_thread::get_id() << std::endl;
 04: 
-05:     constexpr size_t Max = 1000;
+05:     constexpr size_t Max = 2000;
 06: 
 07:     PythagoreanTripleCalculator seqCalc;
 08:     {
@@ -571,22 +561,6 @@ Total: 743 pythagorean triples
 Found: 10 triangles at circumference 1680
 Done.
 
-TID:  17892     [1863 - 2000]
-TID:  5964      [3 - 127]
-TID:  14144     [375 - 499]
-TID:  17268     [251 - 375]
-TID:  17436     [623 - 747]
-TID:  10228     [499 - 623]
-TID:  9344      [127 - 251]
-TID:  7268      [747 - 871]
-TID:  14384     [995 - 1119]
-TID:  3804      [1119 - 1243]
-TID:  6516      [871 - 995]
-TID:  9312      [1243 - 1367]
-TID:  1504      [1615 - 1739]
-TID:  13476     [1491 - 1615]
-TID:  8928      [1367 - 1491]
-TID:  6544      [1739 - 1863]
 Elapsed time: 569 [milliseconds]
 Total: 743 pythagorean triples
 Found: 10 triangles at circumference 1680
