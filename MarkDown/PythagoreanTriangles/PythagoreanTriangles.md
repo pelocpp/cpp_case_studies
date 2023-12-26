@@ -3,9 +3,9 @@
 # Rechtwinklige Dreiecke und `parallel_for`
 
 Und wieder steht etwas Schulmathematik auf dem Programm, dieses Mal geht es um &bdquo;rechtwinklige Dreiecke&rdquo;.
-Für derartige Rechtecke gibt es den Satz des Pythagoras,
-er fällt eine Aussage für die Seitenlängen eines solchen Dreiecks.
-Wir wollen im Folgenden nur solche Rechtecke betrachten, deren Seitenlängen ganzzahlig sind.
+Für derartige Dreiecke gibt es den Satz des Pythagoras,
+er fällt eine Aussage zu den Seitenlängen eines solchen Dreiecks.
+Wir wollen im Folgenden nur solche Dreiecke betrachten, deren Seitenlängen ganzzahlig sind.
 
 Schreiben Sie ein C++&ndash;Programm, das für folgende Fragestellung eine Antwort findet:
 Für welchen Umfang *p* mit *p* <= 2000 ist die Anzahl der verschiedenen rechwinkligen Dreiecke
@@ -565,38 +565,45 @@ Es liegt das Testprogramm aus [Listing 7] zu Grunde:
 *Ausgabe*:
 
 ```
-Main: 7920
-Elapsed time: 9515 [milliseconds]
-Total: 1201 pythagorean triples
-Found: 12 triangles at circumference 2520
+Main: 17892
+Elapsed time: 2740 [milliseconds]
+Total: 743 pythagorean triples
+Found: 10 triangles at circumference 1680
 Done.
 
-TID:  7920      [2808 - 3000]
-TID:  14340     [3 - 190]
-TID:  1768      [377 - 564]
-TID:  17188     [564 - 751]
-TID:  16520     [938 - 1125]
-TID:  5700      [190 - 377]
-TID:  6964      [751 - 938]
-TID:  2324      [1125 - 1312]
-TID:  8920      [1312 - 1499]
-TID:  17004     [1499 - 1686]
-TID:  18408     [1686 - 1873]
-TID:  10532     [1873 - 2060]
-TID:  17608     [2060 - 2247]
-TID:  14412     [2247 - 2434]
-TID:  8812      [2434 - 2621]
-TID:  11196     [2621 - 2808]
-Elapsed time: 1962 [milliseconds]
-Total: 1201 pythagorean triples
-Found: 12 triangles at circumference 2520
+TID:  17892     [1863 - 2000]
+TID:  5964      [3 - 127]
+TID:  14144     [375 - 499]
+TID:  17268     [251 - 375]
+TID:  17436     [623 - 747]
+TID:  10228     [499 - 623]
+TID:  9344      [127 - 251]
+TID:  7268      [747 - 871]
+TID:  14384     [995 - 1119]
+TID:  3804      [1119 - 1243]
+TID:  6516      [871 - 995]
+TID:  9312      [1243 - 1367]
+TID:  1504      [1615 - 1739]
+TID:  13476     [1491 - 1615]
+TID:  8928      [1367 - 1491]
+TID:  6544      [1739 - 1863]
+Elapsed time: 569 [milliseconds]
+Total: 743 pythagorean triples
+Found: 10 triangles at circumference 1680
 Done.
 ```
 
+Das gesuchte Dreieck besitzt den Umfang 1680, es kann auf 10 verschiedene Weisen mit unterschiedlich langer
+Hypotenuse und Katheten dargestellt werden. Werfen Sie einen Blick auf die Rechenzeiten:
+Die sequentielle Ausführung benötigt 2740 Millisekunden, die parallele Variante hingegen nur 569 Millisekunden.
+Der Aufwand in der Realisierung einer `parallel_for`-Funktion hat sich also gelohnt!
 
 
 
 # There&lsquo;s more
+
+???????????????
+
 
 Gray-Codes lassen sich sowohl mit einem rekursiven als auch mit einem iterativen Algorithmus berechnen.
 Versuchen Sie, an Hand der Beschreibung des Algorithmus in [Abbildung 2] eine iterative Realisierung in C++ umzusetzen.
