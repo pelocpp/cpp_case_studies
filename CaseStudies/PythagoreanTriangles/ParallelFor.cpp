@@ -32,45 +32,39 @@ void parallel_for(
     size_t numThreads{ (numThreadsHint == 0) ? 8 : numThreadsHint };
     size_t numElements = to - from + 1;
     size_t batchSize{ numElements / numThreads };
-    size_t batchRemainder{ numElements % numThreads };
 
     // allocate vector of uninitialized thread objects
     std::vector<std::thread> threads;
     threads.reserve(numThreads - 1);
 
-    if (useThreads) {
+    for (size_t i{}; i != numThreads - 1; ++i) {
 
-        // prepare multi-threaded execution
-        for (size_t i{}; i != numThreads - 1; ++i) {
+        size_t start{ from + i * batchSize };
 
-            size_t start{ from + i * batchSize };
-                
+        if (useThreads) {
+
+            // multi-threaded execution
             threads.push_back(
-                std::move(std::thread { 
-                    callableWrapper, callable, start, start + batchSize 
-                })
+                std::move(std::thread{
+                    callableWrapper, callable, start, start + batchSize
+                    }
+                )
             );
         }
-    }
-    else {
+        else {
 
-        // prepare single-threaded execution (for easy debugging)
-        for (size_t i{}; i != numThreads - 1; ++i) {
-
-            size_t start{ from + i * batchSize };
-                
-            // callable(start, start + batchSize);
+            // single-threaded execution (for debugging purposes)
             callableWrapper(callable, start, start + batchSize);
         }
     }
 
     // take care of last element - calling 'callable' synchronously 
     size_t start{ from + (numThreads - 1) * batchSize };
-    // callable(start, to);
     callableWrapper(callable, start, to);
 
     // wait for the other thread to finish their task
-    if (useThreads) {
+    if (useThreads)
+    {
         std::for_each(
             threads.begin(),
             threads.end(),

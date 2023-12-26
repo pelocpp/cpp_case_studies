@@ -24,7 +24,7 @@ static void test_pythagorean_triples_01()
     PythagoreanTripleCalculator<ThreadsafeStack> parCalc;
     {
         ScopedTimer watch{};
-        parCalc.calculatePar(Max, true);
+        parCalc.calculatePar(Max);
     }
     std::cout << parCalc.toString() << std::endl;
     std::cout << "Done." << std::endl;

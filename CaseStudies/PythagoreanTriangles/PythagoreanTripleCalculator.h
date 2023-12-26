@@ -108,7 +108,7 @@ public:
     }
 
     // public concurrent interface
-    void calculatePar(size_t maximum, bool useThreads)
+    void calculatePar(size_t maximum, bool useThreads = true)
     {
         parallel_for(
             3,
