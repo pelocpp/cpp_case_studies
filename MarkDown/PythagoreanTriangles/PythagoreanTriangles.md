@@ -1,7 +1,5 @@
 <!-- Pythagorean Triangles -->
 
-# Rechtwinklige Dreiecke und `parallel_for`
-
 Und wieder steht etwas Schulmathematik auf dem Programm, dieses Mal geht es um rechtwinklige Dreiecke.
 Für derartige Dreiecke gibt es den Satz des Pythagoras,
 er fällt eine Aussage zu den Seitenlängen solcher Dreiecke.
@@ -41,9 +39,7 @@ Als Kathete werden die beiden kürzeren Seiten in einem rechtwinkligen Dreieck b
 
 ###### {#abbildung_1_right_triangle}
 
-<img src="rechtwinkliges_dreieck.svg" width="400">
-
-{{< figure src="/img/PythagoreanTriangles/rechtwinkliges_dreieck.svg" width="50%" >}}
+{{< figure src="/img/pythagorean_triangles/rechtwinkliges_dreieck.svg" width="50%" >}}
 
 *Abbildung* 1: Rechtwinkliges Dreick mit Hypotenuse und Katheten.
 
