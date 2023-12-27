@@ -1,18 +1,18 @@
 <!-- ExpressionTemplates.md -->
 
-Wir betrachten in dieser Fallstudie das Thema &ldquo;Expression Templates&rdquo; und damit in Zusammenhang stehend 
-die Technik der genannten &ldquo;Lazy Evaluation&rdquo;.
-Auf einen einfachen Nenner gebracht: &ldquo;Expression Templates&rdquo; sind ein Anwendungsfall der Metaprogrammierung.
+Wir betrachten in dieser Fallstudie das Thema &bdquo;Expression Templates&rdquo; und damit in Zusammenhang stehend 
+die Technik der genannten &bdquo;Lazy Evaluation&rdquo;.
+Auf einen einfachen Nenner gebracht: &bdquo;Expression Templates&rdquo; sind ein Anwendungsfall der Metaprogrammierung.
 Sie verschieben die Aus­wertung von Ausdrücken in eine separate Funktion,
 die zu einem späteren Zeitpunkt ausgeführt werden kann. An dieser Stelle wird der Begriff der
-&ldquo;Lazy Evaluation&rdquo; verständlich.
+&bdquo;Lazy Evaluation&rdquo; verständlich.
 Wir betrachten das Thema am Beispiel der Verknüpfung von Zeichenketten, also beispielsweise an einem Ausdruck in der Art
 
 ```cpp
 std::string result = "123"s + "ABC"s + "456"s + "XYZ"s + "789"s;
 ```
 
-Mit &ldquo;Expression Templates&rdquo; lernen Sie einen alternativen Ansatz kennen,
+Mit &bdquo;Expression Templates&rdquo; lernen Sie einen alternativen Ansatz kennen,
 einen geschachtelten (arithmetischen) Ausdruck zu berechnen mit dem Vorteil,
 nahezu alle temporären Objekte zu vermeiden,
 die bei der klassischen Berechnung eines solchen Ausdrucks entstehen würden.
@@ -25,11 +25,11 @@ die bei der klassischen Berechnung eines solchen Ausdrucks entstehen würden.
   * Partielle und explizite Template Spezialisierung
   * Folding Ausdrücke
   * Perfektes Forwarding (`std::forward`)
-  * Klasse `std::string`, `std::string`-Literale, Suffix &ldquo;s&rdquo;
+  * Klasse `std::string`, `std::string`-Literale, Suffix &bdquo;s&rdquo;
 
 # Einführung
 
-Der Einsatz von &ldquo;Expression Templates&rdquo; ist dann sinnvoll,
+Der Einsatz von &bdquo;Expression Templates&rdquo; ist dann sinnvoll,
 wenn wir einen komplexen Ausdruck mit programmiersprachlichen Anweisungen auswerten wollen,
 aber die Berechnung von Teilergebnissen, die zur Berechnung des Endergebnisses notwendig sind,
 zu einer ineffizienten Laufzeit in der Auswertung des gesamten Ausdrucks führen.
@@ -77,7 +77,7 @@ den Speicherbereich eines größeren Zeichenkettenobjekts umzukopieren.
 Dieses Vorgehensweise ist ineffizient.
 Es werden zahlreiche Speicherbereiche für die temporären Zeichenketten angelegt (und wieder freigegeben),
 die am endgültigen Resultat nicht direkt beteiligt sind. Man spricht hier auch von der so genannten
-&ldquo;eager&rdquo; (zu deutsch etwa &ldquo;gierig&rdquo;) Strategie,
+&bdquo;eager&rdquo; (zu deutsch etwa &bdquo;gierig&rdquo;) Strategie,
 was eben nicht immer von Vorteil sein muss.
 
 Es ergibt sich an dieser Stelle die folgende Fragestellung:
@@ -85,28 +85,28 @@ Wenn wir die Menge der zu konkatenierenden Zeichenketten im Vorneherein kennen,
 warum berechnen wir dann nicht die Länge der Resultatzeichenkette vorab,
 um damit all die unnötigen Aufrufe in die dynamische Speicherverwaltung zu umgehen.
 Damit müssen wir allerdings die vorzeitige Konkatenationen von Teilzeichenketten verzögern,
-oder eben verspätet (&ldquo;Lazy Evaluation&rdquo;) ausführen.
+oder eben verspätet (&bdquo;Lazy Evaluation&rdquo;) ausführen.
 
 Ist die Länge der Resultatzeichenkette bekannt, legen wir mit nur einem Aufruf dynamisch ein
 entsprechend großes Zeichenkettenobjekt an. Danach kopieren wir die Teilzeichenketten entsprechend in
 diesen Speicherbereich um. Es sind keine weiteren dynamischen Speicheranforderungen notwendig.
 Dies lässt sich aber mit der klassischen Schreibweise nicht erzielen.
 
-# Ansatz mit &ldquo;Expression Templates&rdquo;
+# Ansatz mit &bdquo;Expression Templates&rdquo;
 
-An dieser Stelle kommen die so genannten &ldquo;Expression Templates&rdquo; ins Spiel
-(in manchen Aufsätzen zu diesem Thema auch mit dem Schlagwort &ldquo;Loop Unrolling&rdquo; bezeichnet).
-Ein &ldquo;Expression Template&rdquo; steht für einen Teilausdruck, der die beteiligten Operanden abspeichert,
-aber die Operation (noch) nicht ausführt! Man könnte hier auch von einem &ldquo;Proxy&rdquo;-Objekt sprechen,
+An dieser Stelle kommen die so genannten &bdquo;Expression Templates&rdquo; ins Spiel
+(in manchen Aufsätzen zu diesem Thema auch mit dem Schlagwort &bdquo;Loop Unrolling&rdquo; bezeichnet).
+Ein &bdquo;Expression Template&rdquo; steht für einen Teilausdruck, der die beteiligten Operanden abspeichert,
+aber die Operation (noch) nicht ausführt! Man könnte hier auch von einem &bdquo;Proxy&rdquo;-Objekt sprechen,
 das für eine bestimmte Operation steht, die aber zu einem späteren Zeitpunkt ausgeführt wird.
 
 *Hinweis*: Für die Liebhaber von Software Entwurfsmustern erkennen wir (grob) an dieser Stelle gleich zwei Muster:
-Das *Command Pattern* und das *Proxy Pattern*. Ersteres kapselt die Operationen für deren &ldquo;lazy&rdquo; Ausführung.
-Zweiteres verlagert Operanden und Operator in ein separates Objekt, um die &ldquo;eager&rdquo; Ausführung zu umgehen.
+Das *Command Pattern* und das *Proxy Pattern*. Ersteres kapselt die Operationen für deren &bdquo;lazy&rdquo; Ausführung.
+Zweiteres verlagert Operanden und Operator in ein separates Objekt, um die &bdquo;eager&rdquo; Ausführung zu umgehen.
 
 Jetzt stehen wir nur noch vor dem Problem, dass wir es in den meisten Fällen nicht 
 mit der Konkatenation von zwei, sondern beliebig vielen Zeichenketten zu tun haben.
-Ein &ldquo;Expression Template&rdquo; wird deshalb als rekursive Datenstruktur definiert.
+Ein &bdquo;Expression Template&rdquo; wird deshalb als rekursive Datenstruktur definiert.
 Jedes solche Objekt enthält eine einzelne Teilzeichenkette und ein zweites Objekt (siehe [Abbildung 2]), 
 das die restliche Teilzeichenkette beschreibt.
 
@@ -114,15 +114,15 @@ das die restliche Teilzeichenkette beschreibt.
 
 {{< figure src="/img/expressiontemplates/expression_template_02.svg" width="80%" >}}
 
-*Abbildung* 2: Rekursive Datenstruktur eines &ldquo;Expression Template&rdquo;-Objekts.
+*Abbildung* 2: Rekursive Datenstruktur eines &bdquo;Expression Template&rdquo;-Objekts.
 
 Der Vorteil einer rekursiven Datenstruktur ist, dass diese leicht traversierbar ist,
 wenn es um die nachgelagerte Berechnung des Resultatobjekts geht.
 
-Zusammenfassend kann man also festhalten, dass &ldquo;Expression Templates&rdquo;
+Zusammenfassend kann man also festhalten, dass &bdquo;Expression Templates&rdquo;
 
   * einen komplexen Ausdruck in mehrere Proxy-Objekte zerlegen,
-    die einen rein passiven Charakter haben (keine arithmetischen Berechnungen, keine &ldquo;eager&rdquo;-Funktionalität) und
+    die einen rein passiven Charakter haben (keine arithmetischen Berechnungen, keine &bdquo;eager&rdquo;-Funktionalität) und
   * einen Mechanismus bereitstellen, der eine nachgelagerte, effiziente Berechnung des Gesamtergebnisses gestattet.
 
 # Realisierung
@@ -208,7 +208,7 @@ rekursiv mit den restlichen Zeichenketten fort, die im Objekt `m_tail` abgelegt 
 
 Das tatsächliche Aneinanderhängen der Teilzeichenketten findet
 im Typkonvertierungsoperator `operator std::string()` statt (Zeilen 33 bis 40).
-Dieser steht folglich für die viel zitierte &ldquo;Lazy Evaluation&rdquo;!
+Dieser steht folglich für die viel zitierte &bdquo;Lazy Evaluation&rdquo;!
 Es findet eine Tyumwandlung von `StringHelper` nach `std::string` statt.
 Die Variable `result` von Zeile 36 ist die Resultatzeichenkette.
 Sie wird zu Beginn mit einer entsprechenden internen Länge angelegt, so dass keine weiteren
@@ -217,7 +217,7 @@ Die einzelnen Teilzeichenketten werden wiederum innerhalb der Methode `save` umk
 Zu diesem Zweck wird `save` mit einem Iteratorobjekt so aufgerufen,
 dass das Iteratorobjekt auf das Ende der Resultatzeichenkette zeigt.
 Dies hat den Grund, dass die einzelnen Teilzeichenketten auf Grund des rekursiven Charakters der Verarbeitung
-in umgekehrter Reihenfolge vorliegen und dementsprechend von &ldquo;rechts&rdquo; nach &ldquo;links&rdquo;
+in umgekehrter Reihenfolge vorliegen und dementsprechend von &bdquo;rechts&rdquo; nach &bdquo;links&rdquo;
 abgearbeitet werden müssen.
 
 Wie muss nun eigentlich ein Konkatenationsausdruck in der optimierten Version aussehen,
@@ -236,7 +236,7 @@ ein leeres `StringHelper<>`-Objekt einzufügen! Eine einfache Umformulierung lau
 std::string result{ StringHelper<>{} + "123"s + "ABC"s + "456"s + "XYZ"s + "789"s };
 ```
 
-`StringHelper<>{}` steht hier für ein &ldquo;leeres&rdquo; `StringHelper`-Objekt, 
+`StringHelper<>{}` steht hier für ein &bdquo;leeres&rdquo; `StringHelper`-Objekt, 
 alle nachfolgenden `operator+`&ndash;Aufrufe kreieren eine verschachtelte (rekursive) `StringHelper`-Objektstruktur,
 wenn wir den `operator+` in der Template Klasse `StringHelper<>` wie in den Zeile 42 bis 49 gezeigt implementieren:
 
@@ -320,7 +320,7 @@ ziehen wir wiederum den Debugger zu Rate ([Abbildung 4]):
 
 *Abbildung* 4: Ein Blick auf die konkreten Instanziierungen der Template Klasse `StringHelper`.
 
-Natürlich ist es auch möglich, die Konkatenation von Zeichenketten mit &ldquo;Modern C++&rdquo;
+Natürlich ist es auch möglich, die Konkatenation von Zeichenketten mit &bdquo;Modern C++&rdquo;
 Sprachkonstrukten angenehmer zu schreiben: An die Stelle der Wiederholung des `+`-Operators könnten
 Funktionen mit einer variadischen Anzahl von Parametern einspringen:
 Ein *Folding*-Ausdruck tritt somit an die Stelle der sich wiederholenden `operator+`&ndash;Aufrufe:
@@ -366,7 +366,7 @@ void Test_ExpressionTemplates()
 
 Bevor wir das Programm ausführen, ein letzter Hinweis:
 Die erhofften Ergebnisse erhalten wir (auf meinem Rechner und mit meiner Entwicklungsumgebung) nur dann,
-wenn wir das Programm im &ldquo;Release Modus&rdquo; ausführen. Damit zu den Laufzeiten:
+wenn wir das Programm im &bdquo;Release Modus&rdquo; ausführen. Damit zu den Laufzeiten:
 
 ```
 15.475500 msecs.
@@ -401,7 +401,7 @@ Mit zwei Handgriffen kann man diesen Fehler beseitigen:
 
   * Die Definitionen der beiden Template Klassen `StringHelper<String, Strings...>` und `StringHelper<>` sind bzgl. ihrer Reihenfolge im Quellcode zu vertauschen.
   * Der `+`-Operator wird nicht in der Template Klasse `StringHelper<>` definiert, sondern seine Definition
-    wird als so genannte &ldquo;*Out of class* Member Definition&rdquo; außerhalb der Template Definition angesiedelt:
+    wird als so genannte &bdquo;*Out of class* Member Definition&rdquo; außerhalb der Template Definition angesiedelt:
 
 ```
 StringHelper<std::string>
@@ -418,7 +418,7 @@ Damit ist das vorliegende Beispiel auch unter dem GCC übersetzbar!
 
 ## Literatur
 
-Im Folgenden habe ich einige interessante Artikel zum Thema &ldquo;Expression Templates&rdquo;
+Im Folgenden habe ich einige interessante Artikel zum Thema &bdquo;Expression Templates&rdquo;
 zusammengestellt &ndash; darunter auch einige, die sie kritisch mit diesem Thema
 auseinandersetzen:
  
@@ -431,7 +431,7 @@ auseinandersetzen:
 [Thinking in C++ Volume 2 - Practical Programming](https://www.linuxtopia.org/online_books/programming_books/c++_practical_programming/c++_practical_programming_132.html)
 
 Es fehlt ein letzter Literaturhinweis. Das Beispiel aus dieser Fallstudie 
-kann man in dem Buch &ldquo;Functional Programming in C++&rdquo; von Ivan Cukic
+kann man in dem Buch &bdquo;Functional Programming in C++&rdquo; von Ivan Cukic
 [hier](https://www.amazon.de/Functional-Programming-C-Ivan-Cukic/dp/1617293814/) nachlesen. 
 
 <br/>

@@ -19,7 +19,7 @@ können Sie in dieser Fallstudie nachlesen.
 # Lernziele
 
   * Operatorliteral `operator""`
-  * &ldquo;Cooked&rdquo;- versus &ldquo;Raw&rdquo;-Form
+  * &bdquo;Cooked&rdquo;- versus &bdquo;Raw&rdquo;-Form
   * Schlüsselwort `constexpr`
   * Anwendung von `static_assert`
   * Variadische Templates
@@ -55,17 +55,17 @@ um zu lernen, wie man benutzerdefinierte Literale implementiert.
 ## Roh oder gekocht
 
 Prinzipiell unterstützt C++ benutzerdefinierte Literale für natürliche Zahlen, Fließkommazahlen, Zeichen und C-Zeichenketten.
-Die erste Variante wird als &ldquo;Cooked&rdquo;-Form, die zweite Variante als &ldquo;Raw&rdquo;-Form bezeichnet.
+Die erste Variante wird als &bdquo;Cooked&rdquo;-Form, die zweite Variante als &bdquo;Raw&rdquo;-Form bezeichnet.
 Bei Letzteren bildet der Wert des benutzerdefinierten Literals ein Paar, das aus der C-Zeichenkette und seiner Länge besteht.
 Für natürliche Zahlen und Fließkommazahlen gilt indes eine Besonderheit.
-Für sie können benutzerdefinierte Literale in den beiden Darstellungsarten &ldquo;Raw&rdquo; und &ldquo;Cooked&rdquo; spezifiziert werden.
-In der &ldquo;Cooked&rdquo;-Form nimmt der Literal-Operator seine Argumente als `unsigned long long int` entgegen,
+Für sie können benutzerdefinierte Literale in den beiden Darstellungsarten &bdquo;Raw&rdquo; und &bdquo;Cooked&rdquo; spezifiziert werden.
+In der &bdquo;Cooked&rdquo;-Form nimmt der Literal-Operator seine Argumente als `unsigned long long int` entgegen,
 wenn es sich um eine natürliche Zahl handelt. Fließkommazahlen interpretiert er hingegen als `long double` Wert.
 
-Im Gegensatz dazu steht der Wert &ldquo;Raw&rdquo; für `const char*` Argumente.
-Ein &ldquo;Cooked&rdquo;-Literal-Operator `operator"" _km(long double)` besitzt im Rohzustand (&ldquo;Raw&rdquo;)
+Im Gegensatz dazu steht der Wert &bdquo;Raw&rdquo; für `const char*` Argumente.
+Ein &bdquo;Cooked&rdquo;-Literal-Operator `operator"" _km(long double)` besitzt im Rohzustand (&bdquo;Raw&rdquo;)
 die Form `operator"" _km(const char*)`.
-Stehen beide Varianten zur Verfügung, wird die &ldquo;Cooked&rdquo;-Form bevorzugt. 
+Stehen beide Varianten zur Verfügung, wird die &bdquo;Cooked&rdquo;-Form bevorzugt. 
 
 In [Tabelle 1] finden Sie einen Überblick vor:
 
@@ -86,7 +86,7 @@ In [Tabelle 1] finden Sie einen Überblick vor:
 der Entscheidung der Implementierung des Literaloperators, auf welchen C++ Standarddatentyp bzw. auf welchen benutzerdefinierten Datentyp
 man das Literal abbilden möchte.
 
-Es folgen einige Hinweise zu [Tabelle 1]. Der Literaloperator für den Datentyp `char` besitzt die Form &ldquo;*Zeichen*_Suffix&rdquo;.
+Es folgen einige Hinweise zu [Tabelle 1]. Der Literaloperator für den Datentyp `char` besitzt die Form &bdquo;*Zeichen*_Suffix&rdquo;.
 Ein Beispiel dafür ist `'?'_unit`. In diesem Fall versucht der Übersetzer den Literaloperator für `operator"" _unit (char)` aufzurufen.
 Das Zeichen ist in dem konkreten Fall vom Typ `char`, es könnten aber auch `wchar_t`, `char16_t` und `char32_t` zum Zuge kommen.
 
@@ -102,8 +102,8 @@ abbilden. Die 8 steht für die Länge der C-Zeichenkette.
 
 Natürliche Zahlen bzw. Fließkommazahlen kann der Compiler sowohl auf natürliche Zahlen (`unsigned long long int`) bzw. Fließkommazahlen (`long double`)
 als auch auf C-Zeichenketten abbilden.
-Der Compiler verwendet die &ldquo;Raw&rdquo;-Form genau dann, wenn der Literaloperator sein Argument als C-Zeichenkette erwartet.
-Andernfalls verwendet er die &ldquo;Cooked&rdquo;-Form.
+Der Compiler verwendet die &bdquo;Raw&rdquo;-Form genau dann, wenn der Literaloperator sein Argument als C-Zeichenkette erwartet.
+Andernfalls verwendet er die &bdquo;Cooked&rdquo;-Form.
 
 ## Zur Praxis
 
@@ -162,13 +162,13 @@ in der Realisierung eines benutzerdefinierten Literals für Binärformate in
 46: }
 ```
 
-*Listing* 1: &ldquo;Raw&rdquo;- und "Cooked" Version für das Suffix `_b`.
+*Listing* 1: &bdquo;Raw&rdquo;- und "Cooked" Version für das Suffix `_b`.
 
 Beide Versionen aus [Listing 1] analysieren ein binäres Literal.
-Die so genannte &ldquo;Cooked&ldquo;-Version bekommt ein `unsigned long long`-Literal übergeben.
+Die so genannte &bdquo;Cooked&bdquo;-Version bekommt ein `unsigned long long`-Literal übergeben.
 Dieses wird auf Korrektheit überprüft &ndash; nur die Ziffern 0 und 1 sind zulässig &ndash;
 und eine Umwandlung vom binären in das dezimale Format erfolgt.
-Die &ldquo;Raw&ldquo;-Version bekommt das binäre Literal als Zeichenkette übergeben.
+Die &bdquo;Raw&bdquo;-Version bekommt das binäre Literal als Zeichenkette übergeben.
 Inwieweit diese Darstellung für binäre Literale sinnvoll ist, kann man diskutieren,
 siehe dazu auch die nachfolgenden Beispiele.
 Beide Realisierungen beachten auch die zulässige Länge binärer Literale, um dies nur abschließend zu erwähnen.
@@ -230,7 +230,7 @@ Es wäre ja geradezu wünschenswert, das auch benutzerdefinierte Literale den Stat
 das ist ja gerade der Sinn dieser Übung. Wir müssen aus diesem Grund die in [Listing 1] vorgestellte Realisierung
 umstellen, das C++ Schlüsselwort `constexpr` ist die Lösung unseres Problems.
 Wenn wir ganz auf die Schnelle beide Operator-Implementierungen um das Schlüsselwort `constexpr` ergänzen,
-erhalten wir für die &ldquo;Raw&rdquo;-Version folgende Fehlermeldung:
+erhalten wir für die &bdquo;Raw&rdquo;-Version folgende Fehlermeldung:
 *Failure was caused by call of undefined function or one not declared 'constexpr': see usage of 'strlen'*.
 
 Im Prinzip genommen ist diese Fehlermeldung nicht ganz überraschend:
@@ -300,7 +300,7 @@ mit einer selbst geschriebenen Funktion `length` austauschen:
 55: }
 ```
 
-*Listing* 2: &ldquo;Raw&rdquo;- und &ldquo;Cooked&rdquo;-Version für das Suffix `_b` als `constexpr` Variante.
+*Listing* 2: &bdquo;Raw&rdquo;- und &bdquo;Cooked&rdquo;-Version für das Suffix `_b` als `constexpr` Variante.
 
 Wollen wir uns davon überzeugen, dass die Varianten aus [Listing 2] zur Übersetzungszeit ausgeführt werden,
 müssen wir zunächst den Testrahmen anpassen! Es genügt nicht einfach, ein benutzerdefiniertes Literal gemäß der neuen 
@@ -578,7 +578,7 @@ auf einen benutzerdefinierten Datentyp `Color` für RGB-Farben an ([Listing 4]):
 *Listing* 4: Klasse `Color` für RGB-Farbwerte.
 
 Bevor man sich Gedanken zur Realisierung des Literaloperators macht, ist zunächst der syntaktische Aufbau des Literals zu klären.
-Im Sinne einer Bottom-Up Betrachtung kann man die folgenden Beispiele quasi als &ldquo;Use Cases&rdquo; heranziehen:
+Im Sinne einer Bottom-Up Betrachtung kann man die folgenden Beispiele quasi als &bdquo;Use Cases&rdquo; heranziehen:
 
 ```cpp
 constexpr Color red = 0xFF0000_rgb;
@@ -599,7 +599,7 @@ std::cout << black << std::endl;
 
 Nun gilt es Randfälle zu diskutieren: Sollen Schreibweisen wie `0xFF_rgb` oder `0b0101_rgb` ebenfalls erlaubt sein?
 Diese wenigen Beispiele zeigen bereits, dass eine umfassende Definition samt Realisierung von Farbwertliteralen
-nicht ganz trivial ist. Der nachfolgende Lösungsvorschlag deckt daher nur die &ldquo;naheliegenden&rdquo; Fälle ab ([Listing 5]).
+nicht ganz trivial ist. Der nachfolgende Lösungsvorschlag deckt daher nur die &bdquo;naheliegenden&rdquo; Fälle ab ([Listing 5]).
 Es ist natürlich Ihrer Kreativität überlassen, diese Lösung zu verfeinern und damit zu vervollständigen!
 
 ###### {#listing_05_literals_color_operator}
@@ -708,14 +708,14 @@ Sowohl für Bereichsüberschreitungen als auch für falsche Hexadezimalwerte sind F
 ## There's much more
 
 Möchte man die Implementierung eines benutzerdefinierten Literals ganz perfekt gestalten,
-muss man sich mit dem Zahlentrennzeichen (`'`) beschäftigen. Für die &ldquo;Cooked&rdquo;-Version ist nichts weiter
+muss man sich mit dem Zahlentrennzeichen (`'`) beschäftigen. Für die &bdquo;Cooked&rdquo;-Version ist nichts weiter
 zu berücksichtigen, der Übersetzer verarbeitet das Zahlentrennzeichen selbst:
 
 ```cpp
 constexpr size_t n{ 11'111'11_b };   // compiles
 ```
 
-Anders sieht es bei der &ldquo;Raw&rdquo;-Version aus: Hier muss der `const char*`-Parameter
+Anders sieht es bei der &bdquo;Raw&rdquo;-Version aus: Hier muss der `const char*`-Parameter
 des Literaloperators das Zahlentrennzeichen explizit behandeln &ndash; und damit ignorieren.
 Zum Abschluss finden Sie in [Listing 6] entsprechende Modifikationen in Bezug auf die Realisierung aus [Listing 2] vor:
 

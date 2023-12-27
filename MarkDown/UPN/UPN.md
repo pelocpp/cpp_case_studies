@@ -17,7 +17,7 @@ fließen neben anderen Modern C++&ndash;Sprachmitteln in der Implementierung mit
   * Container `std::stack<>`, `std::list<>`, `std::vector<>`
   * Verkettung von Konstruktoren
   * Datentyp `class enum`
-  * &ldquo;Range-Based&ldquo; `for`-Wiederholungsschleife
+  * &bdquo;Range-Based&bdquo; `for`-Wiederholungsschleife
   * Reguläre Ausdrücke (`std::sregex_iterator`, `smatch`)
   * Iteratoren Konzept
   * Type Traits (`std::is_integral<T>`, `std::is_floating_point<T>`)
@@ -50,7 +50,7 @@ das Programm legt für die Berechnung die *Postfix*-Notation zu Grunde.
 Arithmetische Ausdrücke in der Postfix-Schreibweise bestehen nur aus Operatoren und Operanden.
 Derartige Bestandteile eines arithmetischen Ausdrucks werden in der Informatik auch als *Token*
 bezeichnet. Definieren Sie zunächst in Ihrem Programm zur Unterscheidung der unterschiedlichen
-Tokenarten wie &ldquo;Operator&rdquo; oder &ldquo;Operand&rdquo; den folgenden Aufzählungstyp `TokenType`:
+Tokenarten wie &bdquo;Operator&rdquo; oder &bdquo;Operand&rdquo; den folgenden Aufzählungstyp `TokenType`:
 
 ```cpp
 enum class TokenType { Null, Operator, Operand, LBracket, RBracket };
@@ -152,7 +152,7 @@ Input: 1 2 *
 
 Das zweite Beispiel demonstriert die Zerlegung eines arithmetischen Ausdrucks in seine einzelnen
 Bestandteile. Die Zerlegung erfolgt in der `scan`-Methode, das Resultat wird
-durch eine &ldquo;Range-Based&ldquo; `for`-Wiederholungsschleife ausgegeben:
+durch eine &bdquo;Range-Based&bdquo; `for`-Wiederholungsschleife ausgegeben:
 
 ```cpp
 Scanner<int> scanner;
@@ -211,7 +211,7 @@ Methode `calc` besitzt ([Tabelle 3]):
 
 Unser erstes Beispiel testet ein `PostfixCalculator`-Objekt &ndash; und dies, nebenbei bemerkt &ndash; ohne Gebrauch
 eines `Scanner`-Objekts. Man sieht an dem Beispiel, dass man das `std::list<Token>`-Objekt
-gewissermaßen auch &ldquo;händisch&rdquo; erstellen kann &ndash; wenn man es richtig konstruiert:
+gewissermaßen auch &bdquo;händisch&rdquo; erstellen kann &ndash; wenn man es richtig konstruiert:
 
 *Beispiel*:
 
@@ -349,10 +349,10 @@ und ihren Operanden auch noch runde Klammern besitzen:
 ((28 + 2) * (2 / 4))
 </pre>
 
-Mit den runden Klammern lassen sich die standardmäßig vorherrschenden Vorrangregeln (&ldquo;Punkt-vor-Strich&ldquo;) abändern.
+Mit den runden Klammern lassen sich die standardmäßig vorherrschenden Vorrangregeln (&bdquo;Punkt-vor-Strich&bdquo;) abändern.
 Ein Operator mit einem höheren Vorrang wird einem Operator mit einem niedrigeren Vorrang in der Ausführung vorgezogen,
 siehe [Abbildung 2]. Da wir in dieser Studie nur die fünf Operatoren `+`, `-`, `*`, `/` und `%`
-zulassen, können wir den Aspekt des *Operatorenvorrangs* simpel auch als &ldquo;Punkt-vor-Strich&ldquo;-Regel titulieren.
+zulassen, können wir den Aspekt des *Operatorenvorrangs* simpel auch als &bdquo;Punkt-vor-Strich&bdquo;-Regel titulieren.
 
 ###### {#abbildung_2_upn_operator_precedence}
 

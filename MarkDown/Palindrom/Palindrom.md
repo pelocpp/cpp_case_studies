@@ -59,7 +59,7 @@ Die in [Tabelle 1] beschriebenen Elemente der Klasse `Number` dienen hierzu zur 
 *Tabelle* 1: Elemente der Klasse `Number`.
 
 Bei der Additionsmethode `add` legen Sie Ihre Kenntnisse aus der Schulmathematik zu Grunde:
-Die zu addierenden Zahlen sind &ldquo;gedanklich&rdquo; betrachtet untereinander zu schreiben.
+Die zu addierenden Zahlen sind &bdquo;gedanklich&rdquo; betrachtet untereinander zu schreiben.
 Die Zahlen werden nun von hinten beginnend aufaddiert, wobei ein Übertrag entstehen kann.
 Dieser ist dann im nächsten Schritt zu berücksichtigen, wie in [Abbildung 1] am Beispiel
 der beiden Zahlen 1282 und 976 dargestellt wird:
@@ -301,7 +301,7 @@ Found palindrom: 8.813.200.023.188
 # Viertes Eulersches Problem
 
 Ein nach dem Mathematiker *Leonhard Euler* benanntes Problem lautet:
-&ldquo;Finde das größte Palindrom, das ein Produkt aus zwei dreistelligen Zahlen ist!&rdquo;.
+&bdquo;Finde das größte Palindrom, das ein Produkt aus zwei dreistelligen Zahlen ist!&rdquo;.
 Zum besseren Verständnis: Das größte 4-stellige Palindrom als Produkt zweier 2-stelliger Zahlen ist 9009 = 91 * 99.
 
 *Hinweis*: Für die Multiplikation dreistelliger Zahlen dürfen Sie Variablen des Typs `int` verwenden.
@@ -567,7 +567,7 @@ dass der Standardkonstruktor dieser Klasse nicht zur Verfügung steht.
 Leider produziert die `calcPalindrom`-Methode nicht bei jedem ihrer Aufrufe ein Palindrom.
 Wir müssen aus diesem Grund die Klasse `PalindromCalculator` sehr sorgfältigen Tests unterziehen &ndash; einen Ausschnitt des Testszenarios
 finden Sie in den nachfolgenden Ausschnitten vor. Eine interessante Website zum Thema
-&ldquo;*Reversal-Addition Palindrome Records*&rdquo; findet man unter [What is a Palindrome?](http://jasondoucette.com/pal/).
+&bdquo;*Reversal-Addition Palindrome Records*&rdquo; findet man unter [What is a Palindrome?](http://jasondoucette.com/pal/).
 
 Eine Kostprobe gefällig? Die Zahl 1.186.060.307.891.929.990 wird dort getestet &ndash; und wir können das Resultat
 mit unserem Testprogramm verifizieren:
@@ -611,7 +611,7 @@ Found palindrom:
     984.873.422.673.467.987.856.626.544
 ```
 
-Auch findet man unter [What is a Palindrome?](http://jasondoucette.com/pal/) &ldquo;Weltrekorde&rdquo; dokumentiert vor:
+Auch findet man unter [What is a Palindrome?](http://jasondoucette.com/pal/) &bdquo;Weltrekorde&rdquo; dokumentiert vor:
 
 > **THE NEW WORLD RECORD (Jan 4, 2021)**<br/>
 > **Anton Stefanov** has discovered the new World Record!<br/>

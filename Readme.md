@@ -53,7 +53,7 @@ vor.
 
 ### April 2021
 
-  * [Parallele Suche nach Primzahlen mit &ldquo;Hindernissen&rdquo;](/CaseStudies/ParallelPrimes)
+  * [Parallele Suche nach Primzahlen mit &bdquo;Hindernissen&rdquo;](/CaseStudies/ParallelPrimes)
   * [Spiegelzahlen – auch Palindrome genannt](/CaseStudies/Palindrom)
   * [Exakte Arithmetik ganzer Zahlen](/CaseStudies/BigInteger)
 

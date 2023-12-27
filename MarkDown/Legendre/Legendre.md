@@ -40,7 +40,7 @@ Auch für Binomialkoeffizienten wollen wir ein Beispiel geben.
 Wie groß ist also die Wahrscheinlichkeit, 6 Richtige aus 49 Möglichkeiten zu raten? 
 Also in anderen Worten: Wie groß ist die Wahrscheinlichkeit eines Lottogewinns?
 Zur Antwort dieser Frage benötigen wir die Anzahl der verschiedenen Möglichkeiten, 6 Zahlen aus 49 möglichen zu wählen.
-Dazu müssen wir den Binomialkoeffizienten &ldquo;49 über 6&rdquo; berechnen, das Ergebnis ist 13.983.816.
+Dazu müssen wir den Binomialkoeffizienten &bdquo;49 über 6&rdquo; berechnen, das Ergebnis ist 13.983.816.
 
 ## Klasse `Factorial`
 
@@ -160,8 +160,8 @@ Primzahl, die *n*! teilt:
 
 *Abbildung* 1: Der Satz von Legendre mit Gaußklammern.
 
-Hierbei repräsentieren in [Abbildung 1] die senkrechten Klammern so genannte &ldquo;Gaußklammern&rdquo;: Sie stehen für
-&ldquo;die größte ganze Zahl kleiner gleich *n*/*p*&rdquo; am Beispiel des Bruchs *n*/*p*.
+Hierbei repräsentieren in [Abbildung 1] die senkrechten Klammern so genannte &bdquo;Gaußklammern&rdquo;: Sie stehen für
+&bdquo;die größte ganze Zahl kleiner gleich *n*/*p*&rdquo; am Beispiel des Bruchs *n*/*p*.
 Ferner beachte man: Von den Summanden |*n*/*p*<sup>i</sup>|
 sind nur endlich viele ungleich 0, nämlich die für alle *i* mit *p*<sup>i</sup> &leq; *n*.
 
@@ -251,7 +251,7 @@ Reihenfolge. Die mathematische Formel zur Berechnung des Binomialkoeffizienten f
 *Abbildung* 3: Definition eines Binomialkoeffizienten.
 
 Auf der linken Seite steht die Kurzschreibweise des Binomialkoeffizienten, gesprochen
-&ldquo;n über k&rdquo;. Auf der rechten Seite steht die Berechnung des Koeffizienten als Bruch mit drei
+&bdquo;n über k&rdquo;. Auf der rechten Seite steht die Berechnung des Koeffizienten als Bruch mit drei
 Fakultäten. Wir verdeutlichen dies an zwei Beispielen in [Abbildung 4]:
 
 ###### {#abbildung_4_binomial_coefficient_definition_examples}
@@ -260,9 +260,9 @@ Fakultäten. Wir verdeutlichen dies an zwei Beispielen in [Abbildung 4]:
 
 *Abbildung* 4: Zwei Beispiele für Binomialkoeffizienten.
 
-Der Binomialkoeffizient &ldquo;49 über 6&rdquo; entspricht damit beispielsweise der Anzahl der
+Der Binomialkoeffizient &bdquo;49 über 6&rdquo; entspricht damit beispielsweise der Anzahl der
 möglichen Ziehungen beim Lotto &ndash; nicht zu verwechseln mit der Treffer-Wahrscheinlichkeit
-&ldquo;6 Richtige&rdquo; beim Lotto, die durch eine hypergeometrische Verteilung ermittelbar ist.
+&bdquo;6 Richtige&rdquo; beim Lotto, die durch eine hypergeometrische Verteilung ermittelbar ist.
 
 Erstellen Sie eine Klasse `BinomialCoefficient` mit einer Methode `calculate` zur
 Berechnung des Binomialkoeffizienten. Die folgenden Code-Fragmente sollten mit Hilfe
@@ -299,13 +299,13 @@ Binomial (16, 8) = 12870
 Binomial (18, 9) = 48620
 ```
 
-Berechnen Sie der Reihe nach die Binomialkoeffizienten &ldquo;2 über 1&rdquo;, &ldquo;4 über 2&rdquo;, &ldquo;8 über 4&rdquo;, usw.
+Berechnen Sie der Reihe nach die Binomialkoeffizienten &bdquo;2 über 1&rdquo;, &bdquo;4 über 2&rdquo;, &bdquo;8 über 4&rdquo;, usw.
 Ab welchem Koeffizienten machen Sie auch hier die Beobachtung, dass die sehr schnell wachsenden Werte zu falschen Resultaten führen.
 
 ## Methode `reduce`
 
 Um dieses Problem zu lösen, kommen wir wieder auf den Trick mit der Partialbruchzerlegung zurück.
-Um den Koeffizienten &ldquo;*n* über *k*&rdquo; auszurechnen, berechnen wir die drei Werte *n*!, *k*! und (*n* – *k*)! als `PrimeDictionary`-Objekte
+Um den Koeffizienten &bdquo;*n* über *k*&rdquo; auszurechnen, berechnen wir die drei Werte *n*!, *k*! und (*n* – *k*)! als `PrimeDictionary`-Objekte
 und vereinfachen diese anschließend.
 Dazu werden wir eine Methode `reduce` einführen, die zwei `PrimeDictionary`-Objekte als
 Parameter hat und die Vereinfachung des ersten `PrimeDictionary`-Objekts um das zweite
@@ -710,7 +710,7 @@ Es fehlt noch eine Klasse für Binomialkoeffizienten ([Listing 5] und [Listing 6
 
 
 Eine Frage wollen wir im Lösungsabschnitt noch betrachten.
-Erinnern Sie sich: &ldquo;Auf wie viele Nullen endet die Zahl 2022! ?&rdquo;
+Erinnern Sie sich: &bdquo;Auf wie viele Nullen endet die Zahl 2022! ?&rdquo;
 Mit folgendem Code-Snippet ist die Frage gelöst:
 
 ```cpp
@@ -738,7 +738,7 @@ Es bietet sich an, diese Klassen als Templates zu realisieren.
 ## Literatur
 
 Einige Beispiele und Anregungen zu dem Satz von Legende stammen aus dem Aufsatz
-&ldquo;[Die Sätze von Legendre und Tchebychef](https://userpages.uni-koblenz.de/~krapf/Sommersemester%202018/Proseminar%20Primzahlen/Ausarbeitung2.pdf)&rdquo;
+&bdquo;[Die Sätze von Legendre und Tchebychef](https://userpages.uni-koblenz.de/~krapf/Sommersemester%202018/Proseminar%20Primzahlen/Ausarbeitung2.pdf)&rdquo;
 (abgerufen am 27. März 2022).
 
 <br/>

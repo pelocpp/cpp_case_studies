@@ -25,9 +25,9 @@ Die Zahl mit der Nummer _i_ &ndash; man sagt hier auch: mit dem Index _i_ &ndash
 Diese Fallstudie zeigt, wie sich die Berechnung der Elemente einer Zahlenfolge in einem {cpp}-Iterator einbetten lässt,
 um auf diese Weise mit Hilfe der STL-Algorithmen performante und elegant in das {cpp}-Programmiermodell integrierte Algorithmen zu erhalten.
 
-== Die &ldquo;teuflische Zahlenfolge&rdquo; oder auch das _Collatz_-Problem
+== Die &bdquo;teuflische Zahlenfolge&rdquo; oder auch das _Collatz_-Problem
 
-Das _Collatz_-Problem, auch als &ldquo;3__n__ + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
+Das _Collatz_-Problem, auch als &bdquo;3__n__ + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
 Problem und wird dem Mathematiker Lothar Collatz zugeschrieben. Bei dem Problem geht es um
 Zahlenfolgen, die nach einem einfachen Bildungsgesetz konstruiert werden. Gegeben ist eine
 beliebige natürliche Startzahl _n_, aus der eine Folge von Zahlen nach den folgenden zwei Regeln gebildet wird:
@@ -44,7 +44,7 @@ Startzahl man die Folge gestartet hat. Wählen wir zum Beispiel den Startwert 7,
 Bis heute konnte das Collatz-Problem mathematisch nicht bewiesen werden. Auch konnte man mit Hilfe von Computerprogrammen die Vermutung bis heute nur unterstützen,
 aber nicht widerlegen. Alle Startzahlen bis ca. 5,76 * 10^18^ untermauern die Vermutung (Stand Januar 2009).
 Obwohl das Problem so einfach zu formulieren ist, gilt es als extrem schwierig, die mit ihm verbundene Aussage mathematisch zu beweisen.
-Oder wie es Paul Erdös, einer der bedeutendsten Mathematiker des 20. Jahrhunderts, formulierte: &ldquo;absolut hoffnungslos&rdquo;.
+Oder wie es Paul Erdös, einer der bedeutendsten Mathematiker des 20. Jahrhunderts, formulierte: &bdquo;absolut hoffnungslos&rdquo;.
 
 Natürlich wollen wir in dieser Fallstudie keinen Versuch unternehmen, das _Collatz_-Problem zu lösen.
 Kommen wir auf {cpp} und damit auf eine Umsetzung des Regelwerks in einen {cpp}-Algorithmus zu sprechen. 
@@ -53,7 +53,7 @@ nach Bedarf aufrufen. Wir wollen aber einen Schritt weitergehen und {cpp}-Iterat
 
 Durch die Implementierung des _Collatz_-Problems in Form eines {cpp}-Iterators kann die Implementierung in Kombination mit der STL verwendet werden,
 wodurch nicht nur die Lesbarkeit des Codes verbessert wird. Es stehen insbesondere alle STL-Algorithmen nahtlos zur Verfügung, 
-um Ergebnisse in der Berechnung der &ldquo;teuflische Zahlenfolge&rdquo; weiterverarbeiten zu können.
+um Ergebnisse in der Berechnung der &bdquo;teuflische Zahlenfolge&rdquo; weiterverarbeiten zu können.
 
 == {cpp}&ndash;Iteratoren und die bereichs-basierte `for`-Wiederholungsschleife
 
@@ -90,7 +90,7 @@ Dem Container und damit dem iterierbaren Bereich auf der einen Seite (hier: `con
 Der iterierbare Bereich (Container) muss zwei Funktionen `begin()` und `end()` implementieren.
 Diese Funktionen geben jeweils Iteratorobjekte zurück. Das von `begin()` zurückgelieferte Iteratorobjekt steht für das erste Element in der Auflistung,
 das von `end()` für das letzte Element der Auflistung. 
-Hierauf gehen wir später noch näher ein, da eben genau dieses &ldquo;letzte Element&rdquo; nicht immer von vorneherein bekannt ist.
+Hierauf gehen wir später noch näher ein, da eben genau dieses &bdquo;letzte Element&rdquo; nicht immer von vorneherein bekannt ist.
 
 Kommen wir jetzt auf die Iterator-Klasse zu sprechen. Vom obigen Code-Fragment können wir ableiten, dass die folgenden drei Operatoren vorhanden sein müssen:
 
@@ -237,9 +237,9 @@ CollatzSequence::CollatzSequence(int start) : m_start{ start } {}
 CollatzIterator CollatzSequence::begin() const { return { m_start }; } <1>
 CollatzIterator CollatzSequence::end()   const { return { 1 }; } <1>
 ----
-<1> &ldquo;Uniform Initialization&rdquo; im Zusammenspiel mit der `return`-Anweisung.
+<1> &bdquo;Uniform Initialization&rdquo; im Zusammenspiel mit der `return`-Anweisung.
 
-Das {cpp11} Sprachfeature der &ldquo;Uniform Initialization&rdquo; kann auch zusammen mit einer `return`-Anweisung auftreten.
+Das {cpp11} Sprachfeature der &bdquo;Uniform Initialization&rdquo; kann auch zusammen mit einer `return`-Anweisung auftreten.
 Betrachten Sie die beiden Zeilen XXX und XXX von <<src_listing_collatzsequence_implementation>>.
 Es steht auf Grund der Definition der Methoden begin() und end() fest, dass diese ein Objekt des Typs `CollatzIterator` zurückliefern müssen.
 Wozu aber
@@ -278,7 +278,7 @@ Dies ist nicht ganz trival lösbar, aber wenn wir an zwei Stelle im Quellcode ge
 * Beobachtung 1: In der Festlegung des Ende-Iteratorobjekts sind wir ein wenig gekniffen: Der Wert 1 ist eigentlich der einzig mögliche Wert,
   der sich hier anbietet. Da er aber das Ende der Zahlenfolge ist, wird er von der Iteration ausgenommen, was wir vermeinden wollen.
 * Beobachtung 2: Des Rätsels Lösung liegt an einer ganz anderen Stelle in der Iteratorklasse verborgen: Es ist der `operator!=`, den wir in einer ersten Version
-  seiner Realisierung etwas &ldquo;unterschätzt&rdquo; haben:  
+  seiner Realisierung etwas &bdquo;unterschätzt&rdquo; haben:  
 +
 [source,c++]
 ----
@@ -339,7 +339,7 @@ eine Implementierung der beiden Methoden `begin()` und `end()`. An den zurückge
 drei Operatoren `operator++()`, `operator!=()` und `operator*()` vorhanden sein. Anderfalls wäre ein derartiges Code-Fragment nicht übersetzungsfähig.
 
 Für die nachfolgenden Code-Fragmente muss die Iteratorklasse noch weitere Auskünfte bereitstellen.
-Wir sind beim Themenkreis der so genannten &ldquo;Iterator Traits&rdquo; &ndash; zu deutsch etwa &ldquo;Iterator Spuren&rdquo; &ndash; angekommen.
+Wir sind beim Themenkreis der so genannten &bdquo;Iterator Traits&rdquo; &ndash; zu deutsch etwa &bdquo;Iterator Spuren&rdquo; &ndash; angekommen.
 Die Anforderung lässt sich vergleichsweise einfach durch 5 `using`-Deklarationen erfüllen:
 
 [source,c++]

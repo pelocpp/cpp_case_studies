@@ -2,7 +2,7 @@
 
 Unter dem *Gray-Code* versteht man eine Folge binärer Zahlenketten, die nach dem Ingenieur *Frank Gray*,
 einem Forscher in den *Bell Laboratories*, benannt wurde. Er erhielt im Jahre 1953 für die Nutzung
-des nach ihm benannten Codes das U.S. Patent No. 2 632 058 &ldquo;Pulse Code Communication&rdquo;.
+des nach ihm benannten Codes das U.S. Patent No. 2 632 058 &bdquo;Pulse Code Communication&rdquo;.
 Durch die Anzahl der Bits wird die Länge *n* eines Gray-Codes festgelegt. Man kann sich leicht überlegen,
 dass es zu einem bestimmten *n* 2<sup>*n*</sup> unterschiedliche Gray-Codes gibt.
 
@@ -34,7 +34,7 @@ Diese Eigenschaft kommt vielen Anwendungen zu Gute, wie wir beispielsweise an ei
 Würde ein Inkrementalgeber eine herkömmliche Binärzahl (im Zweier-Komplement) als Position liefern,
 also etwa `0101` für 5 und `0110` für 6, dann gäbe es ein Problem,
 wenn nicht alle Bits absolut gleichzeitig ihre Wertigkeit ändern.
-In diesem Fall könnten &ldquo;Phantomwerte&rdquo; wie `0100` (4) oder `0111` (7) auftreten.
+In diesem Fall könnten &bdquo;Phantomwerte&rdquo; wie `0100` (4) oder `0111` (7) auftreten.
 Der Gray-Code hat dieses Problem nicht, da sich benachbarte Werte nur in einem Bit unterscheiden.
 In [Abbildung 1] wird diese Eigenschaft am Beispiel des 4-Bit-Gray-Codes demonstriert:
 
@@ -57,7 +57,7 @@ In [Abbildung 2] finden Sie die sukzessive Erzeugung des 1-, 2- und 3-Bit-Gray-C
 
 *Abbildung* 2: Bildung des Gray-Codes durch Spiegelung und Bitergänzung.
 
-Erstellen Sie eine &ldquo;Modern C++&rdquo;&ndash;Anwendung, die möglichst einfallsreich alle Gray-Codes
+Erstellen Sie eine &bdquo;Modern C++&rdquo;&ndash;Anwendung, die möglichst einfallsreich alle Gray-Codes
 für ein beliebiges *n* berechnet. Orientieren Sie sich in Ihrer Realisierung an den Details von [Tabelle 1]:
 
 ###### {#tabelle_1_class_graycodescalculator}

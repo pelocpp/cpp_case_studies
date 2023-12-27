@@ -1,6 +1,6 @@
 <!-- Josephus.md -->
 
-In dieser Fallstudie  betrachten wir ein sehr &ldquo;martialisches&rdquo; Problem,
+In dieser Fallstudie  betrachten wir ein sehr &bdquo;martialisches&rdquo; Problem,
 das durch den jüdischen Historiker *Flavius Josephus* überliefert worden ist.
 Dieser soll im römisch&ndash;jüdischen Krieg mit 41 Kameraden den Selbstmord der Gefangenschaft vorgezogen haben.
 Details finden Sie gleich weiter unten vor &ndash; umso interessanter die Fragestellung,
@@ -108,7 +108,7 @@ Für beide Varianten stellen wir eine Lösung vor.
 
 Zur Vertiefung bzw. Wiederholung elementarer programmiersprachlicher C++&ndash;Konstrukte im Umfeld der Vererbung
 stellen wir auf Basis des objekt-orientierten Entwurfs zunächst eine Schnittstelle `IJosephus` vor ([Listing 1]).
-Schnittstellen lassen sich in C++ mit so genannten &ldquo;pure-virtuellen&rdquo; Methoden nachahmen,
+Schnittstellen lassen sich in C++ mit so genannten &bdquo;pure-virtuellen&rdquo; Methoden nachahmen,
 in anderen Programmiersprachen gibt es eigens dafür ein programmiersprachliches Konstrukt mit dem Schlüsselwort `interface`.
 
 ###### {#listing_01_ijosephus_interface}
@@ -363,9 +363,9 @@ Auf diese Weise erkennt man, welche zwei Soldaten als letztes überleben!
 
 {{< figure src="/img/josephus/JosephusRing_01_LinkedList.png" width="50%" >}}
 
-*Abbildung* 2: Beispiel des Josephus-Problems mit Datenstruktur &ldquo;verkettete Liste&rdquo;.
+*Abbildung* 2: Beispiel des Josephus-Problems mit Datenstruktur &bdquo;verkettete Liste&rdquo;.
 
-Am Beispiel aus [Abbildung 2] können Sie die Arbeitsweise des &ldquo;Auszählens&rdquo; nachverfolgen.
+Am Beispiel aus [Abbildung 2] können Sie die Arbeitsweise des &bdquo;Auszählens&rdquo; nachverfolgen.
 12 Soldaten sind hier in einem Kreis angeordnet. Nacheinander bringt sich jeder dritte um.
 Soldat 1 stirbt zuerst, danach Soldat 4 usw. Neben den Soldaten steht die jeweilige Nummer in der Eliminationsreihenfolge.
 Am Schluss bleiben die Soldaten 3 und 8 übrig.

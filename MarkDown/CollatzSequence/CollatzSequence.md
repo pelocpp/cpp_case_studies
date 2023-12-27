@@ -1,6 +1,6 @@
 <!-- CollatzSequence.md -->
 
-Das *Collatz*-Problem, auch als &ldquo;3*n* + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
+Das *Collatz*-Problem, auch als &bdquo;3*n* + 1&rdquo;-Vermutung bezeichnet, ist ein ungelöstes mathematisches
 Problem und wird dem Mathematiker *Lothar Collatz* zugeschrieben. 
 
 Diese Fallstudie zeigt, wie sich die Berechnung der Elemente einer Zahlenfolge in einen C++&ndash;Iterator einbetten lässt,
@@ -27,7 +27,7 @@ beliebige natürliche Startzahl _n_, aus der eine Folge von Zahlen nach den folg
   * STL-Algorithmen (`std::distance`, `std::accumulate`, `std::copy`, `std::back_inserter`)
   * Bereichsbasierte `for`-Wiederholungsschleife (Range-based `for`-Loop)
 
-# Die &ldquo;teuflische Zahlenfolge&rdquo; oder auch das *Collatz*-Problem
+# Die &bdquo;teuflische Zahlenfolge&rdquo; oder auch das *Collatz*-Problem
 
 Merkwürdigerweise erreicht diese Folge nach endlich vielen Schritten immer die Zahl 1. Man kann
 die Vermutung auch so betrachten: Jede Folge mündet in den Zyklus 4, 2, 1 – egal, mit welcher
@@ -38,7 +38,7 @@ Startzahl man die Folge startet. Wählen wir zum Beispiel den Startwert 7, so la
 Bis heute konnte das Collatz-Problem mathematisch nicht bewiesen werden. Auch konnte man mit Hilfe von Computerprogrammen die Vermutung bis heute nur unterstützen,
 aber nicht widerlegen. Alle Startzahlen bis ca. 5,76 * 10<sup>18</sup> untermauern die Vermutung (Stand Januar 2009).
 Obwohl das Problem so einfach zu formulieren ist, gilt es als extrem schwierig, die mit ihm verbundene Aussage mathematisch zu beweisen.
-Oder wie es *Paul Erdös*, einer der bedeutendsten Mathematiker des 20. Jahrhunderts, formulierte: &ldquo;absolut hoffnungslos&rdquo;.
+Oder wie es *Paul Erdös*, einer der bedeutendsten Mathematiker des 20. Jahrhunderts, formulierte: &bdquo;absolut hoffnungslos&rdquo;.
 
 Natürlich wollen wir in dieser Fallstudie keinen Versuch unternehmen, das *Collatz*-Problem zu lösen.
 Kommen wir auf C++ und damit auf eine Umsetzung des Regelwerks in einen C++&ndash;Algorithmus zu sprechen. 
@@ -46,7 +46,7 @@ In einem ersten Ansatz würde man vielleicht eine Klasse `CollatzSolver` impleme
 nach Bedarf aufrufen. Wir wollen aber einen Schritt weitergehen und C++&ndash;Iteratoren ins Spiel bringen.
 Durch die Implementierung des *Collatz*-Problems in Form eines C++&ndash;Iterators kann die Implementierung in Kombination mit der STL verwendet werden,
 wodurch nicht nur die Lesbarkeit des Codes verbessert wird. Es stehen vor allem alle STL-Algorithmen nahtlos zur Verfügung, 
-um Ergebnisse in der Berechnung der &ldquo;teuflischen Zahlenfolge&rdquo; weiterverarbeiten zu können.
+um Ergebnisse in der Berechnung der &bdquo;teuflischen Zahlenfolge&rdquo; weiterverarbeiten zu können.
 
 ## C++&ndash;Iteratoren und die bereichsbasierte `for`-Wiederholungsschleife
 
@@ -81,7 +81,7 @@ Dem Container und damit dem iterierbaren Bereich auf der einen Seite (hier: `con
 Der iterierbare Bereich (*Container*) muss zwei Funktionen `begin()` und `end()` implementieren.
 Diese Funktionen geben jeweils Iteratorobjekte zurück. Das von `begin()` zurückgelieferte Iteratorobjekt steht für das erste Element in der Auflistung,
 das von `end()` für das letzte Element der Auflistung. 
-Hierauf gehen wir später noch näher ein, da eben genau dieses &ldquo;letzte Element&rdquo; nicht immer von vorneherein bekannt ist.
+Hierauf gehen wir später noch näher ein, da eben genau dieses &bdquo;letzte Element&rdquo; nicht immer von vorneherein bekannt ist.
 
 # Lösung
 
@@ -247,7 +247,7 @@ Alle Informationen zu den iterierenden Werten residieren in der Iteratorklasse, 
 
 *Listing* 4: Klasse `CollatzSequence`: Implementierung.
 
-Das C++11&ndash;Sprachfeature der &ldquo;Uniform Initialization&rdquo; kann auch zusammen mit einer `return`-Anweisung auftreten.
+Das C++11&ndash;Sprachfeature der &bdquo;Uniform Initialization&rdquo; kann auch zusammen mit einer `return`-Anweisung auftreten.
 Betrachten Sie die beiden Zeilen 5 und 6 von [Listing 4]. Es steht auf Grund der Definition
 der Methoden `begin()` und `end()` fest, dass diese ein Objekt des Typs `CollatzIterator` zurückliefern müssen.
 Wozu dann
@@ -290,7 +290,7 @@ Dies ist nicht ganz trivial lösbar, aber wenn wir an zwei Stellen im Quellcode 
     der sich hier anbietet. Da er aber das Ende der Zahlenfolge ist, wird er von der Iteration ausgenommen, was wir vermeiden wollen.
 
   * Beobachtung 2: Des Rätsels Lösung liegt an einer ganz anderen Stelle in der Iteratorklasse verborgen: Es ist der `operator!=`, den wir in einer ersten Version
-    seiner Realisierung etwas &ldquo;unterschätzt&rdquo; haben:  
+    seiner Realisierung etwas &bdquo;unterschätzt&rdquo; haben:  
 
     ```cpp
     bool CollatzIterator::operator!=(const CollatzIterator& seq) const
@@ -352,7 +352,7 @@ eine Implementierung der beiden Methoden `begin()` und `end()`. An den zurückge
 drei Operatoren `operator++()`, `operator!=()` und `operator*()` vorhanden sein. Anderfalls wäre ein derartiges Code-Fragment nicht übersetzungsfähig.
 
 Für die nachfolgenden Code-Fragmente muss die Iteratorklasse noch weitere Auskünfte bereitstellen.
-Wir sind beim Themenkreis der so genannten &ldquo;Iterator Traits&rdquo; &ndash; zu Deutsch etwa &ldquo;Iterator Spuren&rdquo; &ndash; angekommen.
+Wir sind beim Themenkreis der so genannten &bdquo;Iterator Traits&rdquo; &ndash; zu Deutsch etwa &bdquo;Iterator Spuren&rdquo; &ndash; angekommen.
 Die Anforderung lässt sich vergleichsweise einfach durch fünf `using`-Deklarationen erfüllen:
 
 ```cpp
@@ -410,7 +410,7 @@ std::cout << count << std::endl;
 ```
 
 *Hinweis*:
-Ohne eine entsprechenden Definition der &ldquo;Iterator Traits&rdquo; in der Klasse `CollatzIterator` ([Listing 1])
+Ohne eine entsprechenden Definition der &bdquo;Iterator Traits&rdquo; in der Klasse `CollatzIterator` ([Listing 1])
 ist der Algorithmus-Aufruf `std::distance` nicht übersetzungsfähig! 
 Die Fehlermeldung ist leider nicht einfach verständlich, bei genauem Hinsehen kann man erkennen,
 dass die zum Zählen der Elemente notwendige Information des Abstands zweier Elemente fehlt:

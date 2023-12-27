@@ -409,8 +409,8 @@ Wie müssten Sie einen Operator `<` in der Klasse `PartialSet` definieren, um di
 |Operator |Beschreibung
 
 | Operator `<`
-a| Vergleicht zwei `PartialSet`-Objekte auf &ldquo;kleiner&rdquo;.
-Wir bezeichnen eine Teilmenge __S__1 &ldquo;kleiner&rdquo; als eine Teilmenge __S__2,
+a| Vergleicht zwei `PartialSet`-Objekte auf &bdquo;kleiner&rdquo;.
+Wir bezeichnen eine Teilmenge __S__1 &bdquo;kleiner&rdquo; als eine Teilmenge __S__2,
 wenn __S__1 entweder weniger Elemente als __S__2 enthält oder, falls __S__2 gleich viel Elemente enthält,
 das erste Element von __S__1 kleiner ist als das erste Element von __S__2.
 Stimmen beide Teilmengen im ersten Element überein, setzen wir den Vergleich mit dem zweiten, dritten, etc. Element solange fort,
@@ -426,7 +426,7 @@ friend bool operator<(const PartialSet&, const PartialSet&);
 == Aufzählung einer Potenzmenge
 
 Bei Objekten, die den Charakter eines Containers besitzen (Menge aller Schriftarten auf einem Rechner, Menge aller laufenden Prozesse, etc.)
-gibt es die Möglichkeit, die einzelnen Elemente eines solchen Objekts der Reihe nach aufzuzählen (so genannte &ldquo;Traversierung der Menge&rdquo;).
+gibt es die Möglichkeit, die einzelnen Elemente eines solchen Objekts der Reihe nach aufzuzählen (so genannte &bdquo;Traversierung der Menge&rdquo;).
 Auf das Beispiel der Potenzmenge angewendet ergänzen wir die Klasse `PowerSet` um die beiden Methoden `begin()` und `end()`, die die zum Iterieren
 notwendigen Objekte für den Start und das Ende einer Aufzählung bereitstellen:
 

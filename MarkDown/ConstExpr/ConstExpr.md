@@ -45,7 +45,7 @@ Für Variablen, die mit `constexpr` definiert sind, gelten folgende Regeln, die m
   * Die Variable muss vorbelegt werden.
   * Der Vorbelegungswert muss ein konstanter Ausdruck sein
 
-Vielmehr gibt es zum Themenbereich &ldquo;Variablen&rdquo; nicht zu sagen, wir kommen jetzt auf Klassen und Objekte zu sprechen.
+Vielmehr gibt es zum Themenbereich &bdquo;Variablen&rdquo; nicht zu sagen, wir kommen jetzt auf Klassen und Objekte zu sprechen.
 
 ## Klassen mit `constexpr` Konstruktoren
 
@@ -260,7 +260,7 @@ und damit nicht auf dem Zielsystem, für das Maschinencode generiert wird.
 
 Die Zeilen 4 bis 22 von Listing 1 haben es in sich: Prinzipiell haben wir es mit einer Lambda-Funktion zu tun, die anonym ist,
 also keinen Namen besitzt! Eigentlich haben wir es mit einer Lambda-Templatefunktion zu tun,
-der Template-Parameter `F` (wie &ldquo;Factor&rdquo;) spezifiziert den Faktor,
+der Template-Parameter `F` (wie &bdquo;Factor&rdquo;) spezifiziert den Faktor,
 der für die Potenzierung heranzuziehen ist. Nun zu Zeile 22: Die runden Klammern `()` bewirken, dass die Lambda-Templatefunktion
 bei Spezialisierung (mit einem Faktor) aufgerufen wird: Der Bezeichner `powerTable` in Zeile 5
 steht also für das `std::array`-Objekt, dass von der Lambda-Funktion berechnet und zurückgeliefert wird. 
@@ -271,7 +271,7 @@ Einen Aufruf finden wir in Zeile 35 vor: Spezialisiert mit einem `Factor` gleich
 Es ist also der Index-Operator `[]` ebenfalls eine `constexpr`-Funktion (Methode), um dies hervorzuheben.
 
 Bleiben wir bei der Funktion `sumUpPowerTable`. Sie soll exemplarisch veranschaulichen,
-dass `constexpr`-Variablen und -Funktionen gewissermaßen &ldquo;schachtelbar&rdquo; sind,
+dass `constexpr`-Variablen und -Funktionen gewissermaßen &bdquo;schachtelbar&rdquo; sind,
 also die `constexpr`-Eigenschaft bleibt so lange erhalten, wie eine `constexpr`-Funktion aus
 unterlagerten `constexpr`-Funktionsaufrufen und -Variablen gebildet wird.
 
@@ -627,7 +627,7 @@ in all seinen Facetten gewonnen!
 
 Die Anregungen zu diesem Artikel stammen aus einem Aufsatz aus der Zeitschrift *IX*:
 
-Petrautzki, Dirk. &ldquo;Nachschlagewerk: C++-Metaprogrammierung mit Templates für eingebettete Systeme&rdquo;.
+Petrautzki, Dirk. &bdquo;Nachschlagewerk: C++-Metaprogrammierung mit Templates für eingebettete Systeme&rdquo;.
 *iX* Magazin für professionelle Informationstechnik, Mai 2021, S. 134 - 137.
 
 Materialien in elektronischer Form: https://github.com/Fraunhofer-IIS-ARC-WST.

@@ -48,7 +48,7 @@ Die drei Zustände *denken*, *hungrig sein* und *essen* werden folglich ständig
 
 {{< figure src="/img/diningphilosophers/Dining_Philosophers.png" width="25%" >}}
 
-<sup>Credits: gefunden in einem Artikel [&ldquo;Elixir, Erlang, and the Dining Philosophers&rdquo; von Tony Baker](https://spin.atomicobject.com/2012/10/31/elixir-erlang-and-the-dining-philosophers)</sup>.
+<sup>Credits: gefunden in einem Artikel [&bdquo;Elixir, Erlang, and the Dining Philosophers&rdquo; von Tony Baker](https://spin.atomicobject.com/2012/10/31/elixir-erlang-and-the-dining-philosophers)</sup>.
 
 *Abbildung* 1: Die dinierenden Philosophen.
 
@@ -268,7 +268,7 @@ Gabeln zu seiner linken und rechten Seite bestimmt sind.
 Also dem dritten Philosoph ist die dritte und vierte Gabel
 aus dem Feld `m_forks` (siehe Zeile 4 von [Listing 3]) zugeordnet, etc.
 
-Des Weiteren kann ein Philosoph &ldquo;denken&rdquo;, &ldquo;hungrig sein&rdquo; und &ldquo;essen&rdquo;,
+Des Weiteren kann ein Philosoph &bdquo;denken&rdquo;, &bdquo;hungrig sein&rdquo; und &bdquo;essen&rdquo;,
 was wir mit entsprechenden Methoden `thinking`, `hungry` und `eating` simulieren.
 Die Methode `dine` wiederum bildet den gesamten Lebenszyklus
 eines Philosoph ab, den wir zur Laufzeit in einem Thread ausführen.
@@ -467,7 +467,7 @@ Damit haben wir die interessanten Quellcode-Abschnitte von [Listing 5] studiert.
 
 In einer Multithreading-Anwendung kann für textuelle Ausgaben das `std::cout`-Objekt nicht ohne Weiteres verwendet werden.
 `std::cout` ist ein globales Objekt, Methodenaufrufe an diesem Objekt im Kontext unterschiedlicher Threads führen
-zwar nicht zu einem Absturz, die Ausgaben können aber &ldquo;zerstückelt&rdquo;
+zwar nicht zu einem Absturz, die Ausgaben können aber &bdquo;zerstückelt&rdquo;
 auf der Konsole auftreten, zum Beispiel dann, wenn der `<<`-Operator kaskadiert verwendet wird.
 
 Möchte man auf den Gebrauch des `<<`-Operators am `std::cout`-Objekt nicht verzichten,
@@ -515,7 +515,7 @@ In der `Logger`-Klasse finden sich noch einige andere Funktionalitäten vor &nda
 zum Beispiel zwei Funktionen `startWatch` und `stopWatch` zum Messen der Ausführungszeit eines Programms. 
 Ferner wird jedem Thread, der sich in C++ mit der Funktion `std::this_thread::get_id` identifizieren lässt,
 eine leichter lesbare ganze Zahl (1, 2, ...) zugeordnet. So sind die Ausgaben der 
-&ldquo;*Dining Philosophers*&rdquo;-Simulation besser lesbar.
+&bdquo;*Dining Philosophers*&rdquo;-Simulation besser lesbar.
 
 Den gesamten Quellcode der Klasse `Logger` finden Sie in zum Abschluss dieser Betrachtungen in [Listing 7] vor:
 

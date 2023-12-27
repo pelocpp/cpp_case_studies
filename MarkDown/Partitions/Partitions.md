@@ -107,7 +107,7 @@ die Summanden eines solchen Objekts stets sortiert (z.B. in absteigender Reihenf
 | _getter_ `size()` | `size_t size() const;`<br/>Liefert die Anzahl der Summanden der Partition zurück. |
 | _getter_ `numbers()` | `std::vector<size_t> numbers();`<br/>Liefert die einzelnen Summanden der Partition in einem `std::vector<size_t>`-Objekt zurück. |
 | Operator `==` | `friend bool operator==(const Partition&, const Partition&);`<br/>Vergleicht zwei `Partition`-Objekte auf Gleichheit. Siehe dazu die Definition der Gleichheit zweier Zerlegungen in der Einführung. |
-| Operatoren `<` und `>` | `friend bool operator<(const Partition&, const Partition&);`<br/>`friend bool operator>(const Partition&, const Partition&);`<br/>Vergleicht zwei `Partition`-Objekte auf &ldquo;kleiner&rdquo; oder &ldquo;größer&rdquo;. Die Art und Weise, wie Partitionen verglichen werden, wurde eingangs erläutert. |
+| Operatoren `<` und `>` | `friend bool operator<(const Partition&, const Partition&);`<br/>`friend bool operator>(const Partition&, const Partition&);`<br/>Vergleicht zwei `Partition`-Objekte auf &bdquo;kleiner&rdquo; oder &bdquo;größer&rdquo;. Die Art und Weise, wie Partitionen verglichen werden, wurde eingangs erläutert. |
 | Operator `<<` | `friend std::ostream& operator<< (std::ostream&, const Partition&);`<br/>Gibt ein `Partition`-Objekt auf der Konsole aus. Die Darstellung einer Partition sollte folgendes Aussehen haben:<br/>`7 = 3 + 2 + 1 + 1` |
 
 *Tabelle* 1: Wesentliche Elemente der Klasse `Partition`.
@@ -193,7 +193,7 @@ Mit welchem STL-Container lässt sich diese Anforderung leicht realisieren? Weit
 
 *Tabelle* 2: Wesentliche Elemente der Klasse `PartitionSet`.
 
-Die Klasse `PartitionSet` aus [Tabelle 2] ist noch nicht in der Lage, die Partitionen zu einer beliebigen natürlichen Zahl zu berechnen. Darauf kommen wir im folgenden Abschnitt zu sprechen. Die prinzipielle Funktionsweise der Klasse `PartitionSet` lässt sich aber schon mal &ldquo;manuell&rdquo; testen:
+Die Klasse `PartitionSet` aus [Tabelle 2] ist noch nicht in der Lage, die Partitionen zu einer beliebigen natürlichen Zahl zu berechnen. Darauf kommen wir im folgenden Abschnitt zu sprechen. Die prinzipielle Funktionsweise der Klasse `PartitionSet` lässt sich aber schon mal &bdquo;manuell&rdquo; testen:
 
 ```cpp
 PartitionSet set{ 3 };
@@ -648,7 +648,7 @@ Zur Verwaltung der `Partition`-Objekte gibt es die Klasse `PartitionSet`:
 
 *Listing* 4: Klasse `PartitionSet`: Definition.
 
-Der Default-Konstruktor ergibt bei dieser Klasse wenig Sinn. Es sollte in Minimalfall immer die natürliche Zahl, um deren Zerlegungen es geht, bekannt sein. Deshalb wird in Zeile 9 ([Listing 4]) der Default-Konstruktor mit dem Schlüsselwort `delete` markiert, die Klasse besitzt folglich *keinen* Standard-Konstruktor. Für die Realisierung der `emplace`-Methode (Zeile 20) kommt das Feature der &ldquo;*Template Member Function*&rdquo; zum Einsatz. Ferner findet die Implementierung
+Der Default-Konstruktor ergibt bei dieser Klasse wenig Sinn. Es sollte in Minimalfall immer die natürliche Zahl, um deren Zerlegungen es geht, bekannt sein. Deshalb wird in Zeile 9 ([Listing 4]) der Default-Konstruktor mit dem Schlüsselwort `delete` markiert, die Klasse besitzt folglich *keinen* Standard-Konstruktor. Für die Realisierung der `emplace`-Methode (Zeile 20) kommt das Feature der &bdquo;*Template Member Function*&rdquo; zum Einsatz. Ferner findet die Implementierung
 im Header-File statt, da dies bei Templates der einfachste Ansatz ist.
 
 In Zeile 24 von [Listing 4] findet die so genannte _Parameter Pack Expansion_ statt (`static_cast<size_t>(args)...`). Es handelt sich um die drei nachgestellten Punkte (`...`) nach dem Parameter `args`. Wir wenden die  _Parameter Pack Expansion_ an, um alle Parameter in einem `std::initializer_list<size_t>`-Objekt zusammenzufassen. Dieses Objekt verwenden wir zur Fehlerüberprüfung (Zeile 26) und berechnen mit `std::accumulate` die Summe der Parameter. Den auf diese Weise erhaltenen Wert vergleichen wir in Zeile 27 mit `m_number` auf Übereinstimmung. Bei Nicht-Übereinstimmung werfen wir ein `std::invalid_argument`-Objekt und verlassen die `emplace`-Methode vorzeitig.
@@ -787,7 +787,7 @@ Die Aufruf von Konstruktoren der Klasse `std::vector<T>` kann manchmal leicht ve
 
 # There&lsquo;s more
 
-Das Thema &ldquo;Aufzählen&rdquo; &ndash; in unserem Fall &ldquo;Partitionen aufzählen&rdquo; &ndash; tritt immer bei Klassen in Erscheinung, deren Struktur gewisse Ähnlichkeiten mit einem Container hat. Ergänzen Sie Ihre Implementierung der Klasse `PartitionSet` entsprechend.
+Das Thema &bdquo;Aufzählen&rdquo; &ndash; in unserem Fall &bdquo;Partitionen aufzählen&rdquo; &ndash; tritt immer bei Klassen in Erscheinung, deren Struktur gewisse Ähnlichkeiten mit einem Container hat. Ergänzen Sie Ihre Implementierung der Klasse `PartitionSet` entsprechend.
 
 _Beispielfragment_:
 

@@ -6,7 +6,7 @@ der Zahlentheoretiker heutzutage auf eine zusätzliche Hilfestellung zurückgrei
 Wir wollen im Folgenden ein Programm entwickeln, das mit Hilfe mehrerer Threads zu zwei fest gegebenen
 natürlichen Zahlen *n* und *m* die Anzahl aller Primzahlen *p* mit *n* &leq; *p* &leq; *m* bestimmt.
 
-Für die Koordination der Threads setzen wir &ldquo;Hindernisse&rdquo; ein, also C++&ndash;20 `std::latch`-Objekte.
+Für die Koordination der Threads setzen wir &bdquo;Hindernisse&rdquo; ein, also C++&ndash;20 `std::latch`-Objekte.
 Studieren Sie in dieser Anwendung, wie die Primzahlensuche mit mehreren Threads auf diese Weise koordinierbar ist.
 
 <!--more-->
@@ -621,7 +621,7 @@ Abhilfe kann hier ein Verfahren schaffen, das von drei indischen Wissenschaftler
 > Der **AKS**-Primzahltest (auch bekannt unter dem Namen **Agrawal-Kayal-Saxena-Primzahltest**) ist ein deterministischer Algorithmus,
 > der für eine natürliche Zahl in polynomieller Laufzeit feststellt, ob sie prim ist oder nicht.
 
-In &ldquo;[AKS-Primzahltest](https://www.biancahoegel.de/mathe/verfahr/aks-primzahltest.html)&rdquo;
+In &bdquo;[AKS-Primzahltest](https://www.biancahoegel.de/mathe/verfahr/aks-primzahltest.html)&rdquo;
 finden Sie für diesen Algorithmus eine Notation in Pseudo-Code vor.
 Wer jetzt seitenweise komplizierte Ausdrücke oder mathematische Formeln vermutet,
 wird überrascht sein, wie einfach der Algorithmus aufgebaut ist.

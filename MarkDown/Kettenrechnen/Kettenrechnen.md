@@ -2,12 +2,12 @@
 
 Mit dem Kettenrechnen kehren wir zu den Ursprüngen unserer Grundschulzeit zurück.
 Für diejenigen unter Ihnen, die dieses Thema aus Ihrem Gedächtnis verdrängt haben:
-Jede Kettenrechnung beginnt mit einer normalen Rechenaufgabe (z.B. &ldquo;1 + 3&rdquo;).
+Jede Kettenrechnung beginnt mit einer normalen Rechenaufgabe (z.B. &bdquo;1 + 3&rdquo;).
 Das Resultat muss im Gedächtnis behalten werden,
-denn es folgt eine weitere Operation (z.B. &ldquo;* 5&rdquo;),
+denn es folgt eine weitere Operation (z.B. &bdquo;* 5&rdquo;),
 welche jeweils zum vorhergehenden Resultat gerechnet wird.
 Das neue Zwischenresultat merkt man sich ebenfalls wieder für die nächste Operation usw. usw.
-So verlängert sich die &ldquo;Rechenkette&rdquo; immer weiter.
+So verlängert sich die &bdquo;Rechenkette&rdquo; immer weiter.
 Im Beispiel der Kettenrechnung `1 + 3 * 5 - 2 * 2 - 8 / 2` sollte man 14 als Endergebnis erhalten.
 
 Entwickeln Sie eine Funktion `calc`, die eine Kettenrechnung als Parameter übergeben bekommt
@@ -38,7 +38,7 @@ Lösungsansätze vor, die generische Funktionen, heterogene STL-Container, regul
 
 Wir klären noch einige Details zum Kettenrechnen vorab:
 Wir halten fest, dass die vier Grundrechenarten ohne Operatorenvorrang
-auszuwerten sind. Die Regel &ldquo;Punkt vor Strich&rdquo; gilt also nicht.
+auszuwerten sind. Die Regel &bdquo;Punkt vor Strich&rdquo; gilt also nicht.
 Auch gibt es keine Klammern. Sie würden ja die Reihenfolge der Auswertung von Rechnungen
 beeinflussen.
 
@@ -100,7 +100,7 @@ Und wir können auf diese Weise eine Brücke von der klassischen Vorgehensweise 
 Diese Lösung kommt im wesentlichen nur mit einem Objekt der Klasse `std::string` aus.
 Die Rechenkette wird als `std::string`-Objekt an eine entsprechende `calc`-Methode durchgereicht.
 Mit geeigneten Iteratoren-Objekten eines `std::string`-Objekts wird die Rechenkette traversiert,
-es werden Operanden und Operatoren gewissermaßen &ldquo;manuell&rdquo; aus der Rechenkette extrahiert
+es werden Operanden und Operatoren gewissermaßen &bdquo;manuell&rdquo; aus der Rechenkette extrahiert
 und zeitgleich die Kettenrechnung durchgeführt.
 
 Mit einer recht simplen Fehlerüberprüfung wird darauf geachtet, dass Operanden und Operatoren
@@ -375,7 +375,7 @@ Result: 60
 In manchen Abschnitten weist die letzte Lösung doch gewisse Umständlichkeiten auf, oder,
 um es deutlicher zu sagen: Da könnte man das eine oder andere auch besser machen.
 *Reguläre Ausdrücke* sind das probate Mittel, um Zeichenketten zu zerlegen
-und ihre Inhalte zu extrahieren. Mit &ldquo;Inhalten&rdquo; sind hier Operatoren und Operanden gemeint.
+und ihre Inhalte zu extrahieren. Mit &bdquo;Inhalten&rdquo; sind hier Operatoren und Operanden gemeint.
 
 In der vorgestellten Lösung finden Sie den regulären Ausdruck
 
@@ -1076,7 +1076,7 @@ Wie sehen die Resultate auf Ihrem Rechner aus?
 # There&lsquo;s more
 
 Tja, eine Idee ist mir da während des Schreibens des Textes gekommen.
-Das `constexpr`-Sprachfeature ist ja zur Zeit der &ldquo;letzte Schrei&rdquo;, um es etwas salopp auszudrücken.
+Das `constexpr`-Sprachfeature ist ja zur Zeit der &bdquo;letzte Schrei&rdquo;, um es etwas salopp auszudrücken.
 Hmm, wie sieht es eigentlich damit aus, Kettenrechnungen vom Übersetzer durchführen zu lassen?
 
 Habe ich ihr Interesse geweckt? Im Lösungsteil der Aufgabe finden Sie eine `constexpr`-Realisierung

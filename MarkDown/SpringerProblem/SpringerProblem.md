@@ -2,7 +2,7 @@
 
 Das *Springerproblem* ist auf den Schweizer Mathematiker *Leonhard Euler* (1707 &ndash; 1783) zurückzuführen.
 Dieser stellte sich vor über 200 Jahren, genauer gesagt im Jahre 1758, die folgende Frage:
-&ldquo;Gegeben sei ein leeres Schachbrett. Gibt es eine Zugfolge, mit der der Springer alle (schwarzen und weißen)
+&bdquo;Gegeben sei ein leeres Schachbrett. Gibt es eine Zugfolge, mit der der Springer alle (schwarzen und weißen)
 Felder des Bretts genau einmal besucht?&rdquo;.
 
 Hmmm, eine gute Frage, wird sich der geneigte Leser jetzt sagen. Möglicherweise kann man sie innerhalb
@@ -14,7 +14,7 @@ wie wir in dieser Fallstudie am Beispiel von *Modern C++* zeigen werden.
 
 Neben der Implementierung einer *Backtracking*-Strategie betrachten wir auch Überlegungen,
 wie sich das Suchen von Zugfolgen parallelisieren lässt.
-Die Methode `std::async` und Objekte, die es &ldquo;erst in der Zukunft&rdquo; gibt (`std::future<T>`), kommen zum Einsatz.
+Die Methode `std::async` und Objekte, die es &bdquo;erst in der Zukunft&rdquo; gibt (`std::future<T>`), kommen zum Einsatz.
 
 <!--more-->
 
@@ -72,49 +72,49 @@ Damit kommen wir jetzt auf die Details des Springerproblems zu sprechen. Die Zug
 
 *Abbildung* 3: Zugmöglichkeiten des Springers auf einem Schachbrett.
 
-# Lösungsstrategie &ldquo;Trial and Error&rdquo;
+# Lösungsstrategie &bdquo;Trial and Error&rdquo;
 
-Wir erläutern nun eine Lösungsstrategie für das Springerproblem am Beispiel eines 3&#x00D7;4-Schachbretts und erklären in einzelnen Schritten den Ablauf. Exemplarisch legen wir für den Springer die Startposition in der linken unteren Ecke fest, also das Feld mit den Koordinaten (2,0), wobei wir den Ursprung des Bretts in der linken, oberen Ecke festlegen ( [Abbildung 4]). Es wäre aber auch jedes andere Feld zur Erörterung der Lösungsstrategie geeignet. Die &ldquo;1&rdquo; symbolisiert, dass es sich um den ersten Zug des Springers handelt:
+Wir erläutern nun eine Lösungsstrategie für das Springerproblem am Beispiel eines 3&#x00D7;4-Schachbretts und erklären in einzelnen Schritten den Ablauf. Exemplarisch legen wir für den Springer die Startposition in der linken unteren Ecke fest, also das Feld mit den Koordinaten (2,0), wobei wir den Ursprung des Bretts in der linken, oberen Ecke festlegen ( [Abbildung 4]). Es wäre aber auch jedes andere Feld zur Erörterung der Lösungsstrategie geeignet. Die &bdquo;1&rdquo; symbolisiert, dass es sich um den ersten Zug des Springers handelt:
 
 ###### {#abbildung_4_springer_problem_knight_moves_start}
 {{< figure src="/img/springer_problem/knight_moves_start.svg" width="25%" >}}
-*Abbildung* 4: Ausgangssituation &ldquo;1&rdquo;: Springer wird im linken unteren Feld platziert.
+*Abbildung* 4: Ausgangssituation &bdquo;1&rdquo;: Springer wird im linken unteren Feld platziert.
 
-Anhand der Ausgangsposition des Springers bestimmen wir nun eine Liste seiner möglichen Züge, die er von der aktuellen Position aus bestreiten kann. Sitzt der Springer auf dem Feld (2,0), so hat er in diesem Fall die Wahl zwischen zwei Zielfeldern (0,1) und (1,2), um weiter voran zu schreiten. Sie finden diese Felder in [Abbildung 5] grau hinterlegt vor. Wir entscheiden uns für das erste Feld aus der Liste, auf dem Schachbrett nehmen wir durch die &ldquo;2&rdquo; eine entsprechende Nummerierung vor:
+Anhand der Ausgangsposition des Springers bestimmen wir nun eine Liste seiner möglichen Züge, die er von der aktuellen Position aus bestreiten kann. Sitzt der Springer auf dem Feld (2,0), so hat er in diesem Fall die Wahl zwischen zwei Zielfeldern (0,1) und (1,2), um weiter voran zu schreiten. Sie finden diese Felder in [Abbildung 5] grau hinterlegt vor. Wir entscheiden uns für das erste Feld aus der Liste, auf dem Schachbrett nehmen wir durch die &bdquo;2&rdquo; eine entsprechende Nummerierung vor:
 
 ###### {#abbildung_5_springer_problem_knight_moves_01}
 {{< figure src="/img/springer_problem/knight_moves_01.svg" width="60%" >}}
-*Abbildung* 5: Spielsituation &ldquo;2&rdquo;: Springer zieht von Feld (2,0) nach Feld (0,1).
+*Abbildung* 5: Spielsituation &bdquo;2&rdquo;: Springer zieht von Feld (2,0) nach Feld (0,1).
 
 Von der aktuellen Springerposition ausgehend bestimmen wir wieder alle möglichen Felder, auf die der Springer nun springen kann. Es ist wieder eine Liste mit zufälligerweise zwei Positionen, dieses Mal sind es die Felder (1,3) und (2,2), siehe [Abbildung 6]. Wir wählen wieder das erste Element aus der Liste aus und setzen die Figur auf das Feld (1,3):
 
 ###### {#abbildung_6_springer_problem_knight_moves_02}
 {{< figure src="/img/springer_problem/knight_moves_02.svg" width="60%" >}}
-*Abbildung* 6: Spielsituation &ldquo;3&rdquo;: Springer zieht von Feld (0,1) nach Feld (1,3).
+*Abbildung* 6: Spielsituation &bdquo;3&rdquo;: Springer zieht von Feld (0,1) nach Feld (1,3).
 
 Es wurden bei weitem noch nicht alle Felder des Schachbretts besucht. Von der Springerposition (1,3) ausgehend bietet sich dieses Mal aber nur ein einziges Feld (2,1) für den Folgezug an, siehe [Abbildung 7]:
 
 ###### {#abbildung_7_springer_problem_knight_moves_03}
 {{< figure src="/img/springer_problem/knight_moves_03.svg" width="60%" >}}
-*Abbildung* 7: Spielsituation &ldquo;4&rdquo;: Springer zieht von Feld (1,3) nach Feld (2,1).
+*Abbildung* 7: Spielsituation &bdquo;4&rdquo;: Springer zieht von Feld (1,3) nach Feld (2,1).
 
 Und noch einmal gilt es diese Runde zu drehen. Dieses Mal können wir zwei Felder (0,0) und (0,2) als mögliche nächste Kandidaten ausmachen. Wir entscheiden uns in [Abbildung 8] für das Feld (0,0):
 
 ###### {#abbildung_8_springer_problem_knight_moves_04}
 {{< figure src="/img/springer_problem/knight_moves_04.svg" width="60%" >}}
-*Abbildung* 8: Spielsituation &ldquo;5&rdquo;: Springer zieht von Feld (2,1) nach Feld (0,0).
+*Abbildung* 8: Spielsituation &bdquo;5&rdquo;: Springer zieht von Feld (2,1) nach Feld (0,0).
 
 Ich verspreche es, diese Runde drehen wir jetzt zum letzten Mal. Es gibt wieder nur ein einziges Feld zum Weiterspielen, in [Abbildung 9] erkennen Sie das weitere Vorgehen:
 
 ###### {#abbildung_9_springer_problem_knight_moves_05}
 {{< figure src="/img/springer_problem/knight_moves_05.svg" width="60%" >}}
-*Abbildung* 9: Spielsituation &ldquo;6&rdquo;: Springer zieht von Feld (0,0) nach Feld (1,2).
+*Abbildung* 9: Spielsituation &bdquo;6&rdquo;: Springer zieht von Feld (0,0) nach Feld (1,2).
 
 Wir sind an einer entscheidenden Stelle in der Betrachtung der Lösungsstrategie angekommen. Wenn Sie [Abbildung 9] betrachten, werden Sie erkennen, dass es von der aktuellen Springerposition aus betrachtet keine weitere Möglichkeit gibt, zu springen und damit zu einer Lösung des Springerproblems zu gelangen. Jetzt kommen die Listen mit den möglichen Folgezügen aus den vorherigen Schritten zum Zuge. Offensichtlich war die Auswahl eines Folgezugs in den Schritten zuvor nicht Erfolg versprechend. Wir müssen die Figur also auf die vorherige Ausgangssituation zurücksetzen. Da wir in diesem Schritt (im konkret vorliegenden Beispiel) aber nur einen einzigen Folgezug hatten, müssen wir gleich noch eine weitere Ausgangssituation zurücksetzen und kommen damit in [Abbildung 7] an. Dort hatten wir, vom Spielfeld mit der Nummer 4 ausgehend, die zwei möglichen Folgezüge (0,0) und (0,2) zur Auswahl. Die Entscheidung für (0,0) hat nicht zum Ziel geführt, also versuchen wir es jetzt mit der zweiten Alternative (0,2), siehe [Abbildung 10]. Sie verstehen jetzt, zu welchem Zweck die Listen mit den möglichen Folgezügen aufzubewahren sind. Gelangt man in einem bestimmten Schritt in die missliche Situation, dass es keine Folgezüge mehr gibt, muss man einen oder mehrere Schritte rückgängig machen und mit einem alternativen Folgezug sein Glück von Neuem versuchen.
 
 ###### {#abbildung_10_springer_problem_knight_moves_06}
 {{< figure src="/img/springer_problem/knight_moves_06.svg" width="60%" >}}
-*Abbildung* 10: Springer geht zur Spielsituation &ldquo;4&rdquo; zurück und springt jetzt von (2,1) nach Feld (0,2).
+*Abbildung* 10: Springer geht zur Spielsituation &bdquo;4&rdquo; zurück und springt jetzt von (2,1) nach Feld (0,2).
 
 Dieses Verfahren läuft solange weiter, bis alle Felder des Schachbrettes besucht worden sind (und man damit eine Lösung gefunden hat), oder man eben feststellt, dass es keine Lösung gibt. Möchte man alle Lösungen zu einer bestimmten Schachbrettgröße finden, bricht man das Verfahren nach dem Entdecken einer Lösung nicht ab, sondern hinterlegt die gefundene Lösung in einer geeigneten Datenstruktur und setzt das Verfahren mit den noch vorhandenen Alternativzügen fort. Wenn Sie alles richtig gemacht haben, werden Sie bei dem betrachteten Beispiel eines 3&#x00D7;4-Schachbretts zwei Lösungen aufspüren, die Sie in [Abbildung 11] betrachten können:
 
@@ -122,11 +122,11 @@ Dieses Verfahren läuft solange weiter, bis alle Felder des Schachbrettes besuch
 {{< figure src="/img/springer_problem/knight_moves_07.svg" width="60%" >}}
 *Abbildung* 11: Zwei Lösungen des Springerproblems auf einem 3&#x00D7;4-Schachbrett.
 
-Die dargelegte Lösungsstrategie ist in der Informatik unter dem Begriff &ldquo;Trial and Error&rdquo; geläufig. Sie findet immer dann Anwendung, wenn zur Lösung eines Problems kein systematisches Verfahren zur Verfügung steht. Bei der &ldquo;Trial and Error&rdquo;-Methode werden nacheinander alle in Frage kommenden Lösungskandidaten durchprobiert, bis eine oder mehrere Lösungen gefunden wurden.
+Die dargelegte Lösungsstrategie ist in der Informatik unter dem Begriff &bdquo;Trial and Error&rdquo; geläufig. Sie findet immer dann Anwendung, wenn zur Lösung eines Problems kein systematisches Verfahren zur Verfügung steht. Bei der &bdquo;Trial and Error&rdquo;-Methode werden nacheinander alle in Frage kommenden Lösungskandidaten durchprobiert, bis eine oder mehrere Lösungen gefunden wurden.
 
-Im Falle des Springerproblems bedeutet dies, dass nach dem Setzen des Springers auf ein Ausgangsfeld maximal 8 Möglichkeiten zu betrachten sind, um auf das nächste Feld zu springen. Auf diesem Feld gibt es wiederum maximal 8 Möglichkeiten, um zum nächsten Feld weiterzuziehen usw. Geht es auf einem bestimmten Spielfeld überhaupt nicht mehr weiter, wird der letzte Schritt (beziehungsweise die letzten Schritte) zurückgenommen, und es werden stattdessen alternative Zugmöglichkeiten ausprobiert. Hieraus erklärt sich auch der Begriff &ldquo;Backtracking&rdquo;, der häufig bei &ldquo;Trial and Error&rdquo;-Problemen anzutreffen ist.
+Im Falle des Springerproblems bedeutet dies, dass nach dem Setzen des Springers auf ein Ausgangsfeld maximal 8 Möglichkeiten zu betrachten sind, um auf das nächste Feld zu springen. Auf diesem Feld gibt es wiederum maximal 8 Möglichkeiten, um zum nächsten Feld weiterzuziehen usw. Geht es auf einem bestimmten Spielfeld überhaupt nicht mehr weiter, wird der letzte Schritt (beziehungsweise die letzten Schritte) zurückgenommen, und es werden stattdessen alternative Zugmöglichkeiten ausprobiert. Hieraus erklärt sich auch der Begriff &bdquo;Backtracking&rdquo;, der häufig bei &bdquo;Trial and Error&rdquo;-Problemen anzutreffen ist.
 
-Durch das systematische Vorwärts- und Rückwärtsziehen des Springers auf dem Schachbrett ist sichergestellt, dass alle in Frage kommenden Lösungswege betrachtet werden. Bildlich gesprochen kann man die Bewegungen des Springers als &ldquo;Aufspannen eines Lösungsbaums&rdquo; ansehen ([Abbildung 12]). In diesem Baum gilt es, Ast für Ast zu traversieren, um die Lösungen zu finden. Führt ein Ast nicht zu einer Lösung, so muss man auf diesem Ast zurückgehen und einen anderen Ast überprüfen.
+Durch das systematische Vorwärts- und Rückwärtsziehen des Springers auf dem Schachbrett ist sichergestellt, dass alle in Frage kommenden Lösungswege betrachtet werden. Bildlich gesprochen kann man die Bewegungen des Springers als &bdquo;Aufspannen eines Lösungsbaums&rdquo; ansehen ([Abbildung 12]). In diesem Baum gilt es, Ast für Ast zu traversieren, um die Lösungen zu finden. Führt ein Ast nicht zu einer Lösung, so muss man auf diesem Ast zurückgehen und einen anderen Ast überprüfen.
 
 ###### {#abbildung_12_springer_problem_solution_tree}
 {{< figure src="/img/springer_problem/knight_moves_solution_tree.png" width="90%" >}}
@@ -143,7 +143,7 @@ In unserem konkreten Beispiel lässt sich nun zusammenfassend das Lösungsverfah
 > **Eingabe**: Aktuelle Position (*x*, *y*) des Springers
 > ****
 > * Springer setzen: Markiere Zielfeld (*x*, *y*) als belegt<br/>
-> * **if** (&ldquo;*alle Felder des Schachbretts sind belegt*&ldquo;) **then**<br/>
+> * **if** (&bdquo;*alle Felder des Schachbretts sind belegt*&bdquo;) **then**<br/>
 > &nbsp;&nbsp;&nbsp;&nbsp;Lösung gefunden: In Liste abspeichern<br/>
 > * **else**<br/>
 > &nbsp;&nbsp;&nbsp;&nbsp;* Bestimmung aller möglichen Folgezüge des Springers<br/>
@@ -284,7 +284,7 @@ Einen Pseudo-Code der `findMoves`-Methode finden Sie in [Abbildung 15] vor. Beac
 
 Wie kann man die Suche nach Lösungen des Springerproblems parallelisieren? Ist der Springer erst einmal auf seinem Startfeld positioniert, können die versuchsweisen Bestimmungen der Zugfolgen von jeweils einem separaten Thread durchgeführt werden. Da jeder Versuch zur Lösung des Springerproblems sich Notizen auf dem Schachbrett macht (Eintragung der Zugnummer), benötigt jede Task ein eigenes Schachbrett. Im Vergleich zu dem zeitlichen Gewinn, der bei der Parallelisierung des Algorithmus entsteht, ist diese Anforderung an die Implementierung jedoch als äußerst marginal einzustufen.
 
-Sie haben soeben das *Master*-*Slave*-Modell als eine Organisationsform zur Parallelisierung von Algorithmen kennen gelernt ([Abbildung 16]). Ein Master-Thread ist bei diesem Modell für die grundlegenden Aufgaben wie Organisation des Schachbretts, seine Visualisierung oder den Empfang und die Verwaltung asynchron eintreffender Lösungen zuständig. Die eigentliche Aufgabe, das Suchen nach Zugfolgen auf dem Schachbrett, wird an einen oder mehrere Slave-Threads delegiert. In Abhängigkeit von den zur Verfügung stehenden Ressourcen des Rechners entscheidet der Master-Thread, wie viele Slave-Threads zu erzeugen sind &ndash; oder auch zu einem späteren Zeitpunkt noch zusätzlich nachgestartet werden können. Alle Daten, die vom Master- und seinen Slave-Threads gemeinsam benutzt werden, dürfen natürlich nur nach der Strategie des &ldquo;gegenseitigen Ausschlusses&rdquo; benutzt werden.
+Sie haben soeben das *Master*-*Slave*-Modell als eine Organisationsform zur Parallelisierung von Algorithmen kennen gelernt ([Abbildung 16]). Ein Master-Thread ist bei diesem Modell für die grundlegenden Aufgaben wie Organisation des Schachbretts, seine Visualisierung oder den Empfang und die Verwaltung asynchron eintreffender Lösungen zuständig. Die eigentliche Aufgabe, das Suchen nach Zugfolgen auf dem Schachbrett, wird an einen oder mehrere Slave-Threads delegiert. In Abhängigkeit von den zur Verfügung stehenden Ressourcen des Rechners entscheidet der Master-Thread, wie viele Slave-Threads zu erzeugen sind &ndash; oder auch zu einem späteren Zeitpunkt noch zusätzlich nachgestartet werden können. Alle Daten, die vom Master- und seinen Slave-Threads gemeinsam benutzt werden, dürfen natürlich nur nach der Strategie des &bdquo;gegenseitigen Ausschlusses&rdquo; benutzt werden.
 
 ###### {#abbildung_16_springer_problem_master_slave_model}
 {{< figure src="/img/springer_problem/knight_moves_master_slave.svg" width="70%" >}}
@@ -729,8 +729,8 @@ Ein Aufruf mit einer normalen C-Funktion (keine Objekt-Orientierung) oder mit ei
 finden Sie in den Zeilen 66 bis 69 vor. Im Prinzip dient der Einsatz des `()`-Operators nur einem einzigen Zweck, nämlich die `findMovesParallel`-Methode an `std::async` als Parameter übergeben zu können, also eine objekt-orientierte Vorgehensweise zu haben.
 
 Die Implementierung des  `()`-Operators zieht noch eine zweite Konsequenz nach sich: Es kommt zu einem
-rekursiver Aufruf der `findMovesParallel`-Methode! Wozu ist dieser rekursive Aufruf überhaupt notwendig? Ich wollte die Parallelisierung des Algorithmus nicht nur auf eine &ldquo;Ebene&rdquo; beschränken (Zug von der aktuellen Position zu einer möglichen Nachfolgeposition),
-sondern auch &ldquo;Züge von einer Nachfolgeposition zu den Nach-Nachfolgepositionen&rdquo; mit in die Parallelisierung mit einbeziehen können,
+rekursiver Aufruf der `findMovesParallel`-Methode! Wozu ist dieser rekursive Aufruf überhaupt notwendig? Ich wollte die Parallelisierung des Algorithmus nicht nur auf eine &bdquo;Ebene&rdquo; beschränken (Zug von der aktuellen Position zu einer möglichen Nachfolgeposition),
+sondern auch &bdquo;Züge von einer Nachfolgeposition zu den Nach-Nachfolgepositionen&rdquo; mit in die Parallelisierung mit einbeziehen können,
 sofern dies erwünscht ist. Aus diesem Grund besitzt die 
 `findMovesParallel`-Methode einen Parameter `maxDepth`, der die Tiefe des rekursiven Abstiegs kontrolliert.
 Ist `maxDepth` größer als 0, dann wird, wiederum mit einem Aufruf von `findMovesParallel`
@@ -742,7 +742,7 @@ kann (sinnvollweise) nicht als Referenz oder Kopie an `std::async` übergeben we
 Dasselbe gilt für `std::future<ListSolutions>`-Objekte, die vorübergehend in einem `std::deque<std::future<ListSolutions>>`-Objekte abgelegt werden.
 Auch hier muss die Verschiebesemantik zum Einsatz kommen. 
 
-Der Einsatz von `std::async`-Methoden bringt es mit sich, dass die Resultate über ein entsprechendes `std::future<T>`-Objekt &ldquo;in der nahen Zukunft&rdquo;
+Der Einsatz von `std::async`-Methoden bringt es mit sich, dass die Resultate über ein entsprechendes `std::future<T>`-Objekt &bdquo;in der nahen Zukunft&rdquo;
 abgeholt werden können. Die durch `std::async` angestoßenen Threads stehen konzeptionell für die *Slaves*. 
 Ab den Zeilen 145 werden mit einem `get`-Aufruf an den jeweiligen `std::future<T>`-Objekten die von ihnen berechneten (Zwischen-)Resultate abgeholt und
 in einen entsprechenden Container des *Masters* umkopiert. Da alle beteiligten Threads auf einer Kopie eines `KnightProblemSolver`-Objekts arbeiten,
@@ -750,7 +750,7 @@ sind während der parallelen Ausführung keine besonderen Schutzmechanismen notw
 (die Beachtung eines etwaigen konkurrierenden Zugriffs auf gemeinsame Daten ist nicht erforderlich).
 Ist ein *Slave* fertig, können seine Resultate im *Master* direkt umkopiert werden, es wird jetzt nicht mehr parallel gearbeitet.
 
-Noch ein abschließender Hinweis: In den Zeilen 178 ff. finden Sie eine C++ 17 Spracherweiterung vor, eine `if`-Anweisung mit einer Variablen-Initialisierung. So ist die Variable `tmp` von Zeile 178 genau bis zur Zeile 181 gültig bzw. bekannt. Ihre Definition ist &ldquo;innerhalb&rdquo; der `if`-Anweisung erfolgt,
+Noch ein abschließender Hinweis: In den Zeilen 178 ff. finden Sie eine C++ 17 Spracherweiterung vor, eine `if`-Anweisung mit einer Variablen-Initialisierung. So ist die Variable `tmp` von Zeile 178 genau bis zur Zeile 181 gültig bzw. bekannt. Ihre Definition ist &bdquo;innerhalb&rdquo; der `if`-Anweisung erfolgt,
 damit erklärt sich ihr minimaler Gültigkeitsbereich:
 
 ```cpp

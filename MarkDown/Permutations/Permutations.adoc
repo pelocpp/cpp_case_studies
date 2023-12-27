@@ -356,7 +356,7 @@ private:
     ...
 ----
 
-Dieser Vektor kann mit einem geeigneten Konstruktor und der so genannten &ldquo;Initialisierungsliste&rdquo; (engl. &ldquo;List Initialization&rdquo;, seit C++ 11)
+Dieser Vektor kann mit einem geeigneten Konstruktor und der so genannten &bdquo;Initialisierungsliste&rdquo; (engl. &bdquo;List Initialization&rdquo;, seit C++ 11)
 elegant vorbelegt werden. Eigentlich hat der in Frage kommende Konstruktor einen Parameter des Typs `std::vector<char>`.
 Wir müssen beim Anlegen eines `Permutation`-Objekts aber nicht zwingend vor dem Aufruf ein `std::vector<char>`-Objekt explizit anlegen.
 Wir können stattdessen eine Menge von Zeichen in geschweifte Klammern setzen und an den Konstruktor übergeben:
@@ -372,8 +372,8 @@ Dieser Quellcode basiert auf der Tatsache, dass der Konstruktor der Klasse `std:
 nicht als `explicit` definiert ist. Damit kann der Übersetzter implizit eine Wandlung von einer Initialisierungsliste in ein `std::vector<T>`-Objekt durchführen.
 Im Rumpf des Konstruktors erhalten wir folglich - dank des Übersetzers - ein `std::vector<T>`-Objekt, das wir der `m_values`-Variablen zuweisen können.
 Diese Wertzuweisung habe ich syntaktisch im der Initialisierungsliste des Konstruktors vorgenommen,
-und dabei ist zu beachten, dass die geschweiften Klammern dieses Mal für das so genannten Feature der &ldquo;einheitlichen Initialisierung&rdquo;
-(engl. &ldquo;Uniform Initialization&rdquo;, seit C++ 11) stehen. Dieses Schreibweise bildet zusammen mit der Initialisierungsliste 
+und dabei ist zu beachten, dass die geschweiften Klammern dieses Mal für das so genannten Feature der &bdquo;einheitlichen Initialisierung&rdquo;
+(engl. &bdquo;Uniform Initialization&rdquo;, seit C++ 11) stehen. Dieses Schreibweise bildet zusammen mit der Initialisierungsliste 
 den Ansatz von Modern C++, den Themenbereich der Initialisierung von Variablen und Objekten zu vereinheitlichen.
 
 #### _Purists can do better_: Vermeidung der geschweiften Klammern.
@@ -394,7 +394,7 @@ Permutation p('1', '2', '3', '4', '5');
 ----
 
 sieht irgendwie merkwürdig aus: Wir haben es - in diesem Beispiel - mit fünf Parametern zu tun, die logischerweise nicht zu einem der vorhandenen Konstruktoren
-passen. Entsprechend reagiert der Compiler auch mit einer Fehlermeldung der Art _&ldquo;'Permutation::Permutation': no overloaded function takes 5 arguments&rdquo;_
+passen. Entsprechend reagiert der Compiler auch mit einer Fehlermeldung der Art _&bdquo;'Permutation::Permutation': no overloaded function takes 5 arguments&rdquo;_
 Damit ändern wir die runden Klammern einfach in geschweifte Klammern um:
 
 [source,c++]
@@ -403,7 +403,7 @@ Permutation p{ '1', '2', '3', '4', '5' };
 ----
 
 Der Compiler bildet dem Ausdruck `{ '1', '2', '3', '4', '5' }` auf eine Initialisierungsliste ab, kann diese aber nicht einem Konstruktor der Klasse `Permutation`
-zuordnen: _&ldquo;'initializing': cannot convert from 'initializer list' to 'Permutation'&rdquo;_
+zuordnen: _&bdquo;'initializing': cannot convert from 'initializer list' to 'Permutation'&rdquo;_
 
 Ein gangbare Weg besteht nun darin, einen Konstruktor mit einem Parameter des Typs std::intializer_list<> zu ergänzen:
 

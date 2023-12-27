@@ -165,7 +165,7 @@ unterschiedlichen Typs und auch mit nicht-arithmetischen Werten aufrufen, also z
 mit `std::string`&ndash;Objekten. Im Falle von nicht-arithmetischen Datentypen ist es aber
 erforderlich, dass die jeweilige Klasse den `+`&ndash;Operator unterstützt.
 Bei Variablen unterschiedlichen Datentyps wird das Ergebnis nach den üblichen C/C++
-Konvertierungsregeln bzgl. des &ldquo;*größten gemeinsamen*&rdquo; Datentyps berechnet.
+Konvertierungsregeln bzgl. des &bdquo;*größten gemeinsamen*&rdquo; Datentyps berechnet.
 
 *Beispiel*:
 
@@ -279,7 +279,7 @@ des Parameter Packs gibt.
 
 Sagen wir es so: Der Ansatz mit `for` führt nach wie vor nicht zum Ziel,
 aber es gibt eine spezielle Art des Foldings, die uns in die Nähe des Ziels bringt:
-Das &ldquo;*Folding over a Comma*&rdquo;.
+Das &bdquo;*Folding over a Comma*&rdquo;.
 
 Ja, Sie haben es richtig gelesen: Wir wenden das Folding für den Komma-Operator `,` an.
 Um es wahrheitsgemäßer zu sagen: Am Komma-Operator sind wir eigentlich überhaupt nicht interessiert,
@@ -305,13 +305,13 @@ Die erste Variation sollte in puncto Lesbarkeit die beste sein:
 11:     ( printElem(args) , ... );
 12: }
 ```
-*Listing* 1: &ldquo;*Folding over a Comma*&rdquo;.
+*Listing* 1: &bdquo;*Folding over a Comma*&rdquo;.
 
 Betrachten Sie in diesem Code-Fragment Zeile 11: Hier finden wir den diskutierten Folding-Ausdruck vor:
 Ja, es mutet ein wenig merkwürdig an, den Komma-Operator hier vorzufinden.
 Aber wenn Sie Zeile 11 genau betrachten, werden Sie erkennen, dass es eigentlich um den Aufruf
 der Hilfsfunktion `printElem` geht. Und diese Funktion wird eben auf Grund des
-&ldquo;*Abrollens*&rdquo; (so könnte man *Folding* ins Deutsche übersetzen)
+&bdquo;*Abrollens*&rdquo; (so könnte man *Folding* ins Deutsche übersetzen)
 der Reihe nach für jedes Element des Parameter Packs aufgerufen!
 
 Nebenbei bemerkt: In [Listing 1] finden wir eine Kombination der C++ Sprachkonstrukte
@@ -319,7 +319,7 @@ Nebenbei bemerkt: In [Listing 1] finden wir eine Kombination der C++ Sprachkonst
 
 Wie versprochen, nun einige Alternativen zur Gestaltung des Quellcodes von Funktion `doSomethingWithParameterPack`:
 Sollten Sie sich in Zeile 3 an der lokalen Variablen `i` stören, so könnte man
-diese auch als &ldquo;*Instanzvariable*&rdquo; der inneren Lambda-Funktion `printElem` definieren:
+diese auch als &bdquo;*Instanzvariable*&rdquo; der inneren Lambda-Funktion `printElem` definieren:
 
 ###### {#listing_2_lambda_with_instance_variable}
 
@@ -387,7 +387,7 @@ Diese Realisierung ist am schwersten lesbar. Meiner Vorstellung von gutem Softwa
 05:     ([&] { ++i; std::cout << "Element " << i << ": " << args << std::endl; } () , ... );
 06: }
 ```
-*Listing* 4: &ldquo;*Folding over a Comma*&rdquo; in minimalistischer Schreibweise.
+*Listing* 4: &bdquo;*Folding over a Comma*&rdquo; in minimalistischer Schreibweise.
 
 In [Listing 4] finden wir die innere Lambda-Funktion als Argument des Folding Ausdrucks vor &ndash; garniert mit
 einem unmittelbaren Aufruf (*IIFE*).
@@ -503,7 +503,7 @@ in dessen Rumpf wird mit `if constexpr` und `sizeof...` eine Fallunterscheidung 
 *Listing* 8: Dasselbe Beispiel in Lambda-Funktionsschreibweise &ndash; dieses Mal korrekt (C++ 17).
 
 *Bemerkung*: Der Quellcode aus [Listing 8] ist mit GCC nicht übersetzungsfähig.
-Die Fehlermeldung lautet in Zeile 7: &ldquo;*Error: use of 'sum' before deduction of 'auto'*&ldquo;.
+Die Fehlermeldung lautet in Zeile 7: &bdquo;*Error: use of 'sum' before deduction of 'auto'*&bdquo;.
 Wenn Sie eine Idee haben, wie man diesen Fehler beseitigen kann, würde ich mich über eine Nachricht sehr freuen.
 
 ## Funktionale Programmierung mit C++
@@ -514,7 +514,7 @@ Was nicht unmittelbar zu erkennen war:
 Mit Hilfe derartiger Lambda Funktionen lassen sich nun auch
 Konzepte der *funktionalen Programmierung* in C++ formulieren.
 
-Ich will damit nicht zum Ausdruck bringen, dass &ldquo;Modern C++&ldquo; auf einer Ebene
+Ich will damit nicht zum Ausdruck bringen, dass &bdquo;Modern C++&bdquo; auf einer Ebene
 wie zum Beispiel *Haskell* oder *F#* steht.
 Aber das eine oder andere zentrale Konzept der funktionalen Programmierung &ndash; wie zum Beispiel
 *Currying* und *Funktionen höherer Ordnung* &ndash; können wir nun auch mit C++ Hilfsmitteln schreiben.
@@ -581,11 +581,11 @@ nur um ihre Phantasie etwas anzuregen.
 
 In der Konsole erhalten wir den Wert `15` als Ergebnis.
 Damit sollte das Prinzip des Curryings verständlich geworden sein:
-&ldquo;Wir zerlegen eine Funktion,
+&bdquo;Wir zerlegen eine Funktion,
 die mehrere Argumente verwendet, in eine Reihe mehrerer Funktionen,
 die jeweils nur ein Argument verwenden.&rdquo;
 
-Moment mal! Wo hatten wir in unseren bisherigen Beispielen den Aufruf mit den &ldquo;vielen&rdquo; Argumenten?
+Moment mal! Wo hatten wir in unseren bisherigen Beispielen den Aufruf mit den &bdquo;vielen&rdquo; Argumenten?
 Diesen Aufruf sollten wir nachreichen:
 
 ```cpp
@@ -663,7 +663,7 @@ In Zeile 9 wird es nun konkreter: Auf Grund der Quellcode-Fragments
 ```cpp
 func(result);
 ```
-muss es sich bei `func` um etwas &ldquo;*Aufrufbares*&rdquo; handeln, also ein *Callable* im C++&ndash;Jargon.
+muss es sich bei `func` um etwas &bdquo;*Aufrufbares*&rdquo; handeln, also ein *Callable* im C++&ndash;Jargon.
 Es sind die runden Klammern nach `func`, die den Compiler auf diese Fährte führen.
 Es wurde schon mehrere Male angesprochen:
 Auch wenn man landläufig von Lambda Funktionen spricht, haben wir es mit *Objekten* zu tun.
@@ -732,12 +732,12 @@ Dieses Mal liegen bei den Parametern `int`-Werte vor, also haben wir es nicht
 mit einer Funktion höherer Ordnung zu tun.
 
 Okay, ich vermute mal, Sie werden sagen:
-Das ginge vielleicht auch etwas &ldquo;eleganter&rdquo;,
+Das ginge vielleicht auch etwas &bdquo;eleganter&rdquo;,
 wobei ich es Ihnen überlasse, ein geeignetes Wort für den von mir angestrebten Sachverhalt zu finden.
 Die Formulierung eines geschachtelten Funktionsaufrufs ist bisweilen immer etwas mühsam,
 man muss die schließenden runden Klammern am Ende des Ausdrucks genau zählen.
 
-&ldquo;We can do better&rdquo;: Wie wäre es mit einer separaten Funktion `combine` 
+&bdquo;We can do better&rdquo;: Wie wäre es mit einer separaten Funktion `combine` 
 &ndash; und wie sollte es anders sein: einer Funktion höherer Ordnung,
 deren Argumente (Lambda Objekte) über das Parameter Pack übergeben werden
 und von `combine` verschachtelt aufgerufen werden.
@@ -814,17 +814,17 @@ Einfache Antwort: Überhaupt nicht! Die Parameter sind beim Aufruf des zurückgege
 Lambda Objekts bereitzustellen,
 und das ist in unserem Beispiel am Ende von Zeile 32 der Fall &ndash; hier mit dem Wert `1`.
 Da es sich um ein Parameter Pack handelt, könnten dies auch mehrere Parameter sein.
-Die Thematik &ldquo;*Parameter Pack an andere Funktionen weiterreichen*&rdquo;
+Die Thematik &bdquo;*Parameter Pack an andere Funktionen weiterreichen*&rdquo;
 hatten wir bereits betrachtet.
 
 Zugegeben, nach dem Studium des Quellcodes aus [Listing 14] werden Sie sich sicherlich fragen,
 wo bei den vielen Überladungen der `combine` Hilfsfunktion noch ein Vorteil liegt?
-Vielleicht erahnen Sie es schon: &ldquo;Again we can do better&rdquo;!
+Vielleicht erahnen Sie es schon: &bdquo;Again we can do better&rdquo;!
 
 ## Betrachtung einer generischen Funktion höherer Ordnung mit rekursiver Parameter Pack Expansion
 
 Ich weiß, diese Überschrift sollte man nicht ernst nehmen, aber es war ja das Ziel dieser Fallstudie,
-möglichst viele Konzepte von &ldquo;Modern C++&ldquo; in möglichst geschickten Kombinationen darzulegen.
+möglichst viele Konzepte von &bdquo;Modern C++&bdquo; in möglichst geschickten Kombinationen darzulegen.
 
 Die vielen Überladungen der `combine` Hilfsfunktion lassen sich auf eine reduzieren,
 wenn man das Parameter Pack rekursiv auspackt &ndash; siehe [Listing 15]:
@@ -915,7 +915,7 @@ weitere Qualifizierungen mit `const` oder `&` spielen in diesem Zusammenhang kei
 Der Rückgabetyp muss `bool` sein, was von den beiden Funktionen `beginsWith` und `endsWith` erfüllt wird.
 
 Die beiden Lambda Objekte `beginsWith` und `endsWith` sind
-einfache &ldquo;filtrierende&rdquo; Prädikatsfunktionen, um
+einfache &bdquo;filtrierende&rdquo; Prädikatsfunktionen, um
 Zeichenketten zu finden, die entweder mit `a` beginnen bzw. mit `b` enden.
 
 Wir könnten diese beiden Funktionen in der Tat direkt als Argument für `std::copy_if` verwenden.
@@ -1075,7 +1075,7 @@ Und es sollte nach wie vor Ihre Entscheidung sein, welche der modernen C++ Baust
 
 
 Ich bin am Ende meiner Ausführungen angekommen! Ich hoffe, es hat Ihnen etwas Spaß bereitet,
-zu verfolgen, welche neuen Möglichkeiten in &ldquo;Modern C++&ldquo;
+zu verfolgen, welche neuen Möglichkeiten in &bdquo;Modern C++&bdquo;
 zur Verfügung stehen.
 
 
@@ -1085,12 +1085,12 @@ zur Verfügung stehen.
 
 Einige Beispiele und Anregungen zu dieser Fallstudie stammen aus dem Aufsatz
 
-&ldquo;[What are C++ variadic templates and fold expressions?](https://iamsorush.com/posts/cpp-variadic-template/)&rdquo;</br>
+&bdquo;[What are C++ variadic templates and fold expressions?](https://iamsorush.com/posts/cpp-variadic-template/)&rdquo;</br>
 (abgerufen am 8. Mai 2023).
 
 Auch wurden Anregungen durch das Buch 
 
-Bill Weinmann, &ldquo;*C++ Cookbook (1th Edition)*&rdquo;.</br>
+Bill Weinmann, &bdquo;*C++ Cookbook (1th Edition)*&rdquo;.</br>
 Verlag Packt (27. Mai 2022), 450 Seiten. Sprache: Englisch. ISBN-13: 978-1-80324-871-4, ISBN-10: 1803248718.
 
 gegeben.

@@ -7,7 +7,7 @@ P<sub>n</sub>(*x*) = a<sub>n</sub>*x*<sup>n</sup> + a<sub>n-1</sub>*x*<sup>n-1</
 
 Entwickeln Sie eine Klasse `Polynom`, die &ndash; möglichst einfallsreich &ndash; die unterschiedlichen Konstrukte
 (Instanzvariablen, Konstruktoren, Methoden, inklusive *getter*- und *setter*-Methoden, Lambda-Funktionen, Operatoren usw.)
-zur Definition einer Klasse in &ldquo;Modern C++&rdquo; in Anspruch nimmt.
+zur Definition einer Klasse in &bdquo;Modern C++&rdquo; in Anspruch nimmt.
 
 <!--more-->
 
@@ -146,14 +146,14 @@ Natürlich mit *x*<sup>2</sup>, das erste Teilresultat der Division ergibt sich 
 (*x*<sup>3</sup> + 6*x*<sup>2</sup> + 3*x* - 10) : (*x* + 5) = *x*<sup>2</sup>
 
 Wie bei der Division von ganzen Zahlen multipliziert man jetzt den neuen Bestandteil des Ergebnisses mit dem Divisor
-und schreibt ihn &ldquo;passend&rdquo; unter den Dividenden,
+und schreibt ihn &bdquo;passend&rdquo; unter den Dividenden,
 also gleiche Potenzen von *x* sind jeweils untereinander zu schreiben:
 
 (*x*<sup>3</sup> + 6*x*<sup>2</sup> + 3*x* - 10) : (*x* + 5) = *x*<sup>2</sup>
 
  *x*<sup>3</sup> + 5*x*<sup>2</sup>
 
-Nun wird die Subtraktion durchgeführt und anschließend werden alle restlichen Glieder des Polynoms &ldquo;heruntergeholt&rdquo;:
+Nun wird die Subtraktion durchgeführt und anschließend werden alle restlichen Glieder des Polynoms &bdquo;heruntergeholt&rdquo;:
 
 {{< figure src="/img/polynoms/PolynomDivision01.png" width="35%" >}}
 
@@ -164,14 +164,14 @@ des Quotienten (des Ergebnisses) +*x*:
 
 {{< figure src="/img/polynoms/PolynomDivision02.png" width="40%" >}}
 
-Die jetzt noch zu beantwortende Frage lautet &ldquo;Wie oft passt *x* in -2*x*?&rdquo;.
+Die jetzt noch zu beantwortende Frage lautet &bdquo;Wie oft passt *x* in -2*x*?&rdquo;.
 Offensichtlich -2-Mal, und die (letzte) Subtraktion sieht nun so aus:
 
 {{< figure src="/img/polynoms/PolynomDivision03.png" width="42%" >}}
 
 Dass diese Polynomdivision keinen Rest besitzt, ist in der Tat Zufall – oder um es doch ehrlich zu sagen:
 Ich habe es mit Absicht so hingedeichselt :-). Es kann allerdings auch der Fall vorliegen, dass das Restpolynom
-nicht mehr durch das Divisorpolynom teilbar ist. In diesem Fall weist die Polynomdivision einen &ldquo;Rest&rdquo; auf.
+nicht mehr durch das Divisorpolynom teilbar ist. In diesem Fall weist die Polynomdivision einen &bdquo;Rest&rdquo; auf.
 Neben der Division gibt es daher auch die Modulo-Operation für Polynome,
 also die Bestimmung des Restpolynoms bei Polynomdivision, siehe dazu folgendes Beispiel:
 
@@ -374,11 +374,11 @@ x^2+2x^1+3
 -4x^1-8
 ```
 
-Bislang haben uns wir ausschließlich dem &ldquo;Ring der Polynome&rdquo; zugewendet, wie ein Mathematiker sagen würde,
+Bislang haben uns wir ausschließlich dem &bdquo;Ring der Polynome&rdquo; zugewendet, wie ein Mathematiker sagen würde,
 also dem Verknüpfen von Polynomen mit Operatoren.
 Um die mathematische Schreibweise für die Auswertung eines Polynoms *p* an der Stelle *y* nachzuahmen,
 bieten sich in C++ gleich zwei Operatoren an: Der Index-Operator `[]` sowie der Funktionsaufruf-Operator `()`, auch *Funktor* genannt.
-Der Index-Operator bietet sich eigentlich immer dann an, wenn die zugrunde liegende Klasse den Charakter von etwas &ldquo;indizierbarem&rdquo; hat.
+Der Index-Operator bietet sich eigentlich immer dann an, wenn die zugrunde liegende Klasse den Charakter von etwas &bdquo;indizierbarem&rdquo; hat.
 Dies trifft auf die Klasse `Polynom` eigentlich nicht zu, daher ist meine Wahl auf den Funktionsaufruf-Operator `()` gefallen ([Tabelle 7]):
 
 ###### {#tabelle_7_class_polynom_functor}
@@ -439,10 +439,10 @@ Natürlich lassen sich Polynome auch vergleichen. In [Tabelle 8] finden Sie die 
 | :---- | :---- |
 | Operator `==` | `friend Polynom& operator== (const Polynom&, const Polynom&);`<br/>Test auf Gleichheit zweier Polynome. |
 | Operator `!=` | `friend Polynom& operator!= (const Polynom&, const Polynom&);`<br/>Test auf Ungleichheit zweier Polynome. |
-| Operator `<` | `friend Polynom& operator< (const Polynom&, const Polynom&);`<br/>Test auf &ldquo;Kleiner&rdquo; zweier Polynome. |
-| Operator `<=` | `friend Polynom& operator<= (const Polynom&, const Polynom&);`<br/>Test auf &ldquo;Kleiner-Gleich&rdquo; zweier Polynome. |
-| Operator `>` | `friend Polynom& operator> (const Polynom&, const Polynom&);`<br/>Test auf &ldquo;Größer&rdquo; zweier Polynome. |
-| Operator `>=` | `friend Polynom& operator>= (const Polynom&, const Polynom&);`<br/>Test auf &ldquo;Größer-Gleich&rdquo; zweier Polynome. |
+| Operator `<` | `friend Polynom& operator< (const Polynom&, const Polynom&);`<br/>Test auf &bdquo;Kleiner&rdquo; zweier Polynome. |
+| Operator `<=` | `friend Polynom& operator<= (const Polynom&, const Polynom&);`<br/>Test auf &bdquo;Kleiner-Gleich&rdquo; zweier Polynome. |
+| Operator `>` | `friend Polynom& operator> (const Polynom&, const Polynom&);`<br/>Test auf &bdquo;Größer&rdquo; zweier Polynome. |
+| Operator `>=` | `friend Polynom& operator>= (const Polynom&, const Polynom&);`<br/>Test auf &bdquo;Größer-Gleich&rdquo; zweier Polynome. |
 
 *Tabelle* 8: Vergleichsoperatoren für Objekte der Klasse `Polynom`.
 
@@ -564,7 +564,7 @@ einen falschen Wert zurückliefert, wenn die Anzahl der Koeffizienten gefragt is
 zum Beispiel dadurch, dass man neben dem `m_coefficients`-Objekt eine zweite Instanzvariable, nennen wir sie `m_size`,
 mitführt und -verwaltet. Damit würden 0-Elemente am Ende des `std::vector<double>`-Objekts nicht zu falschen Konsequenzen führen.
 
-&ldquo;Viele Wege führen nach Rom&rdquo; &ndash; bei mir ist dies die Entscheidung für einen *minimalistischen Ansatz*
+&bdquo;Viele Wege führen nach Rom&rdquo; &ndash; bei mir ist dies die Entscheidung für einen *minimalistischen Ansatz*
 mit einer einzigen Instanzvariablen. Dies hat allerdings zur Folge, dass eine Methode `removeTrailingZeros` ins Spiel kommt (Zeile 62, [Listing 1]),
 die immer, wenn ein neues `std::vector<double>` berechnet wurde (nach einer Polynom-Addition, -Subtraktion etc.),
 auf das Koeffizienten-Objekt angewendet wird.

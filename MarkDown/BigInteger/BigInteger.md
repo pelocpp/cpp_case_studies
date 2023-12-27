@@ -35,7 +35,7 @@ Vermutlich sind Ihre Erinnerungen hierzu, wie meine auch, zwischenzeitlich recht
 In den nachfolgenden Hinweisen finden Sie einen kurzen Auffrischungskurs dieser schulmathematischen Grundlagen vor.
 
 Um etwaige Missverständnisse rechtzeitig auszuräumen: In der Implementierung Ihrer Klasse `BigInteger`
-dürfen Sie zum Rechnen mit einzelnen Ziffern &ndash; aus denen die &ldquo;sehr großen Zahlen&rdquo; gebildet werden &ndash; selbstverständlich
+dürfen Sie zum Rechnen mit einzelnen Ziffern &ndash; aus denen die &bdquo;sehr großen Zahlen&rdquo; gebildet werden &ndash; selbstverständlich
 die Standardoperatoren von C++ wie `+` oder `*` verwenden.
 Ziel dieser Fallstudie ist es, einen Klassentyp zu entwickeln, der die Wertebereichslimitierungen
 dieser elementaren ganzzahligen Datentypen überwindet.
@@ -65,7 +65,7 @@ Mit Ausnahme von Punkten dürfen in der Zeichenkette keine anderen Zeichen entha
 halber in der Zeichenkette zulässig, wie etwa `"123.456.789"`.
 
 Eine zweite Möglichkeit zum Benutzen von `BigInteger`-Objekten sind ab C++ 11 die
-so genannten &ldquo;benutzerdefinierte Literale&rdquo;.
+so genannten &bdquo;benutzerdefinierte Literale&rdquo;.
 Diese gestatten es, einen konstanten Wert der jeweiligen Klasse, also `BigInteger` in unserem Fall, mit einem
 Suffix in das Lexikon von C++ aufzunehmen. Wenn wir uns auf das Suffix `_big` festlegen, dann sind die
 folgenden Anweisungen gültiges C++:
@@ -158,7 +158,7 @@ wenn die obere Ziffer kleiner ist als die dazugehörige untere des Subtrahenden,
 so dass die Subtraktion der zwei Ziffern nicht durchgeführt werden kann.
 Hier gibt es mehrere Verfahren zur Lösung des Problems.
 Wir skizzieren im Folgenden das so genannte *Entbündelungsverfahren*. Subtrahieren mit *Entbündeln* bedeutet,
-dass der zu kleine Minuend bei seinem linken Nachbarn eine &ldquo;Anleihe&rdquo; macht.
+dass der zu kleine Minuend bei seinem linken Nachbarn eine &bdquo;Anleihe&rdquo; macht.
 Durch Borgen von der nächsthöheren Stelle wird die Ziffer des Minuenden um 10 erhöht,
 und zum Zwecke des Ausgleichs die nächsthöherwertige Ziffer des Minuenden um 1 erniedrigt.
 Auf diese Weise kann man stets erreichen, dass die untenliegende Ziffer von der obenliegenden abgezogen werden kann,
@@ -217,7 +217,7 @@ Ist diese Zahl nicht größer als der Divisor, nehmen wir die nächste Zahl des 
 und wiederholen diesen Vorgang solange, bis die auf diese Weise gebildete Zahl größer ist als der Dividend.
 Nun teilen wir diese Zahl durch den Divisor, das Ergebnis bildet die erste Ziffer des gesuchten Quotienten.
 Um die Division fortsetzen zu können, multiplizieren wir das Ergebnis mit dem Divisor,
-und subtrahieren das Produkt von der alten Zahl. Das so erhaltene Ergebnis wird durch &ldquo;Herunterziehen&rdquo;
+und subtrahieren das Produkt von der alten Zahl. Das so erhaltene Ergebnis wird durch &bdquo;Herunterziehen&rdquo;
 der nächsten Ziffer von oben ergänzt. Dieses Procedere beginnen wir nun wieder von vorne.
 Der neue Dividend ist das Ergebnis der letzten Subtraktion, ergänzt um die heruntergezogene Ziffer usw.
 
@@ -1175,7 +1175,7 @@ Sie kommt in der Realisierung der diversen Methoden und Operatoren der `BigInteg
 Damit sind am Ende der Lösungsbesprechung angekommen. Welchen Nutzen können wir aus der Klasse `BigInteger` ziehen?
 Wir demonstrieren als Beispiel die Fakultätfunktion aus der Mathematik,
 die jeder Zahl das Produkt aller natürlichen Zahlen kleiner und gleich dieser Zahl zuordnet.
-Als Notation wird der natürlichen Zahl ein Ausrufezeichen &ldquo;!&rdquo; nachgestellt, also
+Als Notation wird der natürlichen Zahl ein Ausrufezeichen &bdquo;!&rdquo; nachgestellt, also
 
 *n*! = 1 * 2 * 3 * ... * n
 
@@ -1546,7 +1546,7 @@ und durch 1 teilbar ist.
 
 Sowohl perfekte Zahlen als auch Primzahlen lassen sich mit den herkömmlichen Sprachmitteln von C++
 (und natürlich auch anderen Hochsprachen) relativ einfach bestimmen &ndash; wenn wir nur auf der Suche nach vergleichsweise
-&ldquo;kleinen&rdquo; Zahlen sind. Für die Bestimmung größerer Zahlen benötigen wir Hilfsmittel wie beispielsweise die
+&bdquo;kleinen&rdquo; Zahlen sind. Für die Bestimmung größerer Zahlen benötigen wir Hilfsmittel wie beispielsweise die
 Klasse `BigInteger`. Um es vorweg zu nehmen: Wir werden mit einem zweiten Problem konfrontiert sein:
 Der Laufzeit des jeweiligen Programms. Wie lange derartige Berechnungen sein können, dürfen Sie mit folgendem Code-Fragment eruieren.
 Die beteiligten Klassen `BigPerfectNumbers` und `BigPrimeNumbers` finden Sie

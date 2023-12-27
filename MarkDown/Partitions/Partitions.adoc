@@ -159,7 +159,7 @@ friend bool operator==(const Partition&, const Partition&);
 ----
 
 | Operatoren `<` und `>`
-a| Vergleicht zwei `Partition`-Objekte auf &ldquo;kleiner&rdquo; oder &ldquo;größer&rdquo;.
+a| Vergleicht zwei `Partition`-Objekte auf &bdquo;kleiner&rdquo; oder &bdquo;größer&rdquo;.
 Die Art und Weise, wie Partitionen verglichen werden, wurde eingangs erläutert.
 
 [source,c++]
@@ -324,7 +324,7 @@ friend std::ostream& operator<< (std::ostream&, const PartitionSet&);
 |===
 
 Die Klasse `PartitionSet` aus <<id_table_partitionset>> ist noch nicht in der Lage, die Partitionen zu einer beliebigen natürlichen Zahl zu berechnen.
-Darauf kommen wir im folgenden Abschnitt zu sprechen. Die prinzipielle Funktionsweise der Klasse `PartitionSet` lässt sich aber schon mal &ldquo;manuell&rdquo; testen:
+Darauf kommen wir im folgenden Abschnitt zu sprechen. Die prinzipielle Funktionsweise der Klasse `PartitionSet` lässt sich aber schon mal &bdquo;manuell&rdquo; testen:
 
 [source,c++]
 ----
@@ -822,7 +822,7 @@ Zur Verwaltung der `Partition`-Objekte gibt es die Klasse `PartitionSet`:
 ----
 <1> Der Default-Konstruktor ergibt bei dieser Klasse wenig Sinn. Es sollte in Minimalfall immer die natürliche Zahl, um deren Zerlegungen es geht,
 bekannt sein.
-<2> Für die Realisierung der `emplace`-Methode kommt das Feature der &ldquo;template member function&rdquo; zum Einsatz. Ferner findet die Implementierung
+<2> Für die Realisierung der `emplace`-Methode kommt das Feature der &bdquo;template member function&rdquo; zum Einsatz. Ferner findet die Implementierung
 im Header-File statt, da dies bei Templates der einfachste Ansatz ist.
 
 In Zeile 24 von <<id_class_partitionset_decl>> findet die so genannte _Parameter Pack Expansion_ statt (`static_cast<size_t>(args)...`).
@@ -970,7 +970,7 @@ in der Klasse `PartitionCalculator` finden sich daher nur statische Klassenmetho
 
 == There is more
 
-Das Thema &ldquo;Aufzählen&rdquo; &ndash; in unserem Fall &ldquo;Partitionen aufzählen&rdquo; tritt immer bei Klassen in Erscheinung,
+Das Thema &bdquo;Aufzählen&rdquo; &ndash; in unserem Fall &bdquo;Partitionen aufzählen&rdquo; tritt immer bei Klassen in Erscheinung,
 deren Gestalt gewisse Ähnlichkeiten mit einem Container haben. Ergänzen Sie Ihre Implementierung der Klasse `PartitionSet` entsprechend.
 
 _Beispielfragment_:

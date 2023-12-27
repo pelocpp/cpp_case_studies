@@ -4,7 +4,7 @@ Im Jahr 1857 hat der Amerikaner *Samuel Morse* das Morsealphabet erfunden. Damal
 nicht möglich, gesprochenen Text über Telegrafenleitungen zu übermitteln. Also verwendete
 Samuel Morse für jeden Buchstaben kurze und lange Piepstöne (Punkte und Striche). Diese
 Punkte und Striche kann man aber auch als Lichtblitze, Pfeiftöne etc. weitergeben. So ist es
-möglich, ganze Worte mit anderen über große Distanzen zu &ldquo;sprechen&rdquo;.
+möglich, ganze Worte mit anderen über große Distanzen zu &bdquo;sprechen&rdquo;.
 
 Schreiben Sie zwei Funktionen `encode` und `decode`, die eine lesbare Nachricht in Morseschrift
 verschlüsseln bzw. entschlüsseln.
@@ -13,7 +13,7 @@ verschlüsseln bzw. entschlüsseln.
 
 # Lernziele
 
-  * Klasse `std::string_view`, `std::string_view`-Literale, Suffix &ldquo;sv&rdquo;
+  * Klasse `std::string_view`, `std::string_view`-Literale, Suffix &bdquo;sv&rdquo;
   * `constexpr`-Objekte
   * Lambda-Funktionen
   * STL-Algorithmen `std::begin`, `std::end`, `std::for_each`, `std::find_if`
@@ -148,7 +148,7 @@ Im Quellcode von [Listing 1] sind zwei weitere Subtilitäten verborgen, auf die 
   * In Zeile 16 und 30 sind jeweils zwei geschweifte Klammern notwendig, um das `std::array`-Objekt statisch initialisieren
     zu können. Ich versuche, den Sachverhalt möglichst einfach zu erklären:
     Bei einem  `std::array`-Objekt kommt die so genannte *Aggregat*-*Initialisierung* zum Einsatz.
-    Die Klasse `std::array` besitzt konzeptionell wiederum ein &ldquo;Built-in&rdquo; Array, das mit einer
+    Die Klasse `std::array` besitzt konzeptionell wiederum ein &bdquo;Built-in&rdquo; Array, das mit einer
     Initialisierungliste (`std::initializer_list`) vorbelegt wird. 
     Damit sind die inneren geschweiften Klammern für das `std::initializer_list`-Objekt,
     die äußeren für die Aggregat-Initialisierung notwendig.
@@ -164,7 +164,7 @@ dies ist dem statischen Charakter der Methoden geschuldet.
 Die Realisierung der `getEntry`-Methode ist mit und ohne `template`-Technik möglich.
 Greift man auf die `template`-Technik zurück, ist der Alphabet-Index gleich dem Template-Parameter.
 Logischerweise muss dieser zur Übersetzungszeit bekannt sein.
-Die `getEntry`-Methoden ist in diesem Fall eine so genannte &ldquo;*Template Member Function*&rdquo;.
+Die `getEntry`-Methoden ist in diesem Fall eine so genannte &bdquo;*Template Member Function*&rdquo;.
 Eine Non-Template Klasse kann also Template Member Funktionen haben, wenn dies erwünscht ist.
 
 Die zweite Überladung der `getEntry`-Methode kommt ohne Template-Technik aus,
@@ -301,7 +301,7 @@ Zum einen wollte ich die Morsealphabet&ndash;Datenstruktur zur Übersetzungszeit
 Hierzu bieten `std::map`-Objekte wenig oder eigentlich gar keine Unterstützung an.
 Zum zweiten ist auch die `std::map`-Klasse nicht ganz die ideale Datenstruktur zum Suchen,
 da man auf Grund der Suche in beiden Richtungen (Buchstabe nach Morsezeichenkette und umgekehrt)
-eigentlich eine &ldquo;*Bi*&rdquo;Map Datenstruktur benötigen würde.
+eigentlich eine &bdquo;*Bi*&rdquo;Map Datenstruktur benötigen würde.
 
 Die Realisierung der `encode`-Methode verbirgt keine Stolpersteine.
 In der `decode`-Methode wird zweimal &ndash; auf unterschiedliche Weise &ndash; eine Zeichenkette in Teilzeichenketten zerlegt.
@@ -352,11 +352,11 @@ Result: THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG
 
 Die Anregungen zum Zerlegen von Zeichenketten stammen aus
 
-[Jonathan Boccara, &ldquo;How to split a string in C++&rdquo;](https://www.fluentcpp.com/2017/04/21/how-to-split-a-string-in-c//).
+[Jonathan Boccara, &bdquo;How to split a string in C++&rdquo;](https://www.fluentcpp.com/2017/04/21/how-to-split-a-string-in-c//).
 
 Die Hinweise zum Initialisieren eines `std::array`-Objekts sind
 
-[Stackoverflow, &ldquo;C++11: Correct std::array initialization?&rdquo;](https://stackoverflow.com/questions/14178264/c11-correct-stdarray-initialization/)
+[Stackoverflow, &bdquo;C++11: Correct std::array initialization?&rdquo;](https://stackoverflow.com/questions/14178264/c11-correct-stdarray-initialization/)
 
 entnommen.  
 

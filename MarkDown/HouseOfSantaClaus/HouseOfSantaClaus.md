@@ -2,12 +2,12 @@
 
 Das Haus des Nikolaus ist ein altes Zeichenspiel und vermutlich jedem Leser unter Ihnen bekannt,
 der Kinder sein eigen nennen darf. Ziel des Spiels ist es, ein Haus (wie in [Abbildung 1] dargestellt)
-&ldquo;ohne Absetzen des Stiftes&ldquo; zu zeichnen, also in einem Zug mit acht Strecken.
+&bdquo;ohne Absetzen des Stiftes&bdquo; zu zeichnen, also in einem Zug mit acht Strecken.
 Sie werden die Beobachtung machen, dass dies nicht immer zum Ziel führt,
 da man öfters in die Situation gelangt, eine Strecke mehrmals zeichnen zu müssen,
 was nicht erlaubt ist. Kinder erfreuen sich an diesem Spiel zusätzlich daran,
 ihre Eltern lautstark am Spielen zu beteiligen, indem sie an jeder Ecke, die sie erreichen,
-ein Wort des Satzes &ldquo;Das ist das Haus vom Ni&ndash;ko&ndash;laus&rdquo; aussprechen &ndash; zu
+ein Wort des Satzes &bdquo;Das ist das Haus vom Ni&ndash;ko&ndash;laus&rdquo; aussprechen &ndash; zu
 jeder Strecke gehört ein Wort bzw. eine Silbe.
 Wie viele verschiedene Möglichkeiten gibt es, das Haus zu zeichnen?
 
@@ -18,11 +18,11 @@ Wie viele verschiedene Möglichkeiten gibt es, das Haus zu zeichnen?
 *Abbildung* 1: Das Haus des Nikolaus &ndash; als Spiel betrachtet.
 
 Entwerfen Sie geeignet ein oder mehrere C++&ndash;Klassen,
-um alle Lösungen des &ldquo;Haus des Nikolaus&rdquo;-Problems zu ermitteln.
+um alle Lösungen des &bdquo;Haus des Nikolaus&rdquo;-Problems zu ermitteln.
 Im Lösungsvorschlag finden Sie zwei Realisierungsansätze vor:
 
-  * eine klassische Realisierung (keine &ldquo;Modern C++&rdquo; Kenntnisse erforderlich)
-  * eine C++20 Realisierung mit &ldquo;Ranges&rdquo;
+  * eine klassische Realisierung (keine &bdquo;Modern C++&rdquo; Kenntnisse erforderlich)
+  * eine C++20 Realisierung mit &bdquo;Ranges&rdquo;
 
 Schreiben Sie ein Programm, das alle Lösungen in ansprechender Form auf der Konsole ausgibt.
 
@@ -218,16 +218,16 @@ Wir fahren gleich mit der Implementierung der `HouseOfSantaClaus`-Klasse in [Lis
 *Listing* 2: Abstrakte Basisklasse `HouseOfSantaClaus`: Realisierung.
 
 *Hinweis*: Wenn Sie [Listing 1] und [Listing 2] genau betrachten, dürfte Ihnen nicht entgangen sein,
-dass ein klassisches Entwurfsmuster umgesetzt wurde: Das &ldquo;Template Method Pattern&ldquo;.
+dass ein klassisches Entwurfsmuster umgesetzt wurde: Das &bdquo;Template Method Pattern&bdquo;.
 Methode `isSolution` besitzt in der Klasse `HouseOfSantaClaus` eine Realisierung,
 die aus einer Reihe von auszuführenden Teilschritten (Teilmethoden) besteht,
 die allesamt in Klasse  `HouseOfSantaClaus` nur abstrakt definiert sind.
 In einer niedrigeren Abstraktionsebene (Detailebene) ist für diese Teilmethoden eine Implementierung bereitzustellen.
 Wir werden die Methoden `numberToDigits`, `checkValidRangeOfDigits`, `checkSelfLoops`, `checkValidEdges` und `checkForDuplicateEdges`
-einmal &ldquo;klassisch&ldquo; und ein weiteres Mal mit der C++20 &ldquo;Ranges&ldquo;-Bibliothek implementieren.
+einmal &bdquo;klassisch&bdquo; und ein weiteres Mal mit der C++20 &bdquo;Ranges&bdquo;-Bibliothek implementieren.
 Hierfür betrachten wir nachfolgend die beiden von `HouseOfSantaClaus` abgeleiteten Klassen
 `HouseOfSantaClausIterative` und `HouseOfSantaClausRanges`.
-Die Methode `isSolution` selbst ist die so genannte &ldquo;Template Method&rdquo;,
+Die Methode `isSolution` selbst ist die so genannte &bdquo;Template Method&rdquo;,
 ihre Realisierung ist fest in der Basisklasse `HouseOfSantaClaus` verankert.
 
 Die Implementierung des `<<`-Operators in den Zeilen 41 bis 59 (inklusive der Hilfsmethode `printSolution`)
@@ -614,16 +614,16 @@ Neben dem in dieser Fallstudie vorgestellten iterativen Lösungsansatz
 gibt es auch eine rekursive Lösungsstrategie.
 Der rekursive Ansatz geht in der mathematischen Betrachtung ein kleines Stück weiter
 und betrachtet die so genannte *Adjazenzmatrix* des Nikolaushaus-Graphen.
-Adjazent heißt &ldquo;verbunden&rdquo;. Durch eine Adjazenzmatrix wird beschrieben,
+Adjazent heißt &bdquo;verbunden&rdquo;. Durch eine Adjazenzmatrix wird beschrieben,
 welche Knoten eines Graphen miteinander verbunden sind und welche nicht.
 
 Konkret ist jeder Zeile der Adjazenzmatrix ein Knoten zugeordnet, von dem mindestens eine Kante ausgeht.
 Die Spalte wiederum spezifiziert die Nummer des Knotens, zu dem eine Kante führt.
-Steht in Zeile *i* und Spalte *j* der Matrix eine &ldquo;1&rdquo;, so heißt das,
+Steht in Zeile *i* und Spalte *j* der Matrix eine &bdquo;1&rdquo;, so heißt das,
 dass von Knoten *i* nach Knoten *j* eine Kante führt.
-Andererseits sagt eine &ldquo;0&rdquo; aus, dass keine Kante zwischen *i* und *j* existiert.
+Andererseits sagt eine &bdquo;0&rdquo; aus, dass keine Kante zwischen *i* und *j* existiert.
 
-Überlegen Sie sich, wie eine Realisierung des &ldquo;Haus des Nikolaus&rdquo;&ndash;Problems mit
+Überlegen Sie sich, wie eine Realisierung des &bdquo;Haus des Nikolaus&rdquo;&ndash;Problems mit
 Hilfe von Adjazenzmatrizen aussehen könnte.
 
 <br/>

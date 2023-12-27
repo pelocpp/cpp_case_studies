@@ -309,14 +309,14 @@ Wie müssten Sie einen Operator `<` in der Klasse `PartialSet` definieren, um di
 
 | Operator | Beschreibung |
 | :---- | :---- |
-| Operator `<` | `friend bool operator<(const PartialSet&, const PartialSet&);`<br/>Vergleicht zwei `PartialSet`-Objekte auf &ldquo;kleiner&rdquo;. Wir bezeichnen eine Teilmenge *S*1 &ldquo;kleiner&rdquo; als eine Teilmenge *S*2, wenn *S*1 entweder weniger Elemente als *S*2 enthält oder, falls *S*2 gleich viele Elemente enthält, das erste Element von *S*1 kleiner ist als das erste Element von *S*2. Stimmen beide Teilmengen im ersten Element überein, setzen wir den Vergleich mit dem zweiten, dritten, usw. Element fort, bis ein Unterschied auftritt. Dabei wird vorausgesetzt, dass die Elemente beider Teilmengen in aufsteigender Reihenfolge vorliegen. |
+| Operator `<` | `friend bool operator<(const PartialSet&, const PartialSet&);`<br/>Vergleicht zwei `PartialSet`-Objekte auf &bdquo;kleiner&rdquo;. Wir bezeichnen eine Teilmenge *S*1 &bdquo;kleiner&rdquo; als eine Teilmenge *S*2, wenn *S*1 entweder weniger Elemente als *S*2 enthält oder, falls *S*2 gleich viele Elemente enthält, das erste Element von *S*1 kleiner ist als das erste Element von *S*2. Stimmen beide Teilmengen im ersten Element überein, setzen wir den Vergleich mit dem zweiten, dritten, usw. Element fort, bis ein Unterschied auftritt. Dabei wird vorausgesetzt, dass die Elemente beider Teilmengen in aufsteigender Reihenfolge vorliegen. |
 
 *Tabelle* 3: Definition des Operators `operator<` in der Klasse `PartialSet`.
 
 # Aufzählung einer Potenzmenge
 
 Bei Objekten, die den Charakter eines Containers besitzen (Menge aller Schriftarten auf einem Rechner, Menge aller laufenden Prozesse, etc.)
-gibt es die Möglichkeit, die einzelnen Elemente eines solchen Objekts der Reihe nach aufzuzählen (so genannte &ldquo;Traversierung der Menge&rdquo;).
+gibt es die Möglichkeit, die einzelnen Elemente eines solchen Objekts der Reihe nach aufzuzählen (so genannte &bdquo;Traversierung der Menge&rdquo;).
 Auf das Beispiel der Potenzmenge angewendet ergänzen wir die Klasse `PowerSet` um die beiden Methoden `begin()` und `end()`, die die zum Iterieren
 notwendigen Objekte für den Start und das Ende einer Aufzählung bereitstellen ([Tabelle 4]):
 
