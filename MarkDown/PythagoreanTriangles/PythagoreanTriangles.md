@@ -37,15 +37,13 @@ wir auf die Realisierung einer Funktion `parallel_for` ein.
 Für rechtwinklige Dreiecke gibt es den *Satz des Pythagoras*. Dieser besagt, dass
 für die drei Seiten *a*, *b* und *c* die Beziehung *a*<sup>2</sup> + *b*<sup>2</sup> = *c*<sup>2</sup> gilt.
 Dabei steht *c* für die Hypotenuse, sie ist die längste Seite eines rechtwinkligen Dreiecks und liegt dem rechten Winkel gegenüber.
-Als Kathete werden die beiden kürzeren Seiten in einem rechtwinkligen Dreieck bezeichnet.
+Als Kathete werden die beiden kürzeren Seiten in einem rechtwinkligen Dreieck bezeichnet ([Abbildung 1]):
 
 ###### {#abbildung_1_right_triangle}
 
-<img src="RightTriangle.png" width="400">
+<img src="rechtwinkliges_dreieck.svg" width="400">
 
-{{< figure src="/img/graycodes/GrayCodes01.png" width="50%" >}}
-
-RightTriangle.png
+{{< figure src="/img/PythagoreanTriangles/rechtwinkliges_dreieck.svg" width="50%" >}}
 
 *Abbildung* 1: Rechtwinkliges Dreick mit Hypotenuse und Katheten.
 
@@ -77,6 +75,8 @@ aber es bereitet keine große Mühe, eine solche Funktion selber zu schreiben.
 # Lösung
 
 > Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
+
+## Klasse `PythagoreanTriple`
 
 Wir beginnen mit den Dreiecken. Da wir bei Bedarf die berechneten Dreiecke auch ausgeben wollen,
 müssen wir diese in einer geeigneten Datenstruktur festhalten. Es kommen hier im Prinzip die beiden Möglichkeiten
@@ -130,6 +130,7 @@ Die Realisierung der Konstuktoren und der beiden Methoden `circumference` und `t
 
 *Listing* 2: Klasse `PythagoreanTriple`: Realisierung.
 
+## Klasse `PythagoreanTripleCalculator` im Überblick
 
 Damit sind wir schon bei der Berechnung der Dreiecke angekommen.
 In einem sehr einfachen Ansatz ziehen wir mehrere geeignete `for`-Wiederholungsanweisungen auf,
@@ -137,9 +138,7 @@ um am Ende mit den beiden Bedingungen, die sich durch den &bdquo;Satz das Pythag
 Treffer zu suchen. Eine grobe Skizze einer Klasse `PythagoreanTripleCalculator`
 zeigt [Listing 3] auf:
 
-
 ###### {#listing_3_class_pythagorean_triple_calculator}
-
 
 ```cpp
 01: template <typename TStore>
@@ -187,6 +186,8 @@ zeigt [Listing 3] auf:
 In den Zeilen 25 bis 36 von [Listing 3] erkennen wir den *Brute-Force*&ndash;Ansatz in der Berechnung
 der geeigneten Dreiecke. Wenngleich diese Vorgehensweise nicht recht elegant aussehen mag,
 bietet sie jedoch Potential für den Einstieg in eine parallele Berechnung.
+
+## Funktion `parallel_for`
 
 Die äußerste `for`-Wiederholungsanweisung nimmt sich dem Wert einer Dreiecksseite *a* an.
 Diese Wiederholungen für alle möglichen Werte von *a* könnte man auch gleichzeitig (also *quasi*- oder *echt*-parallel) abarbeiten.
@@ -308,6 +309,8 @@ Und noch ein letzter Hinweis zu den Zeilen 52 und 53 von [Listing 4]:
 Für die letzte Untergruppe spendieren wir keinen eigenen Thread, die Funktion `callable` (bzw. `callableWrapper`)
 wird synchron im aktuellen Thread ausgeführt. Dies kann man als eine minimale Optimierung ansehen,
 um auch den Hauptthread der Anwendung mit in die zu erbringenden Rechenarbeiten einzubeziehen.
+
+## *Policy-Based Design* Entwurfsmuster
 
 Damit kommen wir noch einmal auf die Skizzierung einer Funktion `calculate` zurück,
 wie sie von `parallel_for` ausgeführt werden soll:
@@ -435,6 +438,8 @@ Die Klasse `ThreadsafeDataStore` besitzt dieselbe öffentliche Schnittstelle wie
 nur mit dem Unterschied, dass ihre Methoden threadsicher sind! Zu diesem Zweck
 werden ein `std::mutex`-Objekt und eine Hüllenklasse `std::lock_guard` eingesetzt (RAII Idiom).
 
+## Klasse `PythagoreanTripleCalculator`
+
 Zum Abschluss dieser Erläuterungen stellen wir die Klasse `PythagoreanTripleCalculator` 
 noch einmal im Ganzen vor. Beachten Sie beim Template-Parameter `TStore`:
 Es findet eine Anwendung des *Policy-Based Design* Entwurfsmusters statt.
@@ -517,6 +522,8 @@ Dies kann aber durch Verwendung der `ThreadsafeDataStore<PythagoreanTriple>`-Kla
 
 *Listing* 6: Vollständige Realisierung der Klasse `PythagoreanTripleCalculator`.
 
+## Vergleich der Ausführungszeiten
+
 Sicherlich sind Sie darauf gespannt zu erfahren, ob sich der Aufwand für eine Parallelisierung des *Project Euler Problems 39*
 auch gelohnt hat. Wir testen unsere Realisierung am Beispiel mit einem maximalen Umfang von 2000.
 Es liegt das Testprogramm aus [Listing 7] zu Grunde:
@@ -585,7 +592,7 @@ dargestellt werden:
 1680: [80,  798, 802]
 ```
 
-Werfen Sie einen Blick auf die Rechenzeiten:
+Werfen Sie einen Blick auf die Ausführungszeiten:
 Die sequentielle Ausführung benötigt 2740 Millisekunden, die parallele Variante hingegen nur 569 Millisekunden.
 Der Aufwand in der Realisierung einer `parallel_for`-Funktion hat sich also gelohnt!
 
@@ -594,8 +601,8 @@ Der Aufwand in der Realisierung einer `parallel_for`-Funktion hat sich also gelo
 
 In [Listing 6] haben wir Klasse `PythagoreanTripleCalculator` vorgestellt,
 die Ablage der Daten ist auf Basis des *Policy-Based Design* Entwurfsmusters zu konfigurieren.
-Wie immer diese Konfigurationsklasse auch aussieht, es wäre wünschenswert, dass die öffentliche Schnittstelle
-fest vereinbar ist.
+Wie immer diese Konfigurationsklasse auch aussieht, es wäre wünschenswert, dass die öffentliche Schnittstelle derartiger Klassen
+fest vereinbart ist.
 
 Zu diesem Zweck gibt es ab C++ 20 das Sprachfeature der *Concepts*:
 Erstellen Sie ein Konzept, dass die beiden Methoden
@@ -605,8 +612,7 @@ void add(size_t count, size_t a, size_t b, size_t c);
 std::stack<T> data();
 ```
 
-für einen Templateparamater `TStore` der Klasse `PythagoreanTripleCalculator` vorschreibt.
-
+für einen Templateparameter `TStore` der Klasse `PythagoreanTripleCalculator` vorschreibt.
 
 <br/>
 

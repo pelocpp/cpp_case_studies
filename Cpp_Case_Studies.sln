@@ -248,7 +248,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PythagoreanTriangles", "PythagoreanTriangles", "{DBA94A0D-EC4B-4F08-A68F-158BA5AFD1D3}"
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\PythagoreanTriangles\PythagoreanTriangles.md = MarkDown\PythagoreanTriangles\PythagoreanTriangles.md
-		MarkDown\PythagoreanTriangles\RightTriangle.png = MarkDown\PythagoreanTriangles\RightTriangle.png
+		MarkDown\PythagoreanTriangles\rechtwinkliges_dreieck.svg = MarkDown\PythagoreanTriangles\rechtwinkliges_dreieck.svg
 	EndProjectSection
 EndProject
 Global
