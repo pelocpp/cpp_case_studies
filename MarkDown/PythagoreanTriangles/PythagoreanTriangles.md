@@ -4,8 +4,8 @@
 
 Und wieder steht etwas Schulmathematik auf dem Programm, dieses Mal geht es um rechtwinklige Dreiecke.
 Für derartige Dreiecke gibt es den Satz des Pythagoras,
-er fällt eine Aussage zu den Seitenlängen eines solchen Dreiecks.
-Wir wollen im Folgenden nur solche Dreiecke betrachten, deren Seitenlängen ganzzahlig sind.
+er fällt eine Aussage zu den Seitenlängen solcher Dreiecke.
+Wir wollen im Folgenden nur Dreiecke betrachten, deren Seitenlängen ganzzahlig sind.
 
 Schreiben Sie ein C++&ndash;Programm, das für folgende Fragestellung eine Antwort findet:
 Für welchen Umfang *p* mit *p* <= 2000 ist die Anzahl der verschiedenen rechwinkligen Dreiecke
@@ -19,7 +19,7 @@ finden Sie unter &bdquo;Problem 39&rdquo; vor.
 Welche Parallelisierungsansätze sind für diese Aufgabenstellung denkbar?
 Implementieren Sie einen parallelen Algorithmus und vergleichen Sie die Laufzeiten der beiden Varianten.
 Mit Hilfe der Klassen `std::thread`, `std::function`, `std::mutex` und `std::lock_guard` gehen
-wir auf eine Realisierung einer Funktion `parallel_for` ein.
+wir auf die Realisierung einer Funktion `parallel_for` ein.
 
 <!--more-->
 
@@ -64,13 +64,13 @@ die mit ganzzahligen Werten ein rechtwinkliges Dreieck des Umfangs *p* = 120 bes
 
 Mit Hilfe der beiden Gleichungen *a*<sup>2</sup> + *b*<sup>2</sup> = *c*<sup>2</sup> und *p* = *a* + *b* + *c* lässt
 sich auf recht einfache Weise eine Methode mit einigen wenigen geschachtelten Kontrollstrukturen entwerfen,
-die alle in Frage kommenden Tripel (*a*, *b*, *c*) berechnet.
+die alle in Frage kommenden Tripel { *a*, *b*, *c* } berechnet.
 
 
 ## Parallelisierung der Lösung
 
 Die im letzen Abschnitt erwähnten Kontrollstrukturen &ndash; wir reden da offensichtlich von `for`-Wiederholungsschleifen &ndash; 
-kann man auf Basis einer `parallel_for`-Kontrollstrukturen parallelisieren.
+kann man auf Basis einer `parallel_for`-Kontrollstruktur parallelisieren.
 Einziger Wehrmutstropfen dieser Idee: In der STL gibt es eine derartige Funktion nicht, 
 aber es bereitet keine große Mühe, eine solche Funktion selber zu schreiben.
 
@@ -132,7 +132,7 @@ Die Realisierung der Konstuktoren und der beiden Methoden `circumference` und `t
 
 
 Damit sind wir schon bei der Berechnung der Dreiecke angekommen.
-In einem sehr einfachen Ansatz ziehen wir drei geeignete `for`-Wiederholungsanweisungen auf,
+In einem sehr einfachen Ansatz ziehen wir mehrere geeignete `for`-Wiederholungsanweisungen auf,
 um am Ende mit den beiden Bedingungen, die sich durch den &bdquo;Satz das Pythagoras&rdquo; und den &bdquo;Umfang des Dreiecks&rdquo; ergeben,
 Treffer zu suchen. Eine grobe Skizze einer Klasse `PythagoreanTripleCalculator`
 zeigt [Listing 3] auf:
@@ -269,12 +269,14 @@ Auf einige markante Stellen von [Listing 4] sollten wir näher eingehen.
 In den Zeilen 38 bis 40 wird ein Thread-Objekt erzeugt. Thread-Objekte sind nicht kopierbar, aber verschiebbar,
 deshalb der Einsatz von `std::move`.
 Um die Thread-Objekte in einem `std::vector<std::thread>`-Container aufbewahren zu können,
-verschieben wir sie deshalb mit `std::move` in den Container `threads`. Sinn und Zweck dieser Vorgehensweise ist, dass wir am Ende
+verschieben wir sie deshalb (mit `std::move`) in den Container `threads`. Sinn und Zweck dieser Vorgehensweise ist, dass wir am Ende
 der `parallel_for`-Funktion auf das Ende aller erzeugten Threads warten wollen. Dies tun wir in
 den Zeilen 58 bis 62. In Zeile 61 wird demonstriert, wie man bei Gebrauch des `std::for_each`-Algorithmus
-auf alle Objekte des traversierten Containers die Aufruf der `std::thread::join`-Methode anwenden kann.
+auf alle Objekte des traversierten Containers einen Aufruf der `std::thread::join`-Methode anwenden kann
+(mit Hilfe von `std::mem_fn`).
 
-Die Threads innerhalb der `parallel_for`-Funktion werden im ersten Parameter mit der `callableWrapper`-Funktion versorgt.
+Die Threads innerhalb der `parallel_for`-Funktion werden im ersten Parameter des Konstruktors von `std::thread`
+mit der `callableWrapper`-Funktion versorgt.
 Diese Funktion finden wir in den Zeilen 3 bis 12 vor. Im Prinzip hätte man sich den Umweg über
 diese Funktion auch sparen können. Ich wollte aber zu Testzwecken bestimmte Trace-Ausgaben
 pro gestartetem Thread ergänzend hinzufügen. Etwas formaler betrachtet könnte man sagen,
@@ -282,7 +284,7 @@ dass hier das *Intercepting Filter Pattern* zum Zuge kommt. Dieses beschäftigt 
 der Vor- und Nachbearbeitung von Methodenaufrufen.
 
 Die im wesentlichen parallel auszuführende Funktion wird an `parallel_for` im Parameter `callable` übergegeben.
-Dieser Parameter ist so definiert:
+Der Typ dieses Parameters ist so definiert:
 
 ```cpp
 using Callable = std::function<void(size_t start, size_t end)>;
@@ -290,12 +292,12 @@ using Callable = std::function<void(size_t start, size_t end)>;
 
 Damit kommt die Klasse `std::function` zum Vorschein. Sie dient dem Zweck, alles,
 was man in C++ &bdquo;aufrufen&rdquo; kann, zu kapseln. `std::function`-Objekte sind also Allzweck-Hüllenobjekte
-für polymorphe Funktionen.
+für Funktionen (Methoden) irgendeiner Art.
 
 Die Schnittstelle des `std::function`-Objekts muss zwei Parameter `start` und `end`
 des Typs `size_t` entgegennehmen können. Dahinter verbirgt sich die Idee,
 dass bei einer `for`-Schleife mit beispielsweise 100.000 Wiederholungen nicht 100.000 Threads erzeugt werden können.
-Die Vorgehensweise ist eine andere: Zunächst wird mit einem Aufruf von `std::thread::hardware_concurrency` eruiert,
+Die Vorgehensweise ist eine andere: Zunächst wird mit einem Aufruf von `std::thread::hardware_concurrency` eruiert (Zeile 21),
 welche tatsächliche, maximale Anzahl von Threads sich ganz konkret auf dem aktuellen Rechner anbieten würde.
 Hiervon ausgehend wird der Bereich der `for`-Schleife nun in Untergruppen von Wiederholungen aufgeteilt.
 Jede Untergruppe soll dabei von einem Thread ausgeführt werden. Dies wiederum hat zur Folge,
@@ -303,9 +305,9 @@ dass der Parameter `callable` nicht nur die auszuführende Funktion an sich besc
 sondern auch eine bestimmte Anzahl von Ausführungen in einem Teilbereich der gesamten `for`-Schleife durchführt.
 
 Und noch ein letzter Hinweis zu den Zeilen 52 und 53 von [Listing 4]:
-Für die letzte Untergruppe spendieren wir keinen eigenen Thread, Funktion `callable` (bzw. `callableWrapper`)
+Für die letzte Untergruppe spendieren wir keinen eigenen Thread, die Funktion `callable` (bzw. `callableWrapper`)
 wird synchron im aktuellen Thread ausgeführt. Dies kann man als eine minimale Optimierung ansehen,
-um auch den Hauptthread der Anwendung mit in die Rechenarbeit einzubeziehen.
+um auch den Hauptthread der Anwendung mit in die zu erbringenden Rechenarbeiten einzubeziehen.
 
 Damit kommen wir noch einmal auf die Skizzierung einer Funktion `calculate` zurück,
 wie sie von `parallel_for` ausgeführt werden soll:
@@ -337,14 +339,13 @@ sie sind vor dem Zugriff unterschiedlicher Threads sicher!
 Einzig und allein das Containerobjekt `m_store` wird von allen Threads gemeinsam genutzt.
 
 Auf der anderen Seite möchte ich das ganze Programm auch mit nur einem Thread ausführen können,
-jedwede Synchronisationsmechanismen wären damit überflüssig und würden die Laufzeit der Programms nur
+jedwede Synchronisationsmechanismen wären damit überflüssig und würden die Laufzeit der Programms nur unnötigerweise
 verschlechtern.
 
 Ich habe diese Beobachtungen zum Anlass genommen, das *Policy-Based Design* Entwurfsmuster einzusetzen.
 &bdquo;Policies&rdquo; stellen Schnittstellen für konfigurierbare Belange einer Klasse dar.
-
-Die Konfigurierbarkeit der Klasse `PythagoreanTripleCalculator` wird nun so vorgenommen,
-dass der Datenspeicher `m_store` über einen Template-Parameter (hier: `TStore`) beschrieben wird,
+Die Konfigurierbarkeit der Klasse `PythagoreanTripleCalculator` wird so vorgenommen,
+dass der Datenspeicher `m_store` über einen Template-Parameter (hier: `TStore`) eingebracht wird,
 also nicht fest kodiert ist. Es werden zwei Realisierungen einer Datenspeicherklasse vorgenommen
 (threadsicher und nicht threadsicher), um für alle Belange einer `PythagoreanTripleCalculator`-Klasse
 laufzeitoptimal gerüstet zu sein:
@@ -428,15 +429,15 @@ laufzeitoptimal gerüstet zu sein:
 
 Klasse `SimpleDataStore` aus [Listing 5] besitzt eine Methode `add` zum Hinzufügen eines Dreiecks.
 Neben den Seitenlängen des Dreiecks wird auch eine Zählervariable `count` an den Datenspeicher
-mit übergeben, um die Anzahl der gefundenen Dreiecke festzuhalten.
+mit übergeben, um die Anzahl der gefundenen Dreiecke eines bestimmten Umfangs festzuhalten.
 
-Die Klasse `ThreadsafeDataStore` besitzt dieselbe öffentliche Schnittstelle wir Klasse `SimpleDataStore`,
+Die Klasse `ThreadsafeDataStore` besitzt dieselbe öffentliche Schnittstelle wie Klasse `SimpleDataStore`,
 nur mit dem Unterschied, dass ihre Methoden threadsicher sind! Zu diesem Zweck
-werden ein `std::mutex`-Objekt und eine Hüllenklasse `std::lock_guard` eingesetzt.
+werden ein `std::mutex`-Objekt und eine Hüllenklasse `std::lock_guard` eingesetzt (RAII Idiom).
 
 Zum Abschluss dieser Erläuterungen stellen wir die Klasse `PythagoreanTripleCalculator` 
 noch einmal im Ganzen vor. Beachten Sie beim Template-Parameter `TStore`:
-Es findet hier eine Anwendung des *Policy-Based Design* Entwurfsmusters statt.
+Es findet eine Anwendung des *Policy-Based Design* Entwurfsmusters statt.
 In der Voreinstellung wird der Kalkulator mit einer nicht-threadsicheren Datenspeicherklasse
 (hier: `SimpleDataStore<PythagoreanTriple>`) ausgestattet.
 Dies kann aber durch Verwendung der `ThreadsafeDataStore<PythagoreanTriple>`-Klasse geändert werden:
@@ -516,7 +517,7 @@ Dies kann aber durch Verwendung der `ThreadsafeDataStore<PythagoreanTriple>`-Kla
 
 *Listing* 6: Vollständige Realisierung der Klasse `PythagoreanTripleCalculator`.
 
-Sicherlich sind Sie gespannt zu erfahren, ob sich der Aufwand für eine Parallelisierung des *Project Euler Problems 39*
+Sicherlich sind Sie darauf gespannt zu erfahren, ob sich der Aufwand für eine Parallelisierung des *Project Euler Problems 39*
 auch gelohnt hat. Wir testen unsere Realisierung am Beispiel mit einem maximalen Umfang von 2000.
 Es liegt das Testprogramm aus [Listing 7] zu Grunde:
 
@@ -567,21 +568,45 @@ Found: 10 triangles at circumference 1680
 Done.
 ```
 
-Das gesuchte Dreieck besitzt den Umfang 1680, es kann auf 10 verschiedene Weisen mit unterschiedlich langer
-Hypotenuse und Katheten dargestellt werden. Werfen Sie einen Blick auf die Rechenzeiten:
+Das gesuchte Dreieck besitzt den Umfang 1680, es kann auf 10 verschiedene Weisen
+(unterschiedlich lange Hypotenuse bzw. Katheten)
+dargestellt werden:
+
+```
+1680: [480, 504, 696]
+1680: [455, 528, 697]
+1680: [420, 560, 700]
+1680: [336, 630, 714]
+1680: [280, 672, 728]
+1680: [240, 700, 740]
+1680: [210, 720, 750]
+1680: [112, 780, 788]
+1680: [105, 784, 791]
+1680: [80,  798, 802]
+```
+
+Werfen Sie einen Blick auf die Rechenzeiten:
 Die sequentielle Ausführung benötigt 2740 Millisekunden, die parallele Variante hingegen nur 569 Millisekunden.
 Der Aufwand in der Realisierung einer `parallel_for`-Funktion hat sich also gelohnt!
 
 
-
 # There&lsquo;s more
 
-???????????????
+In [Listing 6] haben wir Klasse `PythagoreanTripleCalculator` vorgestellt,
+die Ablage der Daten ist auf Basis des *Policy-Based Design* Entwurfsmusters zu konfigurieren.
+Wie immer diese Konfigurationsklasse auch aussieht, es wäre wünschenswert, dass die öffentliche Schnittstelle
+fest vereinbar ist.
 
+Zu diesem Zweck gibt es ab C++ 20 das Sprachfeature der *Concepts*:
+Erstellen Sie ein Konzept, dass die beiden Methoden
 
-Gray-Codes lassen sich sowohl mit einem rekursiven als auch mit einem iterativen Algorithmus berechnen.
-Versuchen Sie, an Hand der Beschreibung des Algorithmus in [Abbildung 2] eine iterative Realisierung in C++ umzusetzen.
-Die folgende [Anregung](https://www.geeksforgeeks.org/generate-n-bit-gray-codes/) könnte hierbei behilflich sein.
+```cpp
+void add(size_t count, size_t a, size_t b, size_t c);
+std::stack<T> data();
+```
+
+für einen Templateparamater `TStore` der Klasse `PythagoreanTripleCalculator` vorschreibt.
+
 
 <br/>
 
