@@ -1,22 +1,23 @@
 // =====================================================================================
-// End-of-File
+// MandelbrotPalette.h
 // =====================================================================================
 
 #pragma once
 
-class MandelbrotPalette {
+class MandelbrotPalette
+{
 private:
     std::vector<COLORREF> m_palette;
 
 public:
     // c'tor
-    MandelbrotPalette();
+    /* constexpr */ MandelbrotPalette();
 
     // operators
-    const COLORREF operator[]  (int index) const;
+    /* constexpr */ COLORREF operator[] (int index) const;
 
 private:
-    void init();
+    /* constexpr */ void init();
 };
 
 // =====================================================================================

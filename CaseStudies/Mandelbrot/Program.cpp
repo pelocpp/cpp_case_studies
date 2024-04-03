@@ -1,8 +1,28 @@
-// ===========================================================================================
-// Mandelbrot Application - miscellaneous variants
-// ===========================================================================================
+// =====================================================================================
+// Program.cpp // Mandelbrot Application Entry Point
+// =====================================================================================
+
+
+// =====================================================================================
+
+// TBD: Die einzelnen Varianten können mit constexpr auskommentiert werden !!!
+
+// Irgendeine Variante könnte std::latch anwenden !!!
+
+// Werden die Arrays speicher konform initialisiert ?????????????
+
+// TODO: Geht diese Palette nicht mit constexpr ?????????  Da gibt es Linker Error ....
+
+// TODO: Hmmm, viele long Variablen köntnen size_t sein .
+ 
+
+// TODO: jede Menge const einfügen .........
+
+// =====================================================================================
+
 
 #include "framework.h"
+
 #include "Mandelbrot.h"
 
 #include <complex>
@@ -18,7 +38,6 @@
 
 #include "MandelbrotPalette.h"
 #include "MandelbrotHelper.h"
-using namespace MandelbrotBasisVersion;
 
 #define MAX_LOADSTRING 100
 
@@ -117,8 +136,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static Mandelbrot mandelbrot;
 
-    MandelbrotVersion version = mandelbrot.getVersion();
-    if (version == MandelbrotVersion::ProducerConsumerBasedApproach) {
+    constexpr MandelbrotVersion version = getVersion();
+
+    if constexpr (version == MandelbrotVersion::ProducerConsumerBasedApproach)
+    {
         mandelbrot.setHWND(hWnd);
     }
 
@@ -133,10 +154,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         mandelbrot.setClientHeight(rect.bottom);
         mandelbrot.computeRects();
 
-        if (version == MandelbrotVersion::ProducerConsumerBasedApproach) {
+        if constexpr (version == MandelbrotVersion::ProducerConsumerBasedApproach)
+        {
             mandelbrot.setHWND(hWnd);
             mandelbrot.startCalculationThread(); // launch calculation threads
-            mandelbrot.startDrawingThread(); // launch single drawing thread
+            mandelbrot.startDrawingThread();     // launch single drawing thread
         }
 
         ::OutputDebugString(L"< WM_SIZE\n");
@@ -146,12 +168,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         ::OutputDebugString(L"> WM_PAINT\n");
 
-        MandelbrotVersion version = mandelbrot.getVersion();
-
-        if (version == MandelbrotVersion::BasicVersion ||
+        if constexpr (
+            version == MandelbrotVersion::BasicVersion ||
             version == MandelbrotVersion::RectanglesSequential ||
-            version == MandelbrotVersion::RectanglesParallelBlocking) {
-
+            version == MandelbrotVersion::RectanglesParallelBlocking)
+        {
             // register start time
             LONGLONG dwStart;
             dwStart = ::GetTickCount64();
@@ -184,8 +205,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 L"< WM_PAINT -  %ld milliseconds\n", (DWORD)dwTimeEllapsed);
             ::OutputDebugString(szText);
         }
-        else if (mandelbrot.getVersion() == MandelbrotVersion::RectanglesParallelNonBlocking) {
-
+        else if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlocking)
+        {
             ::ValidateRect(hWnd, NULL);
 
             // cancel all drawing threads, if existing
@@ -207,7 +228,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
             ::OutputDebugString(L"< WM_PAINT\n");
         }
-        else if (mandelbrot.getVersion() == MandelbrotVersion::ProducerConsumerBasedApproach) {
+        else if constexpr  (version == MandelbrotVersion::ProducerConsumerBasedApproach) {
             ::OutputDebugString(L"> WM_PAINT Anfang\n");
             ::ValidateRect(hWnd, NULL);
             //PAINTSTRUCT ps;
@@ -217,11 +238,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
     }
     break;
+
     case WM_DESTROY:
         ::OutputDebugString(L"> WM_DESTROY\n");
 
-        if (mandelbrot.getVersion() == MandelbrotVersion::RectanglesParallelNonBlocking) {
-
+        if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlocking)
+        {
             // cancel all drawing threads, if existing
             int doneRectangles = mandelbrot.getDoneRectangles();
             if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
@@ -229,19 +251,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 mandelbrot.setAbort(true);
                 mandelbrot.waitRectanglesDone();
             }
-
-            ::OutputDebugString(L"< WM_DESTROY\n");
         }
-        else if (mandelbrot.getVersion() == MandelbrotVersion::ProducerConsumerBasedApproach) {
+        else if constexpr (version == MandelbrotVersion::ProducerConsumerBasedApproach)
+        {
             mandelbrot.setAbort(true);
         }
+
         ::PostQuitMessage(0);
+        
+        ::OutputDebugString(L"< WM_DESTROY\n"); 
         break;
 
-    //case WM_QUIT:
-    //    ::OutputDebugString(L"> WM_DESTROY\n");
-    //    ::OutputDebugString(L"< WM_DESTROY\n");
-    //    break;
+    case WM_QUIT:
+        ::OutputDebugString(L"> WM_QUIT\n");
+        ::OutputDebugString(L"< WM_QUIT\n");
+        break;
 
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -249,5 +273,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-// ================================================================================
-
+// =====================================================================================
+// End-of-File
+// =====================================================================================

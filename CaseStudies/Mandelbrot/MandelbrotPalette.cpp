@@ -1,5 +1,5 @@
 // =====================================================================================
-// End-of-File
+// MandelbrotPalette.cpp
 // =====================================================================================
 
 #include <complex>
@@ -20,13 +20,12 @@
 
 // =====================================================================================
 
-using namespace MandelbrotBasisVersion;
-
-MandelbrotPalette::MandelbrotPalette() {
+/* constexpr */ MandelbrotPalette::MandelbrotPalette() {
     init();
 }
 
-void MandelbrotPalette::init() {
+/* constexpr */ void MandelbrotPalette::init()
+{
     m_palette.reserve(Mandelbrot::NumColors);
 
     for (unsigned int x = 0; x < Mandelbrot::NumColors / 32; ++x) {
@@ -60,7 +59,7 @@ void MandelbrotPalette::init() {
     m_palette[Mandelbrot::NumColors - 1] = RGB(0, 0, 0);  // last color is black
 }
 
-const COLORREF MandelbrotPalette::operator[] (int index) const {
+/* constexpr */ COLORREF MandelbrotPalette::operator[] (int index) const {
 
     if (index >= Mandelbrot::NumColors) {
         throw std::out_of_range("illegal palette index");
