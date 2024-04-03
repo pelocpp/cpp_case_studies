@@ -2,22 +2,16 @@
 // MandelbrotHelper.cpp
 // =====================================================================================
 
-#include <complex>
-#include <vector>
-#include <array>
-#include <queue>
-#include <deque>
-#include <thread>
-#include <future>
-#include <utility>
-#include <functional> 
-#include <mutex>
-#include <chrono>
-
 #include "framework.h"
 
 #include "MandelbrotPalette.h"
 #include "MandelbrotHelper.h"
+
+#include <thread>
+#include <utility>
+#include <functional> 
+#include <latch>
+#include <chrono>
 
 // =====================================================================================
 
@@ -93,57 +87,186 @@ void Mandelbrot::paint(HDC hDC) {
 
 void Mandelbrot::paintRectangles(HDC hDC) {
 
-    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
-        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
-            paintRect(hDC, m_rects[j][i]);
+    for (const auto& row : m_rects)
+    {
+        for (const auto& rectangle : row) {
+            paintRect(hDC, rectangle);
         }
     }
 }
 
-void Mandelbrot::paintRectanglesAsync(HDC hDC) {
+
+// https://stackoverflow.com/questions/28652422/stdpackaged-task-with-stdbindfunc-this-within-class
+
+// Hmmm: [this](int a, int b){ return somefunc(a, b); } is more readable, about the same number of keys to type
+// as std::bind(&foo::somefunc, this, _1, _2), 
+
+//void Mandelbrot::paintRectanglesAsync_LEGACY(HDC hDC) {
+//
+//    std::deque<std::packaged_task<std::pair<std::wstring, long>(HDC, RECT)>> tasks;
+//    std::deque<std::future<std::pair<std::wstring, long>>> futures;
+//
+//    // define tasks, store corresponding futures
+//    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
+//        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+//
+//            using namespace std::placeholders;
+//            std::packaged_task<std::pair<std::wstring, long>(HDC, RECT)> task{
+//                std::bind(&Mandelbrot::paintRectAsync, this, _1, _2)
+//            };
+//
+//            std::future<std::pair<std::wstring, long>> future = task.get_future();
+//            tasks.push_back(std::move(task));
+//            futures.push_back(std::move (future));
+//        }
+//    }
+//
+//    // execute each task in a separate thread
+//    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
+//        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+//
+//            std::packaged_task<std::pair<std::wstring, long>(HDC, RECT)> task =
+//                std::move(tasks.front());
+//
+//            tasks.pop_front();
+//
+//            std::thread t(std::move(task), hDC, m_rects[j][i]);
+//            t.detach();
+//        }
+//    }
+//
+//    // get the results
+//    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
+//        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+//
+//            std::future<std::pair<std::wstring, long>> future =
+//                std::move(futures.front());
+//
+//            futures.pop_front();
+//
+//            auto [tid, pixels] = future.get();
+//
+//            // print some statistics
+//            WCHAR szText[64];
+//            ::swprintf(szText, 64,
+//                L"thread %ls:  painted %ld pixels\n", tid.c_str(), pixels);
+//            OutputDebugString(szText);
+//        }
+//    }
+//}
+
+// NEU
+void Mandelbrot::paintRectanglesAsync (HDC hDC) {
 
     std::deque<std::packaged_task<std::pair<std::wstring, long>(HDC, RECT)>> tasks;
+
     std::deque<std::future<std::pair<std::wstring, long>>> futures;
 
-    // define tasks, store corresponding futures
-    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
-        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+    for (const auto& row : m_rects)
+    {
+        for (const auto& rectangle : row) {
 
-            using namespace std::placeholders;
             std::packaged_task<std::pair<std::wstring, long>(HDC, RECT)> task{
-                std::bind(&Mandelbrot::paintRectAsync, this, _1, _2)
+                [=, this](HDC hDC, RECT rect) { return paintRectAsync(hDC, rectangle); }
             };
-            std::future<std::pair<std::wstring, long>> future = task.get_future();
+
+            std::future<std::pair<std::wstring, long>> future{ task.get_future() };
 
             tasks.push_back(std::move(task));
-            futures.push_back(std::move (future));
+            futures.push_back(std::move(future));
         }
     }
 
     // execute each task in a separate thread
-    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
-        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+    for (const auto& row : m_rects)
+    {
+        for (const auto& rectangle : row) {
 
-            std::packaged_task<std::pair<std::wstring, long>(HDC, RECT)> task =
-                std::move(tasks.front());
-
+            auto task{ std::move(tasks.front()) };
             tasks.pop_front();
 
-            std::thread t(std::move(task), hDC, m_rects[j][i]);
+            std::thread t(std::move(task), hDC, rectangle);
             t.detach();
         }
     }
 
     // get the results
-    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
-        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+    for (const auto& row : m_rects)
+    {
+        for (const auto& rectangle : row) {
 
-            std::future<std::pair<std::wstring, long>> future =
-                std::move(futures.front());
-
+            std::future<std::pair<std::wstring, long>> future{
+                std::move(futures.front()) 
+            };
             futures.pop_front();
 
-            auto [tid, pixels]  = future.get();
+            const auto& [tid, pixels] = future.get();
+
+            // print some statistics
+            WCHAR szText[64];
+            ::swprintf(szText, 64,
+                L"Thread %ls:  painted %ld pixels\n", tid.c_str(), pixels);
+            OutputDebugString(szText);
+        }
+    }
+}
+
+void Mandelbrot::paintRectanglesAsyncWithLatch(HDC hDC) {
+
+    std::deque<std::packaged_task<std::pair<std::wstring, long>(HDC, RECT)>> tasks;
+
+    std::deque<std::future<std::pair<std::wstring, long>>> futures;
+
+    std::latch paintedAllRectangles{ MandelbrotRectangles::NUM_RECTS };
+
+    for (const auto& row : m_rects)
+    {
+        for (const auto& rectangle : row) {
+
+            std::packaged_task<std::pair<std::wstring, long>(HDC, RECT)> task {
+                [&, this](HDC hDC, RECT rect) mutable {
+
+                    auto result = paintRectAsync(hDC, rectangle);
+
+                    paintedAllRectangles.count_down();
+
+                    return result;
+                }
+            };
+
+            std::future<std::pair<std::wstring, long>> future{ task.get_future() };
+
+            tasks.push_back(std::move(task));
+            futures.push_back(std::move(future));
+        }
+    }
+
+    // execute each task in a separate thread
+    for (const auto& row : m_rects)
+    {
+        for (const auto& rectangle : row) {
+
+            auto task{ std::move(tasks.front()) };
+            tasks.pop_front();
+
+            std::thread t(std::move(task), hDC, rectangle);
+            t.detach();
+        }
+    }
+
+    // block until work is done
+    paintedAllRectangles.wait();
+    OutputDebugString(L"All calculations done :)");
+
+    // get the results
+    for (const auto& row : m_rects)
+    {
+        for (const auto& rectangle : row) {
+
+            auto future{ std::move(futures.front()) };
+            futures.pop_front();
+
+            const auto& [tid, pixels] = future.get();
 
             // print some statistics
             WCHAR szText[64];
@@ -153,6 +276,8 @@ void Mandelbrot::paintRectanglesAsync(HDC hDC) {
         }
     }
 }
+
+// ====================================================================================
 
 void Mandelbrot::startPaintingRectanglesAsync(HWND hWnd, HDC hDC) {
 

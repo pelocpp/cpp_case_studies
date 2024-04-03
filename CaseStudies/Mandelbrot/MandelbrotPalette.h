@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <vector>
+
 class MandelbrotPalette
 {
 private:

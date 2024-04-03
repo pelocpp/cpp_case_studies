@@ -4,6 +4,16 @@
 
 #pragma once
 
+#include "MandelbrotPalette.h"
+
+#include <complex>
+#include <array>
+#include <queue>
+#include <deque>
+#include <future>
+#include <mutex>
+#include <atomic>
+
 enum class MandelbrotVersion 
 {
     BasicVersion,                  // single rectangle, nonresponsive
@@ -13,7 +23,7 @@ enum class MandelbrotVersion
     ProducerConsumerBasedApproach  // multiple rectangles, parallel, responsive (non blocking)
 };
 
-constexpr MandelbrotVersion getVersion() { return MandelbrotVersion::BasicVersion; }
+constexpr MandelbrotVersion getVersion() { return MandelbrotVersion::RectanglesParallelNonBlocking; }
 
 // =====================================================================================
 
@@ -38,8 +48,8 @@ struct Pixel
 class MandelbrotRectangles 
 {
 public:
-    static constexpr size_t NUM_ROWS = 2;  
-    static constexpr size_t NUM_COLS = 2;  
+    static constexpr size_t NUM_ROWS = 4;  
+    static constexpr size_t NUM_COLS = 3;  
     static constexpr size_t NUM_RECTS = (NUM_ROWS * NUM_COLS);
 }; 
 
@@ -71,7 +81,7 @@ private:
     std::deque<std::packaged_task<long(HWND, HDC, RECT)>> m_tasks;
     std::deque<std::future<long>> m_futures;
 
-    std::mutex m_mutex;
+    mutable std::mutex m_mutex;
     std::atomic<bool> m_abort;
     std::atomic<int> m_doneRectangles;
 
@@ -109,7 +119,8 @@ public:
     void computeRects();
     void paint(HDC);
     void paintRectangles(HDC);
-    void paintRectanglesAsync(HDC);
+    void paintRectanglesAsync(HDC hDC); 
+    void paintRectanglesAsyncWithLatch(HDC hDC);
 
     void startPaintingRectanglesAsync(HWND, HDC);
     void waitRectanglesDone();
