@@ -12,11 +12,18 @@
 #include <functional> 
 #include <latch>
 #include <chrono>
+#include <stop_token>
 
 // =====================================================================================
 
+//Mandelbrot::Mandelbrot() :
+//    m_abort{ false }, m_doneRectangles{ MandelbrotRectangles::NUM_RECTS } ,
+//    m_clientWidth{}, m_clientHeight{}, m_NumRows{}, m_NumCols{},
+//    m_hWnd{}, m_hDC{}, m_rects{}, m_palette{}
+//{}
+
 Mandelbrot::Mandelbrot() :
-    m_abort{ false }, m_doneRectangles{ MandelbrotRectangles::NUM_RECTS } ,
+    m_abort{ false }, m_doneRectangles{ MandelbrotRectangles::NUM_RECTS },
     m_clientWidth{}, m_clientHeight{}, m_NumRows{}, m_NumCols{},
     m_hWnd{}, m_hDC{}, m_rects{}, m_palette{}
 {}
@@ -58,10 +65,10 @@ constexpr std::complex<T> Mandelbrot::getComplex(
     static constexpr T YMIN = MANDELBROT_COORDINATES::YMIN;
     static constexpr T YMAX = MANDELBROT_COORDINATES::YMAX;
 
-    return std::complex<T>(
+    return std::complex<T>{
         XMIN + (XMAX - XMIN) * x / maxWidth,
         YMAX + (YMIN - YMAX) * y / maxHeight
-    );
+    };
 }
 
 void Mandelbrot::paint(HDC hDC) {
@@ -72,14 +79,14 @@ void Mandelbrot::paint(HDC hDC) {
 
         for (int x = 0; x < m_clientWidth; x++) {
 
-            std::complex<T> c = getComplex<T, MandelbrotParams<T>>(
-                x, 
-                y,
-                m_clientWidth,
-                m_clientHeight);
+            std::complex<T> number { 
+                getComplex<T, MandelbrotParams<T>>(x, y, m_clientWidth, m_clientHeight)
+            };
 
-            long iterations = computeSequence(c);
-            COLORREF cr = m_palette[iterations - 1];
+            long iterations{ computeSequence(number) };
+
+            COLORREF cr{ m_palette[iterations - 1] };
+            
             ::SetPixelV(hDC, (int) x, (int) y, cr);
         }
     }
@@ -164,15 +171,18 @@ void Mandelbrot::paintRectanglesAsync (HDC hDC) {
 
     for (const auto& row : m_rects)
     {
-        for (const auto& rectangle : row) {
+        for (const auto& rect : row) {
 
             std::packaged_task<std::pair<std::wstring, long>(HDC, RECT)> task{
-                [=, this](HDC hDC, RECT rect) { return paintRectAsync(hDC, rectangle); }
+                [=, this](HDC hDC, RECT rect) {
+                    return paintRectAsync(hDC, rect); 
+                }
             };
 
             std::future<std::pair<std::wstring, long>> future{ task.get_future() };
 
             tasks.push_back(std::move(task));
+
             futures.push_back(std::move(future));
         }
     }
@@ -224,7 +234,8 @@ void Mandelbrot::paintRectanglesAsyncWithLatch(HDC hDC) {
         for (const auto& rectangle : row) {
 
             std::packaged_task<std::pair<std::wstring, long>(HDC, RECT)> task {
-                [&, this](HDC hDC, RECT rect) mutable {
+
+                [&, this] (HDC hDC, RECT rect) mutable {
 
                     auto result = paintRectAsync(hDC, rectangle);
 
@@ -279,6 +290,45 @@ void Mandelbrot::paintRectanglesAsyncWithLatch(HDC hDC) {
 
 // ====================================================================================
 
+// Legacy
+//void Mandelbrot::startPaintingRectanglesAsync(HWND hWnd, HDC hDC) {
+//
+//    m_doneRectangles = 0;
+//
+//    m_tasks.clear();
+//    m_futures.clear();
+//
+//    // define tasks, store corresponding futures
+//    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++)
+//    {
+//        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+//
+//            using namespace std::placeholders;
+//            std::packaged_task<long(HWND, HDC, RECT)> task{
+//                std::bind(&Mandelbrot::startPaintRectAsync, this, _1, _2, _3)
+//            };
+//            std::future<long> future = task.get_future();
+//
+//            m_tasks.push_back(std::move(task));
+//            m_futures.push_back(std::move(future));
+//        }
+//    }
+//
+//    // execute each task in a separate thread
+//    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
+//        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+//
+//            std::packaged_task<long(HWND, HDC, RECT)> task =
+//                std::move(m_tasks.front());
+//
+//            m_tasks.pop_front();
+//
+//            std::thread t(std::move(task), hWnd, hDC, m_rects[j][i]);
+//            t.detach();
+//        }
+//    }
+//}
+
 void Mandelbrot::startPaintingRectanglesAsync(HWND hWnd, HDC hDC) {
 
     m_doneRectangles = 0;
@@ -287,50 +337,136 @@ void Mandelbrot::startPaintingRectanglesAsync(HWND hWnd, HDC hDC) {
     m_futures.clear();
 
     // define tasks, store corresponding futures
-    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
-        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+    //for (int j{}; j != MandelbrotRectangles::NUM_ROWS; j++)
+    //{
+    //    for (int i{}; i != MandelbrotRectangles::NUM_COLS; i++) {
 
-            using namespace std::placeholders;
-            std::packaged_task<long(HWND, HDC, RECT)> task{
-                std::bind(&Mandelbrot::startPaintRectAsync, this, _1, _2, _3)
-            };
-            std::future<long> future = task.get_future();
+    //        std::packaged_task<long(HWND, HDC, RECT)> task {
+    //            [this] (HWND hWnd, HDC hDC, RECT rect) { 
+    //                return startPaintRectAsync(hWnd, hDC, rect); 
+    //            }
+    //        };
 
-            m_tasks.push_back(std::move(task));
-            m_futures.push_back(std::move(future));
-        }
+    //        std::future<long> future{ task.get_future() };
+
+    //        m_tasks.push_back(std::move(task));
+
+    //        m_futures.push_back(std::move(future));
+    //    }
+    //}
+
+    for (int j{}; j != MandelbrotRectangles::NUM_ROWS * MandelbrotRectangles::NUM_COLS; j++) {
+
+        std::packaged_task<long(HWND, HDC, RECT)> task {
+            [this] (HWND hWnd, HDC hDC, RECT rect) { 
+                return startPaintRectAsync(hWnd, hDC, rect); 
+            }
+        };
+
+        std::future<long> future{ task.get_future() };
+        m_tasks.push_back(std::move(task));
+        m_futures.push_back(std::move(future));
     }
 
     // execute each task in a separate thread
-    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
-        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+    for (const auto& row : m_rects)
+    {
+        for (const auto& rect : row) {
 
-            std::packaged_task<long(HWND, HDC, RECT)> task =
-                std::move(m_tasks.front());
+            std::packaged_task<long(HWND, HDC, RECT)> task{
+                std::move(m_tasks.front()) 
+            };
 
             m_tasks.pop_front();
 
-            std::thread t(std::move(task), hWnd, hDC, m_rects[j][i]);
+            std::thread t{ std::move(task), hWnd, hDC, rect };
             t.detach();
         }
     }
 }
 
+void Mandelbrot::startPaintingRectanglesAsyncEx(std::stop_source source, HWND hWnd, HDC hDC) {
+
+    m_doneRectangles = 0;
+
+    m_tasksEx.clear();
+    m_futures.clear();
+
+    // define tasks, store corresponding futures
+
+    // DAS GEHT MIT ZWEIMAL std::generator: Erst den Vektor mit std::packaged_task befüllen,
+    // dann deb 2, Vektor mit den Futures befüllen
+
+    for (int j{}; j != MandelbrotRectangles::NUM_ROWS * MandelbrotRectangles::NUM_COLS; j++) {
+
+        std::packaged_task<long(std::stop_token, HWND, HDC, RECT)> task{
+            [this](std::stop_token token, HWND hWnd, HDC hDC, RECT rect) {
+                return startPaintRectAsyncEx(token, hWnd, hDC, rect);
+            }
+        };
+
+        std::future<long> future{ task.get_future() };
+        m_tasksEx.push_back(std::move(task));
+        m_futures.push_back(std::move(future));
+    }
+
+    // need stop_source and stop_token objects
+    std::stop_token token{ source.get_token() };
+
+    // execute each task in a separate thread
+
+    // Hmmm: Ginge auch mit geschachteltem std:for_each .... und Lambda
+    for (const auto& row : m_rects)
+    {
+        for (const auto& rect : row) {
+
+            std::packaged_task<long(std::stop_token, HWND, HDC, RECT)> task{
+                std::move(m_tasksEx.front())
+            };
+
+            m_tasksEx.pop_front();
+
+            std::jthread t{ std::move(task), token, hWnd, hDC, rect };
+            t.detach();
+        }
+    }
+}
+
+
+//void Mandelbrot::waitRectanglesDone() {
+//
+//    // Hmmmmm .. wieso 2 Schleifen ??????????????????????????
+//
+//    for (int j{}; j < MandelbrotRectangles::NUM_ROWS; j++) {
+//
+//        for (int i{}; i < MandelbrotRectangles::NUM_COLS; i++) {
+//
+//            std::future<long> future = std::move(m_futures.front());
+//            m_futures.pop_front();
+//            long numPixels = future.get();
+//
+//            // print some statistics
+//            WCHAR szText[64];
+//            ::swprintf(szText, 64,
+//                L"   ... %ld pixels painted\n", numPixels);
+//            OutputDebugString(szText);
+//        }
+//    }
+//}
+
 void Mandelbrot::waitRectanglesDone() {
 
-    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
-        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
+    while (!m_futures.empty()) {
 
-            std::future<long> future = std::move(m_futures.front());
-            m_futures.pop_front();
-            long numPixels = future.get();
+        std::future<long> future = std::move(m_futures.front());
+        m_futures.pop_front();
+        long numPixels = future.get();
 
-            // print some statistics
-            WCHAR szText[64];
-            ::swprintf(szText, 64,
-                L"   ... %ld pixels painted\n", numPixels);
-            OutputDebugString(szText);
-        }
+        // print some statistics
+        WCHAR szText[64];
+        ::swprintf(szText, 64,
+            L"   ... %ld pixels painted\n", numPixels);
+        OutputDebugString(szText);
     }
 }
 
@@ -338,18 +474,18 @@ void Mandelbrot::paintRect(HDC hDC, RECT rect) {
 
     using T = double;
 
-    for (int y = rect.top; y < rect.bottom; y++) {
+    for (int y{ rect.top }; y < rect.bottom; y++) {
 
-        for (int x = rect.left; x < rect.right; x++) {
+        for (int x{ rect.left }; x < rect.right; x++) {
 
-            std::complex<T> c = getComplex<T, MandelbrotParams<T>>(
-                x,
-                y,
-                m_clientWidth,
-                m_clientHeight);
+            std::complex<T> number{
+                getComplex<T, MandelbrotParams<T>>(x, y, m_clientWidth, m_clientHeight)
+            };
 
-            long iterations = computeSequence(c);
-            COLORREF cr = m_palette[iterations - 1];
+            long iterations{ computeSequence(number) };
+
+            COLORREF cr{ m_palette[iterations - 1] };
+
             ::SetPixelV(hDC, x, y, cr);
         }
     }
@@ -359,27 +495,30 @@ std::pair<std::wstring, long> Mandelbrot::paintRectAsync(HDC hDC, RECT rect) {
 
     using T = double;
 
-    std::thread::id tid = std::this_thread::get_id();
+    std::thread::id tid{ std::this_thread::get_id() };
 
-    long numPixels = 0;
+    long numPixels{};
 
-    for (int y = rect.top; y < rect.bottom; y++) {
+    for (int y{ rect.top }; y < rect.bottom; y++) {
 
-        for (int x = rect.left; x < rect.right; x++) {
+        for (int x{ rect.left }; x < rect.right; x++) {
 
-            std::complex<T> c = getComplex<T, MandelbrotParams<T>>(
-                x,
-                y,
-                m_clientWidth,
-                m_clientHeight);
+            std::complex<T> number{
+                getComplex<T, MandelbrotParams<T>>(x, y, m_clientWidth, m_clientHeight)
+            };
 
-            unsigned int iterations = computeSequence(c);
-            COLORREF cr = m_palette[iterations - 1];
+            long iterations{ computeSequence(number) };
+
+            COLORREF cr{ m_palette[iterations - 1] };
+
             ++numPixels;
 
-            // RAII lock
-            std::scoped_lock<std::mutex> lock(m_mutex);
-            ::SetPixelV(hDC, x, y, cr);
+            {
+                // RAII lock
+                std::scoped_lock<std::mutex> lock(m_mutex);
+
+                ::SetPixelV(hDC, x, y, cr);
+            }
         }
     }
 
@@ -393,7 +532,7 @@ long Mandelbrot::startPaintRectAsync(HWND hWnd, HDC hDC, RECT rect) {
 
     using T = double;
 
-    long numPixels = 0;
+    long numPixels{};
 
     for (int y = rect.top; y < rect.bottom; y++) {
 
@@ -401,26 +540,85 @@ long Mandelbrot::startPaintRectAsync(HWND hWnd, HDC hDC, RECT rect) {
 
             // premature end of drawing
             if (m_abort == true) {
-                break;
+                // break;
+                ::OutputDebugString(L"premature end of drawing ...");
+                goto m_label;
             }
 
-            std::complex<T> c = getComplex<T, MandelbrotParams<T>>(
+            std::complex<T> number = getComplex<T, MandelbrotParams<T>>(
                 x,
                 y,
                 m_clientWidth,
                 m_clientHeight);
 
-            unsigned int iterations = computeSequence(c);
-            COLORREF cr = m_palette[iterations - 1];
+            long iterations{ computeSequence(number) };
+
+            COLORREF cr{ m_palette[iterations - 1] };
+
             ++numPixels;
 
-            // RAII lock
-            std::scoped_lock<std::mutex> lock(m_mutex);
-            ::SetPixelV(hDC, x, y, cr);
+            {
+                // RAII lock
+                std::scoped_lock<std::mutex> lock(m_mutex);
+
+                ::SetPixelV(hDC, x, y, cr);
+            }
         }
     }
 
+    m_label:
+
     m_doneRectangles++;
+
+    if (m_doneRectangles == MandelbrotRectangles::NUM_RECTS) {
+
+        ::ReleaseDC(hWnd, hDC);
+    }
+
+    return numPixels;
+}
+
+long Mandelbrot::startPaintRectAsyncEx(std::stop_token token, HWND hWnd, HDC hDC, RECT rect) {
+
+    using T = double;
+
+    long numPixels{};
+
+    for (int y = rect.top; y < rect.bottom; y++) {
+
+        for (int x = rect.left; x < rect.right; x++) {
+
+            // premature end of drawing
+            if (token.stop_requested()) {
+                ::OutputDebugString(L"premature end of drawing ...");
+                goto m_label;
+            }
+
+            std::complex<T> number = getComplex<T, MandelbrotParams<T>>(
+                x,
+                y,
+                m_clientWidth,
+                m_clientHeight);
+
+            long iterations{ computeSequence(number) };
+
+            COLORREF cr{ m_palette[iterations - 1] };
+
+            ++numPixels;
+
+            {
+                // RAII lock
+                std::scoped_lock<std::mutex> lock(m_mutex);
+
+                ::SetPixelV(hDC, x, y, cr);
+            }
+        }
+    }
+
+    m_label:
+
+    m_doneRectangles++;
+
     if (m_doneRectangles == MandelbrotRectangles::NUM_RECTS) {
 
         ::ReleaseDC(hWnd, hDC);
@@ -435,7 +633,7 @@ long Mandelbrot::computeSequence(std::complex<T> point) const
 {
     std::complex<T> c(0.0);
 
-    long count = 0;
+    long count{};
     while (count < Mandelbrot::NumColors && std::abs(c) < Mandelbrot::Limit) {
         c = c * c + point;
         ++count;

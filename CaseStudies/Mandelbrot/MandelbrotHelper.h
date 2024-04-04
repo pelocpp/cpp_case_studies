@@ -16,14 +16,17 @@
 
 enum class MandelbrotVersion 
 {
-    BasicVersion,                  // single rectangle, nonresponsive
-    RectanglesSequential,          // multiple rectangles, sequential, nonresponsive (blocking)
-    RectanglesParallelBlocking,    // multiple rectangles, parallel, nonresponsive (blocking)
-    RectanglesParallelNonBlocking, // multiple rectangles, parallel, responsive (non blocking)
-    ProducerConsumerBasedApproach  // multiple rectangles, parallel, responsive (non blocking)
+    BasicVersion,                    // single rectangle, nonresponsive
+    RectanglesSequential,            // multiple rectangles, sequential, nonresponsive (blocking)
+    RectanglesParallelBlocking,      // multiple rectangles, parallel, nonresponsive (blocking)
+    RectanglesParallelNonBlocking,   // multiple rectangles, parallel, responsive (non blocking)
+    RectanglesParallelNonBlockingEx, // multiple rectangles, parallel, responsive (non blocking)
+    ProducerConsumerBasedApproach    // multiple rectangles, parallel, responsive (non blocking)
 };
 
-constexpr MandelbrotVersion getVersion() { return MandelbrotVersion::RectanglesParallelNonBlocking; }
+constexpr MandelbrotVersion getVersion() { 
+    return MandelbrotVersion::RectanglesParallelNonBlockingEx; 
+}
 
 // =====================================================================================
 
@@ -48,8 +51,8 @@ struct Pixel
 class MandelbrotRectangles 
 {
 public:
-    static constexpr size_t NUM_ROWS = 4;  
-    static constexpr size_t NUM_COLS = 3;  
+    static constexpr size_t NUM_ROWS = 2;  
+    static constexpr size_t NUM_COLS = 2;  
     static constexpr size_t NUM_RECTS = (NUM_ROWS * NUM_COLS);
 }; 
 
@@ -79,6 +82,7 @@ private:
             MandelbrotRectangles::NUM_ROWS> m_rects;
 
     std::deque<std::packaged_task<long(HWND, HDC, RECT)>> m_tasks;
+    std::deque<std::packaged_task<long(std::stop_token, HWND, HDC, RECT)>> m_tasksEx;
     std::deque<std::future<long>> m_futures;
 
     mutable std::mutex m_mutex;
@@ -122,7 +126,9 @@ public:
     void paintRectanglesAsync(HDC hDC); 
     void paintRectanglesAsyncWithLatch(HDC hDC);
 
+    // Redesign
     void startPaintingRectanglesAsync(HWND, HDC);
+    void startPaintingRectanglesAsyncEx(std::stop_source, HWND, HDC);
     void waitRectanglesDone();
 
     // public "producer - consumer" interface
@@ -141,6 +147,7 @@ private:
     void paintRect(HDC, RECT);
     std::pair<std::wstring, long> paintRectAsync(HDC, RECT);
     long startPaintRectAsync(HWND, HDC, RECT);
+    long startPaintRectAsyncEx(std::stop_token token, HWND, HDC, RECT);
 
     template <typename T = float, typename MANDELBROT_COORDINATES>
     constexpr std::complex<T> getComplex(long x, long y, long max_x, long max_y) const;
