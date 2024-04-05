@@ -36,7 +36,7 @@ LRESULT CALLBACK MandelbrotWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
     switch (message)
     {
     case WM_SIZE:
-        ::OutputDebugString(L"> WM_SIZE\n");
+        ::OutputDebugString(L"> WM_SIZE");
 
         RECT rect;
         ::GetClientRect(hWnd, &rect);
@@ -51,22 +51,19 @@ LRESULT CALLBACK MandelbrotWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
             mandelbrot.startDrawingThread();      // launch single drawing thread
         }
 
-        ::OutputDebugString(L"< WM_SIZE\n");
+        ::OutputDebugString(L"< WM_SIZE");
         break;
 
     case WM_PAINT:
     {
-        ::OutputDebugString(L"> WM_PAINT\n");
+        ::OutputDebugString(L"> WM_PAINT");
 
         if constexpr (
             version == MandelbrotVersion::BasicVersion ||
             version == MandelbrotVersion::RectanglesSequential ||
-            version == MandelbrotVersion::RectanglesParallelBlocking)
+            version == MandelbrotVersion::RectanglesParallelBlocking || 
+            version == MandelbrotVersion::RectanglesParallelBlockingUsingLatch)
         {
-            // register start time
-            //LONGLONG dwStart;
-            //dwStart = ::GetTickCount64();
-
             // register start time
             ULONGLONG dwStart{ ::GetTickCount64() };
 
@@ -82,7 +79,9 @@ LRESULT CALLBACK MandelbrotWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
                 mandelbrot.paintRectangles(hdc);
                 break;
             case MandelbrotVersion::RectanglesParallelBlocking:
-                // mandelbrot.paintRectanglesAsync(hdc);
+                mandelbrot.paintRectanglesAsync(hdc);
+                break;
+            case MandelbrotVersion::RectanglesParallelBlockingUsingLatch:
                 mandelbrot.paintRectanglesAsyncWithLatch(hdc);
                 break;
             default:
@@ -98,20 +97,26 @@ LRESULT CALLBACK MandelbrotWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
                 L"< WM_PAINT -  %ld milliseconds\n", (DWORD)dwTimeEllapsed);
             ::OutputDebugString(szText);
         }
-        else if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlocking)
+        else if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlockingClassic)
         {
+            // using 'bool flag' 
+
+            ::OutputDebugString(L"> Start ...");
+
             ::ValidateRect(hWnd, NULL);
 
             // cancel all drawing threads, if existing
             size_t doneRectangles = mandelbrot.getDoneRectangles();
             if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
+                ::OutputDebugString(L"> Requesting Abort ...");
+
                 mandelbrot.setAbort(true);
                 mandelbrot.waitRectanglesDone();
             }
 
             // launch new drawing threads
-            ::OutputDebugString(L"launching new drawing threads ...\n");
+            ::OutputDebugString(L"> Launching new drawing threads ...");
 
             mandelbrot.setAbort(false);
             mandelbrot.resetDoneRectangles();
@@ -119,59 +124,53 @@ LRESULT CALLBACK MandelbrotWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
             HDC hDC = ::GetDC(hWnd);
             mandelbrot.startPaintingRectanglesAsync(hWnd, hDC);
 
-            ::OutputDebugString(L"< WM_PAINT\n");
+            ::OutputDebugString(L"< WM_PAINT");
         }
-        else if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlockingEx)
+        else if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlockingStopToken)
         {
-            // 2. Versuch ... mit stop_token
-            // ==============================
+            // using std::jthread and std::stop_token 
+
+            ::OutputDebugString(L"> Start ...");
 
             ::ValidateRect(hWnd, NULL);
-
-            //// need stop_source and stop_token objects
-            std::stop_source stopSource;
-            //std::stop_token stopToken{ stopSource.get_token() };
 
             // cancel all drawing threads, if existing
             size_t doneRectangles = mandelbrot.getDoneRectangles();
             if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
-               // mandelbrot.setAbort(true);
+                ::OutputDebugString(L"> Requesting Stop ...");
 
-                ::OutputDebugString(L"requesting stop ...");
-
-                  // requesting stop 
-                stopSource.request_stop();
-
+                // requesting stop 
+                mandelbrot.requestAbort();
                 mandelbrot.waitRectanglesDone();
             }
 
             // launch new drawing threads
-            ::OutputDebugString(L"launching new drawing threads ...\n");
+            ::OutputDebugString(L"> Launching new drawing threads ...");
 
-            //mandelbrot.setAbort(false);
             mandelbrot.resetDoneRectangles();
 
             HDC hDC = ::GetDC(hWnd);
-            mandelbrot.startPaintingRectanglesAsyncEx(stopSource, hWnd, hDC);
+            mandelbrot.startPaintingRectanglesAsyncEx(hWnd, hDC);
 
-            ::OutputDebugString(L"< WM_PAINT\n");
+            ::OutputDebugString(L"< WM_PAINT");
         }
         else if constexpr (version == MandelbrotVersion::ProducerConsumerBasedApproach) {
-            ::OutputDebugString(L"> WM_PAINT Anfang\n");
+            ::OutputDebugString(L"> WM_PAINT Anfang");
             ::ValidateRect(hWnd, NULL);
             //PAINTSTRUCT ps;
             //HDC hdc = BeginPaint(hWnd, &ps);
             //::EndPaint(hWnd, &ps);
-            ::OutputDebugString(L"< WM_PAINT Ende\n");
+            ::OutputDebugString(L"< WM_PAINT Ende");
         }
     }
     break;
 
     case WM_DESTROY:
-        ::OutputDebugString(L"> WM_DESTROY\n");
+        ::OutputDebugString(L"> WM_DESTROY");
 
-        if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlocking)
+        if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlockingClassic ||
+            version == MandelbrotVersion::RectanglesParallelNonBlockingStopToken)
         {
             // cancel all drawing threads, if existing
             int doneRectangles = mandelbrot.getDoneRectangles();
@@ -188,13 +187,8 @@ LRESULT CALLBACK MandelbrotWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
         ::PostQuitMessage(0);
 
-        ::OutputDebugString(L"< WM_DESTROY\n");
+        ::OutputDebugString(L"< WM_DESTROY");
         break;
-
-    //case WM_QUIT:
-    //    ::OutputDebugString(L"> WM_QUIT\n");
-    //    ::OutputDebugString(L"< WM_QUIT\n");
-    //    break;
 
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

@@ -28,6 +28,8 @@
 
 // vorsicht ergeben lokale constexpr Variablen Sinn ...............
 
+// Die letzte Variante stürzt ab, wenn man Close drückt ...
+
 // =====================================================================================
 
 #include "framework.h"

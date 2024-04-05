@@ -159,6 +159,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MandelbrotHelper_Legacy.cpp" />
     <ClCompile Include="MandelbrotWndProc.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="MandelbrotHelper.cpp" />

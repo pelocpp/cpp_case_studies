@@ -13,19 +13,22 @@
 #include <future>
 #include <mutex>
 #include <atomic>
+#include <stop_token>
+#include <thread>
 
 enum class MandelbrotVersion 
 {
-    BasicVersion,                    // single rectangle, nonresponsive
-    RectanglesSequential,            // multiple rectangles, sequential, nonresponsive (blocking)
-    RectanglesParallelBlocking,      // multiple rectangles, parallel, nonresponsive (blocking)
-    RectanglesParallelNonBlocking,   // multiple rectangles, parallel, responsive (non blocking)
-    RectanglesParallelNonBlockingEx, // multiple rectangles, parallel, responsive (non blocking)
-    ProducerConsumerBasedApproach    // multiple rectangles, parallel, responsive (non blocking)
+    BasicVersion = 1,                            // single rectangle, nonresponsive
+    RectanglesSequential = 2,                    // multiple rectangles, sequential, nonresponsive (blocking)
+    RectanglesParallelBlocking = 3,              // multiple rectangles, parallel, nonresponsive (blocking)
+    RectanglesParallelBlockingUsingLatch = 4,    // multiple rectangles, parallel, nonresponsive (blocking), using std::latch
+    RectanglesParallelNonBlockingClassic = 5,    // multiple rectangles, parallel, responsive (non blocking)
+    RectanglesParallelNonBlockingStopToken = 6,  // multiple rectangles, parallel, responsive (non blocking), using std::stop_token
+    ProducerConsumerBasedApproach = 7            // multiple rectangles, parallel, responsive (non blocking)
 };
 
 constexpr MandelbrotVersion getVersion() { 
-    return MandelbrotVersion::RectanglesParallelNonBlockingEx; 
+    return MandelbrotVersion::ProducerConsumerBasedApproach;
 }
 
 // =====================================================================================
@@ -51,29 +54,31 @@ struct Pixel
 class MandelbrotRectangles 
 {
 public:
-    static constexpr size_t NUM_ROWS = 2;  
-    static constexpr size_t NUM_COLS = 2;  
+    static constexpr size_t NUM_ROWS = 4;
+    static constexpr size_t NUM_COLS = 4;
     static constexpr size_t NUM_RECTS = (NUM_ROWS * NUM_COLS);
 }; 
 
-class Mandelbrot 
+// =====================================================================================
+
+class Mandelbrot
 {
 public:
     static const int NumColors = 256;
     static const int Limit = 5;
 
-    static const int WindowHeight = 450;
-    static const int WindowWidth = 500;
+    //static const int WindowHeight = 450;
+    //static const int WindowWidth = 500;
 
-    //static const int WindowHeight = 150;
-    //static const int WindowWidth = 100;
+    static const int WindowHeight = 350;
+    static const int WindowWidth = 300;
 
 private:
     long m_clientWidth;
     long m_clientHeight;
 
-    int m_NumRows;
-    int m_NumCols;
+    int m_numRows;
+    int m_numCols;
 
     MandelbrotPalette m_palette;
 
@@ -88,6 +93,7 @@ private:
     mutable std::mutex m_mutex;
     std::atomic<bool> m_abort;
     std::atomic<int> m_doneRectangles;
+    std::stop_source m_source;
 
     std::condition_variable m_conditionPixelsAvailable;
     std::queue <Pixel> m_pixels;
@@ -112,12 +118,17 @@ public:
     void setClientHeight(long clientHeight) { m_clientHeight = clientHeight; }
     long getClientHeight() const { return m_clientHeight; }
 
+    int  getDoneRectangles() { return m_doneRectangles; }
+    void incDoneRectangles() { ++m_doneRectangles; }
+    void resetDoneRectangles() { m_doneRectangles = 0; }
+
+
+    // 1. Variante
     void setAbort(bool flag) { m_abort = flag; }
     bool getAbort() const { return m_abort; }
 
-    int getDoneRectangles() { return m_doneRectangles; }
-    void incDoneRectangles() { ++m_doneRectangles; }
-    void resetDoneRectangles() { m_doneRectangles = 0; }
+    // 2. Variante
+    void requestAbort() { m_source.request_stop(); }
 
     // public interface
     void computeRects();
@@ -128,7 +139,7 @@ public:
 
     // Redesign
     void startPaintingRectanglesAsync(HWND, HDC);
-    void startPaintingRectanglesAsyncEx(std::stop_source, HWND, HDC);
+    void startPaintingRectanglesAsyncEx(HWND, HDC);
     void waitRectanglesDone();
 
     // public "producer - consumer" interface

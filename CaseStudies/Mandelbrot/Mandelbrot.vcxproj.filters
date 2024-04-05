@@ -47,6 +47,9 @@
     <ClCompile Include="MandelbrotWndProc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MandelbrotHelper_Legacy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Mandelbrot.rc">
