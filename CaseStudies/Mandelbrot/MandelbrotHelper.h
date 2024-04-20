@@ -16,7 +16,9 @@
 #include <stop_token>
 #include <thread>
 
-enum class MandelbrotVersion 
+// =====================================================================================
+
+enum class MandelbrotVersion
 {
     BasicVersion = 1,                            // single rectangle, nonresponsive
     RectanglesSequential = 2,                    // multiple rectangles, sequential, nonresponsive (blocking)
@@ -33,15 +35,19 @@ constexpr MandelbrotVersion getVersion() {
 
 // =====================================================================================
 
+using TFloatingPoint = float;  // float or double or long double
+ 
+// =====================================================================================
+
 template <typename T>
 class MandelbrotParams
 {
 public:
     // original limits
-    static constexpr T XMIN = -2.0;   // minimum x-value (real part)
-    static constexpr T XMAX = +0.75;  // maximum x-value (real part)
-    static constexpr T YMIN = -1.25;  // minimum y-value (imaginary part)
-    static constexpr T YMAX = +1.25;  // maximum y-value (imaginary part)
+    static constexpr T XMIN{ (T) -2.0  };  // minimum x-value (real part)
+    static constexpr T XMAX{ (T) +0.75 };  // maximum x-value (real part)
+    static constexpr T YMIN{ (T) -1.25 };  // minimum y-value (imaginary part)
+    static constexpr T YMAX{ (T) +1.25 };  // maximum y-value (imaginary part)
 };
 
 struct Pixel 
@@ -51,44 +57,58 @@ struct Pixel
     COLORREF m_cr;
 };
 
+struct Rectangle
+{
+    size_t m_left;
+    size_t m_top;
+    size_t m_right;
+    size_t m_bottom;
+};
+
 class MandelbrotRectangles 
 {
 public:
-    static constexpr size_t NUM_ROWS = 4;
-    static constexpr size_t NUM_COLS = 4;
-    static constexpr size_t NUM_RECTS = (NUM_ROWS * NUM_COLS);
+    static constexpr size_t NUM_ROWS { 4 };
+    static constexpr size_t NUM_COLS { 4 };
+    static constexpr size_t NUM_RECTS{ (NUM_ROWS * NUM_COLS) };
 }; 
 
 // =====================================================================================
 
+
+
 class Mandelbrot
 {
 public:
-    static const int NumColors = 256;
-    static const int Limit = 5;
+    static const int NumColors{ 256 };
+    static const int Limit{ 5 };
 
-    //static const int WindowHeight = 450;
-    //static const int WindowWidth = 500;
+    //static const int WindowHeight{ 450 };
+    //static const int WindowWidth{ 500 };
 
-    static const int WindowHeight = 350;
-    static const int WindowWidth = 300;
+    static const int WindowHeight{ 350 };
+    static const int WindowWidth{ 300 };
 
 private:
-    long m_clientWidth;
-    long m_clientHeight;
+    size_t m_clientWidth;
+    size_t m_clientHeight;
 
-    int m_numRows;
-    int m_numCols;
+    size_t m_numRows;
+    size_t m_numCols;
 
-    MandelbrotPalette m_palette;
+    MandelbrotPalette m_palette{};    // const möglicherweise wieder entfernen ..........
+
+    //std::array <
+    //    std::array <RECT, MandelbrotRectangles::NUM_COLS>, 
+    //        MandelbrotRectangles::NUM_ROWS> m_rects;
 
     std::array <
-        std::array <RECT, MandelbrotRectangles::NUM_COLS>, 
-            MandelbrotRectangles::NUM_ROWS> m_rects;
+    std::array <struct Rectangle, MandelbrotRectangles::NUM_COLS>,
+        MandelbrotRectangles::NUM_ROWS> m_rects;
 
-    std::deque<std::packaged_task<long(HWND, HDC, RECT)>> m_tasks;
-    std::deque<std::packaged_task<long(std::stop_token, HWND, HDC, RECT)>> m_tasksEx;
-    std::deque<std::future<long>> m_futures;
+    std::deque<std::packaged_task<size_t(HWND, HDC, struct Rectangle)>> m_tasks;
+    std::deque<std::packaged_task<size_t(std::stop_token, HWND, HDC, struct Rectangle)>> m_tasksEx;
+    std::deque<std::future<size_t>> m_futures;
 
     mutable std::mutex m_mutex;
     std::atomic<bool> m_abort;
@@ -102,9 +122,9 @@ private:
     HWND m_hWnd;
     HDC m_hDC;
 
-    std::deque<std::packaged_task<long(RECT, long, long)>> m_CalculationTasks;
-    std::deque<std::future<long>> m_CalculationFutures;
-    std::packaged_task<long()> m_DrawingTask;
+    std::deque<std::packaged_task<size_t(struct Rectangle, size_t, size_t)>> m_CalculationTasks;
+    std::deque<std::future<size_t>> m_CalculationFutures;
+    std::packaged_task<size_t()> m_DrawingTask;
     std::future<void> m_DrawingFuture;
 
 public:
@@ -112,16 +132,15 @@ public:
     Mandelbrot();
 
     // getter/setter
-    void setClientWidth(long clientWidth) { m_clientWidth = clientWidth; }
-    long getClientWidth() const { return m_clientWidth; }
+    void setClientWidth(size_t clientWidth) { m_clientWidth = clientWidth; }
+    size_t getClientWidth() const { return m_clientWidth; }
 
-    void setClientHeight(long clientHeight) { m_clientHeight = clientHeight; }
-    long getClientHeight() const { return m_clientHeight; }
+    void setClientHeight(size_t clientHeight) { m_clientHeight = clientHeight; }
+    size_t getClientHeight() const { return m_clientHeight; }
 
     int  getDoneRectangles() { return m_doneRectangles; }
     void incDoneRectangles() { ++m_doneRectangles; }
     void resetDoneRectangles() { m_doneRectangles = 0; }
-
 
     // 1. Variante
     void setAbort(bool flag) { m_abort = flag; }
@@ -148,23 +167,23 @@ public:
     void setHWND(HWND hWnd);
     void addPixel(Pixel);
     void notify();
-    long computePixel(RECT rect, long maxWidth, long maxHeight);
+    size_t computePixel(struct Rectangle rect, size_t maxWidth, size_t maxHeight);
     void drawPixel();
     void startCalculationThread();
     void startDrawingThread();
 
 private:
     // private helper methods
-    void paintRect(HDC, RECT);
-    std::pair<std::wstring, long> paintRectAsync(HDC, RECT);
-    long startPaintRectAsync(HWND, HDC, RECT);
-    long startPaintRectAsyncEx(std::stop_token token, HWND, HDC, RECT);
+    void paintRect(HDC, struct Rectangle);
+    std::pair<std::wstring, size_t> paintRectAsync(HDC, struct Rectangle);
+    size_t startPaintRectAsync(HWND, HDC, struct Rectangle);
+    size_t startPaintRectAsyncEx(std::stop_token token, HWND, HDC, struct Rectangle);
 
-    template <typename T = float, typename MANDELBROT_COORDINATES>
-    constexpr std::complex<T> getComplex(long x, long y, long max_x, long max_y) const;
+    template <typename T>
+    constexpr std::complex<T> getComplex(size_t x, size_t y, size_t max_x, size_t max_y) const;
 
-    template <typename T = float>
-    long computeSequence(std::complex<T> point) const;
+    template <typename T>
+    size_t computeSequence(std::complex<T> point) const;
 };
 
 // =====================================================================================

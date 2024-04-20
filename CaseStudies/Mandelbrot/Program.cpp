@@ -6,9 +6,9 @@
 
 // TBD: Die einzelnen Varianten können mit constexpr auskommentiert werden !!!
 
-// Irgendeine Variante könnte std::latch anwenden !!!
+// TBD: Irgendeine Variante könnte std::latch anwenden !!!
 
-// Werden die Arrays speicher konform initialisiert ?????????????
+// TBD: Werden die Arrays speicher konform initialisiert ?????????????
 
 // TODO: Geht diese Palette nicht mit constexpr ?????????  Da gibt es Linker Error ....
 

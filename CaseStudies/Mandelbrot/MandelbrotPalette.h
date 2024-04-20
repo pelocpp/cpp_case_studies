@@ -5,6 +5,23 @@
 #pragma once
 
 #include <vector>
+#include <array>
+
+//class MandelbrotPalette
+//{
+//private:
+//    std::vector<COLORREF> m_palette;
+//
+//public:
+//    // c'tor
+//    /* constexpr */ MandelbrotPalette();
+//
+//    // operators
+//    /* constexpr */ COLORREF operator[] (int index) const;
+//
+//private:
+//    /* constexpr */ void init();
+//};
 
 class MandelbrotPalette
 {
@@ -13,14 +30,37 @@ private:
 
 public:
     // c'tor
-    /* constexpr */ MandelbrotPalette();
+    MandelbrotPalette();
 
     // operators
-    /* constexpr */ COLORREF operator[] (int index) const;
+    COLORREF operator[] (size_t index) const;
 
-private:
-    /* constexpr */ void init();
+//private:
+public:
+    void init();
 };
+
+// =====================================================================================
+
+
+
+class MandelbrotPaletteEx
+{
+private:
+    std::array<COLORREF, 100> m_palette = {};
+
+public:
+    // c'tor
+    constexpr MandelbrotPaletteEx() {};
+
+    // operators
+    COLORREF operator[] (size_t index) const;
+
+    //private:
+public:
+
+};
+
 
 // =====================================================================================
 // End-of-File
