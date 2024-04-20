@@ -32,11 +32,20 @@
 
 // =====================================================================================
 
+
 #include "framework.h"
 
 #include "Mandelbrot.h"
 
-#include "MandelbrotHelper.h"
+#include "MandelbrotGeneral.h"
+#include "MandelbrotBasic.h"
+
+// =====================================================================================
+
+extern LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+// =====================================================================================
+
 
 #define MAX_LOADSTRING 100
 
@@ -101,6 +110,15 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.lpszClassName = szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
+
+    constexpr MandelbrotVersion version{ getVersion() };
+
+    if constexpr (version == MandelbrotVersion::BasicVersion)
+    {
+        wcex.lpfnWndProc = MandelbrotWndProcBasic;
+        wcscat_s(szTitle, MAX_LOADSTRING, L" - Basic Version");
+    }
+
     return ::RegisterClassExW(&wcex);
 }
 
@@ -114,8 +132,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
         WS_OVERLAPPEDWINDOW,
         300,
         30,
-        Mandelbrot::WindowWidth,
-        Mandelbrot::WindowHeight,
+        MandelbrotWindowDimension::WindowWidth,
+        MandelbrotWindowDimension::WindowHeight,
         nullptr,
         nullptr,
         hInstance,

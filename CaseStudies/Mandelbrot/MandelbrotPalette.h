@@ -25,6 +25,10 @@
 
 class MandelbrotPalette
 {
+public:
+    static const int NumColors{ 256 };
+    static const int Limit{ 5 };
+
 private:
     std::vector<COLORREF> m_palette;
 
