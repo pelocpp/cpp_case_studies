@@ -39,6 +39,15 @@
     <ClInclude Include="MandelbrotGeneral.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MandelBrot_Helper_Legacy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MandelbrotPalette_Legacy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MandelbrotRectanglesSequential.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -62,10 +71,19 @@
     <ClCompile Include="MandelbrotBasic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MandelbrotParent.h">
+    <ClCompile Include="MandelbrotBase.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="MandelbrotParent.cpp">
+    <ClCompile Include="MandelbrotBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotPalette_Legacy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotWndProc_02_RectanglesSequential.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotRectanglesSequential.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

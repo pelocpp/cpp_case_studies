@@ -1,13 +1,10 @@
-// =====================================================================================
-// MandelbrotPalette.h
-// =====================================================================================
-
 #pragma once
+
+#if 0
+
 
 #include <vector>
 #include <array>
-
-#include "framework.h"
 
 //class MandelbrotPalette
 //{
@@ -28,7 +25,6 @@
 class MandelbrotPalette
 {
 public:
-  
     static const int NumColors{ 256 };
     static const int Limit{ 5 };
 
@@ -42,7 +38,7 @@ public:
     // operators
     COLORREF operator[] (size_t index) const;
 
-//private:
+    //private:
 public:
     void init();
 };
@@ -69,6 +65,5 @@ public:
 };
 
 
-// =====================================================================================
-// End-of-File
-// =====================================================================================
+#endif
+

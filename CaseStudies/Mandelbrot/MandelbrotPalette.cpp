@@ -2,21 +2,12 @@
 // MandelbrotPalette.cpp
 // =====================================================================================
 
-#include <complex>
-#include <vector>
-#include <array>
-#include <queue>
-#include <deque>
-#include <thread>
-#include <future>
-#include <utility>
-#include <functional> 
-#include <mutex>
+#include <stdexcept>
 
 #include "framework.h"
 
 #include "MandelbrotPalette.h"
-#include "MandelbrotHelper.h"
+#include "MandelbrotGeneral.h"
 
 // =====================================================================================
 
@@ -26,42 +17,42 @@ MandelbrotPalette::MandelbrotPalette() {
 
 void MandelbrotPalette::init()
 {
-    m_palette.reserve(Mandelbrot::NumColors);
+    m_palette.reserve(NumColors);
 
-    for (unsigned int x = 0; x < Mandelbrot::NumColors / 32; ++x) {
-        m_palette.push_back(RGB(x * 32 * 255 / Mandelbrot::NumColors, 0, 0));
+    for (unsigned int x = 0; x < NumColors / 32; ++x) {
+        m_palette.push_back(RGB(x * 32 * 255 / NumColors, 0, 0));
     }
 
-    for (unsigned int x = 0; x < Mandelbrot::NumColors / 32; ++x) {
-        m_palette.push_back(RGB(255, x * 32 * 255 / Mandelbrot::NumColors, 0));
+    for (unsigned int x = 0; x < NumColors / 32; ++x) {
+        m_palette.push_back(RGB(255, x * 32 * 255 / NumColors, 0));
     }
 
-    for (unsigned int x = 0; x < Mandelbrot::NumColors / 16; ++x) {
-        m_palette.push_back(RGB(((Mandelbrot::NumColors / 16 - x) * 16) * 255 / Mandelbrot::NumColors, 255, 0));
+    for (unsigned int x = 0; x < NumColors / 16; ++x) {
+        m_palette.push_back(RGB(((NumColors / 16 - x) * 16) * 255 / NumColors, 255, 0));
     }
 
-    for (unsigned int x = 0; x < Mandelbrot::NumColors / 16; ++x) {
-        m_palette.push_back(RGB(0, ((Mandelbrot::NumColors / 16 - x) * 16) * 255 / Mandelbrot::NumColors, x * 16 * 255 / Mandelbrot::NumColors));
+    for (unsigned int x = 0; x < NumColors / 16; ++x) {
+        m_palette.push_back(RGB(0, ((NumColors / 16 - x) * 16) * 255 / NumColors, x * 16 * 255 / NumColors));
     }
 
-    for (unsigned int x = 0; x < Mandelbrot::NumColors / 16; ++x) {
-        m_palette.push_back(RGB(x * 16 * 255 / Mandelbrot::NumColors, 0, 255));
+    for (unsigned int x = 0; x < NumColors / 16; ++x) {
+        m_palette.push_back(RGB(x * 16 * 255 / NumColors, 0, 255));
     }
 
-    for (unsigned int x = 0; x < Mandelbrot::NumColors / 4; ++x) {
-        m_palette.push_back(RGB(((Mandelbrot::NumColors / 4 - x) * 4) * 255 / Mandelbrot::NumColors, x * 4 * 255 / Mandelbrot::NumColors, 255));
+    for (unsigned int x = 0; x < NumColors / 4; ++x) {
+        m_palette.push_back(RGB(((NumColors / 4 - x) * 4) * 255 / NumColors, x * 4 * 255 / NumColors, 255));
     }
 
-    for (unsigned int x = 0; x < Mandelbrot::NumColors / 2; ++x) {
-        m_palette.push_back(RGB(x * 2 * 255 / Mandelbrot::NumColors, 255, 255));
+    for (unsigned int x = 0; x < NumColors / 2; ++x) {
+        m_palette.push_back(RGB(x * 2 * 255 / NumColors, 255, 255));
     }
 
-    m_palette[Mandelbrot::NumColors - 1] = RGB(0, 0, 0);  // last color is black
+    m_palette[NumColors - 1] = RGB(0, 0, 0);  // last color is black
 }
 
 COLORREF MandelbrotPalette::operator[] (size_t index) const {
 
-    if (index >= Mandelbrot::NumColors) {
+    if (index >= NumColors) {
         throw std::out_of_range("illegal palette index");
     }
 
@@ -79,9 +70,9 @@ COLORREF MandelbrotPalette::operator[] (size_t index) const {
 
 COLORREF MandelbrotPaletteEx::operator[] (size_t index) const {
 
-    if (index >= Mandelbrot::NumColors) {
-        throw std::out_of_range("illegal palette index");
-    }
+    //if (index >= NumColors) {
+    //    throw std::out_of_range("illegal palette index");
+    //}
 
     return m_palette[index];
 }
@@ -98,42 +89,42 @@ COLORREF MandelbrotPaletteEx::operator[] (size_t index) const {
 //
 ///* constexpr */ void MandelbrotPalette::init()
 //{
-//    m_palette.reserve(Mandelbrot::NumColors);
+//    m_palette.reserve(NumColors);
 //
-//    for (unsigned int x = 0; x < Mandelbrot::NumColors / 32; ++x) {
-//        m_palette.push_back(RGB(x * 32 * 255 / Mandelbrot::NumColors, 0, 0));
+//    for (unsigned int x = 0; x < NumColors / 32; ++x) {
+//        m_palette.push_back(RGB(x * 32 * 255 / NumColors, 0, 0));
 //    }
 //
-//    for (unsigned int x = 0; x < Mandelbrot::NumColors / 32; ++x) {
-//        m_palette.push_back(RGB(255, x * 32 * 255 / Mandelbrot::NumColors, 0));
+//    for (unsigned int x = 0; x < NumColors / 32; ++x) {
+//        m_palette.push_back(RGB(255, x * 32 * 255 / NumColors, 0));
 //    }
 //
-//    for (unsigned int x = 0; x < Mandelbrot::NumColors / 16; ++x) {
-//        m_palette.push_back(RGB(((Mandelbrot::NumColors / 16 - x) * 16) * 255 / Mandelbrot::NumColors, 255, 0));
+//    for (unsigned int x = 0; x < NumColors / 16; ++x) {
+//        m_palette.push_back(RGB(((NumColors / 16 - x) * 16) * 255 / NumColors, 255, 0));
 //    }
 //
-//    for (unsigned int x = 0; x < Mandelbrot::NumColors / 16; ++x) {
-//        m_palette.push_back(RGB(0, ((Mandelbrot::NumColors / 16 - x) * 16) * 255 / Mandelbrot::NumColors, x * 16 * 255 / Mandelbrot::NumColors));
+//    for (unsigned int x = 0; x < NumColors / 16; ++x) {
+//        m_palette.push_back(RGB(0, ((NumColors / 16 - x) * 16) * 255 / NumColors, x * 16 * 255 / NumColors));
 //    }
 //
-//    for (unsigned int x = 0; x < Mandelbrot::NumColors / 16; ++x) {
-//        m_palette.push_back(RGB(x * 16 * 255 / Mandelbrot::NumColors, 0, 255));
+//    for (unsigned int x = 0; x < NumColors / 16; ++x) {
+//        m_palette.push_back(RGB(x * 16 * 255 / NumColors, 0, 255));
 //    }
 //
-//    for (unsigned int x = 0; x < Mandelbrot::NumColors / 4; ++x) {
-//        m_palette.push_back(RGB(((Mandelbrot::NumColors / 4 - x) * 4) * 255 / Mandelbrot::NumColors, x * 4 * 255 / Mandelbrot::NumColors, 255));
+//    for (unsigned int x = 0; x < NumColors / 4; ++x) {
+//        m_palette.push_back(RGB(((NumColors / 4 - x) * 4) * 255 / NumColors, x * 4 * 255 / NumColors, 255));
 //    }
 //
-//    for (unsigned int x = 0; x < Mandelbrot::NumColors / 2; ++x) {
-//        m_palette.push_back(RGB(x * 2 * 255 / Mandelbrot::NumColors, 255, 255));
+//    for (unsigned int x = 0; x < NumColors / 2; ++x) {
+//        m_palette.push_back(RGB(x * 2 * 255 / NumColors, 255, 255));
 //    }
 //
-//    m_palette[Mandelbrot::NumColors - 1] = RGB(0, 0, 0);  // last color is black
+//    m_palette[NumColors - 1] = RGB(0, 0, 0);  // last color is black
 //}
 //
 ///* constexpr */ COLORREF MandelbrotPalette::operator[] (int index) const {
 //
-//    if (index >= Mandelbrot::NumColors) {
+//    if (index >= NumColors) {
 //        throw std::out_of_range("illegal palette index");
 //    }
 //

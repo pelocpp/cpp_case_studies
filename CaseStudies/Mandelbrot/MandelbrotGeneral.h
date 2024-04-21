@@ -4,8 +4,6 @@
 
 #pragma once
 
-// #include <Windef.h>
-
 // =====================================================================================
 
 enum class MandelbrotVersion
@@ -20,7 +18,7 @@ enum class MandelbrotVersion
 };
 
 constexpr MandelbrotVersion getVersion() {
-    return MandelbrotVersion::BasicVersion;
+    return MandelbrotVersion::RectanglesSequential;
 }
 
 // =====================================================================================
@@ -56,19 +54,19 @@ struct Rectangle
 
 struct MandelbrotRectangles
 {
-    //static constexpr size_t NUM_ROWS { 4 };
-    //static constexpr size_t NUM_COLS { 4 };
+    static constexpr size_t NUM_ROWS { 4 };
+    static constexpr size_t NUM_COLS { 4 };
 
-    static constexpr size_t NUM_ROWS{ 1 };
-    static constexpr size_t NUM_COLS{ 2 };
+    //static constexpr size_t NUM_ROWS{ 1 };
+    //static constexpr size_t NUM_COLS{ 2 };
 
     static constexpr size_t NUM_RECTS{ (NUM_ROWS * NUM_COLS) };
 };
 
 struct MandelbrotWindowDimension
 {
-    static constexpr size_t WindowHeight{ 200 };
-    static constexpr size_t WindowWidth{ 500 };
+    static constexpr size_t WindowHeight{ 2 * 200 };
+    static constexpr size_t WindowWidth{ 2 * 250 };
 };
 
 // =====================================================================================

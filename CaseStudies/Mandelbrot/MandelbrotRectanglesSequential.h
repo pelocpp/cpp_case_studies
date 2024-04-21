@@ -1,16 +1,23 @@
 // =====================================================================================
-// MandelbrotParent.h 
+// MandelbrotRectanglesSequential.h 
+// Variant: Basic Version
 // =====================================================================================
 
 #pragma once
 
-// #include <wingdi.h>
+#include "MandelbrotBase.h"
 
-class MandelbrotParent
+class MandelbrotRectanglesSequential : public MandelbrotBase
 {
-protected:
-    //static const int NumColors{ 256 };
-    //static const int Limit{ 5 };
+public:
+    // c'tor(s)
+    MandelbrotRectanglesSequential();
+
+public:
+    void paintRectanglesSequential(HDC hDC) const;
+
+private:
+    void paintRectangle(HDC hDC, struct Rectangle rect) const;
 };
 
 // =====================================================================================

@@ -40,11 +40,26 @@
 #include "MandelbrotGeneral.h"
 #include "MandelbrotBasic.h"
 
+#include "MandelbrotPalette.h"
+
 // =====================================================================================
 
 extern LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+extern LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 // =====================================================================================
+
+
+constexpr MandelbrotVersion version{ getVersion() };
+
+// =====================================================================================
+
+
+// TODO: Hmmm, das muss global irgendwo anders hin ....
+MandelbrotPalette g_palette{};
+
+// =====================================================================================
+
 
 
 #define MAX_LOADSTRING 100
@@ -99,7 +114,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbSize = sizeof(WNDCLASSEX);
 
     wcex.style = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc = MandelbrotWndProc;
+    // wcex.lpfnWndProc = MandelbrotWndProc;
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
@@ -110,13 +125,16 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.lpszClassName = szWindowClass;
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-
-    constexpr MandelbrotVersion version{ getVersion() };
-
     if constexpr (version == MandelbrotVersion::BasicVersion)
     {
         wcex.lpfnWndProc = MandelbrotWndProcBasic;
         wcscat_s(szTitle, MAX_LOADSTRING, L" - Basic Version");
+    }
+
+    if constexpr (version == MandelbrotVersion::RectanglesSequential)
+    {
+        wcex.lpfnWndProc = MandelbrotWndProcRectanglesSequential;
+        wcscat_s(szTitle, MAX_LOADSTRING, L" - Rectangles Sequential");
     }
 
     return ::RegisterClassExW(&wcex);

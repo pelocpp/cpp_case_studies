@@ -1,15 +1,14 @@
 // =====================================================================================
-// MandelbrotWndProc_01_Basic.cpp
+// MandelbrotWndProc_02_RectanglesSequential.cpp
 // Mandelbrot Application Window Procedure
-// Variant 01: BasicVersion
+// Variant 02: Rectangles Sequential
 // =====================================================================================
 
-#include "MandelbrotBasic.h"
+#include "MandelbrotRectanglesSequential.h"
 
-LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    // static Mandelbrot mandelbrot;
-    static MandelbrotBasic mandelbrot;
+    static MandelbrotRectanglesSequential mandelbrot;
 
     switch (message)
     {
@@ -20,6 +19,7 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
+        mandelbrot.computeRects();
 
         ::OutputDebugString(L"< WM_SIZE");
         break;
@@ -33,7 +33,7 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
 
         PAINTSTRUCT ps;
         HDC hdc = ::BeginPaint(hWnd, &ps);
-        mandelbrot.paint(hdc);
+        mandelbrot.paintRectanglesSequential(hdc);
         ::EndPaint(hWnd, &ps);
 
         // verbose output
