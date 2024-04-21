@@ -40,7 +40,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, 
         ULONGLONG dwTimeEllapsed{ ::GetTickCount64() - dwStart };
         WCHAR szText[64];
         wsprintf(szText,
-            L"< WM_PAINT -  %ld milliseconds\n", (DWORD)dwTimeEllapsed);
+            L"< WM_PAINT -  %ld milliseconds\n", (DWORD) dwTimeEllapsed);
         ::OutputDebugString(szText);
     }
     break;

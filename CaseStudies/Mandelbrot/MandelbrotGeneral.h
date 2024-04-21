@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotGeneral.h 
+// MandelbrotGeneral.h
 // =====================================================================================
 
 #pragma once
@@ -18,7 +18,7 @@ enum class MandelbrotVersion
 };
 
 constexpr MandelbrotVersion getVersion() {
-    return MandelbrotVersion::RectanglesSequential;
+    return MandelbrotVersion::RectanglesParallelBlockingUsingLatch;
 }
 
 // =====================================================================================

@@ -44,11 +44,13 @@
 
 // =====================================================================================
 
-extern LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-extern LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+extern LRESULT CALLBACK MandelbrotWndProcBasic(HWND, UINT, WPARAM, LPARAM);
+extern LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND, UINT, WPARAM, LPARAM);
+extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlocking(HWND, UINT, WPARAM, LPARAM);
+extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlockingUsingLatch(HWND, UINT, WPARAM, LPARAM);
+extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingClassic(HWND, UINT, WPARAM, LPARAM);
 
 // =====================================================================================
-
 
 constexpr MandelbrotVersion version{ getVersion() };
 
@@ -59,8 +61,6 @@ constexpr MandelbrotVersion version{ getVersion() };
 MandelbrotPalette g_palette{};
 
 // =====================================================================================
-
-
 
 #define MAX_LOADSTRING 100
 
@@ -114,7 +114,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbSize = sizeof(WNDCLASSEX);
 
     wcex.style = CS_HREDRAW | CS_VREDRAW;
-    // wcex.lpfnWndProc = MandelbrotWndProc;
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
@@ -130,11 +129,25 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
         wcex.lpfnWndProc = MandelbrotWndProcBasic;
         wcscat_s(szTitle, MAX_LOADSTRING, L" - Basic Version");
     }
-
-    if constexpr (version == MandelbrotVersion::RectanglesSequential)
+    else if constexpr (version == MandelbrotVersion::RectanglesSequential)
     {
         wcex.lpfnWndProc = MandelbrotWndProcRectanglesSequential;
         wcscat_s(szTitle, MAX_LOADSTRING, L" - Rectangles Sequential");
+    }
+    else if constexpr (version == MandelbrotVersion::RectanglesParallelBlocking)
+    {
+        wcex.lpfnWndProc = MandelbrotWndProcRectanglesParallelBlocking;
+        wcscat_s(szTitle, MAX_LOADSTRING, L" - Rectangles Parallel - Blocking");
+    }
+    else if constexpr (version == MandelbrotVersion::RectanglesParallelBlockingUsingLatch)
+    {
+        wcex.lpfnWndProc = MandelbrotWndProcRectanglesParallelBlockingUsingLatch;
+        wcscat_s(szTitle, MAX_LOADSTRING, L" - Rectangles Parallel - Blocking - Using Latch");
+    }
+    else if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlockingClassic)
+    {
+        wcex.lpfnWndProc = MandelbrotWndProcRectanglesParallelNonBlockingClassic;
+        wcscat_s(szTitle, MAX_LOADSTRING, L" - Rectangles Parallel - Non Blocking - Classic");
     }
 
     return ::RegisterClassExW(&wcex);

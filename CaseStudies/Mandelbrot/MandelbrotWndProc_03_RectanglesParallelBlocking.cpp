@@ -1,15 +1,14 @@
 // =====================================================================================
-// MandelbrotWndProc_01_Basic.cpp
+// MandelbrotWndProc_03_RectanglesParallelBlocking.cpp
 // Mandelbrot Application Window Procedure
-// Variant 01: BasicVersion
+// Variant 03: Parallel - Blocking
 // =====================================================================================
 
-#include "MandelbrotBasic.h"
+#include "MandelbrotRectanglesParallelBlocking.h"
 
-LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlocking(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    // static Mandelbrot mandelbrot;
-    static MandelbrotBasic mandelbrot;
+    static MandelbrotRectanglesParallelBlocking mandelbrot;
 
     switch (message)
     {
@@ -20,6 +19,7 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
+        mandelbrot.computeRects();
 
         ::OutputDebugString(L"< WM_SIZE");
         break;
@@ -33,7 +33,7 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
 
         PAINTSTRUCT ps;
         HDC hdc = ::BeginPaint(hWnd, &ps);
-        mandelbrot.paint(hdc);
+        mandelbrot.paintRectanglesAsync(hdc);
         ::EndPaint(hWnd, &ps);
 
         // verbose output

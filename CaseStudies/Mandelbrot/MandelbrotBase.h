@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotBase.h 
+// MandelbrotBase.h
 // =====================================================================================
 
 #pragma once
@@ -37,7 +37,11 @@ public:
     // public interface
     void computeRects();
 
-    // protected helper methods
+protected:
+    // protected helper functions
+    std::pair<std::wstring, size_t> paintRectangleAsync(HDC hDC, struct Rectangle rect) const;
+
+    // protected helper templated methods
 protected:
     template <typename T>
     std::complex<T> getComplex(size_t x, size_t y, size_t maxWidth, size_t maxHeight) const

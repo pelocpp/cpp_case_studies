@@ -48,6 +48,15 @@
     <ClInclude Include="MandelbrotRectanglesSequential.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MandelbrotRectanglesParallelBlocking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MandelbrotRectanglesParallelNonBlockingClassic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MandelbrotRectanglesParallelBlockingUsingLatch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -84,6 +93,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MandelbrotRectanglesSequential.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotWndProc_03_RectanglesParallelBlocking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotRectanglesParallelBlocking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotRectanglesParallelNonBlockingClassic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotWndProc_05_RectanglesParallelNonBlockingClassic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotRectanglesParallelBlockingUsingLatch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotWndProc_04_RectanglesParallelBlockingUsingLatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

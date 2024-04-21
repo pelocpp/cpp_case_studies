@@ -1,15 +1,14 @@
 // =====================================================================================
-// MandelbrotWndProc_01_Basic.cpp
+// MandelbrotWndProc_03_RectanglesParallelBlocking.cpp
 // Mandelbrot Application Window Procedure
-// Variant 01: BasicVersion
+// Variant 04: Parallel - Blocking - Using Latch
 // =====================================================================================
 
-#include "MandelbrotBasic.h"
+#include "MandelbrotRectanglesParallelBlockingUsingLatch.h"
 
-LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlockingUsingLatch(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    // static Mandelbrot mandelbrot;
-    static MandelbrotBasic mandelbrot;
+    static MandelbrotRectanglesParallelBlockingUsingLatch mandelbrot;
 
     switch (message)
     {
@@ -20,6 +19,7 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
+        mandelbrot.computeRects();
 
         ::OutputDebugString(L"< WM_SIZE");
         break;
@@ -33,14 +33,14 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
 
         PAINTSTRUCT ps;
         HDC hdc = ::BeginPaint(hWnd, &ps);
-        mandelbrot.paint(hdc);
+        mandelbrot.paintRectanglesAsyncWithLatch(hdc);
         ::EndPaint(hWnd, &ps);
 
         // verbose output
         ULONGLONG dwTimeEllapsed{ ::GetTickCount64() - dwStart };
         WCHAR szText[64];
         wsprintf(szText,
-            L"< WM_PAINT -  %ld milliseconds\n", (DWORD) dwTimeEllapsed);
+            L"< WM_PAINT -  %ld milliseconds\n", (DWORD)dwTimeEllapsed);
         ::OutputDebugString(szText);
     }
     break;

@@ -7,7 +7,6 @@
 
 #include "MandelbrotGeneral.h"
 #include "MandelbrotRectanglesSequential.h"
-
 #include "MandelbrotPalette.h"
 
 #include <complex>

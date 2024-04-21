@@ -9,10 +9,14 @@
 
 #include "MandelbrotPalette.h"
 
+#include <thread>
+#include <mutex>
+//#include <future>
+
+
 MandelbrotBase::MandelbrotBase() :
     m_clientWidth{}, m_clientHeight{}, m_rects{}
 {}
-
 
 // proteced interface
 void MandelbrotBase::computeRects()
@@ -37,6 +41,42 @@ void MandelbrotBase::computeRects()
         }
     }
 }
+
+// protected helper functions
+std::pair<std::wstring, size_t> MandelbrotBase::paintRectangleAsync(HDC hDC, struct Rectangle rect) const
+{
+    std::thread::id tid{ std::this_thread::get_id() };
+
+    size_t numPixels{};
+
+    for (size_t y{ rect.m_top }; y != rect.m_bottom; y++)
+    {
+        for (size_t x{ rect.m_left }; x != rect.m_right; x++)
+        {
+            std::complex<TFloatingPoint> number{
+                getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight)
+            };
+
+            size_t iterations{ computeSequence(number) };
+            COLORREF cr{ g_palette[iterations - 1] };
+            ++numPixels;
+
+            {
+                // RAII lock
+                 hier eine virtual function in der abgeleiteten Klasse
+                dann auch die Basic-FUntion umleiten auf diese !!!!!!!
+                std::lock_guard<std::mutex> lock{ m_mutex };
+                ::SetPixelV(hDC, (int)x, (int)y, cr);
+            }
+        }
+    }
+
+    std::wstringstream ss;
+    ss << tid;
+
+    return { ss.str(), numPixels };
+}
+
 
 // =====================================================================================
 // End-of-File
