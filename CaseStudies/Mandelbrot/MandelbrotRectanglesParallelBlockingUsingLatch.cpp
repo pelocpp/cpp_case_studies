@@ -91,6 +91,13 @@ void MandelbrotRectanglesParallelBlockingUsingLatch::paintRectanglesAsyncWithLat
     }
 }
 
+void MandelbrotRectanglesParallelBlockingUsingLatch::drawPixel(HDC hdc, int x, int y, COLORREF color) const
+{
+    // RAII lock
+    std::lock_guard<std::mutex> lock{ m_mutex };
+    ::SetPixelV(hdc, x, y, color);
+}
+
 // private helper functions
 //std::pair<std::wstring, size_t> MandelbrotRectanglesParallelBlockingUsingLatch::paintRectangleAsync(HDC hDC, struct Rectangle rect) const {
 //

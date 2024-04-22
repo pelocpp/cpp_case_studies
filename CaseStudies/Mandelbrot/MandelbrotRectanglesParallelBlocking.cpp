@@ -62,6 +62,7 @@ void MandelbrotRectanglesParallelBlocking::paintRectanglesAsync (HDC hDC) const 
             tasks.pop_front();
 
             std::jthread t{ std::move(task), hDC, rect };
+            t.detach();
         }
     }
 
@@ -78,6 +79,14 @@ void MandelbrotRectanglesParallelBlocking::paintRectanglesAsync (HDC hDC) const 
             L"Thread %ls:  painted %zu pixels", tid.c_str(), pixels);
         ::OutputDebugString(szText);
     }
+}
+
+
+void MandelbrotRectanglesParallelBlocking::drawPixel(HDC hdc, int x, int y, COLORREF color) const
+{
+    // RAII lock
+    std::lock_guard<std::mutex> lock{ m_mutex };
+    ::SetPixelV(hdc, x, y, color);
 }
 
 // private helper functions

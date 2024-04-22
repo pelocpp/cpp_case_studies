@@ -11,7 +11,9 @@
 
 #include <thread>
 #include <mutex>
-//#include <future>
+
+// TODO: Hmmm, das muss global irgendwo anders hin ....
+extern MandelbrotPalette g_palette;
 
 
 MandelbrotBase::MandelbrotBase() :
@@ -43,7 +45,7 @@ void MandelbrotBase::computeRects()
 }
 
 // protected helper functions
-std::pair<std::wstring, size_t> MandelbrotBase::paintRectangleAsync(HDC hDC, struct Rectangle rect) const
+std::pair<std::wstring, size_t> MandelbrotBase::paintRectangleAsync(HDC hdc, struct Rectangle rect) const
 {
     std::thread::id tid{ std::this_thread::get_id() };
 
@@ -58,16 +60,19 @@ std::pair<std::wstring, size_t> MandelbrotBase::paintRectangleAsync(HDC hDC, str
             };
 
             size_t iterations{ computeSequence(number) };
-            COLORREF cr{ g_palette[iterations - 1] };
+            COLORREF color{ g_palette[iterations - 1] };
             ++numPixels;
 
-            {
-                // RAII lock
-                 hier eine virtual function in der abgeleiteten Klasse
-                dann auch die Basic-FUntion umleiten auf diese !!!!!!!
-                std::lock_guard<std::mutex> lock{ m_mutex };
-                ::SetPixelV(hDC, (int)x, (int)y, cr);
-            }
+            // virtual !!!!!!!!!!!!!
+            drawPixel(hdc, (int) x, (int) y, color);
+
+            //{
+            //    // RAII lock
+            //     hier eine virtual function in der abgeleiteten Klasse
+            //    dann auch die Basic-FUntion umleiten auf diese !!!!!!!
+            //    std::lock_guard<std::mutex> lock{ m_mutex };
+            //    ::SetPixelV(hDC, (int)x, (int)y, cr);
+            //}
         }
     }
 

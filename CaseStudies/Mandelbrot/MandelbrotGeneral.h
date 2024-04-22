@@ -18,7 +18,7 @@ enum class MandelbrotVersion
 };
 
 constexpr MandelbrotVersion getVersion() {
-    return MandelbrotVersion::RectanglesParallelBlockingUsingLatch;
+    return MandelbrotVersion::BasicVersion;
 }
 
 // =====================================================================================

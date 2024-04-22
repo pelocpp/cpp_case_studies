@@ -65,6 +65,7 @@ void MandelbrotRectanglesParallelNonBlockingClassic::startPaintingRectanglesAsyn
             m_tasks.pop_front();
 
             std::jthread t{ std::move(task), hWnd, hDC, rect };
+            t.detach();
         }
     }
 }
@@ -104,13 +105,14 @@ size_t MandelbrotRectanglesParallelNonBlockingClassic::startPaintRectAsync(HWND 
             };
 
             size_t iterations{ computeSequence(number) };
-            COLORREF cr{ g_palette[iterations - 1] };
+            COLORREF color{ g_palette[iterations - 1] };
             ++numPixels;
 
             {
-                // RAII lock
-                std::lock_guard<std::mutex> lock{ m_mutex };
-                ::SetPixelV(hDC, (int) x, (int) y, cr);
+                //// RAII lock
+                //std::lock_guard<std::mutex> lock{ m_mutex };
+                //::SetPixelV(hDC, (int) x, (int) y, color);
+                drawPixel(hDC, (int)x, (int)y, color);
             }
         }
     }
@@ -125,6 +127,14 @@ size_t MandelbrotRectanglesParallelNonBlockingClassic::startPaintRectAsync(HWND 
 
     return numPixels;
 }
+
+void MandelbrotRectanglesParallelNonBlockingClassic::drawPixel(HDC hdc, int x, int y, COLORREF color) const
+{
+    // RAII lock
+    std::lock_guard<std::mutex> lock{ m_mutex };
+    ::SetPixelV(hdc, (int)x, (int)y, color);
+}
+
 
 // =====================================================================================
 // End-of-File

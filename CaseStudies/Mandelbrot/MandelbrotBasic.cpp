@@ -31,11 +31,17 @@ void MandelbrotBasic::paint(HDC hDC) {
             };
 
             size_t iterations{ computeSequence<TFloatingPoint>(number) };
-            // COLORREF cr{ m_palette[iterations - 1] };
             COLORREF cr{ g_palette[iterations - 1] };
-            ::SetPixelV(hDC, (int)x, (int)y, cr);
+
+            // ::SetPixelV(hDC, (int)x, (int)y, cr);
+            drawPixel(hDC, (int)x, (int)y, cr);
         }
     }
+}
+
+void MandelbrotBasic::drawPixel(HDC hdc, int x, int y, COLORREF color) const
+{
+    ::SetPixelV(hdc, x, y, color);
 }
 
 // =====================================================================================

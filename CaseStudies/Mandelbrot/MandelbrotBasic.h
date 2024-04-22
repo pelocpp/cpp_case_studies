@@ -15,6 +15,10 @@ public:
 
     // public interface
     void paint(HDC);
+
+private:
+    virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const override;
+
 };
 
 // =====================================================================================

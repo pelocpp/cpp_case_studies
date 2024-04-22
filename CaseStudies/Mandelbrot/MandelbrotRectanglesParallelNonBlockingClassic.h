@@ -45,6 +45,9 @@ public:
 private:
     // private helper functions
     size_t startPaintRectAsync(HWND hWnd, HDC hDC, struct Rectangle rect);
+
+private:
+    virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const override;
 };
 
 // =====================================================================================

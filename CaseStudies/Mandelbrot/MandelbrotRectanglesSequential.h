@@ -19,6 +19,10 @@ public:
 
 private:
     void paintRectangle(HDC hDC, struct Rectangle rect) const;
+
+private:
+    virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const override;
+
 };
 
 // =====================================================================================

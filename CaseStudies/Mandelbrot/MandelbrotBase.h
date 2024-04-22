@@ -26,6 +26,10 @@ protected:
     size_t m_clientWidth;
     size_t m_clientHeight;
 
+
+protected:
+    virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const = 0;
+
 public:
     // getter/setter
     void setClientWidth(size_t clientWidth) { m_clientWidth = clientWidth; }

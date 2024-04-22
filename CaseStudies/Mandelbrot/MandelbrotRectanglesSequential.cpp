@@ -39,11 +39,19 @@ void MandelbrotRectanglesSequential::paintRectangle(HDC hDC, struct Rectangle re
             };
 
             size_t iterations{ computeSequence<TFloatingPoint>(number) };
-            COLORREF cr{ g_palette[iterations - 1] };
-            ::SetPixelV(hDC, (int) x, (int) y, cr);
+            COLORREF color{ g_palette[iterations - 1] };
+            
+            // ::SetPixelV(hDC, (int) x, (int) y, color);
+            drawPixel(hDC, (int)x, (int)y, color);
         }
     }
 }
+
+void MandelbrotRectanglesSequential::drawPixel(HDC hdc, int x, int y, COLORREF color) const
+{
+    ::SetPixelV(hdc, x, y, color);
+}
+
 
 // =====================================================================================
 // End-of-File
