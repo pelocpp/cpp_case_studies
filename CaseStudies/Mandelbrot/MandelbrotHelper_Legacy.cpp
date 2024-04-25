@@ -489,7 +489,7 @@ void Mandelbrot::startPaintingRectanglesAsyncEx(HWND hWnd, HDC hDC) {
 
 void Mandelbrot::waitRectanglesDone() {
 
-    // PELO - WIEDER ENTFERNEN
+    // PELO - WIEDER ENTFERNEN 
     WCHAR szText[64];
     ::swprintf(szText, 64, L">>> waitRectanglesDone ==> %zu futures pending\n", m_futures.size());
     OutputDebugString(szText);

@@ -49,6 +49,7 @@ extern LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND, UINT, WPARAM
 extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlocking(HWND, UINT, WPARAM, LPARAM);
 extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlockingUsingLatch(HWND, UINT, WPARAM, LPARAM);
 extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingClassic(HWND, UINT, WPARAM, LPARAM);
+extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND, UINT, WPARAM, LPARAM);
 
 // =====================================================================================
 
@@ -148,6 +149,11 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     {
         wcex.lpfnWndProc = MandelbrotWndProcRectanglesParallelNonBlockingClassic;
         wcscat_s(szTitle, MAX_LOADSTRING, L" - Rectangles Parallel - Non Blocking - Classic");
+    }
+    else if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlockingStopToken)
+    {
+        wcex.lpfnWndProc = MandelbrotWndProcRectanglesParallelNonBlockingStopToken;
+        wcscat_s(szTitle, MAX_LOADSTRING, L" - Rectangles Parallel - Non Blocking - Stop Token");
     }
 
     return ::RegisterClassExW(&wcex);

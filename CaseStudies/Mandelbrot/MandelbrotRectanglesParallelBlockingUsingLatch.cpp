@@ -13,7 +13,6 @@
 #include <deque>
 #include <future>
 #include <algorithm>
-//#include <mutex>
 #include <latch>
 
 // TODO: Hmmm, das muss global irgendwo anders hin ....

@@ -1,12 +1,10 @@
 // =====================================================================================
-// MandelbrotRectanglesParallelNonBlockingClassic.cpp
-// Variant 05: Parallel - Non Blocking - Classic Variant
+// MandelbrotRectanglesParallelNonBlockingStopToken.cpp
+// Variant 06: Parallel - Non Blocking - Stop Token
 // =====================================================================================
 
-#pragma once
-
 #include "MandelbrotGeneral.h"
-#include "MandelbrotRectanglesParallelNonBlockingClassic.h"
+#include "MandelbrotRectanglesParallelNonBlockingStopToken.h"
 #include "MandelbrotPalette.h"
 
 #include <complex>
@@ -18,10 +16,10 @@
 extern MandelbrotPalette g_palette;
 
 // c'tor(s)
-MandelbrotRectanglesParallelNonBlockingClassic::MandelbrotRectanglesParallelNonBlockingClassic() {}
+MandelbrotRectanglesParallelNonBlockingStopToken::MandelbrotRectanglesParallelNonBlockingStopToken() {}
 
 //public interface
-void MandelbrotRectanglesParallelNonBlockingClassic::startPaintingRectanglesAsync(HWND hWnd, HDC hDC) {
+void MandelbrotRectanglesParallelNonBlockingStopToken::startPaintingRectanglesAsync(HWND hWnd, HDC hDC) {
 
     // clear member data
     resetDoneRectangles();
@@ -35,10 +33,10 @@ void MandelbrotRectanglesParallelNonBlockingClassic::startPaintingRectanglesAsyn
     std::generate(
         m_tasks.begin(),
         m_tasks.end(),
-        [this] () {
-            return std::packaged_task<size_t(HWND, HDC, struct Rectangle)> {
+        [this]() {
+            return std::packaged_task<size_t(std::stop_token, HWND, HDC, struct Rectangle)> {
                 [this](HWND hWnd, HDC hDC, struct Rectangle rect) {
-                    return startPaintRectAsync(hWnd, hDC, rect);
+                    return startPaintRectAsync(token, hWnd, hDC, rect);
                 }
             };
         }
@@ -56,6 +54,15 @@ void MandelbrotRectanglesParallelNonBlockingClassic::startPaintingRectanglesAsyn
         }
     );
 
+
+    // creating a new std::stop_source object for this execution
+    m_source = std::stop_source{};
+
+    // need stop_token object
+    std::stop_token token{ m_source.get_token() };
+
+
+
     // launch these tasks each in a separate thread
     for (const auto& row : m_rects)
     {
@@ -71,7 +78,7 @@ void MandelbrotRectanglesParallelNonBlockingClassic::startPaintingRectanglesAsyn
 }
 
 
-void MandelbrotRectanglesParallelNonBlockingClassic::waitRectanglesDone() {
+void MandelbrotRectanglesParallelNonBlockingStopToken::waitRectanglesDone() {
 
     while (!m_futures.empty()) {
 
@@ -87,7 +94,7 @@ void MandelbrotRectanglesParallelNonBlockingClassic::waitRectanglesDone() {
 }
 
 // private helper functions
-size_t MandelbrotRectanglesParallelNonBlockingClassic::startPaintRectAsync(HWND hWnd, HDC hDC, struct Rectangle rect) {
+size_t MandelbrotRectanglesParallelNonBlockingStopToken::startPaintRectAsync(std::stop_token token, HWND hWnd, HDC hDC, struct Rectangle rect) {
 
     size_t numPixels{};
 
@@ -96,12 +103,13 @@ size_t MandelbrotRectanglesParallelNonBlockingClassic::startPaintRectAsync(HWND 
         for (size_t x{ rect.m_left }; x != rect.m_right; x++)
         {
             // premature end of drawing
-            if (m_abort == true) {
+            if (token.stop_requested()) {
+                ::OutputDebugString(L"! Got Stop Request !!!");
                 goto m_label;
             }
 
             std::complex<TFloatingPoint> number{
-                getComplex<TFloatingPoint>( x, y, m_clientWidth, m_clientHeight)
+                getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight)
             };
 
             size_t iterations{ computeSequence(number) };
@@ -117,7 +125,7 @@ size_t MandelbrotRectanglesParallelNonBlockingClassic::startPaintRectAsync(HWND 
         }
     }
 
-    m_label:
+m_label:
 
     incDoneRectangles();
     if (getDoneRectangles() == MandelbrotRectangles::NUM_RECTS) {
@@ -128,7 +136,7 @@ size_t MandelbrotRectanglesParallelNonBlockingClassic::startPaintRectAsync(HWND 
     return numPixels;
 }
 
-void MandelbrotRectanglesParallelNonBlockingClassic::drawPixel(HDC hdc, int x, int y, COLORREF color) const
+void MandelbrotRectanglesParallelNonBlockingStopToken::drawPixel(HDC hdc, int x, int y, COLORREF color) const
 {
     // RAII lock
     std::lock_guard<std::mutex> lock{ m_mutex };
