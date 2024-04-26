@@ -2,8 +2,6 @@
 // MandelbrotBase.cpp
 // =====================================================================================
 
-#pragma once
-
 #include "MandelbrotGeneral.h"
 #include "MandelbrotBase.h"
 

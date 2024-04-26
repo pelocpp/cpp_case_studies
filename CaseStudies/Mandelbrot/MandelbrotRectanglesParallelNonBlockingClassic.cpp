@@ -3,8 +3,6 @@
 // Variant 05: Parallel - Non Blocking - Classic Variant
 // =====================================================================================
 
-#pragma once
-
 #include "MandelbrotGeneral.h"
 #include "MandelbrotRectanglesParallelNonBlockingClassic.h"
 #include "MandelbrotPalette.h"
@@ -70,7 +68,6 @@ void MandelbrotRectanglesParallelNonBlockingClassic::startPaintingRectanglesAsyn
     }
 }
 
-
 void MandelbrotRectanglesParallelNonBlockingClassic::waitRectanglesDone() {
 
     while (!m_futures.empty()) {
@@ -101,7 +98,7 @@ size_t MandelbrotRectanglesParallelNonBlockingClassic::startPaintRectAsync(HWND 
             }
 
             std::complex<TFloatingPoint> number{
-                getComplex<TFloatingPoint>( x, y, m_clientWidth, m_clientHeight)
+                getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight)
             };
 
             size_t iterations{ computeSequence(number) };

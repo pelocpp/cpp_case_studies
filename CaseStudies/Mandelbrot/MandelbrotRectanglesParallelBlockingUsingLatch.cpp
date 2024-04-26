@@ -3,8 +3,6 @@
 // Variant 04: Parallel - Blocking - Using Latch
 // =====================================================================================
 
-#pragma once
-
 #include "MandelbrotGeneral.h"
 #include "MandelbrotRectanglesParallelBlockingUsingLatch.h"
 #include "MandelbrotPalette.h"

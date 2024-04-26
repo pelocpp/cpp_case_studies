@@ -33,9 +33,9 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::startPaintingRectanglesAs
     std::generate(
         m_tasks.begin(),
         m_tasks.end(),
-        [this]() {
+        [this] () {
             return std::packaged_task<size_t(std::stop_token, HWND, HDC, struct Rectangle)> {
-                [this](HWND hWnd, HDC hDC, struct Rectangle rect) {
+                [this](std::stop_token token, HWND hWnd, HDC hDC, struct Rectangle rect) {
                     return startPaintRectAsync(token, hWnd, hDC, rect);
                 }
             };
@@ -49,19 +49,16 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::startPaintingRectanglesAs
         m_tasks.begin(),
         m_tasks.end(),
         m_futures.begin(),
-        [](std::packaged_task<size_t(HWND, HDC, struct Rectangle)>& task) {
+        [](std::packaged_task<size_t(std::stop_token, HWND, HDC, struct Rectangle)>& task) {
             return task.get_future();
         }
     );
-
 
     // creating a new std::stop_source object for this execution
     m_source = std::stop_source{};
 
     // need stop_token object
     std::stop_token token{ m_source.get_token() };
-
-
 
     // launch these tasks each in a separate thread
     for (const auto& row : m_rects)
@@ -76,7 +73,6 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::startPaintingRectanglesAs
         }
     }
 }
-
 
 void MandelbrotRectanglesParallelNonBlockingStopToken::waitRectanglesDone() {
 
@@ -104,7 +100,7 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::startPaintRectAsync(std
         {
             // premature end of drawing
             if (token.stop_requested()) {
-                ::OutputDebugString(L"! Got Stop Request !!!");
+                ::OutputDebugString(L"! Got Stop Request !!!");  // Wenn es läuft, KOMMENTAR entfernen !!!
                 goto m_label;
             }
 
@@ -125,7 +121,7 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::startPaintRectAsync(std
         }
     }
 
-m_label:
+    m_label:
 
     incDoneRectangles();
     if (getDoneRectangles() == MandelbrotRectangles::NUM_RECTS) {

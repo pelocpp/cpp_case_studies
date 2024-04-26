@@ -16,7 +16,7 @@ class MandelbrotRectanglesParallelNonBlockingClassic : public MandelbrotBase
 private:
     mutable std::mutex m_mutex;
 
-    std::atomic<int> m_doneRectangles;
+    std::atomic<int>  m_doneRectangles;
     std::atomic<bool> m_abort;
 
     std::deque<std::packaged_task<size_t(HWND, HDC, struct Rectangle)>> m_tasks;
@@ -32,22 +32,18 @@ public:
     void resetDoneRectangles() { m_doneRectangles = 0; }
 
     void setAbort(bool flag) { m_abort = flag; }
-  //  bool getAbort() const { return m_abort; }
 
 public:
     // public interface
-    // size_t startPaintRectAsync(HWND hWnd, HDC hDC, struct Rectangle rect);
-
     void startPaintingRectanglesAsync(HWND hWnd, HDC hDC);
-
     void waitRectanglesDone();
     
 private:
     // private helper functions
-    size_t startPaintRectAsync(HWND hWnd, HDC hDC, struct Rectangle rect);
+    size_t startPaintRectAsync(HWND, HDC, struct Rectangle);
 
 private:
-    virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const override;
+    virtual void drawPixel(HDC, int x, int y, COLORREF) const override;
 };
 
 // =====================================================================================

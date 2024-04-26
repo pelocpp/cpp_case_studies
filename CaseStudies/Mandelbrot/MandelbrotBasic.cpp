@@ -3,8 +3,6 @@
 // Variant 01: Basic Version
 // =====================================================================================
 
-#pragma once
-
 #include "MandelbrotGeneral.h"
 #include "MandelbrotBasic.h"
 
