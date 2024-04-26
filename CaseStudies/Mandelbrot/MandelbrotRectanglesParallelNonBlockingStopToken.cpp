@@ -11,6 +11,7 @@
 #include <deque>
 #include <future>
 #include <mutex>
+#include <thread>
 
 // TODO: Hmmm, das muss global irgendwo anders hin ....
 extern MandelbrotPalette g_palette;
@@ -36,7 +37,7 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::startPaintingRectanglesAs
         [this] () {
             return std::packaged_task<size_t(std::stop_token, HWND, HDC, struct Rectangle)> {
                 [this](std::stop_token token, HWND hWnd, HDC hDC, struct Rectangle rect) {
-                    return startPaintRectAsync(token, hWnd, hDC, rect);
+                    return paintRectangle(token, hWnd, hDC, rect);
                 }
             };
         }
@@ -68,7 +69,7 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::startPaintingRectanglesAs
             auto task{ std::move(m_tasks.front()) };
             m_tasks.pop_front();
 
-            std::jthread t{ std::move(task), hWnd, hDC, rect };
+            std::jthread t{ std::move(task), token, hWnd, hDC, rect };
             t.detach();
         }
     }
@@ -90,7 +91,7 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::waitRectanglesDone() {
 }
 
 // private helper functions
-size_t MandelbrotRectanglesParallelNonBlockingStopToken::startPaintRectAsync(std::stop_token token, HWND hWnd, HDC hDC, struct Rectangle rect) {
+size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::stop_token token, HWND hWnd, HDC hDC, struct Rectangle rect) {
 
     size_t numPixels{};
 
@@ -100,7 +101,6 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::startPaintRectAsync(std
         {
             // premature end of drawing
             if (token.stop_requested()) {
-                ::OutputDebugString(L"! Got Stop Request !!!");  // Wenn es läuft, KOMMENTAR entfernen !!!
                 goto m_label;
             }
 
@@ -112,12 +112,7 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::startPaintRectAsync(std
             COLORREF color{ g_palette[iterations - 1] };
             ++numPixels;
 
-            {
-                //// RAII lock
-                //std::lock_guard<std::mutex> lock{ m_mutex };
-                //::SetPixelV(hDC, (int) x, (int) y, color);
-                drawPixel(hDC, (int)x, (int)y, color);
-            }
+            drawPixel(hDC, (int)x, (int)y, color);
         }
     }
 

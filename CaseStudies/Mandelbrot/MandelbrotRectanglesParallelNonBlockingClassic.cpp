@@ -36,7 +36,7 @@ void MandelbrotRectanglesParallelNonBlockingClassic::startPaintingRectanglesAsyn
         [this] () {
             return std::packaged_task<size_t(HWND, HDC, struct Rectangle)> {
                 [this](HWND hWnd, HDC hDC, struct Rectangle rect) {
-                    return startPaintRectAsync(hWnd, hDC, rect);
+                    return paintRectangle(hWnd, hDC, rect);
                 }
             };
         }
@@ -84,7 +84,7 @@ void MandelbrotRectanglesParallelNonBlockingClassic::waitRectanglesDone() {
 }
 
 // private helper functions
-size_t MandelbrotRectanglesParallelNonBlockingClassic::startPaintRectAsync(HWND hWnd, HDC hDC, struct Rectangle rect) {
+size_t MandelbrotRectanglesParallelNonBlockingClassic::paintRectangle(HWND hWnd, HDC hDC, struct Rectangle rect) {
 
     size_t numPixels{};
 
@@ -105,12 +105,7 @@ size_t MandelbrotRectanglesParallelNonBlockingClassic::startPaintRectAsync(HWND 
             COLORREF color{ g_palette[iterations - 1] };
             ++numPixels;
 
-            {
-                //// RAII lock
-                //std::lock_guard<std::mutex> lock{ m_mutex };
-                //::SetPixelV(hDC, (int) x, (int) y, color);
-                drawPixel(hDC, (int)x, (int)y, color);
-            }
+            drawPixel(hDC, (int)x, (int)y, color);
         }
     }
 

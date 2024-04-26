@@ -43,7 +43,7 @@ void MandelbrotBase::computeRects()
 }
 
 // protected helper functions
-std::pair<std::wstring, size_t> MandelbrotBase::paintRectangleAsync(HDC hdc, struct Rectangle rect) const
+std::pair<std::wstring, size_t> MandelbrotBase::paintRectangle(HDC hdc, struct Rectangle rect) const
 {
     std::thread::id tid{ std::this_thread::get_id() };
 

@@ -24,10 +24,6 @@ public:
 
 private:
     virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const override;
-
-private:
-    // private helper functions
-    // std::pair<std::wstring, size_t> paintRectangleAsync(HDC hDC, struct Rectangle rect) const;
 };
 
 // =====================================================================================

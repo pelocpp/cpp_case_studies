@@ -7,6 +7,7 @@
 
 #include "MandelbrotBase.h"
 
+#include <thread>
 #include <mutex>
 #include <deque>
 #include <future>
@@ -27,11 +28,11 @@ public:
     MandelbrotRectanglesParallelNonBlockingClassic();
 
     // getter / setter
-    int  getDoneRectangles() { return m_doneRectangles; }
-    void incDoneRectangles() { ++m_doneRectangles; }
+    int  getDoneRectangles()   { return m_doneRectangles; }
+    void incDoneRectangles()   { ++m_doneRectangles; }
     void resetDoneRectangles() { m_doneRectangles = 0; }
 
-    void setAbort(bool flag) { m_abort = flag; }
+    void setAbort(bool flag)   { m_abort = flag; }
 
 public:
     // public interface
@@ -40,7 +41,7 @@ public:
     
 private:
     // private helper functions
-    size_t startPaintRectAsync(HWND, HDC, struct Rectangle);
+    size_t paintRectangle(HWND, HDC, struct Rectangle);
 
 private:
     virtual void drawPixel(HDC, int x, int y, COLORREF) const override;

@@ -26,7 +26,6 @@ protected:
     size_t m_clientWidth;
     size_t m_clientHeight;
 
-
 protected:
     virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const = 0;
 
@@ -43,7 +42,7 @@ public:
 
 protected:
     // protected helper functions
-    std::pair<std::wstring, size_t> paintRectangleAsync(HDC hDC, struct Rectangle rect) const;
+    std::pair<std::wstring, size_t> paintRectangle(HDC hDC, struct Rectangle rect) const;
 
     // protected helper templated methods
 protected:

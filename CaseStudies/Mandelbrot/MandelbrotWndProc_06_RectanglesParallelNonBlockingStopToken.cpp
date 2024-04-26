@@ -36,14 +36,15 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
 
             ::OutputDebugString(L"> Requesting Abort ...");
 
-  //          mandelbrot.setAbort(true);
+            // mandelbrot.setAbort(true);
+            mandelbrot.requestAbort();
             mandelbrot.waitRectanglesDone();
         }
 
         // launch new drawing threads
         ::OutputDebugString(L"> Launching new drawing threads ...");
 
-  //      mandelbrot.setAbort(false);
+        // mandelbrot.setAbort(false);
         mandelbrot.resetDoneRectangles();
 
         HDC hDC = ::GetDC(hWnd);
@@ -61,7 +62,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         int doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
-     //       mandelbrot.setAbort(true);
+           // mandelbrot.setAbort(true);
             mandelbrot.waitRectanglesDone();
         }
 

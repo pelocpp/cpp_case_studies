@@ -31,7 +31,7 @@ void MandelbrotRectanglesParallelBlocking::paintRectanglesAsync (HDC hDC) const 
         [this] () {
             return std::packaged_task<std::pair<std::wstring, size_t>(HDC, struct Rectangle)> {
                 [this](HDC hDC, struct Rectangle rect) {
-                    return paintRectangleAsync(hDC, rect);
+                    return paintRectangle(hDC, rect);
                 }
             };
         }
@@ -86,39 +86,6 @@ void MandelbrotRectanglesParallelBlocking::drawPixel(HDC hdc, int x, int y, COLO
     std::lock_guard<std::mutex> lock{ m_mutex };
     ::SetPixelV(hdc, x, y, color);
 }
-
-// private helper functions
-//std::pair<std::wstring, size_t> MandelbrotRectanglesParallelBlocking::paintRectangleAsync(HDC hDC, struct Rectangle rect) const {
-//
-//    std::thread::id tid{ std::this_thread::get_id() };
-//
-//    size_t numPixels{};
-//
-//    for (size_t y{ rect.m_top }; y != rect.m_bottom; y++)
-//    {
-//        for (size_t x{ rect.m_left }; x != rect.m_right; x++)
-//        {
-//            std::complex<TFloatingPoint> number{
-//                getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight)
-//            };
-//
-//            size_t iterations{ computeSequence(number) };
-//            COLORREF cr{ g_palette[iterations - 1] };
-//            ++numPixels;
-//
-//            {
-//                // RAII lock
-//                std::lock_guard<std::mutex> lock{ m_mutex };
-//                ::SetPixelV(hDC, (int) x, (int) y, cr);
-//            }
-//        }
-//    }
-//
-//    std::wstringstream ss;
-//    ss << tid;
-//
-//    return { ss.str(), numPixels };
-//}
 
 // =====================================================================================
 // End-of-File

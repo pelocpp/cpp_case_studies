@@ -27,11 +27,11 @@ public:
     MandelbrotRectanglesParallelNonBlockingStopToken();
 
     // getter / setter
-    int  getDoneRectangles() { return m_doneRectangles; }
-    void incDoneRectangles() { ++m_doneRectangles; }
+    int  getDoneRectangles()   { return m_doneRectangles; }
+    void incDoneRectangles()   { ++m_doneRectangles; }
     void resetDoneRectangles() { m_doneRectangles = 0; }
 
-    void requestAbort() { m_source.request_stop(); }
+    void requestAbort()        { m_source.request_stop(); }
 
 public:
     // public interface
@@ -40,7 +40,7 @@ public:
 
 private:
     // private helper functions
-    size_t startPaintRectAsync(std::stop_token, HWND, HDC, struct Rectangle);
+    size_t paintRectangle(std::stop_token, HWND, HDC, struct Rectangle);
 
 private:
     virtual void drawPixel(HDC, int x, int y, COLORREF) const override;
