@@ -19,21 +19,21 @@ MandelbrotBase::MandelbrotBase() :
 {}
 
 // proteced interface
-void MandelbrotBase::computeRects()
+void MandelbrotBase::computeRects(int rows, int cols)
 {
     // adjust total client width and height according to number of rectangles
-    size_t clientWidth{ m_clientWidth - (m_clientWidth % MandelbrotRectangles::NUM_COLS) };
-    size_t clientHeight{ m_clientHeight - (m_clientHeight % MandelbrotRectangles::NUM_ROWS) };
+    size_t clientWidth{ m_clientWidth - (m_clientWidth % cols) };
+    size_t clientHeight{ m_clientHeight - (m_clientHeight % rows) };
 
     // calculate size of a single rectangle
-    size_t rectWidth{ clientWidth / MandelbrotRectangles::NUM_COLS };
-    size_t rectHeight{ clientHeight / MandelbrotRectangles::NUM_ROWS };
+    size_t rectWidth{ clientWidth / cols };
+    size_t rectHeight{ clientHeight / rows };
 
     // calculate coordinates of each rectangle
-    for (size_t i{}; i != MandelbrotRectangles::NUM_ROWS; i++)
+    for (size_t i{}; i != rows; i++)
     {
-        for (size_t j{}; j != MandelbrotRectangles::NUM_COLS; j++) {
-                
+        for (size_t j{}; j != cols; j++) {
+
             m_rects[i][j] = {
                 (j * rectWidth), (i * rectHeight),
                 ((j + 1) * rectWidth - 1), ((i + 1) * rectHeight - 1)
@@ -43,9 +43,14 @@ void MandelbrotBase::computeRects()
 }
 
 // protected helper functions
+std::pair<std::wstring, size_t> MandelbrotBase::paintRectangle(HDC hDC) const
+{
+    return paintRectangle(hDC, m_rects[0][0]);
+}
+
 std::pair<std::wstring, size_t> MandelbrotBase::paintRectangle(HDC hdc, struct Rectangle rect) const
 {
-    std::thread::id tid{ std::this_thread::get_id() };
+    std::jthread::id tid{ std::this_thread::get_id() };
 
     size_t numPixels{};
 
@@ -53,7 +58,7 @@ std::pair<std::wstring, size_t> MandelbrotBase::paintRectangle(HDC hdc, struct R
     {
         for (size_t x{ rect.m_left }; x != rect.m_right; x++)
         {
-            std::complex<TFloatingPoint> number{
+            std::complex<TFloatingPoint> number {
                 getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight)
             };
 
@@ -61,16 +66,7 @@ std::pair<std::wstring, size_t> MandelbrotBase::paintRectangle(HDC hdc, struct R
             COLORREF color{ g_palette[iterations - 1] };
             ++numPixels;
 
-            // virtual !!!!!!!!!!!!!
             drawPixel(hdc, (int) x, (int) y, color);
-
-            //{
-            //    // RAII lock
-            //     hier eine virtual function in der abgeleiteten Klasse
-            //    dann auch die Basic-FUntion umleiten auf diese !!!!!!!
-            //    std::lock_guard<std::mutex> lock{ m_mutex };
-            //    ::SetPixelV(hDC, (int)x, (int)y, cr);
-            //}
         }
     }
 
@@ -79,7 +75,6 @@ std::pair<std::wstring, size_t> MandelbrotBase::paintRectangle(HDC hdc, struct R
 
     return { ss.str(), numPixels };
 }
-
 
 // =====================================================================================
 // End-of-File

@@ -13,11 +13,8 @@ public:
     // c'tor
     MandelbrotBasic();
 
-    // public interface
-    void paint(HDC);
-
 private:
-    virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const override;
+    virtual void drawPixel(HDC, int, int, COLORREF) const override;
 
 };
 

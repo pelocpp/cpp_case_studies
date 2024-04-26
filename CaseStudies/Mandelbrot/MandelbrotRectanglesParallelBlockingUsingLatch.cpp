@@ -32,7 +32,7 @@ void MandelbrotRectanglesParallelBlockingUsingLatch::paintRectanglesAsyncWithLat
     std::generate(
         tasks.begin(),
         tasks.end(),
-        [&, this]() {
+        [&, this] () {
             return std::packaged_task<std::pair<std::wstring, size_t>(HDC, struct Rectangle)> {
                 [&, this](HDC hDC, struct Rectangle rect) {
                     auto result = paintRectangle(hDC, rect);
@@ -64,8 +64,8 @@ void MandelbrotRectanglesParallelBlockingUsingLatch::paintRectanglesAsyncWithLat
             auto task{ std::move(tasks.front()) };
             tasks.pop_front();
 
-            std::thread thread{ std::move(task), hDC, rect };
-            thread.detach();
+            std::jthread t{ std::move(task), hDC, rect };
+            t.detach();
         }
     }
 

@@ -18,8 +18,10 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
 
         RECT rect;
         ::GetClientRect(hWnd, &rect);
+
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
+        mandelbrot.computeRects(1, 1);
 
         ::OutputDebugString(L"< WM_SIZE");
         break;
@@ -33,14 +35,13 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
 
         PAINTSTRUCT ps;
         HDC hdc = ::BeginPaint(hWnd, &ps);
-        mandelbrot.paint(hdc);
+        mandelbrot.paintRectangle(hdc);
         ::EndPaint(hWnd, &ps);
 
         // verbose output
         ULONGLONG dwTimeEllapsed{ ::GetTickCount64() - dwStart };
         WCHAR szText[64];
-        wsprintf(szText,
-            L"< WM_PAINT -  %ld milliseconds\n", (DWORD) dwTimeEllapsed);
+        wsprintf(szText, L"< WM_PAINT -  %ld milliseconds\n", (DWORD) dwTimeEllapsed);
         ::OutputDebugString(szText);
     }
     break;

@@ -7,6 +7,7 @@
 
 #include "MandelbrotBase.h"
 
+#include <thread>
 #include <mutex>
 #include <deque>
 #include <future>

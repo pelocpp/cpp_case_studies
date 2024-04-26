@@ -19,7 +19,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingClassic(HWND hWnd
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
-        mandelbrot.computeRects();
+        mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
         ::OutputDebugString(L"< WM_SIZE");
         break;

@@ -20,7 +20,7 @@ public:
     MandelbrotBase();
 
 protected:
-    std::array <std::array <struct Rectangle, MandelbrotRectangles::NUM_COLS>, MandelbrotRectangles::NUM_ROWS> m_rects;
+    std::array<std::array <struct Rectangle, MandelbrotRectangles::NUM_COLS>, MandelbrotRectangles::NUM_ROWS> m_rects;
 
 protected:
     size_t m_clientWidth;
@@ -38,25 +38,27 @@ public:
     size_t getClientHeight() const { return m_clientHeight; }
 
     // public interface
-    void computeRects();
+    void computeRects(int rows, int cols);
 
-protected:
-    // protected helper functions
+public:
+    // public helper functions
     std::pair<std::wstring, size_t> paintRectangle(HDC hDC, struct Rectangle rect) const;
+    std::pair<std::wstring, size_t> paintRectangle(HDC hDC) const;
 
-    // protected helper templated methods
 protected:
+    // protected helper templated methods
     template <typename T>
     std::complex<T> getComplex(size_t x, size_t y, size_t maxWidth, size_t maxHeight) const
     {
         // short hand constants for the Mandelbrot coordinates system
-        static T XMIN = MandelbrotParams<T>::XMIN;
-        static T XMAX = MandelbrotParams<T>::XMAX;
-        static T YMIN = MandelbrotParams<T>::YMIN;
-        static T YMAX = MandelbrotParams<T>::YMAX;
+        static T XMIN { MandelbrotParams<T>::XMIN };
+        static T XMAX { MandelbrotParams<T>::XMAX };
+        static T YMIN { MandelbrotParams<T>::YMIN };
+        static T YMAX { MandelbrotParams<T>::YMAX };
 
         return std::complex<T> {
-            XMIN + (XMAX - XMIN) * x / maxWidth, YMAX + (YMIN - YMAX) * y / maxHeight
+            XMIN + (XMAX - XMIN) * x / maxWidth, 
+            YMAX + (YMIN - YMAX) * y / maxHeight
         };
     }
 

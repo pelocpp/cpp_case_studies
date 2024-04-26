@@ -31,7 +31,7 @@ template <typename T>
 struct MandelbrotParams
 {
     // original limits
-    static constexpr T XMIN{ (T)-2.0 };  // minimum x-value (real part)
+    static constexpr T XMIN{ (T)-2.0 };   // minimum x-value (real part)
     static constexpr T XMAX{ (T)+0.75 };  // maximum x-value (real part)
     static constexpr T YMIN{ (T)-1.25 };  // minimum y-value (imaginary part)
     static constexpr T YMAX{ (T)+1.25 };  // maximum y-value (imaginary part)
@@ -54,11 +54,8 @@ struct Rectangle
 
 struct MandelbrotRectangles
 {
-    static constexpr size_t NUM_ROWS { 4 };
-    static constexpr size_t NUM_COLS { 4 };
-
-    //static constexpr size_t NUM_ROWS{ 1 };
-    //static constexpr size_t NUM_COLS{ 2 };
+    static constexpr size_t NUM_ROWS { 8 };
+    static constexpr size_t NUM_COLS { 8 };
 
     static constexpr size_t NUM_RECTS{ (NUM_ROWS * NUM_COLS) };
 };

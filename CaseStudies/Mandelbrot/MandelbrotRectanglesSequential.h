@@ -15,14 +15,10 @@ public:
 
 public:
     // public interface
-    void paintRectanglesSequential(HDC hDC) const;
-
-private:
-    void paintRectangle(HDC hDC, struct Rectangle rect) const;
+    void paintRectangles(HDC hDC) const;
 
 private:
     virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const override;
-
 };
 
 // =====================================================================================

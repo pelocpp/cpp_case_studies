@@ -19,7 +19,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
-        mandelbrot.computeRects();
+        mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
         ::OutputDebugString(L"< WM_SIZE");
         break;
@@ -36,7 +36,6 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
 
             ::OutputDebugString(L"> Requesting Abort ...");
 
-            // mandelbrot.setAbort(true);
             mandelbrot.requestAbort();
             mandelbrot.waitRectanglesDone();
         }
@@ -44,7 +43,6 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         // launch new drawing threads
         ::OutputDebugString(L"> Launching new drawing threads ...");
 
-        // mandelbrot.setAbort(false);
         mandelbrot.resetDoneRectangles();
 
         HDC hDC = ::GetDC(hWnd);
@@ -62,7 +60,6 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         int doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
-           // mandelbrot.setAbort(true);
             mandelbrot.waitRectanglesDone();
         }
 

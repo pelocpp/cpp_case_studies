@@ -19,7 +19,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, 
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
-        mandelbrot.computeRects();
+        mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
         ::OutputDebugString(L"< WM_SIZE");
         break;
@@ -33,7 +33,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, 
 
         PAINTSTRUCT ps;
         HDC hdc = ::BeginPaint(hWnd, &ps);
-        mandelbrot.paintRectanglesSequential(hdc);
+        mandelbrot.paintRectangles(hdc);
         ::EndPaint(hWnd, &ps);
 
         // verbose output

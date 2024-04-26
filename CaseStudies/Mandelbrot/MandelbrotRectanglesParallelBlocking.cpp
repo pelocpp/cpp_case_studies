@@ -10,7 +10,7 @@
 #include <complex>
 #include <deque>
 #include <future>
-#include <mutex>
+#include <algorithm>
 
 // TODO: Hmmm, das muss global irgendwo anders hin ....
 extern MandelbrotPalette g_palette;
@@ -39,7 +39,6 @@ void MandelbrotRectanglesParallelBlocking::paintRectanglesAsync (HDC hDC) const 
 
     // retrieve futures from these tasks
     std::deque<std::future<std::pair<std::wstring, size_t>>> futures;
-
     futures.resize(MandelbrotRectangles::NUM_RECTS);
 
     std::transform(
@@ -73,8 +72,7 @@ void MandelbrotRectanglesParallelBlocking::paintRectanglesAsync (HDC hDC) const 
 
         // print some statistics
         WCHAR szText[64];
-        ::swprintf(szText, 64,
-            L"Thread %ls:  painted %zu pixels", tid.c_str(), pixels);
+        ::swprintf(szText, 64, L"Thread %ls:  painted %zu pixels", tid.c_str(), pixels);
         ::OutputDebugString(szText);
     }
 }
