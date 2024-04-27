@@ -13,6 +13,8 @@
 #include <queue>
 #include <future>
 #include <condition_variable>
+#include <stop_token>
+
 
 
 // TO BE DONE: Warum sind die Member int und nicht size_t
@@ -35,28 +37,21 @@ private:
      mutable std::mutex m_mutex;
      std::condition_variable m_conditionPixelsAvailable;  // TODO  Auch mutable ???
 
-    //std::atomic<int> m_doneRectangles;
-    //std::stop_source m_source;
+     std::stop_source m_source;
+     std::atomic<bool> m_done;
 
-    //std::deque<std::packaged_task<size_t(std::stop_token, HWND, HDC, struct Rectangle)>> m_tasks;
-    //std::deque<std::future<size_t>> m_futures;
+     std::deque<std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>> m_calculationTasks;
+     std::deque<std::future<size_t>> m_calculationFutures;  // TODO: Was mache ich mit diesen Futures
 
-     std::deque<std::packaged_task<size_t(struct Rectangle, size_t, size_t)>> m_calculationTasks;
-     std::deque<std::future<size_t>> m_calculationFutures;
+     std::packaged_task<void(std::stop_token)> m_drawingTask;
+     std::future<void> m_drawingFuture;  // TODO: Was mache ich mit dieser Futures
 
-
-     std::packaged_task<void()> m_drawingTask;
-     std::future<void> m_drawingFuture;
-
-
-        // "producer/consumer" based data
+    // "producer/consumer" based data
     HWND m_hWnd;
     HDC  m_hDC;
 
-
     std::queue<Pixel> m_pixels;       // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
                                        // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
-
 
 public:
     // c'tor(s)
@@ -69,37 +64,36 @@ public:
 
     // void requestAbort() { m_source.request_stop(); }
 
+    bool getDone () { return m_done; }
+
 public:
     // public interface
-    //void startPaintingRectanglesAsync(HWND hWnd, HDC hDC);
     //void waitRectanglesDone();
 
     void setHWND(HWND hWnd);
-    void addPixel(Pixel);
-    // void notify();
-    size_t computePixels(struct Rectangle rect, size_t maxWidth, size_t maxHeight);
-    void drawPixelXXX();
 
-
-    void prepareCalculationThreads();
-    void prepareDrawingThread();
-
-    void startCalculationThreads();
-    void startDrawingThread();
-
+    void prepareAllThreads(int rows, int cols);
+    void launchAllThreads();
+    void waitAllThreadsDone();
 
 private:
-    // Hmmm, das ist der geerbte Vertrag ?!?!?!
-    virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const override;
+    void prepareCalculationThreads(int rows, int cols);
+    void prepareDrawingThread();
 
-    // WELCHE hehen hier private
+    void launchCalculationThreads(std::stop_token);
+    void launchDrawingThread(std::stop_token);
+
+    void addPixel(Pixel);
+    // void notify();
+    size_t computePixels(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight);
+    void drawPixelXXX(std::stop_token token);
 
 private:
     // private helper functions
    // size_t paintRectangle(std::stop_token, HWND, HDC, struct Rectangle);
 
 private:
-   // virtual void drawPixel(HDC, int x, int y, COLORREF) const override;
+   virtual void drawPixel(HDC, int, int, COLORREF) const override;
 };
 
 // =====================================================================================

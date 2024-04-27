@@ -3,7 +3,7 @@
 // Variant 01: Basic Version
 // =====================================================================================
 
-#include "MandelbrotGeneral.h"
+#include "MandelbrotCommon.h"
 #include "MandelbrotBasic.h"
 #include "MandelbrotPalette.h"
 

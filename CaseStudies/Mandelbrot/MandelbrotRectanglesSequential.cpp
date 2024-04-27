@@ -3,7 +3,7 @@
 // Variant 02: Rectangles Sequential
 // =====================================================================================
 
-#include "MandelbrotGeneral.h"
+#include "MandelbrotCommon.h"
 #include "MandelbrotRectanglesSequential.h"
 #include "MandelbrotPalette.h"
 

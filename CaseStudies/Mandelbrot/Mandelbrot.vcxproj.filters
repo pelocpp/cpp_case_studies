@@ -36,7 +36,7 @@
     <ClInclude Include="MandelbrotBasic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MandelbrotGeneral.h">
+    <ClInclude Include="MandelbrotCommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MandelBrot_Helper_Legacy.h">

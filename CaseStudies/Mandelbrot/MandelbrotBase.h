@@ -7,7 +7,7 @@
 #include <complex>
 #include <array>
 
-#include "MandelbrotGeneral.h"
+#include "MandelbrotCommon.h"
 #include "MandelbrotPalette.h"
 
 class MandelbrotBase

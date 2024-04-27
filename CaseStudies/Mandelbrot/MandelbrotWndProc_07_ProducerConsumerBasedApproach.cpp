@@ -15,6 +15,17 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
     case WM_SIZE:
         ::OutputDebugString(L"> WM_SIZE");
 
+        // cancel all threads, if any existing
+        bool done = mandelbrot.getDone();
+        if (!done) {
+
+            ::OutputDebugString(L"> Requesting Abort ...");
+            mandelbrot.waitAllThreadsDone();
+        }
+
+        // clear queues
+        mandelbrot.clearAllQueues();
+
         RECT rect;
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
@@ -22,12 +33,8 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
         mandelbrot.setHWND(hWnd);
-
-        mandelbrot.prepareCalculationThreads();  // XXX
-        mandelbrot.prepareDrawingThread();       // XXX
-
-        mandelbrot.startCalculationThreads();  // launch calculation threads
-        mandelbrot.startDrawingThread();       // launch single drawing thread
+        mandelbrot.prepareAllThreads(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);  // XXX
+        mandelbrot.launchAllThreads();  // launch calculation threads and single drawing thread
 
         ::OutputDebugString(L"< WM_SIZE");
         break;
@@ -37,16 +44,6 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         ::OutputDebugString(L"> WM_PAINT");
 
         ::ValidateRect(hWnd, NULL);
-
-        // cancel drawing thread, if existing
-        //size_t doneRectangles = mandelbrot.getDoneRectangles();
-        //if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
-
-        //    ::OutputDebugString(L"> Requesting Abort ...");
-
-        //    mandelbrot.requestAbort();
-        //    mandelbrot.waitRectanglesDone();
-        //}
 
         ::OutputDebugString(L"< WM_PAINT");
     }

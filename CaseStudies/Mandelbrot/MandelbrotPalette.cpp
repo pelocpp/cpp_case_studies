@@ -7,7 +7,7 @@
 #include "framework.h"
 
 #include "MandelbrotPalette.h"
-#include "MandelbrotGeneral.h"
+#include "MandelbrotCommon.h"
 
 // =====================================================================================
 

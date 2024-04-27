@@ -154,7 +154,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="Mandelbrot.h" />
     <ClInclude Include="MandelbrotBasic.h" />
-    <ClInclude Include="MandelbrotGeneral.h" />
+    <ClInclude Include="MandelbrotCommon.h" />
     <ClInclude Include="MandelbrotHelper.h" />
     <ClInclude Include="MandelbrotPalette.h" />
     <ClInclude Include="MandelbrotPalette_Legacy.h" />

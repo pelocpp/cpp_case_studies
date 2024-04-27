@@ -30,6 +30,14 @@
 
 // Die letzte Variante stürzt ab, wenn man Close drückt ...
 
+
+// Das geht auch mit einer Call back Funktion ... und dann ohne Polling ...
+//             // premature end of drawing
+//if (token.stop_requested()) {
+//    goto m_label;
+//}
+
+
 // =====================================================================================
 
 
@@ -37,7 +45,7 @@
 
 #include "Mandelbrot.h"
 
-#include "MandelbrotGeneral.h"
+#include "MandelbrotCommon.h"
 #include "MandelbrotBasic.h"
 
 #include "MandelbrotPalette.h"

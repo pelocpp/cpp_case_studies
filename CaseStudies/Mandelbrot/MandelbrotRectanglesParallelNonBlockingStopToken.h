@@ -11,6 +11,7 @@
 #include <mutex>
 #include <deque>
 #include <future>
+#include <stop_token>
 
 class MandelbrotRectanglesParallelNonBlockingStopToken : public MandelbrotBase
 {

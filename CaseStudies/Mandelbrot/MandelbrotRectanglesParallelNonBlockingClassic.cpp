@@ -3,7 +3,7 @@
 // Variant 05: Parallel - Non Blocking - Classic Variant
 // =====================================================================================
 
-#include "MandelbrotGeneral.h"
+#include "MandelbrotCommon.h"
 #include "MandelbrotRectanglesParallelNonBlockingClassic.h"
 #include "MandelbrotPalette.h"
 

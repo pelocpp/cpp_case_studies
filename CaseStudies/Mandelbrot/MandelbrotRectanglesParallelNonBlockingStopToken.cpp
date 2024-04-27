@@ -3,7 +3,7 @@
 // Variant 06: Parallel - Non Blocking - Stop Token
 // =====================================================================================
 
-#include "MandelbrotGeneral.h"
+#include "MandelbrotCommon.h"
 #include "MandelbrotRectanglesParallelNonBlockingStopToken.h"
 #include "MandelbrotPalette.h"
 
@@ -101,7 +101,7 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::sto
         {
             // premature end of drawing
             if (token.stop_requested()) {
-                goto m_label;
+                goto loopEnd;
             }
 
             std::complex<TFloatingPoint> number{
@@ -116,8 +116,7 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::sto
         }
     }
 
-    m_label:
-
+    loopEnd:
     incDoneRectangles();
     if (getDoneRectangles() == MandelbrotRectangles::NUM_RECTS) {
 

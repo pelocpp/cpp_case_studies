@@ -2,7 +2,7 @@
 // MandelbrotBase.cpp
 // =====================================================================================
 
-#include "MandelbrotGeneral.h"
+#include "MandelbrotCommon.h"
 #include "MandelbrotBase.h"
 
 #include "MandelbrotPalette.h"
