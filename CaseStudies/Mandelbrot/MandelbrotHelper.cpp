@@ -590,7 +590,7 @@
 //        // notity painting thread row per row
 //        notify();
 //    }
-//
+//	
 //    ::OutputDebugString(L"< computePixel End");
 //
 //    return numPixels;
@@ -635,38 +635,7 @@
 //
 //    ::OutputDebugString(L"< drawPixel Begin");
 //}
-//
-//void Mandelbrot::startCalculationThread() {
-//
-//    // define tasks, store corresponding futures
-//    for (size_t j{}; j != MandelbrotRectangles::NUM_ROWS; j++) {
-//        for (size_t i{}; i != MandelbrotRectangles::NUM_COLS; i++) {
-//
-//            using namespace std::placeholders;
-//            std::packaged_task<size_t(struct Rectangle, size_t, size_t)> task {
-//                std::bind(&Mandelbrot::computePixel, this, _1, _2, _3)
-//            };
-//            std::future<size_t> future = task.get_future();
-//
-//            m_CalculationTasks.push_back(std::move(task));
-//            m_CalculationFutures.push_back(std::move(future));
-//        }
-//    }
-//
-//    // execute each task in a separate thread
-//    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++) {
-//        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++) {
-//
-//            std::packaged_task<size_t(struct Rectangle, size_t, size_t)> task =
-//                std::move(m_CalculationTasks.front());
-//
-//            m_CalculationTasks.pop_front();
-//
-//            std::thread t(std::move(task), m_rects[j][i], m_clientWidth, m_clientHeight);
-//            t.detach();
-//        }
-//    }
-//}
+	
 //
 //void Mandelbrot::startDrawingThread() {
 //

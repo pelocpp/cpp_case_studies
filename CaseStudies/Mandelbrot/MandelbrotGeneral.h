@@ -18,7 +18,7 @@ enum class MandelbrotVersion
 };
 
 constexpr MandelbrotVersion getVersion() {
-    return MandelbrotVersion::RectanglesParallelNonBlockingStopToken;
+    return MandelbrotVersion::ProducerConsumerBasedApproach;
 }
 
 // =====================================================================================
@@ -37,13 +37,6 @@ struct MandelbrotParams
     static constexpr T YMAX{ (T)+1.25 };  // maximum y-value (imaginary part)
 };
 
-//struct Pixel
-//{
-//    int m_x;
-//    int m_y;
-//    COLORREF m_cr;
-//};
-
 struct Rectangle
 {
     size_t m_left;
@@ -54,8 +47,8 @@ struct Rectangle
 
 struct MandelbrotRectangles
 {
-    static constexpr size_t NUM_ROWS { 8 };
-    static constexpr size_t NUM_COLS { 8 };
+    static constexpr size_t NUM_ROWS { 2 };
+    static constexpr size_t NUM_COLS { 2 };
 
     static constexpr size_t NUM_RECTS{ (NUM_ROWS * NUM_COLS) };
 };

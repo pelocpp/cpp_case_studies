@@ -50,6 +50,7 @@ extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlocking(HWND, UINT, 
 extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlockingUsingLatch(HWND, UINT, WPARAM, LPARAM);
 extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingClassic(HWND, UINT, WPARAM, LPARAM);
 extern LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND, UINT, WPARAM, LPARAM);
+extern LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND, UINT, WPARAM, LPARAM);
 
 // =====================================================================================
 
@@ -63,7 +64,7 @@ MandelbrotPalette g_palette{};
 
 // =====================================================================================
 
-#define MAX_LOADSTRING 100
+#define MAX_LOADSTRING 256
 
 // global Variables:
 HINSTANCE hInst;                        // current instance
@@ -154,6 +155,16 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     {
         wcex.lpfnWndProc = MandelbrotWndProcRectanglesParallelNonBlockingStopToken;
         wcscat_s(szTitle, MAX_LOADSTRING, L" - Rectangles Parallel - Non Blocking - Stop Token");
+    }
+    else if constexpr (version == MandelbrotVersion::RectanglesParallelNonBlockingStopToken)
+    {
+        wcex.lpfnWndProc = MandelbrotWndProcProducerConsumerBasedApproach;
+        wcscat_s(szTitle, MAX_LOADSTRING, L" - Rectangles Parallel - Non Blocking - Stop Token");
+    }
+    else if constexpr (version == MandelbrotVersion::ProducerConsumerBasedApproach)
+    {
+        wcex.lpfnWndProc = MandelbrotWndProcProducerConsumerBasedApproach;
+        wcscat_s(szTitle, MAX_LOADSTRING, L" - Rectangles Parallel - Non Blocking - Producer Consumer Based Approach");
     }
 
     return ::RegisterClassExW(&wcex);

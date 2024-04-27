@@ -60,6 +60,9 @@
     <ClInclude Include="MandelbrotRectanglesParallelNonBlockingStopToken.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MandelbrotProducerConsumerBasedApproach.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -120,6 +123,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MandelbrotWndProc_06_RectanglesParallelNonBlockingStopToken.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotWndProc_07_ProducerConsumerBasedApproach.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MandelbrotProducerConsumerBasedApproach.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

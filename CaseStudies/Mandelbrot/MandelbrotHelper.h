@@ -172,13 +172,8 @@ public:
     // public "producer - consumer" interface
 
     // TODO: Welche dieser MEthoden können privat deklariert werden .....
-    void setHWND(HWND hWnd);
-    void addPixel(Pixel);
-    void notify();
-    size_t computePixel(struct Rectangle rect, size_t maxWidth, size_t maxHeight);
-    void drawPixel();
-    void startCalculationThread();
-    void startDrawingThread();
+
+
 
 private:
     // private helper methods

@@ -58,15 +58,16 @@ std::pair<std::wstring, size_t> MandelbrotBase::paintRectangle(HDC hdc, struct R
     {
         for (size_t x{ rect.m_left }; x != rect.m_right; x++)
         {
-            std::complex<TFloatingPoint> number {
+            std::complex<TFloatingPoint> comp {
                 getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight)
             };
 
-            size_t iterations{ computeSequence(number) };
+            size_t iterations{ computeSequence(comp) };
             COLORREF color{ g_palette[iterations - 1] };
-            ++numPixels;
 
+            // draw pixel - either directly or thread safe
             drawPixel(hdc, (int) x, (int) y, color);
+            ++numPixels;
         }
     }
 
