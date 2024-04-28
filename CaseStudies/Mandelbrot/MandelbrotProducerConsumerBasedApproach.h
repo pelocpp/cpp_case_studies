@@ -9,12 +9,12 @@
 
 //#include <thread>
 #include <mutex>
+#include <latch>
 #include <deque>
 #include <queue>
 #include <future>
 #include <condition_variable>
 #include <stop_token>
-
 
 
 // TO BE DONE: Warum sind die Member int und nicht size_t
@@ -27,31 +27,34 @@ struct Pixel
 };
 
 
-
-
 // TO BE DONE: Welcher Container hat die schnellsten insert am Begin // entfernen am Ende
 
 class MandelbrotProducerConsumerBasedApproach : public MandelbrotBase
 {
 private:
-     mutable std::mutex m_mutex;
-     std::condition_variable m_conditionPixelsAvailable;  // TODO  Auch mutable ???
+    // data
+    mutable std::mutex m_mutex;
+    std::condition_variable m_conditionPixelsAvailable;  // TODO  Auch mutable ???
 
-     std::stop_source m_source;
-     std::atomic<bool> m_done;
+    std::stop_source m_source;
+    std::atomic<bool> m_done;
+    std::atomic<int> m_doneRectangles;
 
-     std::deque<std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>> m_calculationTasks;
-     std::deque<std::future<size_t>> m_calculationFutures;  // TODO: Was mache ich mit diesen Futures
 
-     std::packaged_task<void(std::stop_token)> m_drawingTask;
-     std::future<void> m_drawingFuture;  // TODO: Was mache ich mit dieser Futures
+    std::deque<std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>> m_calculationTasks;
+    std::deque<std::future<size_t>> m_calculationFutures;  // TODO: Was mache ich mit diesen Futures
+
+    std::packaged_task<void(std::stop_token)> m_drawingTask;
+    std::future<void> m_drawingFuture;  // TODO: Was mache ich mit dieser Futures
 
     // "producer/consumer" based data
     HWND m_hWnd;
     HDC  m_hDC;
 
-    std::queue<Pixel> m_pixels;       // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
-                                       // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
+    std::queue<Pixel> m_pixels;   // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
+                                  // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
+
+                                  // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
 
 public:
     // c'tor(s)
@@ -62,9 +65,78 @@ public:
     //void incDoneRectangles() { ++m_doneRectangles; }
     //void resetDoneRectangles() { m_doneRectangles = 0; }
 
-    // void requestAbort() { m_source.request_stop(); }
-
+    void requestStop() { m_source.request_stop(); }
     bool getDone () { return m_done; }
+
+    //// -----------------------------------------------------
+    //// Neuer Ansatz:
+    //// Daten
+    //std::latch m_latch{ MandelbrotRectangles::NUM_RECTS + 1 };
+    //std::atomic<bool> m_pendingTasks{ false };
+
+    //// Neuer Ansatz
+    //void taskDone() { m_latch.count_down(); }
+
+    //bool tasksPending() { return m_pendingTasks; }
+
+    ////     std::latch m_latch{ MandelbrotRectangles::NUM_RECTS + 1 };
+
+    //void resetLatch() { m_latch = std::latch{ MandelbrotRectangles::NUM_RECTS + 1 }; }
+
+    //void waitForPendingThreads() { m_latch.wait(); }
+
+    // -----------------------------------------------------
+    // ZWEITER Neuer Ansatz:
+    // Daten
+
+    // TO BE DONE: std::unique_ptr !!!!
+    
+    //std::latch* m_latch = nullptr;
+
+    //std::atomic<bool> m_pendingTasks{ false };
+
+    //// Neuer Ansatz
+    //void taskDone() { m_latch->count_down(); }
+
+    //bool tasksPending() { return m_pendingTasks; }
+    //void setPendingTasks() { m_pendingTasks = true; }
+    //void clearPendingTasks() { m_pendingTasks = false; }
+
+    ////     std::latch m_latch{ MandelbrotRectangles::NUM_RECTS + 1 };
+
+    //void resetLatch() { 
+    //    delete m_latch;
+    //    m_latch = new std::latch{ MandelbrotRectangles::NUM_RECTS + 1 }; 
+    //}
+
+    //void waitForPendingThreads() {
+    //    m_latch->wait();
+    //    
+    //    clearPendingTasks();
+    //}
+
+    // ------------------------------------------------------
+
+        // DRITTER Neuer Ansatz:
+    //// Daten
+    std::atomic<int> m_tasksCounter { 0 };  // MandelbrotRectangles::NUM_RECTS + 1 
+
+    bool tasksPending() { return m_tasksCounter > 0; } 
+
+    void taskDone() { -- m_tasksCounter; }
+
+    void resetTasksCounter(int counter) { m_tasksCounter = counter; }
+
+ //    void reseTasksCounter(int value) { m_tasksCounter = MandelbrotRectangles::NUM_RECTS + 1; }
+
+    void waitForPendingTasks() { 
+        waitAllThreadsDone();
+    }
+
+    // ------------------------------------------------------
+
+
+
 
 public:
     // public interface

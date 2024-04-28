@@ -33,7 +33,7 @@ public:
     void incDoneRectangles()   { ++m_doneRectangles; }
     void resetDoneRectangles() { m_doneRectangles = 0; }
 
-    void requestAbort()        { m_source.request_stop(); }
+    void requestStop()        { m_source.request_stop(); }
 
 public:
     // public interface

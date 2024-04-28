@@ -16,14 +16,30 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         ::OutputDebugString(L"> WM_SIZE");
 
         // cancel all threads, if any existing
-        if (! mandelbrot.getDone()) {
+        //if (! mandelbrot.getDone()) {
 
-            ::OutputDebugString(L"> Requesting Abort ...");
-            mandelbrot.waitAllThreadsDone();
+        //    ::OutputDebugString(L"! Requesting Abort ...");
+        //    mandelbrot.requestStop();
+        //    mandelbrot.waitAllThreadsDone();
+        //    ::OutputDebugString(L"! Requested Abort Done !");
+        //}
+
+
+
+        // cancel all threads, if any existing
+        if (mandelbrot.tasksPending()) {
+
+            ::OutputDebugString(L"! Requesting Abort ...");
+            mandelbrot.requestStop();
+            mandelbrot.waitForPendingTasks();
+            ::OutputDebugString(L"! Requested Abort Done !");
         }
+
 
         // clear queues
         mandelbrot.clearAllQueues();
+        
+        // mandelbrot.resetDoneRectangles();
 
         RECT rect;
         ::GetClientRect(hWnd, &rect);
@@ -53,11 +69,12 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         ::OutputDebugString(L"> WM_DESTROY");
 
         // cancel all threads, if any existing
-        if (!mandelbrot.getDone()) {
+        //if (!mandelbrot.getDone()) {
 
-            ::OutputDebugString(L"> Requesting Abort ...");
-            mandelbrot.waitAllThreadsDone();
-        }
+        //    ::OutputDebugString(L"> Requesting Abort ...");
+        //    mandelbrot.requestStop();
+        //    mandelbrot.waitAllThreadsDone();
+        //}
 
         ::PostQuitMessage(0);
 

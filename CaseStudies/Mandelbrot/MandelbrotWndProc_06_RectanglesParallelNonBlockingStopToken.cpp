@@ -36,7 +36,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
 
             ::OutputDebugString(L"> Requesting Abort ...");
 
-            mandelbrot.requestAbort();
+            mandelbrot.requestStop();
             mandelbrot.waitRectanglesDone();
         }
 
@@ -60,6 +60,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         int doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
+            mandelbrot.requestStop();  // Dieser Aufruf ist nicht getestet !!!!!!!!!!!!!!!!!!!!!!!!
             mandelbrot.waitRectanglesDone();
         }
 

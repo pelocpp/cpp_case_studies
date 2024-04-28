@@ -91,6 +91,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
+    ::OutputDebugString(L"> Program");
+
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -113,6 +115,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         ::TranslateMessage(&msg);
         ::DispatchMessage(&msg);
     }
+
+    ::OutputDebugString(L"< Program");
 
     return (int)msg.wParam;
 }
