@@ -12,6 +12,7 @@
 #include <future>
 #include <mutex>
 #include <thread>
+#include <chrono>
 
 
 
@@ -53,9 +54,9 @@ void MandelbrotProducerConsumerBasedApproach::addPixel(Pixel pixel)
     // b) das geht mit einer andere n Lock Klasse !!!!!!!!!!!!
 }
 
-size_t MandelbrotProducerConsumerBasedApproach::computePixels(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight) {
+size_t MandelbrotProducerConsumerBasedApproach::computePixelOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight) {
 
-    ::OutputDebugString(L"> computePixels Begin");
+    ::OutputDebugString(L"> computePixelOfRectangle");
 
     size_t numPixels{};
 
@@ -65,7 +66,7 @@ size_t MandelbrotProducerConsumerBasedApproach::computePixels(std::stop_token to
         {
             // premature end of drawing
             if (token.stop_requested()) {
-                ::OutputDebugString(L"> computePixels: STOP REQUESTED");
+                ::OutputDebugString(L"> computePixelOfRectangle: STOP REQUESTED");
                 goto loopEnd;
             }
 
@@ -88,14 +89,16 @@ size_t MandelbrotProducerConsumerBasedApproach::computePixels(std::stop_token to
     }
 
     loopEnd:
-    ::OutputDebugString(L"< computePixels End");
+    ::OutputDebugString(L"< computePixelOfRectangle");
 
     return numPixels;
 }
 
-void MandelbrotProducerConsumerBasedApproach::drawPixelXXX(std::stop_token token) {
+void MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token token) {
 
-    ::OutputDebugString(L"> drawPixelXXX Begin");
+    ::OutputDebugString(L"> drawQueuedPixels");
+
+    size_t numPixels{};
 
     // Uhhhhhhhhh - wie wird diese Endlos Schleife sauber beendet ?????????????????????
     while (true) {
@@ -104,7 +107,7 @@ void MandelbrotProducerConsumerBasedApproach::drawPixelXXX(std::stop_token token
 
         // premature end of drawing
         if (token.stop_requested()) {
-            ::OutputDebugString(L"> drawPixelXXX: STOP REQUESTED");
+            ::OutputDebugString(L"> drawQueuedPixels: STOP REQUESTED");
             break;
         }
 
@@ -129,12 +132,17 @@ void MandelbrotProducerConsumerBasedApproach::drawPixelXXX(std::stop_token token
                 Pixel p = m_pixels.front();
                 m_pixels.pop();
 
-                drawPixel(m_hDC, p.m_x, p.m_y, p.m_cr);
+                drawPixel(m_hDC, p.m_x, p.m_y, p.m_cr); numPixels;
                 
                 --size;
             }
         }
     }
+
+    // print some statistics
+    WCHAR szText[64];
+    ::swprintf(szText, 64, L"| drawed %zu pixels.", numPixels);
+    OutputDebugString(szText);
 
     // there is only a single drawing thread - being responsible for the graphics context
     ::ReleaseDC(m_hWnd, m_hDC);
@@ -142,7 +150,7 @@ void MandelbrotProducerConsumerBasedApproach::drawPixelXXX(std::stop_token token
     // regular end of calculation and drawing pixels reached
     m_done = true;
 
-    ::OutputDebugString(L"< drawPixel Begin");
+    ::OutputDebugString(L"< drawPixel");
 }
 
 // Hmmm, das ist der geerbte Vertrag ?!?!?!
@@ -151,6 +159,9 @@ void MandelbrotProducerConsumerBasedApproach::drawPixel(HDC hdc, int x, int y, C
     ::SetPixelV(hdc, x, y, color);
 }
 
+void MandelbrotProducerConsumerBasedApproach::clearAllQueues() {
+
+}
 
 void MandelbrotProducerConsumerBasedApproach::prepareAllThreads(int rows, int cols)
 {
@@ -164,7 +175,6 @@ void MandelbrotProducerConsumerBasedApproach::prepareCalculationThreads(int rows
 
     // TO BE DONE: DAS geht mit std::generate ...
 
-
     // define tasks, store corresponding futures
     for (size_t j{}; j != rows; j++)
     {
@@ -172,7 +182,7 @@ void MandelbrotProducerConsumerBasedApproach::prepareCalculationThreads(int rows
         {
             std::packaged_task <size_t(std::stop_token, struct Rectangle, size_t, size_t)> task{
                 [this] (std::stop_token token, struct Rectangle rect, size_t width, size_t height) {
-                    return computePixels(token, rect, width, height);
+                    return computePixelOfRectangle(token, rect, width, height);
                 }
             };
 
@@ -188,7 +198,7 @@ void MandelbrotProducerConsumerBasedApproach::prepareCalculationThreads(int rows
 void MandelbrotProducerConsumerBasedApproach::prepareDrawingThread() {
 
     std::packaged_task <void(std::stop_token)> task{
-        [this] (std::stop_token token) { return drawPixelXXX(token); }
+        [this] (std::stop_token token) { return drawQueuedPixels(token); }
     };
 
     m_drawingFuture = task.get_future();
@@ -257,12 +267,9 @@ void MandelbrotProducerConsumerBasedApproach::waitAllThreadsDone()
     }
 
     // wait for end of single drawing thread
-    m_drawingFuture.get();
-
-    // print some statistics
-    WCHAR szText[64];
-    ::swprintf(szText, 64, L"   ... single drawing thread done");
-    OutputDebugString(szText);
+    if (m_drawingFuture.valid()) {
+        m_drawingFuture.get();
+    }
 }
 
 // =====================================================================================

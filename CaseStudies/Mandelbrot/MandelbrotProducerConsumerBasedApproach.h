@@ -69,6 +69,7 @@ public:
 public:
     // public interface
     //void waitRectanglesDone();
+    void clearAllQueues();
 
     void setHWND(HWND hWnd);
 
@@ -85,8 +86,8 @@ private:
 
     void addPixel(Pixel);
     // void notify();
-    size_t computePixels(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight);
-    void drawPixelXXX(std::stop_token token);
+    size_t computePixelOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight);
+    void drawQueuedPixels(std::stop_token token);
 
 private:
     // private helper functions

@@ -16,8 +16,7 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         ::OutputDebugString(L"> WM_SIZE");
 
         // cancel all threads, if any existing
-        bool done = mandelbrot.getDone();
-        if (!done) {
+        if (! mandelbrot.getDone()) {
 
             ::OutputDebugString(L"> Requesting Abort ...");
             mandelbrot.waitAllThreadsDone();
@@ -30,11 +29,7 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
-        mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
-
         mandelbrot.setHWND(hWnd);
-        mandelbrot.prepareAllThreads(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);  // XXX
-        mandelbrot.launchAllThreads();  // launch calculation threads and single drawing thread
 
         ::OutputDebugString(L"< WM_SIZE");
         break;
@@ -45,6 +40,10 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
 
         ::ValidateRect(hWnd, NULL);
 
+        mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
+        mandelbrot.prepareAllThreads(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
+        mandelbrot.launchAllThreads();  // launch calculation threads and single drawing thread
+
         ::OutputDebugString(L"< WM_PAINT");
     }
     break;
@@ -53,12 +52,12 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
     {
         ::OutputDebugString(L"> WM_DESTROY");
 
-        // cancel all drawing threads, if existing
-        //int doneRectangles{ mandelbrot.getDoneRectangles() };
-        //if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
+        // cancel all threads, if any existing
+        if (!mandelbrot.getDone()) {
 
-        //    mandelbrot.waitRectanglesDone();
-        //}
+            ::OutputDebugString(L"> Requesting Abort ...");
+            mandelbrot.waitAllThreadsDone();
+        }
 
         ::PostQuitMessage(0);
 
