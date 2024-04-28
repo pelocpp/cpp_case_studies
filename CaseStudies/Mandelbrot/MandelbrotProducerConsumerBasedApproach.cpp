@@ -49,9 +49,9 @@ void MandelbrotProducerConsumerBasedApproach::addPixel(Pixel pixel)
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    // a) der notity aus der Sperre raus !!!
+    // a) der notity sollte ausserhalb der Sperre sein !!!
 
-    // b) das geht mit einer andere n Lock Klasse !!!!!!!!!!!!
+    // b) das geht mit einer anderen Lock Klasse !!!!!!!!!!!!
 }
 
 size_t MandelbrotProducerConsumerBasedApproach::computePixelOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight) {
@@ -128,32 +128,32 @@ void MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token t
             break;
         }
 
-        //std::unique_lock guard{ m_mutex };
+        std::unique_lock guard{ m_mutex };
 
-        //// are pixels available ?
-        //m_conditionPixelsAvailable.wait(
-        //    guard,
-        //    [&] () { 
-        //        return m_pixels.size() > 0;
-        //    }
-        //);
+        // are pixels available ?
+        m_conditionPixelsAvailable.wait(
+            guard,
+            [&] () { 
+                return m_pixels.size() > 0;
+            }
+        );
 
-        ////WCHAR szText[32];
-        ////wsprintf(szText, L"ProducerConsumerBasedApproach: painting %d pixel", (int) m_pixels.size());
-        ////::OutputDebugString(szText);
+        //WCHAR szText[32];
+        //wsprintf(szText, L"ProducerConsumerBasedApproach: painting %d pixel", (int) m_pixels.size());
+        //::OutputDebugString(szText);
 
-        //if (m_pixels.size() > 0) {
+        if (m_pixels.size() > 0) {
 
-        //    size_t size = m_pixels.size();
-        //    while (size != 0) {
-        //        Pixel p = m_pixels.front();
-        //        m_pixels.pop();
+            size_t size = m_pixels.size();
+            while (size != 0) {
+                Pixel p = m_pixels.front();
+                m_pixels.pop();
 
-        //        drawPixel(m_hDC, p.m_x, p.m_y, p.m_cr); numPixels;
-        //        
-        //        --size;
-        //    }
-        //}
+                drawPixel(m_hDC, p.m_x, p.m_y, p.m_cr); numPixels;
+                
+                --size;
+            }
+        }
     }
 
     // print some statistics
@@ -234,9 +234,6 @@ void MandelbrotProducerConsumerBasedApproach::prepareDrawingThread() {
 
     m_drawingFuture = task.get_future();
     m_drawingTask = std::move (task);
-
-    //std::thread t(std::move(task));
-    //t.detach();
 }
 
 void MandelbrotProducerConsumerBasedApproach::launchAllThreads()

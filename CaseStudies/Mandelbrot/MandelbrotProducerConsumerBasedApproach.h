@@ -36,10 +36,9 @@ private:
     mutable std::mutex m_mutex;
     std::condition_variable m_conditionPixelsAvailable;  // TODO  Auch mutable ???
 
-    std::stop_source m_source;
-    std::atomic<bool> m_done;
-    std::atomic<int> m_doneRectangles;
-
+    std::stop_source    m_source;
+    std::atomic<bool>   m_done;
+    std::atomic<int>    m_doneRectangles;
 
     std::deque<std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>> m_calculationTasks;
     std::deque<std::future<size_t>> m_calculationFutures;  // TODO: Was mache ich mit diesen Futures
@@ -68,57 +67,10 @@ public:
     void requestStop() { m_source.request_stop(); }
     bool getDone () { return m_done; }
 
-    //// -----------------------------------------------------
-    //// Neuer Ansatz:
-    //// Daten
-    //std::latch m_latch{ MandelbrotRectangles::NUM_RECTS + 1 };
-    //std::atomic<bool> m_pendingTasks{ false };
-
-    //// Neuer Ansatz
-    //void taskDone() { m_latch.count_down(); }
-
-    //bool tasksPending() { return m_pendingTasks; }
-
-    ////     std::latch m_latch{ MandelbrotRectangles::NUM_RECTS + 1 };
-
-    //void resetLatch() { m_latch = std::latch{ MandelbrotRectangles::NUM_RECTS + 1 }; }
-
-    //void waitForPendingThreads() { m_latch.wait(); }
-
-    // -----------------------------------------------------
-    // ZWEITER Neuer Ansatz:
-    // Daten
-
-    // TO BE DONE: std::unique_ptr !!!!
-    
-    //std::latch* m_latch = nullptr;
-
-    //std::atomic<bool> m_pendingTasks{ false };
-
-    //// Neuer Ansatz
-    //void taskDone() { m_latch->count_down(); }
-
-    //bool tasksPending() { return m_pendingTasks; }
-    //void setPendingTasks() { m_pendingTasks = true; }
-    //void clearPendingTasks() { m_pendingTasks = false; }
-
-    ////     std::latch m_latch{ MandelbrotRectangles::NUM_RECTS + 1 };
-
-    //void resetLatch() { 
-    //    delete m_latch;
-    //    m_latch = new std::latch{ MandelbrotRectangles::NUM_RECTS + 1 }; 
-    //}
-
-    //void waitForPendingThreads() {
-    //    m_latch->wait();
-    //    
-    //    clearPendingTasks();
-    //}
-
     // ------------------------------------------------------
 
-        // DRITTER Neuer Ansatz:
-    //// Daten
+    // DRITTER Neuer Ansatz:
+    // Daten
     std::atomic<int> m_tasksCounter { 0 };  // MandelbrotRectangles::NUM_RECTS + 1 
 
     bool tasksPending() { return m_tasksCounter > 0; } 
@@ -127,8 +79,6 @@ public:
 
     void resetTasksCounter(int counter) { m_tasksCounter = counter; }
 
- //    void reseTasksCounter(int value) { m_tasksCounter = MandelbrotRectangles::NUM_RECTS + 1; }
-
     void waitForPendingTasks() { 
         waitAllThreadsDone();
     }
@@ -136,11 +86,8 @@ public:
     // ------------------------------------------------------
 
 
-
-
 public:
     // public interface
-    //void waitRectanglesDone();
     void clearAllQueues();
 
     void setHWND(HWND hWnd);
@@ -160,10 +107,6 @@ private:
     // void notify();
     size_t computePixelOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight);
     void drawQueuedPixels(std::stop_token token);
-
-private:
-    // private helper functions
-   // size_t paintRectangle(std::stop_token, HWND, HDC, struct Rectangle);
 
 private:
    virtual void drawPixel(HDC, int, int, COLORREF) const override;
