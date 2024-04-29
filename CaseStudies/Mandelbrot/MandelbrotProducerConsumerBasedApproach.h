@@ -29,22 +29,25 @@ struct Pixel
 
 // TO BE DONE: Welcher Container hat die schnellsten insert am Begin // entfernen am Ende
 
+// TO BE DONE: Möglcierweise für die Thread Prozeduren Namen vergeben,
+// dann werden die Namen der Container kürzer
+// using YXY = size_t(std::stop_token, struct Rectangle, size_t, size_t);
+
+
 class MandelbrotProducerConsumerBasedApproach : public MandelbrotBase
 {
 private:
     // data
-    mutable std::mutex m_mutex;
-    std::condition_variable m_conditionPixelsAvailable;  // TODO  Auch mutable ???
+    mutable std::mutex            m_mutexQueue;
+    std::condition_variable_any   m_conditionPixelsAvailable;  // TODO  Auch mutable ??? Eher nein !!!
 
-    std::stop_source    m_source;
-    std::atomic<bool>   m_done;
-    std::atomic<int>    m_doneRectangles;
+    std::stop_source              m_source;
 
     std::deque<std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>> m_calculationTasks;
-    std::deque<std::future<size_t>> m_calculationFutures;  // TODO: Was mache ich mit diesen Futures
+    std::deque<std::future<size_t>>             m_calculationFutures;
 
-    std::packaged_task<void(std::stop_token)> m_drawingTask;
-    std::future<void> m_drawingFuture;  // TODO: Was mache ich mit dieser Futures
+    std::packaged_task<size_t(std::stop_token)> m_drawingTask;
+    std::future<size_t>                         m_drawingFuture;
 
     // "producer/consumer" based data
     HWND m_hWnd;
@@ -65,33 +68,40 @@ public:
     //void resetDoneRectangles() { m_doneRectangles = 0; }
 
     void requestStop() { m_source.request_stop(); }
-    bool getDone () { return m_done; }
+
+   //  bool getDone () { return m_done; }
 
     // ------------------------------------------------------
 
     // DRITTER Neuer Ansatz:
     // Daten
-    std::atomic<int> m_tasksCounter { 0 };  // MandelbrotRectangles::NUM_RECTS + 1 
 
-    bool tasksPending() { return m_tasksCounter > 0; } 
+    mutable std::mutex        m_mutexDone;
 
-    void taskDone() { -- m_tasksCounter; }
+    int m_doneRectangles = 0;  // In den Konstruktor aufnehmen !!!!!!!!!!!!!!!!!!!!!!!!
 
-    void resetTasksCounter(int counter) { m_tasksCounter = counter; }
+    bool m_done = true;     // In den Konstruktor aufnehmen !!!!!!!!!!!!!!!!!!!!!!!!
 
-    void waitForPendingTasks() { 
-        waitAllThreadsDone();
-    }
+    // std::atomic<bool>         m_done;
+    // std::atomic<int>          m_doneRectangles;
+    // std::atomic<int>       m_tasksCounter { 0 };  // MandelbrotRectangles::NUM_RECTS + 1 
+
+    //bool tasksPending() { return m_tasksCounter > 0; } 
+
+    //void taskDone() { -- m_tasksCounter; }
+
+    //void resetTasksCounter(int counter) { m_tasksCounter = counter; }
+
+    //void waitForPendingTasks() { 
+    //    waitAllThreadsDone();
+    //}
 
     // ------------------------------------------------------
 
-
 public:
     // public interface
-    void clearAllQueues();
-
     void setHWND(HWND hWnd);
-
+    void clearAllQueues();
     void prepareAllThreads(int rows, int cols);
     void launchAllThreads();
     void waitAllThreadsDone();
@@ -106,7 +116,7 @@ private:
     void addPixel(Pixel);
     // void notify();
     size_t computePixelOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight);
-    void drawQueuedPixels(std::stop_token token);
+    size_t drawQueuedPixels(std::stop_token token);
 
 private:
    virtual void drawPixel(HDC, int, int, COLORREF) const override;

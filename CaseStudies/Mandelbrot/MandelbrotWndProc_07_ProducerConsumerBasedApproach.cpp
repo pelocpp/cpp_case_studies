@@ -13,6 +13,7 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
     switch (message)
     {
     case WM_SIZE:
+    {
         ::OutputDebugString(L"> WM_SIZE");
 
         // cancel all threads, if any existing
@@ -24,21 +25,54 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         //    ::OutputDebugString(L"! Requested Abort Done !");
         //}
 
-
-
         // cancel all threads, if any existing
-        if (mandelbrot.tasksPending()) {
+        //if (mandelbrot.tasksPending()) {
 
-            ::OutputDebugString(L"! Requesting Abort ...");
-            mandelbrot.requestStop();
-            mandelbrot.waitForPendingTasks();
-            ::OutputDebugString(L"! Requested Abort Done !");
+        //    ::OutputDebugString(L"! Requesting Abort ...");
+        //    mandelbrot.requestStop();
+        //    mandelbrot.waitForPendingTasks();
+        //    ::OutputDebugString(L"! Requested Abort Done !");
+        //}
+
+        //// DRITTER ANSATZ
+        //{
+        //    std::lock_guard<std::mutex> guard{ mandelbrot.m_mutexDone };
+
+        //    if (! mandelbrot.m_done) {
+
+        //        ::OutputDebugString(L"> m_done ==> false");
+
+        //        mandelbrot.requestStop();
+        //        mandelbrot.waitAllThreadsDone();
+        //        mandelbrot.m_done = true;
+
+        //        ::OutputDebugString(L"> m_done ==> true");
+        //    }
+        //}
+
+        // VIERTER ANSATZ
+        bool done;
+
+        {
+            std::lock_guard<std::mutex> guard{ mandelbrot.m_mutexDone };
+
+            done = mandelbrot.m_done;
         }
 
+        if (!done) {
+
+            ::OutputDebugString(L"> m_done ==> false");
+
+            mandelbrot.requestStop();
+            mandelbrot.waitAllThreadsDone();
+            mandelbrot.m_done = true;
+
+            ::OutputDebugString(L"> m_done ==> true");
+        }
 
         // clear queues
         mandelbrot.clearAllQueues();
-        
+
         // mandelbrot.resetDoneRectangles();
 
         RECT rect;
@@ -48,6 +82,8 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         mandelbrot.setHWND(hWnd);
 
         ::OutputDebugString(L"< WM_SIZE");
+    }
+
         break;
 
     case WM_PAINT:
@@ -69,12 +105,16 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         ::OutputDebugString(L"> WM_DESTROY");
 
         // cancel all threads, if any existing
-        //if (!mandelbrot.getDone()) {
+        {
+            std::lock_guard<std::mutex> guard{ mandelbrot.m_mutexDone };
 
-        //    ::OutputDebugString(L"> Requesting Abort ...");
-        //    mandelbrot.requestStop();
-        //    mandelbrot.waitAllThreadsDone();
-        //}
+            if (!mandelbrot.m_done) {
+
+                mandelbrot.requestStop();
+                mandelbrot.waitAllThreadsDone();
+               // mandelbrot.m_done = true;   // nicht notwendig
+            }
+        }
 
         ::PostQuitMessage(0);
 
