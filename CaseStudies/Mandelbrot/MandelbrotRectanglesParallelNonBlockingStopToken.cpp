@@ -126,11 +126,12 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::sto
     return numPixels;
 }
 
-void MandelbrotRectanglesParallelNonBlockingStopToken::drawPixel(HDC hdc, int x, int y, COLORREF color) const
+void MandelbrotRectanglesParallelNonBlockingStopToken::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
 {
     // RAII lock
     std::lock_guard<std::mutex> lock{ m_mutex };
-    ::SetPixelV(hdc, (int)x, (int)y, color);
+
+    ::SetPixelV(hdc, (int) x, (int) y, color);
 }
 
 

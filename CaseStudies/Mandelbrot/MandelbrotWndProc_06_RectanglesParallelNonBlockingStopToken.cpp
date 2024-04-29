@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotWndProc_04_RectanglesParallelNonBlockingClassic.cpp
+// MandelbrotWndProc_06_RectanglesParallelNonBlockingStopToken.cpp
 // Mandelbrot Application Window Procedure
 // Variant 06: Parallel - Non Blocking - Stop Token
 // =====================================================================================

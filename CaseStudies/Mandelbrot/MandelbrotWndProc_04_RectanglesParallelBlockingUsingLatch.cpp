@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotWndProc_03_RectanglesParallelBlocking.cpp
+// MandelbrotWndProc_04_RectanglesParallelBlockingUsingLatch.cpp
 // Mandelbrot Application Window Procedure
 // Variant 04: Parallel - Blocking - Using Latch
 // =====================================================================================

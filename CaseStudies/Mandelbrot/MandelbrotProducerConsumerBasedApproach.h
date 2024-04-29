@@ -17,12 +17,10 @@
 #include <stop_token>
 
 
-// TO BE DONE: Warum sind die Member int und nicht size_t
-
 struct Pixel
 {
-    int      m_x;
-    int      m_y;
+    size_t   m_x;
+    size_t   m_y;
     COLORREF m_cr;
 };
 
@@ -38,8 +36,11 @@ class MandelbrotProducerConsumerBasedApproach : public MandelbrotBase
 {
 private:
     // data
-    mutable std::mutex            m_mutexQueue;
-    std::condition_variable_any   m_conditionPixelsAvailable;  // TODO  Auch mutable ??? Eher nein !!!
+    mutable std::mutex                    m_mutexQueue;
+    mutable std::condition_variable_any   m_conditionPixelsAvailable;
+
+    HWND m_hWnd;
+    HDC  m_hDC;
 
     std::stop_source              m_source;
 
@@ -49,9 +50,6 @@ private:
     std::packaged_task<size_t(std::stop_token)> m_drawingTask;
     std::future<size_t>                         m_drawingFuture;
 
-    // "producer/consumer" based data
-    HWND m_hWnd;
-    HDC  m_hDC;
 
     std::queue<Pixel> m_pixels;   // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
                                   // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
@@ -63,13 +61,7 @@ public:
     MandelbrotProducerConsumerBasedApproach();
 
     // getter / setter
-    //int  getDoneRectangles() { return m_doneRectangles; }
-    //void incDoneRectangles() { ++m_doneRectangles; }
-    //void resetDoneRectangles() { m_doneRectangles = 0; }
-
     void requestStop() { m_source.request_stop(); }
-
-   //  bool getDone () { return m_done; }
 
     // ------------------------------------------------------
 
@@ -82,19 +74,6 @@ public:
 
     bool m_done = true;     // In den Konstruktor aufnehmen !!!!!!!!!!!!!!!!!!!!!!!!
 
-    // std::atomic<bool>         m_done;
-    // std::atomic<int>          m_doneRectangles;
-    // std::atomic<int>       m_tasksCounter { 0 };  // MandelbrotRectangles::NUM_RECTS + 1 
-
-    //bool tasksPending() { return m_tasksCounter > 0; } 
-
-    //void taskDone() { -- m_tasksCounter; }
-
-    //void resetTasksCounter(int counter) { m_tasksCounter = counter; }
-
-    //void waitForPendingTasks() { 
-    //    waitAllThreadsDone();
-    //}
 
     // ------------------------------------------------------
 
@@ -107,19 +86,19 @@ public:
     void waitAllThreadsDone();
 
 private:
+    // private helper methods
     void prepareCalculationThreads(int rows, int cols);
     void prepareDrawingThread();
-
     void launchCalculationThreads(std::stop_token);
     void launchDrawingThread(std::stop_token);
 
     void addPixel(Pixel);
-    // void notify();
-    size_t computePixelOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight);
+    size_t computePixelsOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight);
     size_t drawQueuedPixels(std::stop_token token);
+    // void notify();
 
 private:
-   virtual void drawPixel(HDC, int, int, COLORREF) const override;
+   virtual void drawPixel(HDC, size_t, size_t, COLORREF) const override;
 };
 
 // =====================================================================================

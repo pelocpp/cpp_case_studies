@@ -26,9 +26,9 @@ void MandelbrotRectanglesSequential::paintRectangles(HDC hDC) const {
     }
 }
 
-void MandelbrotRectanglesSequential::drawPixel(HDC hdc, int x, int y, COLORREF color) const
+void MandelbrotRectanglesSequential::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
 {
-    ::SetPixelV(hdc, x, y, color);
+    ::SetPixelV(hdc, (int) x, (int) y, color);
 }
 
 

@@ -66,7 +66,7 @@ std::pair<std::wstring, size_t> MandelbrotBase::paintRectangle(HDC hdc, struct R
             COLORREF color{ g_palette[iterations - 1] };
 
             // draw pixel - either directly or thread safe
-            drawPixel(hdc, (int) x, (int) y, color);
+            drawPixel(hdc, x, y, color);
             ++numPixels;
         }
     }

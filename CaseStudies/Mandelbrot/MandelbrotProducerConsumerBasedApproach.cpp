@@ -35,7 +35,6 @@ void MandelbrotProducerConsumerBasedApproach::setHWND(HWND hWnd)
     m_hDC = ::GetDC(m_hWnd);
 }
 
-
 void MandelbrotProducerConsumerBasedApproach::addPixel(Pixel pixel)
 {
     std::lock_guard<std::mutex> lock{ m_mutexQueue };
@@ -52,9 +51,9 @@ void MandelbrotProducerConsumerBasedApproach::addPixel(Pixel pixel)
     // b) das geht mit einer anderen Lock Klasse !!!!!!!!!!!!
 }
 
-size_t MandelbrotProducerConsumerBasedApproach::computePixelOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight) {
+size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight) {
 
-    ::OutputDebugString(L"> computePixelOfRectangle");
+    ::OutputDebugString(L"> computePixelsOfRectangle");
 
     size_t numPixels{};
 
@@ -64,7 +63,7 @@ size_t MandelbrotProducerConsumerBasedApproach::computePixelOfRectangle(std::sto
         {
             // premature end of drawing
             if (token.stop_requested()) {
-                ::OutputDebugString(L"> computePixelOfRectangle: STOP REQUESTED");
+                ::OutputDebugString(L"> computePixelsOfRectangle: STOP REQUESTED");
                 goto loopEnd;
             }
 
@@ -76,168 +75,101 @@ size_t MandelbrotProducerConsumerBasedApproach::computePixelOfRectangle(std::sto
             COLORREF color{ g_palette[iterations - 1] };
 
             // enter pixel into queue (queue is thread safe)
-            Pixel pixel{ (int) x, (int) y, color };
+            Pixel pixel{ x, y, color };
             addPixel(pixel);
             ++numPixels;
         }
 
         // notity painting thread row per row
         // // TO BE DONE; Das mit dem notify muss genau betrachtet werden !!!!!
-      //  notify();
+        //  notify();
     }
 
     loopEnd:
-
-    //// WIEDER ENTFERNEN:
-    //incDoneRectangles();
-    //if (getDoneRectangles() == MandelbrotRectangles::NUM_RECTS) {
-
-    //    m_done = true;
-    //}
-
-    // ZWEITER ANSATZ
-    // taskDone();
-
-
-    // DRITTER ANSATZ
     {
         std::lock_guard<std::mutex> guard{ m_mutexDone };
 
         m_doneRectangles++;
-
         if (m_doneRectangles == MandelbrotRectangles::NUM_RECTS) {
             m_done = true;
+
+            // last calculation threads inserts "end-of-pixels-queue" marker
+            Pixel pixel{ SIZE_MAX, SIZE_MAX, 0 };
+            addPixel(pixel);
+
             ::OutputDebugString(L"> m_done ==> true");
         }
     }
 
     // print some statistics
     WCHAR szText[64];
-    ::swprintf(szText, 64, L"< computePixelOfRectangle - computed %zu pixels", numPixels);
+    ::swprintf(szText, 64, L"< computePixelsOfRectangle - computed %zu pixels", numPixels);
     OutputDebugString(szText);
 
     return numPixels;
 }
 
-// ORIGINAL - ist aber nie richtig gelaufen !!!
-//size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token token) {
-//
-//    ::OutputDebugString(L"> drawQueuedPixels");
-//
-//    size_t numPixels{};
-//
-//    // Uhhhhhhhhh - wie wird diese Endlos Schleife sauber beendet ?????????????????????
-//    while (true) {
-//
-//        // TODO Hmmmmmm, komme ich da mit eine STop Callback Routine besser raus ??????????
-//
-//        // premature end of drawing
-//        if (token.stop_requested()) {
-//            ::OutputDebugString(L"> drawQueuedPixels: STOP REQUESTED");
-//            break;
-//        }
-//
-//        std::unique_lock guard{ m_mutexQueue };
-//
-//        // are pixels available ?
-//        m_conditionPixelsAvailable.wait(
-//            guard,
-//            [&] () { 
-//                return m_pixels.size() > 0;
-//            }
-//        );
-//
-//        //WCHAR szText[32];
-//        //wsprintf(szText, L"ProducerConsumerBasedApproach: painting %d pixel", (int) m_pixels.size());
-//        //::OutputDebugString(szText);
-//
-//        if (m_pixels.size() > 0) {
-//
-//            size_t size = m_pixels.size();
-//            while (size != 0) {
-//                Pixel p = m_pixels.front();
-//                m_pixels.pop();
-//
-//                drawPixel(m_hDC, p.m_x, p.m_y, p.m_cr); 
-//                
-//                numPixels++;
-//                
-//                --size;
-//            }
-//        }
-//    }
-//
-//    // print some statistics
-//    WCHAR szText[64];
-//    ::swprintf(szText, 64, L"| drawed %zu pixels.", numPixels);
-//    OutputDebugString(szText);
-//
-//    // there is only a single drawing thread - being responsible for the graphics context
-//    ::ReleaseDC(m_hWnd, m_hDC);
-//
-//    {
-//        std::lock_guard<std::mutex> guard{ m_mutexDone };
-//
-//        m_doneRectangles++;
-//
-//        if (m_doneRectangles == MandelbrotRectangles::NUM_RECTS) {
-//            m_done = true;
-//            ::OutputDebugString(L"> m_done ==> true");
-//        }
-//    }
-//
-//    ::OutputDebugString(L"< drawQueuedPixels");
-//
-//    return numPixels;
-//}
-
-
+// REDESIGN
 size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token token) {
 
     ::OutputDebugString(L"> drawQueuedPixels");
 
     size_t numPixels{};
 
+    std::queue<Pixel> pixels;
+
     // Uhhhhhhhhh - wie wird diese Endlos Schleife sauber beendet ?????????????????????
-    while (!token.stop_requested()) {
+    while (! token.stop_requested()) {
 
-        std::unique_lock guard{ m_mutexQueue };
+        // RAII
+        {
+            std::unique_lock guard{ m_mutexQueue };
 
-        // wait for next available pixels
-        // TO BE DONE: Der Name stopRequested ist vermutlich schlecht --- logisch falsch herum
-        bool stopRequested{
-            m_conditionPixelsAvailable.wait(
-                guard,
-                token,
-                [&]() { return m_pixels.size() > 0; }
-            )
-        };
+            // wait for next available pixels
+            // TO BE DONE: Der Name stopRequested ist vermutlich schlecht --- logisch falsch herum
+            bool stopRequested{
+                m_conditionPixelsAvailable.wait(
+                    guard,
+                    token,
+                    [&]() { return m_pixels.size() > 0; }
+                )
+            };
 
-        if (!stopRequested) {
-            ::OutputDebugString(L"> drawQueuedPixels: STOP REQUESTED");
-            break;
+            if (!stopRequested) {
+                ::OutputDebugString(L"> drawQueuedPixels: STOP REQUESTED");
+                break;
+            }
+
+            std::swap(pixels, m_pixels);
         }
 
         //WCHAR szText[32];
         //wsprintf(szText, L"ProducerConsumerBasedApproach: painting %d pixel", (int) m_pixels.size());
         //::OutputDebugString(szText);
 
-        if (m_pixels.size() > 0) {
+        while (! pixels.empty()) { 
 
-            size_t size = m_pixels.size();
-            while (size != 0) {
-                Pixel p = m_pixels.front();
-                m_pixels.pop();
+            Pixel p = pixels.front();
+            pixels.pop();
 
+            // end of queue reached?
+            if (p.m_x == SIZE_MAX && p.m_y == SIZE_MAX) {
+
+                ::OutputDebugString(L"> EXIT drawQueuedPixels !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                goto loopEnd;
+            }
+            else {
                 drawPixel(m_hDC, p.m_x, p.m_y, p.m_cr);
-
                 numPixels++;
-
-                --size;
             }
         }
+
+        // WANN WIRD DIESE SCHLEIFE REGULÄR VERLASSEN ????????????????????????????????????????
+        // NIEMALS !!!!!!!!!!!!!!!!!!!!!!!!!!
+        // JETZT SOLLTE SIE ES .
     }
 
+    loopEnd:
     // print some statistics
     WCHAR szText[64];
     ::swprintf(szText, 64, L"| drawed %zu pixels.", numPixels);
@@ -250,7 +182,6 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
         std::lock_guard<std::mutex> guard{ m_mutexDone };
 
         m_doneRectangles++;
-
         if (m_doneRectangles == MandelbrotRectangles::NUM_RECTS) {
             m_done = true;
             ::OutputDebugString(L"> m_done ==> true");
@@ -260,14 +191,12 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
     ::OutputDebugString(L"< drawQueuedPixels");
 
     return numPixels;
-
-
-
 }
-// Hmmm, das ist der geerbte Vertrag ?!?!?!
-void MandelbrotProducerConsumerBasedApproach::drawPixel(HDC hdc, int x, int y, COLORREF color) const
+
+
+void MandelbrotProducerConsumerBasedApproach::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
 {
-    ::SetPixelV(hdc, x, y, color);
+    ::SetPixelV(hdc, (int) x, (int) y, color);
 }
 
 void MandelbrotProducerConsumerBasedApproach::clearAllQueues() {
@@ -304,7 +233,7 @@ void MandelbrotProducerConsumerBasedApproach::prepareCalculationThreads(int rows
         {
             std::packaged_task <size_t(std::stop_token, struct Rectangle, size_t, size_t)> task{
                 [this] (std::stop_token token, struct Rectangle rect, size_t width, size_t height) {
-                    return computePixelOfRectangle(token, rect, width, height);
+                    return computePixelsOfRectangle(token, rect, width, height);
                 }
             };
 

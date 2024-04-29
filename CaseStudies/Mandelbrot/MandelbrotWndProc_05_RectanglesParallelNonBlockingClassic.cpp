@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotWndProc_04_RectanglesParallelNonBlockingClassic.cpp
+// MandelbrotWndProc_05_RectanglesParallelNonBlockingClassic.cpp
 // Mandelbrot Application Window Procedure
 // Variant 05: Parallel - Non Blocking - Classic
 // =====================================================================================

@@ -1,7 +1,7 @@
 // =====================================================================================
-// MandelbrotWndProc_04_RectanglesParallelNonBlockingClassic.cpp
+// MandelbrotWndProc_07_ProducerConsumerBasedApproach.cpp
 // Mandelbrot Application Window Procedure
-// Variant 07: Parallel - Non Blocking - Stop Token
+// Variant 07: Parallel - Non Blocking - Producer Consumer Based Approach
 // =====================================================================================
 
 #include "MandelbrotProducerConsumerBasedApproach.h"
@@ -17,40 +17,6 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         ::OutputDebugString(L"> WM_SIZE");
 
         // cancel all threads, if any existing
-        //if (! mandelbrot.getDone()) {
-
-        //    ::OutputDebugString(L"! Requesting Abort ...");
-        //    mandelbrot.requestStop();
-        //    mandelbrot.waitAllThreadsDone();
-        //    ::OutputDebugString(L"! Requested Abort Done !");
-        //}
-
-        // cancel all threads, if any existing
-        //if (mandelbrot.tasksPending()) {
-
-        //    ::OutputDebugString(L"! Requesting Abort ...");
-        //    mandelbrot.requestStop();
-        //    mandelbrot.waitForPendingTasks();
-        //    ::OutputDebugString(L"! Requested Abort Done !");
-        //}
-
-        //// DRITTER ANSATZ
-        //{
-        //    std::lock_guard<std::mutex> guard{ mandelbrot.m_mutexDone };
-
-        //    if (! mandelbrot.m_done) {
-
-        //        ::OutputDebugString(L"> m_done ==> false");
-
-        //        mandelbrot.requestStop();
-        //        mandelbrot.waitAllThreadsDone();
-        //        mandelbrot.m_done = true;
-
-        //        ::OutputDebugString(L"> m_done ==> true");
-        //    }
-        //}
-
-        // VIERTER ANSATZ
         bool done;
 
         {
@@ -72,8 +38,6 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
 
         // clear queues
         mandelbrot.clearAllQueues();
-
-        // mandelbrot.resetDoneRectangles();
 
         RECT rect;
         ::GetClientRect(hWnd, &rect);

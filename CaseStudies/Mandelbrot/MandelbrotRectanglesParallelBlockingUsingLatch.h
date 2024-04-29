@@ -23,7 +23,7 @@ public:
     void paintRectanglesAsyncWithLatch(HDC hDC) const;
 
 private:
-    virtual void drawPixel(HDC hdc, int x, int y, COLORREF color) const override;
+    virtual void drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const override;
 };
 
 // =====================================================================================

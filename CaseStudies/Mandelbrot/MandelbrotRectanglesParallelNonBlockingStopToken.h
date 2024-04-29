@@ -45,7 +45,7 @@ private:
     size_t paintRectangle(std::stop_token, HWND, HDC, struct Rectangle);
 
 private:
-    virtual void drawPixel(HDC, int x, int y, COLORREF) const override;
+    virtual void drawPixel(HDC, size_t x, size_t y, COLORREF) const override;
 };
 
 // =====================================================================================

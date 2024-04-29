@@ -14,7 +14,7 @@ public:
     MandelbrotBasic();
 
 private:
-    virtual void drawPixel(HDC, int, int, COLORREF) const override;
+    virtual void drawPixel(HDC, size_t, size_t, COLORREF) const override;
 
 };
 
