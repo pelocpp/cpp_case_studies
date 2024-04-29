@@ -47,8 +47,8 @@ struct Rectangle
 
 struct MandelbrotRectangles
 {
-    static constexpr size_t NUM_ROWS { 2 };
-    static constexpr size_t NUM_COLS { 2 };
+    static constexpr size_t NUM_ROWS { 8 };
+    static constexpr size_t NUM_COLS { 8 };
 
     static constexpr size_t NUM_RECTS{ (NUM_ROWS * NUM_COLS) };
 };

@@ -35,55 +35,45 @@ struct Pixel
 class MandelbrotProducerConsumerBasedApproach : public MandelbrotBase
 {
 private:
-    // data
-    mutable std::mutex                    m_mutexQueue;
-    mutable std::condition_variable_any   m_conditionPixelsAvailable;
-
+    // GDI specific data
     HWND m_hWnd;
     HDC  m_hDC;
 
-    std::stop_source              m_source;
+    // handling of miscellaneous packaged tasks (computation and drawing)
+    using ComputationTaskSignature = std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>;
 
-    std::deque<std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>> m_calculationTasks;
+    std::deque<ComputationTaskSignature>        m_calculationTasks;
     std::deque<std::future<size_t>>             m_calculationFutures;
-
     std::packaged_task<size_t(std::stop_token)> m_drawingTask;
     std::future<size_t>                         m_drawingFuture;
 
+    // concurrency data to handle "Producer-Consumer" implementation
+    mutable std::mutex   m_mutexPixelsQueue;
+    mutable std::condition_variable_any  m_conditionPixelsAvailable;
 
-    std::queue<Pixel> m_pixels;   // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
-                                  // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
-
-                                  // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
+    // storing computed pixels to draw
+    std::queue<Pixel>    m_pixels;      // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
+                                        // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
+                                        // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
+    
+    // data to handle premature ending of worker threads
+    mutable std::mutex   m_mutexDone;
+    std::stop_source     m_source;
+    int                  m_doneRectangles;
+    bool                 m_done;
 
 public:
     // c'tor(s)
     MandelbrotProducerConsumerBasedApproach();
-
-    // getter / setter
-    void requestStop() { m_source.request_stop(); }
-
-    // ------------------------------------------------------
-
-    // DRITTER Neuer Ansatz:
-    // Daten
-
-    mutable std::mutex        m_mutexDone;
-
-    int m_doneRectangles = 0;  // In den Konstruktor aufnehmen !!!!!!!!!!!!!!!!!!!!!!!!
-
-    bool m_done = true;     // In den Konstruktor aufnehmen !!!!!!!!!!!!!!!!!!!!!!!!
-
 
     // ------------------------------------------------------
 
 public:
     // public interface
     void setHWND(HWND hWnd);
-    void clearAllQueues();
     void prepareAllThreads(int rows, int cols);
     void launchAllThreads();
-    void waitAllThreadsDone();
+    void cancelActiveThreadsIfAny();
 
 private:
     // private helper methods
@@ -91,6 +81,8 @@ private:
     void prepareDrawingThread();
     void launchCalculationThreads(std::stop_token);
     void launchDrawingThread(std::stop_token);
+    void requestStop();
+    void waitAllThreadsDone();
 
     void addPixel(Pixel);
     size_t computePixelsOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight);
