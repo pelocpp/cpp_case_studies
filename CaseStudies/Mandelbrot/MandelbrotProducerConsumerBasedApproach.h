@@ -48,11 +48,12 @@ private:
     std::future<size_t>                         m_drawingFuture;
 
     // concurrency data to handle "Producer-Consumer" implementation
-    mutable std::mutex   m_mutexPixelsQueue;
-    mutable std::condition_variable_any  m_conditionPixelsAvailable;
+    mutable std::mutex                          m_mutexPixelsQueue;
+    mutable std::condition_variable_any         m_conditionPixelsAvailable;
 
     // storing computed pixels to draw
-    std::queue<Pixel>    m_pixels;      // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
+    std::queue<Pixel>                           m_pixels;      
+                                        // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
                                         // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
                                         // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
     

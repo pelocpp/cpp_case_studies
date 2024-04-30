@@ -19,17 +19,15 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         // cancel all threads, if any existing
         mandelbrot.cancelActiveThreadsIfAny();
 
-
         RECT rect;
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
-        mandelbrot.setHWND(hWnd);
+        mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
         ::OutputDebugString(L"< WM_SIZE");
     }
-
-        break;
+    break;
 
     case WM_PAINT:
     {
@@ -37,7 +35,7 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
 
         ::ValidateRect(hWnd, NULL);
 
-        mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
+        mandelbrot.setHWND(hWnd);
         mandelbrot.prepareAllThreads(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
         mandelbrot.launchAllThreads();  // launch calculation threads and single drawing thread
 
@@ -51,19 +49,6 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
 
         // cancel active threads, if any existing
         mandelbrot.cancelActiveThreadsIfAny();
-        
-        // 
-        // 
-        //{
-        //    std::lock_guard<std::mutex> guard{ mandelbrot.m_mutexDone };
-
-        //    if (!mandelbrot.m_done) {
-
-        //        mandelbrot.requestStop();
-        //        mandelbrot.waitAllThreadsDone();
-        //       // mandelbrot.m_done = true;   // nicht notwendig
-        //    }
-        //}
 
         ::PostQuitMessage(0);
 
