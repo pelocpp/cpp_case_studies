@@ -38,13 +38,17 @@ void MandelbrotProducerConsumerBasedApproach::setHWND(HWND hWnd)
 {
     m_hWnd = hWnd;
     m_hDC = ::GetDC(m_hWnd);
+    if (m_hDC == NULL) {
+        ::OutputDebugString(L"> GetDC: ERROR ###############################################################################");
+    }
 }
 
 void MandelbrotProducerConsumerBasedApproach::addPixel(Pixel pixel)
 {
     std::unique_lock<std::mutex> lock{ m_mutexPixelsQueue };
 
-    m_pixels.push(pixel);
+    // m_pixels.push(pixel);
+    m_pixels.push_back(pixel);
 
     size_t currentSize = m_pixels.size();
 
@@ -126,7 +130,9 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
     WCHAR szText[128];
     size_t numPixels{};
 
-    std::queue<Pixel> pixels;
+    // std::queue<Pixel> pixels;
+    std::deque<Pixel> pixels;
+
 
     while (! token.stop_requested())
     {
@@ -157,7 +163,8 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
         while (!pixels.empty() && !token.stop_requested()) {
 
             Pixel p = pixels.front();
-            pixels.pop();
+            // pixels.pop();
+            pixels.pop_front();
 
             // end of queue reached?
             if (p.m_x == SIZE_MAX && p.m_y == SIZE_MAX) {
@@ -185,6 +192,13 @@ loopEnd:
     }
 
     ::swprintf(szText, 128, L"< STD::JTHREAD: drawQueuedPixels - drawed %zu pixels", numPixels);
+    ::OutputDebugString(szText);
+
+    // calculating time
+    std::chrono::high_resolution_clock::time_point endTime{ std::chrono::high_resolution_clock::now() };
+    double msecs = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(endTime - m_begin).count();
+    msecs /= 1000.0;
+    ::swprintf(szText, 128, L"> Drawing took %lf seconds.", msecs);
     ::OutputDebugString(szText);
 
     return numPixels;
@@ -243,12 +257,20 @@ void MandelbrotProducerConsumerBasedApproach::prepareDrawingThread() {
     m_drawingTask = std::move (task);
     m_drawingFuture = m_drawingTask.get_future();
 
-    // need "swap idiom" to clear pixels queue
+    //// need "swap idiom" to clear pixels queue
+    //{
+    //    std::lock_guard<std::mutex> lock{ m_mutexPixelsQueue };
+
+    //    //std::queue<Pixel> empty{};
+    //    std::deque<Pixel> empty{};
+    //    std::swap(m_pixels, empty);
+    //}
+
+    // need thread-safe context to clear the pixels queue
     {
         std::lock_guard<std::mutex> lock{ m_mutexPixelsQueue };
 
-        std::queue<Pixel> empty{};
-        std::swap(m_pixels, empty);
+        m_pixels.clear();
     }
 }
 
@@ -264,6 +286,10 @@ void MandelbrotProducerConsumerBasedApproach::launchAllThreads()
 
     // creating a new std::stop_source object for this execution cycle
     m_source = std::stop_source{};
+
+    // std::chrono::system_clock::time_point m_begin = std::chrono::system_clock::now();
+     m_begin = std::chrono::high_resolution_clock::now();
+
 
     // need stop_token object
     std::stop_token token{ m_source.get_token() };

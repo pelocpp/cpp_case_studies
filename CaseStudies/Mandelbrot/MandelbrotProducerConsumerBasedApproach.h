@@ -52,16 +52,25 @@ private:
     mutable std::condition_variable_any         m_conditionPixelsAvailable;
 
     // storing computed pixels to draw
-    std::queue<Pixel>                           m_pixels;      
-                                        // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
-                                        // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
-                                        // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
+    //std::queue<Pixel>                           m_pixels;      
+                                                // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
+                                                // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
+                                                // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
     
+
+    std::deque<Pixel>                           m_pixels;
+
+
     // data to handle premature ending of worker threads
     mutable std::mutex   m_mutexDone;
     std::stop_source     m_source;
     int                  m_doneRectangles;
     bool                 m_done;
+
+    // stop watch
+    //std::chrono::system_clock::time_point m_begin;
+    std::chrono::high_resolution_clock::time_point m_begin;
+
 
 public:
     // c'tor(s)

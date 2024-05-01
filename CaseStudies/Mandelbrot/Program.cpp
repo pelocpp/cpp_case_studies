@@ -36,7 +36,18 @@
 // Da gibt es noch einen sporadischen Fehler: Das Bild ist "gesprengelt" ...
 // Hmmm, sieht nach einem ungültigen HWND ODER HDC aus ??????????????????
 
+// Der Fehler könnte sein, das ReleaseDC in einem anderen Thread-Kontext aufgerufen wird !!!!!!!!!
+// Hmmm, da müsste man eine NAchricht einschleusen ..
 
+// DAs geht mit SendMessage:
+
+// Sending a Message
+// The SendMessage function is used to send a message directly to a window procedure.SendMessage calls a window procedure and waits for that procedure to process the message and return a result.
+
+
+
+
+// Die ganzen ODS Ausgaben müssen ein \n haben, sonst geht es im Output Fenter nicht !!!!!
 
 // =====================================================================================
 
