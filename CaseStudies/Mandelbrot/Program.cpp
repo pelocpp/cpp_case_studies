@@ -4,16 +4,20 @@
 
 // =====================================================================================
 
-// TBD: Die einzelnen Varianten können mit constexpr auskommentiert werden !!!
 
-// TBD: Irgendeine Variante könnte std::latch anwenden !!!
+// Das ganze Projekt wegen dieser beschisssenen Warnung neu aufsetzen:
+// macro expansion producing 'defined' has undefined behavior
+
 
 // TBD: Werden die Arrays speicher konform initialisiert ?????????????
 
 // TODO: Geht diese Palette nicht mit constexpr ?????????  Da gibt es Linker Error ....
+// Die Palette muss auf jeden Fall auf constexpr umgestellt werden !!!!!!!!!!!!!!!!!!
 
-// TODO: Hmmm, viele long Variablen köntnen size_t sein .
- 
+
+// 
+// TODO: Hmmm, viele long Variablen könnten size_t sein ...
+//  
 // TODO: jede Menge const einfügen .........
 
 // RANGE BASED For-Loop
@@ -28,14 +32,10 @@
 
 // vorsicht ergeben lokale constexpr Variablen Sinn ...............
 
-// Die letzte Variante stürzt ab, wenn man Close drückt ...
+// Zur Produce-Consumer Variante:
+// Da gibt es noch einen sporadischen Fehler: Das Bild ist "gesprengelt" ...
+// Hmmm, sieht nach einem ungültigen HWND ODER HDC aus ??????????????????
 
-
-// Das geht auch mit einer Call back Funktion ... und dann ohne Polling ...
-//             // premature end of drawing
-//if (token.stop_requested()) {
-//    goto m_label;
-//}
 
 
 // =====================================================================================

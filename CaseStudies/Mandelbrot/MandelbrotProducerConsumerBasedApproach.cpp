@@ -128,22 +128,14 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
 
     std::queue<Pixel> pixels;
 
-    // Uhhhhhhhhh - wie wird diese Endlos Schleife sauber beendet ?????????????????????
-    // while (! token.stop_requested()) {
-    while (true)
+    while (! token.stop_requested())
     {
-        if (token.stop_requested()) {
-            ::OutputDebugString(L"> computePixelsOfRectangle: Stop Requested (1) ################################");
-            break;
-        }
- 
         // RAII
         {
             std::unique_lock guard{ m_mutexPixelsQueue };
 
             // wait for next available pixels
-            // TO BE DONE: Der Name stopRequested ist vermutlich schlecht --- logisch falsch herum
-            bool stopRequested{
+            bool stopRequested {
                 m_conditionPixelsAvailable.wait(
                     guard,
                     token,
@@ -151,18 +143,18 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
                 )
             };
 
-            //  DIESER ZUGRIFF IST PROBLEMATISCH : ich checke jetzt die Condition ?!?!?!?!?!
+            // Komme mit Rückgabewert stopRequested nicht zurecht, checke jetzt die Condition ?!?!?!?!?!
             if (m_pixels.size() == 0) {
-                ::swprintf(szText, 128, L"> drawQueuedPixels:         Stop Requested (2) ################################ - drawn so far: %zu", numPixels);
+                ::swprintf(szText, 128, L"> drawQueuedPixels: Stop Requested (2) #### - drawn so far: %zu", numPixels);
                 ::OutputDebugString(szText);
                 break;
             }
-                 
+
             // double buffer pattern
             std::swap(pixels, m_pixels);
         }
 
-        while (! pixels.empty()) { 
+        while (!pixels.empty() && !token.stop_requested()) {
 
             Pixel p = pixels.front();
             pixels.pop();
@@ -178,7 +170,7 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
         }
     }
 
-    loopEnd:
+loopEnd:
 
     // there is only a single drawing thread - being responsible for the graphics context
     ::ReleaseDC(m_hWnd, m_hDC);
@@ -192,12 +184,11 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
         }
     }
 
-    ::swprintf(szText, 64, L"< STD::JTHREAD: drawQueuedPixels - drawed %zu pixels", numPixels);
+    ::swprintf(szText, 128, L"< STD::JTHREAD: drawQueuedPixels - drawed %zu pixels", numPixels);
     ::OutputDebugString(szText);
 
     return numPixels;
 }
-
 
 void MandelbrotProducerConsumerBasedApproach::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
 {
@@ -282,23 +273,20 @@ void MandelbrotProducerConsumerBasedApproach::launchAllThreads()
     launchDrawingThread(token);
 }
 
-// TODO: Da müssen Cols und Rows übergeben werden !!!!!
-// TODO: dAS SOLLte ohne 2 for-Schleifen gehen !!!
-// Hmmm, das Problem ist das mit dem Zugriff auf m_rects[j][i] ...
 void MandelbrotProducerConsumerBasedApproach::launchCalculationThreads(std::stop_token token) {
 
     // execute each task in a separate thread
-    for (int j = 0; j < MandelbrotRectangles::NUM_ROWS; j++)
+    for (const auto& row : m_rects)
     {
-        for (int i = 0; i < MandelbrotRectangles::NUM_COLS; i++)
-        {
+        for (const auto& rect : row) {
+
             std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)> task{
                 std::move(m_calculationTasks.front())
             };
 
             m_calculationTasks.pop_front();
 
-            std::jthread t{ std::move(task), token, m_rects[j][i], m_clientWidth, m_clientHeight };
+            std::jthread t{ std::move(task), token, rect, m_clientWidth, m_clientHeight };
             t.detach();
         }
     }
