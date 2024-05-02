@@ -5,6 +5,25 @@
 // =====================================================================================
 
 
+// Zur Produce-Consumer Variante:
+// Da gibt es noch einen sporadischen Fehler: Das Bild ist "gesprengelt" ...
+// Hmmm, sieht nach einem ungültigen HWND ODER HDC aus ??????????????????
+
+// URSACHE: Möglicherweise:
+
+/*
+
+ReleaseDC must be called from the same thread that called GetDC.
+
+https://stackoverflow.com/questions/42028838/drawing-to-window-from-child-thread
+
+
+*/
+
+
+// =====================================================================================
+
+
 // Das ganze Projekt wegen dieser beschisssenen Warnung neu aufsetzen:
 // macro expansion producing 'defined' has undefined behavior
 
@@ -32,10 +51,6 @@
 
 // vorsicht ergeben lokale constexpr Variablen Sinn ...............
 
-// Zur Produce-Consumer Variante:
-// Da gibt es noch einen sporadischen Fehler: Das Bild ist "gesprengelt" ...
-// Hmmm, sieht nach einem ungültigen HWND ODER HDC aus ??????????????????
-
 // Der Fehler könnte sein, das ReleaseDC in einem anderen Thread-Kontext aufgerufen wird !!!!!!!!!
 // Hmmm, da müsste man eine NAchricht einschleusen ..
 
@@ -43,9 +58,6 @@
 
 // Sending a Message
 // The SendMessage function is used to send a message directly to a window procedure.SendMessage calls a window procedure and waits for that procedure to process the message and return a result.
-
-
-
 
 // Die ganzen ODS Ausgaben müssen ein \n haben, sonst geht es im Output Fenter nicht !!!!!
 
