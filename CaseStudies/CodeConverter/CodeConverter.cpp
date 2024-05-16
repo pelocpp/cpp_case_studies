@@ -24,7 +24,7 @@ namespace Clipboard {
     };
 
     // non RAII conformant solution
-    int transformText_Deprecated() {
+    static int transformText_Deprecated() {
 
         // open the clipboard, and empty it. 
         if (!::OpenClipboard((HWND) 0))
@@ -244,7 +244,7 @@ namespace Clipboard {
         }
     };
 
-    void transformText() {
+    static void transformText() {
         try
         {
             std::string code{};
