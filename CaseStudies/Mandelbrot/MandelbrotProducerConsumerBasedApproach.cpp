@@ -13,6 +13,7 @@
 #include <mutex>
 #include <thread>
 #include <chrono>
+#include <cassert>
 
 // ACHTUNG !!!!!!!!!!!!!!!!!!!!!!!
 
@@ -27,7 +28,7 @@ extern MandelbrotPalette g_palette;
 
 // TODO: Da fehlen Default Vorbelegungen ...
 MandelbrotProducerConsumerBasedApproach::MandelbrotProducerConsumerBasedApproach() 
-    : m_mutexPixelsQueue{}, m_hWnd{}, m_hDC{}
+    : m_mutexPixelsQueue{}, m_hWnd{}
 {
     // no pending threads yet
     m_doneRectangles = 0;
@@ -37,10 +38,10 @@ MandelbrotProducerConsumerBasedApproach::MandelbrotProducerConsumerBasedApproach
 void MandelbrotProducerConsumerBasedApproach::setHWND(HWND hWnd)
 {
     m_hWnd = hWnd;
-    m_hDC = ::GetDC(m_hWnd);
-    if (m_hDC == NULL) {
-        ::OutputDebugString(L"> GetDC: ERROR ###############################################################################");
-    }
+    //m_hDC = ::GetDC(m_hWnd);
+    //if (m_hDC == NULL) {
+    //    ::OutputDebugString(L"> GetDC: ERROR ###############################################################################");
+    //}
 }
 
 void MandelbrotProducerConsumerBasedApproach::addPixel(Pixel pixel)
@@ -133,6 +134,13 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
     // std::queue<Pixel> pixels;
     std::deque<Pixel> pixels;
 
+    // retrieve a handle to a device context for the client area of a specified window 
+    HDC hDC = ::GetDC(m_hWnd);
+    //if (hDC == NULL) {
+    //    ::OutputDebugString(L"> GetDC: ERROR ###############################################################################");
+    //}
+
+    assert(hDC != NULL);
 
     while (! token.stop_requested())
     {
@@ -171,7 +179,7 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
                 goto loopEnd;
             }
             else {
-                drawPixel(m_hDC, p.m_x, p.m_y, p.m_cr);
+                drawPixel(hDC, p.m_x, p.m_y, p.m_cr);
                 numPixels++;
             }
         }
@@ -180,7 +188,7 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
 loopEnd:
 
     // there is only a single drawing thread - being responsible for the graphics context
-    ::ReleaseDC(m_hWnd, m_hDC);
+    ::ReleaseDC(m_hWnd, hDC);
 
     {
         std::lock_guard<std::mutex> guard{ m_mutexDone };
@@ -206,7 +214,15 @@ loopEnd:
 
 void MandelbrotProducerConsumerBasedApproach::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
 {
-    ::SetPixelV(hdc, (int) x, (int) y, color);
+    bool succeeded = ::SetPixelV(hdc, (int) x, (int) y, color);
+    // COLORREF col = ::SetPixel(hdc, (int) x, (int) y, color);
+
+    //assert(succeeded == true);
+
+   if (! succeeded) {
+    ::OutputDebugString(L"> SetPixelV: ####################################################################################");
+   }
+
 }
 
 void MandelbrotProducerConsumerBasedApproach::prepareAllThreads(int rows, int cols)

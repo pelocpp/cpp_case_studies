@@ -37,7 +37,7 @@ class MandelbrotProducerConsumerBasedApproach : public MandelbrotBase
 private:
     // GDI specific data
     HWND m_hWnd;
-    HDC  m_hDC;
+    //HDC  m_hDC;
 
     // handling of miscellaneous packaged tasks (computation and drawing)
     using ComputationTaskSignature = std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>;
