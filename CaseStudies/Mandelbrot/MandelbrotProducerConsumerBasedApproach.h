@@ -7,15 +7,14 @@
 
 #include "MandelbrotBase.h"
 
-//#include <thread>
 #include <mutex>
+#include <atomic>
 #include <latch>
 #include <deque>
 #include <queue>
 #include <future>
 #include <condition_variable>
 #include <stop_token>
-
 
 struct Pixel
 {
@@ -58,19 +57,25 @@ private:
                                                 // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
     
 
-    std::deque<Pixel>                           m_pixels;
+    std::deque<Pixel>                           m_pixelsQueue;
 
 
     // data to handle premature ending of worker threads
-    mutable std::mutex   m_mutexDone;
+    mutable std::mutex   m_mutexDone;             // <========== da brauche ich vielleicht 2 verschiedene Mutexe !!!!!
     std::stop_source     m_source;
-    int                  m_doneRectangles;
-    bool                 m_done;
+    // size_t               m_doneRectangles;
+
+    bool                 m_drawingDone;
+    size_t               m_numRectanglesCalculated;
+    bool                 m_calculationsDone;
 
     // stop watch
     //std::chrono::system_clock::time_point m_begin;
     std::chrono::high_resolution_clock::time_point m_begin;
 
+    // assertions
+    std::atomic<size_t> m_activeCalcThreadCounter;
+    std::atomic<size_t> m_DrawThreadCounterIsDown;
 
 public:
     // c'tor(s)

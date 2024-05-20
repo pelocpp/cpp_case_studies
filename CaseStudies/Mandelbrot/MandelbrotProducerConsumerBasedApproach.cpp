@@ -31,29 +31,43 @@ MandelbrotProducerConsumerBasedApproach::MandelbrotProducerConsumerBasedApproach
     : m_mutexPixelsQueue{}, m_hWnd{}
 {
     // no pending threads yet
-    m_doneRectangles = 0;
-    m_done = true;
+    //m_doneRectangles = 0;
+    //m_done = true;
+    m_drawingDone = true;
+    m_numRectanglesCalculated = 0;
+    m_calculationsDone = true;
+
+    // assertions
+    m_activeCalcThreadCounter = 0;
+    m_DrawThreadCounterIsDown = 0;
 }
 
 void MandelbrotProducerConsumerBasedApproach::setHWND(HWND hWnd)
 {
     m_hWnd = hWnd;
-    //m_hDC = ::GetDC(m_hWnd);
-    //if (m_hDC == NULL) {
-    //    ::OutputDebugString(L"> GetDC: ERROR ###############################################################################");
-    //}
 }
 
 void MandelbrotProducerConsumerBasedApproach::addPixel(Pixel pixel)
 {
-    std::unique_lock<std::mutex> lock{ m_mutexPixelsQueue };
+    //std::unique_lock<std::mutex> lock{ m_mutexPixelsQueue };
 
-    // m_pixels.push(pixel);
-    m_pixels.push_back(pixel);
+    //m_pixelsQueue.push_back(pixel);
 
-    size_t currentSize = m_pixels.size();
+    //size_t currentSize = m_pixelsQueue.size();
 
-    lock.unlock();
+    //lock.unlock();
+
+    //if (currentSize > 10) {
+    //    m_conditionPixelsAvailable.notify_one();  // wakeup drawing thread, if waiting
+    //}
+
+    size_t currentSize{};
+
+    {
+        std::lock_guard<std::mutex> guard{ m_mutexPixelsQueue };
+        m_pixelsQueue.push_back(pixel);
+        currentSize = m_pixelsQueue.size();
+    }
 
     if (currentSize > 10) {
         m_conditionPixelsAvailable.notify_one();  // wakeup drawing thread, if waiting
@@ -63,6 +77,9 @@ void MandelbrotProducerConsumerBasedApproach::addPixel(Pixel pixel)
 size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle (std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight) {
 
     ::OutputDebugString(L"> STD::JTHREAD: computePixelsOfRectangle");
+
+    // prepare assertion
+    m_activeCalcThreadCounter++;
 
     size_t numPixels{};
 
@@ -96,20 +113,19 @@ size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle (std::s
 
 loopEnd:
 
-    bool done{};
-
+    bool calculationsDone{};
     {
         std::lock_guard<std::mutex> guard{ m_mutexDone };
 
-        m_doneRectangles++;
-        if (m_doneRectangles == MandelbrotRectangles::NUM_RECTS) {
-            m_done = true;
+        m_numRectanglesCalculated++;
+        if (m_numRectanglesCalculated == MandelbrotRectangles::NUM_RECTS) {
+            m_calculationsDone = true;
         }
 
-        done = m_done;
+        m_calculationsDone = m_calculationsDone;
     }
 
-    if (done) {
+    if (m_calculationsDone) {
 
         // last calculation threads inserts "end-of-pixels-queue" marker
         Pixel pixel{ SIZE_MAX, SIZE_MAX, 0 };
@@ -121,12 +137,18 @@ loopEnd:
     ::swprintf(szText, 64, L"< STD::JTHREAD: computePixelsOfRectangle - computed %zu pixels", numPixels);
     ::OutputDebugString(szText);
 
+    // prepare assertion
+    m_activeCalcThreadCounter--;
+
     return numPixels;
 }
 
 size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token token) {
 
     ::OutputDebugString(L"> STD::JTHREAD: drawQueuedPixels");
+
+    // assertions
+    m_DrawThreadCounterIsDown++;
 
     WCHAR szText[128];
     size_t numPixels{};
@@ -136,10 +158,6 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
 
     // retrieve a handle to a device context for the client area of a specified window 
     HDC hDC = ::GetDC(m_hWnd);
-    //if (hDC == NULL) {
-    //    ::OutputDebugString(L"> GetDC: ERROR ###############################################################################");
-    //}
-
     assert(hDC != NULL);
 
     while (! token.stop_requested())
@@ -153,29 +171,32 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
                 m_conditionPixelsAvailable.wait(
                     guard,
                     token,
-                    [&]() { return m_pixels.size() != 0; }
+                    [&]() { return m_pixelsQueue.size() != 0; }
                 )
             };
 
             // Komme mit Rückgabewert stopRequested nicht zurecht, checke jetzt die Condition ?!?!?!?!?!
-            if (m_pixels.size() == 0) {
+            if (m_pixelsQueue.size() == 0) {
                 ::swprintf(szText, 128, L"> drawQueuedPixels: Stop Requested (2) #### - drawn so far: %zu", numPixels);
                 ::OutputDebugString(szText);
                 break;
             }
 
             // double buffer pattern
-            std::swap(pixels, m_pixels);
+            std::swap(pixels, m_pixelsQueue);
         }
 
         while (!pixels.empty() && !token.stop_requested()) {
 
             Pixel p = pixels.front();
-            // pixels.pop();
             pixels.pop_front();
 
             // end of queue reached?
             if (p.m_x == SIZE_MAX && p.m_y == SIZE_MAX) {
+
+
+                m_drawingDone = true; // <========= Hmmm, der muss möglicherweise unter Thread Sperre laufen !!!!!
+
                 goto loopEnd;
             }
             else {
@@ -187,17 +208,18 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
 
 loopEnd:
 
-    // there is only a single drawing thread - being responsible for the graphics context
+    // there is only a single drawing thread, being responsible for the graphics context
     ::ReleaseDC(m_hWnd, hDC);
 
-    {
-        std::lock_guard<std::mutex> guard{ m_mutexDone };
+    // need to know if a 'cancelActiveThreadsIfAny' has to be fired
+    //{
+    //    std::lock_guard<std::mutex> guard{ m_mutexDone };
 
-        m_doneRectangles++;
-        if (m_doneRectangles == MandelbrotRectangles::NUM_RECTS) {
-            m_done = true;
-        }
-    }
+    //    m_doneRectangles++;
+    //    if (m_doneRectangles == MandelbrotRectangles::NUM_RECTS) {
+    //        m_done = true;
+    //    }
+    //}
 
     ::swprintf(szText, 128, L"< STD::JTHREAD: drawQueuedPixels - drawed %zu pixels", numPixels);
     ::OutputDebugString(szText);
@@ -208,6 +230,9 @@ loopEnd:
     msecs /= 1000.0;
     ::swprintf(szText, 128, L"> Drawing took %lf seconds.", msecs);
     ::OutputDebugString(szText);
+
+    // assertions
+    m_DrawThreadCounterIsDown--;
 
     return numPixels;
 }
@@ -233,6 +258,19 @@ void MandelbrotProducerConsumerBasedApproach::prepareAllThreads(int rows, int co
 }
 
 void MandelbrotProducerConsumerBasedApproach::prepareCalculationThreads(int rows, int cols) {
+
+    // test assertion
+    //assert(m_activeCalcThreadCounter == 0);
+    //assert(m_DrawThreadCounterIsDown == 0);
+
+    //size_t currentPixelsQueueSize{};
+    //{
+    //    std::lock_guard<std::mutex> lock{ m_mutexPixelsQueue };
+    //    currentPixelsQueueSize = m_pixelsQueue.size();
+    //}
+    //assert(currentPixelsQueueSize == 0);
+
+    // ---------------------------------------------------------------------
 
     // setup tasks
     m_calculationTasks.clear();
@@ -286,7 +324,9 @@ void MandelbrotProducerConsumerBasedApproach::prepareDrawingThread() {
     {
         std::lock_guard<std::mutex> lock{ m_mutexPixelsQueue };
 
-        m_pixels.clear();
+        m_pixelsQueue.clear();
+
+        m_drawingDone = false;
     }
 }
 
@@ -296,16 +336,17 @@ void MandelbrotProducerConsumerBasedApproach::launchAllThreads()
     {
         std::lock_guard<std::mutex> guard{ m_mutexDone };
 
-        m_done = false;
-        m_doneRectangles = 0;
+        m_drawingDone = false;
+
+        m_numRectanglesCalculated = 0;
+        m_calculationsDone = false;
     }
 
     // creating a new std::stop_source object for this execution cycle
     m_source = std::stop_source{};
 
     // std::chrono::system_clock::time_point m_begin = std::chrono::system_clock::now();
-     m_begin = std::chrono::high_resolution_clock::now();
-
+    m_begin = std::chrono::high_resolution_clock::now();
 
     // need stop_token object
     std::stop_token token{ m_source.get_token() };
@@ -342,20 +383,24 @@ void MandelbrotProducerConsumerBasedApproach::launchDrawingThread(std::stop_toke
 
 void MandelbrotProducerConsumerBasedApproach::cancelActiveThreadsIfAny()
 {
-    bool done;
+    bool drawingDone;
+
+    ::OutputDebugString(L"< cancelActiveThreadsIfAny");
 
     {
         // need thread safe context to read current value of 'm_done'
         std::lock_guard<std::mutex> guard{ m_mutexDone };
-        done = m_done;
+        drawingDone = m_drawingDone;
     }
 
-    if (!done) {
+    if (!drawingDone) {
 
         requestStop();
         waitAllThreadsDone();
-        m_done = true;
+        m_drawingDone = true;   // Überflüssig, wird beim Neustart gesetzt
     }
+
+    ::OutputDebugString(L"> cancelActiveThreadsIfAny");
 }
 
 void MandelbrotProducerConsumerBasedApproach::requestStop() 

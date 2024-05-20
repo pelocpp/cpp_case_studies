@@ -18,7 +18,7 @@ enum class MandelbrotVersion
 };
 
 constexpr MandelbrotVersion getVersion() {
-    return MandelbrotVersion::RectanglesParallelNonBlockingClassic;
+    return MandelbrotVersion::ProducerConsumerBasedApproach;
 }
 
 // =====================================================================================
@@ -55,8 +55,8 @@ struct MandelbrotRectangles
 
 struct MandelbrotWindowDimension
 {
-    static constexpr size_t WindowHeight{ 3 * 200 };
-    static constexpr size_t WindowWidth{ 3 * 250 };
+    static constexpr size_t WindowHeight{ 2 * 200 };
+    static constexpr size_t WindowWidth{ 2 * 250 };
 };
 
 // =====================================================================================
