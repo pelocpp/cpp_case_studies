@@ -114,18 +114,19 @@ size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle (std::s
 loopEnd:
 
     bool calculationsDone{};
+
     {
-        std::lock_guard<std::mutex> guard{ m_mutexDone };
+        std::lock_guard<std::mutex> guard{ m_mutexRectanglesCalculated };
 
         m_numRectanglesCalculated++;
         if (m_numRectanglesCalculated == MandelbrotRectangles::NUM_RECTS) {
             m_calculationsDone = true;
         }
 
-        m_calculationsDone = m_calculationsDone;
+        calculationsDone = m_calculationsDone;
     }
 
-    if (m_calculationsDone) {
+    if (calculationsDone) {
 
         // last calculation threads inserts "end-of-pixels-queue" marker
         Pixel pixel{ SIZE_MAX, SIZE_MAX, 0 };
@@ -194,8 +195,10 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
             // end of queue reached?
             if (p.m_x == SIZE_MAX && p.m_y == SIZE_MAX) {
 
-
-                m_drawingDone = true; // <========= Hmmm, der muss möglicherweise unter Thread Sperre laufen !!!!!
+                {
+                    std::lock_guard<std::mutex> guard{ m_mutexDrawingDone };
+                    m_drawingDone = true; // <========= Hmmm, der muss möglicherweise unter Thread Sperre laufen !!!!!
+                }
 
                 goto loopEnd;
             }
@@ -242,18 +245,16 @@ void MandelbrotProducerConsumerBasedApproach::drawPixel(HDC hdc, size_t x, size_
     bool succeeded = ::SetPixelV(hdc, (int) x, (int) y, color);
     // COLORREF col = ::SetPixel(hdc, (int) x, (int) y, color);
 
-    //assert(succeeded == true);
-
+    // UNgelöst: Warum schlägt SetPixelV fehlt
+    // assert(succeeded == true);
    if (! succeeded) {
     ::OutputDebugString(L"> SetPixelV: ####################################################################################");
    }
-
 }
 
 void MandelbrotProducerConsumerBasedApproach::prepareAllThreads(int rows, int cols)
 {
     prepareCalculationThreads(rows, cols);
-    
     prepareDrawingThread();
 }
 
@@ -265,7 +266,7 @@ void MandelbrotProducerConsumerBasedApproach::prepareCalculationThreads(int rows
 
     //size_t currentPixelsQueueSize{};
     //{
-    //    std::lock_guard<std::mutex> lock{ m_mutexPixelsQueue };
+    //    std::lock_guard<std::mutex> guard{ m_mutexPixelsQueue };
     //    currentPixelsQueueSize = m_pixelsQueue.size();
     //}
     //assert(currentPixelsQueueSize == 0);
@@ -310,34 +311,25 @@ void MandelbrotProducerConsumerBasedApproach::prepareDrawingThread() {
 
     m_drawingTask = std::move (task);
     m_drawingFuture = m_drawingTask.get_future();
-
-    //// need "swap idiom" to clear pixels queue
-    //{
-    //    std::lock_guard<std::mutex> lock{ m_mutexPixelsQueue };
-
-    //    //std::queue<Pixel> empty{};
-    //    std::deque<Pixel> empty{};
-    //    std::swap(m_pixels, empty);
-    //}
-
-    // need thread-safe context to clear the pixels queue
-    {
-        std::lock_guard<std::mutex> lock{ m_mutexPixelsQueue };
-
-        m_pixelsQueue.clear();
-
-        m_drawingDone = false;
-    }
 }
 
 void MandelbrotProducerConsumerBasedApproach::launchAllThreads()
 {
-    // starting another phase of calculation and drawing pixels
+    // clear queue of computed pixels
     {
-        std::lock_guard<std::mutex> guard{ m_mutexDone };
+        std::lock_guard<std::mutex> guard{ m_mutexPixelsQueue };
+        m_pixelsQueue.clear();
+    }
 
+    // clear boolean flag to observe drawing thread
+    {
+        std::lock_guard<std::mutex> guard{ m_mutexDrawingDone };
         m_drawingDone = false;
+    }
 
+    // reset counter variable of so far computed rextangles
+    {
+        std::lock_guard<std::mutex> guard{ m_mutexRectanglesCalculated };
         m_numRectanglesCalculated = 0;
         m_calculationsDone = false;
     }
@@ -389,15 +381,14 @@ void MandelbrotProducerConsumerBasedApproach::cancelActiveThreadsIfAny()
 
     {
         // need thread safe context to read current value of 'm_done'
-        std::lock_guard<std::mutex> guard{ m_mutexDone };
+        std::lock_guard<std::mutex> guard{ m_mutexDrawingDone };
         drawingDone = m_drawingDone;
     }
 
-    if (!drawingDone) {
+    if (! drawingDone) {
 
         requestStop();
         waitAllThreadsDone();
-        m_drawingDone = true;   // Überflüssig, wird beim Neustart gesetzt
     }
 
     ::OutputDebugString(L"> cancelActiveThreadsIfAny");

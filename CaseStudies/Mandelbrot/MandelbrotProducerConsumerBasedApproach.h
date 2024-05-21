@@ -35,28 +35,24 @@ class MandelbrotProducerConsumerBasedApproach : public MandelbrotBase
 {
 private:
     // GDI specific data
-    HWND m_hWnd;
-    //HDC  m_hDC;
+    HWND                                        m_hWnd;
 
     // handling of miscellaneous packaged tasks (computation and drawing)
     using ComputationTaskSignature = std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>;
+    using DrawingTaskSignature = std::packaged_task<size_t(std::stop_token)>;
 
     std::deque<ComputationTaskSignature>        m_calculationTasks;
     std::deque<std::future<size_t>>             m_calculationFutures;
-    std::packaged_task<size_t(std::stop_token)> m_drawingTask;
+    DrawingTaskSignature                        m_drawingTask;
     std::future<size_t>                         m_drawingFuture;
 
-    // concurrency data to handle "Producer-Consumer" implementation
+    // concurrency data to secure "Producer-Consumer" implementation
     mutable std::mutex                          m_mutexPixelsQueue;
     mutable std::condition_variable_any         m_conditionPixelsAvailable;
 
     // storing computed pixels to draw
-    //std::queue<Pixel>                           m_pixels;      
-                                                // !!!!!!!!!!!!!!!!!!! ANDERER Container ?!?!?!?!?
                                                 // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
                                                 // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
-    
-
     std::deque<Pixel>                           m_pixelsQueue;
 
 
@@ -65,9 +61,15 @@ private:
     std::stop_source     m_source;
     // size_t               m_doneRectangles;
 
-    bool                 m_drawingDone;
-    size_t               m_numRectanglesCalculated;
-    bool                 m_calculationsDone;
+    // count number of rectangles being calculated
+    mutable std::mutex                         m_mutexRectanglesCalculated;
+    size_t                                     m_numRectanglesCalculated;
+    bool                                       m_calculationsDone;
+
+
+    // watching a single thread drawing pixels
+    mutable std::mutex                         m_mutexDrawingDone;
+    bool                                       m_drawingDone;
 
     // stop watch
     //std::chrono::system_clock::time_point m_begin;
