@@ -421,7 +421,7 @@ void MandelbrotProducerConsumerBasedApproach::waitAllThreadsDone()
     // wait for the end of all calculation threads
     while (! m_calculationFutures.empty()) {
 
-        std::future<size_t> future = std::move(m_calculationFutures.front());
+        std::future<size_t> future{ std::move(m_calculationFutures.front()) };
         m_calculationFutures.pop_front();
 
         ::OutputDebugString(L"  waiting end of calculation thread ...");

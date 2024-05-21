@@ -31,11 +31,10 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         ::ValidateRect(hWnd, NULL);
 
         // cancel all drawing threads, if existing
-        size_t doneRectangles = mandelbrot.getDoneRectangles();
+        size_t doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
             ::OutputDebugString(L"> Requesting Abort ...");
-
             mandelbrot.requestStop();
             mandelbrot.waitRectanglesDone();
         }
@@ -43,9 +42,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         // launch new drawing threads
         ::OutputDebugString(L"> Launching new drawing threads ...");
 
-        mandelbrot.resetDoneRectangles();
-
-        HDC hDC = ::GetDC(hWnd);
+        HDC hDC{ ::GetDC(hWnd) };
         mandelbrot.startPaintingRectanglesAsync(hWnd, hDC);
 
         ::OutputDebugString(L"< WM_PAINT");
@@ -57,10 +54,11 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         ::OutputDebugString(L"> WM_DESTROY");
 
         // cancel all drawing threads, if existing
-        int doneRectangles{ mandelbrot.getDoneRectangles() };
+        size_t doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
-            mandelbrot.requestStop();  // Dieser Aufruf ist nicht getestet !!!!!!!!!!!!!!!!!!!!!!!!
+            ::OutputDebugString(L"> Requesting Abort ...");
+            mandelbrot.requestStop();
             mandelbrot.waitRectanglesDone();
         }
 

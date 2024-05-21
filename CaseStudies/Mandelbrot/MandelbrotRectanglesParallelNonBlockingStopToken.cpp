@@ -17,7 +17,9 @@
 extern MandelbrotPalette g_palette;
 
 // c'tor(s)
-MandelbrotRectanglesParallelNonBlockingStopToken::MandelbrotRectanglesParallelNonBlockingStopToken() {}
+MandelbrotRectanglesParallelNonBlockingStopToken::MandelbrotRectanglesParallelNonBlockingStopToken()
+    : m_doneRectangles{ MandelbrotRectangles::NUM_RECTS }
+{}
 
 //public interface
 void MandelbrotRectanglesParallelNonBlockingStopToken::startPaintingRectanglesAsync(HWND hWnd, HDC hDC) {
@@ -79,7 +81,7 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::waitRectanglesDone() {
 
     while (!m_futures.empty()) {
 
-        std::future<size_t> future = std::move(m_futures.front());
+        std::future<size_t> future{ std::move(m_futures.front()) };
         m_futures.pop_front();
         size_t numPixels = future.get();
 
@@ -94,6 +96,7 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::waitRectanglesDone() {
 size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::stop_token token, HWND hWnd, HDC hDC, struct Rectangle rect) {
 
     size_t numPixels{};
+    bool prematureEndOfPainting{ false };
 
     for (size_t y{ rect.m_top }; y != rect.m_bottom; y++)
     {
@@ -101,6 +104,7 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::sto
         {
             // premature end of drawing
             if (token.stop_requested()) {
+                prematureEndOfPainting = true;
                 goto loopEnd;
             }
 
@@ -112,7 +116,7 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::sto
             COLORREF color{ g_palette[iterations - 1] };
             ++numPixels;
 
-            drawPixel(hDC, (int)x, (int)y, color);
+            drawPixel(hDC, (int) x, (int) y, color);
         }
     }
 
@@ -123,13 +127,21 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::sto
         ::ReleaseDC(hWnd, hDC);
     }
 
+    if (!prematureEndOfPainting) {
+
+        // print some statistics
+        WCHAR szText[64];
+        ::swprintf(szText, 64, L"   ... %zu pixels painted", numPixels);
+        OutputDebugString(szText);
+    }
+    
     return numPixels;
 }
 
 void MandelbrotRectanglesParallelNonBlockingStopToken::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
 {
     // RAII lock
-    std::lock_guard<std::mutex> lock{ m_mutex };
+    std::lock_guard<std::mutex> guard{ m_mutex };
 
     ::SetPixelV(hdc, (int) x, (int) y, color);
 }

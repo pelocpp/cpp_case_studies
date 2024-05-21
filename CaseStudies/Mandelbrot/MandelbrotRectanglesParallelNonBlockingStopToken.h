@@ -16,24 +16,24 @@
 class MandelbrotRectanglesParallelNonBlockingStopToken : public MandelbrotBase
 {
 private:
-    mutable std::mutex m_mutex;
+    mutable std::mutex    m_mutex;
 
-    std::atomic<int> m_doneRectangles;
-    std::stop_source m_source;
+    std::atomic<size_t>   m_doneRectangles;
+    std::stop_source      m_source;
 
     std::deque<std::packaged_task<size_t(std::stop_token, HWND, HDC, struct Rectangle)>> m_tasks;
-    std::deque<std::future<size_t>> m_futures;
+    std::deque<std::future<size_t>>                                                      m_futures;
 
 public:
     // c'tor(s)
     MandelbrotRectanglesParallelNonBlockingStopToken();
 
     // getter / setter
-    int  getDoneRectangles()   { return m_doneRectangles; }
-    void incDoneRectangles()   { ++m_doneRectangles; }
-    void resetDoneRectangles() { m_doneRectangles = 0; }
+    size_t getDoneRectangles()   { return m_doneRectangles; }
+    void   incDoneRectangles()   { ++m_doneRectangles; }
+    void   resetDoneRectangles() { m_doneRectangles = 0; }
 
-    void requestStop()        { m_source.request_stop(); }
+    void   requestStop()         { m_source.request_stop(); }
 
 public:
     // public interface
@@ -51,4 +51,3 @@ private:
 // =====================================================================================
 // End-of-File
 // =====================================================================================
-
