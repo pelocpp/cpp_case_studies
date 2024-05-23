@@ -65,7 +65,9 @@ void MandelbrotProducerConsumerBasedApproach::addPixel(Pixel pixel)
 
     {
         std::lock_guard<std::mutex> guard{ m_mutexPixelsQueue };
-        m_pixelsQueue.push_back(pixel);
+        
+        // m_pixelsQueue.push_back(pixel);
+        m_pixelsQueue.push(pixel);
         currentSize = m_pixelsQueue.size();
     }
 
@@ -155,7 +157,8 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
     size_t numPixels{};
 
     // std::queue<Pixel> pixels;
-    std::deque<Pixel> pixels;
+    // std::deque<Pixel> pixels;
+    std::stack<Pixel> pixels;
 
     // retrieve a handle to a device context for the client area of a specified window 
     HDC hDC = ::GetDC(m_hWnd);
@@ -189,9 +192,12 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
 
         while (!pixels.empty() && !token.stop_requested()) {
 
-            Pixel p = pixels.front();
-            pixels.pop_front();
+            //Pixel p = pixels.front();
+            //pixels.pop_front();
 
+            Pixel p = pixels.top();
+            pixels.pop();
+            
             // end of queue reached?
             if (p.m_x == SIZE_MAX && p.m_y == SIZE_MAX) {
 
@@ -318,7 +324,11 @@ void MandelbrotProducerConsumerBasedApproach::launchAllThreads()
     // clear queue of computed pixels
     {
         std::lock_guard<std::mutex> guard{ m_mutexPixelsQueue };
-        m_pixelsQueue.clear();
+        
+        // m_pixelsQueue.clear();
+        
+        std::stack<Pixel> empty;
+        std::swap(m_pixelsQueue, empty);
     }
 
     // clear boolean flag to observe drawing thread

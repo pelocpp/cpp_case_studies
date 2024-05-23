@@ -12,6 +12,7 @@
 #include <latch>
 #include <deque>
 #include <queue>
+#include <stack>
 #include <future>
 #include <condition_variable>
 #include <stop_token>
@@ -53,7 +54,9 @@ private:
     // storing computed pixels to draw
                                                 // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
                                                 // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
-    std::deque<Pixel>                           m_pixelsQueue;
+    //std::deque<Pixel>                           m_pixelsQueue;
+    std::stack<Pixel>                           m_pixelsQueue;
+
 
 
     // data to handle premature ending of worker threads
