@@ -127,8 +127,10 @@ loopEnd:
     if (calculationsDone) {
 
         // last calculation threads inserts "end-of-pixels-queue" marker
-        Pixel pixel{ SIZE_MAX, SIZE_MAX, 0 };
-        addPixel(pixel);
+        //Pixel pixel{ SIZE_MAX, SIZE_MAX, 0 };
+        //addPixel(pixel);
+
+        m_pixelsContainer.endOfCalculationReached();
     }
 
     // print some statistics
@@ -149,7 +151,9 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
     // std::queue<Pixel> pixels;
     // std::deque<Pixel> pixels;
     // std::stack<Pixel> pixels;
-    PixelContainerDeque pixelsContainer;
+    
+    //PixelContainerDeque pixelsContainer;
+    PixelContainerStack pixelsContainer;
 
     // retrieve a handle to a device context for the client area of a specified window 
     HDC hDC = ::GetDC(m_hWnd);
@@ -160,19 +164,21 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
         // RAII
         {
             // std::unique_lock guard{ m_mutexPixelsQueue };
-            std::unique_lock guard{ pixelsContainer.mutex() };
+            std::unique_lock guard{ m_pixelsContainer.mutex() };
 
             // wait for next available pixels
             bool stopRequested {
                 m_conditionPixelsAvailable.wait(
                     guard,
                     token,
-                    [&]() { return pixelsContainer.size() != 0; }
+                    [&] () { 
+                        return m_pixelsContainer.size() != 0;
+                    }
                 )
             };
 
             // Komme mit Rückgabewert stopRequested nicht zurecht, checke jetzt die Condition ?!?!?!?!?!
-            if (pixelsContainer.size() == 0) {
+            if (m_pixelsContainer.size() == 0) {
                 ::swprintf(szText, 128, L"> drawQueuedPixels: Stop Requested (2) #### - drawn so far: %zu", numPixels);
                 ::OutputDebugString(szText);
                 break;
@@ -181,18 +187,12 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
             // double buffer pattern
             // std::swap(pixels, m_pixelsQueue);
             //using std::swap;
-            pixelsContainer.swap(m_pixelsContainer);
+            m_pixelsContainer.swap(pixelsContainer);
         }
 
-        while (m_pixelsContainer.size() != 0 && !token.stop_requested()) {
+        while (pixelsContainer.size() != 0 && !token.stop_requested()) {
 
-            //Pixel p = pixels.front();
-            //pixels.pop_front();
-
-            //Pixel p = pixels.top();
-            //pixels.pop();
-
-            Pixel p = m_pixelsContainer.remove();
+            Pixel p = pixelsContainer.remove();
             
             // end of queue reached?
             if (p.m_x == SIZE_MAX && p.m_y == SIZE_MAX) {

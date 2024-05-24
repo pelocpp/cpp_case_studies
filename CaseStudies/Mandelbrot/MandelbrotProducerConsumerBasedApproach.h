@@ -17,14 +17,6 @@
 #include <future>
 #include <condition_variable>
 #include <stop_token>
-//
-//struct Pixel
-//{
-//    size_t   m_x;
-//    size_t   m_y;
-//    COLORREF m_cr;
-//};
-
 
 // TO BE DONE: Welcher Container hat die schnellsten insert am Begin // entfernen am Ende
 
@@ -57,7 +49,7 @@ private:
                                                 // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
     //std::deque<Pixel>                           m_pixelsQueue;
     //std::stack<Pixel>                           m_pixelsQueue;
-    PixelContainerDeque                         m_pixelsContainer;
+    PixelContainerStack                         m_pixelsContainer;
 
 
 
