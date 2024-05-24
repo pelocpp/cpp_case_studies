@@ -6,6 +6,7 @@
 #pragma once
 
 #include "MandelbrotBase.h"
+#include "PixelContainer.h"
 
 #include <mutex>
 #include <atomic>
@@ -16,13 +17,13 @@
 #include <future>
 #include <condition_variable>
 #include <stop_token>
-
-struct Pixel
-{
-    size_t   m_x;
-    size_t   m_y;
-    COLORREF m_cr;
-};
+//
+//struct Pixel
+//{
+//    size_t   m_x;
+//    size_t   m_y;
+//    COLORREF m_cr;
+//};
 
 
 // TO BE DONE: Welcher Container hat die schnellsten insert am Begin // entfernen am Ende
@@ -48,14 +49,15 @@ private:
     std::future<size_t>                         m_drawingFuture;
 
     // concurrency data to secure "Producer-Consumer" implementation
-    mutable std::mutex                          m_mutexPixelsQueue;
+    //mutable std::mutex                          m_mutexPixelsQueue;
     mutable std::condition_variable_any         m_conditionPixelsAvailable;
 
     // storing computed pixels to draw
                                                 // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
                                                 // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
     //std::deque<Pixel>                           m_pixelsQueue;
-    std::stack<Pixel>                           m_pixelsQueue;
+    //std::stack<Pixel>                           m_pixelsQueue;
+    PixelContainerDeque                         m_pixelsContainer;
 
 
 
@@ -77,10 +79,6 @@ private:
     // stop watch
     //std::chrono::system_clock::time_point m_begin;
     std::chrono::high_resolution_clock::time_point m_begin;
-
-    // assertions
-    std::atomic<size_t> m_activeCalcThreadCounter;
-    std::atomic<size_t> m_DrawThreadCounterIsDown;
 
 public:
     // c'tor(s)
@@ -104,7 +102,7 @@ private:
     void requestStop();
     void waitAllThreadsDone();
 
-    void addPixel(Pixel);
+    void addPixel(const Pixel& pixel);
     size_t computePixelsOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight);
     size_t drawQueuedPixels(std::stop_token token);
     // void notify();

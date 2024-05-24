@@ -63,6 +63,9 @@
     <ClInclude Include="MandelbrotProducerConsumerBasedApproach.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Pixel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="MandelbrotProducerConsumerBasedApproach.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelContainer.h">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
