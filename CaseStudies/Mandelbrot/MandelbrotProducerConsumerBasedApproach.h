@@ -6,7 +6,7 @@
 #pragma once
 
 #include "MandelbrotBase.h"
-#include "PixelContainer.h"
+#include "Pixel.h"
 
 #include <mutex>
 #include <atomic>
@@ -41,17 +41,13 @@ private:
     std::future<size_t>                         m_drawingFuture;
 
     // concurrency data to secure "Producer-Consumer" implementation
-    //mutable std::mutex                          m_mutexPixelsQueue;
+    mutable std::mutex                          m_mutexPixelsQueue;
     mutable std::condition_variable_any         m_conditionPixelsAvailable;
 
     // storing computed pixels to draw
                                                 // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
                                                 // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
-    //std::deque<Pixel>                           m_pixelsQueue;
-    //std::stack<Pixel>                           m_pixelsQueue;
-    PixelContainerStack                         m_pixelsContainer;
-
-
+    std::deque<Pixel>                           m_pixelsQueue;
 
     // data to handle premature ending of worker threads
     mutable std::mutex   m_mutexDone;             // <========== da brauche ich vielleicht 2 verschiedene Mutexe !!!!!
@@ -69,7 +65,6 @@ private:
     bool                                       m_drawingDone;
 
     // stop watch
-    //std::chrono::system_clock::time_point m_begin;
     std::chrono::high_resolution_clock::time_point m_begin;
 
 public:
