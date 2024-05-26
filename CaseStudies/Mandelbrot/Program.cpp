@@ -20,6 +20,12 @@ https://stackoverflow.com/questions/42028838/drawing-to-window-from-child-thread
 
 */
 
+// =====================================================================================
+
+
+// OutputDebugString: Da muss ein \n hinzugefügt werden
+
+// Meinen eigenen Logger intergrieren ...
 
 // =====================================================================================
 

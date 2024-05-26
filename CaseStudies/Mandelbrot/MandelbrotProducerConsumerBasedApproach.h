@@ -9,7 +9,7 @@
 #include "Pixel.h"
 
 #include <mutex>
-#include <atomic>
+//#include <atomic>
 #include <latch>
 #include <deque>
 #include <queue>
