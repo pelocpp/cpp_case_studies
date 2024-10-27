@@ -13,16 +13,18 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlockingUsingLatch(HWND hWnd
     switch (message)
     {
     case WM_SIZE:
+    {
         ::OutputDebugString(L"> WM_SIZE");
 
-        RECT rect;
+        RECT rect{};
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
         mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
         ::OutputDebugString(L"< WM_SIZE");
-        break;
+    }
+    break;
 
     case WM_PAINT:
     {
@@ -31,7 +33,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlockingUsingLatch(HWND hWnd
         // register start time
         ULONGLONG dwStart{ ::GetTickCount64() };
 
-        PAINTSTRUCT ps;
+        PAINTSTRUCT ps{};
         HDC hdc = ::BeginPaint(hWnd, &ps);
         mandelbrot.paintRectanglesAsyncWithLatch(hdc);
         ::EndPaint(hWnd, &ps);
@@ -46,10 +48,12 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlockingUsingLatch(HWND hWnd
     break;
 
     case WM_DESTROY:
+    {
         ::OutputDebugString(L"> WM_DESTROY");
         ::PostQuitMessage(0);
         ::OutputDebugString(L"< WM_DESTROY");
-        break;
+    }
+    break;
 
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

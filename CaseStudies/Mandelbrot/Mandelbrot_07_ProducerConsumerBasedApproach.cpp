@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotProducerConsumerBasedApproach.cpp
+// Mandelbrot_07_ProducerConsumerBasedApproach.cpp
 // Variant 07: Parallel - Non Blocking - Producer Consumer Based Approach
 // =====================================================================================
 

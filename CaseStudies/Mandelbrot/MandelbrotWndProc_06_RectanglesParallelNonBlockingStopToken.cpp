@@ -16,7 +16,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
     {
         ::OutputDebugString(L"> WM_SIZE"); 
 
-        RECT rect;
+        RECT rect{};
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);

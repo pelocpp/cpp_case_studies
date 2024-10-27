@@ -80,7 +80,7 @@
     <ClCompile Include="MandelbrotWndProc_01_Basic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MandelbrotBasic.cpp">
+    <ClCompile Include="Mandelbrot_01_Basic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MandelbrotBase.h">
@@ -95,28 +95,28 @@
     <ClCompile Include="MandelbrotWndProc_02_RectanglesSequential.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MandelbrotRectanglesSequential.cpp">
+    <ClCompile Include="Mandelbrot_02_RectanglesSequential.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MandelbrotWndProc_03_RectanglesParallelBlocking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MandelbrotRectanglesParallelBlocking.cpp">
+    <ClCompile Include="Mandelbrot_03_RectanglesParallelBlocking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MandelbrotRectanglesParallelNonBlockingClassic.cpp">
+    <ClCompile Include="Mandelbrot_05_RectanglesParallelNonBlockingClassic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MandelbrotWndProc_05_RectanglesParallelNonBlockingClassic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MandelbrotRectanglesParallelBlockingUsingLatch.cpp">
+    <ClCompile Include="Mandelbrot_04_RectanglesParallelBlockingUsingLatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MandelbrotWndProc_04_RectanglesParallelBlockingUsingLatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MandelbrotRectanglesParallelNonBlockingStopToken.cpp">
+    <ClCompile Include="Mandelbrot_06_RectanglesParallelNonBlockingStopToken.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MandelbrotWndProc_06_RectanglesParallelNonBlockingStopToken.cpp">
@@ -125,7 +125,7 @@
     <ClCompile Include="MandelbrotWndProc_07_ProducerConsumerBasedApproach.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MandelbrotProducerConsumerBasedApproach.cpp">
+    <ClCompile Include="Mandelbrot_07_ProducerConsumerBasedApproach.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PixelContainer.h">

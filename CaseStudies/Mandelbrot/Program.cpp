@@ -123,12 +123,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     ::OutputDebugString(L"> Program");
 
-
-    double d1 = 0.0;
-    TFloatingPoint d2 = 0.0;
-
-
-
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 

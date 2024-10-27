@@ -19,7 +19,7 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         // cancel all threads, if any existing
         mandelbrot.cancelActiveThreadsIfAny();
 
-        RECT rect;
+        RECT rect{};
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);

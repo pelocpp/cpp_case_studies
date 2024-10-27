@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotRectanglesParallelBlockingUsingLatch.cpp
+// Mandelbrot_04_RectanglesParallelBlockingUsingLatch.cpp
 // Variant 04: Parallel - Blocking - Using Latch
 // =====================================================================================
 

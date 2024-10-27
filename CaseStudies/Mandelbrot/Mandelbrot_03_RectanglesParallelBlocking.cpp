@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotRectanglesSequential.cpp
+// Mandelbrot_03_RectanglesParallelBlocking.cpp
 // Variant 03: Parallel - Blocking
 // =====================================================================================
 

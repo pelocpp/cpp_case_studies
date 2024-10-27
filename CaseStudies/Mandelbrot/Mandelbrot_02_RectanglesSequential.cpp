@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotRectanglesSequential.cpp
+// Mandelbrot_02_RectanglesSequential.cpp
 // Variant 02: Rectangles Sequential
 // =====================================================================================
 
