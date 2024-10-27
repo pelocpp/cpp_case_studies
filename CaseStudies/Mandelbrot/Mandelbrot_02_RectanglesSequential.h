@@ -1,26 +1,21 @@
 // =====================================================================================
-// MandelbrotRectanglesParallelBlocking.h
-// Variant 03: Parallel - Blocking
+// Mandelbrot_02_RectanglesSequential.h
+// Variant 02: Drawing Rectangles Sequential
 // =====================================================================================
 
 #pragma once
 
 #include "MandelbrotBase.h"
 
-#include <mutex>
-
-class MandelbrotRectanglesParallelBlocking : public MandelbrotBase
+class MandelbrotRectanglesSequential : public MandelbrotBase
 {
-private:
-    mutable std::mutex m_mutex;
-
 public:
     // c'tor(s)
-    MandelbrotRectanglesParallelBlocking();
+    MandelbrotRectanglesSequential();
 
 public:
     // public interface
-    void paintRectanglesAsync(HDC hDC) const;
+    void paintRectangles(HDC hDC) const;
 
 private:
     virtual void drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const override;

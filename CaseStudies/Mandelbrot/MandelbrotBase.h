@@ -13,9 +13,6 @@
 class MandelbrotBase
 {
 public:
-    static const int Limit{ 5 };
-
-public:
     // c'tor(s)
     MandelbrotBase();
 
@@ -51,14 +48,24 @@ protected:
     std::complex<T> getComplex(size_t x, size_t y, size_t maxWidth, size_t maxHeight) const
     {
         // short hand constants for the Mandelbrot coordinates system
-        static T XMIN { MandelbrotParams<T>::XMIN };
-        static T XMAX { MandelbrotParams<T>::XMAX };
-        static T YMIN { MandelbrotParams<T>::YMIN };
-        static T YMAX { MandelbrotParams<T>::YMAX };
+        //static T XMIN { MandelbrotParams<T>::XMIN };
+        //static T XMAX { MandelbrotParams<T>::XMAX };
+        //static T YMIN { MandelbrotParams<T>::YMIN };
+        //static T YMAX { MandelbrotParams<T>::YMAX };
+
+        static T xMin{ MandelbrotParams<T>::XMIN };
+        static T xMax{ MandelbrotParams<T>::XMAX };
+        static T yMin{ MandelbrotParams<T>::YMIN };
+        static T YMax{ MandelbrotParams<T>::YMAX };
+
+        T tX = (T) x;
+        T tY = (T)y;
+        T tMaxWidth = (T) maxWidth;
+        T tMaxHeight = (T) maxHeight;
 
         return std::complex<T> {
-            XMIN + (XMAX - XMIN) * x / maxWidth, 
-            YMAX + (YMIN - YMAX) * y / maxHeight
+            xMin + (((xMax - xMin) * tX) / tMaxWidth),
+            YMax + (((yMin - YMax) * tY) / tMaxHeight)
         };
     }
 
@@ -68,7 +75,7 @@ protected:
         std::complex<T> number{};
         size_t count{};
 
-        while (count != MandelbrotPalette::NumColors && std::abs(number) < Limit) {
+        while (count != MandelbrotPalette::NumColors && (T) std::abs(number) < MandelbrotPalette::Limit) {
             number = number * number + point;
             ++count;
         }

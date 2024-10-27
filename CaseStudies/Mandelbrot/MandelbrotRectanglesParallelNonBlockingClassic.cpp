@@ -4,7 +4,7 @@
 // =====================================================================================
 
 #include "MandelbrotCommon.h"
-#include "MandelbrotRectanglesParallelNonBlockingClassic.h"
+#include "Mandelbrot_05_RectanglesParallelNonBlockingClassic.h"
 #include "MandelbrotPalette.h"
 
 #include <complex>
@@ -16,7 +16,9 @@
 extern MandelbrotPalette g_palette;
 
 // c'tor(s)
-MandelbrotRectanglesParallelNonBlockingClassic::MandelbrotRectanglesParallelNonBlockingClassic() {}
+MandelbrotRectanglesParallelNonBlockingClassic::MandelbrotRectanglesParallelNonBlockingClassic() 
+    : m_doneRectangles{ MandelbrotRectangles::NUM_RECTS }
+{}
 
 //public interface
 void MandelbrotRectanglesParallelNonBlockingClassic::startPaintingRectanglesAsync(HWND hWnd, HDC hDC) {
@@ -74,7 +76,7 @@ void MandelbrotRectanglesParallelNonBlockingClassic::waitRectanglesDone() {
 
         std::future<size_t> future = std::move(m_futures.front());
         m_futures.pop_front();
-        size_t numPixels = future.get();
+        size_t numPixels{ future.get() };
 
         // print some statistics
         WCHAR szText[64];
@@ -123,7 +125,7 @@ size_t MandelbrotRectanglesParallelNonBlockingClassic::paintRectangle(HWND hWnd,
 void MandelbrotRectanglesParallelNonBlockingClassic::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
 {
     // RAII lock
-    std::lock_guard<std::mutex> lock{ m_mutex };
+    std::lock_guard<std::mutex> guard{ m_mutex };
 
     ::SetPixelV(hdc, (int) x, (int) y, color);
 }

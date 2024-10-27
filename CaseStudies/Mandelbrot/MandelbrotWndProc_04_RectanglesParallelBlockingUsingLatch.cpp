@@ -4,7 +4,7 @@
 // Variant 04: Parallel - Blocking - Using Latch
 // =====================================================================================
 
-#include "MandelbrotRectanglesParallelBlockingUsingLatch.h"
+#include "Mandelbrot_04_RectanglesParallelBlockingUsingLatch.h"
 
 LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlockingUsingLatch(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

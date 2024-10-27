@@ -67,15 +67,15 @@ COLORREF MandelbrotPalette::operator[] (size_t index) const {
 
 //constexpr MandelbrotPaletteEx::MandelbrotPaletteEx() {
 //}
-
-COLORREF MandelbrotPaletteEx::operator[] (size_t index) const {
-
-    //if (index >= NumColors) {
-    //    throw std::out_of_range("illegal palette index");
-    //}
-
-    return m_palette[index];
-}
+//
+//COLORREF MandelbrotPaletteEx::operator[] (size_t index) const {
+//
+//    //if (index >= NumColors) {
+//    //    throw std::out_of_range("illegal palette index");
+//    //}
+//
+//    return m_palette[index];
+//}
 
 
 // =====================================================================================

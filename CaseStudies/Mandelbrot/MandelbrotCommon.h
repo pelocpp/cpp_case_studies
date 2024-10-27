@@ -18,7 +18,7 @@ enum class MandelbrotVersion
 };
 
 constexpr MandelbrotVersion getVersion() {
-    return MandelbrotVersion::ProducerConsumerBasedApproach;
+    return MandelbrotVersion::RectanglesParallelNonBlockingStopToken;
 }
 
 // =====================================================================================
@@ -31,10 +31,42 @@ template <typename T>
 struct MandelbrotParams
 {
     // original limits
-    static constexpr T XMIN{ (T)-2.0 };   // minimum x-value (real part)
-    static constexpr T XMAX{ (T)+0.75 };  // maximum x-value (real part)
-    static constexpr T YMIN{ (T)-1.25 };  // minimum y-value (imaginary part)
-    static constexpr T YMAX{ (T)+1.25 };  // maximum y-value (imaginary part)
+    //static constexpr T XMIN{ (T) -2.0  };  // minimum x-value (real part)
+    //static constexpr T XMAX{ (T) +0.75 };  // maximum x-value (real part)
+    //static constexpr T YMIN{ (T) -1.25 };  // minimum y-value (imaginary part)
+    //static constexpr T YMAX{ (T) +1.25 };  // maximum y-value (imaginary part)
+
+    //static constexpr T XMIN{ (T)-0.745468 };  // minimum x-value (real part)
+    //static constexpr T XMAX{ (T)-0.745385 };  // maximum x-value (real part)
+    //static constexpr T YMIN{ (T)+0.112975 };  // minimum y-value (imaginary part)
+    //static constexpr T YMAX{ (T)+0.113044 };  // maximum y-value (imaginary part)
+
+
+    //double XMIN = -0.745468;  // minimum x-value (real part)
+    //double XMAX = -0.745385;  // maximum x-value (real part)
+    //double YMIN = +0.112975;  // minimum y-value (imaginary part)
+    //double YMAX = +0.113044;  // maximum y-value (imaginary part)
+
+
+    // Christian Kormanyos: well-known, classic Mandelbrot 
+    static constexpr T XCENTER{ (T) -0.75 };          // centered x-value (real part)
+    static constexpr T YCENTER{ (T) 0.0 };            // centered x-value (imaginary part)
+    static constexpr T HalfWidth{ (T) 1.35 };         // half width of rectangle
+
+    static constexpr T XMIN{ XCENTER - HalfWidth };   // minimum x-value (real part)
+    static constexpr T XMAX{ XCENTER + HalfWidth };   // maximum x-value (real part)
+    static constexpr T YMIN{ YCENTER - HalfWidth };   // minimum y-value (imaginary part)
+    static constexpr T YMAX{ YCENTER + HalfWidth };   // maximum y-value (imaginary part)
+
+    // Christian Kormanyos: Swirly Seahorses and Mini Mandelbrot - does't work
+    //static constexpr T XCENTER{ (T) 0.7453983606667815 };   // centered x-value (real part)
+    //static constexpr T YCENTER{ (T) 0.1125046349959942 };   // centered x-value (imaginary part)
+    //static constexpr T HalfWidth{ (T) 1.76e-12 };           // half width of rectangle
+
+    //static constexpr T XMIN{ XCENTER - HalfWidth };   // minimum x-value (real part)
+    //static constexpr T XMAX{ XCENTER + HalfWidth };   // maximum x-value (real part)
+    //static constexpr T YMIN{ YCENTER - HalfWidth };   // minimum y-value (imaginary part)
+    //static constexpr T YMAX{ YCENTER + HalfWidth };   // maximum y-value (imaginary part)
 };
 
 struct Rectangle

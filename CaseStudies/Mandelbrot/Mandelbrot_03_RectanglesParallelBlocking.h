@@ -1,6 +1,6 @@
 // =====================================================================================
-// MandelbrotRectanglesParallelBlockingUsingLatch.h
-// Variant 04: Parallel - Blocking - Using Latch
+// Mandelbrot_03_RectanglesParallelBlocking.h
+// Variant 03: Parallel - Blocking
 // =====================================================================================
 
 #pragma once
@@ -9,18 +9,18 @@
 
 #include <mutex>
 
-class MandelbrotRectanglesParallelBlockingUsingLatch : public MandelbrotBase
+class MandelbrotRectanglesParallelBlocking : public MandelbrotBase
 {
 private:
     mutable std::mutex m_mutex;
 
 public:
     // c'tor(s)
-    MandelbrotRectanglesParallelBlockingUsingLatch();
+    MandelbrotRectanglesParallelBlocking();
 
 public:
     // public interface
-    void paintRectanglesAsyncWithLatch(HDC hDC) const;
+    void paintRectanglesAsync(HDC hDC) const;
 
 private:
     virtual void drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const override;
@@ -29,4 +29,3 @@ private:
 // =====================================================================================
 // End-of-File
 // =====================================================================================
-

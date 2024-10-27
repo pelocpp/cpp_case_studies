@@ -4,19 +4,19 @@
 // Variant 01: BasicVersion
 // =====================================================================================
 
-#include "MandelbrotBasic.h"
+#include "Mandelbrot_01_Basic.h"
 
 LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    // static Mandelbrot mandelbrot;
     static MandelbrotBasic mandelbrot;
 
     switch (message)
     {
     case WM_SIZE:
+    {
         ::OutputDebugString(L"> WM_SIZE");
 
-        RECT rect;
+        RECT rect{};
         ::GetClientRect(hWnd, &rect);
 
         mandelbrot.setClientWidth(rect.right);
@@ -24,7 +24,8 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
         mandelbrot.computeRects(1, 1);
 
         ::OutputDebugString(L"< WM_SIZE");
-        break;
+    }
+    break;
 
     case WM_PAINT:
     {
@@ -33,10 +34,12 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
         // register start time
         ULONGLONG dwStart{ ::GetTickCount64() };
 
-        PAINTSTRUCT ps;
-        HDC hdc = ::BeginPaint(hWnd, &ps);
-        mandelbrot.paintRectangle(hdc);
-        ::EndPaint(hWnd, &ps);
+        {
+            PAINTSTRUCT ps{};
+            HDC hdc{ ::BeginPaint(hWnd, &ps) };
+            mandelbrot.paintRectangle(hdc);
+            ::EndPaint(hWnd, &ps);
+        }
 
         // verbose output
         ULONGLONG dwTimeEllapsed{ ::GetTickCount64() - dwStart };
@@ -47,10 +50,12 @@ LRESULT CALLBACK MandelbrotWndProcBasic(HWND hWnd, UINT message, WPARAM wParam, 
     break;
 
     case WM_DESTROY:
+    {
         ::OutputDebugString(L"> WM_DESTROY");
         ::PostQuitMessage(0);
         ::OutputDebugString(L"< WM_DESTROY");
-        break;
+    }
+    break;
 
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

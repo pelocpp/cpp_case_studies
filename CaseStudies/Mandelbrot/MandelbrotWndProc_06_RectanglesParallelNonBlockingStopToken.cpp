@@ -4,7 +4,7 @@
 // Variant 06: Parallel - Non Blocking - Stop Token
 // =====================================================================================
 
-#include "MandelbrotRectanglesParallelNonBlockingStopToken.h"
+#include "Mandelbrot_06_RectanglesParallelNonBlockingStopToken.h"
 
 LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -13,6 +13,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
     switch (message)
     {
     case WM_SIZE:
+    {
         ::OutputDebugString(L"> WM_SIZE"); 
 
         RECT rect;
@@ -22,7 +23,8 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
         ::OutputDebugString(L"< WM_SIZE");
-        break;
+    }
+    break;
 
     case WM_PAINT:
     {

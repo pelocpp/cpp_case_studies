@@ -153,17 +153,16 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="Mandelbrot.h" />
-    <ClInclude Include="MandelbrotBasic.h" />
+    <ClInclude Include="Mandelbrot_01_Basic.h" />
     <ClInclude Include="MandelbrotCommon.h" />
-    <ClInclude Include="MandelbrotHelper.h" />
     <ClInclude Include="MandelbrotPalette.h" />
     <ClInclude Include="MandelbrotPalette_Legacy.h" />
-    <ClInclude Include="MandelbrotProducerConsumerBasedApproach.h" />
-    <ClInclude Include="MandelbrotRectanglesParallelBlocking.h" />
-    <ClInclude Include="MandelbrotRectanglesParallelBlockingUsingLatch.h" />
-    <ClInclude Include="MandelbrotRectanglesParallelNonBlockingClassic.h" />
-    <ClInclude Include="MandelbrotRectanglesParallelNonBlockingStopToken.h" />
-    <ClInclude Include="MandelbrotRectanglesSequential.h" />
+    <ClInclude Include="Mandelbrot_07_ProducerConsumerBasedApproach.h" />
+    <ClInclude Include="Mandelbrot_03_RectanglesParallelBlocking.h" />
+    <ClInclude Include="Mandelbrot_04_RectanglesParallelBlockingUsingLatch.h" />
+    <ClInclude Include="Mandelbrot_05_RectanglesParallelNonBlockingClassic.h" />
+    <ClInclude Include="Mandelbrot_06_RectanglesParallelNonBlockingStopToken.h" />
+    <ClInclude Include="Mandelbrot_02_RectanglesSequential.h" />
     <ClInclude Include="MandelBrot_Helper_Legacy.h" />
     <ClInclude Include="Pixel.h" />
     <ClInclude Include="Resource.h" />
@@ -180,7 +179,6 @@
     <ClCompile Include="MandelbrotRectanglesParallelBlockingUsingLatch.cpp" />
     <ClCompile Include="MandelbrotRectanglesParallelNonBlockingClassic.cpp" />
     <ClCompile Include="MandelbrotRectanglesParallelNonBlockingStopToken.cpp" />
-    <ClCompile Include="MandelbrotWndProc.cpp" />
     <ClCompile Include="MandelbrotWndProc_01_Basic.cpp" />
     <ClCompile Include="MandelbrotWndProc_02_RectanglesSequential.cpp" />
     <ClCompile Include="MandelbrotRectanglesSequential.cpp" />

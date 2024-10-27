@@ -4,7 +4,7 @@
 // =====================================================================================
 
 #include "MandelbrotCommon.h"
-#include "MandelbrotRectanglesParallelBlocking.h"
+#include "Mandelbrot_03_RectanglesParallelBlocking.h"
 #include "MandelbrotPalette.h"
 
 #include <complex>

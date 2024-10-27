@@ -1,10 +1,10 @@
 // =====================================================================================
 // MandelbrotWndProc_02_RectanglesSequential.cpp
 // Mandelbrot Application Window Procedure
-// Variant 02: Rectangles Sequential
+// Variant 02: Drawing Rectangles Sequential
 // =====================================================================================
 
-#include "MandelbrotRectanglesSequential.h"
+#include "Mandelbrot_02_RectanglesSequential.h"
 
 LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -13,16 +13,18 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, 
     switch (message)
     {
     case WM_SIZE:
+    {
         ::OutputDebugString(L"> WM_SIZE");
 
-        RECT rect;
+        RECT rect{};
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
         mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
         ::OutputDebugString(L"< WM_SIZE");
-        break;
+    }
+    break;
 
     case WM_PAINT:
     {
@@ -31,7 +33,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, 
         // register start time
         ULONGLONG dwStart{ ::GetTickCount64() };
 
-        PAINTSTRUCT ps;
+        PAINTSTRUCT ps{};
         HDC hdc = ::BeginPaint(hWnd, &ps);
         mandelbrot.paintRectangles(hdc);
         ::EndPaint(hWnd, &ps);
@@ -39,17 +41,18 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, 
         // verbose output
         ULONGLONG dwTimeEllapsed{ ::GetTickCount64() - dwStart };
         WCHAR szText[64];
-        wsprintf(szText,
-            L"< WM_PAINT -  %ld milliseconds\n", (DWORD) dwTimeEllapsed);
+        wsprintf(szText, L"< WM_PAINT -  %ld milliseconds\n", (DWORD) dwTimeEllapsed);
         ::OutputDebugString(szText);
     }
     break;
 
     case WM_DESTROY:
+    {
         ::OutputDebugString(L"> WM_DESTROY");
         ::PostQuitMessage(0);
         ::OutputDebugString(L"< WM_DESTROY");
-        break;
+    }
+    break;
 
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

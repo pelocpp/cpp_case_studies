@@ -4,7 +4,7 @@
 // Variant 07: Parallel - Non Blocking - Producer Consumer Based Approach
 // =====================================================================================
 
-#include "MandelbrotProducerConsumerBasedApproach.h"
+#include "Mandelbrot_07_ProducerConsumerBasedApproach.h"
 
 LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

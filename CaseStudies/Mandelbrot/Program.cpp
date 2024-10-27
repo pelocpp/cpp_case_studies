@@ -75,7 +75,7 @@ https://stackoverflow.com/questions/42028838/drawing-to-window-from-child-thread
 #include "Mandelbrot.h"
 
 #include "MandelbrotCommon.h"
-#include "MandelbrotBasic.h"
+#include "Mandelbrot_01_Basic.h"
 
 #include "MandelbrotPalette.h"
 
@@ -98,6 +98,7 @@ constexpr MandelbrotVersion version{ getVersion() };
 
 // TODO: Hmmm, das muss global irgendwo anders hin ....
 MandelbrotPalette g_palette{};
+// MandelbrotPalette100 g_palette{};
 
 // =====================================================================================
 
@@ -121,6 +122,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ int       nCmdShow)
 {
     ::OutputDebugString(L"> Program");
+
+
+    double d1 = 0.0;
+    TFloatingPoint d2 = 0.0;
+
+
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);

@@ -4,7 +4,7 @@
 // Variant 05: Parallel - Non Blocking - Classic
 // =====================================================================================
 
-#include "MandelbrotRectanglesParallelNonBlockingClassic.h"
+#include "Mandelbrot_05_RectanglesParallelNonBlockingClassic.h"
 
 LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingClassic(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -13,16 +13,18 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingClassic(HWND hWnd
     switch (message)
     {
     case WM_SIZE:
+    {
         ::OutputDebugString(L"> WM_SIZE");
 
-        RECT rect;
+        RECT rect{};
         ::GetClientRect(hWnd, &rect);
         mandelbrot.setClientWidth(rect.right);
         mandelbrot.setClientHeight(rect.bottom);
         mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
         ::OutputDebugString(L"< WM_SIZE");
-        break;
+    }
+    break;
 
     case WM_PAINT:
     {
@@ -31,7 +33,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingClassic(HWND hWnd
         ::ValidateRect(hWnd, NULL);
 
         // cancel all drawing threads, if existing
-        size_t doneRectangles = mandelbrot.getDoneRectangles();
+        size_t doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
             ::OutputDebugString(L"> Requesting Abort ...");
@@ -58,7 +60,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingClassic(HWND hWnd
         ::OutputDebugString(L"> WM_DESTROY");
 
         // cancel all drawing threads, if existing
-        int doneRectangles{ mandelbrot.getDoneRectangles() };
+        size_t doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
             mandelbrot.setAbort(true);

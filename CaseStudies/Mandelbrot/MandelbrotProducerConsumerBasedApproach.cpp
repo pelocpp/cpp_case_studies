@@ -4,7 +4,7 @@
 // =====================================================================================
 
 #include "MandelbrotCommon.h"
-#include "MandelbrotProducerConsumerBasedApproach.h"
+#include "Mandelbrot_07_ProducerConsumerBasedApproach.h"
 #include "MandelbrotPalette.h"
 
 #include <complex>

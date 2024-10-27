@@ -4,7 +4,7 @@
 // =====================================================================================
 
 #include "MandelbrotCommon.h"
-#include "MandelbrotBasic.h"
+#include "Mandelbrot_01_Basic.h"
 #include "MandelbrotPalette.h"
 
 #include <complex>

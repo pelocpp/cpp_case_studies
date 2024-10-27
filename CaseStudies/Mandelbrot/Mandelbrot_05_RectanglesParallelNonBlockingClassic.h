@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotRectanglesParallelNonBlockingClassic.h
+// Mandelbrot_05_RectanglesParallelNonBlockingClassic.h
 // Variant 05: Parallel - Non Blocking - Classic Variant
 // =====================================================================================
 
@@ -17,8 +17,8 @@ class MandelbrotRectanglesParallelNonBlockingClassic : public MandelbrotBase
 private:
     mutable std::mutex m_mutex;
 
-    std::atomic<int>  m_doneRectangles;
-    std::atomic<bool> m_abort;
+    std::atomic<size_t>  m_doneRectangles;
+    std::atomic<bool>    m_abort;
 
     std::deque<std::packaged_task<size_t(HWND, HDC, struct Rectangle)>> m_tasks;
     std::deque<std::future<size_t>> m_futures;
@@ -28,7 +28,7 @@ public:
     MandelbrotRectanglesParallelNonBlockingClassic();
 
     // getter / setter
-    int  getDoneRectangles()   { return m_doneRectangles; }
+    size_t getDoneRectangles() { return m_doneRectangles; }
     void incDoneRectangles()   { ++m_doneRectangles; }
     void resetDoneRectangles() { m_doneRectangles = 0; }
 

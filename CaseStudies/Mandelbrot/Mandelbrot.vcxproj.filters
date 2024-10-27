@@ -24,16 +24,13 @@
     <ClInclude Include="Mandelbrot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MandelbrotHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MandelbrotPalette.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MandelbrotBasic.h">
+    <ClInclude Include="Mandelbrot_01_Basic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MandelbrotCommon.h">
@@ -45,22 +42,22 @@
     <ClInclude Include="MandelbrotPalette_Legacy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MandelbrotRectanglesSequential.h">
+    <ClInclude Include="Mandelbrot_02_RectanglesSequential.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MandelbrotRectanglesParallelBlocking.h">
+    <ClInclude Include="Mandelbrot_03_RectanglesParallelBlocking.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MandelbrotRectanglesParallelNonBlockingClassic.h">
+    <ClInclude Include="Mandelbrot_05_RectanglesParallelNonBlockingClassic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MandelbrotRectanglesParallelBlockingUsingLatch.h">
+    <ClInclude Include="Mandelbrot_04_RectanglesParallelBlockingUsingLatch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MandelbrotRectanglesParallelNonBlockingStopToken.h">
+    <ClInclude Include="Mandelbrot_06_RectanglesParallelNonBlockingStopToken.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MandelbrotProducerConsumerBasedApproach.h">
+    <ClInclude Include="Mandelbrot_07_ProducerConsumerBasedApproach.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pixel.h">
@@ -75,9 +72,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MandelbrotPalette.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MandelbrotWndProc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MandelbrotHelper_Legacy.cpp">

@@ -1,5 +1,5 @@
 // =====================================================================================
-// MandelbrotRectanglesParallelNonBlockingStopToken.h
+// Mandelbrot_06_RectanglesParallelNonBlockingStopToken.h
 // Variant 06: Parallel - Non Blocking - Stop Token
 // =====================================================================================
 
