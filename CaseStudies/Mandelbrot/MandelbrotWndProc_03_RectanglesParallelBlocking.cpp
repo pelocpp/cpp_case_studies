@@ -14,7 +14,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlocking(HWND hWnd, UINT mes
     {
     case WM_SIZE:
     {
-        ::OutputDebugString(L"> WM_SIZE");
+        ::OutputDebugString(L"> WM_SIZE\n");
 
         RECT rect{};
         ::GetClientRect(hWnd, &rect);
@@ -22,13 +22,13 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlocking(HWND hWnd, UINT mes
         mandelbrot.setClientHeight(rect.bottom);
         mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
-        ::OutputDebugString(L"< WM_SIZE");
+        ::OutputDebugString(L"< WM_SIZE\n");
     }
     break;
 
     case WM_PAINT:
     {
-        ::OutputDebugString(L"> WM_PAINT");
+        ::OutputDebugString(L"> WM_PAINT\n");
 
         // register start time
         ULONGLONG dwStart{ ::GetTickCount64() };
@@ -41,17 +41,16 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelBlocking(HWND hWnd, UINT mes
         // verbose output
         ULONGLONG dwTimeEllapsed{ ::GetTickCount64() - dwStart };
         WCHAR szText[64];
-        wsprintf(szText,
-            L"< WM_PAINT -  %ld milliseconds\n", (DWORD) dwTimeEllapsed);
+        wsprintf(szText, L"< WM_PAINT -  %ld milliseconds\n", (DWORD) dwTimeEllapsed);
         ::OutputDebugString(szText);
     }
     break;
 
     case WM_DESTROY:
     {
-        ::OutputDebugString(L"> WM_DESTROY");
+        ::OutputDebugString(L"> WM_DESTROY\n");
         ::PostQuitMessage(0);
-        ::OutputDebugString(L"< WM_DESTROY");
+        ::OutputDebugString(L"< WM_DESTROY\n");
     }
     break;
 

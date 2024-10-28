@@ -14,7 +14,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, 
     {
     case WM_SIZE:
     {
-        ::OutputDebugString(L"> WM_SIZE");
+        ::OutputDebugString(L"> WM_SIZE\n");
 
         RECT rect{};
         ::GetClientRect(hWnd, &rect);
@@ -22,13 +22,13 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, 
         mandelbrot.setClientHeight(rect.bottom);
         mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
-        ::OutputDebugString(L"< WM_SIZE");
+        ::OutputDebugString(L"< WM_SIZE\n");
     }
     break;
 
     case WM_PAINT:
     {
-        ::OutputDebugString(L"> WM_PAINT");
+        ::OutputDebugString(L"> WM_PAINT\n");
 
         // register start time
         ULONGLONG dwStart{ ::GetTickCount64() };
@@ -48,9 +48,9 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesSequential(HWND hWnd, UINT message, 
 
     case WM_DESTROY:
     {
-        ::OutputDebugString(L"> WM_DESTROY");
+        ::OutputDebugString(L"> WM_DESTROY\n");
         ::PostQuitMessage(0);
-        ::OutputDebugString(L"< WM_DESTROY");
+        ::OutputDebugString(L"< WM_DESTROY\n");
     }
     break;
 

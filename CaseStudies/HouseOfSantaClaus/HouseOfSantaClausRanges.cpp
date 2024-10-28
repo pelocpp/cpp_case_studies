@@ -3,10 +3,10 @@
 // =====================================================================================
 
 #include <iostream>
-#include <vector>
 #include <array>
 #include <ranges>
-#include <chrono>
+#include <vector>
+#include <algorithm>
 
 #include "HouseOfSantaClaus.h"
 #include "HouseOfSantaClausRanges.h"

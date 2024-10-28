@@ -21,7 +21,7 @@ private:
     std::atomic<bool>    m_abort;
 
     std::deque<std::packaged_task<size_t(HWND, HDC, struct Rectangle)>> m_tasks;
-    std::deque<std::future<size_t>> m_futures;
+    std::deque<std::future<size_t>>                                     m_futures;
 
 public:
     // c'tor(s)

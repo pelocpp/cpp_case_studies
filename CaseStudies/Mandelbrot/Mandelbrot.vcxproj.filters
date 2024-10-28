@@ -68,13 +68,7 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MandelbrotHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MandelbrotPalette.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MandelbrotHelper_Legacy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MandelbrotWndProc_01_Basic.cpp">
@@ -127,9 +121,6 @@
     </ClCompile>
     <ClCompile Include="Mandelbrot_07_ProducerConsumerBasedApproach.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PixelContainer.h">
-      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

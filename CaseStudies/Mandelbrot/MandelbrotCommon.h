@@ -18,7 +18,7 @@ enum class MandelbrotVersion
 };
 
 constexpr MandelbrotVersion getVersion() {
-    return MandelbrotVersion::RectanglesParallelNonBlockingClassic;
+    return MandelbrotVersion::RectanglesParallelNonBlockingStopToken;
 }
 
 // =====================================================================================
@@ -79,8 +79,8 @@ struct Rectangle
 
 struct MandelbrotRectangles
 {
-    static constexpr size_t NUM_ROWS { 2 };
-    static constexpr size_t NUM_COLS { 2 };
+    static constexpr size_t NUM_ROWS { 6 };
+    static constexpr size_t NUM_COLS { 6 };
 
     static constexpr size_t NUM_RECTS{ (NUM_ROWS * NUM_COLS) };
 };

@@ -170,7 +170,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mandelbrot_01_Basic.cpp" />
-    <ClCompile Include="MandelbrotHelper_Legacy.cpp" />
     <ClCompile Include="MandelbrotPalette_Legacy.cpp" />
     <ClCompile Include="MandelbrotBase.cpp" />
     <ClCompile Include="MandelbrotBase.h" />
@@ -187,9 +186,7 @@
     <ClCompile Include="MandelbrotWndProc_05_RectanglesParallelNonBlockingClassic.cpp" />
     <ClCompile Include="MandelbrotWndProc_06_RectanglesParallelNonBlockingStopToken.cpp" />
     <ClCompile Include="MandelbrotWndProc_07_ProducerConsumerBasedApproach.cpp" />
-    <ClCompile Include="PixelContainer.h" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="MandelbrotHelper.cpp" />
     <ClCompile Include="MandelbrotPalette.cpp" />
   </ItemGroup>
   <ItemGroup>

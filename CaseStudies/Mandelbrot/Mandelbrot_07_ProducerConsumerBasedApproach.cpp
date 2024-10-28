@@ -16,12 +16,6 @@
 #include <chrono>
 #include <cassert>
 
-// ACHTUNG !!!!!!!!!!!!!!!!!!!!!!!
-
-// ALLE QUEUES ... Tasks, futures, Pixels müssen beim "Neustart" geleert sein !!!!!!!!!!!!
-// Wie ist da bei den anderen Varianten
-
-
 // TODO: Hmmm, das muss global irgendwo anders hin ....
 extern MandelbrotPalette g_palette;
 
@@ -32,11 +26,9 @@ MandelbrotProducerConsumerBasedApproach::MandelbrotProducerConsumerBasedApproach
     : m_hWnd{}
 {
     // no pending threads yet
-    //m_doneRectangles = 0;
-    //m_done = true;
     m_drawingDone = true;
-    m_numRectanglesCalculated = 0;
     m_calculationsDone = true;
+    m_numRectanglesCalculated = 0;
 }
 
 void MandelbrotProducerConsumerBasedApproach::setHWND(HWND hWnd)
@@ -49,7 +41,7 @@ void MandelbrotProducerConsumerBasedApproach::addPixel(const Pixel& pixel)
     size_t currentSize{};
 
     {
-        std::lock_guard<std::mutex> lock{ m_mutexPixelsQueue };
+        std::lock_guard<std::mutex> guard{ m_mutexPixelsQueue };
         m_pixelsQueue.push_back(pixel);
         currentSize = m_pixelsQueue.size();
     }
@@ -61,7 +53,7 @@ void MandelbrotProducerConsumerBasedApproach::addPixel(const Pixel& pixel)
 
 size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle (std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight) {
 
-    ::OutputDebugString(L"> STD::JTHREAD: computePixelsOfRectangle");
+    ::OutputDebugString(L"> computePixelsOfRectangle\n");
 
     size_t numPixels{};
 
@@ -71,7 +63,6 @@ size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle (std::s
         {
             // premature end of drawing
             if (token.stop_requested()) {
-                ::OutputDebugString(L"> computePixelsOfRectangle: Stop Requested <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
                 goto loopEnd;
             }
 
@@ -87,10 +78,6 @@ size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle (std::s
             addPixel(pixel);
             ++numPixels;
         }
-
-        // notity painting thread row per row
-        // // TO BE DONE; Das mit dem notify muss genau betrachtet werden !!!!!
-        //  notify();
     }
 
 loopEnd:
@@ -117,7 +104,7 @@ loopEnd:
 
     // print some statistics
     WCHAR szText[128];
-    ::swprintf(szText, 128, L"< STD::JTHREAD: computePixelsOfRectangle - computed %zu pixels", numPixels);
+    ::swprintf(szText, 128, L"< computePixelsOfRectangle - computed %zu pixels\n", numPixels);
     ::OutputDebugString(szText);
 
     return numPixels;
@@ -125,14 +112,14 @@ loopEnd:
 
 size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token token) {
 
-    ::OutputDebugString(L"> STD::JTHREAD: drawQueuedPixels");
+    ::OutputDebugString(L"> drawQueuedPixels\n");
 
     WCHAR szText[128];
     size_t numPixels{};
     std::deque<Pixel> pixels;
 
     // retrieve a handle to a device context for the client area of a specified window 
-    HDC hDC = ::GetDC(m_hWnd);
+    HDC hDC{ ::GetDC(m_hWnd) };
     assert(hDC != NULL);
 
     while (! token.stop_requested())
@@ -153,9 +140,9 @@ size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token
                 )
             };
 
-            // Komme mit Rückgabewert stopRequested nicht zurecht, checke jetzt die Condition ?!?!?!?!?!
+            // using length of queue to decide 'end-of-drawing' state
             if (m_pixelsQueue.size() == 0) {
-                ::swprintf(szText, 128, L"> drawQueuedPixels: Stop Requested (2) #### - drawn so far: %zu", numPixels);
+                ::swprintf(szText, 128, L"> drawQueuedPixels: Stop Requested (2) #### - drawn so far: %zu\n", numPixels);
                 ::OutputDebugString(szText);
                 break;
             }
@@ -191,14 +178,14 @@ loopEnd:
     // there is only a single drawing thread, being responsible for the graphics context
     ::ReleaseDC(m_hWnd, hDC);
 
-    ::swprintf(szText, 128, L"< STD::JTHREAD: drawQueuedPixels - drawed %zu pixels", numPixels);
+    ::swprintf(szText, 128, L"< drawQueuedPixels - drawed %zu pixels.\n", numPixels);
     ::OutputDebugString(szText);
 
     // calculating time
     std::chrono::high_resolution_clock::time_point endTime{ std::chrono::high_resolution_clock::now() };
-    double msecs = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(endTime - m_begin).count();
+    double msecs{ std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(endTime - m_begin).count() };
     msecs /= 1000.0;
-    ::swprintf(szText, 128, L"> Drawing took %lf seconds.", msecs);
+    ::swprintf(szText, 128, L"| Drawing took %lf seconds.\n", msecs);
     ::OutputDebugString(szText);
 
     return numPixels;
@@ -206,14 +193,7 @@ loopEnd:
 
 void MandelbrotProducerConsumerBasedApproach::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
 {
-    bool succeeded = ::SetPixelV(hdc, (int) x, (int) y, color);
-    // COLORREF col = ::SetPixel(hdc, (int) x, (int) y, color);
-
-    // UNgelöst: Warum schlägt SetPixelV fehlt
-    // assert(succeeded == true);
-   if (! succeeded) {
-    ::OutputDebugString(L"> SetPixelV: ####################################################################################");
-   }
+    ::SetPixelV(hdc, (int) x, (int) y, color);
 }
 
 void MandelbrotProducerConsumerBasedApproach::prepareAllThreads(int rows, int cols)
@@ -288,14 +268,13 @@ void MandelbrotProducerConsumerBasedApproach::launchAllThreads()
     // creating a new std::stop_source object for this execution cycle
     m_source = std::stop_source{};
 
-    // std::chrono::system_clock::time_point m_begin = std::chrono::system_clock::now();
-    m_begin = std::chrono::high_resolution_clock::now();
-
     // need stop_token object
     std::stop_token token{ m_source.get_token() };
 
-    launchCalculationThreads(token);
+    // std::chrono::system_clock::time_point m_begin = std::chrono::system_clock::now();
+    m_begin = std::chrono::high_resolution_clock::now();
 
+    launchCalculationThreads(token);
     launchDrawingThread(token);
 }
 
@@ -306,7 +285,7 @@ void MandelbrotProducerConsumerBasedApproach::launchCalculationThreads(std::stop
     {
         for (const auto& rect : row) {
 
-            std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)> task{
+            std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)> task {
                 std::move(m_calculationTasks.front())
             };
 
@@ -328,10 +307,10 @@ void MandelbrotProducerConsumerBasedApproach::cancelActiveThreadsIfAny()
 {
     bool drawingDone;
 
-    ::OutputDebugString(L"< cancelActiveThreadsIfAny");
+    ::OutputDebugString(L"< cancelActiveThreadsIfAny\n");
 
     {
-        // need thread safe context to read current value of 'm_done'
+        // need thread safe context to read current value of 'm_drawingDone'
         std::lock_guard<std::mutex> guard{ m_mutexDrawingDone };
         drawingDone = m_drawingDone;
     }
@@ -342,7 +321,7 @@ void MandelbrotProducerConsumerBasedApproach::cancelActiveThreadsIfAny()
         waitAllThreadsDone();
     }
 
-    ::OutputDebugString(L"> cancelActiveThreadsIfAny");
+    ::OutputDebugString(L"> cancelActiveThreadsIfAny\n");
 }
 
 void MandelbrotProducerConsumerBasedApproach::requestStop() 
@@ -356,36 +335,38 @@ void MandelbrotProducerConsumerBasedApproach::waitAllThreadsDone()
     size_t numPixels{};
 
     // print some statistics
-    ::OutputDebugString(L"> waitAllThreadsDone");
+    ::OutputDebugString(L"> waitAllThreadsDone\n");
 
-    {
-        ::OutputDebugString(L"  waiting end of drawing thread ...");
-
-        // wait for end of single drawing thread
-        numPixels = m_drawingFuture.get();
-
-        // print some statistics
-        ::swprintf(szText, 64, L"  end of drawing thread: %zu pixels drawn", numPixels);
-        ::OutputDebugString(szText);
-    }
+    // which threads should we stop at first ... I think this doesn't matter
 
     // wait for the end of all calculation threads
     while (! m_calculationFutures.empty()) {
 
+        ::OutputDebugString(L"| waiting end of calculation thread ...\n");
+
         std::future<size_t> future{ std::move(m_calculationFutures.front()) };
         m_calculationFutures.pop_front();
-
-        ::OutputDebugString(L"  waiting end of calculation thread ...");
 
         // wait for end of a calculation thread
         numPixels = future.get();
 
         // print some statistics
-        ::swprintf(szText, 64, L"  end of calculation thread: %zu pixels calculated", numPixels);
+        ::swprintf(szText, 64, L"| end of calculation thread: %zu pixels calculated.\n", numPixels);
         ::OutputDebugString(szText);
     }
 
-    ::OutputDebugString(L"> waitAllThreadsDone");
+    {
+        ::OutputDebugString(L"| waiting end of drawing thread ...\n");
+
+        // wait for end of single drawing thread
+        numPixels = m_drawingFuture.get();
+
+        // print some statistics
+        ::swprintf(szText, 64, L"| end of drawing thread: %zu pixels drawn.\n", numPixels);
+        ::OutputDebugString(szText);
+    }
+
+    ::OutputDebugString(L"> waitAllThreadsDone\n");
 }
 
 // =====================================================================================

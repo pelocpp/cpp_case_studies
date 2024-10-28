@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <array>
+
 class HouseOfSantaClausIterative : public HouseOfSantaClaus
 {
 private:

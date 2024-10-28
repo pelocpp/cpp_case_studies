@@ -14,7 +14,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
     {
     case WM_SIZE:
     {
-        ::OutputDebugString(L"> WM_SIZE"); 
+        ::OutputDebugString(L"> WM_SIZE\n"); 
 
         RECT rect{};
         ::GetClientRect(hWnd, &rect);
@@ -22,13 +22,13 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         mandelbrot.setClientHeight(rect.bottom);
         mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
-        ::OutputDebugString(L"< WM_SIZE");
+        ::OutputDebugString(L"< WM_SIZE\n");
     }
     break;
 
     case WM_PAINT:
     {
-        ::OutputDebugString(L"> WM_PAINT");
+        ::OutputDebugString(L"> WM_PAINT\n");
 
         ::ValidateRect(hWnd, NULL);
 
@@ -36,37 +36,37 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingStopToken(HWND hW
         size_t doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
-            ::OutputDebugString(L"> Requesting Abort ...");
+            ::OutputDebugString(L"> Requesting Abort ...\n");
             mandelbrot.requestStop();
             mandelbrot.waitRectanglesDone();
         }
 
         // launch new drawing threads
-        ::OutputDebugString(L"> Launching new drawing threads ...");
+        ::OutputDebugString(L"> Launching new drawing threads ...\n");
 
         HDC hDC{ ::GetDC(hWnd) };
         mandelbrot.startPaintingRectanglesAsync(hWnd, hDC);
 
-        ::OutputDebugString(L"< WM_PAINT");
+        ::OutputDebugString(L"< WM_PAINT\n");
     }
     break;
 
     case WM_DESTROY:
     {
-        ::OutputDebugString(L"> WM_DESTROY");
+        ::OutputDebugString(L"> WM_DESTROY\n");
 
         // cancel all drawing threads, if existing
         size_t doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
-            ::OutputDebugString(L"> Requesting Abort ...");
+            ::OutputDebugString(L"> Requesting Abort ...\n");
             mandelbrot.requestStop();
             mandelbrot.waitRectanglesDone();
         }
 
         ::PostQuitMessage(0);
 
-        ::OutputDebugString(L"< WM_DESTROY");
+        ::OutputDebugString(L"< WM_DESTROY\n");
     }
     break;
 

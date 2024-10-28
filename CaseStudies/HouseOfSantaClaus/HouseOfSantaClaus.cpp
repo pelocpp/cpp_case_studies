@@ -3,8 +3,8 @@
 // =====================================================================================
 
 #include <iostream>
-#include <vector>
 #include <chrono>
+#include <algorithm>
 
 #include "HouseOfSantaClaus.h"
 

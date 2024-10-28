@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <iostream>
+
 class HouseOfSantaClaus
 {
 friend std::ostream& operator<< (std::ostream&, const HouseOfSantaClaus&); 

@@ -72,7 +72,7 @@ void MandelbrotRectanglesParallelBlocking::paintRectanglesAsync (HDC hDC) const 
 
         // print some statistics
         WCHAR szText[64];
-        ::swprintf(szText, 64, L"Thread %ls:  painted %zu pixels", tid.c_str(), pixels);
+        ::swprintf(szText, 64, L"Thread %ls:  painted %zu pixels\n", tid.c_str(), pixels);
         ::OutputDebugString(szText);
     }
 }
@@ -81,7 +81,7 @@ void MandelbrotRectanglesParallelBlocking::paintRectanglesAsync (HDC hDC) const 
 void MandelbrotRectanglesParallelBlocking::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
 {
     // RAII lock
-    std::lock_guard<std::mutex> lock{ m_mutex };
+    std::lock_guard<std::mutex> guard{ m_mutex };
     ::SetPixelV(hdc, (int) x, (int) y, color);
 }
 

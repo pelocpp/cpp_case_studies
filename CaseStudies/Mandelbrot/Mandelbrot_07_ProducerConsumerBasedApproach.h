@@ -20,49 +20,40 @@
 
 // TO BE DONE: Welcher Container hat die schnellsten insert am Begin // entfernen am Ende
 
-// TO BE DONE: Möglcierweise für die Thread Prozeduren Namen vergeben,
-// dann werden die Namen der Container kürzer
-// using YXY = size_t(std::stop_token, struct Rectangle, size_t, size_t);
-
 
 class MandelbrotProducerConsumerBasedApproach : public MandelbrotBase
 {
 private:
     // GDI specific data
-    HWND                                        m_hWnd;
+    HWND                                           m_hWnd;
 
     // handling of miscellaneous packaged tasks (computation and drawing)
     using ComputationTaskSignature = std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>;
     using DrawingTaskSignature = std::packaged_task<size_t(std::stop_token)>;
 
-    std::deque<ComputationTaskSignature>        m_calculationTasks;
-    std::deque<std::future<size_t>>             m_calculationFutures;
-    DrawingTaskSignature                        m_drawingTask;
-    std::future<size_t>                         m_drawingFuture;
+    std::deque<ComputationTaskSignature>           m_calculationTasks;
+    DrawingTaskSignature                           m_drawingTask;
+    std::deque<std::future<size_t>>                m_calculationFutures;
+    std::future<size_t>                            m_drawingFuture;
 
     // concurrency data to secure "Producer-Consumer" implementation
-    mutable std::mutex                          m_mutexPixelsQueue;
-    mutable std::condition_variable_any         m_conditionPixelsAvailable;
+    mutable std::mutex                             m_mutexPixelsQueue;
+    mutable std::condition_variable_any            m_conditionPixelsAvailable;
 
     // storing computed pixels to draw
-                                                // Da hätten wir doch eine Blocking Thread Safe Queoe !!!!!!!!!!!
-                                                // brauche da einen Container mit SCHNELL insert am Anfang und SCHNELL entfernen am Ende
-    std::deque<Pixel>                           m_pixelsQueue;
+    std::deque<Pixel>                              m_pixelsQueue;
 
     // data to handle premature ending of worker threads
-    mutable std::mutex   m_mutexDone;             // <========== da brauche ich vielleicht 2 verschiedene Mutexe !!!!!
-    std::stop_source     m_source;
-    // size_t               m_doneRectangles;
+    std::stop_source                               m_source;
 
     // count number of rectangles being calculated
-    mutable std::mutex                         m_mutexRectanglesCalculated;
-    size_t                                     m_numRectanglesCalculated;
-    bool                                       m_calculationsDone;
-
+    mutable std::mutex                             m_mutexRectanglesCalculated;
+    size_t                                         m_numRectanglesCalculated;
+    bool                                           m_calculationsDone;
 
     // watching a single thread drawing pixels
-    mutable std::mutex                         m_mutexDrawingDone;
-    bool                                       m_drawingDone;
+    mutable std::mutex                             m_mutexDrawingDone;
+    bool                                           m_drawingDone;
 
     // stop watch
     std::chrono::high_resolution_clock::time_point m_begin;

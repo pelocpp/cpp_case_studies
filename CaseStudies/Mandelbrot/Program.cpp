@@ -67,6 +67,13 @@ https://stackoverflow.com/questions/42028838/drawing-to-window-from-child-thread
 
 // Die ganzen ODS Ausgaben müssen ein \n haben, sonst geht es im Output Fenter nicht !!!!!
 
+// ------------
+
+//setClientWidth
+//setClientWidth
+
+// Warum gibt es da keine Funktion, die beides in einem Rutsch entgegennimmt ....
+
 // =====================================================================================
 
 
@@ -121,7 +128,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
-    ::OutputDebugString(L"> Program");
+    ::OutputDebugString(L"> Program\n");
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -146,7 +153,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         ::DispatchMessage(&msg);
     }
 
-    ::OutputDebugString(L"< Program");
+    ::OutputDebugString(L"< Program\n");
 
     return (int)msg.wParam;
 }

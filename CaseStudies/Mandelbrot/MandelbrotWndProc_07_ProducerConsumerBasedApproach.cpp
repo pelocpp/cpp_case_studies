@@ -14,7 +14,7 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
     {
     case WM_SIZE:
     {
-        ::OutputDebugString(L"> WM_SIZE");
+        ::OutputDebugString(L"> WM_SIZE\n");
 
         // cancel all threads, if any existing
         mandelbrot.cancelActiveThreadsIfAny();
@@ -25,13 +25,13 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         mandelbrot.setClientHeight(rect.bottom);
         mandelbrot.computeRects(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
 
-        ::OutputDebugString(L"< WM_SIZE");
+        ::OutputDebugString(L"< WM_SIZE\n");
     }
     break;
 
     case WM_PAINT:
     {
-        ::OutputDebugString(L"> WM_PAINT");
+        ::OutputDebugString(L"> WM_PAINT\n");
 
         ::ValidateRect(hWnd, NULL);
 
@@ -39,20 +39,20 @@ LRESULT CALLBACK MandelbrotWndProcProducerConsumerBasedApproach(HWND hWnd, UINT 
         mandelbrot.prepareAllThreads(MandelbrotRectangles::NUM_ROWS, MandelbrotRectangles::NUM_COLS);
         mandelbrot.launchAllThreads();  // launch calculation threads and single drawing thread
 
-        ::OutputDebugString(L"< WM_PAINT");
+        ::OutputDebugString(L"< WM_PAINT\n");
     }
     break;
 
     case WM_DESTROY:
     {
-        ::OutputDebugString(L"> WM_DESTROY");
+        ::OutputDebugString(L"> WM_DESTROY\n");
 
         // cancel active threads, if any existing
         mandelbrot.cancelActiveThreadsIfAny();
 
         ::PostQuitMessage(0);
 
-        ::OutputDebugString(L"< WM_DESTROY");
+        ::OutputDebugString(L"< WM_DESTROY\n");
     }
     break;
 
