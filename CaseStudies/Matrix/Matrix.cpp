@@ -25,7 +25,6 @@ class Matrix
 protected:
     std::size_t m_rows;
     std::size_t m_cols;
-
     std::shared_ptr<double[]> m_values;
 
 public:
@@ -41,6 +40,8 @@ public:
 
     // public interface
     void print(); 
+    double& at(std::size_t row, std::size_t col);  // TODO: die 2. Version für const !!!
+    Matrix transpose();
 };
 
 Matrix::Matrix() : m_rows{}, m_cols{}, m_values{} {}
@@ -50,7 +51,7 @@ Matrix::Matrix(std::size_t rows, std::size_t cols)
 {
     m_values = std::make_shared<double[]>(m_rows * m_cols);
 
-    // TODO: Ist der Speicher Null ????
+    // TODO: Ist der Speicher Null ???? Ja !!! Value-Initialize
 }
 
 Matrix::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<double> values)
@@ -111,31 +112,85 @@ void Matrix::print()
     }
 }
 
+double& Matrix::at(std::size_t row, std::size_t col)
+{
+    if (row >= m_rows) {
+        throw std::invalid_argument("Invalid row index!!");
+    }
+
+    if (col >= m_cols) {
+        throw std::invalid_argument("Invalid col index!!");
+    }
+
+    return m_values.get()[m_cols * row + col];
+}
+
+Matrix Matrix::transpose()
+{
+    Matrix result{ m_cols, m_rows };
+
+    for (int row{}; row != m_rows; ++row) {
+
+        for (int col{}; col != m_cols; ++col) {
+
+            auto value{ m_values[row * m_cols + col] };
+            result.at(col, row) = value;
+        }
+    }
+
+    return result;
+}
+
+// ====================
+
 void test_01() {
 
     Matrix matrix{ 3, 3 };
     matrix.print();
 
-    Matrix matrix2{ 3, 3,  { 1, 2, 3 ,4 , 5, 6, 7, 8, 9 } };
+    Matrix matrix2{ 3, 3, { 1, 2, 3 ,4 , 5, 6, 7, 8, 9 } };
     matrix2.print();
 
-    Matrix matrix3{ 2, 3,  { 1, 2, 3 ,4 , 5, 6 } };
+    Matrix matrix3{ 2, 3, { 1, 2, 3 ,4 , 5, 6 } };
     matrix3.print();
 }
 
 void test_02() {
 
-    Matrix matrix2{ 3, 3,  { { 1, 2, 3 } , { 4, 5, 6 } } };
+    Matrix matrix2{ 3, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
     matrix2.print();
-
 }
 
-void test_03    () {
+void test_03 () {
 
+    Matrix matrix{ 2, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
+    matrix.print();
 
-    double* d1 =  new double[10];
-    double* d2 = new double[10] {};
+    auto value = matrix.at(0, 2);
+    std::println("Value: {}", value);
 
+    matrix.at(0, 2) = 33;
+    std::println("Value: {}", matrix.at(0, 2));
+
+    matrix.print();
+}
+
+void test_04() {
+
+    Matrix matrix{ 2, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
+    Matrix copy{ matrix };
+
+    matrix.print();
+    copy.print();
+}
+
+void test_05() {
+
+    Matrix matrix{ 2, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
+    matrix.print();
+
+    Matrix t = matrix.transpose();
+    t.print();
 }
 
 // =====================================================================================
