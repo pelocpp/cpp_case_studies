@@ -12,13 +12,11 @@
 
 // Rule of Zero aufzeigen // demonstrieren
 
-// ModernC++:
+// Modern C++:
 // Diese beiden Zeilen aufnehmen:
 
 //double* d1 = new double[10];  // then no initialization is performed — it’s as if you called new double[n] without parentheses, so: The array contains indeterminate(garbage) values.
 //double* d2 = new double[10] {};  // then the array is value - initialized, meaning: All elements are initialized to 0.0.
-
-
 
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -33,6 +31,8 @@ void test_02();
 void test_03();
 void test_04();
 void test_05();
+void test_06();
+void test_07();
 
 int main()
 {   
@@ -40,7 +40,7 @@ int main()
 
     try
     {
-        test_05();
+        test_03();
     }
     catch (std::invalid_argument const& ex)
     {
