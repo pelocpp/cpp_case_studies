@@ -42,11 +42,13 @@ public:
     void print() const;
     double& at(std::size_t row, std::size_t col);  // TODO: die 2. Version für const !!!
     const double& at(std::size_t row, std::size_t col) const;
-    Matrix transpose() const;
 
+    Matrix transpose() const;
     Matrix add(const Matrix& other) const;
     Matrix sub(const Matrix& other) const;
     Matrix mul(const Matrix& other) const;
+
+    void test();
 };
 
 Matrix::Matrix() : m_rows{}, m_cols{}, m_values{} {}
@@ -106,7 +108,7 @@ void Matrix::print() const
 
     std::span<double> sp{ m_values.get(), m_rows * m_cols};
 
-    for (int col = 0;  auto elem : sp) {
+    for (int col = 0; auto elem : sp) {
 
         std::print("{:3}", elem);
 
@@ -148,7 +150,8 @@ const double& Matrix::at(std::size_t row, std::size_t col) const
         throw std::invalid_argument("Invalid col index!!");
     }
 
-    return m_values.get()[m_cols * row + col];
+   // return m_values.get()[m_cols * row + col];
+    return m_values[m_cols * row + col];
 }
 
 
@@ -216,15 +219,20 @@ Matrix Matrix::mul(const Matrix& other) const
             double value{};
 
             for (std::size_t k{}; k != m_cols; ++k) {
-            
-            
-            
+
+                std::size_t index1 = k + m_cols * row;
+                std::size_t index2 = col + other.m_cols * k;
+
+                //std::println("{} - {} ", m_values[index1], other.m_values[index2]);
+
+                value += m_values[index1] * other.m_values[index2];
             }
 
+            result.m_values[col + other.m_cols * row] = value;
+
+            std::println();
         }
     }
-
-
 
     //std::span<double> left{ m_values.get(), m_rows * m_cols };
     //std::span<double> right{ other.m_values.get(), m_rows * m_cols };
@@ -238,7 +246,24 @@ Matrix Matrix::mul(const Matrix& other) const
     return result;
 }
 
+
+void Matrix::test()
+{
+    m_values[0] = 1;
+    m_values[1] = 2;
+ }
+
 // ====================
+
+void test_00()
+{
+    Matrix matrix{ 3, 3 };
+    matrix.print();
+    std::println();
+
+    matrix.test();
+    matrix.print();
+}
 
 void test_01() {
 
@@ -252,13 +277,26 @@ void test_01() {
     matrix3.print();
 }
 
+
 void test_02() {
+
+    Matrix matrix{ 3, 3 };
+    matrix.print();
+
+    Matrix matrix2{ 3, 3, { 1, 2, 3 ,4 , 5, 6, 7, 8, 9 } };
+    matrix2.print();
+
+    Matrix matrix3{ 2, 3, { 1, 2, 3 ,4 , 5, 6 } };
+    matrix3.print();
+}
+
+void test_03() {
 
     Matrix matrix2{ 3, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
     matrix2.print();
 }
 
-void test_03 () {
+void test_04 () {
 
     Matrix matrix{ 2, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
     matrix.print();
@@ -279,7 +317,7 @@ void test_03 () {
     constMatrix.print();
 }
 
-void test_04() {
+void test_05() {
 
     Matrix matrix{ 2, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
     Matrix copy{ matrix };
@@ -288,7 +326,7 @@ void test_04() {
     copy.print();
 }
 
-void test_05() {
+void test_06() {
 
     Matrix matrix{ 2, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
     matrix.print();
@@ -297,7 +335,7 @@ void test_05() {
     t.print();
 }
 
-void test_06() {
+void test_07() {
 
     Matrix matrix1{ 3, 3, { { 1, 2, 3 } ,{ 4 , 5, 6 }, { 7, 8, 9 } } };
     matrix1.print();
@@ -309,7 +347,7 @@ void test_06() {
     sum.print();
 }
 
-void test_07() {
+void test_08() {
 
     Matrix matrix1{ 3, 3, { { 1, 2, 3 } ,{ 4 , 5, 6 }, { 7, 8, 9 } } };
     matrix1.print();
@@ -319,6 +357,18 @@ void test_07() {
 
     Matrix sum = matrix1.sub(matrix2);
     sum.print();
+}
+
+void test_09() {
+
+    Matrix matrix1{ 2, 3, { { 1, 2, 3 } ,{ 4 , 5, 6 }} };
+    //matrix1.print();
+
+    Matrix matrix2{ 3, 2, { { 1, 4 } ,{ 2, 5 }, { 3, 6 } } };
+   // matrix2.print();
+
+    Matrix product = matrix1.mul(matrix2);
+    product.print();
 }
 
 // =====================================================================================

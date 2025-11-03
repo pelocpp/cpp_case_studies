@@ -26,6 +26,7 @@
 #include <print>
 
 
+void test_00();
 void test_01();
 void test_02();
 void test_03();
@@ -33,6 +34,7 @@ void test_04();
 void test_05();
 void test_06();
 void test_07();
+void test_08();
 
 int main()
 {   
@@ -40,7 +42,7 @@ int main()
 
     try
     {
-        test_03();
+        test_04();
     }
     catch (std::invalid_argument const& ex)
     {
