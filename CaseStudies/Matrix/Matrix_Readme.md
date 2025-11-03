@@ -105,9 +105,9 @@ $$
 \begin{pmatrix}
 x_{11} & x_{12} & ...  & x_{1n}\\
 x_{21} & x_{22} & ...  & x_{2n}\\
-... &mldr;\\
-... &mldr;\\
-... &mldr;\\
+&mldr;\\
+&mldr;\\
+&mldr;\\
 x_{m1} & x_{m2} & ...  & x_{mn}\\
 \end{pmatrix}
 $$
