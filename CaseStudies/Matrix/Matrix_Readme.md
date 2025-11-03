@@ -188,7 +188,7 @@ Zum Beispiel kann eine *m*&times;*n*-Matrix (*m* Reihen, *n* Spalten) in einem e
 wobei sich der Index für das Element in Zeile *i* und Spalte *j* zu *i* * *n* + *j* berechnet.
 
 *Beispiel*:<br />
-Eine Matrix 2&times;3-Matrix
+Eine Matrix 2&times;3-Matrix des Aussehens
 
 $$
 \begin{pmatrix}
@@ -198,3 +198,118 @@ $$
 $$
 
 wird in einem eindimensionalen Array mit den Werten `{ 1, 2, 3, 4, 5, 6 }` abgelegt.
+
+Damit sind wir in C++ angekommen, unser Entwurf eine Klasse `Matrix` sieht so aus:
+
+```cpp
+01: class Matrix
+02: {
+03: protected:
+04:     std::size_t m_rows;
+05:     std::size_t m_cols;
+06:     std::shared_ptr<double[]> m_values;
+07:     ...
+08: };
+```
+
+
+## Konstruktoren der Klasse `Matrix`
+
+Wir wollen Matrix-Objekte in unterschiedlicher Weise anlegen können.
+Eine Zusammenfassung der überladenen Konstruktoren folgt:
+
+
+```cpp
+01: // c'tors
+02: Matrix();
+03: Matrix(std::size_t rows, std::size_t cols);
+04: Matrix(std::size_t rows, std::size_t cols, std::initializer_list<double> values);
+05: Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<double>> values);
+```
+
+Der Standard-Konstruktor ist mehr der Vollständigkeit halber vorhanden.
+Matrizen mit 0 Reihen und 0 Spalten spielen in der Praxis keine Rolle:
+
+```cpp
+Matrix::Matrix() : m_rows{}, m_cols{}, m_values{} {}
+```
+
+Der nächste Konstruktor mit der Schnittstelle
+
+```cpp
+Matrix::Matrix(std::size_t rows, std::size_t cols)
+```
+
+besitzt folgende Realisierung:
+
+```cpp
+01: Matrix::Matrix(std::size_t rows, std::size_t cols)
+02:     : m_rows{ rows }, m_cols{ cols } 
+03: {
+04:     m_values = std::make_shared<double[]>(m_rows * m_cols);
+05: }
+```
+
+Man beachte hierbei, dass das Funktionstemplate `std::make_shared` den reserierten Speicher mit `0.0` vorbelegt.
+Als ob wir `new double[m_rows * m_cols] {}` aufgerufen hätten.
+Damit können wir Matrizen mit Null-Werten anlegen:
+
+```cpp
+Matrix matrix{ 3, 3 };
+```
+
+Hübsch wären aber anderen Schreibweisen. Wir wäre es beispielsweise mit
+
+```cpp
+Matrix matrix{ 3, 3, { 1, 2, 3 ,4 , 5, 6, 7, 8, 9 } };
+```
+
+oder noch schöner in einer Schreibweise
+
+
+```cpp
+Matrix matrix{ 3, 3, { { 1, 2, 3 } , { 4, 5, 6 }, { 7, 8, 9 } } };
+```
+
+Hier kommt uns die C++-Klasse `std::initializer_list` zu Hilfe.
+In einer ersten Anwendung können wir mit ihrer Hilfe eine beliebig lange Liste von Werten
+einem Konstruktorenaufruf übergeben. Diese Liste mit Werten müssen dann an jede Reihe der Matrix geeignet übertragen 
+werden, so dass am Ende alle Elemente der Matrix mit Werten aus der Liste vorbelegt sind.
+
+Man könnte &ndash; wie in C/C++ bei einer unvollständigen Initialisierungsliste für ein Array &ndash; diskutieren,
+ob man auch Listen mit weniger Werten als die Matrix benötigt zulässt.
+Ich habe den Weg eingeschlagen, dass die Liste vollständig sein muss:
+
+
+```cpp
+01: Matrix::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<double> values)
+02:     : m_rows{ rows }, m_cols{ cols }
+03: {
+04:     if (m_rows * m_cols != values.size()) {
+05:         throw std::invalid_argument("Wrong number of values!");
+06:     }
+07: 
+08:     m_values = std::make_shared<double[]>(m_rows * m_cols);
+09: 
+10:     std::copy(
+11:         values.begin(),
+12:         values.end(),
+13:         m_values.get()
+14:     );
+15: }
+```
+
+Dieser Konstruktor profitiert in seiner Realisierung davon, dass die Elemente der Matrix in einem ein-dimensionalen Feld vorliegen.
+Auf diese Weise kann der STL-Algorithmus `std::copy` angeworfen werden.
+Ein `std::initializer_list`-Objekt kann als *Range* aufgefasst werden, es unterstützt die beiden Methoden
+`begin()` und `end()`. Das dritte Argument kann ein Raw-Zeiger sein, die STL wurde so konzipiert, 
+dass Zeiger bereits *random-access* Iteratoren sind.
+
+Noch hübscher wäre natürlich eine Schreibweis in der Art
+
+```cpp
+Matrix matrix{ 3, 3, { { 1, 2, 3 } , { 4, 5, 6 }, { 7, 8, 9 } } };
+```
+
+Auch dies können wir realisieren, eine geschachtelte `std::initializer_list` ist ebenfalls möglich.
+

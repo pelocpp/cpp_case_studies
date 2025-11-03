@@ -105,7 +105,7 @@ public:
     Matrix(std::size_t rows, std::size_t cols, std::initializer_list<double> values);
     Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<double>> values);
 
-    // getter
+    // getter   
     std::size_t rows() const { return m_rows; }
     std::size_t cols() const { return m_cols; }
 
@@ -128,8 +128,6 @@ Matrix::Matrix(std::size_t rows, std::size_t cols)
     : m_rows{ rows }, m_cols{ cols } 
 {
     m_values = std::make_shared<double[]>(m_rows * m_cols);
-
-    // TODO: Ist der Speicher Null ???? Ja !!! Value-Initialize
 }
 
 Matrix::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<double> values)
@@ -342,7 +340,7 @@ void test_000()
     BadApproachMatrix<double, 2, 3> matrix3{ 1, 2, 3, 4, 5, 6 };
     matrix3.print();
 
-    BadApproachMatrix<double, 3, 3> matrix4{ { 1, 2, 3 } , { 4, 5, 6 },  { 7, 8, 9 } };
+    BadApproachMatrix<double, 3, 3> matrix4{ { 1, 2, 3 }, { 4, 5, 6 },  { 7, 8, 9 } };
     matrix4.print();
 }
 
@@ -366,10 +364,10 @@ void test_01() {
     Matrix matrix{ 3, 3 };
     matrix.print();
 
-    Matrix matrix2{ 3, 3, { 1, 2, 3 ,4 , 5, 6, 7, 8, 9 } };
+    Matrix matrix2{ 3, 3, { 1, 2, 3, 4, 5, 6, 7, 8, 9 } };
     matrix2.print();
 
-    Matrix matrix3{ 2, 3, { 1, 2, 3 ,4 , 5, 6 } };
+    Matrix matrix3{ 2, 3, { 1, 2, 3, 4, 5, 6 } };
     matrix3.print();
 }
 
@@ -379,22 +377,22 @@ void test_02() {
     Matrix matrix{ 3, 3 };
     matrix.print();
 
-    Matrix matrix2{ 3, 3, { 1, 2, 3 ,4 , 5, 6, 7, 8, 9 } };
+    Matrix matrix2{ 3, 3, { 1, 2, 3, 4, 5, 6, 7, 8, 9 } };
     matrix2.print();
 
-    Matrix matrix3{ 2, 3, { 1, 2, 3 ,4 , 5, 6 } };
+    Matrix matrix3{ 2, 3, { 1, 2, 3, 4, 5, 6 } };
     matrix3.print();
 }
 
 void test_03() {
 
-    Matrix matrix2{ 3, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };  // Diese Liste ist unvollständig ?????????????
+    Matrix matrix2{ 3, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };  // Diese Liste ist unvollständig ?????????????
     matrix2.print();
 }
 
 void test_04 () {
 
-    Matrix matrix{ 2, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
+    Matrix matrix{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };
     matrix.print();
 
     auto value = matrix.at(0, 2);
@@ -405,7 +403,7 @@ void test_04 () {
 
     matrix.print();
 
-    const Matrix constMatrix{ 2, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
+    const Matrix constMatrix{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };
 
     value = constMatrix.at(0, 2);
     std::println("Value: {}", value);
@@ -415,7 +413,7 @@ void test_04 () {
 
 void test_05() {
 
-    Matrix matrix{ 2, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
+    Matrix matrix{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };
     Matrix copy{ matrix };
 
     matrix.print();
@@ -424,7 +422,7 @@ void test_05() {
 
 void test_06() {
 
-    Matrix matrix{ 2, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
+    Matrix matrix{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };
     matrix.print();
 
     Matrix t = matrix.transpose();
@@ -433,10 +431,10 @@ void test_06() {
 
 void test_07() {
 
-    Matrix matrix1{ 3, 3, { { 1, 2, 3 } ,{ 4 , 5, 6 }, { 7, 8, 9 } } };
+    Matrix matrix1{ 3, 3, { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } } };
     matrix1.print();
 
-    Matrix matrix2{ 3, 3, { { 9, 8, 7 } ,{ 6, 5, 4 }, { 3, 2, 1 } } };
+    Matrix matrix2{ 3, 3, { { 9, 8, 7 }, { 6, 5, 4 }, { 3, 2, 1 } } };
     matrix2.print();
 
     Matrix sum = matrix1.add(matrix2);
@@ -445,10 +443,10 @@ void test_07() {
 
 void test_08() {
 
-    Matrix matrix1{ 3, 3, { { 1, 2, 3 } ,{ 4 , 5, 6 }, { 7, 8, 9 } } };
+    Matrix matrix1{ 3, 3, { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } } };
     matrix1.print();
 
-    Matrix matrix2{ 3, 3, { { 9, 8, 7 } ,{ 6, 5, 4 }, { 3, 2, 1 } } };
+    Matrix matrix2{ 3, 3, { { 9, 8, 7 }, { 6, 5, 4 }, { 3, 2, 1 } } };
     matrix2.print();
 
     Matrix sum = matrix1.sub(matrix2);
@@ -457,10 +455,10 @@ void test_08() {
 
 void test_09() {
 
-    Matrix matrix1{ 2, 3, { { 1, 2, 3 } ,{ 4 , 5, 6 }} };
+    Matrix matrix1{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 }} };
     //matrix1.print();
 
-    Matrix matrix2{ 3, 2, { { 1, 4 } ,{ 2, 5 }, { 3, 6 } } };
+    Matrix matrix2{ 3, 2, { { 1, 4 }, { 2, 5 }, { 3, 6 } } };
    // matrix2.print();
 
     Matrix product = matrix1.mul(matrix2);
