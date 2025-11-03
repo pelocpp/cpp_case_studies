@@ -6,6 +6,12 @@ https://home.mathematik.uni-freiburg.de/knies/lehre/bkla/Skript-Brueckenkurs.pdf
 
 https://www.matheretter.de/wiki/matrizen
 
+Mit Google:
+
+https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
+
+KI:  markdown math matrices examples
+
 ## Einleitung
 
 Eine Matrix ist eine rechteckige Anordnung von Werten (mathematischen Objekten),
@@ -27,7 +33,7 @@ die Kryptografie und natürlich nicht zu vergessen die KI mit dem maschinellen Le
 Elementare Rechenoperationen für Matrizen sind die Addition, Subtraktion und Multiplikation.
 
 
-## Darstellung
+## Darstellung // TEST
 
 Eine allgemeine *m*&times;*n*  Matrix sieht dabei so aus:
 
@@ -88,6 +94,20 @@ $$
 1 & 2 & 3 \\
 a & b & c
 \end{Bmatrix}
+$$
+
+
+## Darstellung // TEST
+
+Eine allgemeine *m*&times;*n*  Matrix sieht dabei so aus:
+
+$$
+\begin{bmatrix}
+x_{11} & x_{12} & ...  & x_{1n}\\
+x_{21} & x_{22} & ...  & x_{2n}\\
+...
+x_{m1} & x_{m2} & ...  & x_{mn}\\
+\end{bmatrix}
 $$
 
 
