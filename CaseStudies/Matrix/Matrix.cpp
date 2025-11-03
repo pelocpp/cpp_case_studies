@@ -13,12 +13,83 @@
 #endif
 #endif  // _DEBUG
 
-#include <exception>
 #include <algorithm>
 #include <cstddef>
+#include <exception>
 #include <memory>
 #include <print>
 #include <span>
+#include <array>
+#include <vector>
+
+template <typename T, std::size_t Rows, std::size_t Cols>
+class BadApproachMatrix
+{
+protected:
+    std::array<std::array<T, Cols>, Rows> m_values{};
+
+public:
+    // c'tors
+    BadApproachMatrix();
+    BadApproachMatrix(std::initializer_list<double> values);
+    BadApproachMatrix(std::initializer_list<std::initializer_list<double>> values);
+
+    // public interface
+    void print() const;
+};
+
+template <class T, std::size_t Rows, std::size_t Cols>
+BadApproachMatrix<T, Rows, Cols>::BadApproachMatrix() = default;
+
+template <class T, std::size_t Rows, std::size_t Cols>
+BadApproachMatrix<T, Rows, Cols>::BadApproachMatrix(std::initializer_list<double> values)
+{
+    std::copy(
+        values.begin(),
+        values.end(),
+        &m_values[0][0]
+    );
+}
+
+template <class T, std::size_t Rows, std::size_t Cols>
+BadApproachMatrix<T, Rows, Cols>::BadApproachMatrix(std::initializer_list<std::initializer_list<double>> list)
+{
+    if (Rows != list.size()) {
+        throw std::invalid_argument("Wrong number of rows!");
+    }
+
+    for (std::size_t rowIndex{}; auto values : list) {
+
+        if (values.size() != Cols) {
+            throw std::invalid_argument("Wrong number of columns!");
+        }
+
+        auto& row = m_values[rowIndex];
+
+        std::copy(
+            values.begin(),
+            values.end(),
+            row.begin()
+        );
+
+        ++rowIndex;
+    }
+}
+
+template <class T, std::size_t Rows, std::size_t Cols>
+void BadApproachMatrix<T, Rows, Cols>::print() const
+{
+    for (const auto& row : m_values) {
+
+        for (const auto& elem : row) {
+            std::print("{:3}", elem);
+        }
+        std::println();
+    }
+    std::println();
+}
+
+// =====================================================================================
 
 class Matrix
 {
@@ -154,7 +225,6 @@ const double& Matrix::at(std::size_t row, std::size_t col) const
     return m_values[m_cols * row + col];
 }
 
-
 Matrix Matrix::transpose() const
 {
     Matrix result{ m_cols, m_rows };
@@ -253,7 +323,33 @@ void Matrix::test()
     m_values[1] = 2;
  }
 
-// ====================
+// =====================================================================================
+// =====================================================================================
+// =====================================================================================
+
+void test_000()
+{
+    BadApproachMatrix<double,3, 3> matrix{ };
+    matrix.print();
+    //std::println();
+
+    //matrix.test();
+    //matrix.print();
+
+    BadApproachMatrix<double, 3, 3> matrix2{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    matrix2.print();
+
+    BadApproachMatrix<double, 2, 3> matrix3{ 1, 2, 3, 4, 5, 6 };
+    matrix3.print();
+
+    BadApproachMatrix<double, 3, 3> matrix4{ { 1, 2, 3 } , { 4, 5, 6 },  { 7, 8, 9 } };
+    matrix4.print();
+}
+
+
+
+// =====================================================================================
+
 
 void test_00()
 {
@@ -292,7 +388,7 @@ void test_02() {
 
 void test_03() {
 
-    Matrix matrix2{ 3, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };
+    Matrix matrix2{ 3, 3, { { 1, 2, 3 } , { 4, 5, 6 } } };  // Diese Liste ist unvollständig ?????????????
     matrix2.print();
 }
 

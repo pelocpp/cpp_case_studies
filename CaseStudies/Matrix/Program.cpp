@@ -36,13 +36,15 @@ void test_06();
 void test_07();
 void test_08();
 
+void test_000();
+
 int main()
 {   
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
     try
     {
-        test_04();
+        test_000();
     }
     catch (std::invalid_argument const& ex)
     {
