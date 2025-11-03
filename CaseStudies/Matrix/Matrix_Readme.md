@@ -34,7 +34,56 @@ Eine allgemeine *m*&times;*n*  Matrix sieht dabei so aus:
 $ A = \begin{pmatrix} a & b \\ c & d \end{pmatrix} $
 
 $$
-B = \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{bmatrix}
+B = \begin{bmatrix} 1 & 2 & 3 \\
+4 & 5 & 6 \end{bmatrix}
+$$
+
+
+$$
+\begin{pmatrix}
+1 & 2 & 3 \\
+a & b & c
+\end{pmatrix}
+$$
+
+$$
+\begin{bmatrix}
+x_{11} & x_{12} \\
+x_{21} & x_{22}
+\end{bmatrix}
+$$
+
+
+% Using the 'matrix' environment for a plain matrix
+$$
+\begin{matrix}
+1 & 2 & 3 \\
+a & b & c
+\end{matrix}
+$$
+
+% Using the 'pmatrix' environment for a matrix with parentheses
+$$
+\begin{pmatrix}
+1 & 2 & 3 \\
+a & b & c
+\end{pmatrix}
+$$
+
+% Using the 'bmatrix' environment for a matrix with square brackets
+$$
+\begin{bmatrix}
+1 & 2 & 3 \\
+a & b & c
+\end{bmatrix}
+$$
+
+% Using the 'Bmatrix' environment for a matrix with curly braces
+$$
+\begin{Bmatrix}
+1 & 2 & 3 \\
+a & b & c
+\end{Bmatrix}
 $$
 
 
