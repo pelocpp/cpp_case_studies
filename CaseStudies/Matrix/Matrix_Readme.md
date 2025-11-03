@@ -62,7 +62,8 @@ a & b & c
 \end{matrix}
 $$
 
-% Using the 'pmatrix' environment for a matrix with parentheses
+Using the 'pmatrix' environment for a matrix with parentheses
+
 $$
 \begin{pmatrix}
 1 & 2 & 3 \\
@@ -70,7 +71,9 @@ a & b & c
 \end{pmatrix}
 $$
 
-% Using the 'bmatrix' environment for a matrix with square brackets
+
+Using the 'bmatrix' environment for a matrix with square brackets
+
 $$
 \begin{bmatrix}
 1 & 2 & 3 \\
@@ -78,7 +81,8 @@ a & b & c
 \end{bmatrix}
 $$
 
-% Using the 'Bmatrix' environment for a matrix with curly braces
+Using the 'Bmatrix' environment for a matrix with curly braces
+
 $$
 \begin{Bmatrix}
 1 & 2 & 3 \\
