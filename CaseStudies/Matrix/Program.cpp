@@ -1,6 +1,8 @@
 // =====================================================================================
 // Program.cpp
+// https://github.com/pelocpp/cpp_case_studies    // https://peterloos.de
 // =====================================================================================
+
 
 // TODO
 
@@ -25,8 +27,6 @@
 #include <exception>
 #include <print>
 
-
-void test_00();
 void test_01();
 void test_02();
 void test_03();
