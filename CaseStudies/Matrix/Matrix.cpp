@@ -5,9 +5,9 @@
 #include "Matrix.h"
 
 // explicit template instantiations
-template class Matrix<float>;
-template class Matrix<double>;
-template class Matrix<long double>;
+//template class Matrix<float>;
+//template class Matrix<double>;
+//template class Matrix<long double>;
 
 // =====================================================================================
 // End-of-File

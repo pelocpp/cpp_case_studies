@@ -3,12 +3,7 @@
 // https://github.com/pelocpp/cpp_case_studies    // https://peterloos.de
 // =====================================================================================
 
-
 // TODO
-
-// Matrix: Siehe Breyman mit den vielen Template Instanzzierungen ....
-
-// Matrix als Klassentemplate !!!
 
 // Concepts // requires: nur für float, double, long double
 
@@ -54,7 +49,6 @@ int main()
     {
         std::println("{}", ex.what());
     }
-
 
     return 0;
 }
