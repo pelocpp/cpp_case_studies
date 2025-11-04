@@ -388,6 +388,7 @@ b_{21} & b_{22} & &mldr; & b_{2n}\\
 &mldr; & &mldr; & &mldr; \\
 b_{m1} & b_{m2} & &mldr; & b_{mn}\\
 \end{pmatrix}
+=
 $$
 
 
