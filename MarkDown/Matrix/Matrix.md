@@ -402,7 +402,7 @@ a_{21} & a_{22} & &mldr; & a_{2n}\\
 &mldr; & &mldr; & &mldr; \\
 a_{m1} & a_{m2} & &mldr; & a_{mn}\\
 \end{pmatrix}
-+
+\+
 \begin{pmatrix}
 b_{11} & b_{12} & &mldr; & b_{1n}\\
 b_{21} & b_{22} & &mldr; & b_{2n}\\
@@ -411,7 +411,7 @@ b_{21} & b_{22} & &mldr; & b_{2n}\\
 &mldr; & &mldr; & &mldr; \\
 b_{m1} & b_{m2} & &mldr; & b_{mn}\\
 \end{pmatrix}
-+
+\=
 \begin{pmatrix}
 a_{11}+b_{11} & a_{12}+b_{12} & &mldr; & a_{1n}+b_{1n}\\
 a_{21}+b_{21} & a_{22}+b_{22} & &mldr; & a_{2n}+b_{2n}\\
