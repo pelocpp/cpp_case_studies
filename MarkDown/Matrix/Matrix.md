@@ -43,12 +43,6 @@ Eine allgemeine *m*&times;*n*  Matrix sieht dabei so aus:
 $ A = \begin{pmatrix} a & b \\ c & d \end{pmatrix} $
 
 $$
-B = \begin{bmatrix} 1 & 2 & 3 \\
-4 & 5 & 6 \end{bmatrix}
-$$
-
-
-$$
 \begin{pmatrix}
 1 & 2 & 3 \\
 a & b & c
@@ -60,43 +54,6 @@ $$
 x_{11} & x_{12} \\
 x_{21} & x_{22}
 \end{bmatrix}
-$$
-
-
-% Using the 'matrix' environment for a plain matrix
-$$
-\begin{matrix}
-1 & 2 & 3 \\
-a & b & c
-\end{matrix}
-$$
-
-Using the 'pmatrix' environment for a matrix with parentheses
-
-$$
-\begin{pmatrix}
-1 & 2 & 3 \\
-a & b & c
-\end{pmatrix}
-$$
-
-
-Using the 'bmatrix' environment for a matrix with square brackets
-
-$$
-\begin{bmatrix}
-1 & 2 & 3 \\
-a & b & c
-\end{bmatrix}
-$$
-
-Using the 'Bmatrix' environment for a matrix with curly braces
-
-$$
-\begin{Bmatrix}
-1 & 2 & 3 \\
-a & b & c
-\end{Bmatrix}
 $$
 
 
@@ -136,59 +93,64 @@ x_{m1} & x_{m2} & &mldr; & x_{mn}\\
 \end{pmatrix}
 $$
 
-## Darstellung // TEST
-
 ## Darstellung einer Matrix in C++
 
-Für tabellenartige Strukturen von Werten gibt es in höheren Programmiersprachen zunächst keine direkte Umsetzung.
+Für tabellenartige Strukturen von Werten gibt es in höheren Programmiersprachen keine unmittelbare Umsetzung.
 
-Alle Daten, die zu einem Programm gehören, sind in (möglicherweise unterschiedlichen) Speicherbereichen
-eines Programms immer sequentiell angeordnet,
-rechteckige Strukturen gibt es hier nicht.
+Alle Daten, die zu einem Programm gehören, sind in &ndash; möglicherweise unterschiedlichen &ndash; Speicherbereichen
+eines Programms immer sequentiell angeordnet, rechteckige Datenbereiche gibt es hier nicht.
 
 Denkt man sich alle Zeilen einer Matrix der Reihe nach hintereinander angeordnet vor,
-kommen wir einer datentechnischen Umsetzung schon näher.
+kommen wir einer datentechnischen Umsetzung schon recht nahe.
 
-Datenstrukturen wie ein C-Style Array oder Objekte der Klassen `std::array` und `std::vector`
+Datenstrukturen wie ein C-Style Array oder Objekte der Klassen `std::array` oder `std::vector`
 sind für solche Datensequenzen geeignet.
 
-In einer nächsten Verfeinerung einer Realisierung einer Klasse `Matrix` müssen wir die Frage beantworten,
-ob wir die Elemente einer Matrix auf dem Stack (Stapel) oder dem Heap (Halde) sehen.
+In einer nächsten Stufe einer Verfeinerung der Realisierung einer Klasse `Matrix` müssten wir die Frage beantworten,
+ob wir die Elemente einer Matrix auf dem *Stack* (Stapel) oder dem *Heap* (Halde) sehen.
 Der Stack ist per se für Zwischenergebnisse und Daten kleineren Umfangs konzipiert.
 
-Würden wir die Elemente einer Matrix in einer `Matrix`-Klasse direkt in den Instanzvariablen aufbewahren,
-so würden alle Daten auf dem Stack liegen. Umgekehrt könnte man fordern, dass Instanzen einer solchen
+Würden wir die Elemente einer Matrix in einem `Matrix`-Objekt direkt in den Instanzvariablen aufbewahren,
+so würden alle Daten dieses Objekts auf dem Stack liegen, sofern es sich beispielsweise im lokale Objekte einer freien Funktion oder eines Objekts handelt.
+Damit könnte man keine `Matrix`-Objekte mit großer Spalten- oder Zeilenanzahl anlegen, da so der begrenzte Speicherumfang des Stack
+schnell überschritten werden dürfte.
+
+Man könnte fordern, dass Instanzen einer solchen
 Klasse  `Matrix` nur dynamisch, also auf dem Heap angelegt werden dürften.
 Das ist aber eine sehr ungewöhnliche Einschränkung und wird so in der Praxis nicht praktiziert.
+Abgesehen davon, dass ein Compiler derartige Einschränkungen gar nicht überprüfen kann.
 
 Ich habe (spaßeshalber) für eine solche Klasse `Matrix` einen ersten Entwurf gemacht:
 
 >>> BadApproachMatrix Source-Code
 
 Auf den ersten Blick schaut die Implementierung nicht so schlecht aus.
-Bei genauerem Hinsehen können Sie jedoch erkennen, dass alle Werte des geschachteten std::array-Objekts 
+Bei genauerem Hinsehen können Sie jedoch erkennen, dass alle Werte des geschachteten `std::array`-Objekts 
 *im* Instanzvariablenbereich des Objekts liegen. Bei großen Werten von `Rows` oder `Cols` kommen hier schnell
 viele Werte zusammen.
 
-Damit können wir folgern, dass für die Elemente einer Matrix grundsätzlich dynamischer Speicherplatz
+Damit können wir jetzt folgern, dass für die Elemente einer Matrix grundsätzlich nur dynamischer Speicherplatz
 in Frage kommt.
 
 Hier geht es nun mit den Operatoren `new` und `delete` oder Smart-Pointer Klassen weiter.
 
 
 
-Eine Matrix kann durch die Anordnung ihrer Elemente in einem einzigen, eindimensionalen Feld
-(auch Vektor oder Array genannt) dargestellt werden,
-wobei die Zeilen- und Spalteninformationen durch die Reihenfolge der Elemente oder eine Formel komprimiert werden.
+Eine Matrix kann durch die Anordnung ihrer Elemente in einem einzigen, eindimensionalen Feld dargestellt werden.
+Um so auf die Elemente der Matrix zugreifen zu können, werden die Zeilen- und Spalteninformationen
+eines jeden Elements durch eine Formel komprimiert ausgedrückt.
 
-Üblicherweise werden die Elemente in der Reihenfolge der Zeilen (Zeilen-Major-Ordnung) abgelegt,
-die alternative Anordnung wäre die Spalten-Major-Ordnung, also gemäß der Reihenfolge der Spalten.
+Üblicherweise werden die Elemente eines solchen rechteckigen Datenstruktur
+in der Reihenfolge der Zeilen abgelegt (so genannte *Zeilen*-*Major*-Anordnung),
+die alternative Anordnung wäre eine *Spalten*-*Major*-Anordnung, also gemäß der Reihenfolge der Spalten.
 
-Zum Beispiel kann eine *m*&times;*n*-Matrix (*m* Reihen, *n* Spalten) in einem eindimensionalen Feld der Größe *m* * *n* gespeichert werden,
-wobei sich der Index für das Element in Zeile *i* und Spalte *j* zu *i* * *n* + *j* berechnet.
+Speichern wir zum Beispiel eine *rows*&times;*cols*-Matrix (*m* Zeilen, *cols* Spalten) in einem eindimensionalen Feld der Größe *rows* * *cols* ab,
+lautet die Formel für den Zugriff auf das Element in Zeile *row* und Spalte *col*
+
+*row* * *n* + *col*.
 
 *Beispiel*:<br />
-Eine Matrix 2&times;3-Matrix des Aussehens
+Eine 2&times;3-Matrix des Aussehens
 
 $$
 \begin{pmatrix}
@@ -197,7 +159,7 @@ $$
 \end{pmatrix}
 $$
 
-wird in einem eindimensionalen Array mit den Werten `{ 1, 2, 3, 4, 5, 6 }` abgelegt.
+legen in einem eindimensionalen `int`-Array mit den Werten `{ 1, 2, 3, 4, 5, 6 }` ab.
 
 Damit sind wir in C++ angekommen, unser Entwurf eine Klasse `Matrix` sieht so aus:
 
@@ -215,20 +177,10 @@ Damit sind wir in C++ angekommen, unser Entwurf eine Klasse `Matrix` sieht so au
 
 ## Konstruktoren der Klasse `Matrix`
 
-Wir wollen Matrix-Objekte in unterschiedlicher Weise anlegen können.
+Wir wollen `Matrix`-Objekte in unterschiedlicher Weise anlegen können.
 Eine Zusammenfassung der überladenen Konstruktoren folgt:
-
-
-```cpp
-01: // c'tors
-02: Matrix();
-03: Matrix(std::size_t rows, std::size_t cols);
-04: Matrix(std::size_t rows, std::size_t cols, std::initializer_list<double> values);
-05: Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<double>> values);
-```
-
 Der Standard-Konstruktor ist mehr der Vollständigkeit halber vorhanden.
-Matrizen mit 0 Reihen und 0 Spalten spielen in der Praxis keine Rolle:
+Matrizen mit 0 Zeilen und 0 Spalten spielen in der Praxis keine Rolle:
 
 ```cpp
 Matrix::Matrix() : m_rows{}, m_cols{}, m_values{} {}
@@ -240,7 +192,7 @@ Der nächste Konstruktor mit der Schnittstelle
 Matrix::Matrix(std::size_t rows, std::size_t cols)
 ```
 
-besitzt folgende Realisierung:
+legt Matrizenobjekte mit einer vorgegebenen Anzahl von Zeilen und Spalten an. Er besitzt folgende Realisierung:
 
 ```cpp
 01: Matrix::Matrix(std::size_t rows, std::size_t cols)
@@ -250,7 +202,7 @@ besitzt folgende Realisierung:
 05: }
 ```
 
-Man beachte hierbei, dass das Funktionstemplate `std::make_shared` den reserierten Speicher mit `0.0` vorbelegt.
+Man beachte hierbei, dass das Funktionstemplate `std::make_shared` den reservierten Speicher mit `0.0` vorbelegt.
 Als ob wir `new double[m_rows * m_cols] {}` aufgerufen hätten.
 Damit können wir Matrizen mit Null-Werten anlegen:
 
@@ -258,26 +210,20 @@ Damit können wir Matrizen mit Null-Werten anlegen:
 Matrix matrix{ 3, 3 };
 ```
 
-Hübsch wären aber anderen Schreibweisen. Wir wäre es beispielsweise mit
+Hübsch wären aber andere Schreibweisen, wie wäre es beispielsweise mit
 
 ```cpp
 Matrix matrix{ 3, 3, { 1, 2, 3 ,4 , 5, 6, 7, 8, 9 } };
 ```
 
-oder noch schöner in einer Schreibweise
-
-
-```cpp
-Matrix matrix{ 3, 3, { { 1, 2, 3 } , { 4, 5, 6 }, { 7, 8, 9 } } };
-```
 
 Hier kommt uns die C++-Klasse `std::initializer_list` zu Hilfe.
-In einer ersten Anwendung können wir mit ihrer Hilfe eine beliebig lange Liste von Werten
-einem Konstruktorenaufruf übergeben. Diese Liste mit Werten müssen dann an jede Reihe der Matrix geeignet übertragen 
-werden, so dass am Ende alle Elemente der Matrix mit Werten aus der Liste vorbelegt sind.
+In einer ersten Umsetzung können wir mit ihrer Hilfe eine beliebig lange Liste von Werten
+an einen Konstruktorenaufruf übergeben. Diese Liste mit Werten muss dann Zeile für Zeile an das `Matrix`-Objekt übertragen werden,
+so dass am Ende alle Elemente der Matrix mit den Werten aus der Liste vorbelegt sind.
 
-Man könnte &ndash; wie in C/C++ bei einer unvollständigen Initialisierungsliste für ein Array &ndash; diskutieren,
-ob man auch Listen mit weniger Werten als die Matrix benötigt zulässt.
+Man könnte &ndash; wie in C/C++ bei unvollständigen Initialisierungen von Arrays oder Strukturen &ndash; diskutieren,
+ob man für Matrizen auch diese Option einräumt, also Listen mit weniger Werten, als es die Matrix benötigt, zulässt.
 Ich habe den Weg eingeschlagen, dass die Liste vollständig sein muss:
 
 
@@ -301,15 +247,34 @@ Ich habe den Weg eingeschlagen, dass die Liste vollständig sein muss:
 
 Dieser Konstruktor profitiert in seiner Realisierung davon, dass die Elemente der Matrix in einem ein-dimensionalen Feld vorliegen.
 Auf diese Weise kann der STL-Algorithmus `std::copy` angeworfen werden.
-Ein `std::initializer_list`-Objekt kann als *Range* aufgefasst werden, es unterstützt die beiden Methoden
-`begin()` und `end()`. Das dritte Argument kann ein Raw-Zeiger sein, die STL wurde so konzipiert, 
-dass Zeiger bereits *random-access* Iteratoren sind.
+Ein `std::initializer_list`-Objekt kann als Beriech (*Range*) aufgefasst werden, er unterstützt die beiden Methoden
+`begin()` und `end()`. Das dritte Argument kann ein *Raw*-Zeiger sein, die STL wurde so konzipiert, 
+dass Zeiger die Rolle von *random-access* Iteratoren spielen.
 
-Noch hübscher wäre natürlich eine Schreibweis in der Art
+Noch prägnanter wäre natürlich eine Schreibweis in der Art
 
 ```cpp
 Matrix matrix{ 3, 3, { { 1, 2, 3 } , { 4, 5, 6 }, { 7, 8, 9 } } };
 ```
 
-Auch dies können wir realisieren, eine geschachtelte `std::initializer_list` ist ebenfalls möglich.
+Auch dies können wir realisieren, eine geschachtelte `std::initializer_list` obliegt dem Lösungsansatz:
+
+
+```cpp
+Matrix(
+    std::size_t rows, 
+    std::size_t cols,
+    std::initializer_list<std::initializer_list<double>> values
+);
+```
+
+In der Realisierung dieses Konstruktors achten wir wiederum darauf, dass alle `std::initializer_list`-Listen
+die Länge der Zeilen und Spalten respektieren.
+
+
+## Konzepte und Anforderungen für Matrizen
+
+## Kopieren und Verschieben von Matrix-Objekten
+
+## Rechenmethoden für Matrizen: Addition, Subtraktion und Multipliaktion
 
