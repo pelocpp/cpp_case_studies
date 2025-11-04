@@ -20,6 +20,20 @@ KI:  markdown math matrices examples
 
 Eine Matrix ist eine rechteckige Anordnung von Werten (mathematischen Objekten),
 die in Zeilen und Spalten organisiert sind.
+Eine allgemeine *m*&times;*n* Matrix mit *m* Zeilen und *n* Spalten sieht dabei so aus:
+
+$$
+\begin{pmatrix}
+x_{11} & x_{12} & &mldr; & x_{1n} \\
+x_{21} & x_{22} & &mldr; & x_{2n} \\
+&mldr; &        &        & \\
+       & &mldr; &        & \\
+       &        & &mldr; & \\
+       &        &        & &mldr; \\
+x_{m1} & x_{m2} & &mldr; & x_{mn} \\
+\end{pmatrix}
+$$
+
 
 Die Anzahl der Zeilen wird durch *m* und die Anzahl der Spalten durch *n* angegeben.
 Eine Matrix mit *m* Zeilen und *n* Spalten nennt man *m*&times;*n* Matrix.
@@ -34,64 +48,6 @@ die Computergrafik mit Transformationen wie Rotation und Skalierung,
 die Kryptografie und natürlich nicht zu vergessen die KI mit dem maschinellen Lernen zur Verarbeitung großer Datenmengen.
 
 Elementare Rechenoperationen für Matrizen sind die Addition, Subtraktion und Multiplikation.
-
-
-## Darstellung // TEST
-
-Eine allgemeine *m*&times;*n*  Matrix sieht dabei so aus:
-
-$ A = \begin{pmatrix} a & b \\ c & d \end{pmatrix} $
-
-$$
-\begin{pmatrix}
-1 & 2 & 3 \\
-a & b & c
-\end{pmatrix}
-$$
-
-$$
-\begin{bmatrix}
-x_{11} & x_{12} \\
-x_{21} & x_{22}
-\end{bmatrix}
-$$
-
-
-## Darstellung // TEST
-
-Eine allgemeine *m*&times;*n*  Matrix sieht dabei so aus:
-
-$$
-\begin{pmatrix}
-x_{11} & x_{12} & &mldr; & x_{1n} \\
-x_{21} & x_{22} & &mldr; & x_{2n} \\
-&mldr; &        &        & \\
-       & &mldr; &        & \\
-       &        & &mldr; & \\
-       &        &        & &mldr; \\
-x_{m1} & x_{m2} & &mldr; & x_{mn} \\
-\end{pmatrix}
-$$
-
-$$
-\begin{pmatrix}
-x_{11} & x_{12} & &mldr; & x_{1n}\\
-x_{21} & x_{22} & &mldr; & x_{2n}\\
-&mldr; &  & &mldr; & &mldr;\\
-&mldr; & &mldr; & & &mldr;\\
-&mldr; & &mldr; & &mldr; \\
-x_{m1} & x_{m2} & &mldr; & x_{mn}\\
-\end{pmatrix}
-+
-\begin{pmatrix}
-x_{11} & x_{12} & &mldr; & x_{1n}\\
-x_{21} & x_{22} & &mldr; & x_{2n}\\
-&mldr; &  & &mldr; & &mldr;\\
-&mldr; & &mldr; & & &mldr;\\
-&mldr; & &mldr; & &mldr; \\
-x_{m1} & x_{m2} & &mldr; & x_{mn}\\
-\end{pmatrix}
-$$
 
 ## Darstellung einer Matrix in C++
 
@@ -159,7 +115,7 @@ BadApproachMatrix<double, 100, 100> largeMatrix{ };
 Ein Blick hinter die Kulissen des Objekts zeigt uns, dass hier 8.000.000 Bytes auf dem Stack verbraucht werden.
 
 
-<img src="HugeMatrixMemoryLayout.png" width="600">
+<img src="HugeMatrixMemoryLayout.png" width="500">
 
 *Abbildung* 1: Compiler Flag `/Zc:nrvo`.
 
@@ -361,9 +317,50 @@ reagiert der C++&ndash;Compiler mit der Fehlermeldung
 'Matrix': the associated constraints are not satisfied
 ```
 
-
-
 ## Kopieren und Verschieben von Matrix-Objekten
+
+Im Objektmodell von C++ nehmen einige Methoden (dazu zählen wir auch Konstruktoren und Operatoren)
+eine besondere Stellung ein. Es ist die Rede vom Kopierkonstruktor, dem Wertzuweisungs-Operator und dem Destruktor.
+An C++ 11 gesellen hier noch der verschiebende Konstrtuktor und die verschiebende Wertzuweisung (Operator) hinzu.
+
+Die Experten erahnen es schon: Wir kommen auf die Regeln &bdquo;*Rule-of-Three*&rdquo;, &bdquo;*Rule-of-Five*&rdquo;
+und &bdquo;*Rule-of-Zero*&rdquo; zu sprechen.
+
+Diese lauten im einzelnen
+
+*Rule of Three*:
+
+  * Copy constructor: `X(const X&)`
+  * Copy assignment: `X& operator=(const X&)`
+  * Destructor: `~X()`
+
+*Rule of Five*:
+
+  * Copy constructor: `X(const X&)`
+  * Copy assignment: `X& operator=(const X&)`
+  * Move constructor: `X(X&&) noexcept`
+  * Move assignment: `X& operator=(X&&) noexcept`
+  * Destructor: `~X()`
+
+*Rule of Zero*:
+
+  * Es dürfen keine Zeiger vorhanden sein, die mit `new` allokiert wurden.
+  * Verwenden Sie Container der STL.
+  * Verwenden Sie *Smart Pointer*.
+
+
+
+Besitzen Objekte dynamisch mit `new` angelegte Daten, ist die Realisierung der  &bdquo;*Rule-of-Three*&rdquo; unumgänglich.
+In unserem Fall der Klasse `Matrix` haben wir dynamsische Daten, deren Verwaltung wir aber in die Obhut einer Smart-Pointer Klasse `std::shared_ptr<T>`
+gelegt haben.
+
+Damit dürfen wir die &bdquo;*Rule-of-Zero*&rdquo; in Anspruch nehmen, und dies bedeutet: Wir müssen keine der speziellen Lebenszyklusmethoden
+eines C++&ndash;Objekts implementieren.
+
+
+
+
+
 
 ## Rechenmethoden für Matrizen: Addition, Subtraktion und Multipliaktion
 

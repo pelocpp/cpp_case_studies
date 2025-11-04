@@ -125,7 +125,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MatrixImpl.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="ProgramBadApproachMatrix.cpp" />

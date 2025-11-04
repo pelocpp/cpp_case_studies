@@ -1,19 +1,17 @@
 // =====================================================================================
 // MatrixImpl.cpp
 // =====================================================================================
-//
-//#define _CRTDBG_MAP_ALLOC
-//#include <crtdbg.h>
-//#include <cstdlib>
-//
-//#ifdef _DEBUG
-//#ifndef DBG_NEW
-//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-//#define new DBG_NEW
-//#endif
-//#endif  // _DEBUG
 
-// 'Matrix<T>': requires clause is incompatible with the declaration
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+#include <cstdlib>
+
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
 
 #include "Matrix.h"
 
@@ -83,6 +81,10 @@ template <typename T>
 void Matrix<T>::print() const
 {
     // to be Done: Überladen von std::format // print a la C++ 23
+
+    if (m_values.get() == nullptr) {
+        return;
+    }
 
     std::span<T> sp{ m_values.get(), m_rows * m_cols };
 

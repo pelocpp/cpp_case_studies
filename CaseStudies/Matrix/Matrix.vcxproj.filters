@@ -18,9 +18,6 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MatrixImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

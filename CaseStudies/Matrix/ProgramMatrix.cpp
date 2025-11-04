@@ -147,6 +147,20 @@ void test_09() {
     product.print();
 }
 
+void test_20()
+{
+    Matrix<double> matrix{ 3, 3, { { 1.0, 2.0, 3.0 }, { 4.0, 5.0, 6.0 }, { 7.0, 8.0, 9.0 } } };
+    matrix.print();
+
+    Matrix copy = matrix;
+    copy.print();
+
+    Matrix anotherCopy = std::move(matrix);
+    matrix.print();
+    anotherCopy.print();
+
+}
+
 // =====================================================================================
 // End-of-File
 // =====================================================================================
