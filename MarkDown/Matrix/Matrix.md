@@ -122,19 +122,52 @@ Abgesehen davon, dass ein Compiler derartige Einschränkungen gar nicht überprüfe
 
 Ich habe (spaßeshalber) für eine solche Klasse `Matrix` einen ersten Entwurf gemacht:
 
->>> BadApproachMatrix Source-Code
+
+```cpp
+01: template <typename T, std::size_t Rows, std::size_t Cols>
+02: class BadApproachMatrix
+03: {
+04: protected:
+05:     std::array<std::array<T, Cols>, Rows> m_values{};
+06: 
+07: public:
+08:     // c'tors
+09:     BadApproachMatrix() = default;
+10: 
+11:     BadApproachMatrix(std::initializer_list<double> values)
+12:     {
+13:         std::copy(
+14:             values.begin(),
+15:             values.end(),
+16:             &m_values[0][0]
+17:         );
+18:     }
+19:     ...    
+20: };
+```
+
 
 Auf den ersten Blick schaut die Implementierung nicht so schlecht aus.
 Bei genauerem Hinsehen können Sie jedoch erkennen, dass alle Werte des geschachteten `std::array`-Objekts 
 *im* Instanzvariablenbereich des Objekts liegen. Bei großen Werten von `Rows` oder `Cols` kommen hier schnell
-viele Werte zusammen.
+viele Werte zusammen. Siehe das folgende Beispiel mit 100 Zeilen und Spalten:
 
-Damit können wir jetzt folgern, dass für die Elemente einer Matrix grundsätzlich nur dynamischer Speicherplatz
+```cpp
+BadApproachMatrix<double, 100, 100> largeMatrix{ };
+```
+
+Ein Blick hinter die Kulissen des Objekts zeigt uns, dass hier 8.000.000 Bytes auf dem Stack verbraucht werden.
+
+
+<img src="HugeMatrixMemoryLayout.png" width="600">
+
+*Abbildung* 1: Compiler Flag `/Zc:nrvo`.
+
+Das ist in dieser Weise nicht akzeptabel, wir müssen einen anderen Weg beschreiten.
+Wir können jetzt folgern, dass für die Elemente einer Matrix grundsätzlich nur dynamischer Speicherplatz
 in Frage kommt.
 
 Hier geht es nun mit den Operatoren `new` und `delete` oder Smart-Pointer Klassen weiter.
-
-
 
 Eine Matrix kann durch die Anordnung ihrer Elemente in einem einzigen, eindimensionalen Feld dargestellt werden.
 Um so auf die Elemente der Matrix zugreifen zu können, werden die Zeilen- und Spalteninformationen
@@ -144,7 +177,7 @@ eines jeden Elements durch eine Formel komprimiert ausgedrückt.
 in der Reihenfolge der Zeilen abgelegt (so genannte *Zeilen*-*Major*-Anordnung),
 die alternative Anordnung wäre eine *Spalten*-*Major*-Anordnung, also gemäß der Reihenfolge der Spalten.
 
-Speichern wir zum Beispiel eine *rows*&times;*cols*-Matrix (*m* Zeilen, *cols* Spalten) in einem eindimensionalen Feld der Größe *rows* * *cols* ab,
+Speichern wir zum Beispiel eine *rows*&times;*cols*-Matrix (*rows* Zeilen, *cols* Spalten) in einem eindimensionalen Feld der Größe *rows* * *cols* ab,
 lautet die Formel für den Zugriff auf das Element in Zeile *row* und Spalte *col*
 
 *row* * *n* + *col*.
@@ -274,7 +307,112 @@ die Länge der Zeilen und Spalten respektieren.
 
 ## Konzepte und Anforderungen für Matrizen
 
+Die einzelnen Elemente unserer Matrix sollen Gleitpunktwerte aufnehmen.
+Dabei wollen wir aber den Freiheitsgrad aufrecht erhalten, ob die Werte vom Typ `float`, `double` oder `long double` sind.
+In C++ sind Klassentemplates die Antwort auf einen solchen Wunsch.
+
+Eine Verfeinerung unserer `Matrix`-Klassendefinition sieht damit so aus:
+
+```cpp
+01: template <typename T>
+02: concept FloatNumber = std::floating_point<T>;
+03: 
+04: template <typename T>
+05:     requires FloatNumber<T>
+06: class Matrix
+07: {
+08: protected:
+09:     std::size_t m_rows;
+10:     std::size_t m_cols;
+11:     std::shared_ptr<T[]> m_values;
+12: 
+13: public:
+14:     // c'tors
+15:     Matrix();
+16:     Matrix(std::size_t rows, std::size_t cols);
+17:     Matrix(std::size_t rows, std::size_t cols, std::initializer_list<T> values);
+18:     Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<T>> values);
+19: 
+20:     // getter   
+21:     std::size_t rows() const { return m_rows; }
+22:     std::size_t cols() const { return m_cols; }
+23: 
+24:     // public interface
+25:     void print() const;
+26:     T& at(std::size_t row, std::size_t col);
+27:     const T& at(std::size_t row, std::size_t col) const;
+28: 
+29:     Matrix transpose() const;
+30:     Matrix add(const Matrix& other) const;
+31:     Matrix sub(const Matrix& other) const;
+32:     Matrix mul(const Matrix& other) const;
+33: };
+```
+
+
+Die Klasse `Matrix` formulieren wir nun in Gestalt einer Klassenschablone.
+Für die zulässigen Datentypen, die für `T` in Betracht kommen, greifen wir auf die beiden Sprachmittel
+`concept` und `requires` zurück.
+
+Wenn wir nun versuchen, eine Templateinstantiierung für T = int vornehmen zu wollen, 
+reagiert der C++&ndash;Compiler mit der Fehlermeldung
+
+```
+'Matrix': the associated constraints are not satisfied
+```
+
+
+
 ## Kopieren und Verschieben von Matrix-Objekten
 
 ## Rechenmethoden für Matrizen: Addition, Subtraktion und Multipliaktion
+
+Wir starten in diesen Kapitel mit der Betrachtung der Matrizen-Addition.
+Diese ist so definiert, dass in der Ergebnis-Matrix jedes Element die Summe der beiden Elemente aus erstem und zweiten Operanden ist:
+
+$$
+\begin{pmatrix}
+a_{11} & a_{12} & &mldr; & a_{1n}\\
+a_{21} & a_{22} & &mldr; & a_{2n}\\
+&mldr; &  & &mldr; & &mldr;\\
+&mldr; & &mldr; & & &mldr;\\
+&mldr; & &mldr; & &mldr; \\
+a_{m1} & a_{m2} & &mldr; & a_{mn}\\
+\end{pmatrix}
++
+\begin{pmatrix}
+b_{11} & b_{12} & &mldr; & b_{1n}\\
+b_{21} & b_{22} & &mldr; & b_{2n}\\
+&mldr; &  & &mldr; & &mldr;\\
+&mldr; & &mldr; & & &mldr;\\
+&mldr; & &mldr; & &mldr; \\
+b_{m1} & b_{m2} & &mldr; & b_{mn}\\
+\end{pmatrix}
+=
+\begin{pmatrix}
+a_{11}+b_{11} & a_{12}+b_{12} & &mldr; & a_{1n}+b_{1n}\\
+a_{21}+b_{21} & a_{22}+b_{22} & &mldr; & a_{2n}+b_{2n}\\
+&mldr; &  & &mldr; & &mldr;\\
+&mldr; & &mldr; & & &mldr;\\
+&mldr; & &mldr; & &mldr; \\
+a_{m1}+b_{m1} & a_{m2}+b_{m2} & &mldr; & a_{mn}+b_{mn}\\
+\end{pmatrix}
+$$
+
+Ein Umsatzung in C++&ndash;Quellcode ist nicht sonderlich schwer:
+
+
+```cpp
+01: template <typename T>
+02: Matrix<T> Matrix<T>::add(const Matrix& other) const
+03: {
+04:     Matrix<T> result{ m_rows, m_cols };
+05:     for (std::size_t i{}; i != m_rows * m_cols; ++i) {
+06: 
+07:         result.m_values[i] = m_values[i] + other.m_values[i];
+08:     }
+09:     return result;
+10: }
+```
+
 

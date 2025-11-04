@@ -30,6 +30,7 @@ void test_05();
 void test_06();
 void test_07();
 void test_08();
+void test_09();
 
 void test_000();
 
@@ -39,7 +40,7 @@ int main()
 
     try
     {
-        test_000();
+        test_08();
     }
     catch (std::invalid_argument const& ex)
     {

@@ -17,6 +17,8 @@ void test_000()
 
     BadApproachMatrix<double, 3, 3> matrix4{ { 1, 2, 3 }, { 4, 5, 6 },  { 7, 8, 9 } };
     matrix4.print();
+
+    BadApproachMatrix<double, 100, 100> largeMatrix{ };
 }
 
 // =====================================================================================

@@ -33,13 +33,13 @@ public:
 
     // public interface
     void print() const;
-    T& at(std::size_t row, std::size_t col);  // TODO: die 2. Version für const !!!
+    T& at(std::size_t row, std::size_t col);
     const T& at(std::size_t row, std::size_t col) const;
 
-    Matrix<T> transpose() const;
-    Matrix<T> add(const Matrix& other) const;        // ??? Muss das heißen   
-    Matrix<T> sub(const Matrix& other) const;
-    Matrix<T> mul(const Matrix& other) const;
+    Matrix transpose() const;
+    Matrix add(const Matrix& other) const;
+    Matrix sub(const Matrix& other) const;
+    Matrix mul(const Matrix& other) const;
 };
 
 // =====================================================================================

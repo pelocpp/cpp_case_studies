@@ -13,6 +13,8 @@
 //#endif
 //#endif  // _DEBUG
 
+// 'Matrix<T>': requires clause is incompatible with the declaration
+
 #include "Matrix.h"
 
 #include <print>
@@ -20,9 +22,11 @@
 #include <stdexcept>    
 
 template <typename T>
+    requires FloatNumber<T>
 Matrix<T>::Matrix() : m_rows{}, m_cols{}, m_values{} {}
 
 template <typename T>
+    requires FloatNumber<T>
 Matrix<T>::Matrix(std::size_t rows, std::size_t cols)
     : m_rows{ rows }, m_cols{ cols }
 {
@@ -30,6 +34,7 @@ Matrix<T>::Matrix(std::size_t rows, std::size_t cols)
 }
 
 template <typename T>
+    requires FloatNumber<T>
 Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<T> values)
     : m_rows{ rows }, m_cols{ cols }
 {
@@ -47,6 +52,7 @@ Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<T> v
 }
 
 template <typename T>
+    requires FloatNumber<T>
 Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<T>> values)
     : m_rows{ rows }, m_cols{ cols }
 {
@@ -73,6 +79,7 @@ Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std:
 }
 
 template <typename T>
+    requires FloatNumber<T>
 void Matrix<T>::print() const
 {
     // to be Done: Überladen von std::format // print a la C++ 23
@@ -91,6 +98,7 @@ void Matrix<T>::print() const
 }
 
 template <typename T>
+    requires FloatNumber<T>
 T& Matrix<T>::at(std::size_t row, std::size_t col)
 {
     //if (row >= m_rows) {
@@ -113,6 +121,7 @@ T& Matrix<T>::at(std::size_t row, std::size_t col)
 }
 
 template <typename T>
+    requires FloatNumber<T>
 const T& Matrix<T>::at(std::size_t row, std::size_t col) const
 {
     if (row >= m_rows) {
@@ -128,6 +137,7 @@ const T& Matrix<T>::at(std::size_t row, std::size_t col) const
 }
 
 template <typename T>
+    requires FloatNumber<T>
 Matrix<T> Matrix<T>::transpose() const
 {
     Matrix<T> result{ m_cols, m_rows };
@@ -145,40 +155,35 @@ Matrix<T> Matrix<T>::transpose() const
 }
 
 template <typename T>
+    requires FloatNumber<T>
 Matrix<T> Matrix<T>::add(const Matrix& other) const
 {
     Matrix<T> result{ m_rows, m_cols };
 
-    std::span<T> left{ m_values.get(), m_rows * m_cols };
-    std::span<T> right{ other.m_values.get(), m_rows * m_cols };
-    std::span<T> target{ result.m_values.get(), m_rows * m_cols };
-
     for (std::size_t i{}; i != m_rows * m_cols; ++i) {
 
-        target[i] = left[i] + right[i];
+        result.m_values[i] = m_values[i] + other.m_values[i];
     }
 
     return result;
 }
 
 template <typename T>
+    requires FloatNumber<T>
 Matrix<T> Matrix<T>::sub(const Matrix& other) const
 {
     Matrix<T> result{ m_rows, m_cols };
 
-    std::span<T> left{ m_values.get(), m_rows * m_cols };
-    std::span<T> right{ other.m_values.get(), m_rows * m_cols };
-    std::span<T> target{ result.m_values.get(), m_rows * m_cols };
-
     for (std::size_t i{}; i != m_rows * m_cols; ++i) {
 
-        target[i] = left[i] - right[i];
+        result.m_values[i] = m_values[i] - other.m_values[i];
     }
 
     return result;
 }
 
 template <typename T>
+    requires FloatNumber<T>
 Matrix<T> Matrix<T>::mul(const Matrix& other) const
 {
     if (m_cols != other.m_rows) {
@@ -208,15 +213,6 @@ Matrix<T> Matrix<T>::mul(const Matrix& other) const
             std::println();
         }
     }
-
-    //std::span<T> left{ m_values.get(), m_rows * m_cols };
-    //std::span<T> right{ other.m_values.get(), m_rows * m_cols };
-    //std::span<T> target{ result.m_values.get(), m_rows * m_cols };
-
-    //for (std::size_t i{}; i != m_rows * m_cols; ++i) {
-
-    //    target[i] = left[i] - right[i];
-    //}
 
     return result;
 }
