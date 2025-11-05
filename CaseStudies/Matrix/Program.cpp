@@ -31,10 +31,11 @@ void test_06();
 void test_07();
 void test_08();
 void test_09();
-
 void test_20();
 
 void test_000();
+
+void test_linear_equation_01();
 
 int main()
 {   
@@ -42,7 +43,7 @@ int main()
 
     try
     {
-        test_20();
+        test_linear_equation_01();
     }
     catch (std::invalid_argument const& ex)
     {

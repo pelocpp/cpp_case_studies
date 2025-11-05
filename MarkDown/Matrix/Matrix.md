@@ -18,6 +18,20 @@ https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
 
 KI:  markdown math matrices examples
 
+
+
+Linear Equation Solver : r/java
+
+Reddit · r/java
+8 Kommentare · vor 11 Jahren
+Get the values of the parameters for your equation (by parsing a string or having the user input them). Plug the parameters into the formula.
+
+
+
+
+
+
+
 ## Einleitung
 
 Eine Matrix ist eine rechteckige Anordnung von Werten (mathematischen Objekten),

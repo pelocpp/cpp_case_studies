@@ -36,6 +36,10 @@ public:
     T& at(std::size_t row, std::size_t col);
     const T& at(std::size_t row, std::size_t col) const;
 
+    void mulRow(std::size_t row, T value);
+    void subtractRow(std::size_t target, std::size_t source);
+
+
     Matrix transpose() const;
     Matrix add(const Matrix& other) const;
     Matrix sub(const Matrix& other) const;
@@ -45,4 +49,3 @@ public:
 // =====================================================================================
 // End-of-File
 // =====================================================================================
-
