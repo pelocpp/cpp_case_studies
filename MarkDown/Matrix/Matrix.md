@@ -9,6 +9,8 @@ https://www.matheretter.de/wiki/matrizen
 https://www.heise.de/tipps-tricks/LaTeX-Matrix-erstellen-so-geht-s-4352833.html
 
 
+Youtube:
+https://www.youtube.com/watch?v=9Ule9qQaBB0
 
 Mit Google:
 
