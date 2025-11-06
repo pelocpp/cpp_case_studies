@@ -82,22 +82,6 @@ void Matrix<T>::print() const
 {
     // to be Done: Überladen von std::format // print a la C++ 23
 
-    //if (m_values.get() == nullptr) {
-    //    return;
-    //}
-
-    //std::span<T> sp{ m_values.get(), m_rows * m_cols };
-
-    //for (int col = 0; auto elem : sp) {
-
-    //    std::print("{:3}", elem);
-
-    //    ++col;
-    //    if (col % m_cols == 0) {
-    //        std::println();
-    //    }
-    //}
-
     if (m_values == nullptr) {
         return;
     }
@@ -165,15 +149,18 @@ void Matrix<T>::mulRow(std::size_t row, T value)
 
 template <typename T>
     requires FloatNumber<T>
-void Matrix<T>::subtractRow(std::size_t target, std::size_t source)
+void Matrix<T>::subtractRowFromRow(std::size_t source, std::size_t target)
 {
     for (int col{}; col != m_cols; ++col) {
-      //  at(source, col) -= at(target, col);
-        at(source, col) = at(source, col) - at(target, col);
+
+         at(source, col) = at(source, col) - at(target, col);   // geht
+        // oder
+        //at(source, col) =  at(target, col) - at(source, col);     // geht
     }
 }
 
-
+// source = row to modify, target = row to subtract
+// void subtractRowFromRow(std::size_t source, std::size_t target);
 
 template <typename T>
     requires FloatNumber<T>

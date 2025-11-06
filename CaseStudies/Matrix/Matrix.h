@@ -37,8 +37,9 @@ public:
     const T& at(std::size_t row, std::size_t col) const;
 
     void mulRow(std::size_t row, T value);
-    void subtractRow(std::size_t target, std::size_t source);
 
+    // source = row to modify, target = row to subtract
+    void subtractRowFromRow(std::size_t source, std::size_t target);
 
     Matrix transpose() const;
     Matrix add(const Matrix& other) const;

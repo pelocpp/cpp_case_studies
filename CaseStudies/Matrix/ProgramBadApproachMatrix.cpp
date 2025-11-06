@@ -4,7 +4,7 @@
 
 #include "BadApproachMatrix.h"
 
-void test_000()
+void test_bad_matrix_00()
 {
     BadApproachMatrix<double, 3, 3> matrix{ };
     matrix.print();

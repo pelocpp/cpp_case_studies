@@ -6,7 +6,7 @@
 
 #include <print>
 
-void test_01() {
+void test_matrix_01() {
 
     Matrix<double> empty;
     empty.print();
@@ -54,7 +54,7 @@ void test_01() {
 }
 
 
-void test_02() {
+void test_matrix_02() {
 
     Matrix<double> matrix{ 3, 3 };
     matrix.print();
@@ -66,13 +66,13 @@ void test_02() {
     matrix3.print();
 }
 
-void test_03() {
+void test_matrix_03() {
 
     Matrix<double> matrix2{ 3, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };  // Diese Liste ist unvollständig ?????????????
     matrix2.print();
 }
 
-void test_04() {
+void test_matrix_04() {
 
     Matrix<double> matrix{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };
     matrix.print();
@@ -93,7 +93,7 @@ void test_04() {
     constMatrix.print();
 }
 
-void test_05() {
+void test_matrix_05() {
 
     Matrix<double> matrix{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };
     Matrix<double> copy{ matrix };
@@ -102,7 +102,7 @@ void test_05() {
     copy.print();
 }
 
-void test_06() {
+void test_matrix_06() {
 
     Matrix<double> matrix{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };
     matrix.print();
@@ -111,7 +111,7 @@ void test_06() {
     t.print();
 }
 
-void test_07() {
+void test_matrix_07() {
 
     Matrix<double> matrix1{ 3, 3, { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } } };
     matrix1.print();
@@ -123,7 +123,7 @@ void test_07() {
     sum.print();
 }
 
-void test_08() {
+void test_matrix_08() {
 
     Matrix<double> matrix1{ 3, 3, { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } } };
     matrix1.print();
@@ -135,7 +135,7 @@ void test_08() {
     sum.print();
 }
 
-void test_09() {
+void test_matrix_09() {
 
     Matrix<double> matrix1{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 }} };
     matrix1.print();
@@ -147,7 +147,7 @@ void test_09() {
     product.print();
 }
 
-void test_20()
+void test_matrix_20()
 {
     Matrix<double> matrix{ 3, 3, { { 1.0, 2.0, 3.0 }, { 4.0, 5.0, 6.0 }, { 7.0, 8.0, 9.0 } } };
     matrix.print();

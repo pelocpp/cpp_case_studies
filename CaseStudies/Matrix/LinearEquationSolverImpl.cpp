@@ -45,40 +45,92 @@ void LinearEquationSolver::print() const
 {
     for (size_t row{}; row != m_dim; ++row) {
         for (size_t col{}; col != m_dim; ++col) {
-            std::print("{:3}", m_matrix.at(row,col));
+            std::print("{:5g}", m_matrix.at(row,col));
         }
-        std::println(" | {:3}", m_rhs[row]);
+        std::println(" | {:5g}", m_rhs[row]);
     }
     std::println();
 }
 
+//https://www.youtube.com/watch?v=vaahX3Wdxu8
+//
+//https://www.youtube.com/watch?v=9Ule9qQaBB0
+
+
+
 bool LinearEquationSolver::solve()
 {
-    // wenn 1-dimensional ...
+    // wenn 1-dimensional ... Sonderbehanldung
 
-     for (std::size_t row{}; row != m_dim - 1; ++row) {
-   // for (std::size_t row{}; row != 1; ++row) {
+    // mehr als eine Zeile ....
 
-        // eliminate row
-        double coeff1 = m_matrix.at(row, row);
-        double coeff2 = m_matrix.at(row+1, row);
 
-        double newCoeff = coeff1 / coeff2;
+    // forward elimination to create a upper right triangle matrix
+    for (std::size_t dim{}; dim != m_dim - 1; ++dim) {
 
-        // multiply row below current row with this coeccicient
-        m_matrix.mulRow(row + 1, newCoeff);
-        print();
+        for (std::size_t rowBelow{ dim }; rowBelow != m_dim - 1; ++rowBelow) {
 
-        // subtract modified row from first row, result replaces current row ...
-        m_matrix.subtractRow(row, row+1);
+            // eliminate row
+            double coeff1 = m_matrix.at(dim, dim);
+            double coeff2 = m_matrix.at(rowBelow + 1, dim);
 
-        // ... and update right-hand side
-        m_rhs[row+1] -= m_rhs[row];
+            double newCoeff = coeff1 / coeff2;
 
-        print();
+            // multiply row below current row with this coeccicient
+            m_matrix.mulRow(rowBelow + 1, newCoeff);
+
+            // ... and update right-hand side
+            m_rhs[rowBelow + 1] *= newCoeff;
+
+            print();
+
+            // subtract modified row from first row, result replaces current row ...
+            m_matrix.subtractRowFromRow(rowBelow + 1, dim);
+
+            // ... and update right-hand side
+            m_rhs[rowBelow + 1] = m_rhs[rowBelow + 1] - m_rhs[dim];
+            print();
+
+            std::println("--------------------");
+        }
     }
 
-    return false;
+
+    //// i ist IMMER groesser Null ?!?!?!?!
+
+    //for (std::size_t i{ m_dim - 1 }, j{ m_dim - 1 }; i >= 0; --i, --j)
+    //{
+    //    double result = m_rhs[i] / m_matrix.at(i, j);
+    //    m_solution[i] = result;
+
+    //    // die gefunden Lösung einsetzen in allen Zeilen , die darüber liegen (o .. i) 
+    //    // und durch Subtraktion auf die rechte Seite bringen
+    //    for (int k = 0; k <= i; ++k)
+    //    {
+    //        m_rhs[k] -= m_matrix.at(k,i) * result;
+
+    //        m_matrix.at(k, i) = 0.0;
+    //    }
+    //}
+
+    for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
+    {
+        double result = m_rhs[i-1] / m_matrix.at(i - 1, j - 1);
+        m_solution[i - 1] = result;
+
+        // die gefunden Lösung einsetzen in allen Zeilen , die darüber liegen (o .. i) 
+        // und durch Subtraktion auf die rechte Seite bringen
+        for (std::size_t k = 0; k != i; ++k)
+        {
+            m_rhs[k] -= m_matrix.at(k, i-1) * result;
+
+            m_matrix.at(k, i-1) = 0.0;
+        }
+    }
+
+    // now apply back substitution to solve the linear equation system
+
+    return true;
 }
 
 

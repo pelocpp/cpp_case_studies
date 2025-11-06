@@ -7,6 +7,9 @@
 
 // TODO
 
+// Es fehlen bei den Vektor und Matrix-Klassen die Vergleichsoperatoren == und !=
+// Das könnte man möglicherweise modern machen ...............
+
 // Rule of Zero aufzeigen // demonstrieren
 
 // Modern C++:
@@ -22,18 +25,20 @@
 #include <exception>
 #include <print>
 
-void test_01();
-void test_02();
-void test_03();
-void test_04();
-void test_05();
-void test_06();
-void test_07();
-void test_08();
-void test_09();
-void test_20();
+void test_vector_01();
 
-void test_000();
+void test_matrix_01();
+void test_matrix_02();
+void test_matrix_03();
+void test_matrix_04();
+void test_matrix_05();
+void test_matrix_06();
+void test_matrix_07();
+void test_matrix_08();
+void test_matrix_09();
+void test_matrix_20();
+
+void test_bad_matrix_00();
 
 void test_linear_equation_01();
 
@@ -43,7 +48,7 @@ int main()
 
     try
     {
-        test_linear_equation_01();
+        test_vector_01();
     }
     catch (std::invalid_argument const& ex)
     {

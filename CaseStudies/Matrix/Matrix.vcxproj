@@ -131,11 +131,14 @@
     <ClCompile Include="ProgramBadApproachMatrix.cpp" />
     <ClCompile Include="ProgramLinearEquationSolver.cpp" />
     <ClCompile Include="ProgramMatrix.cpp" />
+    <ClCompile Include="ProgramVector.cpp" />
+    <ClCompile Include="VectorImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BadApproachMatrix.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="LinearEquationSolver.h" />
+    <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

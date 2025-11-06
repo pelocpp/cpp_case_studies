@@ -65,6 +65,17 @@ die Kryptografie und natürlich nicht zu vergessen die KI mit dem maschinellen Le
 
 Elementare Rechenoperationen für Matrizen sind die Addition, Subtraktion und Multiplikation.
 
+## Vektoren
+
+In der Mathematik und Physik spielen Skalare und Vektoren eine große Rolle.
+Während man unter einem Skalar eine Größe versteht, deren Wert sich eindeutig durch die Angabe einer Maßzahl beschreiben lässt,
+benötigt man zur vollständigen Charakterisierung eines Vektors noch die Angabe einer Richtung im Raum.
+So lassen sich beispielsweise Windgeschwindigkeiten, Beschleunigungen, elektrische oder magnetische Feldstärken durch Vektoren beschreiben.
+
+
+## Darstellung eines Vektors in C++
+
+
 ## Darstellung einer Matrix in C++
 
 Für tabellenartige Strukturen von Werten gibt es in höheren Programmiersprachen keine unmittelbare Umsetzung.
