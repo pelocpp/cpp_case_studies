@@ -11,6 +11,9 @@
 // Das könnte man möglicherweise modern machen ...............
 
 // Rule of Zero aufzeigen // demonstrieren
+// Vorsicht:
+// Da ist doch Rule-of-Three / Five zu implementieren,
+// weil trotzt SmartPointer  keine echte Kopie entsteht !!!
 
 // Modern C++:
 // Diese beiden Zeilen aufnehmen:
@@ -26,21 +29,9 @@
 #include <print>
 
 void test_vector_01();
-
-void test_matrix_01();
-void test_matrix_02();
-void test_matrix_03();
-void test_matrix_04();
-void test_matrix_05();
-void test_matrix_06();
-void test_matrix_07();
-void test_matrix_08();
-void test_matrix_09();
-void test_matrix_20();
-
-void test_bad_matrix_00();
-
-void test_linear_equation_01();
+void test_matrix();
+void test_bad_matrix();
+void test_linear_equation();
 
 int main()
 {   
@@ -48,7 +39,7 @@ int main()
 
     try
     {
-        test_vector_01();
+        test_linear_equation();
     }
     catch (std::invalid_argument const& ex)
     {

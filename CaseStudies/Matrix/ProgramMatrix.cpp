@@ -6,7 +6,7 @@
 
 #include <print>
 
-void test_matrix_01() {
+static void test_matrix_01() {
 
     Matrix<double> empty;
     empty.print();
@@ -54,7 +54,7 @@ void test_matrix_01() {
 }
 
 
-void test_matrix_02() {
+static void test_matrix_02() {
 
     Matrix<double> matrix{ 3, 3 };
     matrix.print();
@@ -66,13 +66,13 @@ void test_matrix_02() {
     matrix3.print();
 }
 
-void test_matrix_03() {
+static void test_matrix_03() {
 
     Matrix<double> matrix2{ 3, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };  // Diese Liste ist unvollständig ?????????????
     matrix2.print();
 }
 
-void test_matrix_04() {
+static void test_matrix_04() {
 
     Matrix<double> matrix{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };
     matrix.print();
@@ -93,7 +93,7 @@ void test_matrix_04() {
     constMatrix.print();
 }
 
-void test_matrix_05() {
+static void test_matrix_05() {
 
     Matrix<double> matrix{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };
     Matrix<double> copy{ matrix };
@@ -102,7 +102,7 @@ void test_matrix_05() {
     copy.print();
 }
 
-void test_matrix_06() {
+static void test_matrix_06() {
 
     Matrix<double> matrix{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 } } };
     matrix.print();
@@ -111,7 +111,7 @@ void test_matrix_06() {
     t.print();
 }
 
-void test_matrix_07() {
+static void test_matrix_07() {
 
     Matrix<double> matrix1{ 3, 3, { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } } };
     matrix1.print();
@@ -123,7 +123,7 @@ void test_matrix_07() {
     sum.print();
 }
 
-void test_matrix_08() {
+static void test_matrix_08() {
 
     Matrix<double> matrix1{ 3, 3, { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } } };
     matrix1.print();
@@ -135,7 +135,7 @@ void test_matrix_08() {
     sum.print();
 }
 
-void test_matrix_09() {
+static void test_matrix_09() {
 
     Matrix<double> matrix1{ 2, 3, { { 1, 2, 3 }, { 4, 5, 6 }} };
     matrix1.print();
@@ -147,7 +147,7 @@ void test_matrix_09() {
     product.print();
 }
 
-void test_matrix_20()
+static void test_matrix_20()
 {
     Matrix<double> matrix{ 3, 3, { { 1.0, 2.0, 3.0 }, { 4.0, 5.0, 6.0 }, { 7.0, 8.0, 9.0 } } };
     matrix.print();
@@ -159,6 +159,20 @@ void test_matrix_20()
     matrix.print();
     anotherCopy.print();
 
+}
+
+void test_matrix()
+{
+    test_matrix_01();
+    test_matrix_02();
+    test_matrix_03();
+    test_matrix_04();
+    test_matrix_05();
+    test_matrix_06();
+    test_matrix_07();
+    test_matrix_08();
+    test_matrix_09();
+    test_matrix_20();
 }
 
 // =====================================================================================

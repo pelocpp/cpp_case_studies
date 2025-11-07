@@ -16,22 +16,23 @@ public:
     LinearEquationSolver();
 
 private:
+    std::size_t    m_dim;          // number of rows / number of columns
     Matrix<double> m_matrix;       // equation
- //   double         m_rhs[3];       // right-hand side
-    std::size_t    m_dim;          // number of rows = number of columns
     Vector<double> m_solution;     // solution
 
 public:
-  //  void setDimension(std::size_t dim);
-    std::size_t getDimension() const;
+    // getter/setter
+    std::size_t dimension() const;
 
     void setEquation(
         std::size_t dim, 
         std::initializer_list<std::initializer_list<double>> values
     );
-    
-    bool solve();
 
+    const Vector<double>& solution() const;
+    
+    // public interface
+    bool solve();
     void print() const;
 };
 

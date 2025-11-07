@@ -6,7 +6,7 @@
 
 #include <print>
 
-void test_vector_01()
+static void test_vector_01()
 {
     Vector<double> vector{ 3 };
     Vector<double> vector1{ 3,{ 3, 6,  8 } };
@@ -17,12 +17,12 @@ void test_vector_01()
     vector1.print();
     vector2.print();
 
-
     // testing vector length
     std::size_t length = vector1.length();
     std::println("Length = {}\n", length);
 
     // testing vector normalization
+    // das ist falsch implementiert ... Siehe Aufgaben C Grundlagen ....
     Vector<double> result{ vector1.normalize()};
 
 
@@ -77,6 +77,11 @@ void test_vector_01()
     //printf(" == ");
     //vectorPrint(vector1, 3);
     //printf(" : %d\n", comparison);
+}
+
+void test_vector()
+{
+    test_vector_01();
 }
 
 // =====================================================================================

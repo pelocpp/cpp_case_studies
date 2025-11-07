@@ -59,9 +59,9 @@ void Vector<T>::print() const
 
     std::span<T> sp{ m_values.get(), m_length };
 
-    std::print("{{ ");
+    std::print("{{");
     for (int k{};  auto elem : sp) {
-        std::print("{:3}", elem);
+        std::print("{:3g}", elem);
         if (k != m_length - 1) {
             std::print(", ", elem);
             ++k;
@@ -88,7 +88,6 @@ const T& Vector<T>::at(std::size_t index) const
     return m_values[index];
 }
 
-
 // die beiden mal aufrufen ... werden die an die jeweilioge const / non-const version umgeleitet ???
 template <typename T>
     requires FloatNumber<T>
@@ -105,8 +104,6 @@ const T& Vector<T>::operator[](std::size_t index) const
 }
 
 
-
-
 template <typename T>
     requires FloatNumber<T>
 Vector<T> Vector<T>::normalize()
@@ -116,7 +113,7 @@ Vector<T> Vector<T>::normalize()
     T norm{ static_cast<T>(1.0) / static_cast<T>(len) };
 
     //  normalize vector
-    Vector<T> result{};
+    Vector<T> result{ len };
     for (std::size_t i{}; i != len; ++i) {
         result.at(i) = m_values[i] * norm;
     }

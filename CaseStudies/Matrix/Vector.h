@@ -21,8 +21,8 @@ protected:
 public:
     // c'tors
     Vector();
-    Vector(std::size_t length);
-    Vector(std::size_t length, std::initializer_list<T> values);
+    explicit Vector(std::size_t length);
+    explicit Vector(std::size_t length, std::initializer_list<T> values);
    
     // getter   
     std::size_t length() const { return m_length; }
