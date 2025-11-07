@@ -9,7 +9,7 @@
 
 // =====================================================================================
 
-LinearEquationSolver::LinearEquationSolver() : m_dim{}, m_rhs{}, m_solution{} {}
+LinearEquationSolver::LinearEquationSolver() : m_dim{} {}
 
 //void LinearEquationSolver::setDimension(std::size_t dim)
 //{
@@ -25,29 +25,17 @@ void LinearEquationSolver::setEquation(std::size_t dim, std::initializer_list<st
 {
     m_dim = dim;
 
-    m_matrix = Matrix<double>{ dim, dim, values };
-}
-
-void LinearEquationSolver::setRightHandSide(std::initializer_list<double> values)
-{
-    if (m_dim != values.size()) {
-        throw std::invalid_argument("Wrong number of values!");
-    }
-
-    // m_rhs
-    for (int i{}; auto elem : values) {
-        m_rhs[i] = elem;
-        ++i;
-    }
+    m_matrix = Matrix<double>{ dim, dim + 1, values };
 }
 
 void LinearEquationSolver::print() const
 {
     for (size_t row{}; row != m_dim; ++row) {
-        for (size_t col{}; col != m_dim; ++col) {
+        size_t col{};
+        for (; col != m_dim; ++col) {
             std::print("{:5g}", m_matrix.at(row,col));
         }
-        std::println(" | {:5g}", m_rhs[row]);
+        std::println(" | {:5g}", m_matrix.at(row, col+1));
     }
     std::println();
 }
@@ -80,7 +68,7 @@ bool LinearEquationSolver::solve()
             m_matrix.mulRow(rowBelow + 1, newCoeff);
 
             // ... and update right-hand side
-            m_rhs[rowBelow + 1] *= newCoeff;
+        //    m_rhs[rowBelow + 1] *= newCoeff;
 
             print();
 
@@ -88,7 +76,7 @@ bool LinearEquationSolver::solve()
             m_matrix.subtractRowFromRow(rowBelow + 1, dim);
 
             // ... and update right-hand side
-            m_rhs[rowBelow + 1] = m_rhs[rowBelow + 1] - m_rhs[dim];
+        //    m_rhs[rowBelow + 1] = m_rhs[rowBelow + 1] - m_rhs[dim];
             print();
 
             std::println("--------------------");
@@ -115,14 +103,18 @@ bool LinearEquationSolver::solve()
 
     for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
     {
-        double result = m_rhs[i-1] / m_matrix.at(i - 1, j - 1);
+        // double result = m_rhs[i-1] / m_matrix.at(i - 1, j - 1);
+        
+        double result = m_matrix.at(i - 1, i) / m_matrix.at(i - 1, j - 1);
+
         m_solution[i - 1] = result;
 
         // die gefunden Lösung einsetzen in allen Zeilen , die darüber liegen (o .. i) 
         // und durch Subtraktion auf die rechte Seite bringen
         for (std::size_t k = 0; k != i; ++k)
         {
-            m_rhs[k] -= m_matrix.at(k, i-1) * result;
+          //  m_rhs[k] -= m_matrix.at(k, i-1) * result;
+            m_matrix.at(k, i) -= m_matrix.at(k, i - 1) * result;
 
             m_matrix.at(k, i-1) = 0.0;
         }
@@ -130,7 +122,7 @@ bool LinearEquationSolver::solve()
 
     // now apply back substitution to solve the linear equation system
 
-    return true;
+    return true;   // hmm, das ist noch zu klären ....
 }
 
 

@@ -125,6 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FloatNumber.h" />
     <ClCompile Include="LinearEquationSolverImpl.cpp" />
     <ClCompile Include="MatrixImpl.cpp" />
     <ClCompile Include="Program.cpp" />

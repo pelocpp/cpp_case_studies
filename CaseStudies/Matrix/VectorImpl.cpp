@@ -88,6 +88,25 @@ const T& Vector<T>::at(std::size_t index) const
     return m_values[index];
 }
 
+
+// die beiden mal aufrufen ... werden die an die jeweilioge const / non-const version umgeleitet ???
+template <typename T>
+    requires FloatNumber<T>
+T& Vector<T>::operator[](std::size_t index)
+{
+    return at(index);
+}
+
+template <typename T>
+    requires FloatNumber<T>
+const T& Vector<T>::operator[](std::size_t index) const
+{
+    return at(index);
+}
+
+
+
+
 template <typename T>
     requires FloatNumber<T>
 Vector<T> Vector<T>::normalize()

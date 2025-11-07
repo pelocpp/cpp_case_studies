@@ -10,8 +10,8 @@ void test_linear_equation_01() {
 
     LinearEquationSolver solver;
 
-    solver.setEquation(3, { {2, 3, -1} , {1, -2, 1} , {-1, 1, 2} });
-    solver.setRightHandSide({ -9, 9, 0});
+    solver.setEquation(3, { {2, 3, -1, -9} , {1, -2, 1, 9} , {-1, 1, 2, 0} });
+  //  solver.setRightHandSide({ -9, 9, 0});
     solver.print();
 
     std::println("=====================================================");

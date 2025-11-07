@@ -4,12 +4,11 @@
 
 #pragma once
 
+#include "FloatNumber.h"
+
 #include <cstddef>
 #include <initializer_list>
 #include <memory>
-
-template <typename T>
-concept FloatNumber = std::floating_point<T>;
 
 template <typename T>
     requires FloatNumber<T>
@@ -31,6 +30,10 @@ public:
     // public interface
     T& at(std::size_t index);
     const T& at(std::size_t index) const;
+
+    T& operator[](std::size_t index);
+    const T& operator[](std::size_t index) const;
+
 
     Vector normalize();
 
