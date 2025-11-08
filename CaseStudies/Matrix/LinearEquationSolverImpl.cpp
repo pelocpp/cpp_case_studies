@@ -9,43 +9,49 @@
 
 // =====================================================================================
 
-LinearEquationSolver::LinearEquationSolver() : m_dim{} {}
+template <typename T>
+LinearEquationSolver<T>::LinearEquationSolver() : m_dim{} {}
 
 //void LinearEquationSolver::setDimension(std::size_t dim)
 //{
 //    m_dim = dim;
 //}
 
-std::size_t LinearEquationSolver::dimension() const
+template <typename T>
+std::size_t LinearEquationSolver<T>::dimension() const
 {
     return m_dim;
 }
 
-void LinearEquationSolver::setEquation(std::size_t dim, std::initializer_list<std::initializer_list<double>> values)
+template <typename T>
+void LinearEquationSolver<T>::setEquation(std::size_t dim, std::initializer_list<std::initializer_list<T>> values)
 {
     m_dim = dim;
-    m_matrix = Matrix<double>{ dim, dim + 1, values };
+    m_matrix = Matrix<T>{ m_dim, m_dim + 1, values };
 }
 
-const Vector<double>& LinearEquationSolver::solution() const 
+template <typename T>
+const Vector<T>& LinearEquationSolver<T>::solution() const
 {
     return m_solution; 
 }
 
-void LinearEquationSolver::print() const
+template <typename T>
+void LinearEquationSolver<T>::print() const
 {
     for (size_t row{}; row != m_dim; ++row) {
         size_t col{};
         for (; col != m_dim; ++col) {
-            std::print("{:4g}", m_matrix.at(row,col));
+            std::print("{:10.2g}", m_matrix.at(row,col));
         }
-        std::println(" | {:4g}", m_matrix.at(row, col));
+        std::println(" | {:10.2g}", m_matrix.at(row, col));
     }
     std::println();
 }
 
 
-bool LinearEquationSolver::solve()
+template <typename T>
+bool LinearEquationSolver<T>::solve()
 {
     // wenn 1-dimensional ... Sonderbehanldung
 
@@ -58,15 +64,15 @@ bool LinearEquationSolver::solve()
         for (std::size_t rowBelow{ dim }; rowBelow != m_dim - 1; ++rowBelow) {
 
             // eliminate row
-            double coeff1 = m_matrix.at(dim, dim);
-            double coeff2 = m_matrix.at(rowBelow + 1, dim);
+            T coeff1 = m_matrix.at(dim, dim);
+            T coeff2 = m_matrix.at(rowBelow + 1, dim);
 
             // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
             if (coeff2 == 0.0) {
                 continue;
             }
 
-            double newCoeff = coeff1 / coeff2;
+            T newCoeff = coeff1 / coeff2;
 
             // multiply row below current row with this coeccicient
             m_matrix.mulRow(rowBelow + 1, newCoeff);
@@ -84,15 +90,15 @@ bool LinearEquationSolver::solve()
         }
     }
 
-    m_solution = Vector<double>{ m_dim };
-
+    // now apply back substitution to solve the linear equation system
+    m_solution = Vector<T>{ m_dim };
     for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
     {
         std::println(">>>>>>>>>>>>");
         print();
         std::println("<<<<<<<<<<<<");
 
-        double result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
+        T result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
         m_solution[i - 1] = result;
 
         // die gefunden Lösung einsetzen in allen Zeilen , die darüber liegen (o .. i) 
@@ -102,7 +108,7 @@ bool LinearEquationSolver::solve()
             // original
             m_matrix.at(k, m_dim) -= m_matrix.at(k, i - 1) * result;
 
-            //double xxx = m_matrix.at(k, i - 1);
+            //T xxx = m_matrix.at(k, i - 1);
             //xxx = xxx * result;
             //m_matrix.at(k, m_dim) -= xxx;
 
@@ -114,13 +120,15 @@ bool LinearEquationSolver::solve()
         }
     }
 
-    // now apply back substitution to solve the linear equation system
-
-   // m_solution.print();
-
     return true;   // hmm, das ist noch zu klären ....
 }
 
+// =====================================================================================
+
+// explicit template instantiations
+template class LinearEquationSolver<float>;
+template class LinearEquationSolver<double>;
+template class LinearEquationSolver<long double>;
 
 // =====================================================================================
 // End-of-File

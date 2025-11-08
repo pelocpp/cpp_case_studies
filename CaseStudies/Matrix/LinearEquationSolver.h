@@ -10,15 +10,16 @@
 #include <cstddef>
 #include <initializer_list>
 
+template <typename T>
 class LinearEquationSolver
 {
 public:
     LinearEquationSolver();
 
 private:
-    std::size_t    m_dim;          // number of rows / number of columns
-    Matrix<double> m_matrix;       // equation
-    Vector<double> m_solution;     // solution
+    std::size_t  m_dim;          // number of rows / number of columns
+    Matrix<T>    m_matrix;       // equation
+    Vector<T>    m_solution;     // solution
 
 public:
     // getter/setter
@@ -26,10 +27,10 @@ public:
 
     void setEquation(
         std::size_t dim, 
-        std::initializer_list<std::initializer_list<double>> values
+        std::initializer_list<std::initializer_list<T>> values
     );
 
-    const Vector<double>& solution() const;
+    const Vector<T>& solution() const;
     
     // public interface
     bool solve();

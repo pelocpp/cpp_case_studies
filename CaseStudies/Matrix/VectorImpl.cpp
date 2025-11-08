@@ -200,7 +200,7 @@ void Vector<T>::print() const
 
     std::print("{{");
     for (int k{}; auto elem : sp) {
-        std::print("{:3g}", elem);
+        std::print("{:6.2g}", elem);
         if (k != m_dimension - 1) {
             std::print(", ", elem);
             ++k;

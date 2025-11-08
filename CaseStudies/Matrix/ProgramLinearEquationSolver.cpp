@@ -15,7 +15,7 @@
 
 static void test_linear_equation_01() {
 
-    LinearEquationSolver solver;
+    LinearEquationSolver<double> solver;
 
     solver.setEquation(
         3,
@@ -39,7 +39,7 @@ static void test_linear_equation_02() {
 
     // Beispiel auf .pdf
 
-    LinearEquationSolver solver;
+    LinearEquationSolver<double> solver;
 
     solver.setEquation(
         4,
@@ -64,7 +64,7 @@ static void test_linear_equation_03() {
 
     // aus https://www.mathebibel.de/gauss-algorithmus
 
-    LinearEquationSolver solver;
+    LinearEquationSolver<double> solver;
 
     solver.setEquation(
         3,
@@ -84,11 +84,50 @@ static void test_linear_equation_03() {
     }
 }
 
+static void test_linear_equation_04() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.setEquation(
+        10,
+        {
+            { 1,  -2,   5,   2, -1,  1,  4, -3,  1,  5,  84 },
+            { 5,   2,  -1,  -2,  2,  2, -3,  0, -1, -4, -50 },
+            { 2,   0,  -4,  -1, -5,  4,  0,  3, -5,  5,  14 },
+            { 5,   4,  -3,   1, -2,  3, -3, -1, -3,  1, -30 },
+            { -1,  3,   1,  -4, -2,  3, -4,  4,  3,  4,  71 },
+            { -1, -4,  -2,   1,  2, -3, -5, -2, -4,  2, -86 },
+            { -2, -4,   0,   0,  4, -2,  0, -4,  4, -4, -38 },
+            { 4,  -2,   2,   1,  3,  2, -1, -4, -1,  2,   9 },
+            { 4,   3,   3,  -5,  3,  1,  3,  2, -5,  2,  32 },
+            { 2,   5,  -3,  -5,  2, -3, -3, -5,  5, -1, -51 }
+        }
+
+
+
+        // [84, -50, 14, -30, 71, -86, -38, 9, 32, -51]
+
+
+
+    );
+    solver.print();
+
+    bool success{ solver.solve() };
+    if (success) {
+
+        const Vector<double>& solution = solver.solution();
+        solution.print();
+    }
+}
+
 void test_linear_equation()
 {
     // test_linear_equation_01();
     // test_linear_equation_02();
-    test_linear_equation_03();
+   // test_linear_equation_03();
+    test_linear_equation_04();
 }
 
 // =====================================================================================
