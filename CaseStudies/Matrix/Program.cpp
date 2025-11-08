@@ -15,6 +15,11 @@
 // Da ist doch Rule-of-Three / Five zu implementieren,
 // weil trotzt SmartPointer  keine echte Kopie entsteht !!!
 
+
+// TODO:
+// Hmmm, generelle Frage:
+// Aus Vector ... und Matrix (??) könnte man einen STL Container machen ????
+
 // Modern C++:
 // Diese beiden Zeilen aufnehmen:
 
@@ -28,7 +33,7 @@
 #include <exception>
 #include <print>
 
-void test_vector_01();
+void test_vector();
 void test_matrix();
 void test_bad_matrix();
 void test_linear_equation();
@@ -39,7 +44,7 @@ int main()
 
     try
     {
-        test_linear_equation();
+        test_vector();
     }
     catch (std::invalid_argument const& ex)
     {

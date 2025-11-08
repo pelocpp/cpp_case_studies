@@ -30,8 +30,9 @@ public:
     std::size_t rows() const { return m_rows; }
     std::size_t cols() const { return m_cols; }
 
-    // public interface
-    void print() const;
+
+    // accessing matrix elements
+
     T& at(std::size_t row, std::size_t col);
     const T& at(std::size_t row, std::size_t col) const;
 
@@ -40,10 +41,13 @@ public:
     // source = row to modify, target = row to subtract
     void subtractRowFromRow(std::size_t source, std::size_t target);
 
+    // public interface
+
     Matrix transpose() const;
     Matrix add(const Matrix& other) const;
     Matrix sub(const Matrix& other) const;
     Matrix mul(const Matrix& other) const;
+    void print() const;
 };
 
 // =====================================================================================

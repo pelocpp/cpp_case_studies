@@ -8,30 +8,31 @@
 
 static void test_vector_01()
 {
-    Vector<double> vector{ 3 };
-    Vector<double> vector1{ 3,{ 3, 6,  8 } };
-    Vector<double> vector2{ 3, { 3, 6,  8 } };
+    Vector<double> vector1{ 3 };
+    Vector<double> vector2{ 3, { 3, 6, 9 } };
+    Vector<double> vector3{ 3, { 3, 6, 9 } };
 
     // testing vector initialization (zero vector)
-    vector.print();
     vector1.print();
     vector2.print();
+    vector3.print();
 
-    // testing vector length
-    std::size_t length = vector1.length();
-    std::println("Length = {}\n", length);
+    // testing vector dimension and length
+    std::size_t dimension{ vector1.dimension() };
+    std::println("Dimension: {}", dimension);
+    double length{ vector1.length() };
+    std::println("Length: {}", length);
 
     // testing vector normalization
-    // das ist falsch implementiert ... Siehe Aufgaben C Grundlagen ....
     Vector<double> result{ vector1.normalize()};
-
-
-   // vectorNormalize(result, vector1, 3);
-    std::println("Normalized: ");
+    std::println("Normalization: ");
     result.print();
-   // length = vectorLength(result, 3);
-    std::println("Length = {}", result.length());
+ 
+    // testing vector addition
+    result = vector2 + vector3;
+    result.print();
 
+   
     //// testing vector addition
     //vectorAdd(result, vector1, vector2, 3);
     //vectorPrint(vector1, 3);
@@ -39,7 +40,7 @@ static void test_vector_01()
     //vectorPrint(vector2, 3);
     //printf(" = ");
     //vectorPrint(result, 3);
-    //printf("\n");
+    //printf("");
 
     //// testing scalar multiplication
     //vectorScalarMul(result, vector1, 3, 10.0);
@@ -48,14 +49,14 @@ static void test_vector_01()
     //vectorPrint(vector1, 3);
     //printf(" = ");
     //vectorPrint(result, 3);
-    //printf("\n");
+    //printf("");
 
     //// testing scalar product
     //double product = vectorScalarProduct(vector1, vector2, 3);
     //vectorPrint(vector1, 3);
     //printf(" * ");
     //vectorPrint(vector2, 3);
-    //printf(" = %lf  [scalar product]\n", product);
+    //printf(" = %lf  [scalar product]", product);
 
     // ===========================================
 
@@ -64,19 +65,19 @@ static void test_vector_01()
     //vectorPrint(vector1, 3);
     //printf(" == ");
     //vectorPrint(vector2, 3);
-    //printf(" : %d\n", comparison);
+    //printf(" : %d", comparison);
 
     //comparison = isUnequal(vector1, vector2, 3);
     //vectorPrint(vector1, 3);
     //printf(" != ");
     //vectorPrint(vector2, 3);
-    //printf(" : %d\n", comparison);
+    //printf(" : %d", comparison);
 
     //comparison = isEqual(vector1, vector1, 3);
     //vectorPrint(vector1, 3);
     //printf(" == ");
     //vectorPrint(vector1, 3);
-    //printf(" : %d\n", comparison);
+    //printf(" : %d", comparison);
 }
 
 void test_vector()

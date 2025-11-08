@@ -15,35 +15,36 @@ template <typename T>
 class Vector
 {
 protected:
-    std::size_t m_length;
+    std::size_t m_dimension;
     std::shared_ptr<T[]> m_values;
 
 public:
     // c'tors
     Vector();
-    explicit Vector(std::size_t length);
-    explicit Vector(std::size_t length, std::initializer_list<T> values);
+    explicit Vector(std::size_t dimension);
+    explicit Vector(std::size_t dimension, std::initializer_list<T> values);
    
     // getter   
-    std::size_t length() const { return m_length; }
+    std::size_t dimension() const;
+    T length() const;
 
-    // public interface
+    // accessing vector elements
     T& at(std::size_t index);
     const T& at(std::size_t index) const;
-
     T& operator[](std::size_t index);
     const T& operator[](std::size_t index) const;
 
+    // operators
+    Vector operator+ (const Vector& other) const;
+    Vector operator- (const Vector& other) const;
+    Vector operator* (T scalar) const;
 
-    Vector normalize();
-
+    // public interface
+    Vector normalize() const;
     Vector add(const Vector& other) const;
     Vector sub(const Vector& other) const;
     Vector mul(T scalar) const;
-
-
-
-    void print() const;
+    void   print() const;
 };
 
 // =====================================================================================
