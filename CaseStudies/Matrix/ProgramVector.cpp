@@ -23,66 +23,81 @@ static void test_vector_01()
     double length{ vector1.length() };
     std::println("Length: {}", length);
 
+    // assignment operators
+    vector1[0] = 1.0;
+    vector1[1] = 1.0;
+    vector1[2] = 1.0;
+    vector1.print();
+
+    const double& elem = vector1[0];
+    std::println("First element: {}", elem);
+
+    // overload resolution of operator[] is based on the this parameter,
+    // that is - on the constness or lack of constness of the object the operator[] is being called upon
+    const Vector<double> vector4{ 3, { 1, 2, 3 } };
+    const double& elem2 = vector4[0];
+    std::println("First element: {}", elem2);
+}
+
+
+static void test_vector_02()
+{
+    // testing length and normalization
+    Vector<double> vector{ 3, { 2, 2, 1 } };
+    vector.print();
+
+    // testing vector dimension and length
+    std::size_t dimension{ vector.dimension() };
+    std::println("Dimension: {}", dimension);
+    double length{ vector.length() };
+    std::println("Length: {}", length);
+
+
     // testing vector normalization
-    Vector<double> result{ vector1.normalize()};
-    std::println("Normalization: ");
+    Vector<double> result{ vector.normalize() };
+    std::println("Normalized Vector: ");
     result.print();
- 
+
+
+    length = result.length();
+    std::println("Length of normalized vector: {}", length);
+}
+
+static void test_vector_03()
+{
+    Vector<double> vector1{ 3 };
+    Vector<double> vector2{ 3, { 1, 2, 3 } };
+    Vector<double> vector3{ 3, { 4, 5, 6 } };
+
+    // testing vector initialization (zero vector)
+    vector1.print();
+    vector2.print();
+    vector3.print();
+
+    // assignment operators
+    vector1[0] = 1.0;
+    vector1[1] = 1.0;
+    vector1[2] = 1.0;
+    vector1.print();
+
     // testing vector addition
-    result = vector2 + vector3;
+    Vector<double> result = vector2 + vector3;
     result.print();
 
-   
-    //// testing vector addition
-    //vectorAdd(result, vector1, vector2, 3);
-    //vectorPrint(vector1, 3);
-    //printf(" + ");
-    //vectorPrint(vector2, 3);
-    //printf(" = ");
-    //vectorPrint(result, 3);
-    //printf("");
+    // testing vector subtraction
+    result = vector2 - vector3;
+    result.print();
 
-    //// testing scalar multiplication
-    //vectorScalarMul(result, vector1, 3, 10.0);
-    //printf(" 10 ");
-    //printf(" * ");
-    //vectorPrint(vector1, 3);
-    //printf(" = ");
-    //vectorPrint(result, 3);
-    //printf("");
-
-    //// testing scalar product
-    //double product = vectorScalarProduct(vector1, vector2, 3);
-    //vectorPrint(vector1, 3);
-    //printf(" * ");
-    //vectorPrint(vector2, 3);
-    //printf(" = %lf  [scalar product]", product);
-
-    // ===========================================
-
-    //// testing vector comparison
-    //int comparison = isEqual(vector1, vector2, 3);
-    //vectorPrint(vector1, 3);
-    //printf(" == ");
-    //vectorPrint(vector2, 3);
-    //printf(" : %d", comparison);
-
-    //comparison = isUnequal(vector1, vector2, 3);
-    //vectorPrint(vector1, 3);
-    //printf(" != ");
-    //vectorPrint(vector2, 3);
-    //printf(" : %d", comparison);
-
-    //comparison = isEqual(vector1, vector1, 3);
-    //vectorPrint(vector1, 3);
-    //printf(" == ");
-    //vectorPrint(vector1, 3);
-    //printf(" : %d", comparison);
+    // testing vector scalar multiplication
+    result = vector2 * 5;  // hmm: 5 * vector2 geht nicht ?!?!??!
+    result.print();
 }
 
 void test_vector()
 {
     test_vector_01();
+    test_vector_02();
+    test_vector_03();
 }
 
 // =====================================================================================

@@ -9,6 +9,11 @@
 
 // Es fehlen bei den Vektor und Matrix-Klassen die Vergleichsoperatoren == und !=
 // Das könnte man möglicherweise modern machen ...............
+    //// testing vector comparison
+    //int comparison = isEqual(vector1, vector2, 3);
+    //comparison = isUnequal(vector1, vector2, 3);
+
+
 
 // Rule of Zero aufzeigen // demonstrieren
 // Vorsicht:

@@ -75,15 +75,12 @@ T Vector<T>::length() const
 }
 
 // operators
-
 template <typename T>
     requires FloatNumber<T>
-
 Vector<T> Vector<T>::operator+ (const Vector& other) const
 {
     return add(other);
 }
-
 
 template <typename T>
     requires FloatNumber<T>
@@ -94,15 +91,12 @@ Vector<T> Vector<T>::operator- (const Vector& other) const
 
 template <typename T>
     requires FloatNumber<T>
-
 Vector<T> Vector<T>::operator* (T scalar) const
 {
     return mul(scalar);
 }
 
-
 // public interface
-
 template <typename T>
     requires FloatNumber<T>
 T& Vector<T>::at(std::size_t index)
@@ -121,7 +115,7 @@ const T& Vector<T>::at(std::size_t index) const
     return m_values[index];
 }
 
-// die beiden mal aufrufen ... werden die an die jeweilioge const / non-const version umgeleitet ???
+// die beiden mal aufrufen ... werden die an die jeweilige const / non-const version umgeleitet ???
 template <typename T>
     requires FloatNumber<T>
 T& Vector<T>::operator[](std::size_t index)
@@ -165,9 +159,6 @@ Vector<T> Vector<T>::add(const Vector& other) const
 
     return result;
 }
-
-
-
 
 template <typename T>
     requires FloatNumber<T>
@@ -217,7 +208,6 @@ void Vector<T>::print() const
     }
     std::println(" }}");
 }
-
 
 // =====================================================================================
 
