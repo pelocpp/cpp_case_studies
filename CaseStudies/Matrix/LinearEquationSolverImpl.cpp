@@ -12,11 +12,6 @@
 template <typename T>
 LinearEquationSolver<T>::LinearEquationSolver() : m_dim{} {}
 
-//void LinearEquationSolver::setDimension(std::size_t dim)
-//{
-//    m_dim = dim;
-//}
-
 template <typename T>
 std::size_t LinearEquationSolver<T>::dimension() const
 {
@@ -24,10 +19,12 @@ std::size_t LinearEquationSolver<T>::dimension() const
 }
 
 template <typename T>
-void LinearEquationSolver<T>::setEquation(std::size_t dim, std::initializer_list<std::initializer_list<T>> values)
+void LinearEquationSolver<T>::equation(std::size_t dim, std::initializer_list<std::initializer_list<T>> values)
 {
     m_dim = dim;
-    m_matrix = Matrix<T>{ m_dim, m_dim + 1, values };
+    m_matrix = { m_dim, m_dim + 1 };
+    m_matrix.elements(values);
+   // m_matrix = Matrix<T>{ m_dim, m_dim + 1, values };
 }
 
 template <typename T>

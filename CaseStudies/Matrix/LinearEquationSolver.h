@@ -17,7 +17,7 @@ public:
     LinearEquationSolver();
 
 private:
-    std::size_t  m_dim;          // number of rows / number of columns
+    std::size_t  m_dim;          // number of rows / columns
     Matrix<T>    m_matrix;       // equation
     Vector<T>    m_solution;     // solution
 
@@ -25,7 +25,7 @@ public:
     // getter/setter
     std::size_t dimension() const;
 
-    void setEquation(
+    void equation(
         std::size_t dim, 
         std::initializer_list<std::initializer_list<T>> values
     );

@@ -17,12 +17,12 @@ static void test_linear_equation_01() {
 
     LinearEquationSolver<double> solver;
 
-    solver.setEquation(
+    solver.equation(
         3,
         {
             { 2,  3, -1, -9 },
             { 1, -2,  1,  9 },
-            { -1, 1,  2,  0 }
+            { -1, 1,  2,  0, 3 }
         }
     );
     solver.print();
@@ -41,7 +41,7 @@ static void test_linear_equation_02() {
 
     LinearEquationSolver<double> solver;
 
-    solver.setEquation(
+    solver.equation(
         4,
         {
             { 1, 0, 1, 0, 4 },
@@ -66,7 +66,7 @@ static void test_linear_equation_03() {
 
     LinearEquationSolver<double> solver;
 
-    solver.setEquation(
+    solver.equation(
         3,
         {
             { 1, -1,  2, 0 },
@@ -90,7 +90,7 @@ static void test_linear_equation_04() {
 
     LinearEquationSolver<double> solver;
 
-    solver.setEquation(
+    solver.equation(
         10,
         {
             { 1,  -2,   5,   2, -1,  1,  4, -3,  1,  5,  84 },
@@ -124,10 +124,10 @@ static void test_linear_equation_04() {
 
 void test_linear_equation()
 {
-    // test_linear_equation_01();
+    test_linear_equation_01();
     // test_linear_equation_02();
    // test_linear_equation_03();
-    test_linear_equation_04();
+  // test_linear_equation_04();
 }
 
 // =====================================================================================

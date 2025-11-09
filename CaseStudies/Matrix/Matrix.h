@@ -23,12 +23,17 @@ public:
     // c'tors
     Matrix();
     Matrix(std::size_t rows, std::size_t cols);
-    Matrix(std::size_t rows, std::size_t cols, std::initializer_list<T> values);
-    Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<T>> values);
+    //Matrix(std::size_t rows, std::size_t cols, std::initializer_list<T> values);
+    //Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<T>> values);
 
-    // getter   
+    // getter/setter   
     std::size_t rows() const { return m_rows; }
     std::size_t cols() const { return m_cols; }
+
+    void elements(std::initializer_list<T> values);
+    void elements(std::initializer_list<std::initializer_list<T>> values);
+
+
 
 
     // accessing matrix elements

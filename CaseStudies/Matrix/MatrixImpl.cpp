@@ -31,16 +31,61 @@ Matrix<T>::Matrix(std::size_t rows, std::size_t cols)
     m_values = std::make_shared<T[]>(m_rows * m_cols);
 }
 
+//template <typename T>
+//    requires FloatNumber<T>
+//Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<T> values)
+//    : m_rows{ rows }, m_cols{ cols }
+//{
+//    if (m_rows * m_cols != values.size()) {
+//        throw std::invalid_argument("Wrong number of values!");
+//    }
+//
+//    m_values = std::make_shared<T[]>(m_rows * m_cols);
+//
+//    std::copy(
+//        values.begin(),
+//        values.end(),
+//        m_values.get()
+//    );
+//}
+
+//template <typename T>
+//    requires FloatNumber<T>
+//Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<T>> values)
+//    : m_rows{ rows }, m_cols{ cols }
+//{
+//    if (m_rows != values.size()) {
+//        throw std::invalid_argument("Wrong number of rows!");
+//    }
+//
+//    m_values = std::make_shared<T[]>(m_rows * m_cols);
+//
+//    T* last{ m_values.get() };
+//
+//    for (auto row : values) {
+//
+//        if (row.size() != m_cols) {
+//            throw std::invalid_argument("Wrong number of columns!");
+//        }
+//
+//        last = std::copy(
+//            row.begin(),
+//            row.end(),
+//            last
+//        );
+//    }
+//}
+
+
 template <typename T>
     requires FloatNumber<T>
-Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<T> values)
-    : m_rows{ rows }, m_cols{ cols }
+void Matrix<T>::elements(std::initializer_list<T> values)
 {
     if (m_rows * m_cols != values.size()) {
         throw std::invalid_argument("Wrong number of values!");
     }
 
-    m_values = std::make_shared<T[]>(m_rows * m_cols);
+   // m_values = std::make_shared<T[]>(m_rows * m_cols);
 
     std::copy(
         values.begin(),
@@ -49,16 +94,17 @@ Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<T> v
     );
 }
 
+
+
 template <typename T>
     requires FloatNumber<T>
-Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<T>> values)
-    : m_rows{ rows }, m_cols{ cols }
+void Matrix<T>::elements(std::initializer_list<std::initializer_list<T>> values)
 {
     if (m_rows != values.size()) {
         throw std::invalid_argument("Wrong number of rows!");
     }
 
-    m_values = std::make_shared<T[]>(m_rows * m_cols);
+  //  m_values = std::make_shared<T[]>(m_rows * m_cols);
 
     T* last{ m_values.get() };
 
@@ -76,47 +122,15 @@ Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std:
     }
 }
 
-template <typename T>
-    requires FloatNumber<T>
-void Matrix<T>::print() const
-{
-    // to be Done: Überladen von std::format // print a la C++ 23
 
-    if (m_values == nullptr) {
-        return;
-    }
 
-    std::span<T> sp{ m_values.get(), m_rows * m_cols };
 
-    for (size_t col{}; auto elem : sp) {
-
-        std::print("{:3}", elem);
-
-        ++col;
-        if (col % m_cols == 0) {
-            std::println();
-        }
-    }
-}
 
 template <typename T>
     requires FloatNumber<T>
 T& Matrix<T>::at(std::size_t row, std::size_t col)
 {
-    //if (row >= m_rows) {
-    //    throw std::invalid_argument("Invalid row index!!");
-    //}
-
-    //if (col >= m_cols) {
-    //    throw std::invalid_argument("Invalid col index!!");
-    //}
-
-    //return m_values.get()[m_cols * row + col];
-
-
     // https://stackoverflow.com/questions/2673508/correct-usages-of-const-cast
-
-
 
     // or Scott Meyers
     return const_cast<T&>(static_cast<const Matrix&>(*this).at(row, col));
@@ -235,12 +249,33 @@ Matrix<T> Matrix<T>::mul(const Matrix& other) const
             }
 
             result.m_values[col + other.m_cols * row] = value;
-
-            std::println();
         }
     }
 
     return result;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+void Matrix<T>::print() const
+{
+    // to be Done: Überladen von std::format // print a la C++ 23
+
+    if (m_values == nullptr) {
+        return;
+    }
+
+    std::span<T> sp{ m_values.get(), m_rows * m_cols };
+
+    for (size_t col{}; auto elem : sp) {
+
+        std::print("{:3}", elem);
+
+        ++col;
+        if (col % m_cols == 0) {
+            std::println();
+        }
+    }
 }
 
 // =====================================================================================

@@ -49,7 +49,7 @@ int main()
 
     try
     {
-        test_linear_equation();
+        test_matrix();
     }
     catch (std::invalid_argument const& ex)
     {
