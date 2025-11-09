@@ -18,11 +18,9 @@ static void test_linear_equation_01() {
     LinearEquationSolver<double> solver;
 
     solver.equation(
-        3,
+        1,
         {
-            { 2,  3, -1, -9 },
-            { 1, -2,  1,  9 },
-            { -1, 1,  2,  0, 3 }
+            { 2,  4 }
         }
     );
     solver.print();
@@ -37,7 +35,29 @@ static void test_linear_equation_01() {
 
 static void test_linear_equation_02() {
 
-    // Beispiel auf .pdf
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        3,
+        {
+            { 2,  3, -1, -9 },
+            { 1, -2,  1,  9 },
+            { -1, 1,  2,  0 }
+        }
+    );
+    solver.print();
+
+    bool success{ solver.solve() };
+    if (success) {
+
+        const Vector<double>& solution = solver.solution();
+        solution.print();
+    }
+}
+
+static void test_linear_equation_03() {
+
+    // Beispiel aus .pdf
 
     LinearEquationSolver<double> solver;
 
@@ -60,7 +80,7 @@ static void test_linear_equation_02() {
     }
 }
 
-static void test_linear_equation_03() {
+static void test_linear_equation_04() {
 
     // aus https://www.mathebibel.de/gauss-algorithmus
 
@@ -84,7 +104,7 @@ static void test_linear_equation_03() {
     }
 }
 
-static void test_linear_equation_04() {
+static void test_linear_equation_05() {
 
     // Larger example, created by ChatGPT
 
@@ -125,9 +145,10 @@ static void test_linear_equation_04() {
 void test_linear_equation()
 {
     test_linear_equation_01();
-    // test_linear_equation_02();
-   // test_linear_equation_03();
-  // test_linear_equation_04();
+    //test_linear_equation_02();
+    //test_linear_equation_03();
+    //test_linear_equation_04();
+    //test_linear_equation_05();
 }
 
 // =====================================================================================

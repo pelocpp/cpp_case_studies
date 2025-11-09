@@ -24,7 +24,6 @@ void LinearEquationSolver<T>::equation(std::size_t dim, std::initializer_list<st
     m_dim = dim;
     m_matrix = { m_dim, m_dim + 1 };
     m_matrix.elements(values);
-   // m_matrix = Matrix<T>{ m_dim, m_dim + 1, values };
 }
 
 template <typename T>
@@ -50,11 +49,6 @@ void LinearEquationSolver<T>::print() const
 template <typename T>
 bool LinearEquationSolver<T>::solve()
 {
-    // wenn 1-dimensional ... Sonderbehanldung
-
-    // mehr als eine Zeile ....
-
-
     // forward elimination to create a upper right triangle matrix
     for (std::size_t dim{}; dim != m_dim - 1; ++dim) {
 
@@ -100,7 +94,7 @@ bool LinearEquationSolver<T>::solve()
 
         // die gefunden Lösung einsetzen in allen Zeilen , die darüber liegen (o .. i) 
         // und durch Subtraktion auf die rechte Seite bringen
-        for (std::size_t k = 0; k != i - 1; ++k)
+        for (std::size_t k{}; k != i - 1; ++k)
         {
             // original
             m_matrix.at(k, m_dim) -= m_matrix.at(k, i - 1) * result;
