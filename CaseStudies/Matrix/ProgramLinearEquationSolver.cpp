@@ -141,6 +141,50 @@ static void test_linear_equation_10() {
     solution.print();
 }
 
+static void test_linear_equation_20() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        3,
+        {
+            { 2, 3, -1, 5 },
+            { 4, 4, -3, 3 },
+            { -2, 3, 2, 7 }
+        }
+    );
+    solver.print();
+
+    solver.solve_03_permutation_vector();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
+
+
+static void test_linear_equation_21() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        3,
+        {
+            { 0, 2, 1, 3 },
+            { 1, -2, -3, -3 },
+            { 3, -1, 2, 4 }
+        }
+    );
+    solver.print();
+
+    solver.solve_03_permutation_vector();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
+
+
 void test_linear_equation()
 {
     //test_linear_equation_01();
@@ -149,7 +193,9 @@ void test_linear_equation()
     //test_linear_equation_04();
     //test_linear_equation_05();
 
-    test_linear_equation_10();
+    //test_linear_equation_10();
+
+    test_linear_equation_20();
 }
 
 // =====================================================================================

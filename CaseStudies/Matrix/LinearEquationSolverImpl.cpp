@@ -119,7 +119,7 @@ void LinearEquationSolver<T>::solve_02_pivot()
             T elem = m_matrix.at(row, dim);
             std::println("row {}: {}", row, elem);
 
-            if (std::fabs(m_matrix.at(row,dim)) > std::fabs(m_matrix.at(maxRow,dim))) { 
+            if (std::fabs(elem) > std::fabs(m_matrix.at(maxRow,dim))) {
                 maxRow = row;
             };
         }
@@ -169,6 +169,80 @@ void LinearEquationSolver<T>::solve_02_pivot()
         }
     }
 }
+
+template <typename T>
+    requires FloatNumber<T>
+void LinearEquationSolver<T>::solve_03_permutation_vector()
+{
+    size_t perms[3] = { 0, 1, 2};
+
+    // forward elimination to create a upper right triangle matrix
+    for (std::size_t dim{}; dim != m_dim - 1; ++dim) {
+
+        // search pivot element
+        std::size_t maxRow{ dim };
+        for (std::size_t row{ dim }; row != m_dim; ++row) {
+
+            T elem = m_matrix.at(perms[row], dim);
+            std::println("row {}: {}", row, elem);
+
+            if (std::fabs(elem) > std::fabs(m_matrix.at(perms[maxRow], dim))) {
+                maxRow = row;
+            };
+        }
+
+        std::println("maxRow {}", maxRow);
+        // m_matrix.swapRows(dim, maxRow);
+
+        // just swap indices, not rows
+        size_t tmp = perms[dim];
+        perms[dim] = perms[maxRow];
+        perms[maxRow] = tmp;
+
+        // elimination
+        for (std::size_t rowBelow{ dim }; rowBelow != m_dim - 1; ++rowBelow) {
+
+            // eliminate rows
+            T coeff1 = m_matrix.at(perms[dim], dim);
+            T coeff2 = m_matrix.at(perm[rowBelow] + 1, dim);
+
+            // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
+            if (coeff2 == 0.0) {
+                continue;
+            }
+
+            T newCoeff{ coeff1 / coeff2 };
+
+            // multiply row below current row with this coeccicient
+            m_matrix.mulRow(perm[rowBelow] + 1, newCoeff);
+
+            // subtract modified row from first row, result replaces current row ...
+            m_matrix.subtractRowFromRow(perm[rowBelow] + 1, dim);
+
+            std::println("############");
+            print();
+            std::println("############");
+        }
+    }
+
+    // now apply back substitution to solve the linear equation system
+    m_solution = Vector<T>{ m_dim };
+    for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
+    {
+        T result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
+        m_solution[i - 1] = result;
+
+        // substitute the value into all the equation lines above,
+        // and move the calculated values ??by subtraction to the right side
+        for (std::size_t k{}; k != i - 1; ++k)
+        {
+            // original
+            m_matrix.at(k, m_dim) -= m_matrix.at(k, i - 1) * result;
+            m_matrix.at(k, i - 1) = 0.0;
+        }
+    }
+}
+
 
 // =====================================================================================
 
