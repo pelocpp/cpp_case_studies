@@ -25,12 +25,9 @@ static void test_linear_equation_01() {
     );
     solver.print();
 
-    bool success{ solver.solve() };
-    if (success) {
-
-        const Vector<double>& solution = solver.solution();
-        solution.print();
-    }
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
 }
 
 static void test_linear_equation_02() {
@@ -47,12 +44,9 @@ static void test_linear_equation_02() {
     );
     solver.print();
 
-    bool success{ solver.solve() };
-    if (success) {
-
-        const Vector<double>& solution = solver.solution();
-        solution.print();
-    }
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
 }
 
 static void test_linear_equation_03() {
@@ -72,12 +66,9 @@ static void test_linear_equation_03() {
     );
     solver.print();
 
-    bool success{ solver.solve() };
-    if (success) {
-
-        const Vector<double>& solution = solver.solution();
-        solution.print();
-    }
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
 }
 
 static void test_linear_equation_04() {
@@ -91,17 +82,14 @@ static void test_linear_equation_04() {
         {
             { 1, -1,  2, 0 },
             { -2, 1, -6, 0 },
-            { 1,  0, -2, 3 },
+            { 1,  0, -2, 3 }
         }
     );
     solver.print();
 
-    bool success{ solver.solve() };
-    if (success) {
-
-        const Vector<double>& solution = solver.solution();
-        solution.print();
-    }
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
 }
 
 static void test_linear_equation_05() {
@@ -124,31 +112,44 @@ static void test_linear_equation_05() {
             { 4,   3,   3,  -5,  3,  1,  3,  2, -5,  2,  32 },
             { 2,   5,  -3,  -5,  2, -3, -3, -5,  5, -1, -51 }
         }
-
-
-
-        // [84, -50, 14, -30, 71, -86, -38, 9, 32, -51]
-
-
-
     );
     solver.print();
 
-    bool success{ solver.solve() };
-    if (success) {
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
 
-        const Vector<double>& solution = solver.solution();
-        solution.print();
-    }
+static void test_linear_equation_10() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        3,
+        {
+            { 2, 3, -1, 5 },
+            { 4, 4, -3, 3 },
+            { -2, 3, 2, 7 }
+        }
+    );
+    solver.print();
+
+    solver.solve_02_pivot();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
 }
 
 void test_linear_equation()
 {
-    test_linear_equation_01();
+    //test_linear_equation_01();
     //test_linear_equation_02();
     //test_linear_equation_03();
     //test_linear_equation_04();
     //test_linear_equation_05();
+
+    test_linear_equation_10();
 }
 
 // =====================================================================================

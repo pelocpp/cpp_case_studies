@@ -144,7 +144,14 @@ Ein Blick hinter die Kulissen des Objekts zeigt uns, dass hier 8.000.000 Bytes a
 
 <img src="HugeMatrixMemoryLayout.png" width="500">
 
-*Abbildung* 1: Compiler Flag `/Zc:nrvo`.
+*Abbildung* 1: Zu viele Daten auf dem Stack.
+
+oder auch so:
+
+<img src="StackExhaustion.png" width="500">
+
+*Abbildung* 2: Zu viele Daten auf dem Stack.
+
 
 Das ist in dieser Weise nicht akzeptabel, wir müssen einen anderen Weg beschreiten.
 Wir können jetzt folgern, dass für die Elemente einer Matrix grundsätzlich nur dynamischer Speicherplatz

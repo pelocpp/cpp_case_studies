@@ -44,6 +44,8 @@ public:
 
     void mulRow(std::size_t row, T value);
 
+    void swapRows(std::size_t row1, std::size_t row2);
+
     // source = row to modify, target = row to subtract
     void subtractRowFromRow(std::size_t source, std::size_t target);
 };

@@ -194,6 +194,25 @@ Matrix<T> Matrix<T>::mul(const Matrix& other) const
     return result;
 }
 
+
+
+template <typename T>
+    requires FloatNumber<T>
+void Matrix<T>::swapRows(std::size_t row1, std::size_t row2)
+{
+    if (row1 == row2) {
+        return; // nothing to do
+    }
+
+    for (std::size_t k{}; k != m_cols; ++k) {
+
+        T tmp = at(row1, k);
+        at(row1, k) = at(row2, k);
+        at(row2, k) = tmp;
+    }
+}
+
+
 template <typename T>
     requires FloatNumber<T>
 void Matrix<T>::print() const

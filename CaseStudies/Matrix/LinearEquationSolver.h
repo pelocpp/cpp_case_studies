@@ -11,6 +11,7 @@
 #include <initializer_list>
 
 template <typename T>
+    requires FloatNumber<T>
 class LinearEquationSolver
 {
 public:
@@ -33,7 +34,9 @@ public:
     const Vector<T>& solution() const;
     
     // public interface
-    bool solve();
+    void solve_01_simple();
+    void solve_02_pivot();
+
     void print() const;
 };
 

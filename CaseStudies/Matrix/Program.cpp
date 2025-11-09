@@ -31,6 +31,14 @@
 //double* d1 = new double[10];  // then no initialization is performed — it’s as if you called new double[n] without parentheses, so: The array contains indeterminate(garbage) values.
 //double* d2 = new double[10] {};  // then the array is value - initialized, meaning: All elements are initialized to 0.0.
 
+
+// ChatGPT Dialog:
+// Ich möchte ein lineares Gleichungssystem mit dem Varfahren von Gauss lösen.
+// Dabei soll die Betrachtung von Pivot-Elementen mit berücksichtig werden.
+// Ich hätte gerne ein Beispiel, dass die Lösung Schritt für Schritt aufzeigt.
+// Exemplarisch sind auch Anweisungen in C++ erwünscht.
+
+
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
 #include <cstdlib>
