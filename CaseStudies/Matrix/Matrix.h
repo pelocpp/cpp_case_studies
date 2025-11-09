@@ -23,8 +23,6 @@ public:
     // c'tors
     Matrix();
     Matrix(std::size_t rows, std::size_t cols);
-    //Matrix(std::size_t rows, std::size_t cols, std::initializer_list<T> values);
-    //Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<T>> values);
 
     // getter/setter   
     std::size_t rows() const { return m_rows; }
@@ -33,26 +31,21 @@ public:
     void elements(std::initializer_list<T> values);
     void elements(std::initializer_list<std::initializer_list<T>> values);
 
-
-
-
     // accessing matrix elements
-
     T& at(std::size_t row, std::size_t col);
     const T& at(std::size_t row, std::size_t col) const;
 
-    void mulRow(std::size_t row, T value);
-
-    // source = row to modify, target = row to subtract
-    void subtractRowFromRow(std::size_t source, std::size_t target);
-
     // public interface
-
     Matrix transpose() const;
     Matrix add(const Matrix& other) const;
     Matrix sub(const Matrix& other) const;
     Matrix mul(const Matrix& other) const;
     void print() const;
+
+    void mulRow(std::size_t row, T value);
+
+    // source = row to modify, target = row to subtract
+    void subtractRowFromRow(std::size_t source, std::size_t target);
 };
 
 // =====================================================================================

@@ -31,52 +31,6 @@ Matrix<T>::Matrix(std::size_t rows, std::size_t cols)
     m_values = std::make_shared<T[]>(m_rows * m_cols);
 }
 
-//template <typename T>
-//    requires FloatNumber<T>
-//Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<T> values)
-//    : m_rows{ rows }, m_cols{ cols }
-//{
-//    if (m_rows * m_cols != values.size()) {
-//        throw std::invalid_argument("Wrong number of values!");
-//    }
-//
-//    m_values = std::make_shared<T[]>(m_rows * m_cols);
-//
-//    std::copy(
-//        values.begin(),
-//        values.end(),
-//        m_values.get()
-//    );
-//}
-
-//template <typename T>
-//    requires FloatNumber<T>
-//Matrix<T>::Matrix(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<T>> values)
-//    : m_rows{ rows }, m_cols{ cols }
-//{
-//    if (m_rows != values.size()) {
-//        throw std::invalid_argument("Wrong number of rows!");
-//    }
-//
-//    m_values = std::make_shared<T[]>(m_rows * m_cols);
-//
-//    T* last{ m_values.get() };
-//
-//    for (auto row : values) {
-//
-//        if (row.size() != m_cols) {
-//            throw std::invalid_argument("Wrong number of columns!");
-//        }
-//
-//        last = std::copy(
-//            row.begin(),
-//            row.end(),
-//            last
-//        );
-//    }
-//}
-
-
 template <typename T>
     requires FloatNumber<T>
 void Matrix<T>::elements(std::initializer_list<T> values)
@@ -85,16 +39,12 @@ void Matrix<T>::elements(std::initializer_list<T> values)
         throw std::invalid_argument("Wrong number of values!");
     }
 
-   // m_values = std::make_shared<T[]>(m_rows * m_cols);
-
     std::copy(
         values.begin(),
         values.end(),
         m_values.get()
     );
 }
-
-
 
 template <typename T>
     requires FloatNumber<T>
@@ -103,8 +53,6 @@ void Matrix<T>::elements(std::initializer_list<std::initializer_list<T>> values)
     if (m_rows != values.size()) {
         throw std::invalid_argument("Wrong number of rows!");
     }
-
-  //  m_values = std::make_shared<T[]>(m_rows * m_cols);
 
     T* last{ m_values.get() };
 
@@ -121,10 +69,6 @@ void Matrix<T>::elements(std::initializer_list<std::initializer_list<T>> values)
         );
     }
 }
-
-
-
-
 
 template <typename T>
     requires FloatNumber<T>
@@ -161,6 +105,10 @@ void Matrix<T>::mulRow(std::size_t row, T value)
     }
 }
 
+
+// source = row to modify, target = row to subtract
+// void subtractRowFromRow(std::size_t source, std::size_t target);
+
 template <typename T>
     requires FloatNumber<T>
 void Matrix<T>::subtractRowFromRow(std::size_t source, std::size_t target)
@@ -172,9 +120,6 @@ void Matrix<T>::subtractRowFromRow(std::size_t source, std::size_t target)
         //at(source, col) =  at(target, col) - at(source, col);     // geht
     }
 }
-
-// source = row to modify, target = row to subtract
-// void subtractRowFromRow(std::size_t source, std::size_t target);
 
 template <typename T>
     requires FloatNumber<T>
@@ -239,16 +184,10 @@ Matrix<T> Matrix<T>::mul(const Matrix& other) const
             T value{};
 
             for (std::size_t k{}; k != m_cols; ++k) {
-
-                std::size_t index1 = k + m_cols * row;
-                std::size_t index2 = col + other.m_cols * k;
-
-                //std::println("{} - {} ", m_values[index1], other.m_values[index2]);
-
-                value += m_values[index1] * other.m_values[index2];
+                value += at(row, k) * other.at(k,col);
             }
 
-            result.m_values[col + other.m_cols * row] = value;
+            result.at(row, col) = value;
         }
     }
 
@@ -269,7 +208,7 @@ void Matrix<T>::print() const
 
     for (size_t col{}; auto elem : sp) {
 
-        std::print("{:3}", elem);
+        std::print("{:6}", elem);
 
         ++col;
         if (col % m_cols == 0) {
