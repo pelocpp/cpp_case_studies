@@ -96,6 +96,30 @@ Vector<T> Vector<T>::operator* (T scalar) const
     return mul(scalar);
 }
 
+template <typename T>
+    requires FloatNumber<T>
+bool Vector<T>::operator== (const Vector& other) const
+{
+    if (m_dimension != other.m_dimension) {
+        return false;
+    }
+
+    for (size_t k{}; k != m_dimension; ++k) {
+        if (m_values[k] != other.m_values[k]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+bool Vector<T>::operator!= (const Vector& other) const
+{
+    return ! (*this == other);
+}
+
 // public interface
 template <typename T>
     requires FloatNumber<T>

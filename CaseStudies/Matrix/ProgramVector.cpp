@@ -93,11 +93,29 @@ static void test_vector_03()
     result.print();
 }
 
+static void test_vector_04()
+{
+    Vector<double> vector1{ 3, { 1, 2, 3 } };
+    Vector<double> vector2{ 3, { 1, 2, 3 } };
+
+    auto b{ vector1 == vector2};
+    std::println("operator==: {}", b);
+
+    vector1[0] = 123;
+
+    b = (vector1 == vector2);
+    std::println("operator==: {}", b);
+
+    b = (vector1 != vector2);
+    std::println("operator!=: {}", b);
+}
+
 void test_vector()
 {
-    test_vector_01();
-    test_vector_02();
-    test_vector_03();
+    //test_vector_01();
+    //test_vector_02();
+    //test_vector_03();
+    test_vector_04();
 }
 
 // =====================================================================================

@@ -172,9 +172,9 @@ static void test_linear_equation_21() {
     solver.equation(
         3,
         {
-            { 0, 2, 1, 3 },
+            { 0,  2,  1,  3 },
             { 1, -2, -3, -3 },
-            { 3, -1, 2, 4 }
+            { 3, -1,  2,  4 }
         }
     );
     solver.print();
@@ -183,6 +183,28 @@ static void test_linear_equation_21() {
     const Vector<double>& solution = solver.solution();
     solution.print();
 }
+
+static void test_linear_equation_30() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        3,
+        {
+            { 2, 1, -1, 8 },
+            { -3, -1, 2, -11 },
+            { -2, 1, 2, -3 }
+        }
+    );
+    solver.print();
+
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
+
 
 
 void test_linear_equation()
@@ -193,10 +215,16 @@ void test_linear_equation()
     //test_linear_equation_04();
     //test_linear_equation_05();
 
-    //test_linear_equation_10();
+    //test_linear_equation_10();           // { 2.875,   1.25,    4.5 }
 
-    test_linear_equation_20();
+    //test_linear_equation_20();           // { 2.875,   1.25,    4.5 }
+    // test_linear_equation_21();
+
+    test_linear_equation_30();             //  { 2. 3, -1}
 }
+
+
+
 
 // =====================================================================================
 // End-of-File

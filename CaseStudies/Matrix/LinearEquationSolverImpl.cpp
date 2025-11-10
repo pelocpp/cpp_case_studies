@@ -26,7 +26,7 @@ template <typename T>
 void LinearEquationSolver<T>::equation(std::size_t dim, std::initializer_list<std::initializer_list<T>> values)
 {
     m_dim = dim;
-    m_matrix = { m_dim, m_dim + 1 };
+    m_matrix = Matrix<T>{ m_dim, m_dim + 1 };
     m_matrix.elements(values);
 }
 
@@ -56,34 +56,32 @@ template <typename T>
 void LinearEquationSolver<T>::solve_01_simple()
 {
     // forward elimination to create a upper right triangle matrix
-    for (std::size_t dim{}; dim != m_dim - 1; ++dim) {
+    for (std::size_t k{}; k != m_dim - 1; ++k) {
 
-        for (std::size_t rowBelow{ dim }; rowBelow != m_dim - 1; ++rowBelow) {
+        if (m_matrix.at(k, k) == 0.0) {   // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
+            continue;  
+        }
 
-            // eliminate rows
-            T coeff1 = m_matrix.at(dim, dim);
-            T coeff2 = m_matrix.at(rowBelow + 1, dim);
+        // Remove all rows below
+        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim; ++rowBelow) {
 
-            // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
-            if (coeff2 == 0.0) {
-                continue;
-            }
+            T factor{ m_matrix.at(rowBelow, k) / m_matrix.at(k, k) };
 
-            T newCoeff{ coeff1 / coeff2 };
+            m_matrix.subtractRow(factor, k, rowBelow);
 
-            // multiply row below current row with this coeccicient
-            m_matrix.mulRow(rowBelow + 1, newCoeff);
+            //// multiply row below current row with this coeccicient
+            //m_matrix.mulRow(rowBelow + 1, newCoeff);
 
             std::println(">>>>>>>>>>>>");
             print();
             std::println("<<<<<<<<<<<<");
 
-            // subtract modified row from first row, result replaces current row ...
-            m_matrix.subtractRowFromRow(rowBelow + 1, dim);
+            //// subtract modified row from first row, result replaces current row ...
+            //m_matrix.subtractRowFromRow(rowBelow + 1, k);
 
-            std::println(">>>>>>>>>>>>");
-            print();
-            std::println("<<<<<<<<<<<<");
+            //std::println(">>>>>>>>>>>>");
+            //print();
+            //std::println("<<<<<<<<<<<<");
         }
     }
 
@@ -127,6 +125,7 @@ void LinearEquationSolver<T>::solve_02_pivot()
         std::println("maxRow {}", maxRow);
         m_matrix.swapRows(dim, maxRow);
 
+        // Wieso steht hier nicht std::size_t rowBelow{ dim + 1 } ???????????????????
         for (std::size_t rowBelow{ dim }; rowBelow != m_dim - 1; ++rowBelow) {
 
             // eliminate rows
@@ -177,34 +176,38 @@ void LinearEquationSolver<T>::solve_03_permutation_vector()
     size_t perms[3] = { 0, 1, 2};
 
     // forward elimination to create a upper right triangle matrix
-    for (std::size_t dim{}; dim != m_dim - 1; ++dim) {
+    for (std::size_t k{}; k != m_dim - 1; ++k) {
+
+        std::println(">>>>>>>>>>>>");
+        print();
+        std::println("<<<<<<<<<<<<");
 
         // search pivot element
-        std::size_t maxRow{ dim };
-        for (std::size_t row{ dim }; row != m_dim; ++row) {
+        std::size_t pivot{ k };
+        T maxValue = m_matrix.at(perms[k], k);
 
-            T elem = m_matrix.at(perms[row], dim);
-            std::println("row {}: {}", row, elem);
+        for (std::size_t i{ k + 1 }; i != m_dim; ++i) {
 
-            if (std::fabs(elem) > std::fabs(m_matrix.at(perms[maxRow], dim))) {
-                maxRow = row;
+            // if (fabs(A[P[i]][k]) > maxVal) 
+            if (std::fabs(m_matrix.at(perms[i], k)) > maxValue) {
+                pivot = i;
             };
         }
 
-        std::println("maxRow {}", maxRow);
-        // m_matrix.swapRows(dim, maxRow);
+        std::println("pivot {}", pivot);
 
         // just swap indices, not rows
-        size_t tmp = perms[dim];
-        perms[dim] = perms[maxRow];
-        perms[maxRow] = tmp;
+        // TODO: Das muss mit std::spap gehen ....
+        size_t tmp = perms[k];
+        perms[k] = perms[pivot];
+        perms[pivot] = tmp;
 
         // elimination
-        for (std::size_t rowBelow{ dim }; rowBelow != m_dim - 1; ++rowBelow) {
+        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim - 1; ++rowBelow) {
 
             // eliminate rows
-            T coeff1 = m_matrix.at(perms[dim], dim);
-            T coeff2 = m_matrix.at(perm[rowBelow] + 1, dim);
+            T coeff1 = m_matrix.at(perms[k], k);
+            T coeff2 = m_matrix.at(perms[rowBelow] + 1, k);
 
             // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
             if (coeff2 == 0.0) {
@@ -214,10 +217,10 @@ void LinearEquationSolver<T>::solve_03_permutation_vector()
             T newCoeff{ coeff1 / coeff2 };
 
             // multiply row below current row with this coeccicient
-            m_matrix.mulRow(perm[rowBelow] + 1, newCoeff);
+            m_matrix.mulRow(perms[rowBelow] + 1, newCoeff);
 
             // subtract modified row from first row, result replaces current row ...
-            m_matrix.subtractRowFromRow(perm[rowBelow] + 1, dim);
+            m_matrix.subtractRowFromRow(perms[rowBelow] + 1, k);
 
             std::println("############");
             print();
@@ -229,7 +232,7 @@ void LinearEquationSolver<T>::solve_03_permutation_vector()
     m_solution = Vector<T>{ m_dim };
     for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
     {
-        T result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
+        T result = m_matrix.at(perms[i - 1], m_dim) / m_matrix.at(perms[i - 1], j - 1);
         m_solution[i - 1] = result;
 
         // substitute the value into all the equation lines above,
@@ -237,12 +240,11 @@ void LinearEquationSolver<T>::solve_03_permutation_vector()
         for (std::size_t k{}; k != i - 1; ++k)
         {
             // original
-            m_matrix.at(k, m_dim) -= m_matrix.at(k, i - 1) * result;
-            m_matrix.at(k, i - 1) = 0.0;
+            m_matrix.at(perms[k], m_dim) -= m_matrix.at(perms[k], i - 1) * result;
+            m_matrix.at(perms[k], i - 1) = 0.0;
         }
     }
 }
-
 
 // =====================================================================================
 

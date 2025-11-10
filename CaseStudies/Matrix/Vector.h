@@ -39,6 +39,9 @@ public:
     Vector operator-      (const Vector& other) const;
     Vector operator*      (T scalar) const;
 
+    bool operator==     (const Vector& other) const;
+    bool operator!=     (const Vector& other) const;
+    
     // public interface
     Vector normalize      () const;
     Vector add            (const Vector& other) const;

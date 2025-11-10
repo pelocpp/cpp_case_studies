@@ -48,6 +48,8 @@ public:
 
     // source = row to modify, target = row to subtract
     void subtractRowFromRow(std::size_t source, std::size_t target);
+
+    void subtractRow(T factor, std::size_t source, std::size_t target);
 };
 
 // =====================================================================================

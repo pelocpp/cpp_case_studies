@@ -225,7 +225,7 @@ void Matrix<T>::print() const
 
     std::span<T> sp{ m_values.get(), m_rows * m_cols };
 
-    for (size_t col{}; auto elem : sp) {
+    for (std::size_t col{}; auto elem : sp) {
 
         std::print("{:6}", elem);
 
@@ -235,6 +235,19 @@ void Matrix<T>::print() const
         }
     }
 }
+
+template <typename T>
+    requires FloatNumber<T>
+void Matrix<T>::subtractRow(T factor, std::size_t source, std::size_t target)
+{
+    for (std::size_t j{ source }; j != m_cols; ++j) {
+      //  matrix[i][j] -= factor * matrix[k][j];
+
+        at(target, j) -= factor * at(source,j);
+    }
+}
+
+
 
 // =====================================================================================
 
