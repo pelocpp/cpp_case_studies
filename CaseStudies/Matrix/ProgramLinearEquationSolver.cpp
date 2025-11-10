@@ -120,6 +120,27 @@ static void test_linear_equation_05() {
     solution.print();
 }
 
+static void test_linear_equation_06() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        3,
+        {
+            { 2, 1, -1, 8 },
+            { -3, -1, 2, -11 },
+            { -2, 1, 2, -3 }
+        }
+    );
+    solver.print();
+
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
+
 static void test_linear_equation_10() {
 
     // Larger example, created by ChatGPT
@@ -184,43 +205,27 @@ static void test_linear_equation_21() {
     solution.print();
 }
 
-static void test_linear_equation_30() {
 
-    // Larger example, created by ChatGPT
-
-    LinearEquationSolver<double> solver;
-
-    solver.equation(
-        3,
-        {
-            { 2, 1, -1, 8 },
-            { -3, -1, 2, -11 },
-            { -2, 1, 2, -3 }
-        }
-    );
-    solver.print();
-
-    solver.solve_01_simple();
-    const Vector<double>& solution = solver.solution();
-    solution.print();
-}
 
 
 
 void test_linear_equation()
 {
-    //test_linear_equation_01();
-    //test_linear_equation_02();
-    //test_linear_equation_03();
-    //test_linear_equation_04();
-    //test_linear_equation_05();
-
+    //test_linear_equation_01();           // { 2 }
+    //test_linear_equation_02();         // {  1,     -3,      2 }
+   // test_linear_equation_03();         // {  4,      2,      0,      1}
+    //test_linear_equation_04();         // {  2,      1,   -0.5 }
+    //test_linear_equation_05();         // {   1,      2,      3,      4,      5,      6,      7,      8,      9,     10}
+    test_linear_equation_06();             //  { 2, 3, -1}
+    
+    
+     
     //test_linear_equation_10();           // { 2.875,   1.25,    4.5 }
 
     //test_linear_equation_20();           // { 2.875,   1.25,    4.5 }
     // test_linear_equation_21();
 
-    test_linear_equation_30();             //  { 2. 3, -1}
+
 }
 
 
