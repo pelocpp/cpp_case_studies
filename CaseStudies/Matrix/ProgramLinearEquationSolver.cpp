@@ -150,9 +150,9 @@ static void test_linear_equation_10() {
     solver.equation(
         3,
         {
-            { 2, 3, -1, 5 },
-            { 4, 4, -3, 3 },
-            { -2, 3, 2, 7 }
+            {  2, 3, -1, 5 },
+            {  4, 4, -3, 3 },
+            { -2, 3,  2, 7 }
         }
     );
     solver.print();
@@ -171,9 +171,9 @@ static void test_linear_equation_20() {
     solver.equation(
         3,
         {
-            { 2, 3, -1, 5 },
-            { 4, 4, -3, 3 },
-            { -2, 3, 2, 7 }
+            {  2,  3, -1,  5 },
+            {  4,  4, -3,  3 },
+            { -2,  3,  2,  7 }
         }
     );
     solver.print();
@@ -216,11 +216,11 @@ void test_linear_equation()
    // test_linear_equation_03();         // {  4,      2,      0,      1}
     //test_linear_equation_04();         // {  2,      1,   -0.5 }
     //test_linear_equation_05();         // {   1,      2,      3,      4,      5,      6,      7,      8,      9,     10}
-    test_linear_equation_06();             //  { 2, 3, -1}
+   // test_linear_equation_06();             //  { 2, 3, -1}
     
     
      
-    //test_linear_equation_10();           // { 2.875,   1.25,    4.5 }
+    test_linear_equation_10();           // { 2.875,   1.25,    4.5 }
 
     //test_linear_equation_20();           // { 2.875,   1.25,    4.5 }
     // test_linear_equation_21();

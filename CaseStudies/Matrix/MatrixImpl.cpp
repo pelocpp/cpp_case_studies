@@ -241,13 +241,9 @@ template <typename T>
 void Matrix<T>::subtractRow(T factor, std::size_t source, std::size_t target)
 {
     for (std::size_t j{ source }; j != m_cols; ++j) {
-      //  matrix[i][j] -= factor * matrix[k][j];
-
         at(target, j) -= factor * at(source,j);
     }
 }
-
-
 
 // =====================================================================================
 

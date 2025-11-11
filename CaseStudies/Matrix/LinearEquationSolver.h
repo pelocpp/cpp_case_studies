@@ -36,6 +36,7 @@ public:
     // public interface
     void solve_01_simple();
     void solve_02_pivot();
+    void solve_02_pivot_original();
     void solve_03_permutation_vector();
 
     void print() const;

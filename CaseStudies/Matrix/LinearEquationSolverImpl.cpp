@@ -55,33 +55,18 @@ template <typename T>
     requires FloatNumber<T>
 void LinearEquationSolver<T>::solve_01_simple()
 {
-    // forward elimination to create a upper right triangle matrix
+    // forward elimination to create an upper triangular matrix
     for (std::size_t k{}; k != m_dim - 1; ++k) {
 
         if (m_matrix.at(k, k) == 0.0) {   // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
             continue;  
         }
 
-        // Remove all rows below
+        // create a zero value in column 'k' in all rows beneath
         for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim; ++rowBelow) {
 
             T factor{ m_matrix.at(rowBelow, k) / m_matrix.at(k, k) };
-
             m_matrix.subtractRow(factor, k, rowBelow);
-
-            //// multiply row below current row with this coeccicient
-            //m_matrix.mulRow(rowBelow + 1, newCoeff);
-
-            std::println(">>>>>>>>>>>>");
-            print();
-            std::println("<<<<<<<<<<<<");
-
-            //// subtract modified row from first row, result replaces current row ...
-            //m_matrix.subtractRowFromRow(rowBelow + 1, k);
-
-            //std::println(">>>>>>>>>>>>");
-            //print();
-            //std::println("<<<<<<<<<<<<");
         }
     }
 
@@ -93,10 +78,9 @@ void LinearEquationSolver<T>::solve_01_simple()
         m_solution[i - 1] = result;
 
         // substitute the value into all the equation lines above,
-        // and move the calculated values ??by subtraction to the right side
+        // and move the calculated values by subtraction to the right side
         for (std::size_t k{}; k != i - 1; ++k)
         {
-            // original
             m_matrix.at(k, m_dim) -= m_matrix.at(k, i - 1) * result;
             m_matrix.at(k, i - 1) = 0.0;
         }
@@ -105,28 +89,50 @@ void LinearEquationSolver<T>::solve_01_simple()
 
 template <typename T>
     requires FloatNumber<T>
-void LinearEquationSolver<T>::solve_02_pivot()
+void LinearEquationSolver<T>::solve_02_pivot_original()
 {
-    // forward elimination to create a upper right triangle matrix
+    // forward elimination to create an upper triangular matrix
     for (std::size_t dim{}; dim != m_dim - 1; ++dim) {
 
         // search pivot element
+        //std::size_t maxRow{ dim };
+        //for (std::size_t row{ dim  }; row != m_dim; ++row) {
+        //
+        //    T elem = m_matrix.at(row, dim);
+        //    std::println("row {}: {}", row, elem);
+
+        //    // TEST
+        //    T elem1 = m_matrix.at(maxRow, dim);
+
+        //    if (std::fabs(elem) > std::fabs(m_matrix.at(maxRow,dim))) {
+        //        maxRow = row;
+        //    };
+        //}
+
         std::size_t maxRow{ dim };
-        for (std::size_t row{ dim  }; row != m_dim; ++row) {
-        
+        for (std::size_t row{ dim + 1 }; row != m_dim; ++row) {
+
             T elem = m_matrix.at(row, dim);
             std::println("row {}: {}", row, elem);
 
-            if (std::fabs(elem) > std::fabs(m_matrix.at(maxRow,dim))) {
+            // TEST
+            T elem1 = m_matrix.at(maxRow, dim);
+
+            if (std::fabs(elem) > std::fabs(m_matrix.at(maxRow, dim))) {
                 maxRow = row;
             };
         }
+
 
         std::println("maxRow {}", maxRow);
         m_matrix.swapRows(dim, maxRow);
 
         // Wieso steht hier nicht std::size_t rowBelow{ dim + 1 } ???????????????????
         for (std::size_t rowBelow{ dim }; rowBelow != m_dim - 1; ++rowBelow) {
+
+            std::println(">>>>>>>>>>>");
+            print();
+            std::println(">>>>>>>>>>>");
 
             // eliminate rows
             T coeff1 = m_matrix.at(dim, dim);
@@ -148,6 +154,103 @@ void LinearEquationSolver<T>::solve_02_pivot()
             std::println("############");
             print();
             std::println("############");
+        }
+    }
+
+    // now apply back substitution to solve the linear equation system
+    m_solution = Vector<T>{ m_dim };
+    for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
+    {
+        T result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
+        m_solution[i - 1] = result;
+
+        // substitute the value into all the equation lines above,
+        // and move the calculated values ??by subtraction to the right side
+        for (std::size_t k{}; k != i - 1; ++k)
+        {
+            // original
+            m_matrix.at(k, m_dim) -= m_matrix.at(k, i - 1) * result;
+            m_matrix.at(k, i - 1) = 0.0;
+        }
+    }
+}
+
+
+template <typename T>
+    requires FloatNumber<T>
+void LinearEquationSolver<T>::solve_02_pivot()
+{
+    // forward elimination to create an upper triangular matrix
+    for (std::size_t dim{}; dim != m_dim - 1; ++dim) {
+
+        // search pivot element
+        //std::size_t maxRow{ dim };
+        //for (std::size_t row{ dim  }; row != m_dim; ++row) {
+        //
+        //    T elem = m_matrix.at(row, dim);
+        //    std::println("row {}: {}", row, elem);
+
+        //    // TEST
+        //    T elem1 = m_matrix.at(maxRow, dim);
+
+        //    if (std::fabs(elem) > std::fabs(m_matrix.at(maxRow,dim))) {
+        //        maxRow = row;
+        //    };
+        //}
+
+        // search pivot element
+        std::size_t maxRow{ dim };
+        for (std::size_t row{ dim + 1 }; row != m_dim; ++row) {
+
+            T elem = m_matrix.at(row, dim);
+            std::println("row {}: {}", row, elem);
+
+            // TEST
+            T elem1 = m_matrix.at(maxRow, dim);
+
+            if (std::fabs(elem) > std::fabs(m_matrix.at(maxRow, dim))) {
+                maxRow = row;
+            };
+        }
+
+
+        std::println("maxRow {}", maxRow);
+        m_matrix.swapRows(dim, maxRow);
+
+        //// Wieso steht hier nicht std::size_t rowBelow{ dim + 1 } ???????????????????
+        //for (std::size_t rowBelow{ dim }; rowBelow != m_dim - 1; ++rowBelow) {
+
+        //    std::println(">>>>>>>>>>>");
+        //    print();
+        //    std::println(">>>>>>>>>>>");
+
+        //    // eliminate rows
+        //    T coeff1 = m_matrix.at(dim, dim);
+        //    T coeff2 = m_matrix.at(rowBelow + 1, dim);
+
+        //    // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
+        //    if (coeff2 == 0.0) {
+        //        continue;
+        //    }
+
+        //    T newCoeff{ coeff1 / coeff2 };
+
+        //    // multiply row below current row with this coeccicient
+        //    m_matrix.mulRow(rowBelow + 1, newCoeff);
+
+        //    // subtract modified row from first row, result replaces current row ...
+        //    m_matrix.subtractRowFromRow(rowBelow + 1, dim);
+
+        //    std::println("############");
+        //    print();
+        //    std::println("############");
+        //}
+
+        // create a zero value in column 'k' in all rows beneath
+        for (std::size_t rowBelow{ dim + 1 }; rowBelow != m_dim; ++rowBelow) {
+
+            T factor{ m_matrix.at(rowBelow, dim) / m_matrix.at(dim, dim) };
+            m_matrix.subtractRow(factor, dim, rowBelow);
         }
     }
 
