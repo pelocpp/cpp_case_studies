@@ -157,7 +157,7 @@ static void test_linear_equation_10() {
     );
     solver.print();
 
-    solver.solve_02_pivot();
+    solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
     solution.print();
 }
@@ -183,8 +183,51 @@ static void test_linear_equation_20() {
     solution.print();
 }
 
-
 static void test_linear_equation_21() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        3,
+        {
+            {  2,  3, -1,  5 },
+            {  4,  4, -3,  3 },
+            { -2,  3,  2,  7 }
+        }
+    );
+    solver.print();
+
+    solver.solve_02_pivot();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
+
+static void test_linear_equation_22() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        3,
+        {
+            {  2,  3, -1,  5 },
+            {  4,  4, -3,  3 },
+            { -2,  3,  2,  7 }
+        }
+    );
+    solver.print();
+
+    solver.solve_03_permutation_vector();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
+
+
+
+static void test_linear_equation_24() {
 
     // Larger example, created by ChatGPT
 
@@ -207,6 +250,108 @@ static void test_linear_equation_21() {
 
 
 
+static void test_linear_equation_30() {
+
+    // Ronald Mak, p. 273
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        2,
+        {
+            { 0.0001, 2, 2 },
+            {      1, 1, 2 }
+        }
+    );
+    solver.print();
+
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
+
+static void test_linear_equation_40() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        10,
+        {
+            { 1,  -2,   5,   2, -1,  1,  4, -3,  1,  5,  84 },
+            { 5,   2,  -1,  -2,  2,  2, -3,  0, -1, -4, -50 },
+            { 2,   0,  -4,  -1, -5,  4,  0,  3, -5,  5,  14 },
+            { 5,   4,  -3,   1, -2,  3, -3, -1, -3,  1, -30 },
+            { -1,  3,   1,  -4, -2,  3, -4,  4,  3,  4,  71 },
+            { -1, -4,  -2,   1,  2, -3, -5, -2, -4,  2, -86 },
+            { -2, -4,   0,   0,  4, -2,  0, -4,  4, -4, -38 },
+            { 4,  -2,   2,   1,  3,  2, -1, -4, -1,  2,   9 },
+            { 4,   3,   3,  -5,  3,  1,  3,  2, -5,  2,  32 },
+            { 2,   5,  -3,  -5,  2, -3, -3, -5,  5, -1, -51 }
+        }
+    );
+    solver.print();
+
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
+
+static void test_linear_equation_41() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        10,
+        {
+            { 1,  -2,   5,   2, -1,  1,  4, -3,  1,  5,  84 },
+            { 5,   2,  -1,  -2,  2,  2, -3,  0, -1, -4, -50 },
+            { 2,   0,  -4,  -1, -5,  4,  0,  3, -5,  5,  14 },
+            { 5,   4,  -3,   1, -2,  3, -3, -1, -3,  1, -30 },
+            { -1,  3,   1,  -4, -2,  3, -4,  4,  3,  4,  71 },
+            { -1, -4,  -2,   1,  2, -3, -5, -2, -4,  2, -86 },
+            { -2, -4,   0,   0,  4, -2,  0, -4,  4, -4, -38 },
+            { 4,  -2,   2,   1,  3,  2, -1, -4, -1,  2,   9 },
+            { 4,   3,   3,  -5,  3,  1,  3,  2, -5,  2,  32 },
+            { 2,   5,  -3,  -5,  2, -3, -3, -5,  5, -1, -51 }
+        }
+    );
+    solver.print();
+
+    solver.solve_02_pivot();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
+
+static void test_linear_equation_42() {
+
+    // Larger example, created by ChatGPT
+
+    LinearEquationSolver<double> solver;
+
+    solver.equation(
+        10,
+        {
+            { 1,  -2,   5,   2, -1,  1,  4, -3,  1,  5,  84 },
+            { 5,   2,  -1,  -2,  2,  2, -3,  0, -1, -4, -50 },
+            { 2,   0,  -4,  -1, -5,  4,  0,  3, -5,  5,  14 },
+            { 5,   4,  -3,   1, -2,  3, -3, -1, -3,  1, -30 },
+            { -1,  3,   1,  -4, -2,  3, -4,  4,  3,  4,  71 },
+            { -1, -4,  -2,   1,  2, -3, -5, -2, -4,  2, -86 },
+            { -2, -4,   0,   0,  4, -2,  0, -4,  4, -4, -38 },
+            { 4,  -2,   2,   1,  3,  2, -1, -4, -1,  2,   9 },
+            { 4,   3,   3,  -5,  3,  1,  3,  2, -5,  2,  32 },
+            { 2,   5,  -3,  -5,  2, -3, -3, -5,  5, -1, -51 }
+        }
+    );
+    solver.print();
+
+    solver.solve_03_permutation_vector();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
 
 
 void test_linear_equation()
@@ -220,14 +365,20 @@ void test_linear_equation()
     
     
      
-    test_linear_equation_10();           // { 2.875,   1.25,    4.5 }
+   // test_linear_equation_10();           // { 2.875,   1.25,    4.5 }
+     
+ //   test_linear_equation_20();           // { 2.875,   1.25,    4.5 }  // simple
+   //  test_linear_equation_21();          // { 2.875,   1.25,    4.5 }  // pivot
+   //  test_linear_equation_22();            // { 2.875,   1.25,    4.5 }  // permutation vector
 
-    //test_linear_equation_20();           // { 2.875,   1.25,    4.5 }
-    // test_linear_equation_21();
+    // Ronald Mak
+   // test_linear_equation_30();
 
+   // test_linear_equation_40();   // korrekt
+    //test_linear_equation_41();   // korrekt
+    test_linear_equation_42();     // stürzt ab
 
 }
-
 
 
 

@@ -240,9 +240,20 @@ template <typename T>
     requires FloatNumber<T>
 void Matrix<T>::subtractRow(T factor, std::size_t source, std::size_t target)
 {
+    std::println("----------");
+    print();
+    std::println("----------");
+
     for (std::size_t j{ source }; j != m_cols; ++j) {
+
+
         at(target, j) -= factor * at(source,j);
     }
+
+    std::println("----------");
+    print();
+    std::println("----------");
+
 }
 
 // =====================================================================================
