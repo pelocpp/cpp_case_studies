@@ -5,6 +5,19 @@
 
 // Youtube
 
+// Weiterarbeit:
+
+// https://chatgpt.com/share/69136761-da80-8007-ac79-e3735a306944
+
+// Hmmm, da hat der ChazGPT nen guten Vorschlag gemacht ....
+// Gretchenfrage:  da ist halt ein std::vector drinne ....
+
+// aber warum nicht !?!?!
+// Das Kopieren funkioniert jetzt ..........................
+
+
+
+
 // TODO
 
 // Es fehlen bei den Vektor und Matrix-Klassen die Vergleichsoperatoren == und !=
@@ -13,6 +26,11 @@
     //int comparison = isEqual(vector1, vector2, 3);
     //comparison = isUnequal(vector1, vector2, 3);
 
+
+
+
+//   if (m_matrix.at(perms[k], k) == 0.0) {   // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
+// Hmmm, das Thema "double Vergleich mit 0.0" ist oder bleibt wohl offen
 
 
 // Rule of Zero aufzeigen // demonstrieren

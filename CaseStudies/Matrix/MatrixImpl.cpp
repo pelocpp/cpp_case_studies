@@ -109,17 +109,17 @@ void Matrix<T>::mulRow(std::size_t row, T value)
 // source = row to modify, target = row to subtract
 // void subtractRowFromRow(std::size_t source, std::size_t target);
 
-template <typename T>
-    requires FloatNumber<T>
-void Matrix<T>::subtractRowFromRow(std::size_t source, std::size_t target)
-{
-    for (int col{}; col != m_cols; ++col) {
-
-         at(source, col) = at(source, col) - at(target, col);   // geht
-        // oder
-        //at(source, col) =  at(target, col) - at(source, col);     // geht
-    }
-}
+//template <typename T>
+//    requires FloatNumber<T>
+//void Matrix<T>::subtractRowFromRow(std::size_t source, std::size_t target)
+//{
+//    for (int col{}; col != m_cols; ++col) {
+//
+//         at(source, col) = at(source, col) - at(target, col);   // geht
+//        // oder
+//        //at(source, col) =  at(target, col) - at(source, col);     // geht
+//    }
+//}
 
 template <typename T>
     requires FloatNumber<T>
@@ -240,20 +240,15 @@ template <typename T>
     requires FloatNumber<T>
 void Matrix<T>::subtractRow(T factor, std::size_t source, std::size_t target)
 {
-    std::println("----------");
-    print();
-    std::println("----------");
+    // Original
+    //for (std::size_t j{ source }; j != m_cols; ++j) {
+    //    at(target, j) -= factor * at(source,j);
+    //}
 
-    for (std::size_t j{ source }; j != m_cols; ++j) {
-
-
-        at(target, j) -= factor * at(source,j);
+    // Neuer Versuch
+    for (std::size_t j{ 0 }; j != m_cols; ++j) {
+        at(target, j) -= factor * at(source, j);
     }
-
-    std::println("----------");
-    print();
-    std::println("----------");
-
 }
 
 // =====================================================================================

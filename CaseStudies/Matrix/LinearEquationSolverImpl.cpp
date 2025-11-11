@@ -5,8 +5,10 @@
 #include "LinearEquationSolver.h"
 
 #include <cmath> 
+#include <numeric>
 #include <print>
 #include <stdexcept>
+#include <utility> 
 #include <vector> 
 
 // =====================================================================================
@@ -56,10 +58,6 @@ template <typename T>
     requires FloatNumber<T>
 bool LinearEquationSolver<T>::solve_01_simple()
 {
-    std::println(">>>>>>>>>>>");
-    print();
-    std::println(">>>>>>>>>>>");
-
     // forward elimination to create an upper triangular matrix
     for (std::size_t k{}; k != m_dim - 1; ++k) {
 
@@ -72,10 +70,6 @@ bool LinearEquationSolver<T>::solve_01_simple()
 
             T factor{ m_matrix.at(rowBelow, k) / m_matrix.at(k, k) };
             m_matrix.subtractRow(factor, k, rowBelow);
-
-            std::println("----------");
-            print();
-            std::println("----------");
         }
     }
 
@@ -112,9 +106,6 @@ bool LinearEquationSolver<T>::solve_02_pivot()
             T elem = m_matrix.at(row, k);
             std::println("row {}: {}", row, elem);
 
-            // TEST
-            T elem1 = m_matrix.at(pivot, k);
-
             if (std::fabs(elem) > std::fabs(m_matrix.at(pivot,k))) {
                 pivot = row;
             };
@@ -123,20 +114,15 @@ bool LinearEquationSolver<T>::solve_02_pivot()
         std::println("pivot: {}", pivot);
         m_matrix.swapRows(k, pivot);
 
-        std::println(">>>>>>>>>>>");
-        print();
-        std::println(">>>>>>>>>>>");
+        if (m_matrix.at(k, k) == 0.0) {   // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
+            return false;
+        }
 
         // create a zero value in column 'k' in all rows beneath
         for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim; ++rowBelow) {
 
             T factor{ m_matrix.at(rowBelow, k) / m_matrix.at(k, k) };
-            std::println("factor: {}", factor);
             m_matrix.subtractRow(factor, k, rowBelow);
-
-            std::println("----------");
-            print();
-            std::println("----------");
         }
     }
 
@@ -164,17 +150,12 @@ template <typename T>
     requires FloatNumber<T>
 bool LinearEquationSolver<T>::solve_03_permutation_vector()
 {
-   // size_t perms[3] = { 0, 1, 2};
-
-    std::vector<std::size_t> perms{ 0, 1, 2 };
-
+    // create a permatations vector being intialized with 0, 1, 2, ...
+    std::vector<std::size_t> perms(m_matrix.rows());
+    std::iota(perms.begin(), perms.end(), 0);
 
     // forward elimination to create an upper triangular matrix
     for (std::size_t k{}; k != m_dim - 1; ++k) {
-
-        std::println(">>>>>>>>>>>>");
-        print();
-        std::println("<<<<<<<<<<<<");
 
         // search pivot element (largest coefficient in rows k,..., m_dim-1)
         std::size_t pivot{ k };
@@ -182,9 +163,6 @@ bool LinearEquationSolver<T>::solve_03_permutation_vector()
 
             T elem = m_matrix.at(row, k);
             std::println("row {}: {}", row, elem);
-
-            // TEST
-            T elem1 = m_matrix.at(pivot, k);
 
             if (std::fabs(elem) > std::fabs(m_matrix.at(pivot, k))) {
                 pivot = row;
@@ -194,58 +172,27 @@ bool LinearEquationSolver<T>::solve_03_permutation_vector()
         std::println("pivot {}", pivot);
 
         // just swap indices, not rows
-        // TODO: Das muss mit std::spap gehen ....
-        size_t tmp = perms[k];
-        perms[k] = perms[pivot];
-        perms[pivot] = tmp;
+        std::swap(perms[k], perms[pivot]);
 
-        
-        // SO MACHT DAS VERSION 2 !=!=!=!=
-        // create a zero value in column 'k' in all rows beneath
-       // for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim; ++rowBelow) {
-        
-        // create a zero value in column 'k' in all rows beneath
-        //for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim - 1; ++rowBelow) {
-
-        //    // eliminate rows
-        //    T coeff1 = m_matrix.at(perms[k], k);
-        //    T coeff2 = m_matrix.at(perms[rowBelow], k);
-
-        //    // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
-        //    if (coeff2 == 0.0) {
-        //        continue;
-        //    }
-
-        //    T newCoeff{ coeff1 / coeff2 };
-        //    std::println("factor: {}", newCoeff);
-
-        //    // multiply row below current row with this coeccicient
-        //    m_matrix.mulRow(perms[rowBelow] + 1, newCoeff);
-
-        //    // subtract modified row from first row, result replaces current row ...
-        //    m_matrix.subtractRowFromRow(perms[rowBelow] + 1, k);
-
-        //    std::println("############");
-        //    print();
-        //    std::println("############");
-        //}
+        if (m_matrix.at(perms[k], k) == 0.0) {   // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
+            return false;
+        }
 
         // create a zero value in column 'k' in all rows beneath
         for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim; ++rowBelow) {
 
-            // T factor{ m_matrix.at(rowBelow, k) / m_matrix.at(k, k) };
             T factor{ m_matrix.at(perms[rowBelow], k) / m_matrix.at(perms[k], k) };
             std::println("factor: {}", factor);
-            //m_matrix.subtractRow(factor, perms[k], perms[rowBelow]);
 
-            for (std::size_t j{ k }; j != m_matrix.cols(); ++j) {
+            //for (std::size_t j{ k }; j != m_matrix.cols(); ++j) {
+            //    m_matrix.at(perms[rowBelow], j) -= factor * m_matrix.at(perms[k], j);
+            //}
 
-                m_matrix.at(perms[rowBelow], j) -= factor * m_matrix.at(perms[k], j);
-            }
+            // versus
 
-            std::println("----------");
-            print();
-            std::println("----------");
+            m_matrix.subtractRow(factor, perms[k], perms[rowBelow]);
+
+            // Beachte: Beide Version sind jetzt indentisch -- natürlich ist das mit 'subtractRow' eleganter ....
         }
     }
 
@@ -257,7 +204,7 @@ bool LinearEquationSolver<T>::solve_03_permutation_vector()
         m_solution[i - 1] = result;
 
         // substitute the value into all the equation lines above,
-        // and move the calculated values ??by subtraction to the right side
+        // and move the calculated values by subtraction to the right side
         for (std::size_t k{}; k != i - 1; ++k)
         {
             // original
