@@ -7,13 +7,37 @@
 
 // Weiterarbeit:
 
+// Frage:
+// I'm implementing a C++ class for matrices. Does it make sense, to implement this class in the manner as a C++ container class?
+
 // https://chatgpt.com/share/69136761-da80-8007-ac79-e3735a306944
 
 // Hmmm, da hat der ChazGPT nen guten Vorschlag gemacht ....
 // Gretchenfrage:  da ist halt ein std::vector drinne ....
 
 // aber warum nicht !?!?!
-// Das Kopieren funkioniert jetzt ..........................
+// Das Kopieren funkioniert jetzt .........................
+
+// Diesselbe Frage für Vektoren:
+
+// https://chatgpt.com/share/69143e18-d640-8007-8563-ac357f816ea1
+
+// Aber ich könnte / sollte einen Vektor kapseln:
+
+//class Vector {
+//    std::vector<double> data_;
+//public:
+//    // size known at runtime
+//    explicit Vector(std::size_t n) : data_(n) {}
+//    double& operator[](std::size_t i) { return data_[i]; }
+//    const double& operator[](std::size_t i) const { return data_[i]; }
+//    std::size_t size() const { return data_.size(); }
+//
+//    // math ops
+//    Vector& operator+=(const Vector& rhs);
+//    Vector& operator*=(double scalar);
+//    // etc.
+//};
 
 
 
