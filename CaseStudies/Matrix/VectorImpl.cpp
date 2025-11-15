@@ -23,31 +23,29 @@
 // c'tors
 template <typename T>
     requires FloatNumber<T>
-Vector<T>::Vector() : m_dimension{}, m_values{} {}
+Vector<T>::Vector() : m_values{} {}
 
 template <typename T>
     requires FloatNumber<T>
-Vector<T>::Vector(std::size_t length)
-    : m_dimension{ length }
+Vector<T>::Vector(std::size_t dimension)
 {
-    m_values = std::make_shared<T[]>(length);
+    m_values.resize(dimension);
 }
 
 template <typename T>
     requires FloatNumber<T>
-Vector<T>::Vector(std::size_t length, std::initializer_list<T> values)
-    : m_dimension{ length }
+Vector<T>::Vector(std::size_t dimension, std::initializer_list<T> values)
 {
-    if (m_dimension != values.size()) {
+    if (dimension != values.size()) {
         throw std::invalid_argument("Wrong number of values!");
     }
 
-    m_values = std::make_shared<T[]>(length);
+    m_values.resize(dimension);
 
     std::copy(
         values.begin(),
         values.end(),
-        m_values.get()
+        m_values.begin()
     );
 }
 
@@ -56,7 +54,7 @@ template <typename T>
     requires FloatNumber<T>
 std::size_t Vector<T>::dimension() const 
 {
-    return m_dimension;
+    return m_values.size();
 }
 
 template <typename T>
@@ -65,7 +63,7 @@ T Vector<T>::length() const
 {
     T result{};
 
-    for (std::size_t i{}; i != m_dimension; ++i) {
+    for (std::size_t i{}; i != dimension(); ++i) {
         result += m_values[i] * m_values[i];
     }
 
@@ -91,6 +89,22 @@ Vector<T> Vector<T>::operator- (const Vector& other) const
 
 template <typename T>
     requires FloatNumber<T>
+Vector<T>& Vector<T>::operator+= (const Vector& other)
+{
+    *this = *this + other;
+    return *this;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+Vector<T>& Vector<T>::operator-= (const Vector& other)
+{
+    *this = *this - other;
+    return *this;
+}
+
+template <typename T>
+    requires FloatNumber<T>
 Vector<T> Vector<T>::operator* (T scalar) const
 {
     return mul(scalar);
@@ -98,19 +112,26 @@ Vector<T> Vector<T>::operator* (T scalar) const
 
 template <typename T>
     requires FloatNumber<T>
+T Vector<T>::operator* (const Vector& other) const
+{
+    if (dimension() != other.dimension()) {
+        throw std::invalid_argument("Wrong dimension!");
+    }
+
+    T result{};
+
+    for (std::size_t i{}; i != dimension(); ++i) {
+        result += (m_values[i] * other.m_values[i]);
+    }
+
+    return result;
+}
+
+template <typename T>
+    requires FloatNumber<T>
 bool Vector<T>::operator== (const Vector& other) const
 {
-    if (m_dimension != other.m_dimension) {
-        return false;
-    }
-
-    for (size_t k{}; k != m_dimension; ++k) {
-        if (m_values[k] != other.m_values[k]) {
-            return false;
-        }
-    }
-
-    return true;
+    return m_values == other.m_values;
 }
 
 template <typename T>
@@ -132,38 +153,36 @@ template <typename T>
     requires FloatNumber<T>
 const T& Vector<T>::at(std::size_t index) const
 {
-    if (index >= m_dimension) {
+    if (index >= dimension()) {
         throw std::invalid_argument("Invalid index!!");
     }
 
     return m_values[index];
 }
 
-// die beiden mal aufrufen ... werden die an die jeweilige const / non-const version umgeleitet ???
 template <typename T>
     requires FloatNumber<T>
 T& Vector<T>::operator[](std::size_t index)
 {
-    return at(index);
+    return m_values[index];
 }
 
 template <typename T>
     requires FloatNumber<T>
 const T& Vector<T>::operator[](std::size_t index) const
 {
-    return at(index);
+    return m_values[index];
 }
-
 
 template <typename T>
     requires FloatNumber<T>
 Vector<T> Vector<T>::normalize() const
 {
-    Vector<T> result{ m_dimension };
+    Vector<T> result{ dimension() };
     T norm{ static_cast<T>(1.0) / length() };
 
     //  normalize vector
-    for (std::size_t i{}; i != m_dimension; ++i) {
+    for (std::size_t i{}; i != dimension(); ++i) {
         result.at(i) = m_values[i] * norm;
     }
 
@@ -174,10 +193,13 @@ template <typename T>
     requires FloatNumber<T>
 Vector<T> Vector<T>::add(const Vector& other) const
 {
-    Vector<T> result{ m_dimension };
+    if (dimension() != other.dimension()) {
+        throw std::invalid_argument("Wrong dimension!");
+    }
 
-    for (std::size_t i{}; i != m_dimension; ++i) {
+    Vector<T> result{ dimension() };
 
+    for (std::size_t i{}; i != dimension(); ++i) {
         result.m_values[i] = m_values[i] + other.m_values[i];
     }
 
@@ -188,10 +210,13 @@ template <typename T>
     requires FloatNumber<T>
 Vector<T> Vector<T>::sub(const Vector& other) const
 {
-    Vector<T> result{ m_dimension };
+    if (dimension() != other.dimension()) {
+        throw std::invalid_argument("Wrong dimension!");
+    }
 
-    for (std::size_t i{}; i != m_dimension; ++i) {
+    Vector<T> result{ dimension() };
 
+    for (std::size_t i{}; i != dimension(); ++i) {
         result.m_values[i] = m_values[i] - other.m_values[i];
     }
 
@@ -204,8 +229,7 @@ Vector<T> Vector<T>::mul(T scalar) const
 {
     Vector<T> result{ *this };
 
-    for (std::size_t i{}; i != m_dimension; ++i) {
-
+    for (std::size_t i{}; i != dimension(); ++i) {
         result.m_values[i] *= scalar;
     }
 
@@ -216,16 +240,10 @@ template <typename T>
     requires FloatNumber<T>
 void Vector<T>::print() const
 {
-    if (m_values == nullptr) {
-        return;
-    }
-
-    std::span<T> sp{ m_values.get(), m_dimension };
-
     std::print("{{");
-    for (int k{}; auto elem : sp) {
+    for (int k{}; auto elem : m_values) {
         std::print("{:6.4g}", elem);
-        if (k != m_dimension - 1) {
+        if (k != dimension() - 1) {
             std::print(", ", elem);
             ++k;
         }

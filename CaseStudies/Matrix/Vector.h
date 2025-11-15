@@ -9,14 +9,14 @@
 #include <cstddef>
 #include <initializer_list>
 #include <memory>
+#include <vector>
 
 template <typename T>
     requires FloatNumber<T>
 class Vector
 {
 protected:
-    std::size_t           m_dimension;
-    std::shared_ptr<T[]>  m_values;
+    std::vector<T>        m_values;
 
 public:
     // c'tors
@@ -35,12 +35,16 @@ public:
     const T& operator[]   (std::size_t index) const;
 
     // operators
-    Vector operator+      (const Vector& other) const;
-    Vector operator-      (const Vector& other) const;
-    Vector operator*      (T scalar) const;
+    Vector  operator+     (const Vector& other) const;
+    Vector  operator-     (const Vector& other) const;
+    Vector& operator+=    (const Vector& other);
+    Vector& operator-=    (const Vector& other);
 
-    bool operator==     (const Vector& other) const;
-    bool operator!=     (const Vector& other) const;
+    Vector  operator*     (T scalar) const;
+    T operator*           (const Vector& other) const;
+
+    bool operator==       (const Vector& other) const;
+    bool operator!=       (const Vector& other) const;
     
     // public interface
     Vector normalize      () const;

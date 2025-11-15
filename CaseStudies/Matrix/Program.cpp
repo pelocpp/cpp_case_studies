@@ -99,7 +99,7 @@ int main()
 
     try
     {
-        test_linear_equation();
+        test_vector();
     }
     catch (std::invalid_argument const& ex)
     {
