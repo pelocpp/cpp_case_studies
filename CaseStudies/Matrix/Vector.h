@@ -52,6 +52,8 @@ public:
     Vector sub            (const Vector& other) const;
     Vector mul            (T scalar) const;
     void   print          () const;
+
+    // Fehlt: Methode fill ... mit einem konstanten Wert vorbelegen ....
 };
 
 // =====================================================================================

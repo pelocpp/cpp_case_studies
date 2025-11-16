@@ -2,23 +2,13 @@
 // MatrixImpl.cpp
 // =====================================================================================
 
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#include <cstdlib>
-
-#ifdef _DEBUG
-#ifndef DBG_NEW
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#define new DBG_NEW
-#endif
-#endif  // _DEBUG
-
 #include "Matrix.h"
 
 #include <print>
 #include <span>
 #include <stdexcept>    
 
+// c'tor(s)
 template <typename T>
     requires FloatNumber<T>
 Matrix<T>::Matrix() : m_rows{}, m_cols{}, m_values{} {}
@@ -28,7 +18,8 @@ template <typename T>
 Matrix<T>::Matrix(std::size_t rows, std::size_t cols)
     : m_rows{ rows }, m_cols{ cols }
 {
-    m_values = std::make_shared<T[]>(m_rows * m_cols);
+    // m_values = std::make_shared<T[]>(m_rows * m_cols);
+    m_values.resize(m_rows * m_cols);
 }
 
 template <typename T>
@@ -42,7 +33,7 @@ void Matrix<T>::elements(std::initializer_list<T> values)
     std::copy(
         values.begin(),
         values.end(),
-        m_values.get()
+        m_values.begin()
     );
 }
 
@@ -54,7 +45,7 @@ void Matrix<T>::elements(std::initializer_list<std::initializer_list<T>> values)
         throw std::invalid_argument("Wrong number of rows!");
     }
 
-    T* last{ m_values.get() };
+    auto last{ m_values.begin() };
 
     for (auto row : values) {
 
@@ -69,6 +60,23 @@ void Matrix<T>::elements(std::initializer_list<std::initializer_list<T>> values)
         );
     }
 }
+
+// getter/setter
+template <typename T>
+    requires FloatNumber<T>
+std::size_t Matrix<T>::rows() const 
+{
+    return m_rows; 
+}
+
+template <typename T>
+    requires FloatNumber<T>
+std::size_t Matrix<T>::cols() const 
+{
+    return m_cols; 
+}
+
+// accessing matrix elements
 
 template <typename T>
     requires FloatNumber<T>
@@ -93,33 +101,38 @@ const T& Matrix<T>::at(std::size_t row, std::size_t col) const
     }
 
     // return m_values.get()[m_cols * row + col];
-    return m_values[m_cols * row + col];
+    return m_values[row * m_cols + col];
 }
 
 template <typename T>
     requires FloatNumber<T>
-void Matrix<T>::mulRow(std::size_t row, T value)
+T& Matrix<T>::operator()(size_t row, size_t col)
 {
-    for (int col{}; col != m_cols; ++col) {
-        at(row, col) *= value;
-    }
+   // return m_values[row * m_cols + col]; 
+    return at(row, col);
+}
+
+template <typename T>
+    requires FloatNumber<T>
+const T& Matrix<T>::operator()(size_t row, size_t col) const
+{
+   // return m_values[row * m_cols + col];
+    return at(row, col);
 }
 
 
-// source = row to modify, target = row to subtract
-// void subtractRowFromRow(std::size_t source, std::size_t target);
 
+
+//// public interface
 //template <typename T>
 //    requires FloatNumber<T>
-//void Matrix<T>::subtractRowFromRow(std::size_t source, std::size_t target)
+//void Matrix<T>::mulRow(std::size_t row, T value)
 //{
 //    for (int col{}; col != m_cols; ++col) {
-//
-//         at(source, col) = at(source, col) - at(target, col);   // geht
-//        // oder
-//        //at(source, col) =  at(target, col) - at(source, col);     // geht
+//        at(row, col) *= value;
 //    }
 //}
+
 
 template <typename T>
     requires FloatNumber<T>
@@ -195,6 +208,55 @@ Matrix<T> Matrix<T>::mul(const Matrix& other) const
 }
 
 
+//     Matrix operator+    (const Matrix& other) const;
+
+// operators
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T> Matrix<T>::operator+ (const Matrix& other) const
+{
+    return add(other);
+}
+
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T> Matrix<T>::operator- (const Matrix& other) const
+{
+    return sub(other);
+}
+
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T> Matrix<T>::operator* (const Matrix& other) const
+{
+    return mul(other);
+}
+
+
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T>& Matrix<T>::operator+= (const Matrix& other)
+{
+    *this = *this + other;
+    return *this;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T>& Matrix<T>::operator-= (const Matrix& other)
+{
+    *this = *this - other;
+    return *this;
+}
+
+
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T>& Matrix<T>::operator*= (const Matrix& other)
+{
+    *this = *this * other;
+    return *this;
+}
 
 template <typename T>
     requires FloatNumber<T>
@@ -219,13 +281,13 @@ void Matrix<T>::print() const
 {
     // to be Done: Überladen von std::format // print a la C++ 23
 
-    if (m_values == nullptr) {
-        return;
-    }
+    //if (m_values == nullptr) {
+    //    return;
+    //}
 
-    std::span<T> sp{ m_values.get(), m_rows * m_cols };
+    //std::span<T> sp{ m_values.get(), m_rows * m_cols };
 
-    for (std::size_t col{}; auto elem : sp) {
+    for (std::size_t col{}; auto elem : m_values) {
 
         std::print("{:6}", elem);
 

@@ -75,25 +75,7 @@ static void test_matrix_01() {
     std::println();
 }
 
-
 static void test_matrix_02() {
-
-    Matrix<double> matrix{ 3, 3 };
-    matrix.print();
-    std::println();
-
-    Matrix<double> matrix2{ 3, 3 };
-    matrix2.elements({ 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-    matrix2.print();
-    std::println();
-
-    Matrix<double> matrix3{ 2, 3 };
-    matrix3.elements({ 1, 2, 3, 4, 5, 6 });
-    matrix3.print();
-    std::println();
-}
-
-static void test_matrix_03() {
 
     Matrix<double> matrix{ 3, 3 };
 
@@ -114,7 +96,7 @@ static void test_matrix_03() {
     std::println();
 }
 
-static void test_matrix_04() {
+static void test_matrix_03() {
 
     Matrix<double> matrix{ 2, 3 };
     matrix.elements({ { 1, 2, 3 }, { 4, 5, 6 } });
@@ -124,24 +106,17 @@ static void test_matrix_04() {
     auto value = matrix.at(0, 2);
     std::println("Value: {}", value);
 
-    matrix.at(0, 2) = 33;
+    matrix.at(0, 2) = 123.0;
     std::println("Value: {}", matrix.at(0, 2));
+
+    value = matrix(1, 2);
+    std::println("Value: {}", value);
+
+    matrix(1, 2) = 456.0;
+    std::println("Value: {}", matrix(1, 2));
 }
 
-static void test_matrix_05() {
-
-    Matrix<double> matrix{ 2, 3 };
-    matrix.elements({ { 1, 2, 3 }, { 4, 5, 6 } });
-
-    Matrix<double> copy{ matrix };
-
-    matrix.print();
-    std::println();
-    copy.print();
-    std::println();
-}
-
-static void test_matrix_06() {
+static void test_matrix_04() {
 
     Matrix<double> matrix{ 2, 3 };
     matrix.elements({ { 1, 2, 3 }, { 4, 5, 6 } });
@@ -153,7 +128,7 @@ static void test_matrix_06() {
     std::println();
 }
 
-static void test_matrix_07() {
+static void test_matrix_05() {
 
     Matrix<double> matrix1{ 3, 3,  };
     matrix1.elements({ { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } });
@@ -168,9 +143,13 @@ static void test_matrix_07() {
     Matrix<double> sum = matrix1.add(matrix2);
     sum.print();
     std::println();
+
+    sum = matrix1 + matrix2;
+    sum.print();
+    std::println();
 }
 
-static void test_matrix_08() {
+static void test_matrix_06() {
 
     Matrix<double> matrix1{ 3, 3 };
     matrix1.elements({ { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } });
@@ -182,12 +161,16 @@ static void test_matrix_08() {
     matrix2.print();
     std::println();
 
-    Matrix<double> sum = matrix1.sub(matrix2);
-    sum.print();
+    Matrix<double> diff = matrix1.sub(matrix2);
+    diff.print();
+    std::println();
+
+    diff = matrix1 - matrix2;
+    diff.print();
     std::println();
 }
 
-static void test_matrix_09() {
+static void test_matrix_07() {
 
     Matrix<double> matrix1{ 3, 3 };
     matrix1.elements({ { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } });
@@ -200,6 +183,10 @@ static void test_matrix_09() {
     std::println();
 
     Matrix<double> product = matrix1.mul(matrix2);
+    product.print();
+    std::println();
+
+    product = matrix1 * matrix2;
     product.print();
     std::println();
 }
@@ -224,16 +211,15 @@ static void test_matrix_20()
 
 void test_matrix()
 {
-    //test_matrix_01();
-    //test_matrix_02();
-    //test_matrix_03();
-    //test_matrix_04();
-    //test_matrix_05();
-    //test_matrix_06();
-    //test_matrix_07();
-    //test_matrix_08();
-    test_matrix_09();
-    //test_matrix_20();
+    test_matrix_01();
+    test_matrix_02();
+    test_matrix_03();
+    test_matrix_04();
+    test_matrix_05();
+    test_matrix_06();
+    test_matrix_07();
+
+    test_matrix_20();
 }
 
 // =====================================================================================

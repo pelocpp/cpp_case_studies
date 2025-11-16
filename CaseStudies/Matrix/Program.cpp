@@ -80,11 +80,6 @@
 // Ich hätte gerne ein Beispiel, dass die Lösung Schritt für Schritt aufzeigt.
 // Exemplarisch sind auch Anweisungen in C++ erwünscht.
 
-
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#include <cstdlib>
-
 #include <exception>
 #include <print>
 
@@ -95,11 +90,9 @@ void test_linear_equation();
 
 int main()
 {   
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
     try
     {
-        test_vector();
+        test_matrix();
     }
     catch (std::invalid_argument const& ex)
     {
