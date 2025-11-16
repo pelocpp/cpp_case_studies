@@ -17,7 +17,7 @@ static void test_linear_equation_01() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         1,
         {
             { 2,  4 }
@@ -34,7 +34,7 @@ static void test_linear_equation_02() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         3,
         {
             { 2,  3, -1, -9 },
@@ -55,7 +55,7 @@ static void test_linear_equation_03() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         4,
         {
             { 1, 0, 1, 0, 4 },
@@ -77,7 +77,7 @@ static void test_linear_equation_04() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         3,
         {
             { 1, -1,  2, 0 },
@@ -98,7 +98,7 @@ static void test_linear_equation_05() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         10,
         {
             {  1,   -2,   5,   2, -1,  1,  4, -3,  1,  5,  84 },
@@ -126,7 +126,7 @@ static void test_linear_equation_06() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         3,
         {
             { 2, 1, -1, 8 },
@@ -147,7 +147,7 @@ static void test_linear_equation_10() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         3,
         {
             {  2, 3, -1, 5 },
@@ -168,7 +168,7 @@ static void test_linear_equation_20() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         3,
         {
             {  2,  3, -1,  5 },
@@ -189,7 +189,7 @@ static void test_linear_equation_21() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         3,
         {
             {  2,  3, -1,  5 },
@@ -210,7 +210,7 @@ static void test_linear_equation_22() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         3,
         {
             {  2,  3, -1,  5 },
@@ -233,7 +233,7 @@ static void test_linear_equation_24() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         3,
         {
             { 0,  2,  1,  3 },
@@ -255,7 +255,7 @@ static void test_linear_equation_30() {
     // Ronald Mak, p. 273
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         2,
         {
             { 0.0001, 2, 2 },
@@ -276,13 +276,13 @@ static void test_linear_equation_31() {
     // Ronald Mak, p. 269
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         4,
         {
             {  3,  1, -5,  4, -18 },
             {  2, -3,  3, -2,  19 },
             {  5, -3,  4,  1,  22 },
-            { -2,  4, -3, -5, -14 }
+            { -2,  4, -3, -3, -14 }
         }
     );
     solver.print();
@@ -299,13 +299,13 @@ static void test_linear_equation_32() {
     // Ronald Mak, p. 269
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         4,
         {
             {  3,  1, -5,  4, -18 },
             {  2, -3,  3, -2,  19 },
             {  5, -3,  4,  1,  22 },
-            { -2,  4, -3, -5, -14 }
+            { -2,  4, -3, -3, -14 }
         }
     );
     solver.print();
@@ -321,13 +321,13 @@ static void test_linear_equation_33() {
     // Ronald Mak, p. 269
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         4,
         {
             {  3,  1, -5,  4, -18 },
             {  2, -3,  3, -2,  19 },
             {  5, -3,  4,  1,  22 },
-            { -2,  4, -3, -5, -14 }
+            { -2,  4, -3, -3, -14 }
         }
     );
     solver.print();
@@ -345,7 +345,7 @@ static void test_linear_equation_40() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         10,
         {
             { 1,  -2,   5,   2, -1,  1,  4, -3,  1,  5,  84 },
@@ -373,7 +373,7 @@ static void test_linear_equation_41() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         10,
         {
             { 1,  -2,   5,   2, -1,  1,  4, -3,  1,  5,  84 },
@@ -401,7 +401,7 @@ static void test_linear_equation_42() {
 
     LinearEquationSolver<double> solver;
 
-    solver.equation(
+    solver.setEquation(
         10,
         {
             { 1,  -2,   5,   2, -1,  1,  4, -3,  1,  5,  84 },
@@ -423,6 +423,55 @@ static void test_linear_equation_42() {
     solution.print();
 }
 
+static void test_linear_equation_50() {
+
+    // Ronald Mak, p. 269
+    LinearEquationSolver<double> solver;
+
+    solver.setEquation(
+        4,
+        {
+            {  3,  1, -5,  4, -18 },
+            {  2, -3,  3, -2,  19 },
+            {  5, -3,  4,  1,  22 },
+            { -2,  4, -3, -3, -14 }
+        }
+    );
+
+    std::println("Solving Equation:");
+    solver.print();
+
+    solver.eliminateForward();
+
+    //solver.solve_01_simple();
+    //const Vector<double>& solution = solver.solution();
+    //solution.print();
+}
+
+static void test_linear_equation_51() {
+
+    // Ronald Mak, p. 269
+    LinearEquationSolver<double> solver;
+
+    solver.setEquation(
+        3,
+        {
+            { 2,  3, -1, -9 },
+            { 1, -2,  1,  9 },
+            { -1, 1,  2,  0 }
+        }
+    );
+
+    std::println("Solving Equation:");
+    solver.print();
+
+    solver.eliminateForward();
+
+    solver.substitueBack();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+}
+
 void test_linear_equation()
 {
     //test_linear_equation_01();           // { 2 }
@@ -440,13 +489,16 @@ void test_linear_equation()
 
     //Ronald Mak
     //test_linear_equation_30();
-    //test_linear_equation_31();
+  // test_linear_equation_31();
     //test_linear_equation_32();
    // test_linear_equation_33();
 
     //test_linear_equation_40();   // korrekt
     //test_linear_equation_41();   // korrekt
-    test_linear_equation_42();   // korrekt
+  //  test_linear_equation_42();   // korrekt
+
+  // test_linear_equation_50();
+   test_linear_equation_51();
 }
 
 

@@ -207,9 +207,6 @@ Matrix<T> Matrix<T>::mul(const Matrix& other) const
     return result;
 }
 
-
-//     Matrix operator+    (const Matrix& other) const;
-
 // operators
 template <typename T>
     requires FloatNumber<T>
@@ -231,7 +228,6 @@ Matrix<T> Matrix<T>::operator* (const Matrix& other) const
 {
     return mul(other);
 }
-
 
 template <typename T>
     requires FloatNumber<T>
@@ -274,22 +270,15 @@ void Matrix<T>::swapRows(std::size_t row1, std::size_t row2)
     }
 }
 
-
 template <typename T>
     requires FloatNumber<T>
 void Matrix<T>::print() const
 {
     // to be Done: Überladen von std::format // print a la C++ 23
 
-    //if (m_values == nullptr) {
-    //    return;
-    //}
-
-    //std::span<T> sp{ m_values.get(), m_rows * m_cols };
-
     for (std::size_t col{}; auto elem : m_values) {
 
-        std::print("{:6}", elem);
+        std::print("{:6.4g}", elem);
 
         ++col;
         if (col % m_cols == 0) {

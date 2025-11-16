@@ -450,3 +450,11 @@ Ein Umsatzung in C++&ndash;Quellcode ist nicht sonderlich schwer:
 ```
 
 
+
+## Lineare Gleichungssysteme
+
+Wir betrachten zum Lösung eines linearen Gleichungssystems den Algorithmus von Gauss.
+
+
+https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
+

@@ -19,7 +19,6 @@ protected:
     std::size_t    m_rows;
     std::size_t    m_cols;
     std::vector<T> m_values;
-    // std::shared_ptr<T[]> m_values;
 
 public:
     // c'tors

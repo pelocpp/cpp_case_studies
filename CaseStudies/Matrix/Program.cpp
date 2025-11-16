@@ -5,6 +5,13 @@
 
 // Youtube
 
+// Markdown:
+
+// https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
+
+
+
+
 // Weiterarbeit:
 
 // Frage:
@@ -92,7 +99,7 @@ int main()
 {   
     try
     {
-        test_matrix();
+        test_linear_equation();
     }
     catch (std::invalid_argument const& ex)
     {

@@ -2,25 +2,15 @@
 // VectorImpl.cpp
 // =====================================================================================
 
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-#include <cstdlib>
-
-#ifdef _DEBUG
-#ifndef DBG_NEW
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#define new DBG_NEW
-#endif
-#endif  // _DEBUG
-
 #include "Vector.h"
 
 #include <cmath>
 #include <print>
-#include <span>
 #include <stdexcept>    
 
+// =====================================================================================
 // c'tors
+
 template <typename T>
     requires FloatNumber<T>
 Vector<T>::Vector() : m_values{} {}
@@ -49,7 +39,9 @@ Vector<T>::Vector(std::size_t dimension, std::initializer_list<T> values)
     );
 }
 
+// =====================================================================================
 // getter
+
 template <typename T>
     requires FloatNumber<T>
 std::size_t Vector<T>::dimension() const 
@@ -72,7 +64,9 @@ T Vector<T>::length() const
     return result;
 }
 
+// =====================================================================================
 // operators
+
 template <typename T>
     requires FloatNumber<T>
 Vector<T> Vector<T>::operator+ (const Vector& other) const
@@ -141,7 +135,9 @@ bool Vector<T>::operator!= (const Vector& other) const
     return ! (*this == other);
 }
 
+// =====================================================================================
 // public interface
+
 template <typename T>
     requires FloatNumber<T>
 T& Vector<T>::at(std::size_t index)

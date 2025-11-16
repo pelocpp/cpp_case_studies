@@ -12,10 +12,14 @@
 #include <vector> 
 
 // =====================================================================================
+// c'tors
 
 template <typename T>
     requires FloatNumber<T>
 LinearEquationSolver<T>::LinearEquationSolver() : m_dim{} {}
+
+// =====================================================================================
+// getter/setter
 
 template <typename T>
     requires FloatNumber<T>
@@ -26,7 +30,7 @@ std::size_t LinearEquationSolver<T>::dimension() const
 
 template <typename T>
     requires FloatNumber<T>
-void LinearEquationSolver<T>::equation(std::size_t dim, std::initializer_list<std::initializer_list<T>> values)
+void LinearEquationSolver<T>::setEquation(std::size_t dim, std::initializer_list<std::initializer_list<T>> values)
 {
     m_dim = dim;
     m_matrix = Matrix<T>{ m_dim, m_dim + 1 };
@@ -40,18 +44,91 @@ const Vector<T>& LinearEquationSolver<T>::solution() const
     return m_solution; 
 }
 
+// =====================================================================================
+// public interface
+
 template <typename T>
     requires FloatNumber<T>
-void LinearEquationSolver<T>::print() const
+bool LinearEquationSolver<T>::eliminateForward()
 {
-    for (size_t row{}; row != m_dim; ++row) {
-        size_t col{};
-        for (; col != m_dim; ++col) {
-            std::print("{:10.2g}", m_matrix.at(row,col));
+    // forward elimination, create an upper triangular matrix
+    for (std::size_t k{}; k != m_dim - 1; ++k) {
+
+        if (m_matrix.at(k, k) == 0.0) {
+            return false;
         }
-        std::println(" | {:10.2g}", m_matrix.at(row, col));
+
+        // create a zero value in column 'k' in all rows beneath
+        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim; ++rowBelow) {
+
+            T factor{ m_matrix.at(rowBelow, k) / m_matrix.at(k, k) };
+            m_matrix.subtractRow(factor, k, rowBelow);
+        }
+
+        std::println("Transforming {}. equation:", k);
+        print();
     }
-    std::println();
+
+    return true;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+void LinearEquationSolver<T>::substitueBack()
+{
+    // apply back substitution to solve the linear equation system
+    m_solution = Vector<T>{ m_dim };
+
+    for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
+    {
+        T result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
+        m_solution[i - 1] = result;
+
+        // substitute the value into all the equation lines above,
+        // move the calculated values by subtraction to the right side
+        for (std::size_t k{}; k != i - 1; ++k)
+        {
+            m_matrix.at(k, m_dim) -= m_matrix.at(k, i - 1) * result;
+            m_matrix.at(k, i - 1) = 0.0;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+template <typename T>
+    requires FloatNumber<T>
+bool LinearEquationSolver<T>::eliminateForwardPivot()
+{
+    return false;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+bool LinearEquationSolver<T>::eliminateForwardPivotPermutation()
+{
+    return false;
 }
 
 template <typename T>
@@ -61,7 +138,7 @@ bool LinearEquationSolver<T>::solve_01_simple()
     // forward elimination to create an upper triangular matrix
     for (std::size_t k{}; k != m_dim - 1; ++k) {
 
-        if (m_matrix.at(k, k) == 0.0) {   // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
+        if (m_matrix.at(k, k) == 0.0) {
             return false;
         }
 
@@ -114,7 +191,7 @@ bool LinearEquationSolver<T>::solve_02_pivot()
         std::println("pivot: {}", pivot);
         m_matrix.swapRows(k, pivot);
 
-        if (m_matrix.at(k, k) == 0.0) {   // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
+        if (m_matrix.at(k, k) == 0.0) {
             return false;
         }
 
@@ -174,7 +251,7 @@ bool LinearEquationSolver<T>::solve_03_permutation_vector()
         // just swap indices, not rows
         std::swap(perms[k], perms[pivot]);
 
-        if (m_matrix.at(perms[k], k) == 0.0) {   // Hmmm, das ist ein Vergleich mit 0.0 ... das geht besser ...
+        if (m_matrix.at(perms[k], k) == 0.0) {
             return false;
         }
 
@@ -214,6 +291,20 @@ bool LinearEquationSolver<T>::solve_03_permutation_vector()
     }
 
     return true;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+void LinearEquationSolver<T>::print() const
+{
+    for (size_t row{}; row != m_dim; ++row) {
+        size_t col{};
+        for (; col != m_dim; ++col) {
+            std::print("{:10.4g}", m_matrix.at(row, col));
+        }
+        std::println(" | {:10.4g}", m_matrix.at(row, col));
+    }
+    std::println();
 }
 
 // =====================================================================================
