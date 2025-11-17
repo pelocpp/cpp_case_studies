@@ -531,7 +531,7 @@ https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
 
 
 <pre>
-3.88 x<sub>2</sub> - 4 x<sub>1</sub> + 2
+3.88 <i>x</i><sub>2</sub> - 4 x<sub>1</sub> + 2
 5    x<sub>2</sub> + 3 x<sub>1</sub> + 3
 3    x<sub>3</sub> + 5 x<sub>2</sub> - x<sub>1</sub> + 5
 </pre>
