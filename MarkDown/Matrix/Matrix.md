@@ -507,14 +507,6 @@ https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
 
 
 
-
-```
-3x<sub>2</sub>-4x<sub>1</sub>+2
-5x<sub>2</sub>+3x<sub>1</sub>+3
-3x<sub>3</sub>+5x<sub>2</sub>-x<sub>1</sub>+5
-```
-
-
 <code>
 3x<sub>2</sub>-4x<sub>1</sub>+2<br />
 5x<sub>2</sub>+3x<sub>1</sub>+3<br />
@@ -530,6 +522,13 @@ https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
 3x<sub>3</sub> + 5x<sub>2</sub> - x<sub>1</sub> + 5
 </pre>
 
+
+
+<code>
+33x<sub>2</sub>-4x<sub>1</sub>+2<br />
+55x<sub>2</sub>+3x<sub>1</sub>+3<br />
+33x<sub>3</sub>+5x<sub>2</sub>-x<sub>1</sub>+5<br />
+</code>
 
 
 
