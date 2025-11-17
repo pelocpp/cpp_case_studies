@@ -451,89 +451,150 @@ Ein Umsatzung in C++&ndash;Quellcode ist nicht sonderlich schwer:
 
 
 
-## Lineare Gleichungssysteme
+## Test Tabellen und lineare Gleichungssystem
 
 Wir betrachten zum Lösung eines linearen Gleichungssystems den Algorithmus von Gauss.
 
 
 https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
 
-| Name | Beschreibung |
-|:-|:-|
-| `[[noreturn]]` | Zeigt an, dass die Funktion nicht zurückkehrt. |
-| `[[deprecated]]` | Zeigt an, dass die Verwendung des mit diesem Attribut deklarierten Namens zulässig ist, aber aus irgendeinem Grund davon abgeraten wird, dieses Sprachfeature einzusetzen. |
-| `[[fallthrough]]` | Weist darauf hin, dass das Durchfallen des vorherigen `case`-Labels beabsichtigt ist und nicht von einem Compiler diagnostiziert werden sollte (so genanntes &bdquo;*fall-through*&rdquo;). |
-| `[[nodiscard]]` | Der Compiler gibt eine Warnung aus, wenn der Rückgabewert ignoriert wird. |
-| `[[maybe_unused]]` | Unterdrückt eine Compiler-Warnung, wenn eine Variable/Objekt nicht verwendet wird. |
+Was versteht man Lösen eines linearen Gleichungssystems nach dem Algorithmus von Gauss
+unter der Vorwärtselimination?
+
+Wie funktioniert die Vorwärtselimination beim
+Lösen eines linearen Gleichungssystems nach dem Algorithmus von Gauss
+im Detail?
+
+Wie funktioniert die Rückwärtssubstitution beim
+Lösen eines linearen Gleichungssystems nach dem Algorithmus von Gauss
+im Detail?
 
 
+## Lineare Gleichungssysteme
 
-|  |  |
-|:-|:-|
-| `[[noreturn]]` | Zeigt an, dass die Funktion nicht zurückkehrt. |
-| `[[deprecated]]` | Zeigt an, dass die Verwendung des mit diesem Attribut deklarierten Namens zulässig ist, aber aus irgendeinem Grund davon abgeraten wird, dieses Sprachfeature einzusetzen. |
-| `[[fallthrough]]` | Weist darauf hin, dass das Durchfallen des vorherigen `case`-Labels beabsichtigt ist und nicht von einem Compiler diagnostiziert werden sollte (so genanntes &bdquo;*fall-through*&rdquo;). |
-| `[[nodiscard]]` | Der Compiler gibt eine Warnung aus, wenn der Rückgabewert ignoriert wird. |
-| `[[maybe_unused]]` | Unterdrückt eine Compiler-Warnung, wenn eine Variable/Objekt nicht verwendet wird. |
+Wir betrachten zum Lösung eines linearen Gleichungssystems den Algorithmus von Gauss.
 
+Die Vorwärtselimination ist der erste Schritt des Gauß-Algorithmus,
+bei dem ein lineares Gleichungssystem schrittweise in eine obere Dreiecksform umgewandelt wird.
+Dabei werden durch äquivalente Zeilenumformungen systematisch Variablen eliminiert,
+sodass unter der Hauptdiagonalen der Matrix nur noch Nullen stehen.
 
+Das Ziel ist die Umwandlung in ein System von vereinfachten Gleichungen,
+das von unten nach oben leicht lösbar ist.
 
-<table>
-    <thead>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td rowspan=4 align="center">R1 Text</td>
-            <td rowspan=2 align="center">R2 Text A</td>
-            <td align="center">R3 Text A</td>
-        </tr>
-        <tr>
-            <td align="center">R3 Text B</td>
-        </tr>
-        <tr>
-            <td rowspan=2 align="center">R2 Text B</td>
-            <td align="center">R3 Text C</td>
-        </tr>
-        <tr>
-            <td align="center">R3 Text D</td>
-        </tr>
-    </tbody>
-</table>
-
-
-
-<code>
-3x<sub>2</sub>-4x<sub>1</sub>+2<br />
-5x<sub>2</sub>+3x<sub>1</sub>+3<br />
-3x<sub>3</sub>+5x<sub>2</sub>-x<sub>1</sub>+5<br />
-</code>
-
-
-
+Wir betrachten das Ganze an folgendem Beispiel. Zu Lösen ist das lineare Gleichungssystem
 
 <pre>
-3x<sub>2</sub> - 4x<sub>1</sub> + 2
-5x<sub>2</sub> + 3x<sub>1</sub> + 3
-3x<sub>3</sub> + 5x<sub>2</sub> - x<sub>1</sub> + 5
+2x<sub>2</sub> + 3x<sub>1</sub> -  x<sub>0</sub> = -9
+ x<sub>2</sub> - 2x<sub>1</sub> +  x<sub>0</sub> = 9
+-x<sub>2</sub> +  x<sub>1</sub> + 2x<sub>0</sub> = 0
+</pre>
+
+### Detaillierte Schritte der Vorwärtselimination
+
+
+#### 1. Aufschreiben der erweiterten Koeffizientenmatrix
+
+Zunächst ist das lineare Gleichungssystem in eine erweiterte Matrix so umzuformulieren,
+dass die Koeffizienten der Variablen in den ersten *n* Spalten einer *n*+1 &times; *m* Matrix
+und die konstanten Werte auf der rechten Seite der Gleichungen in der *n*+1.-ten Spalte stehen:
+
+<pre>
+ 2.0    3.0   -1.0   -9.0
+ 1.0   -2.0    1.0    9.0
+-1.0    1.0    2.0    0.0
+</pre>
+
+#### 2. Auswahl des Pivotelements
+
+Wählen Sie in der ersten Spalte die erste Zeile als Pivotelement aus,
+in der Regel ein von Null verschiedener Wert.
+Ist der Wert 0, so ist für diese Zeile nichts zu tun.
+
+#### 3. Eliminieren der Elemente unter dem Pivotelement
+
+Verwenden Sie das Pivotelement, um alle Koeffizienten in der ersten Spalte unterhalb der ersten Zeile
+auf Null zu setzen.
+
+Dazu subtrahieren wir ein geeignetes Vielfaches der ersten Zeile von den jeweiligen darunterliegenden Zeilen.
+
+*Beispiel*: Um die erste Spalte einer *zeile*<sub>1</sub> in der zweiten Zeile einer *zeile*<sub>2</sub> auf Null zu setzen,
+können Sie die neue Zeile als *zeile*<sub>2</sub> – k * *zeile*<sub>1</sub> definieren,
+wobei *k* so gewählt wird, dass der neue Eintrag in der ersten Spalte Null wird.
+
+Wir betrachten dies am Beispiel des obigen Gleichungssystems.
+Zunächst betrachten wir das erste Element in der zweiten Gleichung, wir wollen
+dieses mit dem Pivot-Element 1/2 auf Null setzen:
+
+<pre>
+ 2.0     3.0   -1.0   -9.0
+ 0.0    -3.5    1.5   13.5
+-1.0     1.0    2.0    0.0
+</pre>
+
+Es folgt die Umwandlung der dritten Gleichung  hier wählen wir das Pivot-Element -1/2:
+
+<pre>
+ 2.0     3.0   -1.0   -9.0
+ 0.0    -3.5    1.5   13.5
+ 0.0     2.5    1.5,  -4.5
 </pre>
 
 
 
-<code>33x<sub>2</sub>-4x<sub>1</sub>+2<br />
-55x<sub>2</sub>+3x<sub>1</sub>+3<br />
-33x<sub>3</sub>+5x<sub>2</sub>-x<sub>1</sub>+5<br /></code>
 
+#### 4. Fortsetzen für die nächste Spalten
 
+Man bewege sich zur zweiten Spalte. Die erste Zeile wird nicht mehr für die folgenden Umformungen verwendet.
+
+Wählen Sie in der zweiten Spalte das nächste Pivotelement, das nun der erste Nicht-Null-Eintrag in der zweiten Zeile ist.
+
+Wiederholen Sie den Eliminationsschritt, indem Sie ein Vielfaches der zweiten Zeile von den darunterliegenden Zeilen subtrahieren,
+um die Einträge in der zweiten Spalte auf Null zu setzen.
+
+In unserem Beispiel hat das Pivot-Element nun den Wert -2.5/3.5 oder einfacher -5/7:
 
 <pre>
-3.88 <i>x</i><sub>2</sub> - 4 x<sub>1</sub> + 2
-5    x<sub>2</sub> + 3 x<sub>1</sub> + 3
-3    x<sub>3</sub> + 5 x<sub>2</sub> - x<sub>1</sub> + 5
+ 2.0     3.0   -1.0     -9.0
+ 0.0    -3.5    1.5     13.5
+ 0.0     0.0    2.571    5.143
 </pre>
+
+
+#### 5. Wiederholung bis zur Dreiecksform
+
+Führen Sie diesen Vorgang für alle Spalten fort, bis die Matrix in der oberen Dreiecksform vorliegt. Das bedeutet, alle Einträge unter der Hauptdiagonalen sind Null. 
+
+### Detaillierte Schritte der Rückwärtssubstitution
+
+Die Rückwärtssubstitution beim Gauß-Algorithmus ist ein Prozess, bei dem man,
+nachdem ein lineares Gleichungssystem in die obere Dreiecksform gebracht wurde,
+die Lösungen schrittweise &bdquo;von unten nach oben&rdquo; ermittelt.
+
+Man beginnt mit der letzten Gleichung, die nur eine Unbekannte enthält, um deren Wert zu bestimmen.
+Diesen Wert setzt man dann in die Gleichung darüber ein, um die nächste Variable zu ermitteln,
+und fährt so fort, bis alle Variablen berechnet sind. 
+
+Schritt-für-Schritt-Anleitung
+
+  * Beginnen Sie mit der letzten Zeile:<br />
+In der oberen Dreiecksform (auch Zeilenstufenform genannt) ist die letzte Zeile des Gleichungssystems eine einfache Gleichung,
+die nur eine Unbekannte enthält. Sie können diese Gleichung nun direkt nach dieser Variable auflösen.
+
+  * Setzen Sie den Wert in die vorletzte Zeile ein:<br />
+Nehmen Sie den gerade berechneten Wert und setzen Sie ihn in die vorletzte Gleichung ein.
+Diese Gleichung enthält nun nur noch zwei Unbekannte, von denen eine jetzt bekannt ist.
+
+  * Lösen Sie nach der nächsten Variablen auf:<br />
+Die Gleichung hat sich zu einer linearen Gleichung mit nur noch einer unbekannten Variable reduziert, die Sie nun leicht berechnen können.
+
+  * Wiederholen Sie den Vorgang:<br />
+Setzen Sie die Werte der beiden gerade berechneten Variablen in die nächsthöhere Gleichung ein.
+Auch diese vereinfacht sich nun zu einer Gleichung, die nur noch eine unbekannte Variable enthält.
+
+  * Setzen Sie die ersten Werte in die erste Zeile ein:<br />
+Fahren Sie so fort, bis Sie alle Werte ermittelt haben. Zum Schluss setzen Sie die Werte aller bereits berechneten Variablen in die erste Gleichung ein, um die letzte verbliebene Variable zu bestimmen und das System vollständig zu lösen. 
+
+
 
 

@@ -423,30 +423,6 @@ static void test_linear_equation_42() {
     solution.print();
 }
 
-static void test_linear_equation_50() {
-
-    // Ronald Mak, p. 269
-    LinearEquationSolver<double> solver;
-
-    solver.setEquation(
-        4,
-        {
-            {  3,  1, -5,  4, -18 },
-            {  2, -3,  3, -2,  19 },
-            {  5, -3,  4,  1,  22 },
-            { -2,  4, -3, -3, -14 }
-        }
-    );
-
-    std::println("Solving Equation:");
-    solver.print();
-
-    solver.eliminateForward();
-
-    //solver.solve_01_simple();
-    //const Vector<double>& solution = solver.solution();
-    //solution.print();
-}
 
 static void test_linear_equation_51() {
 
@@ -471,6 +447,126 @@ static void test_linear_equation_51() {
     const Vector<double>& solution = solver.solution();
     solution.print();
 }
+
+static void test_linear_equation_52() {
+
+    // aus https://www.youtube.com/watch?v=vaahX3Wdxu8
+
+    LinearEquationSolver<double> solver;
+
+    solver.setEquation(
+        3,
+        {
+            { 2,  3, -1, -9 },
+            { 1, -2,  1,  9 },
+            { -1, 1,  2,  0 }
+        }
+    );
+
+    std::println("Solving Equation:");
+    solver.print();
+
+    Vector<double> row1{ 4, {  2,  3, -1, -9 } };
+    Vector<double> row2{ 4, {  1, -2,  1,  9 } };
+    Vector<double> row3{ 4, { -1,  1,  2,  0 } };
+
+    double pivot{ 1.0/2.0 };
+
+    row2 = row2 - row1 * pivot;
+    std::println("2. row");
+    row2.print();
+
+    pivot = -1.0 / 2;
+    row3 = row3 - row1 * pivot;
+    std::println("3. row");
+    row3.print();
+
+    pivot = -5.0 / 7;
+    row3 = row3 - row2 * pivot;
+    std::println("3. row");
+    row3.print();
+
+    std::println("Using LinearEquationSolver:");
+
+    solver.eliminateForward();
+    solver.substitueBack();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+
+    // verification of result:
+}
+
+static void test_linear_equation_53() {
+
+    // Ronald Mak, p. 269
+
+    LinearEquationSolver<double> solver;
+
+    solver.setEquation(
+        4,
+        {
+            {  3,  1, -5,  4, -18 },
+            {  2, -3,  3, -2,  19 },
+            {  5, -3,  4,  1,  22 },
+            { -2,  4, -3, -3, -14 }
+        }
+    );
+
+    std::println("Solving Equation:");
+    solver.print();
+
+
+    Vector<double> row1{ 5, { 3,  1, -5,  4, -18 } };
+    Vector<double> row2{ 5, { 2, -3,  3, -2,  19 } };
+    Vector<double> row3{ 5, { 5, -3,  4,  1,  22 } };
+    Vector<double> row4{ 5, {-2,  4, -3, -3, -14 } };
+
+    std::println("2. column:");
+    std::println();
+
+    double pivot{ 2.0 / 3.0 };
+    row2 = row2 - row1 * pivot;
+    std::println("2. row");
+    row2.print();
+
+    pivot = 5.0 / 3.0;
+    row3 = row3 - row1 * pivot;
+    std::println("3. row");
+    row3.print();
+
+    pivot = -2.0 / 3.0;
+    row4 = row4 - row1 * pivot;
+    std::println("4. row");
+    row4.print();
+    
+    std::println("3. column:");
+    std::println();
+
+    pivot = 14.0 / 11.0;
+    row3 = row3 - row2 * pivot;
+    std::println("3. row");
+    row3.print();
+   
+    pivot = -14.0 / 11.0;
+    row4 = row4 - row2 * pivot;
+    std::println("3. row");
+    row4.print();
+
+    std::println("4. column:");
+    std::println();
+
+    
+    // return;
+
+
+    solver.eliminateForward();
+
+    //solver.solve_01_simple();
+    //const Vector<double>& solution = solver.solution();
+    //solution.print();
+}
+
+
 
 void test_linear_equation()
 {
@@ -498,7 +594,9 @@ void test_linear_equation()
   //  test_linear_equation_42();   // korrekt
 
   // test_linear_equation_50();
-   test_linear_equation_51();
+   //test_linear_equation_51();
+   // test_linear_equation_52();
+   test_linear_equation_53();
 }
 
 
