@@ -458,3 +458,85 @@ Wir betrachten zum Lösung eines linearen Gleichungssystems den Algorithmus von G
 
 https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
 
+| Name | Beschreibung |
+|:-|:-|
+| `[[noreturn]]` | Zeigt an, dass die Funktion nicht zurückkehrt. |
+| `[[deprecated]]` | Zeigt an, dass die Verwendung des mit diesem Attribut deklarierten Namens zulässig ist, aber aus irgendeinem Grund davon abgeraten wird, dieses Sprachfeature einzusetzen. |
+| `[[fallthrough]]` | Weist darauf hin, dass das Durchfallen des vorherigen `case`-Labels beabsichtigt ist und nicht von einem Compiler diagnostiziert werden sollte (so genanntes &bdquo;*fall-through*&rdquo;). |
+| `[[nodiscard]]` | Der Compiler gibt eine Warnung aus, wenn der Rückgabewert ignoriert wird. |
+| `[[maybe_unused]]` | Unterdrückt eine Compiler-Warnung, wenn eine Variable/Objekt nicht verwendet wird. |
+
+
+
+|  |  |
+|:-|:-|
+| `[[noreturn]]` | Zeigt an, dass die Funktion nicht zurückkehrt. |
+| `[[deprecated]]` | Zeigt an, dass die Verwendung des mit diesem Attribut deklarierten Namens zulässig ist, aber aus irgendeinem Grund davon abgeraten wird, dieses Sprachfeature einzusetzen. |
+| `[[fallthrough]]` | Weist darauf hin, dass das Durchfallen des vorherigen `case`-Labels beabsichtigt ist und nicht von einem Compiler diagnostiziert werden sollte (so genanntes &bdquo;*fall-through*&rdquo;). |
+| `[[nodiscard]]` | Der Compiler gibt eine Warnung aus, wenn der Rückgabewert ignoriert wird. |
+| `[[maybe_unused]]` | Unterdrückt eine Compiler-Warnung, wenn eine Variable/Objekt nicht verwendet wird. |
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan=4 align="center">R1 Text</td>
+            <td rowspan=2 align="center">R2 Text A</td>
+            <td align="center">R3 Text A</td>
+        </tr>
+        <tr>
+            <td align="center">R3 Text B</td>
+        </tr>
+        <tr>
+            <td rowspan=2 align="center">R2 Text B</td>
+            <td align="center">R3 Text C</td>
+        </tr>
+        <tr>
+            <td align="center">R3 Text D</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+```
+3x<sub>2</sub>-4x<sub>1</sub>+2
+5x<sub>2</sub>+3x<sub>1</sub>+3
+3x<sub>3</sub>+5x<sub>2</sub>-x<sub>1</sub>+5
+```
+
+
+<code>
+3x<sub>2</sub>-4x<sub>1</sub>+2<br />
+5x<sub>2</sub>+3x<sub>1</sub>+3<br />
+3x<sub>3</sub>+5x<sub>2</sub>-x<sub>1</sub>+5<br />
+</code>
+
+
+
+
+<pre>
+3x<sub>2</sub> - 4x<sub>1</sub> + 2
+5x<sub>2</sub> + 3x<sub>1</sub> + 3
+3x<sub>3</sub> + 5x<sub>2</sub> - x<sub>1</sub> + 5
+</pre>
+
+
+
+
+<pre>
+3.88 x<sub>2</sub> - 4 x<sub>1</sub> + 2
+5    x<sub>2</sub> + 3 x<sub>1</sub> + 3
+3    x<sub>3</sub> + 5 x<sub>2</sub> - x<sub>1</sub> + 5
+</pre>
+
+
