@@ -629,7 +629,7 @@ oder in Gleitpunktdarstellung:
 
 <pre>
  3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -     5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
-     -3.666<i>x</i><sub>2</sub> - 6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> = 31
+     -3.666<i>x</i><sub>2</sub> + 6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> = 31
  5<i>x</i><sub>3</sub> -    3<i>x</i><sub>2</sub> +     4<i>x</i><sub>3</sub> +      1<i>x</i><sub>3</sub> = 22
 -2<i>x</i><sub>3</sub> +    4<i>x</i><sub>2</sub> -     3<i>x</i><sub>3</sub> -      3<i>x</i><sub>3</sub> = -14
 </pre>
@@ -751,5 +751,5 @@ oder in Gleitpunktdarstellung:
 
 ---
 
-Hier geht es weiter ....
+
 

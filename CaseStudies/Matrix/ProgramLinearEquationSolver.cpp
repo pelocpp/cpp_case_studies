@@ -515,6 +515,8 @@ static void test_linear_equation_53() {
     std::println("Solving Equation:");
     solver.print();
 
+    // ---------------------------------------------
+    // ---------------------------------------------
 
     Vector<double> row1{ 5, { 3,  1, -5,  4, -18 } };
     Vector<double> row2{ 5, { 2, -3,  3, -2,  19 } };
@@ -568,16 +570,164 @@ static void test_linear_equation_53() {
     std::println("4. row");
     row4.print();
 
-    return;
-
+    // ---------------------------------------------
 
     solver.eliminateForward();
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
 
+    // ---------------------------------------------
+
+    // Hmmm , habe die Lösung aus dem Buch --- setze die Lösung in die Matrix ein:
+
+    Matrix<double> matrix{ 4, 4 };
+    matrix.elements(
+    {
+        { 3,  1, -5,  4 }, 
+        { 2, -3,  3, -2 },
+        { 5, -3,  4,  1 },
+        { -2,  4, -3, -3 }
+    });
+
+    Matrix<double> vector{ 4, 1 };
+    vector.elements({ 1, -2, 3, -1 } );
+
+    //Matrix<double> vector{ 1, 4 };
+    //matrix.elements({ 1, -2, 3, -1 });
+
+    Matrix<double> result{ 4, 1 };
+    result = matrix.mul(vector);
+
+    result.print();
+}
+
+
+static void test_linear_equation_54() {
+
+    // Ronald Mak, p. 269
+    // Suche nach einem Fehler
+
+    // ALSO ES GIBT DA ZWEI BAUSTELLEN:
+
+    // 4. Element in der 4. Gleichung:  -5 an statt -3
+    // ODER
+    // 4. Element der rechten Seite: -16 an Statt -14
+
+    // NAchdem auf Seite 275 es in der 4. Gleichung   { -2,  4, -3, -5, -14 }
+
+    LinearEquationSolver<double> solver;
+
+    solver.setEquation(
+        4,
+        {
+            {  3,  1, -5,  4, -18 },
+            {  2, -3,  3, -2,  19 },
+            {  5, -3,  4,  1,  22 },
+            { -2,  4, -3, -5, -14 }
+        }
+    );
+
+    std::println("Solving Equation:");
+    solver.print();
+
+
+    solver.solve_01_simple();
+    const Vector<double>& solution = solver.solution();
+    solution.print();
+
+
+    // ---------------------------------------------
+    // ---------------------------------------------
+
+    //Vector<double> row1{ 5, { 3,  1, -5,  4, -18 } };
+    //Vector<double> row2{ 5, { 2, -3,  3, -2,  19 } };
+    //Vector<double> row3{ 5, { 5, -3,  4,  1,  22 } };
+    //Vector<double> row4{ 5, {-2,  4, -3, -3, -14 } };
+
+    //// ---------------------------------------------
+    //// ---------------------------------------------
+
+    //std::println("2. column:");
+    //std::println();
+
+    //double pivot{ 2.0 / 3.0 };
+    //row2 = row2 - row1 * pivot;
+    //std::println("2. row");
+    //row2.print();
+
+    //pivot = 5.0 / 3.0;
+    //row3 = row3 - row1 * pivot;
+    //std::println("3. row");
+    //row3.print();
+
+    //pivot = -2.0 / 3.0;
+    //row4 = row4 - row1 * pivot;
+    //std::println("4. row");
+    //row4.print();
+
+    //// ---------------------------------------------
+
+    //std::println("3. column:");
+    //std::println();
+
+    //pivot = 14.0 / 11.0;
+    //row3 = row3 - row2 * pivot;
+    //std::println("3. row");
+    //row3.print();
+
+    //pivot = -14.0 / 11.0;
+    //row4 = row4 - row2 * pivot;
+    //std::println("4. row");
+    //row4.print();
+
+    //// ---------------------------------------------
+
+    //std::println("4. column:");
+    //std::println();
+
+    //pivot = 57.0 / 141.0;
+
+    //row4 = row4 - row3 * pivot;
+    //std::println("4. row");
+    //row4.print();
+
+    //// ---------------------------------------------
+
+    //solver.eliminateForward();
     //solver.solve_01_simple();
     //const Vector<double>& solution = solver.solution();
     //solution.print();
-}
 
+    // ---------------------------------------------
+
+    // Hmmm , habe die Lösung aus dem Buch --- setze die Lösung in die Matrix ein:
+
+ //   { -2, 4, -3, -5, -14 }
+
+    std::println("---------------------------");
+
+
+    Matrix<double> matrix{ 4, 4 };
+    matrix.elements(
+        {
+            { 3,  1, -5,  4 },
+            { 2, -3,  3, -2 },
+            { 5, -3,  4,  1 },
+            { -2,  4, -3, -5 }
+        });
+
+    Matrix<double> vector{ 4, 1 };
+    vector.elements({ 1, -2, 3, -1 });
+
+    //Matrix<double> vector{ 1, 4 };
+    //matrix.elements({ 1, -2, 3, -1 });
+
+    Matrix<double> result{ 4, 1 };
+    result = matrix.mul(vector);
+
+    result.print();
+}
 
 
 void test_linear_equation()
@@ -608,7 +758,8 @@ void test_linear_equation()
   // test_linear_equation_50();
    //test_linear_equation_51();
    // test_linear_equation_52();
-   test_linear_equation_53();
+  // test_linear_equation_53();
+   test_linear_equation_54();
 }
 
 

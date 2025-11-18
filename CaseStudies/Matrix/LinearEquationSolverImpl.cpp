@@ -51,8 +51,12 @@ template <typename T>
     requires FloatNumber<T>
 bool LinearEquationSolver<T>::eliminateForward()
 {
+    std::println("Forward Elimination:");
+
     // forward elimination, create an upper triangular matrix
     for (std::size_t k{}; k != m_dim - 1; ++k) {
+
+        std::println("Eliminating column {}:", k);
 
         if (m_matrix.at(k, k) == 0.0) {
             return false;
@@ -63,11 +67,13 @@ bool LinearEquationSolver<T>::eliminateForward()
 
             T factor{ m_matrix.at(rowBelow, k) / m_matrix.at(k, k) };
             m_matrix.subtractRow(factor, k, rowBelow);
-        }
 
-        std::println("Transforming {}. equation:", k);
-        print();
+            std::println("Transformed row {}:", rowBelow);
+            print();
+        }
     }
+
+    std::println("Forward Elimination Done.");
 
     return true;
 }

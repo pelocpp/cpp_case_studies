@@ -8,7 +8,6 @@
 
 #include <cstddef>
 #include <initializer_list>
-//#include <memory>
 #include <vector>
 
 template <typename T>
@@ -28,6 +27,14 @@ public:
     // getter/setter   
     std::size_t rows    () const;
     std::size_t cols    () const;
+
+    // TO BE DONE: Hier die Elemente vorne mit hin
+    //void elements(std::size_t rows, std::size_t cols, std::initializer_list<T> values);
+    //void elements(std::size_t rows, std::size_t cols, std::initializer_list<std::initializer_list<T>> values);
+
+    //TO BE DONE : Hier die Elemente vorne mit hin
+    // Matrix mal Vector = Vector
+    // Zum Beispiel zur Überprüfung von Lineren Gleichungssystemen: = Produkt von Matrix und Vektor
 
     void elements       (std::initializer_list<T> values);
     void elements       (std::initializer_list<std::initializer_list<T>> values);
