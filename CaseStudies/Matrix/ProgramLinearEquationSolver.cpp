@@ -521,6 +521,9 @@ static void test_linear_equation_53() {
     Vector<double> row3{ 5, { 5, -3,  4,  1,  22 } };
     Vector<double> row4{ 5, {-2,  4, -3, -3, -14 } };
 
+    // ---------------------------------------------
+    // ---------------------------------------------
+
     std::println("2. column:");
     std::println();
 
@@ -539,6 +542,8 @@ static void test_linear_equation_53() {
     std::println("4. row");
     row4.print();
     
+    // ---------------------------------------------
+
     std::println("3. column:");
     std::println();
 
@@ -549,14 +554,21 @@ static void test_linear_equation_53() {
    
     pivot = -14.0 / 11.0;
     row4 = row4 - row2 * pivot;
-    std::println("3. row");
+    std::println("4. row");
     row4.print();
+
+    // ---------------------------------------------
 
     std::println("4. column:");
     std::println();
 
-    
-    // return;
+    pivot = 57.0 / 141.0;
+
+    row4 = row4 - row3 * pivot;
+    std::println("4. row");
+    row4.print();
+
+    return;
 
 
     solver.eliminateForward();
