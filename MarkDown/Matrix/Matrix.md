@@ -606,14 +606,14 @@ in die erste Gleichung ein, um die letzte verbliebene Variable zu bestimmen und 
 
 Wir betrachten die einzelnen Schritte während der Vorwärtselimination und Rückwärtssubstitution
 nun im Detail. Es handelt sich um ein lineares Gleichungssystem
-mit den vier Unbekannten *x*<sub>1</sub>, *x*<sub>2</sub>, *x*<sub>3</sub> und *x*<sub>4</sub>:
+mit den vier Unbekannten *x*<sub>0</sub>, *x*<sub>1</sub>, *x*<sub>2</sub> und *x*<sub>3</sub>:
 
 
 <pre>
- 3<i>x</i><sub>3</sub> + 1<i>x</i><sub>2</sub> - 5<i>x</i><sub>3</sub> + 4<i>x</i><sub>3</sub> = -18
- 2<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 3<i>x</i><sub>3</sub> - 2<i>x</i><sub>3</sub> =  19
- 5<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 4<i>x</i><sub>3</sub> + 1<i>x</i><sub>3</sub> =  22
--2<i>x</i><sub>3</sub> + 4<i>x</i><sub>2</sub> - 3<i>x</i><sub>3</sub> - 5<i>x</i><sub>3</sub> = -14
+ 3<i>x</i><sub>3</sub> + 1<i>x</i><sub>2</sub> - 5<i>x</i><sub>1</sub> + 4<i>x</i><sub>0</sub> = -18
+ 2<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 3<i>x</i><sub>1</sub> - 2<i>x</i><sub>0</sub> =  19
+ 5<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 4<i>x</i><sub>1</sub> + 1<i>x</i><sub>0</sub> =  22
+-2<i>x</i><sub>3</sub> + 4<i>x</i><sub>2</sub> - 3<i>x</i><sub>1</sub> - 5<i>x</i><sub>0</sub> = -14
 </pre>
 
 #### Betrachtung der Vorwärtselimination:
@@ -625,19 +625,19 @@ mit den vier Unbekannten *x*<sub>1</sub>, *x*<sub>2</sub>, *x*<sub>3</sub> und *
 Wir wählen das Pivot-Element 2/3:
 
 <pre>
- 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +    4<i>x</i><sub>3</sub> = -18
-      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> - 14/3<i>x</i><sub>3</sub> =  31
- 5<i>x</i><sub>3</sub> -    3<i>x</i><sub>2</sub> +    4<i>x</i><sub>3</sub> +    1<i>x</i><sub>3</sub> =  22
--2<i>x</i><sub>3</sub> +    4<i>x</i><sub>2</sub> -    3<i>x</i><sub>3</sub> -    3<i>x</i><sub>3</sub> = -14
+ 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>1</sub> +    4<i>x</i><sub>0</sub> = -18
+      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>1</sub> - 14/3<i>x</i><sub>0</sub> =  31
+ 5<i>x</i><sub>3</sub> -    3<i>x</i><sub>2</sub> +    4<i>x</i><sub>1</sub> +    1<i>x</i><sub>0</sub> =  22
+-2<i>x</i><sub>3</sub> +    4<i>x</i><sub>2</sub> -    3<i>x</i><sub>1</sub> -    3<i>x</i><sub>0</sub> = -14
 </pre>
 
 oder in Gleitpunktdarstellung:
 
 <pre>
- 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -     5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
-     -3.666<i>x</i><sub>2</sub> + 6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> =  31
- 5<i>x</i><sub>3</sub> -    3<i>x</i><sub>2</sub> +     4<i>x</i><sub>3</sub> +      1<i>x</i><sub>3</sub> =  22
--2<i>x</i><sub>3</sub> +    4<i>x</i><sub>2</sub> -     3<i>x</i><sub>3</sub> -      3<i>x</i><sub>3</sub> = -14
+ 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -     5<i>x</i><sub>1</sub> +      4<i>x</i><sub>0</sub> = -18
+     -3.666<i>x</i><sub>2</sub> + 6.333<i>x</i><sub>1</sub> -  4.666<i>x</i><sub>0</sub> =  31
+ 5<i>x</i><sub>3</sub> -    3<i>x</i><sub>2</sub> +     4<i>x</i><sub>1</sub> +      1<i>x</i><sub>0</sub> =  22
+-2<i>x</i><sub>3</sub> +    4<i>x</i><sub>2</sub> -     3<i>x</i><sub>1</sub> -      3<i>x</i><sub>0</sub> = -14
 </pre>
 
 ---
@@ -647,19 +647,19 @@ oder in Gleitpunktdarstellung:
 Wir wählen das Pivot-Element 5/3:
 
 <pre>
- 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +    4<i>x</i><sub>3</sub> = -18
-      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> - 14/3<i>x</i><sub>3</sub> =  31
-      -14/3<i>x</i><sub>2</sub> + 37/3<i>x</i><sub>3</sub> - 17/3<i>x</i><sub>3</sub> =  52
--2<i>x</i><sub>3</sub> +     4<i>x</i><sub>2</sub> -   3<i>x</i><sub>3</sub> -    3<i>x</i><sub>3</sub> = -14
+ 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>1</sub> +    4<i>x</i><sub>0</sub> = -18
+      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>1</sub> - 14/3<i>x</i><sub>0</sub> =  31
+      -14/3<i>x</i><sub>2</sub> + 37/3<i>x</i><sub>1</sub> - 17/3<i>x</i><sub>0</sub> =  52
+-2<i>x</i><sub>3</sub> +     4<i>x</i><sub>2</sub> -   3<i>x</i><sub>1</sub> -    3<i>x</i><sub>0</sub> = -14
 </pre>
 
 oder in Gleitpunktdarstellung:
 
 <pre>
- 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -      5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
-     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> =  31
-     -4.666<i>x</i><sub>2</sub> + 12.333<i>x</i><sub>3</sub> -  5.666<i>x</i><sub>3</sub> =  52
--2<i>x</i><sub>3</sub> +    4<i>x</i><sub>2</sub> -      3<i>x</i><sub>3</sub> -      3<i>x</i><sub>3</sub> = -14
+ 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -      5<i>x</i><sub>1</sub> +      4<i>x</i><sub>0</sub> = -18
+     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>1</sub> -  4.666<i>x</i><sub>0</sub> =  31
+     -4.666<i>x</i><sub>2</sub> + 12.333<i>x</i><sub>1</sub> -  5.666<i>x</i><sub>0</sub> =  52
+-2<i>x</i><sub>3</sub> +    4<i>x</i><sub>2</sub> -      3<i>x</i><sub>1</sub> -      3<i>x</i><sub>0</sub> = -14
 </pre>
 
 ---
@@ -669,19 +669,19 @@ oder in Gleitpunktdarstellung:
 Wir wählen das Pivot-Element -2/3:
 
 <pre>
- 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +    4<i>x</i><sub>3</sub> = -18
-      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> - 14/3<i>x</i><sub>3</sub> =  31
-      -14/3<i>x</i><sub>2</sub> + 37/3<i>x</i><sub>3</sub> - 17/3<i>x</i><sub>3</sub> =  52
-       14/3<i>x</i><sub>2</sub> - 19/3<i>x</i><sub>3</sub> -  7/3<i>x</i><sub>3</sub> = -26
+ 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>1</sub> +    4<i>x</i><sub>0</sub> = -18
+      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>1</sub> - 14/3<i>x</i><sub>0</sub> =  31
+      -14/3<i>x</i><sub>2</sub> + 37/3<i>x</i><sub>1</sub> - 17/3<i>x</i><sub>0</sub> =  52
+       14/3<i>x</i><sub>2</sub> - 19/3<i>x</i><sub>1</sub> -  7/3<i>x</i><sub>0</sub> = -26
 </pre>
 
 oder in Gleitpunktdarstellung:
 
 <pre>
- 3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
-     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> =  31
-     -4.666<i>x</i><sub>2</sub> + 12.333<i>x</i><sub>3</sub> -  5.666<i>x</i><sub>3</sub> =  52
-      4.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> -  2.333<i>x</i><sub>3</sub> = -26
+ 3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>1</sub> +      4<i>x</i><sub>0</sub> = -18
+     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>1</sub> -  4.666<i>x</i><sub>0</sub> =  31
+     -4.666<i>x</i><sub>2</sub> + 12.333<i>x</i><sub>1</sub> -  5.666<i>x</i><sub>0</sub> =  52
+      4.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>1</sub> -  2.333<i>x</i><sub>0</sub> = -26
 </pre>
 
 ---
@@ -693,19 +693,19 @@ oder in Gleitpunktdarstellung:
 Wir wählen das Pivot-Element 14/11:
 
 <pre>
- 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +    4<i>x</i><sub>3</sub> = -18
-      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> - 14/3<i>x</i><sub>3</sub> =  31
-              141/33<i>x</i><sub>3</sub> + 9/33<i>x</i><sub>3</sub> =  138/11
-       14/3<i>x</i><sub>2</sub> - 19/3<i>x</i><sub>3</sub> -  1/3<i>x</i><sub>3</sub> = -26
+ 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>1</sub> +    4<i>x</i><sub>0</sub> = -18
+      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>1</sub> - 14/3<i>x</i><sub>0</sub> =  31
+              141/33<i>x</i><sub>1</sub> + 9/33<i>x</i><sub>0</sub> =  138/11
+       14/3<i>x</i><sub>2</sub> - 19/3<i>x</i><sub>1</sub> -  1/3<i>x</i><sub>0</sub> = -26
 </pre>
 
 oder in Gleitpunktdarstellung:
 
 <pre>
- 3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>3</sub> +     4<i>x</i><sub>3</sub> = -18
-     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> - 4.666<i>x</i><sub>3</sub> = 31
-                 4.272<i>x</i><sub>3</sub> + 0.272<i>x</i><sub>3</sub> = 12,545
-      4.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> - 0.333<i>x</i><sub>3</sub> = -26
+ 3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>1</sub> +     4<i>x</i><sub>0</sub> = -18
+     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>1</sub> - 4.666<i>x</i><sub>0</sub> = 31
+                 4.272<i>x</i><sub>1</sub> + 0.272<i>x</i><sub>0</sub> = 12,545
+      4.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>1</sub> - 0.333<i>x</i><sub>0</sub> = -26
 </pre>
 
 
@@ -714,19 +714,19 @@ oder in Gleitpunktdarstellung:
 Wir wählen das Pivot-Element -14/11:
 
 <pre>
- 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
-      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> -   14/3<i>x</i><sub>3</sub> = 31
-              141/33<i>x</i><sub>3</sub> +   9/33<i>x</i><sub>3</sub> = 138/11
-               57/33<i>x</i><sub>3</sub> - 273/33<i>x</i><sub>3</sub> = 148/11
+ 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>1</sub> +      4<i>x</i><sub>0</sub> = -18
+      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>1</sub> -   14/3<i>x</i><sub>0</sub> = 31
+              141/33<i>x</i><sub>1</sub> +   9/33<i>x</i><sub>0</sub> = 138/11
+               57/33<i>x</i><sub>1</sub> - 273/33<i>x</i><sub>0</sub> = 148/11
 </pre>
 
 oder in Gleitpunktdarstellung:
 
 <pre>
- 3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>3</sub> +     4<i>x</i><sub>3</sub> = -18
-     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> - 4.666<i>x</i><sub>3</sub> = 31
-                 4.272<i>x</i><sub>3</sub> + 0.272<i>x</i><sub>3</sub> = 12,545
-                 1.727<i>x</i><sub>3</sub> - 8.272<i>x</i><sub>3</sub> = 13.454
+ 3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>1</sub> +     4<i>x</i><sub>0</sub> = -18
+     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>1</sub> - 4.666<i>x</i><sub>0</sub> = 31
+                 4.272<i>x</i><sub>1</sub> + 0.272<i>x</i><sub>0</sub> = 12,545
+                 1.727<i>x</i><sub>1</sub> - 8.272<i>x</i><sub>0</sub> = 13.454
 </pre>
 
 
@@ -740,22 +740,125 @@ Wir wählen das Pivot-Element 57/141:
 
 
 <pre>
- 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
-      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> -   14/3<i>x</i><sub>3</sub> = 31
-              141/33<i>x</i><sub>3</sub> +   9/33<i>x</i><sub>3</sub> = 138/11
-                    -39006/4653<i>x</i><sub>3</sub> = 13002/1551
+ 3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>1</sub> +      4<i>x</i><sub>0</sub> = -18
+      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>1</sub> -   14/3<i>x</i><sub>0</sub> = 31
+              141/33<i>x</i><sub>1</sub> +   9/33<i>x</i><sub>0</sub> = 138/11
+                    -39006/4653<i>x</i><sub>0</sub> = 13002/1551
 </pre>
 
 oder in Gleitpunktdarstellung:
 
 <pre>
- 3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>3</sub> +     4<i>x</i><sub>3</sub> = -18
-     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> - 4.666<i>x</i><sub>3</sub> = 31
-                 4.272<i>x</i><sub>3</sub> + 0.272<i>x</i><sub>3</sub> = 12,545
-                         -8.3829<i>x</i><sub>3</sub> = 8,38297
+ 3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>1</sub> +     4<i>x</i><sub>0</sub> = -18
+     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>1</sub> - 4.666<i>x</i><sub>0</sub> = 31
+                 4.272<i>x</i><sub>1</sub> + 0.272<i>x</i><sub>0</sub> = 12,545
+                         -8.3829<i>x</i><sub>0</sub> = 8,38297
 </pre>
 
 ---
 
 
+### Berechnung des Ergebnisses mit der Rückwärtssubstitution
+
+Wir wollen einmal das Verfahren der Rückwärtssubstitution ansehen.
+Die letzte, umgewandelte Gleichung lautet
+
+<pre>
+-39006/4653<i>x</i><sub>0</sub> = 13002/1551
+</pre>
+
+Da können wir die Zähler mit `13002` und die Nenner mit `1551` kürzen und erhalten
+
+<pre>
+-3/3<i>x</i><sub>0</sub> = -<i>x</i><sub>0</sub> = 1/1 = 1
+</pre>
+
+Folglich berechnet sich <i>x</i><sub>0</sub> zu -1.
+Dieser Wert wird nun in die vorletzte Gleichung eingesetzt:
+
+<pre>
+141/33<i>x</i><sub>1</sub> + 9/33<i>x</i><sub>0</sub> = 138/11
+</pre>
+
+also
+
+<pre>
+141/33<i>x</i><sub>1</sub> - 9/33 = 138/11
+</pre>
+
+Weiter zu
+
+<pre>
+141/33<i>x</i><sub>1</sub> = 138/11 + 9/33 = (138*3)/33 + 9/33 = 423/33
+</pre>
+
+und 
+
+<pre>
+141<i>x</i><sub>1</sub> = 423
+</pre>
+
+und damit ist <i>x</i><sub>1</sub> gleich 3.
+
+Auf geht es zur dritten Gleichung von unten aus gesehen:
+
+<pre>
+-11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>1</sub> - 14/3<i>x</i><sub>0</sub> = 31
+</pre>
+
+<i>x</i><sub>0</sub> gleich -1 und <i>x</i><sub>1</sub> gleich 3 eingesetzt ergibt 
+
+<pre>
+-11/3<i>x</i><sub>2</sub> + (3*19)/3 + 14/3 = 31
+</pre>
+
+Weiter folgt
+
+<pre>
+-11/3<i>x</i><sub>2</sub> + 19 + 14/3 = 31
+</pre>
+
+und 
+
+<pre>
+-11/3<i>x</i><sub>2</sub> = 31 - 19 - 14/3 = ((3*31) - (19*3) - 14)/3 = (93-57-14)/3 = 22/3
+</pre>
+
+Damit folgt
+
+<pre>
+-11<i>x</i><sub>2</sub> = 22
+</pre>
+
+Es ist somit 1<i>x</i><sub>2</sub> gleich -2. Alle drei gefundenen Werte setzen wir in die erste Gleichung ein:
+
+<pre>
+3<i>x</i><sub>3</sub> + 1<i>x</i><sub>2</sub> - 5<i>x</i><sub>1</sub> + 4<i>x</i><sub>0</sub> = -18
+</pre>
+
+Sprich
+
+<pre>
+3<i>x</i><sub>3</sub> -2 - 5*3 - 4 = -18
+</pre>
+
+und damit
+
+<pre>
+3<i>x</i><sub>3</sub> = -18 + 2 + 5*3 + 4 = -18 + 2 + 15 + 4 = -18 + 21 = 3 
+</pre>
+
+Es ergibt sich <i>x</i><sub>3</sub> = 1.
+
+Abschließend können wir den berechneten
+Lösungsvektor `{` <i>x</i><sub>3</sub>, <i>x</i><sub>2</sub>, <i>x</i><sub>1</sub>, <i>x</i><sub>0</sub> `}` = `{ 1, -2, 3, -1 }` mit der Matrix des Gleichungssystems multiplizieren,
+um uns von der Korrektheit des Ergebnisses überzeugen zu können:
+
+
+<pre>
+ 3<i>x</i><sub>3</sub> + 1<i>x</i><sub>2</sub> - 5<i>x</i><sub>1</sub> + 4<i>x</i><sub>0</sub> =  3 * 1 + 1 * (-2) - 5 * 3 + 4 * (-1) = -18
+ 2<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 3<i>x</i><sub>1</sub> - 2<i>x</i><sub>0</sub> =  2 * 1 - 3 * (-2) + 3 * 3 - 2 * (-1) =  19
+ 5<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 4<i>x</i><sub>1</sub> + 1<i>x</i><sub>0</sub> =  5 * 1 - 3 * (-2) + 4 * 3 + 1 * (-1) =  22
+-2<i>x</i><sub>3</sub> + 4<i>x</i><sub>2</sub> - 3<i>x</i><sub>1</sub> - 5<i>x</i><sub>0</sub> = -2 * 1 + 4 * (-2) - 3 * 3 - 5 * (-1) = -14
+</pre>
 
