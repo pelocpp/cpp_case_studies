@@ -453,51 +453,48 @@ Ein Umsatzung in C++&ndash;Quellcode ist nicht sonderlich schwer:
 
 ## Test Tabellen und lineare Gleichungssystem
 
-Wir betrachten zum Lösung eines linearen Gleichungssystems den Algorithmus von Gauss.
+Wir betrachten zum Lösung eines linearen Gleichungssystems den Algorithmus von Gauß.
 
 
 https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
 
-Was versteht man Lösen eines linearen Gleichungssystems nach dem Algorithmus von Gauss
+Was versteht man Lösen eines linearen Gleichungssystems nach dem Algorithmus von Gauß
 unter der Vorwärtselimination?
 
 Wie funktioniert die Vorwärtselimination beim
-Lösen eines linearen Gleichungssystems nach dem Algorithmus von Gauss
+Lösen eines linearen Gleichungssystems nach dem Algorithmus von Gauß
 im Detail?
 
 Wie funktioniert die Rückwärtssubstitution beim
-Lösen eines linearen Gleichungssystems nach dem Algorithmus von Gauss
+Lösen eines linearen Gleichungssystems nach dem Algorithmus von Gauß
 im Detail?
 
 
 ## Lineare Gleichungssysteme
 
-Wir betrachten zum Lösung eines linearen Gleichungssystems den Algorithmus von Gauss.
-
-Die Vorwärtselimination ist der erste Schritt des Gauß-Algorithmus,
+Wir betrachten zum Lösung eines linearen Gleichungssystems den Algorithmus von Gauß.
+Die Vorwärtselimination ist hierbei der erste Schritt des Algorithmus,
 bei dem ein lineares Gleichungssystem schrittweise in eine obere Dreiecksform umgewandelt wird.
 Dabei werden durch äquivalente Zeilenumformungen systematisch Variablen eliminiert,
 sodass unter der Hauptdiagonalen der Matrix nur noch Nullen stehen.
 
 Das Ziel ist die Umwandlung in ein System von vereinfachten Gleichungen,
 das von unten nach oben leicht lösbar ist.
-
 Wir betrachten das Ganze an folgendem Beispiel. Zu Lösen ist das lineare Gleichungssystem
 
 <pre>
 2x<sub>2</sub> + 3x<sub>1</sub> -  x<sub>0</sub> = -9
- x<sub>2</sub> - 2x<sub>1</sub> +  x<sub>0</sub> = 9
--x<sub>2</sub> +  x<sub>1</sub> + 2x<sub>0</sub> = 0
+ x<sub>2</sub> - 2x<sub>1</sub> +  x<sub>0</sub> =  9
+-x<sub>2</sub> +  x<sub>1</sub> + 2x<sub>0</sub> =  0
 </pre>
 
-### Detaillierte Schritte der Vorwärtselimination
-
+#### Detaillierte Schritte der Vorwärtselimination
 
 #### 1. Aufschreiben der erweiterten Koeffizientenmatrix
 
 Zunächst ist das lineare Gleichungssystem in eine erweiterte Matrix so umzuformulieren,
-dass die Koeffizienten der Variablen in den ersten *n* Spalten einer *n*+1 &times; *m* Matrix
-und die konstanten Werte auf der rechten Seite der Gleichungen in der *n*+1.-ten Spalte stehen:
+dass die Koeffizienten der Variablen in den ersten *m* Spalten einer *n*&times;*m*+1 Matrix
+und die konstanten Werte auf der rechten Seite der Gleichungen in der *m*+1.-ten Spalte stehen:
 
 <pre>
  2.0    3.0   -1.0   -9.0
@@ -507,24 +504,34 @@ und die konstanten Werte auf der rechten Seite der Gleichungen in der *n*+1.-ten
 
 #### 2. Auswahl des Pivotelements
 
-Wählen Sie in der ersten Spalte die erste Zeile als Pivotelement aus,
-in der Regel ein von Null verschiedener Wert.
-Ist der Wert 0, so ist für diese Zeile nichts zu tun.
+Wählen Sie in der ersten Spalte das erste Element als Pivotelement aus.
+Diese Auswahl erfolgt unter der Annahme, dass der Wert von Null verschieden ist.
+Andernfalls ist für diese Zeile nichts zu tun.
 
 #### 3. Eliminieren der Elemente unter dem Pivotelement
 
 Verwenden Sie das Pivotelement, um alle Koeffizienten in der ersten Spalte unterhalb der ersten Zeile
 auf Null zu setzen.
-
 Dazu subtrahieren wir ein geeignetes Vielfaches der ersten Zeile von den jeweiligen darunterliegenden Zeilen.
 
-*Beispiel*: Um die erste Spalte einer *zeile*<sub>1</sub> in der zweiten Zeile einer *zeile*<sub>2</sub> auf Null zu setzen,
-können Sie die neue Zeile als *zeile*<sub>2</sub> – k * *zeile*<sub>1</sub> definieren,
+*Beispiel*:<br />
+Um die erste Spalte einer ersten Zeile *zeile*<sub>1</sub> in der zweiten Zeile (*zeile*<sub>2</sub>) auf Null zu setzen,
+können Sie die neue Zeile als *zeile*<sub>2</sub> &ndash; *k* &times; *zeile*<sub>1</sub> definieren,
 wobei *k* so gewählt wird, dass der neue Eintrag in der ersten Spalte Null wird.
 
 Wir betrachten dies am Beispiel des obigen Gleichungssystems.
 Zunächst betrachten wir das erste Element in der zweiten Gleichung, wir wollen
 dieses mit dem Pivot-Element 1/2 auf Null setzen:
+
+Ausgehend von
+
+<pre>
+ 2.0    3.0   -1.0   -9.0
+ 1.0   -2.0    1.0    9.0
+-1.0    1.0    2.0    0.0
+</pre>
+
+erhalten wir die neue Matrix
 
 <pre>
  2.0     3.0   -1.0   -9.0
@@ -532,7 +539,7 @@ dieses mit dem Pivot-Element 1/2 auf Null setzen:
 -1.0     1.0    2.0    0.0
 </pre>
 
-Es folgt die Umwandlung der dritten Gleichung  hier wählen wir das Pivot-Element -1/2:
+Es folgt die Umwandlung der dritten Gleichung, hier verwenden wir das Pivot-Element -1/2:
 
 <pre>
  2.0     3.0   -1.0   -9.0
@@ -540,19 +547,15 @@ Es folgt die Umwandlung der dritten Gleichung  hier wählen wir das Pivot-Element
  0.0     2.5    1.5,  -4.5
 </pre>
 
-
-
-
 #### 4. Fortsetzen für die nächste Spalten
 
 Man bewege sich zur zweiten Spalte. Die erste Zeile wird nicht mehr für die folgenden Umformungen verwendet.
-
 Wählen Sie in der zweiten Spalte das nächste Pivotelement, das nun der erste Nicht-Null-Eintrag in der zweiten Zeile ist.
-
 Wiederholen Sie den Eliminationsschritt, indem Sie ein Vielfaches der zweiten Zeile von den darunterliegenden Zeilen subtrahieren,
 um die Einträge in der zweiten Spalte auf Null zu setzen.
 
-In unserem Beispiel hat das Pivot-Element nun den Wert -2.5/3.5 oder einfacher -5/7:
+In unserem Beispiel hat das Pivot-Element nun den Wert -2.5/3.5 oder einfacher -5/7.
+Wir erhalten die neue Matrix
 
 <pre>
  2.0     3.0   -1.0     -9.0
@@ -561,11 +564,11 @@ In unserem Beispiel hat das Pivot-Element nun den Wert -2.5/3.5 oder einfacher -
 </pre>
 
 
-#### 5. Wiederholung bis zur Dreiecksform
+#### 5. Wiederholungen bis zur Dreiecksform
 
 Führen Sie diesen Vorgang für alle Spalten fort, bis die Matrix in der oberen Dreiecksform vorliegt. Das bedeutet, alle Einträge unter der Hauptdiagonalen sind Null. 
 
-### Detaillierte Schritte der Rückwärtssubstitution
+### Detaillierte Beschreibung der Rückwärtssubstitution
 
 Die Rückwärtssubstitution beim Gauß-Algorithmus ist ein Prozess, bei dem man,
 nachdem ein lineares Gleichungssystem in die obere Dreiecksform gebracht wurde,
@@ -575,7 +578,7 @@ Man beginnt mit der letzten Gleichung, die nur eine Unbekannte enthält, um deren
 Diesen Wert setzt man dann in die Gleichung darüber ein, um die nächste Variable zu ermitteln,
 und fährt so fort, bis alle Variablen berechnet sind. 
 
-Schritt-für-Schritt-Anleitung
+### Schritt-für-Schritt-Anleitung
 
   * Beginnen Sie mit der letzten Zeile:<br />
 In der oberen Dreiecksform (auch Zeilenstufenform genannt) ist die letzte Zeile des Gleichungssystems eine einfache Gleichung,
@@ -586,28 +589,31 @@ Nehmen Sie den gerade berechneten Wert und setzen Sie ihn in die vorletzte Gleic
 Diese Gleichung enthält nun nur noch zwei Unbekannte, von denen eine jetzt bekannt ist.
 
   * Lösen Sie nach der nächsten Variablen auf:<br />
-Die Gleichung hat sich zu einer linearen Gleichung mit nur noch einer unbekannten Variable reduziert, die Sie nun leicht berechnen können.
+Die Gleichung hat sich zu einer linearen Gleichung mit nur noch einer unbekannten Variablen reduziert,
+die Sie nun leicht berechnen können.
 
   * Wiederholen Sie den Vorgang:<br />
 Setzen Sie die Werte der beiden gerade berechneten Variablen in die nächsthöhere Gleichung ein.
 Auch diese vereinfacht sich nun zu einer Gleichung, die nur noch eine unbekannte Variable enthält.
 
-  * Setzen Sie die ersten Werte in die erste Zeile ein:<br />
-Fahren Sie so fort, bis Sie alle Werte ermittelt haben. Zum Schluss setzen Sie die Werte aller bereits berechneten Variablen in die erste Gleichung ein, um die letzte verbliebene Variable zu bestimmen und das System vollständig zu lösen. 
+  * Setzen Sie alle ermittelten Werte in die erste Zeile ein:<br />
+Fahren Sie so fort, bis Sie alle Werte ermittelt haben. Zum Schluss setzen Sie die Werte aller bereits berechneten Variablen
+in die erste Gleichung ein, um die letzte verbliebene Variable zu bestimmen und um das System vollständig zu lösen. 
 
 
 
 ### Ein ausführliches Beispiel
 
-Wir betrachten die einzelen Schritte während der Vorwärtselimination und Rückwärtssubstitution
-nun im Detail. Es handelt sich um ein lineares Gleichungssystem mit den vier Unbekannten *x*1, *x*2, *x*3 und *x*4:
+Wir betrachten die einzelnen Schritte während der Vorwärtselimination und Rückwärtssubstitution
+nun im Detail. Es handelt sich um ein lineares Gleichungssystem
+mit den vier Unbekannten *x*<sub>1</sub>, *x*<sub>2</sub>, *x*<sub>3</sub> und *x*<sub>4</sub>:
 
 
 <pre>
  3<i>x</i><sub>3</sub> + 1<i>x</i><sub>2</sub> - 5<i>x</i><sub>3</sub> + 4<i>x</i><sub>3</sub> = -18
- 2<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 3<i>x</i><sub>3</sub> - 2<i>x</i><sub>3</sub> = 19
- 5<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 4<i>x</i><sub>3</sub> + 1<i>x</i><sub>3</sub> = 22
--2<i>x</i><sub>3</sub> + 4<i>x</i><sub>2</sub> - 3<i>x</i><sub>3</sub> - 3<i>x</i><sub>3</sub> = -14
+ 2<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 3<i>x</i><sub>3</sub> - 2<i>x</i><sub>3</sub> =  19
+ 5<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 4<i>x</i><sub>3</sub> + 1<i>x</i><sub>3</sub> =  22
+-2<i>x</i><sub>3</sub> + 4<i>x</i><sub>2</sub> - 3<i>x</i><sub>3</sub> - 5<i>x</i><sub>3</sub> = -14
 </pre>
 
 #### Betrachtung der Vorwärtselimination:
@@ -620,8 +626,8 @@ Wir wählen das Pivot-Element 2/3:
 
 <pre>
  3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +    4<i>x</i><sub>3</sub> = -18
-      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> - 14/3<i>x</i><sub>3</sub> = 31
- 5<i>x</i><sub>3</sub> -    3<i>x</i><sub>2</sub> +    4<i>x</i><sub>3</sub> +    1<i>x</i><sub>3</sub> = 22
+      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> - 14/3<i>x</i><sub>3</sub> =  31
+ 5<i>x</i><sub>3</sub> -    3<i>x</i><sub>2</sub> +    4<i>x</i><sub>3</sub> +    1<i>x</i><sub>3</sub> =  22
 -2<i>x</i><sub>3</sub> +    4<i>x</i><sub>2</sub> -    3<i>x</i><sub>3</sub> -    3<i>x</i><sub>3</sub> = -14
 </pre>
 
@@ -629,8 +635,8 @@ oder in Gleitpunktdarstellung:
 
 <pre>
  3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -     5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
-     -3.666<i>x</i><sub>2</sub> + 6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> = 31
- 5<i>x</i><sub>3</sub> -    3<i>x</i><sub>2</sub> +     4<i>x</i><sub>3</sub> +      1<i>x</i><sub>3</sub> = 22
+     -3.666<i>x</i><sub>2</sub> + 6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> =  31
+ 5<i>x</i><sub>3</sub> -    3<i>x</i><sub>2</sub> +     4<i>x</i><sub>3</sub> +      1<i>x</i><sub>3</sub> =  22
 -2<i>x</i><sub>3</sub> +    4<i>x</i><sub>2</sub> -     3<i>x</i><sub>3</sub> -      3<i>x</i><sub>3</sub> = -14
 </pre>
 
@@ -642,8 +648,8 @@ Wir wählen das Pivot-Element 5/3:
 
 <pre>
  3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +    4<i>x</i><sub>3</sub> = -18
-      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> - 14/3<i>x</i><sub>3</sub> = 31
-      -14/3<i>x</i><sub>2</sub> + 37/3<i>x</i><sub>3</sub> - 17/3<i>x</i><sub>3</sub> = 52
+      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> - 14/3<i>x</i><sub>3</sub> =  31
+      -14/3<i>x</i><sub>2</sub> + 37/3<i>x</i><sub>3</sub> - 17/3<i>x</i><sub>3</sub> =  52
 -2<i>x</i><sub>3</sub> +     4<i>x</i><sub>2</sub> -   3<i>x</i><sub>3</sub> -    3<i>x</i><sub>3</sub> = -14
 </pre>
 
@@ -651,8 +657,8 @@ oder in Gleitpunktdarstellung:
 
 <pre>
  3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -      5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
-     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> = 31
-     -4.666<i>x</i><sub>2</sub> + 12.333<i>x</i><sub>3</sub> -  5.666<i>x</i><sub>3</sub> = 52
+     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> =  31
+     -4.666<i>x</i><sub>2</sub> + 12.333<i>x</i><sub>3</sub> -  5.666<i>x</i><sub>3</sub> =  52
 -2<i>x</i><sub>3</sub> +    4<i>x</i><sub>2</sub> -      3<i>x</i><sub>3</sub> -      3<i>x</i><sub>3</sub> = -14
 </pre>
 
@@ -664,18 +670,18 @@ Wir wählen das Pivot-Element -2/3:
 
 <pre>
  3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +    4<i>x</i><sub>3</sub> = -18
-      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> - 14/3<i>x</i><sub>3</sub> = 31
-      -14/3<i>x</i><sub>2</sub> + 37/3<i>x</i><sub>3</sub> - 17/3<i>x</i><sub>3</sub> = 52
-       14/3<i>x</i><sub>2</sub> - 19/3<i>x</i><sub>3</sub> -  1/3<i>x</i><sub>3</sub> = -26
+      -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> - 14/3<i>x</i><sub>3</sub> =  31
+      -14/3<i>x</i><sub>2</sub> + 37/3<i>x</i><sub>3</sub> - 17/3<i>x</i><sub>3</sub> =  52
+       14/3<i>x</i><sub>2</sub> - 19/3<i>x</i><sub>3</sub> -  7/3<i>x</i><sub>3</sub> = -26
 </pre>
 
 oder in Gleitpunktdarstellung:
 
 <pre>
  3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
-     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> = 31
-     -4.666<i>x</i><sub>2</sub> + 12.333<i>x</i><sub>3</sub> -  5.666<i>x</i><sub>3</sub> = 52
-      4.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> -  0.333<i>x</i><sub>3</sub> = -26
+     -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> -  4.666<i>x</i><sub>3</sub> =  31
+     -4.666<i>x</i><sub>2</sub> + 12.333<i>x</i><sub>3</sub> -  5.666<i>x</i><sub>3</sub> =  52
+      4.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> -  2.333<i>x</i><sub>3</sub> = -26
 </pre>
 
 ---
@@ -711,7 +717,7 @@ Wir wählen das Pivot-Element -14/11:
  3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
       -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> -   14/3<i>x</i><sub>3</sub> = 31
               141/33<i>x</i><sub>3</sub> +   9/33<i>x</i><sub>3</sub> = 138/11
-               57/33<i>x</i><sub>3</sub> - 207/33<i>x</i><sub>3</sub> = 148/11
+               57/33<i>x</i><sub>3</sub> - 273/33<i>x</i><sub>3</sub> = 148/11
 </pre>
 
 oder in Gleitpunktdarstellung:
@@ -720,7 +726,7 @@ oder in Gleitpunktdarstellung:
  3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>3</sub> +     4<i>x</i><sub>3</sub> = -18
      -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> - 4.666<i>x</i><sub>3</sub> = 31
                  4.272<i>x</i><sub>3</sub> + 0.272<i>x</i><sub>3</sub> = 12,545
-                 1.727<i>x</i><sub>3</sub> - 6.272<i>x</i><sub>3</sub> = 13.454
+                 1.727<i>x</i><sub>3</sub> - 8.272<i>x</i><sub>3</sub> = 13.454
 </pre>
 
 
@@ -737,7 +743,7 @@ Wir wählen das Pivot-Element 57/141:
  3<i>x</i><sub>3</sub> +    1<i>x</i><sub>2</sub> -    5<i>x</i><sub>3</sub> +      4<i>x</i><sub>3</sub> = -18
       -11/3<i>x</i><sub>2</sub> + 19/3<i>x</i><sub>3</sub> -   14/3<i>x</i><sub>3</sub> = 31
               141/33<i>x</i><sub>3</sub> +   9/33<i>x</i><sub>3</sub> = 138/11
-                    -29700/4653<i>x</i><sub>3</sub> = 13002/1551
+                    -39006/4653<i>x</i><sub>3</sub> = 13002/1551
 </pre>
 
 oder in Gleitpunktdarstellung:
@@ -746,7 +752,7 @@ oder in Gleitpunktdarstellung:
  3<i>x</i><sub>3</sub>  +   1<i>x</i><sub>2</sub> -      5<i>x</i><sub>3</sub> +     4<i>x</i><sub>3</sub> = -18
      -3.666<i>x</i><sub>2</sub> -  6.333<i>x</i><sub>3</sub> - 4.666<i>x</i><sub>3</sub> = 31
                  4.272<i>x</i><sub>3</sub> + 0.272<i>x</i><sub>3</sub> = 12,545
-                         -6.3829<i>x</i><sub>3</sub> = 8,38297
+                         -8.3829<i>x</i><sub>3</sub> = 8,38297
 </pre>
 
 ---
