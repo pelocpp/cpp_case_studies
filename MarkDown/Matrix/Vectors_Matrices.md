@@ -48,8 +48,9 @@ Die Länge der Verbindungsstrecke vom Anfangspunkt eines Vektors zu seinem Endpun
 Im zwei- oder dreidimensionalen Vektorraum kann der Betrag eines Vektors 
 mit Hilfe des Satzes von Pythagoras anhand seiner Komponenten berechnet werden:
 
+$$
 |x| = \sqrt{x^2+x^2+x^2} 
-
+$$
 
 
 
