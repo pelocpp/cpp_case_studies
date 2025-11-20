@@ -89,7 +89,7 @@ $$
 Zwei Vektoren \vec{a} und \vec{a} sind gleich, wenn sie in allen Koordinaten übereinstimmen. Beide Vektoren haben dann den gleichen Betrag, die gleiche Richtung 
 
 
-$\overline{v}$
+$\vec{v}$
 
 
 
