@@ -22,6 +22,7 @@ KI:  markdown math matrices examples
 
 
 // BEISPIELE FÜR MAthematik in Markdown
+
 https://damienbod.com/2022/06/06/using-math-expressions-in-github-markdown/
 
 oder
@@ -32,6 +33,7 @@ https://www.upyesp.org/posts/makrdown-vscode-math-notation/
 ## Einleitung zu Vektoren
 
 // https://www.grund-wissen.de/mathematik/lineare-algebra-und-analytische-geometrie/vektoren.html
+
 
 Vektoren sind gerichtete Größen, die in Betrag und Richtung (vorzeichenbehaftet) bestimmt sind
 
@@ -103,7 +105,7 @@ indem man die einzelnen Komponenten beider Vektoren addiert:
 
 
 $$
-\vec{a} + \vec{a} =
+\vec{a} + \vec{b} =
 \begin{pmatrix}
 a_{1} \\
 a_{2} \\
@@ -141,7 +143,7 @@ Eine Addition von Vektoren mit unterschiedlicher Dimension ist nicht definiert.
 Rechnerisch erhält man den Differenzvektor, indem man die einzelnen Komponenten beider Vektoren subtrahiert:
 
 $$
-\vec{a} + \vec{a} =
+\vec{a} - \vec{b} =
 \begin{pmatrix}
 a_{1} \\
 a_{2} \\
@@ -212,9 +214,10 @@ c \cdot a_{n} \\
 \end{pmatrix}
 $$
 
+#### Multiplikation eines Vektors mit einer reellen Zahl
 
 
-
+---
 
 ## Einleitung zu Matrizen
 
