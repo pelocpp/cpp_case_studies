@@ -21,6 +21,13 @@ https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
 KI:  markdown math matrices examples
 
 
+// BEISPIELE FÜR MAthematik in Markdown
+https://damienbod.com/2022/06/06/using-math-expressions-in-github-markdown/
+
+oder
+
+https://www.upyesp.org/posts/makrdown-vscode-math-notation/
+
 
 ## Einleitung zu Vektoren
 
@@ -49,7 +56,7 @@ Im zwei- oder dreidimensionalen Vektorraum kann der Betrag eines Vektors
 mit Hilfe des Satzes von Pythagoras anhand seiner Komponenten berechnet werden:
 
 $$
-|x| = \sqrt{x_{1}^2+x_{2}^2+x_{3}^2} 
+$|x| = \sqrt{x_{1}^2+x_{2}^2+x_{3}^2} 
 $$
 
 
