@@ -49,7 +49,7 @@ Im zwei- oder dreidimensionalen Vektorraum kann der Betrag eines Vektors
 mit Hilfe des Satzes von Pythagoras anhand seiner Komponenten berechnet werden:
 
 $$
-|x| = \sqrt{x{1}^2+x{2}^2+x{3}^2} 
+|x| = \sqrt{x_{1}^2+x_{2}^2+x_{3}^2} 
 $$
 
 
