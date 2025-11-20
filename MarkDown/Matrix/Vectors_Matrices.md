@@ -91,6 +91,61 @@ wenn sie in allen Koordinaten übereinstimmen.
 Beide Vektoren haben dann den gleichen Betrag und die gleiche Richtung.
 
 
+### Ein normierter Vektor
+
+Ein Vektor, dessen Länge genau einer Längeneinheit entspricht, wird &bdquo;normierter&rdquo; Vektor $\vec{a}_0$ genannt.
+
+
+### Addition und Subtraktion von Vektoren
+
+Man erhält rechnerisch einen Summenvektor,
+indem man die einzelnen Komponenten beider Vektoren addiert:
+
+
+$$
+\vec{a} + \vec{a} =
+\begin{pmatrix}
+a_{1} \\
+a_{2} \\
+&mldr; \\
+&mldr; \\
+&mldr; \\
+a_{n} \\
+\end{pmatrix}
+\+
+\begin{pmatrix}
+b_{1} \\
+b_{2} \\
+&mldr; \\
+&mldr; \\
+&mldr; \\
+b_{n} \\
+\end{pmatrix}
+\=
+\begin{pmatrix}
+a_{1}+b_{1} \\
+a_{2}+b_{2} \\
+&mldr; \\
+&mldr; \\
+&mldr; \\
+a_{n}+b_{n} \\
+\end{pmatrix}
+$$
+
+
+
+Eine Addition von Vektoren mit unterschiedlicher Dimension ist nicht definiert.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
