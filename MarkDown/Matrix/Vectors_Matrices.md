@@ -56,14 +56,14 @@ Im zwei- oder dreidimensionalen Vektorraum kann der Betrag eines Vektors
 mit Hilfe des Satzes von Pythagoras anhand seiner Komponenten berechnet werden:
 
 $$
-|$\vec{x}$| = \sqrt{x_{1}^2+x_{2}^2+x_{3}^2}
+|\vec{x}| = \sqrt{x_{1}^2+x_{2}^2+x_{3}^2}
 $$
 
 oder
 
 
 $$
-|$\vec{x}$| = \sqrt{x_{1}^2+x_{2}^2}
+|\vec{x}| = \sqrt{x_{1}^2+x_{2}^2}
 $$
 
 *Beispiel*:<br />
@@ -86,7 +86,7 @@ $$
 
 ### Gleichheit (Identität) von Vektoren
 
-Zwei Vektoren \vec{x} und \vec{y} sind gleich,
+Zwei Vektoren $\vec{x}$ und $\vec{y}$ sind gleich,
 wenn sie in allen Koordinaten übereinstimmen.
 Beide Vektoren haben dann den gleichen Betrag und die gleiche Richtung.
 
