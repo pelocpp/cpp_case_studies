@@ -133,17 +133,84 @@ a_{n}+b_{n} \\
 $$
 
 
-
 Eine Addition von Vektoren mit unterschiedlicher Dimension ist nicht definiert.
 
 
+### Der Differenzvektor
+
+Rechnerisch erhält man den Differenzvektor, indem man die einzelnen Komponenten beider Vektoren subtrahiert:
+
+$$
+\vec{a} + \vec{a} =
+\begin{pmatrix}
+a_{1} \\
+a_{2} \\
+&mldr; \\
+&mldr; \\
+&mldr; \\
+a_{n} \\
+\end{pmatrix}
+\-
+\begin{pmatrix}
+b_{1} \\
+b_{2} \\
+&mldr; \\
+&mldr; \\
+&mldr; \\
+b_{n} \\
+\end{pmatrix}
+\=
+\begin{pmatrix}
+a_{1}-b_{1} \\
+a_{2}-b_{2} \\
+&mldr; \\
+&mldr; \\
+&mldr; \\
+a_{n}-b_{n} \\
+\end{pmatrix}
+$$
 
 
+### Multiplikation von Vektoren
 
+Vektoren können entweder mit einer reellen Zahl (einem so genannten &bdquo;Skalar&rdquo;)
+als auch mit anderen Vektoren multipliziert werden.
 
+Man spricht dann von einer skalaren Multiplikation oder im anderen Fall von einer Multiplikation von Vektoren. 
 
+#### Multiplikation eines Vektors mit einer reellen Zahl
 
+Multipliziert man einen Vektor $\vec{a}$ mit einer reellen Zahl *c*,
+so ergibt sich ein Vektor, der die gleiche Richtung und den gleichen Richtungssinn hat,
+dessen Betrag jedoch um den Faktor c verändert ist.
 
+  * Ist *c* > 1, so wird der Vektor gestreckt.
+  * Ist 0 < *c* < 1, so wird der Vektor gestaucht.
+  * Ist *c* < 0, so wird zusätzlich zur Streckung beziehungsweise Stauchung des Vektors der Richtungssinn umgedreht.
+
+Rechnerisch lässt sich ein Vektor $\vec{a}$ mit einer reellen Zahl *c* multiplizieren,
+indem jede Komponente des Vektors mit dieser Zahl multipliziert wird:
+
+$$
+c \cdot \vec{a} = c \cdot
+\begin{pmatrix}
+a_{1} \\
+a_{2} \\
+&mldr; \\
+&mldr; \\
+&mldr; \\
+a_{n} \\
+\end{pmatrix}
+\=
+\begin{pmatrix}
+c \cdot a_{1} \\
+c \cdot a_{2} \\
+&mldr; \\
+&mldr; \\
+&mldr; \\
+c \cdot a_{n} \\
+\end{pmatrix}
+$$
 
 
 
