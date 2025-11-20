@@ -1,4 +1,6 @@
-# Matrizen
+# Vektoren und Matrizen
+
+## Links
 
 https://studyflix.de/mathematik/was-ist-eine-matrix-8111
 
@@ -20,11 +22,33 @@ KI:  markdown math matrices examples
 
 
 
-Linear Equation Solver : r/java
+## Einleitung zu Vektoren
 
-Reddit · r/java
-8 Kommentare · vor 11 Jahren
-Get the values of the parameters for your equation (by parsing a string or having the user input them). Plug the parameters into the formula.
+// https://www.grund-wissen.de/mathematik/lineare-algebra-und-analytische-geometrie/vektoren.html
+
+Vektoren sind gerichtete Größen, die in Betrag und Richtung (vorzeichenbehaftet) bestimmt sind
+
+Bei Vektoren handelt es sich aus geometrischer Sicht um Strecken, die eine bestimmten Länge und Richtung haben.
+
+Betrachten wir Vektoren im zwei- oder dreidimensionalen Raum, reicht ein geordnetes Paar aus zwei oder ein Tupel aus drei Koordinatenwerten aus,
+um den Vektor zu beschreiben &ndash; also etwa 
+(<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>)
+oder
+(<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>, <i>x</i><sub>3</sub>).
+
+Die einzelnen Koordinatenwerte (&bdquo;Komponenten&rdquo;) geben dabei an,
+um wie viele Längeneinheiten die Spitze des Vektors entlang der jeweiligen Raumrichtung vom Anfangspunkt des Vektors entfernt liegt.
+
+ABbildung 1
+
+### Betrag eines Vektors
+
+Die Länge der Verbindungsstrecke vom Anfangspunkt eines Vektors zu seinem Endpunkt wird Betrag des Vektors genannt.
+
+Im zwei- oder dreidimensionalen Vektorraum kann der Betrag eines Vektors 
+mit Hilfe des Satzes von Pythagoras anhand seiner Komponenten berechnet werden:
+
+|x| = \sqrt{x^2+x^2+x^2} 
 
 
 
@@ -32,7 +56,7 @@ Get the values of the parameters for your equation (by parsing a string or havin
 
 
 
-## Einleitung
+## Einleitung zu Matrizen
 
 Eine Matrix ist eine rechteckige Anordnung von Werten (mathematischen Objekten),
 die in Zeilen und Spalten organisiert sind.

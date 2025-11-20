@@ -258,8 +258,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Matrix", "Matrix", "{02EA68
 		MarkDown\Matrix\Backward.png = MarkDown\Matrix\Backward.png
 		MarkDown\Matrix\HugeMatrixMemoryLayout.png = MarkDown\Matrix\HugeMatrixMemoryLayout.png
 		MarkDown\Matrix\LinearEquationSystem.md = MarkDown\Matrix\LinearEquationSystem.md
-		MarkDown\Matrix\Matrix.md = MarkDown\Matrix\Matrix.md
 		MarkDown\Matrix\StackExhaustion.png = MarkDown\Matrix\StackExhaustion.png
+		MarkDown\Matrix\Vectors_Matrices.md = MarkDown\Matrix\Vectors_Matrices.md
 	EndProjectSection
 EndProject
 Global
