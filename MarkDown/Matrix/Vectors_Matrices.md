@@ -56,8 +56,34 @@ Im zwei- oder dreidimensionalen Vektorraum kann der Betrag eines Vektors
 mit Hilfe des Satzes von Pythagoras anhand seiner Komponenten berechnet werden:
 
 $$
-$|x| = \sqrt{x_{1}^2+x_{2}^2+x_{3}^2} 
+|x| = \sqrt{x_{1}^2+x_{2}^2+x_{3}^2}
 $$
+
+oder
+
+
+$$
+|x| = \sqrt{x_{1}^2+x_{2}^2}
+$$
+
+*Beispiel*:<br />
+Der dreidimensionale Vektor
+
+$$
+x=\begin{pmatrix}
+4 \cr
+5 \cr
+2 \cr
+\end{pmatrix}
+$$
+
+hat den Betrag
+
+$$
+|x| = \sqrt{4^2+5^2+2^2} = \sqrt{16+25+4} = \sqrt{45} = 999
+$$
+
+
 
 
 
