@@ -39,9 +39,9 @@ Bei Vektoren handelt es sich aus geometrischer Sicht um Strecken, die eine besti
 
 Betrachten wir Vektoren im zwei- oder dreidimensionalen Raum, reicht ein geordnetes Paar aus zwei oder ein Tupel aus drei Koordinatenwerten aus,
 um den Vektor zu beschreiben &ndash; also etwa 
-(<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>)
+$\vec{x}$ = (<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>)
 oder
-(<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>, <i>x</i><sub>3</sub>).
+$\vec{x}$ = (<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>, <i>x</i><sub>3</sub>).
 
 Die einzelnen Koordinatenwerte (&bdquo;Komponenten&rdquo;) geben dabei an,
 um wie viele Längeneinheiten die Spitze des Vektors entlang der jeweiligen Raumrichtung vom Anfangspunkt des Vektors entfernt liegt.
@@ -56,14 +56,14 @@ Im zwei- oder dreidimensionalen Vektorraum kann der Betrag eines Vektors
 mit Hilfe des Satzes von Pythagoras anhand seiner Komponenten berechnet werden:
 
 $$
-|x| = \sqrt{x_{1}^2+x_{2}^2+x_{3}^2}
+|$\vec{x}$| = \sqrt{x_{1}^2+x_{2}^2+x_{3}^2}
 $$
 
 oder
 
 
 $$
-|x| = \sqrt{x_{1}^2+x_{2}^2}
+|$\vec{x}$| = \sqrt{x_{1}^2+x_{2}^2}
 $$
 
 *Beispiel*:<br />
@@ -86,10 +86,10 @@ $$
 
 ### Gleichheit (Identität) von Vektoren
 
-Zwei Vektoren \vec{a} und \vec{a} sind gleich, wenn sie in allen Koordinaten übereinstimmen. Beide Vektoren haben dann den gleichen Betrag, die gleiche Richtung 
+Zwei Vektoren \vec{x} und \vec{y} sind gleich,
+wenn sie in allen Koordinaten übereinstimmen.
+Beide Vektoren haben dann den gleichen Betrag und die gleiche Richtung.
 
-
-$\vec{v}$
 
 
 
