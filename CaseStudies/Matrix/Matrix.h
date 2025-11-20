@@ -5,6 +5,7 @@
 #pragma once
 
 #include "FloatNumber.h"
+#include "Vector.h"
 
 #include <cstddef>
 #include <initializer_list>
@@ -40,18 +41,18 @@ public:
     void elements       (std::initializer_list<std::initializer_list<T>> values);
 
     // accessing matrix elements
+    T& operator()       (std::size_t row, std::size_t col);
+    const T& operator() (std::size_t row, std::size_t col) const;
     T& at               (std::size_t row, std::size_t col);
     const T& at         (std::size_t row, std::size_t col) const;
-
-    T& operator()       (size_t row, size_t col);
-    const T& operator() (size_t row, size_t col) const;
 
     // public interface
     Matrix transpose    () const;
     Matrix add          (const Matrix& other) const;
     Matrix sub          (const Matrix& other) const;
     Matrix mul          (const Matrix& other) const;
-    void   print        () const;
+    Vector<T> mul       (const Vector<T>& other) const;
+    void   print() const;
 
     // Fehlt: Methode fill ... mit einem konstanten Wert vorbelegen ....
 
@@ -59,6 +60,7 @@ public:
     Matrix operator+    (const Matrix& other) const;
     Matrix operator-    (const Matrix& other) const;
     Matrix operator*    (const Matrix& other) const;
+    Vector<T> operator* (const Vector<T>& other) const;
 
     Matrix& operator+=  (const Matrix& other);
     Matrix& operator-=  (const Matrix& other);

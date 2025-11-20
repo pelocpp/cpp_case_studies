@@ -106,18 +106,16 @@ const T& Matrix<T>::at(std::size_t row, std::size_t col) const
 
 template <typename T>
     requires FloatNumber<T>
-T& Matrix<T>::operator()(size_t row, size_t col)
+T& Matrix<T>::operator()(std::size_t row, std::size_t col)
 {
-   // return m_values[row * m_cols + col]; 
-    return at(row, col);
+   return m_values[row * m_cols + col]; // no index check
 }
 
 template <typename T>
     requires FloatNumber<T>
-const T& Matrix<T>::operator()(size_t row, size_t col) const
+const T& Matrix<T>::operator()(std::size_t row, std::size_t col) const
 {
-   // return m_values[row * m_cols + col];
-    return at(row, col);
+   return m_values[row * m_cols + col]; // no index check
 }
 
 
@@ -207,6 +205,33 @@ Matrix<T> Matrix<T>::mul(const Matrix& other) const
     return result;
 }
 
+template <typename T>
+    requires FloatNumber<T>
+Vector<T> Matrix<T>::mul(const Vector<T>& vec) const
+{
+    if (m_cols != vec.dimension()) {
+        throw std::invalid_argument("Invalid vector dimensions!");
+    }
+
+    Vector<T> result{ m_rows };
+
+    for (std::size_t row{}; row != m_rows; ++row) {
+
+        T value{};
+        for (std::size_t col{}; col != m_cols; ++col) {
+
+            //std::println(">> {}", at(row, col));
+            //std::println(">> {}", vec[col]);
+            //std::println();
+
+            value += at(row, col) * vec[col];
+        }
+        result[row] = value;
+    }
+
+    return result;
+}
+
 // operators
 template <typename T>
     requires FloatNumber<T>
@@ -225,6 +250,13 @@ Matrix<T> Matrix<T>::operator- (const Matrix& other) const
 template <typename T>
     requires FloatNumber<T>
 Matrix<T> Matrix<T>::operator* (const Matrix& other) const
+{
+    return mul(other);
+}
+
+template <typename T>
+    requires FloatNumber<T>
+Vector<T> Matrix<T>::operator* (const Vector<T>& other) const
 {
     return mul(other);
 }

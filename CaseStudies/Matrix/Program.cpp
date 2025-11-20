@@ -3,6 +3,11 @@
 // https://github.com/pelocpp/cpp_case_studies    // https://peterloos.de
 // =====================================================================================
 
+
+
+// Guter Link zur Mathe:
+// https://www.matheretter.de/wiki/eigenvektor-eigenwert-geometrische-deutung
+
 // Youtube
 
 // Markdown:
@@ -99,7 +104,7 @@ int main()
 {   
     try
     {
-        test_linear_equation();
+        test_matrix();
     }
     catch (std::invalid_argument const& ex)
     {

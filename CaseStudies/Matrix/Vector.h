@@ -29,10 +29,10 @@ public:
     T length              () const;
 
     // accessing vector elements
-    T& at                 (std::size_t index);
-    const T& at           (std::size_t index) const;
     T& operator[]         (std::size_t index);
     const T& operator[]   (std::size_t index) const;
+    T& at                 (std::size_t index);
+    const T& at           (std::size_t index) const;
 
     // operators
     Vector  operator+     (const Vector& other) const;
@@ -54,6 +54,7 @@ public:
     void   print          () const;
 
     // Fehlt: Methode fill ... mit einem konstanten Wert vorbelegen ....
+
 };
 
 // =====================================================================================

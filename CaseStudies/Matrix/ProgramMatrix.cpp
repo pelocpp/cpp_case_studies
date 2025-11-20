@@ -191,9 +191,66 @@ static void test_matrix_07() {
     std::println();
 }
 
+static void test_matrix_10() {
+
+    // testing vector & matrix operations together
+    Vector<double> vector{ 2, { 1.0, 2.0 } };
+    vector.print();
+    std::println();
+
+    Matrix<double> matrix{ 2, 2 };
+    matrix.elements({ { 3.0, 4.0 }, { 5.0, 6.0 } });
+    matrix.print();
+    std::println();
+
+    Vector<double> result { matrix.mul(vector) };
+    result.print();
+    std::println();
+
+    result = matrix * vector;
+    result.print();
+    std::println();
+
+    // testing non-rectangular matrix
+    Vector<double> vector2{ 4, { 1.0, 2.0, 3.0, 4.0 } };
+    vector2.print();
+    std::println();
+
+    Matrix<double> matrix2{ 2, 4 };
+    matrix2.elements({ { 1.0, 2.0, 3.0, 4.0 }, { 5.0, 6.0, 7.0, 8.0 } });
+    matrix2.print();
+    std::println();
+
+    Vector<double> result2{ matrix2.mul(vector2) };
+    result2.print();
+    std::println();
+
+    result2 = matrix2 * vector2;
+    result2.print();
+    std::println();
+
+    // testing another non-rectangular matrix
+    Vector<double> vector2{ 2, { 10.0, 11.0 } };
+    vector2.print();
+    std::println();
+
+    Matrix<double> matrix2{ 4, 2 };
+    matrix2.elements({ { 1.0, 2.0 }, { 3.0, 4.0 }, { 5.0, 6.0 }, { 7.0, 8.0 } });
+    matrix2.print();
+    std::println();
+
+    Vector<double> result2{ matrix2.mul(vector2) };
+    result2.print();
+    std::println();
+
+    result2 = matrix2 * vector2;
+    result2.print();
+    std::println();
+}
+
 static void test_matrix_20()
 {
-    Matrix<double> matrix{ 3, 3,  };
+    Matrix<double> matrix{ 3, 3 };
     matrix.elements({ { 1.0, 2.0, 3.0 }, { 4.0, 5.0, 6.0 }, { 7.0, 8.0, 9.0 } });
     matrix.print();
     std::println();
@@ -218,6 +275,8 @@ void test_matrix()
     test_matrix_05();
     test_matrix_06();
     test_matrix_07();
+
+    test_matrix_10();
 
     test_matrix_20();
 }
