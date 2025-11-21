@@ -30,72 +30,74 @@ oder
 https://www.upyesp.org/posts/makrdown-vscode-math-notation/
 
 
-## Einleitung zu Vektoren
-
+Der Text dieses Abschnitts stamm aus
 // https://www.grund-wissen.de/mathematik/lineare-algebra-und-analytische-geometrie/vektoren.html
 
 
-Vektoren sind gerichtete Größen, die in Betrag und Richtung (vorzeichenbehaftet) bestimmt sind.
+## Einleitung zu Vektoren
 
 Bei Vektoren handelt es sich aus geometrischer Sicht um Strecken, die eine bestimmten Länge und Richtung haben.
-
-Betrachten wir Vektoren im zwei- oder dreidimensionalen Raum, reicht ein geordnetes Paar aus zwei oder ein Tupel aus drei Koordinatenwerten aus,
+Betrachten wir Vektoren im zwei- oder dreidimensionalen Raum, so reicht ein geordnetes Paar aus zwei oder ein Tupel aus drei Koordinatenwerten aus,
 um den Vektor zu beschreiben &ndash; also etwa 
-$\vec{x}$ = (<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>)
+$\vec{a}$ = (<i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>)
 oder
-$\vec{x}$ = (<i>x</i><sub>1</sub>, <i>x</i><sub>2</sub>, <i>x</i><sub>3</sub>).
+$\vec{a}$ = (<i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>, <i>a</i><sub>3</sub>).
 
 Die einzelnen Koordinatenwerte (&bdquo;Komponenten&rdquo;) geben dabei an,
 um wie viele Längeneinheiten die Spitze des Vektors entlang der jeweiligen Raumrichtung vom Anfangspunkt des Vektors entfernt liegt.
 
-ABbildung 1
+
+<img src="vector_01.svg" width="500">
+
+*Abbildung* 1: Ein Vektor im dreidimensionalen Raum.
+
 
 ### Betrag eines Vektors
 
-Die Länge der Verbindungsstrecke vom Anfangspunkt eines Vektors zu seinem Endpunkt wird Betrag des Vektors genannt.
-
+Die Länge der Verbindungsstrecke vom Anfangspunkt eines Vektors zu seinem Endpunkt wird *Betrag* des Vektors genannt.
 Im zwei- oder dreidimensionalen Vektorraum kann der Betrag eines Vektors 
 mit Hilfe des Satzes von Pythagoras anhand seiner Komponenten berechnet werden:
 
 $$
-|\vec{x}| = \sqrt{x_{1}^2+x_{2}^2+x_{3}^2}
+|\vec{a}| = \sqrt{a_{1}^2+a_{2}^2}
 $$
 
 oder
 
-
 $$
-|\vec{x}| = \sqrt{x_{1}^2+x_{2}^2}
+|\vec{a}| = \sqrt{a_{1}^2+a_{2}^2+a_{3}^2}
 $$
 
 *Beispiel*:<br />
 Der dreidimensionale Vektor
 
 $$
-x=\begin{pmatrix}
+a=\begin{pmatrix}
+3 \cr
 4 \cr
-5 \cr
-2 \cr
+12 \cr
 \end{pmatrix}
 $$
 
 hat den Betrag
 
 $$
-|x| = \sqrt{4^2+5^2+2^2} = \sqrt{16+25+4} = \sqrt{45} = 999
+|a| = \sqrt{3^2+4^2+12^2} = \sqrt{9+16+144} = \sqrt{169} = 13
 $$
 
 
+Dieselbe Formel lässt sich entsprechend auf Vektoren einer beliebigen Dimension übertragen.
+
 ### Gleichheit (Identität) von Vektoren
 
-Zwei Vektoren $\vec{x}$ und $\vec{y}$ sind gleich,
+Zwei Vektoren $\vec{a}$ und $\vec{b}$ sind gleich,
 wenn sie in allen Koordinaten übereinstimmen.
 Beide Vektoren haben dann den gleichen Betrag und die gleiche Richtung.
 
 
 ### Ein normierter Vektor
 
-Ein Vektor, dessen Länge genau einer Längeneinheit entspricht, wird &bdquo;normierter&rdquo; Vektor $\vec{a}_0$ genannt.
+Ein Vektor, dessen Länge den Wert 1 besitzt, wird &bdquo;normierter&rdquo; Vektor $\vec{a}_0$ genannt.
 
 
 ### Addition und Subtraktion von Vektoren
@@ -110,8 +112,6 @@ $$
 a_{1} \\
 a_{2} \\
 &mldr; \\
-&mldr; \\
-&mldr; \\
 a_{n} \\
 \end{pmatrix}
 \+
@@ -119,16 +119,12 @@ a_{n} \\
 b_{1} \\
 b_{2} \\
 &mldr; \\
-&mldr; \\
-&mldr; \\
 b_{n} \\
 \end{pmatrix}
 \=
 \begin{pmatrix}
 a_{1}+b_{1} \\
 a_{2}+b_{2} \\
-&mldr; \\
-&mldr; \\
 &mldr; \\
 a_{n}+b_{n} \\
 \end{pmatrix}
@@ -148,8 +144,6 @@ $$
 a_{1} \\
 a_{2} \\
 &mldr; \\
-&mldr; \\
-&mldr; \\
 a_{n} \\
 \end{pmatrix}
 \-
@@ -157,16 +151,12 @@ a_{n} \\
 b_{1} \\
 b_{2} \\
 &mldr; \\
-&mldr; \\
-&mldr; \\
 b_{n} \\
 \end{pmatrix}
 \=
 \begin{pmatrix}
 a_{1}-b_{1} \\
 a_{2}-b_{2} \\
-&mldr; \\
-&mldr; \\
 &mldr; \\
 a_{n}-b_{n} \\
 \end{pmatrix}
@@ -176,18 +166,17 @@ $$
 ### Multiplikation von Vektoren
 
 Vektoren können entweder mit einer reellen Zahl (einem so genannten &bdquo;Skalar&rdquo;)
-als auch mit anderen Vektoren multipliziert werden.
-
-Man spricht dann von einer skalaren Multiplikation oder im anderen Fall von einer Multiplikation von Vektoren. 
+oder auch mit anderen Vektoren multipliziert werden.
+Man spricht dann von einer skalaren Multiplikation oder von einer Multiplikation von Vektoren. 
 
 #### Multiplikation eines Vektors mit einer reellen Zahl (skalare Multiplikation)
 
 Multipliziert man einen Vektor $\vec{a}$ mit einer reellen Zahl *c*,
-so ergibt sich ein Vektor, der die gleiche Richtung und den gleichen Richtungssinn hat,
-dessen Betrag jedoch um den Faktor c verändert ist.
+so ergibt sich ein Vektor, der diesselbe gleiche Richtung hat,
+dessen Betrag jedoch um den Faktor *c* verändert ist.
 
-  * Ist *c* > 1, so wird der Vektor gestreckt.
-  * Ist 0 < *c* < 1, so wird der Vektor gestaucht.
+  * Ist *c* > 1, so ist der Vektor gestreckt.
+  * Ist 0 < *c* < 1, so ist der Vektor gestaucht.
   * Ist *c* < 0, so wird zusätzlich zur Streckung beziehungsweise Stauchung des Vektors der Richtungssinn umgedreht.
 
 Rechnerisch lässt sich ein Vektor $\vec{a}$ mit einer reellen Zahl *c* multiplizieren,
@@ -199,8 +188,6 @@ c \cdot \vec{a} = c \cdot
 a_{1} \\
 a_{2} \\
 &mldr; \\
-&mldr; \\
-&mldr; \\
 a_{n} \\
 \end{pmatrix}
 \=
@@ -208,18 +195,17 @@ a_{n} \\
 c \cdot a_{1} \\
 c \cdot a_{2} \\
 &mldr; \\
-&mldr; \\
-&mldr; \\
 c \cdot a_{n} \\
 \end{pmatrix}
 $$
 
 #### Das Skalarprodukt
 
-Zunächst einmal weisen wir darauf hin, dass es hier möglicherweise etwas verwirrenden Namensgebungen für 
-unterschiedliche Rechenoperationen mit Vektoren gibt.
-
-Der Begriff "Skalarprodukt" kann zwei verschiedene Operationen bezeichnen: die Multiplikation von zwei Vektoren, was einen Skalar ergibt, und die Multiplikation eines Skalars mit einem Vektor, was das Ergebnis ein Vektor ist. Zur besseren Unterscheidung werden oft folgende Begriffe verwendet: 
+Bevor wir auf das Skalarprodukt näher eingehen, beachten Sie bitte:
+Es gibt hier möglicherweise etwas verwirrenden Namensgebungen für die 
+unterschiedliche Rechenoperationen im Umfeld der Multiplikationen von Vektoren
+Der Begriff &bdquo;Skalarprodukt&bdquo; kann zwei verschiedene Operationen bezeichnen:
+die Multiplikation von zwei Vektoren, was einen Skalar ergibt, und die Multiplikation eines Skalars mit einem Vektor, was das Ergebnis ein Vektor ist. Zur besseren Unterscheidung werden oft folgende Begriffe verwendet: 
 
 Skalarprodukt (Vektor x Vektor): Das Ergebnis ist ein Skalar (eine Zahl). Alternativ kann man auch Punktprodukt sagen, um den Unterschied zu verdeutlichen.
 
@@ -233,8 +219,7 @@ Skalare Multiplikation (Skalar x Vektor): Das Ergebnis ist ein Vektor.
 *Tabelle* 1: Unterscheidung Skalarprodukt versus skalare Multiplikation.
 
 
-
-
+WEITER: Definition des Skalarprodukt
 
 ## Vektoren
 

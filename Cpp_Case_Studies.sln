@@ -261,6 +261,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Matrix", "Matrix", "{02EA68
 		MarkDown\Matrix\Matrices.md = MarkDown\Matrix\Matrices.md
 		MarkDown\Matrix\StackExhaustion.png = MarkDown\Matrix\StackExhaustion.png
 		MarkDown\Matrix\Vectors.md = MarkDown\Matrix\Vectors.md
+		MarkDown\Matrix\vector_01.svg = MarkDown\Matrix\vector_01.svg
 		MarkDown\Matrix\__Vectors_Matrices.md = MarkDown\Matrix\__Vectors_Matrices.md
 	EndProjectSection
 EndProject

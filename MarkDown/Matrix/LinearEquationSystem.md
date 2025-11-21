@@ -4,10 +4,17 @@ https://share.google/aimode/aft5asTCDimwL1wgI
 
 
 Der Gauß-Algorithmus &ndash; auch als Gaußsches Eliminationsverfahren bezeichnet &ndash; ist eine Methode
-zur Lösung linearer Gleichungssysteme, bei der die Matrix in eine obere Dreiecksform (Zeilenstufenform) überführt wird.
+zur Lösung linearer Gleichungssysteme.
 
-Dies geschieht durch elementare Zeilenoperationen (Multiplizieren einer Zeile mit einer Zahl ungleich Null,
-Addieren des Vielfachen einer Zeile zu einer anderen Zeile), ohne die Reihenfolge der Zeilen zu tauschen.
+Der Algorithmus besteht aus zwei Hauptphasen:
+
+  * **Vorwärtselimination**: Die erweiterte Koeffizientenmatrix wird in obere Dreiecksform gebracht. Dabei werden durch äquivalente Zeilenumformungen systematisch Variablen eliminiert, sodass unter der Hauptdiagonalen der Matrix nur noch Nullen stehen.
+  * **Rückwärtssubstitution**: Die Variablen werden von unten nach oben berechnet und in die darüberliegenden Gleichungen eingesetzt.
+
+Unter der erweiterten Koeffizientenmatrix verstehen wir eine Matrix, die neben den Elementen des Gleichungssystems
+auch die Elemente des Vektors auf der rechten Seite enthält.
+
+
 
 Bemerkung:<br />
 In einer sehr einfachen Realisierung kann man hierbei auf die so genannte *Pivotisierung* verzichten.
@@ -17,14 +24,8 @@ Die Pivotisierung wird normalerweise verwendet, um dies zu vermeiden und die num
 
 ## Einfache Darstellung des Algorithmus
 
-Der Algorithmus besteht aus zwei Hauptphasen:
-
-  * **Vorwärtselimination**: Die erweiterte Koeffizientenmatrix wird in obere Dreiecksform gebracht.
-  * **Rückwärtssubstitution**: Die Variablen werden von unten nach oben berechnet und in die darüberliegenden Gleichungen eingesetzt.
 
 
-Unter der erweiterten Koeffizientenmatrix verstehen wir eine Matrix, die neben den Elementen des Gleichungssystems
-auch die Elemente des Vektors auf der rechten Seite enthält.
 
 ## Schritt-für-Schritt-Erklärung der Vorwärtselimination
 
@@ -80,107 +81,52 @@ Lösen eines linearen Gleichungssystems nach dem Algorithmus von Gauß
 im Detail?
 
 
-## Lineare Gleichungssysteme
+## Lösen eines linearen Gleichungssystems
 
 Wir betrachten zum Lösung eines linearen Gleichungssystems den Algorithmus von Gauß.
 Die Vorwärtselimination ist hierbei der erste Schritt des Algorithmus,
 bei dem ein lineares Gleichungssystem schrittweise in eine obere Dreiecksform umgewandelt wird.
-Dabei werden durch äquivalente Zeilenumformungen systematisch Variablen eliminiert,
-sodass unter der Hauptdiagonalen der Matrix nur noch Nullen stehen.
 
 Das Ziel ist die Umwandlung in ein System von vereinfachten Gleichungen,
 das von unten nach oben leicht lösbar ist.
-Wir betrachten das Ganze an folgendem Beispiel. Zu Lösen ist das lineare Gleichungssystem
 
-<pre>
-2x<sub>2</sub> + 3x<sub>1</sub> -  x<sub>0</sub> = -9
- x<sub>2</sub> - 2x<sub>1</sub> +  x<sub>0</sub> =  9
--x<sub>2</sub> +  x<sub>1</sub> + 2x<sub>0</sub> =  0
-</pre>
+Wir betrachten nun im Detail die Schritte der Vorwärtselimination.
 
-#### Detaillierte Schritte der Vorwärtselimination
-
-#### 1. Aufschreiben der erweiterten Koeffizientenmatrix
-
+   * Aufschreiben der erweiterten Koeffizientenmatrix:<br />
 Zunächst ist das lineare Gleichungssystem in eine erweiterte Matrix so umzuformulieren,
 dass die Koeffizienten der Variablen in den ersten *m* Spalten einer *n*&times;*m*+1 Matrix
 und die konstanten Werte auf der rechten Seite der Gleichungen in der *m*+1.-ten Spalte stehen:
 
-<pre>
- 2.0    3.0   -1.0   -9.0
- 1.0   -2.0    1.0    9.0
--1.0    1.0    2.0    0.0
-</pre>
-
-#### 2. Auswahl des Pivotelements
-
+   * Auswahl des Pivotelements:<br />
 Wählen Sie in der ersten Spalte das erste Element als Pivotelement aus.
+Im einfachsten Fall ist dies das erste Element der Spalte.
 Diese Auswahl erfolgt unter der Annahme, dass der Wert von Null verschieden ist.
-Andernfalls ist für diese Zeile nichts zu tun.
+Andernfalls ist für diese Zeile nichts zu tun.<br />   
+*Bemerkung*:<br />
+Bei der Gleitkommaarithmetik sind Rundungsfehler möglich. Aus diesem Grund sind sehr kleine Zahlen im Nenner von Brüchen ungünstig,
+da diese bei der Berechung des Bruchs zu Ungenauigkeiten führen können.
+Bei der Auswahl des Pivotelements gibt es daher auch den Ansatz, nicht das erste (oberste) Element in der aktuellen Spalte zu wählen,
+sondern das größte Element in der Spalte zu wählen. Dies kann nur funktionieren, wenn dann die entsprechenden Zeilen getauscht werden.
+Wir stellen diesen Ansatz weiter unten vor.
 
-#### 3. Eliminieren der Elemente unter dem Pivotelement
-
+   * Eliminieren der Elemente unter dem Pivotelement:<br />
 Verwenden Sie das Pivotelement, um alle Koeffizienten in der ersten Spalte unterhalb der ersten Zeile
 auf Null zu setzen.
 Dazu subtrahieren wir ein geeignetes Vielfaches der ersten Zeile von den jeweiligen darunterliegenden Zeilen.
 
-*Beispiel*:<br />
-Um die erste Spalte einer ersten Zeile *zeile*<sub>1</sub> in der zweiten Zeile (*zeile*<sub>2</sub>) auf Null zu setzen,
-können Sie die neue Zeile als *zeile*<sub>2</sub> &ndash; *k* &times; *zeile*<sub>1</sub> definieren,
-wobei *k* so gewählt wird, dass der neue Eintrag in der ersten Spalte Null wird.
-
-Wir betrachten dies am Beispiel des obigen Gleichungssystems.
-Zunächst betrachten wir das erste Element in der zweiten Gleichung, wir wollen
-dieses mit dem Pivot-Element 1/2 auf Null setzen:
-
-Ausgehend von
-
-<pre>
- 2.0    3.0   -1.0   -9.0
- 1.0   -2.0    1.0    9.0
--1.0    1.0    2.0    0.0
-</pre>
-
-erhalten wir die neue Matrix
-
-<pre>
- 2.0     3.0   -1.0   -9.0
- 0.0    -3.5    1.5   13.5
--1.0     1.0    2.0    0.0
-</pre>
-
-Es folgt die Umwandlung der dritten Gleichung, hier verwenden wir das Pivot-Element -1/2:
-
-<pre>
- 2.0     3.0   -1.0   -9.0
- 0.0    -3.5    1.5   13.5
- 0.0     2.5    1.5,  -4.5
-</pre>
-
-#### 4. Fortsetzen für die nächste Spalten
-
+   * Fortsetzen für die nächsten Spalten:<br />
 Man bewege sich zur zweiten Spalte. Die erste Zeile wird nicht mehr für die folgenden Umformungen verwendet.
 Wählen Sie in der zweiten Spalte das nächste Pivotelement, das nun der erste Nicht-Null-Eintrag in der zweiten Zeile ist.
 Wiederholen Sie den Eliminationsschritt, indem Sie ein Vielfaches der zweiten Zeile von den darunterliegenden Zeilen subtrahieren,
 um die Einträge in der zweiten Spalte auf Null zu setzen.
 
-In unserem Beispiel hat das Pivot-Element nun den Wert -2.5/3.5 oder einfacher -5/7.
-Wir erhalten die neue Matrix
-
-<pre>
- 2.0     3.0   -1.0     -9.0
- 0.0    -3.5    1.5     13.5
- 0.0     0.0    2.571    5.143
-</pre>
-
-
-#### 5. Wiederholungen bis zur Dreiecksform
+   * Wiederholungen bis zur Dreiecksform:<br />
 
 Führen Sie diesen Vorgang für alle Spalten fort, bis die Matrix in der oberen Dreiecksform vorliegt. Das bedeutet, alle Einträge unter der Hauptdiagonalen sind Null. 
 
 ### Detaillierte Beschreibung der Rückwärtssubstitution
 
-Die Rückwärtssubstitution beim Gauß-Algorithmus ist ein Prozess, bei dem man,
+Die Rückwärtssubstitution beim Gauß-Algorithmus ist ein Verfahren, bei dem man,
 nachdem ein lineares Gleichungssystem in die obere Dreiecksform gebracht wurde,
 die Lösungen schrittweise &bdquo;von unten nach oben&rdquo; ermittelt.
 
@@ -196,7 +142,7 @@ die nur eine Unbekannte enthält. Sie können diese Gleichung nun direkt nach dies
 
   * Setzen Sie den Wert in die vorletzte Zeile ein:<br />
 Nehmen Sie den gerade berechneten Wert und setzen Sie ihn in die vorletzte Gleichung ein.
-Diese Gleichung enthält nun nur noch zwei Unbekannte, von denen eine jetzt bekannt ist.
+Diese Gleichung enthält nun nur noch zwei Unbekannte, von denen eine bekannt ist.
 
   * Lösen Sie nach der nächsten Variablen auf:<br />
 Die Gleichung hat sich zu einer linearen Gleichung mit nur noch einer unbekannten Variablen reduziert,
@@ -205,11 +151,10 @@ die Sie nun leicht berechnen können.
   * Wiederholen Sie den Vorgang:<br />
 Setzen Sie die Werte der beiden gerade berechneten Variablen in die nächsthöhere Gleichung ein.
 Auch diese vereinfacht sich nun zu einer Gleichung, die nur noch eine unbekannte Variable enthält.
+Fahren Sie so fort, bis Sie alle Werte ermittelt haben.
 
-  * Setzen Sie alle ermittelten Werte in die erste Zeile ein:<br />
-Fahren Sie so fort, bis Sie alle Werte ermittelt haben. Zum Schluss setzen Sie die Werte aller bereits berechneten Variablen
-in die erste Gleichung ein, um die letzte verbliebene Variable zu bestimmen und um das System vollständig zu lösen. 
-
+Zum Schluss setzen Sie die Werte aller bereits berechneten Variablen in die erste Gleichung ein,
+um die letzte verbliebene Variable zu bestimmen und um das System vollständig zu lösen. 
 
 
 ### Ein ausführliches Beispiel
@@ -218,7 +163,6 @@ Wir betrachten die einzelnen Schritte während der Vorwärtselimination und Rückwä
 nun im Detail. Es handelt sich um ein lineares Gleichungssystem
 mit den vier Unbekannten *x*<sub>0</sub>, *x*<sub>1</sub>, *x*<sub>2</sub> und *x*<sub>3</sub>:
 
-
 <pre>
  3<i>x</i><sub>3</sub> + 1<i>x</i><sub>2</sub> - 5<i>x</i><sub>1</sub> + 4<i>x</i><sub>0</sub> = -18
  2<i>x</i><sub>3</sub> - 3<i>x</i><sub>2</sub> + 3<i>x</i><sub>1</sub> - 2<i>x</i><sub>0</sub> =  19
@@ -226,11 +170,18 @@ mit den vier Unbekannten *x*<sub>0</sub>, *x*<sub>1</sub>, *x*<sub>2</sub> und *
 -2<i>x</i><sub>3</sub> + 4<i>x</i><sub>2</sub> - 3<i>x</i><sub>1</sub> - 5<i>x</i><sub>0</sub> = -14
 </pre>
 
-#### Betrachtung der Vorwärtselimination:
+Wir führen die Schritte des Gauß Algorithmus jeweils in 2 Varianten durch:
+Zum einen in Gleitpunktarithmetik, so wie es Maschinenprogramme (mit einer entsprechenden Genauigkeit oder eben auch Ungenauigkeit) tun würden.
+Zum anderen mit Brüchen, um das Ergebnis exakt bestimmen zu können.
+
+Wir werden sehen, dass auch bei der Durchführung mit Gleitpunktarithmetik die Ungenauigkeiten nicht so groß sind.
+
+
+#### Betrachtung der Vorwärtselimination
 
 ##### Elimintation der Null in der ersten Spalte
 
-###### Umwandlung der zweiten Gleichung:
+###### Umwandlung der zweiten Gleichung
 
 Wir wählen das Pivot-Element 2/3:
 
@@ -252,7 +203,7 @@ oder in Gleitpunktdarstellung:
 
 ---
 
-###### Umwandlung der dritten Gleichung:
+###### Umwandlung der dritten Gleichung
 
 Wir wählen das Pivot-Element 5/3:
 
@@ -274,7 +225,7 @@ oder in Gleitpunktdarstellung:
 
 ---
 
-###### Umwandlung der vierten Gleichung:
+###### Umwandlung der vierten Gleichung
 
 Wir wählen das Pivot-Element -2/3:
 
@@ -298,7 +249,7 @@ oder in Gleitpunktdarstellung:
 
 ##### Elimintation der Null in der zweiten Spalte
 
-###### Umwandlung der dritten Gleichung:
+###### Umwandlung der dritten Gleichung
 
 Wir wählen das Pivot-Element 14/11:
 
@@ -319,7 +270,7 @@ oder in Gleitpunktdarstellung:
 </pre>
 
 
-###### Umwandlung der vierten Gleichung:
+###### Umwandlung der vierten Gleichung
 
 Wir wählen das Pivot-Element -14/11:
 
@@ -344,7 +295,7 @@ oder in Gleitpunktdarstellung:
 
 ##### Elimintation der Null in der dritten Spalte
 
-###### Umwandlung der vierten Gleichung:
+###### Umwandlung der vierten Gleichung
 
 Wir wählen das Pivot-Element 57/141:
 
