@@ -99,12 +99,13 @@ void test_vector();
 void test_matrix();
 void test_bad_matrix();
 void test_linear_equation();
+void test_determinant();
 
 int main()
 {   
     try
     {
-        test_matrix();
+        test_determinant();
     }
     catch (std::invalid_argument const& ex)
     {

@@ -42,6 +42,15 @@
     <ClCompile Include="FloatNumber.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="ProgramDeterminant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Determinant.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeterminantImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Matrix.h">

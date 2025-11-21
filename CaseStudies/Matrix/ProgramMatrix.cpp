@@ -230,21 +230,21 @@ static void test_matrix_10() {
     std::println();
 
     // testing another non-rectangular matrix
-    Vector<double> vector2{ 2, { 10.0, 11.0 } };
-    vector2.print();
+    Vector<double> vector3{ 2, { 10.0, 11.0 } };
+    vector3.print();
     std::println();
 
-    Matrix<double> matrix2{ 4, 2 };
-    matrix2.elements({ { 1.0, 2.0 }, { 3.0, 4.0 }, { 5.0, 6.0 }, { 7.0, 8.0 } });
-    matrix2.print();
+    Matrix<double> matrix3{ 4, 2 };
+    matrix3.elements({ { 1.0, 2.0 }, { 3.0, 4.0 }, { 5.0, 6.0 }, { 7.0, 8.0 } });
+    matrix3.print();
     std::println();
 
-    Vector<double> result2{ matrix2.mul(vector2) };
-    result2.print();
+    Vector<double> result3{ matrix3.mul(vector3) };
+    result3.print();
     std::println();
 
-    result2 = matrix2 * vector2;
-    result2.print();
+    result3 = matrix3 * vector3;
+    result3.print();
     std::println();
 }
 
@@ -268,17 +268,17 @@ static void test_matrix_20()
 
 void test_matrix()
 {
-    test_matrix_01();
-    test_matrix_02();
-    test_matrix_03();
-    test_matrix_04();
-    test_matrix_05();
-    test_matrix_06();
-    test_matrix_07();
+    //test_matrix_01();
+    //test_matrix_02();
+    //test_matrix_03();
+    //test_matrix_04();
+    //test_matrix_05();
+    //test_matrix_06();
+    //test_matrix_07();
 
     test_matrix_10();
 
-    test_matrix_20();
+    //test_matrix_20();
 }
 
 // =====================================================================================
