@@ -3,7 +3,7 @@
 // =====================================================================================
 
 #include "Matrix.h"
-#include "Determinant.h"
+#include "MatrixDeterminant.h"
 
 #include <print>
 

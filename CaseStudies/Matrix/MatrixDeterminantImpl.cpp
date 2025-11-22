@@ -1,8 +1,8 @@
 // =====================================================================================
-// DeterminantImpl.cpp
+// MatrixDeterminantImpl.cpp
 // =====================================================================================
 
-#include "Determinant.h"
+#include "MatrixDeterminant.h"
 
 // ist hier beschrieben
 // https://www.youtube.com/watch?v=pyiKhRmvMF4

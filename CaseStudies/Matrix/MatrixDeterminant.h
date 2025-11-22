@@ -1,5 +1,5 @@
 // =====================================================================================
-// Determinant.h
+// MatrixDeterminant.h
 // =====================================================================================
 
 #pragma once
@@ -15,19 +15,6 @@
 
 // See here
 // https://www.bigdev.de/2013/04/tutorial-determinant-in-java.html
-
-
-//  std::pow(-1, j)
-
-//template <typename T>
-//auto constexpr power = [](T base, T exp) {
-//
-//    auto result = base;
-//    for (size_t i{ 1 }; i != exp; ++i) {
-//        result *= base;
-//    }
-//    return result;
-//};
 
 static auto constexpr powerOfMinusOne = [](std::size_t exp) {
 
@@ -50,44 +37,6 @@ static auto constexpr powerOfMinusOne = [](std::size_t exp) {
 //  * @return minor of m
 //  */
 //private static double[][] minor(final double[][] m, final int i, final int j) {
-
-
-
-//template <typename T>
-//Matrix<T> minor(Matrix<T> m, std::size_t row, std::size_t col) requires FloatNumber<T>
-//{
-//    Matrix<T> result { m.rows() - 1, m.cols() - 1 };
-//
-//    std::size_t ri{};
-//
-//    for (std::size_t r{}; r != m.rows(); ++r) {
-//
-//        if (ri == row) {
-//            ++ri;
-//            continue;
-//        }
-//
-//        std::size_t ci{};
-//
-//        for (std::size_t c{}; c != m.cols(); ++c) {
-//
-//            if (ci == col) {
-//                ++ci;
-//                continue;
-//            }
-//
-//            T value = m(r, c);
-//            result(ri, ci) = value;
-//
-//            ++ri;
-//            ++ci;
-//        }
-//    }
-//
-//    return result;
-//}
-
-
 
 template <typename T>
 Matrix<T> minor(Matrix<T> m, std::size_t row, std::size_t col) requires FloatNumber<T>

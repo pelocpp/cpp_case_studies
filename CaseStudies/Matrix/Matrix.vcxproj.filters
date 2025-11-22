@@ -42,13 +42,19 @@
     <ClCompile Include="FloatNumber.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="ProgramDeterminant.cpp">
+    <ClCompile Include="ProgramMatrixDeterminant.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Determinant.h">
+    <ClCompile Include="MatrixDeterminant.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="DeterminantImpl.cpp">
+    <ClCompile Include="MatrixDeterminantImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixInverse.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixInverseImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
