@@ -100,12 +100,13 @@ void test_matrix();
 void test_bad_matrix();
 void test_linear_equation();
 void test_determinant();
+void test_lu_decomposition();
 
 int main()
 {   
     try
     {
-        test_determinant();
+        test_lu_decomposition();
     }
     catch (std::invalid_argument const& ex)
     {

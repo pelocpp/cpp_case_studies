@@ -64,14 +64,14 @@ void Matrix<T>::elements(std::initializer_list<std::initializer_list<T>> values)
 // getter/setter
 template <typename T>
     requires FloatNumber<T>
-std::size_t Matrix<T>::rows() const 
+std::size_t Matrix<T>::rows() const noexcept
 {
     return m_rows; 
 }
 
 template <typename T>
     requires FloatNumber<T>
-std::size_t Matrix<T>::cols() const 
+std::size_t Matrix<T>::cols() const noexcept
 {
     return m_cols; 
 }
@@ -301,6 +301,24 @@ void Matrix<T>::swapRows(std::size_t row1, std::size_t row2)
         at(row2, k) = tmp;
     }
 }
+
+// iteration support
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T>::iterator Matrix<T>::begin() noexcept { return m_values.begin(); }
+
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T>::iterator Matrix<T>::end() noexcept { return m_values.end(); }
+
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T>::const_iterator Matrix<T>::begin() const noexcept { return m_values.begin(); }
+
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T>::const_iterator Matrix<T>::end() const noexcept { return m_values.end(); }
+
 
 template <typename T>
     requires FloatNumber<T>

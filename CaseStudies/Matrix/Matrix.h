@@ -21,13 +21,19 @@ protected:
     std::vector<T> m_values;
 
 public:
+    // follow some of the conventions of a C++ container
+    using value_type = T;
+    using iterator = typename std::vector<T>::iterator;
+    using const_iterator = typename std::vector<T>::const_iterator;
+
+public:
     // c'tors
     Matrix();
     Matrix(std::size_t rows, std::size_t cols);
 
     // getter/setter   
-    std::size_t rows    () const;
-    std::size_t cols    () const;
+    std::size_t rows    () const noexcept;
+    std::size_t cols    () const noexcept;
 
     // TO BE DONE: Hier die Elemente vorne mit hin
     //void elements(std::size_t rows, std::size_t cols, std::initializer_list<T> values);
@@ -65,6 +71,17 @@ public:
     Matrix& operator+=  (const Matrix& other);
     Matrix& operator-=  (const Matrix& other);
     Matrix& operator*=  (const Matrix& other);
+
+    // iteration support
+    //iterator begin() noexcept { return m_values.begin(); }
+    //iterator end() noexcept { return m_values.end(); }
+    //const_iterator begin() const noexcept { return m_values.begin(); }
+    //const_iterator end() const noexcept { return m_values.end(); }
+
+    iterator begin() noexcept;
+    iterator end() noexcept;
+    const_iterator begin() const noexcept;
+    const_iterator end() const noexcept;
 
 private:
    // void mulRow         (std::size_t row, T value);   // Hmmm, wozu habe ich diese Methode ....
