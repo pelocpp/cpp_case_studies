@@ -51,16 +51,19 @@
     <ClCompile Include="MatrixDeterminantImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InvertableMatrix.h">
+    <ClCompile Include="MatrixInverter.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="InvertableMatrixImpl.cpp">
+    <ClCompile Include="MatrixInverterImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LU_DecompositionImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ProgramLUDecomposition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProgramMatrixInverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

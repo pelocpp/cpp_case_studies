@@ -1,5 +1,5 @@
 // =====================================================================================
-// InvertableMatrix.h
+// MatrixInverter.h
 // =====================================================================================
 
 #pragma once
@@ -11,11 +11,11 @@
 
 template <typename T>
     requires FloatNumber<T>
-class InvertableMatrix
+class MatrixInverter
 {
 public:
     // c'tor(s)
-    InvertableMatrix() = default;
+    MatrixInverter() = default;
 
 private:
     Matrix<T> m_matrix;  // original matrix
@@ -33,9 +33,9 @@ public:
     
     // Vorwärtssubstitution: L * y = b
 
-    Vector<T> forwardSubstitution();
+    Vector<T> forwardSubstitution(const Vector<T>& v);
 
-    Vector<T> backwardSubstitution();
+    Vector<T> backwardSubstitution(const Vector<T>& v);
 };
 
 // =====================================================================================

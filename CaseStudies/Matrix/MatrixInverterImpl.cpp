@@ -1,20 +1,19 @@
 // =====================================================================================
-// InvertableMatrixImpl.cpp
+// MatrixInverterImpl.cpp
 // =====================================================================================
 
 
 //#include "FloatNumber.h"
 #include "Vector.h"
-#include "InvertableMatrix.h"
+#include "MatrixInverter.h"
 
 #include <cstddef>
 #include <stdexcept>
 
-
 // getter/setter
 template <typename T>
     requires FloatNumber<T>
-void InvertableMatrix<T>::set(const Matrix<T> matrix)
+void MatrixInverter<T>::set(const Matrix<T> matrix)
 {
     if (matrix.rows() != matrix.cols()) {
         throw std::invalid_argument("The matrix must be square!");
@@ -24,7 +23,7 @@ void InvertableMatrix<T>::set(const Matrix<T> matrix)
 // public interface
 template <typename T>
     requires FloatNumber<T>
-bool InvertableMatrix<T>::invert()
+bool MatrixInverter<T>::invert()
 {
     std::size_t n = m_matrix.rows();  // count of rows (or cols)
 
@@ -41,11 +40,11 @@ bool InvertableMatrix<T>::invert()
 
         // L y = e
         // double[] y = forwardSubstitution(L, e);
-        Vector<T> y = forwardSubstitution(m_lower, e);
+        Vector<T> y = forwardSubstitution(e);
 
         // U x = y
         // double[] x = backwardSubstitution(U, y);
-        Vector<T> x = backwardSubstitution(m_upper, y);
+        Vector<T> x = backwardSubstitution(y);
 
         // xi als Spalte in A hoch -1 speichern
         //for (int row = 0; row < n; row++) {
@@ -57,20 +56,20 @@ bool InvertableMatrix<T>::invert()
         }
     }
 
-    return result;
+    return true;
 }
 
 
 template <typename T>
     requires FloatNumber<T>
-Vector<T> InvertableMatrix<T>::forwardSubstitution()
+Vector<T> MatrixInverter<T>::forwardSubstitution(const Vector<T>& v)
 {
     return {};
 }
 
 template <typename T>
     requires FloatNumber<T>
-Vector<T> InvertableMatrix<T>::backwardSubstitution()
+Vector<T> MatrixInverter<T>::backwardSubstitution(const Vector<T>& v)
 {
     return {};
 }
@@ -78,9 +77,9 @@ Vector<T> InvertableMatrix<T>::backwardSubstitution()
 // =====================================================================================
 
 // explicit template instantiations
-template class InvertableMatrix<float>;
-template class InvertableMatrix<double>;
-template class InvertableMatrix<long double>;
+template class MatrixInverter<float>;
+template class MatrixInverter<double>;
+template class MatrixInverter<long double>;
 
 // =====================================================================================
 // End-of-File
