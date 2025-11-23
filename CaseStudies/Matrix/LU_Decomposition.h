@@ -7,20 +7,23 @@
 #include "FloatNumber.h"
 #include "Matrix.h"
 
-//#include <cstddef>
-//#include <initializer_list>
-//#include <memory>
-//#include <vector>
-
 template <typename T>
     requires FloatNumber<T>
 class LU_Decomposition
 {
 public:
     // c'tors
-    LU_Decomposition(const Matrix<T> original);
+    LU_Decomposition(const Matrix<T> original);  // DIESEN KONSTRUKTOR ENTFERNEN ... der setter ist besser wegen der Überprüfung auf quadratisch !!! 
   
+    LU_Decomposition() = default;
+
     bool decompose();
+
+    void set(const Matrix<T> matrix);
+
+    const Matrix<T>& getMatrix();
+    const Matrix<T>& getLowerMatrix();
+    const Matrix<T>& getUpperMatrix();
 
     void printMatrix() const;
     void printLowerTriangularMatrix() const;

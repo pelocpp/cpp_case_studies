@@ -4,14 +4,13 @@
 // =====================================================================================
 
 
-
 // Guter Link zur Mathe:
 // https://www.matheretter.de/wiki/eigenvektor-eigenwert-geometrische-deutung
 
-// Youtube
+// Invertieren einer Matrix:
+// https://www.geeksforgeeks.org/dsa/adjoint-inverse-matrix/
 
 // Markdown:
-
 // https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
 
 
@@ -24,11 +23,10 @@
 
 // https://chatgpt.com/share/69136761-da80-8007-ac79-e3735a306944
 
-// Hmmm, da hat der ChazGPT nen guten Vorschlag gemacht ....
-// Gretchenfrage:  da ist halt ein std::vector drinne ....
-
 // aber warum nicht !?!?!
 // Das Kopieren funkioniert jetzt .........................
+
+
 
 // Diesselbe Frage für Vektoren:
 
@@ -62,6 +60,8 @@
     //int comparison = isEqual(vector1, vector2, 3);
     //comparison = isUnequal(vector1, vector2, 3);
 
+// Die brauche ich bei der LU Zerlegung, um das Erbenis kontrollieren zu können !!!!
+
 
 
 
@@ -74,10 +74,6 @@
 // Da ist doch Rule-of-Three / Five zu implementieren,
 // weil trotzt SmartPointer  keine echte Kopie entsteht !!!
 
-
-// TODO:
-// Hmmm, generelle Frage:
-// Aus Vector ... und Matrix (??) könnte man einen STL Container machen ????
 
 // Modern C++:
 // Diese beiden Zeilen aufnehmen:

@@ -51,10 +51,10 @@
     <ClCompile Include="MatrixDeterminantImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MatrixInverse.cpp">
+    <ClCompile Include="InvertableMatrix.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="MatrixInverseImpl.cpp">
+    <ClCompile Include="InvertableMatrixImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LU_DecompositionImpl.cpp">

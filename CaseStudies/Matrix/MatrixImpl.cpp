@@ -77,7 +77,6 @@ std::size_t Matrix<T>::cols() const noexcept
 }
 
 // accessing matrix elements
-
 template <typename T>
     requires FloatNumber<T>
 T& Matrix<T>::at(std::size_t row, std::size_t col)
@@ -118,20 +117,7 @@ const T& Matrix<T>::operator()(std::size_t row, std::size_t col) const
    return m_values[row * m_cols + col]; // no index check
 }
 
-
-
-
-//// public interface
-//template <typename T>
-//    requires FloatNumber<T>
-//void Matrix<T>::mulRow(std::size_t row, T value)
-//{
-//    for (int col{}; col != m_cols; ++col) {
-//        at(row, col) *= value;
-//    }
-//}
-
-
+// public interface
 template <typename T>
     requires FloatNumber<T>
 Matrix<T> Matrix<T>::transpose() const

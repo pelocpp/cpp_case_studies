@@ -57,6 +57,38 @@ bool LU_Decomposition<T>::decompose()
 
 template <typename T>
     requires FloatNumber<T>
+void LU_Decomposition<T>::set(const Matrix<T> matrix)
+{
+    if (matrix.rows() != matrix.cols()) {
+        throw std::invalid_argument("The matrix must be square!");
+    }
+
+    m_matrix = matrix;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+const Matrix<T>& LU_Decomposition<T>::getMatrix()
+{
+    return m_matrix;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+const Matrix<T>& LU_Decomposition<T>::getLowerMatrix()
+{
+    return m_lower;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+const Matrix<T>& LU_Decomposition<T>::getUpperMatrix()
+{
+        return m_upper;
+}
+
+template <typename T>
+    requires FloatNumber<T>
 void LU_Decomposition<T>::printMatrix() const
 {
     // to be Done: Überladen von std::format // print a la C++ 23
