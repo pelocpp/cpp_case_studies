@@ -18,6 +18,8 @@ void MatrixInverter<T>::set(const Matrix<T> matrix)
     if (matrix.rows() != matrix.cols()) {
         throw std::invalid_argument("The matrix must be square!");
     }
+
+    m_matrix = matrix;
 }
 
 // public interface
@@ -25,13 +27,24 @@ template <typename T>
     requires FloatNumber<T>
 bool MatrixInverter<T>::invert()
 {
+    // ========================================
+    Matrix<T> lower{ 3, 3 };
+    lower.elements({ { 1.0, 0.0, 0.0 } , { 2.0, 1.0, 0.0 } , { -1.0, -1.0, 1.0 } });
+    m_lower = lower;
+
+    Matrix<T> upper{ 3, 3 };
+    upper.elements({ { 2.0, 1.0, 1.0 } , { 0.0, -8.0, -2.0 } , { 0.0, 0.0, 1.0 } });
+    m_upper = upper;
+    // ========================================
+
+
     std::size_t n = m_matrix.rows();  // count of rows (or cols)
 
     Matrix<T> result{ n , n };
    
     // double[][] inverse = new double[n][n];
 
-    for (int i = 0; i < n; i++) {
+    for (std::size_t i{}; i != n; ++i) {
         // ei (Einheitsvektor)
         //double[] e = new double[n];
         //e[i] = 1.0;
@@ -62,16 +75,50 @@ bool MatrixInverter<T>::invert()
 
 template <typename T>
     requires FloatNumber<T>
-Vector<T> MatrixInverter<T>::forwardSubstitution(const Vector<T>& v)
+Vector<T> MatrixInverter<T>::forwardSubstitution(const Vector<T>& b)
 {
-    return {};
+    // -------------------------------------------------------------
+    // forward substitution: L * y = b
+
+    Vector<T> y{ b.dimension() };
+
+    for (std::size_t i{}; i != b.dimension(); ++i) {
+
+        T sum{ b[i] };
+
+        for (std::size_t j{}; j != i; ++j) {
+            sum -= m_lower(i, j) * y[j];
+        }
+
+        y[i] = sum / m_lower(i, i);
+    }
+
+    return y;
 }
 
 template <typename T>
     requires FloatNumber<T>
-Vector<T> MatrixInverter<T>::backwardSubstitution(const Vector<T>& v)
+Vector<T> MatrixInverter<T>::backwardSubstitution(const Vector<T>& y)
 {
-    return {};
+    // -------------------------------------------------------------
+    // backward substitution: U * x = y
+
+    std::size_t dimension{ y.dimension() };
+
+    Vector<T> x{ dimension };
+
+    for (int i = dimension - 1; i >= 0; i--) {    // auf std::size_t umstellen ... hmm ACHTUNG mit der NULL !!!!!!!!!!
+
+        T sum{ y[i] };
+
+        for (int j = i + 1; j < dimension; j++) {
+            sum -= m_upper(i, j) * x[j];
+        }
+
+        x[i] = sum / m_upper(i, i);
+    }
+
+    return x;
 }
 
 // =====================================================================================
