@@ -2,8 +2,6 @@
 // MatrixInverterImpl.cpp
 // =====================================================================================
 
-
-//#include "FloatNumber.h"
 #include "Vector.h"
 #include "MatrixInverter.h"
 
@@ -42,32 +40,25 @@ bool MatrixInverter<T>::invert()
 
     Matrix<T> result{ n , n };
    
-    // double[][] inverse = new double[n][n];
-
     for (std::size_t i{}; i != n; ++i) {
-        // ei (Einheitsvektor)
-        //double[] e = new double[n];
-        //e[i] = 1.0;
-        Vector<T> e{n};  // hmmm, sind da alles Nullen drin .....
+
+        // unit vector with a 1 at the i-th position
+        Vector<T> e{n};
         e[i] = T{ 1.0 };
 
-        // L y = e
-        // double[] y = forwardSubstitution(L, e);
+        // L * y = e
         Vector<T> y = forwardSubstitution(e);
 
-        // U x = y
-        // double[] x = backwardSubstitution(U, y);
+        // U * x = y
         Vector<T> x = backwardSubstitution(y);
 
-        // xi als Spalte in A hoch -1 speichern
-        //for (int row = 0; row < n; row++) {
-        //    inverse[row][i] = x[row];
-        //}
-
-        for (int row = 0; row < n; row++) {
+        // storing x at the i-th position in the inverse matrix 
+        for (std::size_t row{}; row != n; ++row) {
             result(row,i) = x[row];
         }
     }
+
+    result.print();
 
     return true;
 }
@@ -77,7 +68,7 @@ template <typename T>
     requires FloatNumber<T>
 Vector<T> MatrixInverter<T>::forwardSubstitution(const Vector<T>& b)
 {
-    // -------------------------------------------------------------
+    // -------------------------------
     // forward substitution: L * y = b
 
     Vector<T> y{ b.dimension() };
@@ -85,11 +76,9 @@ Vector<T> MatrixInverter<T>::forwardSubstitution(const Vector<T>& b)
     for (std::size_t i{}; i != b.dimension(); ++i) {
 
         T sum{ b[i] };
-
         for (std::size_t j{}; j != i; ++j) {
             sum -= m_lower(i, j) * y[j];
         }
-
         y[i] = sum / m_lower(i, i);
     }
 
@@ -100,21 +89,20 @@ template <typename T>
     requires FloatNumber<T>
 Vector<T> MatrixInverter<T>::backwardSubstitution(const Vector<T>& y)
 {
-    // -------------------------------------------------------------
+    // --------------------------------
     // backward substitution: U * x = y
 
     std::size_t dimension{ y.dimension() };
 
     Vector<T> x{ dimension };
 
-    for (int i = dimension - 1; i >= 0; i--) {    // auf std::size_t umstellen ... hmm ACHTUNG mit der NULL !!!!!!!!!!
+    // Note: reverse iteration with an unsigned loop variable
+    for (std::size_t i = dimension; i-- > 0; ) {
 
         T sum{ y[i] };
-
-        for (int j = i + 1; j < dimension; j++) {
+        for (std::size_t j = i + 1; j != dimension; ++j) {
             sum -= m_upper(i, j) * x[j];
         }
-
         x[i] = sum / m_upper(i, i);
     }
 
