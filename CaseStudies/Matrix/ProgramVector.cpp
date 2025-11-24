@@ -107,12 +107,21 @@ static void test_vector_04()
     std::println("operator!=: {}", b);
 }
 
+static void test_vector_10()
+{
+    // testing std::prinln for template class Vector<>
+    Vector<double> vector1{ 3, { 1.0, 2.0, 3.0 } };
+    std::println("Vector<double>: {}", vector1);
+}
+
 void test_vector()
 {
-    test_vector_01();
-    test_vector_02();
-    test_vector_03();
-    test_vector_04();
+    //test_vector_01();
+    //test_vector_02();
+    //test_vector_03();
+    //test_vector_04();
+
+    test_vector_10();
 }
 
 // =====================================================================================

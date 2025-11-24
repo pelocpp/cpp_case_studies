@@ -104,7 +104,7 @@ int main()
 {   
     try
     {
-        test_lu_decomposition();
+        test_vector();
     }
     catch (std::invalid_argument const& ex)
     {
