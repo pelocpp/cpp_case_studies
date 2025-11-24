@@ -1,5 +1,5 @@
 // =====================================================================================
-// LinearEquationSolver.h
+// LinearEquationSolverGauss.h
 // =====================================================================================
 
 #pragma once
@@ -12,10 +12,10 @@
 
 template <typename T>
     requires FloatNumber<T>
-class LinearEquationSolver
+class LinearEquationSolverGauss
 {
 public:
-    LinearEquationSolver();
+    LinearEquationSolverGauss();
 
 private:
     std::size_t  m_dim;         // number of rows / columns
@@ -42,7 +42,7 @@ public:
     bool eliminateForwardPivot();
     bool eliminateForwardPivotPermutation();
 
-    void substitueBack();
+    void substituteBack();
 
     void print() const;
 };

@@ -1,5 +1,5 @@
 // =====================================================================================
-// ProgramLinearEquationSolver.cpp
+// ProgramLinearEquationSolverGauss.cpp
 // =====================================================================================
 
 // 2 Beispiele:
@@ -9,13 +9,13 @@
 //https://www.youtube.com/watch?v=9Ule9qQaBB0
 
 #include "Vector.h"
-#include "LinearEquationSolver.h"
+#include "LinearEquationSolverGauss.h"
 
 #include <print>
 
-static void test_linear_equation_01() {
+static void test_linear_equation_gauss_01() {
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         1,
@@ -30,9 +30,9 @@ static void test_linear_equation_01() {
     solution.print();
 }
 
-static void test_linear_equation_02() {
+static void test_linear_equation_gauss_02() {
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         3,
@@ -49,11 +49,11 @@ static void test_linear_equation_02() {
     solution.print();
 }
 
-static void test_linear_equation_03() {
+static void test_linear_equation_gauss_03() {
 
     // Beispiel aus .pdf
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         4,
@@ -71,11 +71,11 @@ static void test_linear_equation_03() {
     solution.print();
 }
 
-static void test_linear_equation_04() {
+static void test_linear_equation_gauss_04() {
 
     // aus https://www.mathebibel.de/gauss-algorithmus
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         3,
@@ -92,11 +92,11 @@ static void test_linear_equation_04() {
     solution.print();
 }
 
-static void test_linear_equation_05() {
+static void test_linear_equation_gauss_05() {
 
     // Larger example, created by ChatGPT
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         10,
@@ -120,11 +120,11 @@ static void test_linear_equation_05() {
     solution.print();
 }
 
-static void test_linear_equation_06() {
+static void test_linear_equation_gauss_06() {
 
     // Larger example, created by ChatGPT
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         3,
@@ -141,11 +141,11 @@ static void test_linear_equation_06() {
     solution.print();
 }
 
-static void test_linear_equation_10() {
+static void test_linear_equation_gauss_10() {
 
     // Larger example, created by ChatGPT
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         3,
@@ -162,11 +162,11 @@ static void test_linear_equation_10() {
     solution.print();
 }
 
-static void test_linear_equation_20() {
+static void test_linear_equation_gauss_20() {
 
     // Larger example, created by ChatGPT
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         3,
@@ -183,11 +183,11 @@ static void test_linear_equation_20() {
     solution.print();
 }
 
-static void test_linear_equation_21() {
+static void test_linear_equation_gauss_21() {
 
     // Larger example, created by ChatGPT
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         3,
@@ -204,11 +204,11 @@ static void test_linear_equation_21() {
     solution.print();
 }
 
-static void test_linear_equation_22() {
+static void test_linear_equation_gauss_22() {
 
     // Larger example, created by ChatGPT
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         3,
@@ -227,11 +227,11 @@ static void test_linear_equation_22() {
 
 
 
-static void test_linear_equation_24() {
+static void test_linear_equation_gauss_24() {
 
     // Larger example, created by ChatGPT
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         3,
@@ -250,10 +250,10 @@ static void test_linear_equation_24() {
 
 
 
-static void test_linear_equation_30() {
+static void test_linear_equation_gauss_30() {
 
     // Ronald Mak, p. 273
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         2,
@@ -271,10 +271,10 @@ static void test_linear_equation_30() {
 
 
 
-static void test_linear_equation_31() {
+static void test_linear_equation_gauss_31() {
 
     // Ronald Mak, p. 269
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         4,
@@ -294,10 +294,10 @@ static void test_linear_equation_31() {
 
 
 
-static void test_linear_equation_32() {
+static void test_linear_equation_gauss_32() {
 
     // Ronald Mak, p. 269
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         4,
@@ -316,10 +316,10 @@ static void test_linear_equation_32() {
 }
 
 
-static void test_linear_equation_33() {
+static void test_linear_equation_gauss_33() {
 
     // Ronald Mak, p. 269
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         4,
@@ -339,11 +339,11 @@ static void test_linear_equation_33() {
 
 
 
-static void test_linear_equation_40() {
+static void test_linear_equation_gauss_40() {
 
     // Larger example, created by ChatGPT
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         10,
@@ -367,11 +367,11 @@ static void test_linear_equation_40() {
     solution.print();
 }
 
-static void test_linear_equation_41() {
+static void test_linear_equation_gauss_41() {
 
     // Larger example, created by ChatGPT
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         10,
@@ -395,11 +395,11 @@ static void test_linear_equation_41() {
     solution.print();
 }
 
-static void test_linear_equation_42() {
+static void test_linear_equation_gauss_42() {
 
     // Larger example, created by ChatGPT
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         10,
@@ -424,10 +424,10 @@ static void test_linear_equation_42() {
 }
 
 
-static void test_linear_equation_51() {
+static void test_linear_equation_gauss_51() {
 
     // Ronald Mak, p. 269
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         3,
@@ -443,16 +443,16 @@ static void test_linear_equation_51() {
 
     solver.eliminateForward();
 
-    solver.substitueBack();
+    solver.substituteBack();
     const Vector<double>& solution = solver.solution();
     solution.print();
 }
 
-static void test_linear_equation_52() {
+static void test_linear_equation_gauss_52() {
 
     // aus https://www.youtube.com/watch?v=vaahX3Wdxu8
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         3,
@@ -489,18 +489,18 @@ static void test_linear_equation_52() {
     std::println("Using LinearEquationSolver:");
 
     solver.eliminateForward();
-    solver.substitueBack();
+    solver.substituteBack();
     const Vector<double>& solution = solver.solution();
     solution.print();
 
     // verification of result:
 }
 
-static void test_linear_equation_53() {
+static void test_linear_equation_gauss_53() {
 
     // Ronald Mak, p. 269
 
-    LinearEquationSolver<double> solver;
+    LinearEquationSolverGauss<double> solver;
 
     solver.setEquation(
         4,
@@ -604,37 +604,33 @@ static void test_linear_equation_53() {
 
 void test_linear_equation()
 {
-    //test_linear_equation_01();           // { 2 }
-    //test_linear_equation_02();         // { 1,     -3,  2 }
-    //test_linear_equation_03();         // { 4,  2,  0,  1}
-    //test_linear_equation_04();         // { 2,  1,   -0.5 }
-    //test_linear_equation_05();         // {  1,  2,  3,  4,  5,  6,  7,  8,  9, 10 }
-    //test_linear_equation_06();             //  { 2, 3, -1}
+    test_linear_equation_gauss_01();           // { 2 }
+    test_linear_equation_gauss_02();         // { 1,     -3,  2 }
+    test_linear_equation_gauss_03();         // { 4,  2,  0,  1}
+    test_linear_equation_gauss_04();         // { 2,  1,   -0.5 }
+    test_linear_equation_gauss_05();         // {  1,  2,  3,  4,  5,  6,  7,  8,  9, 10 }
+    test_linear_equation_gauss_06();             //  { 2, 3, -1}
 
-    //test_linear_equation_10();           // { 2.875,   1.25,    4.5 }
+    test_linear_equation_gauss_10();           // { 2.875,   1.25,    4.5 }
     
-    //test_linear_equation_20();           // { 2.875,   1.25,    4.5 }  // simple
-    //test_linear_equation_21();          // { 2.875,   1.25,    4.5 }  // pivot
-    //test_linear_equation_22();            // { 2.875,   1.25,    4.5 }  // permutation vector
+    test_linear_equation_gauss_20();           // { 2.875,   1.25,    4.5 }  // simple
+    test_linear_equation_gauss_21();          // { 2.875,   1.25,    4.5 }  // pivot
+    test_linear_equation_gauss_22();            // { 2.875,   1.25,    4.5 }  // permutation vector
 
     //Ronald Mak
-    //test_linear_equation_30();
-  // test_linear_equation_31();
-    //test_linear_equation_32();
-   // test_linear_equation_33();
+    test_linear_equation_gauss_30();
+    test_linear_equation_gauss_31();
+    test_linear_equation_gauss_32();
+    test_linear_equation_gauss_33();
 
-    //test_linear_equation_40();   // korrekt
-    //test_linear_equation_41();   // korrekt
-  //  test_linear_equation_42();   // korrekt
+    test_linear_equation_gauss_40();   // korrekt
+    test_linear_equation_gauss_41();   // korrekt
+    test_linear_equation_gauss_42();   // korrekt
 
-  // test_linear_equation_50();
-   //test_linear_equation_51();
-   // test_linear_equation_52();
-   test_linear_equation_53();
-
+    test_linear_equation_gauss_51();
+    test_linear_equation_gauss_52();
+    test_linear_equation_gauss_53();
 }
-
-
 
 // =====================================================================================
 // End-of-File

@@ -1,8 +1,8 @@
 // =====================================================================================
-// LinearEquationSolverImpl.cpp
+// LinearEquationSolverGaussImpl.cpp
 // =====================================================================================
 
-#include "LinearEquationSolver.h"
+#include "LinearEquationSolverGauss.h"
 
 #include <cmath> 
 #include <numeric>
@@ -16,21 +16,21 @@
 
 template <typename T>
     requires FloatNumber<T>
-LinearEquationSolver<T>::LinearEquationSolver() : m_dim{} {}
+LinearEquationSolverGauss<T>::LinearEquationSolverGauss() : m_dim{} {}
 
 // =====================================================================================
 // getter/setter
 
 template <typename T>
     requires FloatNumber<T>
-std::size_t LinearEquationSolver<T>::dimension() const
+std::size_t LinearEquationSolverGauss<T>::dimension() const
 {
     return m_dim;
 }
 
 template <typename T>
     requires FloatNumber<T>
-void LinearEquationSolver<T>::setEquation(
+void LinearEquationSolverGauss<T>::setEquation(
     std::size_t dim,
     std::initializer_list<std::initializer_list<T>> values
 )
@@ -42,7 +42,7 @@ void LinearEquationSolver<T>::setEquation(
 
 template <typename T>
     requires FloatNumber<T>
-const Vector<T>& LinearEquationSolver<T>::solution() const
+const Vector<T>& LinearEquationSolverGauss<T>::solution() const
 {
     return m_solution; 
 }
@@ -52,7 +52,7 @@ const Vector<T>& LinearEquationSolver<T>::solution() const
 
 template <typename T>
     requires FloatNumber<T>
-bool LinearEquationSolver<T>::eliminateForward()
+bool LinearEquationSolverGauss<T>::eliminateForward()
 {
     std::println("Forward Elimination:");
 
@@ -83,7 +83,7 @@ bool LinearEquationSolver<T>::eliminateForward()
 
 template <typename T>
     requires FloatNumber<T>
-void LinearEquationSolver<T>::substitueBack()
+void LinearEquationSolverGauss<T>::substituteBack()
 {
     // apply back substitution to solve the linear equation system
     m_solution = Vector<T>{ m_dim };
@@ -128,21 +128,21 @@ void LinearEquationSolver<T>::substitueBack()
 
 template <typename T>
     requires FloatNumber<T>
-bool LinearEquationSolver<T>::eliminateForwardPivot()
+bool LinearEquationSolverGauss<T>::eliminateForwardPivot()
 {
     return false;
 }
 
 template <typename T>
     requires FloatNumber<T>
-bool LinearEquationSolver<T>::eliminateForwardPivotPermutation()
+bool LinearEquationSolverGauss<T>::eliminateForwardPivotPermutation()
 {
     return false;
 }
 
 template <typename T>
     requires FloatNumber<T>
-bool LinearEquationSolver<T>::solve_01_simple()
+bool LinearEquationSolverGauss<T>::solve_01_simple()
 {
     // forward elimination to create an upper triangular matrix
     for (std::size_t k{}; k != m_dim - 1; ++k) {
@@ -180,7 +180,7 @@ bool LinearEquationSolver<T>::solve_01_simple()
 
 template <typename T>
     requires FloatNumber<T>
-bool LinearEquationSolver<T>::solve_02_pivot()
+bool LinearEquationSolverGauss<T>::solve_02_pivot()
 {
     // forward elimination to create an upper triangular matrix
     for (std::size_t k{}; k != m_dim - 1; ++k) {
@@ -234,7 +234,7 @@ bool LinearEquationSolver<T>::solve_02_pivot()
 
 template <typename T>
     requires FloatNumber<T>
-bool LinearEquationSolver<T>::solve_03_permutation_vector()
+bool LinearEquationSolverGauss<T>::solve_03_permutation_vector()
 {
     // create a permatations vector being intialized with 0, 1, 2, ...
     std::vector<std::size_t> perms(m_matrix.rows());
@@ -304,7 +304,7 @@ bool LinearEquationSolver<T>::solve_03_permutation_vector()
 
 template <typename T>
     requires FloatNumber<T>
-void LinearEquationSolver<T>::print() const
+void LinearEquationSolverGauss<T>::print() const
 {
     for (size_t row{}; row != m_dim; ++row) {
         size_t col{};
@@ -319,9 +319,9 @@ void LinearEquationSolver<T>::print() const
 // =====================================================================================
 
 // explicit template instantiations
-template class LinearEquationSolver<float>;
-template class LinearEquationSolver<double>;
-template class LinearEquationSolver<long double>;
+template class LinearEquationSolverGauss<float>;
+template class LinearEquationSolverGauss<double>;
+template class LinearEquationSolverGauss<long double>;
 
 // =====================================================================================
 // End-of-File

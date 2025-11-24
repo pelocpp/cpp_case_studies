@@ -125,20 +125,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LinearEquationSolverLUDecomposition.h" />
+    <ClCompile Include="LinearEquationSolverLUDecompositionImpl.cpp" />
     <ClCompile Include="LU_DecompositionImpl.cpp" />
     <ClCompile Include="MatrixDeterminant.h" />
     <ClCompile Include="MatrixDeterminantImpl.cpp" />
     <ClCompile Include="FloatNumber.h" />
-    <ClCompile Include="LinearEquationSolverImpl.cpp" />
+    <ClCompile Include="LinearEquationSolverGaussImpl.cpp" />
     <ClCompile Include="MatrixImpl.cpp" />
     <ClCompile Include="MatrixInverter.h" />
     <ClCompile Include="MatrixInverterImpl.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="ProgramBadApproachMatrix.cpp" />
+    <ClCompile Include="ProgramLinearEquationSolverLUDecomposition.cpp" />
     <ClCompile Include="ProgramMatrixInverter.cpp" />
     <ClCompile Include="ProgramLUDecomposition.cpp" />
     <ClCompile Include="ProgramMatrixDeterminant.cpp" />
-    <ClCompile Include="ProgramLinearEquationSolver.cpp" />
+    <ClCompile Include="ProgramLinearEquationSolverGauss.cpp" />
     <ClCompile Include="ProgramMatrix.cpp" />
     <ClCompile Include="ProgramVector.cpp" />
     <ClCompile Include="VectorImpl.cpp" />
@@ -147,7 +150,7 @@
     <ClInclude Include="BadApproachMatrix.h" />
     <ClInclude Include="LU_Decomposition.h" />
     <ClInclude Include="Matrix.h" />
-    <ClInclude Include="LinearEquationSolver.h" />
+    <ClInclude Include="LinearEquationSolverGauss.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

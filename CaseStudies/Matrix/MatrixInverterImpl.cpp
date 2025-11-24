@@ -43,7 +43,7 @@ void MatrixInverter<T>::invert()
         Vector<T> e{n};
         e[i] = T{ 1.0 };
 
-        Vector<T> y = forwardSubstitution(lower, e);   // L * y = e        
+        Vector<T> y = forwardSubstitution(lower, e);   // L * y = e
         Vector<T> x = backwardSubstitution(upper, y);  // U * x = y
 
         // storing x at the i-th position in the inverse matrix 
