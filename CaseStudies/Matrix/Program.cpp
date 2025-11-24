@@ -104,7 +104,7 @@ int main()
 {   
     try
     {
-        test_linear_equation_lu_decomposition();
+        test_lu_decomposition();
     }
     catch (std::invalid_argument const& ex)
     {

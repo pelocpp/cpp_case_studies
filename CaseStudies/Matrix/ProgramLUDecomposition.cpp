@@ -177,15 +177,52 @@ static void test_lu_decomposition_11()
     //std::println();
 }
 
+static void test_lu_decomposition_20()
+{
+    // aus Ronald Mak - mit Fehlerkorrektur
+    Matrix<double> matrix{ 4, 4 };
+    matrix.elements(
+        { 
+            { 3.0, 1.0, -5.0, 4.0 },
+            { 2.0, -3.0,  3.0, -2.0 },
+            { 5.0, -3.0,  4.0,  1.0 },
+            { 2.0,  4.0, -3.0, -5.0 }
+        });
+    matrix.print();
+    std::println();
+
+    LU_Decomposition<double> lu{ matrix };
+
+    lu.decompose();
+
+    //lu.printMatrix();
+    //std::println();
+
+    lu.printLowerTriangularMatrix();
+    std::println();
+
+    lu.printUpperTriangularMatrix();
+    std::println();
+
+    // verify result
+    const Matrix<double> lower = lu.getLowerMatrix();
+    const Matrix<double> upper = lu.getUpperMatrix();
+    Matrix<double> prod = lower * upper;
+    prod.print();
+    std::println();
+}
+
 
 void test_lu_decomposition()
 {
     //test_lu_decomposition_01();
-   // test_lu_decomposition_02();
+    //test_lu_decomposition_02();
     //test_lu_decomposition_03();
 
-    // test_lu_decomposition_10();
-    test_lu_decomposition_11();
+    //test_lu_decomposition_10();
+    //test_lu_decomposition_11();
+
+    test_lu_decomposition_20();
 }
 
 // =====================================================================================

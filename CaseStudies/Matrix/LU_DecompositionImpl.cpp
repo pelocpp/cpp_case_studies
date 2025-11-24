@@ -30,8 +30,6 @@ template <typename T>
     requires FloatNumber<T>
 bool LU_Decomposition<T>::decompose()
 {
-    std::println("decompose:");
-
     // create an upper and lower triangular matrix
     for (std::size_t k{}; k != m_matrix.rows() - 1; ++k) {
 

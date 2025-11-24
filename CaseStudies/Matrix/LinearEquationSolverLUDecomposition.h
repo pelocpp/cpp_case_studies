@@ -19,18 +19,18 @@ public:
     LinearEquationSolverLUDecomposition(std::size_t dimension);
 
 private:
-    std::size_t  m_dimension;   // number of rows / columns
-    Matrix<T>    m_matrix;      // equation (left-hand side)
-    Vector<T>    m_rhs;         // right-hand side
-    Vector<T>    m_solution;    // solution
+    std::size_t m_dimension;  // number of rows / columns
+    Matrix<T>   m_matrix;     // equation (left-hand side)
+    Vector<T>   m_rhs;        // right-hand side
+    Vector<T>   m_solution;   // solution
 
 public:
     // getter/setter
-    void setEquation(std::initializer_list<std::initializer_list<T>> values);
-    void setRightHandSide(std::initializer_list<T> rhs);
+    void setEquation          (std::initializer_list<std::initializer_list<T>> values);
+    void setRightHandSide     (std::initializer_list<T> rhs);
 
-    std::size_t dimension() const;
-    const Vector<T>& solution() const;
+    std::size_t dimension     () const;
+    const Vector<T>& solution () const;
 
     // public interface
     void solve();
