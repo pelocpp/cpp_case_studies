@@ -30,7 +30,10 @@ std::size_t LinearEquationSolver<T>::dimension() const
 
 template <typename T>
     requires FloatNumber<T>
-void LinearEquationSolver<T>::setEquation(std::size_t dim, std::initializer_list<std::initializer_list<T>> values)
+void LinearEquationSolver<T>::setEquation(
+    std::size_t dim,
+    std::initializer_list<std::initializer_list<T>> values
+)
 {
     m_dim = dim;
     m_matrix = Matrix<T>{ m_dim, m_dim + 1 };

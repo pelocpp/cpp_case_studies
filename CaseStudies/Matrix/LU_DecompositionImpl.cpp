@@ -21,7 +21,7 @@ LU_Decomposition<T>::LU_Decomposition(const Matrix<T> matrix)
         m_lower(k, k) = T{ 1.0 };
     }
 
-    // initialize upprt triangular matrix with input matrix
+    // initialize upper triangular matrix with input matrix
     m_upper = m_matrix;
 }
 
@@ -68,21 +68,21 @@ void LU_Decomposition<T>::set(const Matrix<T> matrix)
 
 template <typename T>
     requires FloatNumber<T>
-const Matrix<T>& LU_Decomposition<T>::getMatrix()
+const Matrix<T>& LU_Decomposition<T>::getMatrix() const
 {
     return m_matrix;
 }
 
 template <typename T>
     requires FloatNumber<T>
-const Matrix<T>& LU_Decomposition<T>::getLowerMatrix()
+const Matrix<T>& LU_Decomposition<T>::getLowerMatrix() const
 {
     return m_lower;
 }
 
 template <typename T>
     requires FloatNumber<T>
-const Matrix<T>& LU_Decomposition<T>::getUpperMatrix()
+const Matrix<T>& LU_Decomposition<T>::getUpperMatrix() const
 {
         return m_upper;
 }
@@ -137,6 +137,7 @@ void LU_Decomposition<T>::printUpperTriangularMatrix() const
         }
     }
 }
+
 // =====================================================================================
 
 // explicit template instantiations

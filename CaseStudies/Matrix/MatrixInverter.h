@@ -18,24 +18,18 @@ public:
     MatrixInverter() = default;
 
 private:
-    Matrix<T> m_matrix;  // original matrix
-    Matrix<T> m_lower;   // lower triangular matrix
-    Matrix<T> m_upper;   // upper triangular matrix
+    Matrix<T> m_matrix;            // matrix to invert
 
 public:
     // getter/setter
-    void set(const Matrix<T> matrix);
+    void      set                  (const Matrix<T> matrix);
 
     // public interface
-    bool invert();
+    void      invert               ();
 
-    // private ... das muss man spaeter umstellen
-    
-    // Vorwärtssubstitution: L * y = b
-
-    Vector<T> forwardSubstitution(const Vector<T>& v);
-
-    Vector<T> backwardSubstitution(const Vector<T>& v);
+private:
+    Vector<T> forwardSubstitution  (const Matrix<T> lower, const Vector<T>& v) const;
+    Vector<T> backwardSubstitution (const Matrix<T> upper, const Vector<T>& v) const;
 };
 
 // =====================================================================================

@@ -16,6 +16,7 @@ static void test_invertable_matrix_01() {
     std::println();
 
     inverter.set(matrix);
+
     inverter.invert();
 }
 

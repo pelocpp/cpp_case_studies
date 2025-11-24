@@ -3,6 +3,7 @@
 // =====================================================================================
 
 #include "Vector.h"
+#include "LU_Decomposition.h"
 #include "MatrixInverter.h"
 
 #include <cstddef>
@@ -23,34 +24,27 @@ void MatrixInverter<T>::set(const Matrix<T> matrix)
 // public interface
 template <typename T>
     requires FloatNumber<T>
-bool MatrixInverter<T>::invert()
+void MatrixInverter<T>::invert()
 {
-    // ========================================
-    Matrix<T> lower{ 3, 3 };
-    lower.elements({ { 1.0, 0.0, 0.0 } , { 2.0, 1.0, 0.0 } , { -1.0, -1.0, 1.0 } });
-    m_lower = lower;
+    // need at first a LU decomposition of the matrix to invert
+    LU_Decomposition<T> lu{ m_matrix };
+    lu.decompose();
 
-    Matrix<T> upper{ 3, 3 };
-    upper.elements({ { 2.0, 1.0, 1.0 } , { 0.0, -8.0, -2.0 } , { 0.0, 0.0, 1.0 } });
-    m_upper = upper;
-    // ========================================
-
+    const Matrix<T>& lower = lu.getLowerMatrix();
+    const Matrix<T>& upper = lu.getUpperMatrix();
 
     std::size_t n = m_matrix.rows();  // count of rows (or cols)
+    Matrix<T> result{ n , n };   
 
-    Matrix<T> result{ n , n };
-   
+    // now invert input matrix with forward and backward substitution
     for (std::size_t i{}; i != n; ++i) {
 
         // unit vector with a 1 at the i-th position
         Vector<T> e{n};
         e[i] = T{ 1.0 };
 
-        // L * y = e
-        Vector<T> y = forwardSubstitution(e);
-
-        // U * x = y
-        Vector<T> x = backwardSubstitution(y);
+        Vector<T> y = forwardSubstitution(lower, e);   // L * y = e        
+        Vector<T> x = backwardSubstitution(upper, y);  // U * x = y
 
         // storing x at the i-th position in the inverse matrix 
         for (std::size_t row{}; row != n; ++row) {
@@ -59,27 +53,21 @@ bool MatrixInverter<T>::invert()
     }
 
     result.print();
-
-    return true;
 }
-
 
 template <typename T>
     requires FloatNumber<T>
-Vector<T> MatrixInverter<T>::forwardSubstitution(const Vector<T>& b)
+Vector<T> MatrixInverter<T>::forwardSubstitution(const Matrix<T> lower, const Vector<T>& b) const
 {
-    // -------------------------------
-    // forward substitution: L * y = b
-
     Vector<T> y{ b.dimension() };
 
     for (std::size_t i{}; i != b.dimension(); ++i) {
 
         T sum{ b[i] };
         for (std::size_t j{}; j != i; ++j) {
-            sum -= m_lower(i, j) * y[j];
+            sum -= lower(i, j) * y[j];
         }
-        y[i] = sum / m_lower(i, i);
+        y[i] = sum / lower(i, i);
     }
 
     return y;
@@ -87,11 +75,8 @@ Vector<T> MatrixInverter<T>::forwardSubstitution(const Vector<T>& b)
 
 template <typename T>
     requires FloatNumber<T>
-Vector<T> MatrixInverter<T>::backwardSubstitution(const Vector<T>& y)
+Vector<T> MatrixInverter<T>::backwardSubstitution(const Matrix<T> upper, const Vector<T>& y) const
 {
-    // --------------------------------
-    // backward substitution: U * x = y
-
     std::size_t dimension{ y.dimension() };
 
     Vector<T> x{ dimension };
@@ -101,9 +86,9 @@ Vector<T> MatrixInverter<T>::backwardSubstitution(const Vector<T>& y)
 
         T sum{ y[i] };
         for (std::size_t j = i + 1; j != dimension; ++j) {
-            sum -= m_upper(i, j) * x[j];
+            sum -= upper(i, j) * x[j];
         }
-        x[i] = sum / m_upper(i, i);
+        x[i] = sum / upper(i, i);
     }
 
     return x;

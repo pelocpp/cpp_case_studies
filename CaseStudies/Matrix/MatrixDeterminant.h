@@ -25,8 +25,6 @@ static auto constexpr powerOfMinusOne = [](std::size_t exp) {
     return result;
 };
 
-
-
 ///**
 //  * Computing the minor of the matrix m without the i-th row and the j-th
 //  * column
@@ -70,10 +68,6 @@ Matrix<T> minor(Matrix<T> m, std::size_t row, std::size_t col) requires FloatNum
     return result;
 }
 
-
-
-
-
 template <typename T>
 T determinant(Matrix<T> m) requires FloatNumber<T>
 {
@@ -96,6 +90,8 @@ T determinant(Matrix<T> m) requires FloatNumber<T>
 
     return T{};
 }
+
+// =====================================================================================
 
 extern template Matrix<float>       minor<float>       (Matrix<float>, std::size_t row, std::size_t col);
 extern template Matrix<double>      minor<double>      (Matrix<double>, std::size_t row, std::size_t col);

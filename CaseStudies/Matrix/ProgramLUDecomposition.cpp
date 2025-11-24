@@ -6,27 +6,6 @@
 
 #include <print>
 
-//static void test_lu_decomposition_01() {
-//
-//    Matrix<double> matrix{ 3, 3 };
-//    matrix.elements({ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 });
-//    matrix.print();
-//    std::println();
-//
-//    LU_Decomposition<double> lu{ matrix };
-//
-//    lu.decompose();
-//
-//    lu.printMatrix();
-//    std::println();
-//    
-//    lu.printUpperTriangularMatrix();
-//    std::println();
-//
-//    lu.printLowerTriangularMatrix();
-//    std::println();
-//}
-
 static void test_lu_decomposition_01()
 {
     // aus ChatGPT - Ergebnis stimmmt
@@ -97,9 +76,6 @@ static void test_lu_decomposition_02()
     std::println();
 }
 
-
-
-
 static void test_lu_decomposition_03()
 {
     // aus ChatGPT - Ergebnis stimmmt
@@ -143,11 +119,42 @@ static void test_lu_decomposition_03()
 }
 
 
+static void test_lu_decomposition_10()
+{
+    // aus ChatGPT - dieses Beispiel verwende ich bei der Invertierung von Matrizen
+    Matrix<double> matrix{ 3, 3 };
+    matrix.elements({ { 2.0, 1.0, 1.0 } , { 4.0, -6.0, 0.0 } , { -2.0, 7.0, 2.0 } });
+    matrix.print();
+    std::println();
+
+    LU_Decomposition<double> lu{ matrix };
+
+    lu.decompose();
+
+    lu.printMatrix();
+    std::println();
+
+    lu.printLowerTriangularMatrix();
+    std::println();
+
+    lu.printUpperTriangularMatrix();
+    std::println();
+
+    // verify result
+    const Matrix<double> lower = lu.getLowerMatrix();
+    const Matrix<double> upper = lu.getUpperMatrix();
+    Matrix<double> prod = lower * upper;
+    prod.print();
+    std::println();
+}
+
 void test_lu_decomposition()
 {
     //test_lu_decomposition_01();
-    test_lu_decomposition_02();
+   // test_lu_decomposition_02();
     //test_lu_decomposition_03();
+
+    test_lu_decomposition_10();
 }
 
 // =====================================================================================
