@@ -45,6 +45,24 @@ void LinearEquationSolverLUDecomposition<T>::setEquation(
     m_matrix.elements(values);
 }
 
+
+// NEU
+template <typename T>
+    requires FloatNumber<T>
+void LinearEquationSolverLUDecomposition<T>::setEquation(const Matrix<T> coefficients)   // Hmmmm , klären den besten Namen für die Koeefizioentenmatix
+{
+    if (coefficients.rows() != dimension()) {
+        throw std::invalid_argument("Wrong number of rows!");
+    }
+
+    if (coefficients.cols() != dimension()) {
+        throw std::invalid_argument("Wrong number of columns!");
+    }
+
+    m_matrix = coefficients;
+}
+
+
 template <typename T>
     requires FloatNumber<T>
 void LinearEquationSolverLUDecomposition<T>::setRightHandSide(std::initializer_list<T> rhs)
@@ -55,6 +73,19 @@ void LinearEquationSolverLUDecomposition<T>::setRightHandSide(std::initializer_l
 
     m_rhs = Vector<T>{ m_dimension, rhs };
 }
+
+// NEU
+template <typename T>
+    requires FloatNumber<T>
+void LinearEquationSolverLUDecomposition<T>::setRightHandSide(const Vector<T>& rhs)
+{
+    if (rhs.size() != dimension()) {
+        throw std::invalid_argument("Wrong number of values!");
+    }
+
+    m_rhs = rhs;
+}
+
 
 template <typename T>
     requires FloatNumber<T>

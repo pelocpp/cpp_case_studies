@@ -182,12 +182,12 @@ static void test_lu_decomposition_20()
     // aus Ronald Mak - mit Fehlerkorrektur
     Matrix<double> matrix{ 4, 4 };
     matrix.elements(
-        { 
-            { 3.0, 1.0, -5.0, 4.0 },
-            { 2.0, -3.0,  3.0, -2.0 },
-            { 5.0, -3.0,  4.0,  1.0 },
-            { 2.0,  4.0, -3.0, -5.0 }
-        });
+    { 
+        {  3.0,  1.0, -5.0,  4.0  },
+        {  2.0, -3.0,  3.0, -2.0  },
+        {  5.0, -3.0,  4.0,  1.0  },
+        { -2.0,  4.0, -3.0, -5.0  }
+    });
     matrix.print();
     std::println();
 

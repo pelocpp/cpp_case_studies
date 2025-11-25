@@ -45,8 +45,19 @@ bool LU_Decomposition<T>::decompose()
             T pivot{ m_upper.at(rowBelow, k) / m_upper.at(k, k) };
             m_upper.subtractRow(pivot, k, rowBelow);
 
+            //// TEST ################################
+            //std::println("Upper:");
+            //std::println("{}", m_upper);
+            //// TEST ################################
+
+
             // set pivot element in lower triangular matrix
             m_lower(rowBelow, k) = pivot;
+
+            //// TEST ################################
+            //std::println("Lower:");
+            //std::println("{}", m_lower);
+            //// TEST ################################
         }
     }
 

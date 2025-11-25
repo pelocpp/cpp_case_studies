@@ -13,20 +13,32 @@ static void test_linear_equation_lu_decomposition_01()
 
     LinearEquationSolverLUDecomposition<double> solver{ 3 };
 
-    solver.setEquation(
-        {
-            {  2.0,  3.0,  1.0 },
-            {  4.0,  7.0, -1.0 },
-            { -2.0,  4.0,  5.0 }
-        }
-    );
+    Matrix<double> matrix{ 3, 3 };
+    matrix.elements
+    ({ 
+        {  2.0,  3.0,  1.0 },
+        {  4.0,  7.0, -1.0 },
+        { -2.0,  4.0,  5.0 }
+    });
+    solver.setEquation(matrix);
 
-    solver.setRightHandSide({ 1.0, 2.0, 3.0 });
+    Vector<double> rhs{ 1.0, 2.0, 3.0 };
+    solver.setRightHandSide(rhs);
     solver.print();
     solver.solve();
 
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
+
+    // verify solution
+    Vector<double> vector = matrix * solution;
+
+    std::println("Right.hand Side: {}", rhs);
+    std::println("Solution:        {}", solution);
+
+    //if (vector == solution) {
+    //    std::println("Ok.");
+    //}
 }
 
 static void test_linear_equation_lu_decomposition_02()
@@ -37,10 +49,10 @@ static void test_linear_equation_lu_decomposition_02()
 
     solver.setEquation(
         {
-            { 3.0,  1.0, -5.0,  4.0 },
-            { 2.0, -3.0,  3.0, -2.0 },
-            { 5.0, -3.0,  4.0,  1.0 },
-            { 2.0,  4.0, -3.0, -5.0 }
+            {  3.0,  1.0, -5.0,  4.0  },
+            {  2.0, -3.0,  3.0, -2.0  },
+            {  5.0, -3.0,  4.0,  1.0  },
+            { -2.0,  4.0, -3.0, -5.0  },
         }
     );
 
@@ -84,9 +96,9 @@ static void test_linear_equation_lu_decomposition_03()
 
 void test_linear_equation_lu_decomposition()
 {
-   // test_linear_equation_lu_decomposition_01();
-    test_linear_equation_lu_decomposition_02();    //  Ronald Mak // läuft so nicht // extreme Ungenauigkeits fehler ?!?!?!?!? 
-   // test_linear_equation_lu_decomposition_03();   // hmmm, die geht ..... ?!?!?!?!
+    test_linear_equation_lu_decomposition_01();     // 
+    //test_linear_equation_lu_decomposition_02();       //  Ronald Mak // geht
+    // test_linear_equation_lu_decomposition_03();    // Geht  
 }
 
 // =====================================================================================

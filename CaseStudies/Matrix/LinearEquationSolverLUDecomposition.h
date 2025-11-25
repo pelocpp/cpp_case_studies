@@ -27,7 +27,10 @@ private:
 public:
     // getter/setter
     void setEquation          (std::initializer_list<std::initializer_list<T>> values);
+    void setEquation          (const Matrix<T> coefficients);
+
     void setRightHandSide     (std::initializer_list<T> rhs);
+    void setRightHandSide     (const Vector<T>& rhs);
 
     std::size_t dimension     () const;
     const Vector<T>& solution () const;

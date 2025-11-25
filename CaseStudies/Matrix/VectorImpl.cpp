@@ -14,9 +14,9 @@
 // =====================================================================================
 // c'tors
 
-template <typename T>
-    requires FloatNumber<T>
-Vector<T>::Vector() : m_values{} {}
+//template <typename T>
+//    requires FloatNumber<T>
+//Vector<T>::Vector() : m_values{} {}
 
 template <typename T>
     requires FloatNumber<T>
@@ -41,6 +41,23 @@ Vector<T>::Vector(std::size_t dimension, std::initializer_list<T> values)
         m_values.begin()
     );
 }
+
+template <typename T>
+    requires FloatNumber<T>
+Vector<T>::Vector(std::initializer_list<T> values)
+{
+    m_values.resize(values.size());
+
+    std::copy(
+        values.begin(),
+        values.end(),
+        m_values.begin()
+    );
+}
+
+//explicit Vector(std::initializer_list<T> values);
+
+
 
 // =====================================================================================
 // getter

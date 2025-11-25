@@ -23,10 +23,11 @@ protected:
 
 public:
     // c'tors
-    Vector();
+    Vector() = default;
     explicit Vector       (std::size_t dimension);
     explicit Vector       (std::size_t dimension, std::initializer_list<T> values);
-   
+    explicit Vector       (std::initializer_list<T> values);
+
     // getter   
     std::size_t dimension () const;
     T length              () const;
