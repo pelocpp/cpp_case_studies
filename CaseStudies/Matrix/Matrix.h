@@ -53,12 +53,13 @@ public:
     const T& at         (std::size_t row, std::size_t col) const;
 
     // public interface
-    Matrix transpose    () const;
-    Matrix add          (const Matrix& other) const;
-    Matrix sub          (const Matrix& other) const;
-    Matrix mul          (const Matrix& other) const;
+    void      fill      (T value);
+    Matrix    transpose () const;
+    Matrix    add       (const Matrix& other) const;
+    Matrix    sub       (const Matrix& other) const;
+    Matrix    mul       (const Matrix& other) const;
     Vector<T> mul       (const Vector<T>& other) const;
-    void   print() const;
+    void      print     () const;
 
     // Fehlt: Methode fill ... mit einem konstanten Wert vorbelegen ....
 
@@ -72,12 +73,7 @@ public:
     Matrix& operator-=  (const Matrix& other);
     Matrix& operator*=  (const Matrix& other);
 
-    // iteration support
-    //iterator begin() noexcept { return m_values.begin(); }
-    //iterator end() noexcept { return m_values.end(); }
-    //const_iterator begin() const noexcept { return m_values.begin(); }
-    //const_iterator end() const noexcept { return m_values.end(); }
-
+    // iterator support
     iterator begin() noexcept;
     iterator end() noexcept;
     const_iterator begin() const noexcept;
@@ -91,6 +87,38 @@ public:
     void swapRows(std::size_t row1, std::size_t row2);
     void subtractRow(T factor, std::size_t source, std::size_t target);
 };
+
+// =====================================================================================
+
+namespace std
+{
+    // formatter for class Color
+    template<typename T>
+    struct std::formatter<Matrix<T>> : std::formatter<std::string_view>
+    {
+        constexpr auto parse(std::format_parse_context& ctx) {
+            return ctx.begin();
+        }
+
+        auto format(const Matrix<T>& m, std::format_context& ctx) const {
+
+            std::string tmp{};
+            std::format_to(std::back_inserter(tmp), "{{\n");
+
+            for (std::size_t row{}; row != m.rows(); ++row) {
+                for (std::size_t col{}; col != m.cols(); ++col) {
+
+                    auto elem = m(row, col);
+                    std::format_to(std::back_inserter(tmp), "{:6.4g}", elem);
+                }
+                std::format_to(std::back_inserter(tmp), "\n");
+            }
+
+            std::format_to(std::back_inserter(tmp), "}}");
+            return std::formatter<string_view>::format(tmp, ctx);
+        }
+    };
+}
 
 // =====================================================================================
 // End-of-File

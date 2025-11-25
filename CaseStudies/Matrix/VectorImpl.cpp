@@ -175,6 +175,13 @@ const T& Vector<T>::operator[](std::size_t index) const
 
 template <typename T>
     requires FloatNumber<T>
+void Vector<T>::fill(T value)
+{
+    std::fill(m_values.begin(), m_values.end(), value);
+}
+
+template <typename T>
+    requires FloatNumber<T>
 Vector<T> Vector<T>::normalize() const
 {
     Vector<T> result{ dimension() };

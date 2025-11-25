@@ -120,6 +120,13 @@ const T& Matrix<T>::operator()(std::size_t row, std::size_t col) const
 // public interface
 template <typename T>
     requires FloatNumber<T>
+void Matrix<T>::fill(T value)
+{
+    std::fill(m_values.begin(), m_values.end(), value);
+}
+
+template <typename T>
+    requires FloatNumber<T>
 Matrix<T> Matrix<T>::transpose() const
 {
     Matrix<T> result{ m_cols, m_rows };
@@ -310,8 +317,6 @@ template <typename T>
     requires FloatNumber<T>
 void Matrix<T>::print() const
 {
-    // to be Done: Überladen von std::format // print a la C++ 23
-
     for (std::size_t col{}; auto elem : m_values) {
 
         std::print("{:6.4g}", elem);

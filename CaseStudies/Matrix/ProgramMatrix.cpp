@@ -266,19 +266,27 @@ static void test_matrix_20()
     std::println();
 }
 
+static void test_matrix_30()
+{
+    Matrix<double> matrix{ 3, 3 };
+    matrix.elements({ { 1.0, 2.0, 3.0 }, { 4.0, 5.0, 6.0 }, { 7.0, 8.0, 9.0 } });
+    std::println("{}", matrix);
+}
+
 void test_matrix()
 {
-    //test_matrix_01();
-    //test_matrix_02();
-    //test_matrix_03();
-    //test_matrix_04();
-    //test_matrix_05();
-    //test_matrix_06();
-    //test_matrix_07();
+    test_matrix_01();
+    test_matrix_02();
+    test_matrix_03();
+    test_matrix_04();
+    test_matrix_05();
+    test_matrix_06();
+    test_matrix_07();
 
     test_matrix_10();
 
-    //test_matrix_20();
+    test_matrix_20();
+    test_matrix_30();
 }
 
 // =====================================================================================

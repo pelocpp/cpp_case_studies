@@ -50,11 +50,11 @@ public:
     bool operator!=       (const Vector& other) const;
     
     // public interface
+    void   fill           (T value);
     Vector normalize      () const;
     Vector add            (const Vector& other) const;
     Vector sub            (const Vector& other) const;
     Vector mul            (T scalar) const;
-  //  void   print          () const;
 
     // Fehlt: Methode fill ... mit einem konstanten Wert vorbelegen ....
 

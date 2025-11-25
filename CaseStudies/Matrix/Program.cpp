@@ -104,7 +104,7 @@ int main()
 {   
     try
     {
-        test_vector();
+        test_matrix();
     }
     catch (std::invalid_argument const& ex)
     {
