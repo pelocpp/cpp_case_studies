@@ -13,9 +13,9 @@ static void test_vector_01()
     Vector<double> vector3{ 3, { 1, 2, 3 } };
 
     // testing vector initialization
-    vector1.print();
-    vector2.print();
-    vector3.print();
+    std::println("{}", vector1);
+    std::println("{}", vector2);
+    std::println("{}", vector3);
 
     // testing vector dimension and length
     std::size_t dimension{ vector1.dimension() };
@@ -31,7 +31,7 @@ static void test_vector_01()
     vector2[0] = 1.0;
     vector2[1] = 1.0;
     vector2[2] = 1.0;
-    vector2.print();
+    std::println("{}", vector2);
 
     const double& elem = vector2[0];
     std::println("First element: {}", elem);
@@ -47,12 +47,12 @@ static void test_vector_02()
 {
     // testing length and normalization
     Vector<double> vector{ 3, { 2, 2, 1 } };
-    vector.print();
+    std::println("{}", vector);
 
     // testing vector normalization
     Vector<double> result{ vector.normalize() };
     std::println("Normalized Vector: ");
-    result.print();
+    std::println("{}", result);
 
     double length{ result.length() };
     std::println("Length of normalized vector: {}", length);
@@ -63,20 +63,20 @@ static void test_vector_03()
     Vector<double> vector1{ 3, { 1, 2, 3 } };
     Vector<double> vector2{ 3, { 4, 5, 6 } };
 
-    vector1.print();
-    vector2.print();
+    std::println("{}", vector1);
+    std::println("{}", vector2);
 
     // testing vector addition
     Vector<double> result{ vector1 + vector2 };
-    result.print();
+    std::println("{}", result);
 
     // testing vector subtraction
     result = vector1 - vector2;
-    result.print();
+    std::println("{}", result);
 
     // testing vector scalar multiplication
     result = vector2 * 5;
-    result.print();
+    std::println("{}", result);
 
     // testing vector scalar product
     double scalarProduct{ vector1 * vector2 };
@@ -84,10 +84,10 @@ static void test_vector_03()
 
     // testing arithmetic assignment operators
     vector1 += vector2;
-    vector1.print();
+    std::println("{}", vector1);
 
     vector1 -= vector2;
-    vector1.print();
+    std::println("{}", vector1);
 }
 
 static void test_vector_04()
@@ -110,16 +110,16 @@ static void test_vector_04()
 static void test_vector_10()
 {
     // testing std::prinln for template class Vector<>
-    Vector<double> vector1{ 3, { 1.0, 2.0, 3.0 } };
-    std::println("Vector<double>: {}", vector1);
+    Vector<double> vector{ 3, { 1.0, 2.0, 3.0 } };
+    std::println("Vector<double>: {}", vector);
 }
 
 void test_vector()
 {
-    //test_vector_01();
-    //test_vector_02();
-    //test_vector_03();
-    //test_vector_04();
+    test_vector_01();
+    test_vector_02();
+    test_vector_03();
+    test_vector_04();
 
     test_vector_10();
 }

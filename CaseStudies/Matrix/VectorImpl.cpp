@@ -6,10 +6,10 @@
 
 #include <algorithm>
 #include <cmath>
-#include <format> 
+//#include <format> 
 #include <print>
 #include <stdexcept>
-#include <string_view>
+//#include <string_view>
 
 // =====================================================================================
 // c'tors
@@ -235,58 +235,20 @@ Vector<T> Vector<T>::mul(T scalar) const
     return result;
 }
 
-template <typename T>
-    requires FloatNumber<T>
-void Vector<T>::print() const
-{
-    std::print("{{");
-    for (int k{}; auto elem : m_values) {
-        std::print("{:6.4g}", elem);
-        if (k != dimension() - 1) {
-            std::print(", ", elem);
-            ++k;
-        }
-    }
-    std::println(" }}");
-}
-
-// =====================================================================================
-
-namespace std
-{
-    // formatter for class Color
-    template<typename T>
-    //struct std::formatter<Vector<T>> {
-        
-    
-    struct std::formatter<Vector<T>> : std::formatter<std::string_view>
-    {
-        constexpr auto parse(std::format_parse_context& ctx) {
-            return ctx.begin();
-        }
-
-        auto format(const Vector<T>& vec, std::format_context& ctx) const {
-
-            auto length = vec.length();
-
-            T lastElem = vec[length-1];
-
-            std::string tmp{};
-
-            std::for_each(
-                vec.begin(),
-                std::prev(vec.end()),
-                [&](const auto& elem) {
-                    std::format_to(std::back_inserter(tmp), "{}, ", elem);
-                }
-            );
-
-            std::format_to(std::back_inserter(tmp), "{}", lastElem);
-
-            return std::formatter<string_view>::format(tmp, ctx);
-        }
-    };
-}
+//template <typename T>
+//    requires FloatNumber<T>
+//void Vector<T>::print() const
+//{
+//    std::print("{{");
+//    for (int k{}; auto elem : m_values) {
+//        std::print("{:6.4g}", elem);
+//        if (k != dimension() - 1) {
+//            std::print(", ");
+//            ++k;
+//        }
+//    }
+//    std::println(" }}");
+//}
 
 // =====================================================================================
 

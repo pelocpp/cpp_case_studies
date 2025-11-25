@@ -6,9 +6,12 @@
 
 #include "FloatNumber.h"
 
+#include <algorithm>
 #include <cstddef>
+#include <format>
 #include <initializer_list>
 #include <memory>
+#include <string_view>
 #include <vector>
 
 template <typename T>
@@ -51,11 +54,42 @@ public:
     Vector add            (const Vector& other) const;
     Vector sub            (const Vector& other) const;
     Vector mul            (T scalar) const;
-    void   print          () const;
+  //  void   print          () const;
 
     // Fehlt: Methode fill ... mit einem konstanten Wert vorbelegen ....
 
 };
+
+// =====================================================================================
+
+namespace std
+{
+    // formatter for class Color
+    template<typename T>
+    struct std::formatter<Vector<T>> : std::formatter<std::string_view>
+    {
+        constexpr auto parse(std::format_parse_context& ctx) {
+            return ctx.begin();
+        }
+
+        auto format(const Vector<T>& vec, std::format_context& ctx) const {
+
+            std::string tmp{};
+            std::format_to(std::back_inserter(tmp), "{{");
+
+            for (std::size_t k{}; k != vec.dimension(); ++k) {
+                auto elem{ vec[k] };
+                std::format_to(std::back_inserter(tmp), "{:6.4g}", elem);
+                if (k != vec.dimension() - 1) {
+                    std::format_to(std::back_inserter(tmp), ", ");
+                }
+            }
+
+            std::format_to(std::back_inserter(tmp), "}}");
+            return std::formatter<string_view>::format(tmp, ctx);
+        }
+    };
+}
 
 // =====================================================================================
 // End-of-File

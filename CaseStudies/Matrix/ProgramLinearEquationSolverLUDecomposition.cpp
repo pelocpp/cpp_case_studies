@@ -26,7 +26,7 @@ static void test_linear_equation_lu_decomposition_01()
     solver.solve();
 
     const Vector<double>& solution = solver.solution();
-    solution.print();
+    std::println("{}", solution);
 }
 
 static void test_linear_equation_lu_decomposition_02()
@@ -49,7 +49,7 @@ static void test_linear_equation_lu_decomposition_02()
     solver.solve();
 
     const Vector<double>& solution = solver.solution();
-    solution.print();
+    std::println("{}", solution);
 }
 
 static void test_linear_equation_lu_decomposition_03()
@@ -78,7 +78,7 @@ static void test_linear_equation_lu_decomposition_03()
     solver.solve();
 
     const Vector<double>& solution = solver.solution();
-    solution.print();
+    std::println("{}", solution);
 }
 
 
