@@ -79,13 +79,12 @@ template <typename T>
     requires FloatNumber<T>
 void LinearEquationSolverLUDecomposition<T>::setRightHandSide(const Vector<T>& rhs)
 {
-    if (rhs.size() != dimension()) {
+    if (rhs.dimension() != dimension()) {
         throw std::invalid_argument("Wrong number of values!");
     }
 
     m_rhs = rhs;
 }
-
 
 template <typename T>
     requires FloatNumber<T>
@@ -114,10 +113,7 @@ void LinearEquationSolverLUDecomposition<T>::solve()
     std::println("TEST: Upper: ");
     upper.print();
 
-
-
-
-    Vector<T> result{ m_dimension };
+    Vector<T> result(m_dimension);
 
     Vector<T> y = forwardSubstitution(lower, m_rhs);   // L * y = b
     m_solution = backwardSubstitution(upper, y);       // U * x = y
@@ -127,7 +123,7 @@ template <typename T>
     requires FloatNumber<T>
 Vector<T> LinearEquationSolverLUDecomposition<T>::forwardSubstitution(const Matrix<T> lower, const Vector<T>& b) const
 {
-    Vector<T> y{ b.dimension() };
+    Vector<T> y(b.dimension());
 
     for (std::size_t i{}; i != b.dimension(); ++i) {
 
@@ -147,7 +143,7 @@ Vector<T> LinearEquationSolverLUDecomposition<T>::backwardSubstitution(const Mat
 {
     std::size_t dimension{ y.dimension() };
 
-    Vector<T> x{ dimension };
+    Vector<T> x(dimension);
 
     // Note: reverse iteration with an unsigned loop variable
     for (std::size_t i = dimension; i-- > 0; ) {

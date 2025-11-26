@@ -206,7 +206,7 @@ Vector<T> Matrix<T>::mul(const Vector<T>& vec) const
         throw std::invalid_argument("Invalid vector dimensions!");
     }
 
-    Vector<T> result{ m_rows };
+    Vector<T> result(m_rows);
 
     for (std::size_t row{}; row != m_rows; ++row) {
 

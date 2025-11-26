@@ -9,8 +9,8 @@
 static void test_vector_01()
 {
     Vector<double> vector1{};
-    Vector<double> vector2{ 3, { 1, 2, 3 } };
-    Vector<double> vector3{ 3, { 1, 2, 3 } };
+    Vector<double> vector2{ 1.0, 2.0, 3.0 };
+    Vector<double> vector3{ 1.0, 2.0, 3.0 };
 
     // testing vector initialization
     std::println("{}", vector1);
@@ -38,7 +38,7 @@ static void test_vector_01()
 
     // overload resolution of operator[] is based on the 'this' parameter,
     // that is - on the constness or lack of constness of the object - the operator[] is being called upon
-    const Vector<double> vector4{ 3, { 1, 2, 3 } };
+    const Vector<double> vector4{ 1.0, 2.0, 3.0 };
     const double& elem2 = vector4[0];
     std::println("First element: {}", elem2);
 }
@@ -46,7 +46,7 @@ static void test_vector_01()
 static void test_vector_02()
 {
     // testing length and normalization
-    Vector<double> vector{ 3, { 2, 2, 1 } };
+    Vector<double> vector{ 2.0, 2.0, 1.0 };
     std::println("{}", vector);
 
     // testing vector normalization
@@ -60,8 +60,8 @@ static void test_vector_02()
 
 static void test_vector_03()
 {
-    Vector<double> vector1{ 3, { 1, 2, 3 } };
-    Vector<double> vector2{ 3, { 4, 5, 6 } };
+    Vector<double> vector1{ 1.0, 2.0, 3.0 };
+    Vector<double> vector2{ 4.0, 5.0, 6.0 };
 
     std::println("{}", vector1);
     std::println("{}", vector2);
@@ -92,13 +92,13 @@ static void test_vector_03()
 
 static void test_vector_04()
 {
-    Vector<double> vector1{ 3, { 1, 2, 3 } };
-    Vector<double> vector2{ 3, { 1, 2, 3 } };
+    Vector<double> vector1{ 1.0, 2.0, 3.0 };
+    Vector<double> vector2{ 1.0, 2.0, 3.0 };
 
     auto b{ vector1 == vector2};
     std::println("operator==: {}", b);
 
-    vector1[0] = 123;
+    vector1[0] = 123.0;
 
     b = (vector1 == vector2);
     std::println("operator==: {}", b);
@@ -110,7 +110,7 @@ static void test_vector_04()
 static void test_vector_10()
 {
     // testing std::prinln for template class Vector<>
-    Vector<double> vector{ 3, { 1.0, 2.0, 3.0 } };
+    Vector<double> vector{ 1.0, 2.0, 3.0 };
     std::println("Vector<double>: {}", vector);
 }
 

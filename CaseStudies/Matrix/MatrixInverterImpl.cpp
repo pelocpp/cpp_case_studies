@@ -40,7 +40,7 @@ void MatrixInverter<T>::invert()
     for (std::size_t i{}; i != n; ++i) {
 
         // unit vector with a 1 at the i-th position
-        Vector<T> e{n};
+        Vector<T> e(n);
         e[i] = T{ 1.0 };
 
         Vector<T> y = forwardSubstitution(lower, e);   // L * y = e
@@ -59,7 +59,7 @@ template <typename T>
     requires FloatNumber<T>
 Vector<T> MatrixInverter<T>::forwardSubstitution(const Matrix<T> lower, const Vector<T>& b) const
 {
-    Vector<T> y{ b.dimension() };
+    Vector<T> y(b.dimension());
 
     for (std::size_t i{}; i != b.dimension(); ++i) {
 
@@ -79,7 +79,7 @@ Vector<T> MatrixInverter<T>::backwardSubstitution(const Matrix<T> upper, const V
 {
     std::size_t dimension{ y.dimension() };
 
-    Vector<T> x{ dimension };
+    Vector<T> x(dimension);
 
     // Note: reverse iteration with an unsigned loop variable
     for (std::size_t i = dimension; i-- > 0; ) {

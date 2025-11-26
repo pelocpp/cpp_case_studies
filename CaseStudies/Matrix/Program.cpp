@@ -17,6 +17,16 @@
 
 
 // Weiterarbeit:
+// Habe da eine Matrix auf dem Internet
+// ==============> NotizzettelMatrix.txt
+// C++ for Financial Mathematics from John Armstrong
+
+
+
+
+
+
+// Weiterarbeit:
 
 // Frage:
 // I'm implementing a C++ class for matrices. Does it make sense, to implement this class in the manner as a C++ container class?

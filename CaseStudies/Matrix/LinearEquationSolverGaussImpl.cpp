@@ -86,7 +86,7 @@ template <typename T>
 void LinearEquationSolverGauss<T>::substituteBack()
 {
     // apply back substitution to solve the linear equation system
-    m_solution = Vector<T>{ m_dim };
+    m_solution = Vector<T>(m_dim);
 
     for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
     {
@@ -160,7 +160,7 @@ bool LinearEquationSolverGauss<T>::solve_01_simple()
     }
 
     // now apply back substitution to solve the linear equation system
-    m_solution = Vector<T>{ m_dim };
+    m_solution = Vector<T>(m_dim);
     for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
     {
         T result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
@@ -213,7 +213,7 @@ bool LinearEquationSolverGauss<T>::solve_02_pivot()
     }
 
     // now apply back substitution to solve the linear equation system
-    m_solution = Vector<T>{ m_dim };
+    m_solution = Vector<T>(m_dim);
     for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
     {
         T result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
@@ -283,7 +283,7 @@ bool LinearEquationSolverGauss<T>::solve_03_permutation_vector()
     }
 
     // now apply back substitution to solve the linear equation system
-    m_solution = Vector<T>{ m_dim };
+    m_solution = Vector<T>(m_dim);
     for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
     {
         T result = m_matrix.at(perms[i - 1], m_dim) / m_matrix.at(perms[i - 1], j - 1);

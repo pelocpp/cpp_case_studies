@@ -14,10 +14,6 @@
 // =====================================================================================
 // c'tors
 
-//template <typename T>
-//    requires FloatNumber<T>
-//Vector<T>::Vector() : m_values{} {}
-
 template <typename T>
     requires FloatNumber<T>
 Vector<T>::Vector(std::size_t dimension)
@@ -25,22 +21,22 @@ Vector<T>::Vector(std::size_t dimension)
     m_values.resize(dimension);
 }
 
-template <typename T>
-    requires FloatNumber<T>
-Vector<T>::Vector(std::size_t dimension, std::initializer_list<T> values)
-{
-    if (dimension != values.size()) {
-        throw std::invalid_argument("Wrong number of values!");
-    }
-
-    m_values.resize(dimension);
-
-    std::copy(
-        values.begin(),
-        values.end(),
-        m_values.begin()
-    );
-}
+//template <typename T>
+//    requires FloatNumber<T>
+//Vector<T>::Vector(std::size_t dimension, std::initializer_list<T> values)
+//{
+//    if (dimension != values.size()) {
+//        throw std::invalid_argument("Wrong number of values!");
+//    }
+//
+//    m_values.resize(dimension);
+//
+//    std::copy(
+//        values.begin(),
+//        values.end(),
+//        m_values.begin()
+//    );
+//}
 
 template <typename T>
     requires FloatNumber<T>
@@ -54,10 +50,6 @@ Vector<T>::Vector(std::initializer_list<T> values)
         m_values.begin()
     );
 }
-
-//explicit Vector(std::initializer_list<T> values);
-
-
 
 // =====================================================================================
 // getter
@@ -201,7 +193,7 @@ template <typename T>
     requires FloatNumber<T>
 Vector<T> Vector<T>::normalize() const
 {
-    Vector<T> result{ dimension() };
+    Vector<T> result(dimension());
     T norm{ static_cast<T>(1.0) / length() };
 
     //  normalize vector
@@ -220,7 +212,7 @@ Vector<T> Vector<T>::add(const Vector& other) const
         throw std::invalid_argument("Wrong dimension!");
     }
 
-    Vector<T> result{ dimension() };
+    Vector<T> result(dimension());
 
     for (std::size_t i{}; i != dimension(); ++i) {
         result.m_values[i] = m_values[i] + other.m_values[i];
@@ -237,7 +229,7 @@ Vector<T> Vector<T>::sub(const Vector& other) const
         throw std::invalid_argument("Wrong dimension!");
     }
 
-    Vector<T> result{ dimension() };
+    Vector<T> result(dimension());
 
     for (std::size_t i{}; i != dimension(); ++i) {
         result.m_values[i] = m_values[i] - other.m_values[i];

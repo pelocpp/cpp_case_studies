@@ -25,7 +25,6 @@ public:
     // c'tors
     Vector() = default;
     explicit Vector       (std::size_t dimension);
-    explicit Vector       (std::size_t dimension, std::initializer_list<T> values);
     explicit Vector       (std::initializer_list<T> values);
 
     // getter   
@@ -56,9 +55,6 @@ public:
     Vector add            (const Vector& other) const;
     Vector sub            (const Vector& other) const;
     Vector mul            (T scalar) const;
-
-    // Fehlt: Methode fill ... mit einem konstanten Wert vorbelegen ....
-
 };
 
 // =====================================================================================
