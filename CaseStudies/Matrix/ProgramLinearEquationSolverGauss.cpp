@@ -13,7 +13,7 @@
 
 #include <print>
 
-static void test_linear_equation_gauss_01() {
+static void test_linear_equation_solver_gauss_01() {
 
     LinearEquationSolverGauss<double> solver;
 
@@ -23,14 +23,14 @@ static void test_linear_equation_gauss_01() {
             { 2.0,  4.0 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_02() {
+static void test_linear_equation_solver_gauss_02() {
 
     LinearEquationSolverGauss<double> solver;
 
@@ -42,14 +42,14 @@ static void test_linear_equation_gauss_02() {
             { -1.0,  1.0,  2.0,  0.0 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_03() {
+static void test_linear_equation_solver_gauss_03() {
 
     // Beispiel aus .pdf
 
@@ -64,14 +64,14 @@ static void test_linear_equation_gauss_03() {
             { 1.0, 0.0, 0.0, 1.0, 5.0 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_04() {
+static void test_linear_equation_solver_gauss_04() {
 
     // aus https://www.mathebibel.de/gauss-algorithmus
 
@@ -85,14 +85,14 @@ static void test_linear_equation_gauss_04() {
             {  1.0,  0.0, -2.0, 3.0 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_05() {
+static void test_linear_equation_solver_gauss_05() {
 
     // Larger example, created by ChatGPT
 
@@ -113,14 +113,14 @@ static void test_linear_equation_gauss_05() {
             {  2.0,   5.0,  -3.0,  -5.0,  2.0, -3.0, -3.0, -5.0,  5.0, -1.0, -51.0 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_06() {
+static void test_linear_equation_solver_gauss_06() {
 
     // Larger example, created by ChatGPT
 
@@ -134,14 +134,14 @@ static void test_linear_equation_gauss_06() {
             { -2, 1, 2, -3 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_10() {
+static void test_linear_equation_solver_gauss_10() {
 
     // Larger example, created by ChatGPT
 
@@ -155,14 +155,14 @@ static void test_linear_equation_gauss_10() {
             { -2, 3,  2, 7 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_20() {
+static void test_linear_equation_solver_gauss_20() {
 
     // Larger example, created by ChatGPT
 
@@ -176,14 +176,14 @@ static void test_linear_equation_gauss_20() {
             { -2,  3,  2,  7 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_03_permutation_vector();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_21() {
+static void test_linear_equation_solver_gauss_21() {
 
     // Larger example, created by ChatGPT
 
@@ -197,14 +197,14 @@ static void test_linear_equation_gauss_21() {
             { -2,  3,  2,  7 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_02_pivot();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_22() {
+static void test_linear_equation_solver_gauss_22() {
 
     // Larger example, created by ChatGPT
 
@@ -218,7 +218,7 @@ static void test_linear_equation_gauss_22() {
             { -2,  3,  2,  7 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_03_permutation_vector();
     const Vector<double>& solution = solver.solution();
@@ -227,7 +227,7 @@ static void test_linear_equation_gauss_22() {
 
 
 
-static void test_linear_equation_gauss_24() {
+static void test_linear_equation_solver_gauss_24() {
 
     // Larger example, created by ChatGPT
 
@@ -241,7 +241,7 @@ static void test_linear_equation_gauss_24() {
             { 3, -1,  2,  4 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_03_permutation_vector();
     const Vector<double>& solution = solver.solution();
@@ -250,7 +250,7 @@ static void test_linear_equation_gauss_24() {
 
 
 
-static void test_linear_equation_gauss_30() {
+static void test_linear_equation_solver_gauss_30() {
 
     // Ronald Mak, p. 273
     LinearEquationSolverGauss<double> solver;
@@ -262,7 +262,7 @@ static void test_linear_equation_gauss_30() {
             {      1, 1, 2 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
@@ -271,7 +271,7 @@ static void test_linear_equation_gauss_30() {
 
 
 
-static void test_linear_equation_gauss_31() {
+static void test_linear_equation_solver_gauss_31() {
 
     // Ronald Mak, p. 269
     LinearEquationSolverGauss<double> solver;
@@ -285,7 +285,7 @@ static void test_linear_equation_gauss_31() {
             { -2,  4, -3, -3, -14 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
@@ -294,7 +294,7 @@ static void test_linear_equation_gauss_31() {
 
 
 
-static void test_linear_equation_gauss_32() {
+static void test_linear_equation_solver_gauss_32() {
 
     // Ronald Mak, p. 269
     LinearEquationSolverGauss<double> solver;
@@ -308,7 +308,7 @@ static void test_linear_equation_gauss_32() {
             { -2,  4, -3, -3, -14 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_02_pivot();
     const Vector<double>& solution = solver.solution();
@@ -316,7 +316,7 @@ static void test_linear_equation_gauss_32() {
 }
 
 
-static void test_linear_equation_gauss_33() {
+static void test_linear_equation_solver_gauss_33() {
 
     // Ronald Mak, p. 269
     LinearEquationSolverGauss<double> solver;
@@ -330,7 +330,7 @@ static void test_linear_equation_gauss_33() {
             { -2,  4, -3, -3, -14 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_03_permutation_vector();
     const Vector<double>& solution = solver.solution();
@@ -339,7 +339,7 @@ static void test_linear_equation_gauss_33() {
 
 
 
-static void test_linear_equation_gauss_40() {
+static void test_linear_equation_solver_gauss_40() {
 
     // Larger example, created by ChatGPT
 
@@ -360,14 +360,14 @@ static void test_linear_equation_gauss_40() {
             { 2,   5,  -3,  -5,  2, -3, -3, -5,  5, -1, -51 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_01_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_41() {
+static void test_linear_equation_solver_gauss_41() {
 
     // Larger example, created by ChatGPT
 
@@ -388,14 +388,14 @@ static void test_linear_equation_gauss_41() {
             { 2,   5,  -3,  -5,  2, -3, -3, -5,  5, -1, -51 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_02_pivot();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_42() {
+static void test_linear_equation_solver_gauss_42() {
 
     // Larger example, created by ChatGPT
 
@@ -416,7 +416,7 @@ static void test_linear_equation_gauss_42() {
             { 2,   5,  -3,  -5,  2, -3, -3, -5,  5, -1, -51 }
         }
     );
-    solver.print();
+    std::println("{}", solver);
 
     solver.solve_03_permutation_vector();
     const Vector<double>& solution = solver.solution();
@@ -424,7 +424,7 @@ static void test_linear_equation_gauss_42() {
 }
 
 
-static void test_linear_equation_gauss_51() {
+static void test_linear_equation_solver_gauss_51() {
 
     // Ronald Mak, p. 269
     LinearEquationSolverGauss<double> solver;
@@ -439,7 +439,7 @@ static void test_linear_equation_gauss_51() {
     );
 
     std::println("Solving Equation:");
-    solver.print();
+    std::println("{}", solver);
 
     solver.eliminateForward();
 
@@ -448,7 +448,7 @@ static void test_linear_equation_gauss_51() {
     std::println("{}", solution);
 }
 
-static void test_linear_equation_gauss_52() {
+static void test_linear_equation_solver_gauss_52() {
 
     // aus https://www.youtube.com/watch?v=vaahX3Wdxu8
 
@@ -464,7 +464,7 @@ static void test_linear_equation_gauss_52() {
     );
 
     std::println("Solving Equation:");
-    solver.print();
+    std::println("{}", solver);
 
     Vector<double> row1{  2.0,  3.0, -1.0, -9.0 };
     Vector<double> row2{  1.0, -2.0,  1.0,  9.0 };
@@ -496,7 +496,7 @@ static void test_linear_equation_gauss_52() {
     // verification of result:
 }
 
-static void test_linear_equation_gauss_53() {
+static void test_linear_equation_solver_gauss_53() {
 
     // Ronald Mak, p. 269
 
@@ -513,7 +513,8 @@ static void test_linear_equation_gauss_53() {
     );
 
     std::println("Solving Equation:");
-    solver.print();
+    std::println("{}", solver);
+    std::println();
 
     // ---------------------------------------------
     // ---------------------------------------------
@@ -598,38 +599,38 @@ static void test_linear_equation_gauss_53() {
     Matrix<double> result{ 4, 1 };
     result = matrix.mul(vector);
 
-    result.print();
+    std::println("{}", result);
 }
 
 
-void test_linear_equation()
+void test_linear_equation_solver_gauss()
 {
-    test_linear_equation_gauss_01();           // { 2 }
-    test_linear_equation_gauss_02();         // { 1,     -3,  2 }
-    test_linear_equation_gauss_03();         // { 4,  2,  0,  1}
-    test_linear_equation_gauss_04();         // { 2,  1,   -0.5 }
-    test_linear_equation_gauss_05();         // {  1,  2,  3,  4,  5,  6,  7,  8,  9, 10 }
-    test_linear_equation_gauss_06();             //  { 2, 3, -1}
+    //test_linear_equation_solver_gauss_01();           // { 2 }
+    //test_linear_equation_solver_gauss_02();         // { 1,     -3,  2 }
+    //test_linear_equation_solver_gauss_03();         // { 4,  2,  0,  1}
+    //test_linear_equation_solver_gauss_04();         // { 2,  1,   -0.5 }
+    //test_linear_equation_solver_gauss_05();         // {  1,  2,  3,  4,  5,  6,  7,  8,  9, 10 }
+    //test_linear_equation_solver_gauss_06();             //  { 2, 3, -1}
 
-    test_linear_equation_gauss_10();           // { 2.875,   1.25,    4.5 }
-    
-    test_linear_equation_gauss_20();           // { 2.875,   1.25,    4.5 }  // simple
-    test_linear_equation_gauss_21();          // { 2.875,   1.25,    4.5 }  // pivot
-    test_linear_equation_gauss_22();            // { 2.875,   1.25,    4.5 }  // permutation vector
+    //test_linear_equation_solver_gauss_10();           // { 2.875,   1.25,    4.5 }
+    //
+    //test_linear_equation_solver_gauss_20();           // { 2.875,   1.25,    4.5 }  // simple
+    //test_linear_equation_solver_gauss_21();          // { 2.875,   1.25,    4.5 }  // pivot
+    //test_linear_equation_solver_gauss_22();            // { 2.875,   1.25,    4.5 }  // permutation vector
 
-    //Ronald Mak
-    test_linear_equation_gauss_30();
-    test_linear_equation_gauss_31();
-    test_linear_equation_gauss_32();
-    test_linear_equation_gauss_33();
+    ////Ronald Mak
+    //test_linear_equation_solver_gauss_30();
+    //test_linear_equation_solver_gauss_31();
+    //test_linear_equation_solver_gauss_32();
+    //test_linear_equation_solver_gauss_33();
 
-    test_linear_equation_gauss_40();   // korrekt
-    test_linear_equation_gauss_41();   // korrekt
-    test_linear_equation_gauss_42();   // korrekt
+    //test_linear_equation_solver_gauss_40();   // korrekt
+    //test_linear_equation_solver_gauss_41();   // korrekt
+    //test_linear_equation_solver_gauss_42();   // korrekt
 
-    test_linear_equation_gauss_51();
-    test_linear_equation_gauss_52();
-    test_linear_equation_gauss_53();
+    //test_linear_equation_solver_gauss_51();
+    //test_linear_equation_solver_gauss_52();
+    test_linear_equation_solver_gauss_53();   // Ronald Mak, korrigierte Matrix
 }
 
 // =====================================================================================

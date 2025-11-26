@@ -71,7 +71,7 @@ void LinearEquationSolverLUDecomposition<T>::setRightHandSide(std::initializer_l
         throw std::invalid_argument("Wrong number of values!");
     }
 
-    m_rhs = Vector<T>{ m_dimension, rhs };
+    m_rhs = Vector<T>{ rhs };
 }
 
 // NEU
@@ -85,6 +85,21 @@ void LinearEquationSolverLUDecomposition<T>::setRightHandSide(const Vector<T>& r
 
     m_rhs = rhs;
 }
+
+template <typename T>
+    requires FloatNumber<T>
+const Matrix<T>& LinearEquationSolverLUDecomposition<T>::getEquation() const
+{
+    return m_matrix;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+const Vector<T>& LinearEquationSolverLUDecomposition<T>::getRightHandSide() const
+{
+    return m_rhs;
+}
+
 
 template <typename T>
     requires FloatNumber<T>
@@ -108,10 +123,10 @@ void LinearEquationSolverLUDecomposition<T>::solve()
     const Matrix<T>& upper = lu.getUpperMatrix();
 
     std::println("TEST: Lower: ");
-    lower.print();
+    std::println("{}", lower);
 
     std::println("TEST: Upper: ");
-    upper.print();
+    std::println("{}", upper);
 
     Vector<T> result(m_dimension);
 
@@ -156,22 +171,6 @@ Vector<T> LinearEquationSolverLUDecomposition<T>::backwardSubstitution(const Mat
     }
 
     return x;
-}
-
-template <typename T>
-    requires FloatNumber<T>
-void LinearEquationSolverLUDecomposition<T>::print() const
-{
-    // Hmmm, diese Ausgabe wird eigentlich 1:1 von der Klasse Matrix bereits gestellt ...........
-
-
-    for (size_t row{}; row != m_dimension; ++row) {
-        for (size_t col{}; col != m_dimension; ++col) {
-            std::print("{:10.4g}", m_matrix.at(row, col));
-        }
-        std::println();
-    }
-    std::println();
 }
 
 // =====================================================================================

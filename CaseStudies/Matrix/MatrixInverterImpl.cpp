@@ -8,6 +8,7 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <print>
 
 // getter/setter
 template <typename T>
@@ -52,7 +53,7 @@ void MatrixInverter<T>::invert()
         }
     }
 
-    result.print();
+    std::println("{}", result);
 }
 
 template <typename T>

@@ -212,11 +212,6 @@ Vector<T> Matrix<T>::mul(const Vector<T>& vec) const
 
         T value{};
         for (std::size_t col{}; col != m_cols; ++col) {
-
-            //std::println(">> {}", at(row, col));
-            //std::println(">> {}", vec[col]);
-            //std::println();
-
             value += at(row, col) * vec[col];
         }
         result[row] = value;
@@ -311,22 +306,6 @@ Matrix<T>::const_iterator Matrix<T>::begin() const noexcept { return m_values.be
 template <typename T>
     requires FloatNumber<T>
 Matrix<T>::const_iterator Matrix<T>::end() const noexcept { return m_values.end(); }
-
-
-template <typename T>
-    requires FloatNumber<T>
-void Matrix<T>::print() const
-{
-    for (std::size_t col{}; auto elem : m_values) {
-
-        std::print("{:6.4g}", elem);
-
-        ++col;
-        if (col % m_cols == 0) {
-            std::println();
-        }
-    }
-}
 
 template <typename T>
     requires FloatNumber<T>

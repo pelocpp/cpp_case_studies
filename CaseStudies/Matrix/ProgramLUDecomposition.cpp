@@ -11,7 +11,7 @@ static void test_lu_decomposition_01()
     // aus ChatGPT - Ergebnis stimmmt
     Matrix<double> matrix{ 2, 2 };
     matrix.elements({ 2.0, 3.0, 4.0, 7.0 });
-    matrix.print();
+    std::println("{}", matrix);
     std::println();
 
     LU_Decomposition<double> lu{ matrix };
@@ -30,14 +30,14 @@ static void test_lu_decomposition_01()
     // verify result
     const Matrix<double> lower = lu.getLowerMatrix();
     const Matrix<double> upper = lu.getUpperMatrix();
-    Matrix<double> prod = lower * upper;
+    Matrix<double> product = lower * upper;
 
     // Hmm, das habe ich nicht ???????????
     //if (matrix != prod) {
     //    std::println();
     //}
 
-    prod.print();
+    std::println("{}", product);
     std::println();
 }
 
@@ -46,7 +46,7 @@ static void test_lu_decomposition_02()
     // aus ChatGPT - Ergebnis stimmmt
     Matrix<double> matrix{ 3, 3 };
     matrix.elements({ 2.0, 1.0, 1.0, 4.0, -6.0, 0.0, -2.0, 7.0, 2.0 });
-    matrix.print();
+    std::println("{}", matrix);
     std::println();
 
     LU_Decomposition<double> lu{ matrix };
@@ -65,14 +65,14 @@ static void test_lu_decomposition_02()
     // verify result
     const Matrix<double> lower = lu.getLowerMatrix();
     const Matrix<double> upper = lu.getUpperMatrix();
-    Matrix<double> prod = lower * upper;
+    Matrix<double> product = lower * upper;
 
     // Hmm, das habe ich nicht ???????????
     //if (matrix != prod) {
     //    std::println();
     //}
 
-    prod.print();
+    std::println("{}", product);
     std::println();
 }
 
@@ -88,7 +88,7 @@ static void test_lu_decomposition_03()
         {  5, -3,  4,  1 },
         { -2,  4, -3, -5 } 
     });
-    matrix.print();
+    std::println("{}", matrix);
     std::println();
 
     LU_Decomposition<double> lu{ matrix };
@@ -107,14 +107,14 @@ static void test_lu_decomposition_03()
     // verify result
     const Matrix<double> lower = lu.getLowerMatrix();
     const Matrix<double> upper = lu.getUpperMatrix();
-    Matrix<double> prod = lower * upper;
+    Matrix<double> product = lower * upper;
 
     // Hmm, das habe ich nicht ???????????
     //if (matrix != prod) {
     //    std::println();
     //}
 
-    prod.print();
+    std::println("{}", product);
     std::println();
 }
 
@@ -124,7 +124,7 @@ static void test_lu_decomposition_10()
     // aus ChatGPT - dieses Beispiel verwende ich bei der Invertierung von Matrizen
     Matrix<double> matrix{ 3, 3 };
     matrix.elements({ { 2.0, 1.0, 1.0 } , { 4.0, -6.0, 0.0 } , { -2.0, 7.0, 2.0 } });
-    matrix.print();
+    std::println("{}", matrix);
     std::println();
 
     LU_Decomposition<double> lu{ matrix };
@@ -143,8 +143,8 @@ static void test_lu_decomposition_10()
     // verify result
     const Matrix<double> lower = lu.getLowerMatrix();
     const Matrix<double> upper = lu.getUpperMatrix();
-    Matrix<double> prod = lower * upper;
-    prod.print();
+    Matrix<double> product = lower * upper;
+    std::println("{}", product);
     std::println();
 }
 
@@ -153,7 +153,7 @@ static void test_lu_decomposition_11()
     // aus ChatGPT - dieses Beispiel verwende ich bei der Lösung eines linearen Gleichungssystems
     Matrix<double> matrix{ 3, 3 };
     matrix.elements({ { 2.0, 3.0, 1.0 } , { 4.0, 7.0, -1.0 } , { -2.0, 4.0, 5.0 } });
-    matrix.print();
+    std::println("{}", matrix);
     std::println();
 
     LU_Decomposition<double> lu{ matrix };
@@ -172,7 +172,7 @@ static void test_lu_decomposition_11()
     //// verify result
     //const Matrix<double> lower = lu.getLowerMatrix();
     //const Matrix<double> upper = lu.getUpperMatrix();
-    //Matrix<double> prod = lower * upper;
+    //Matrix<double> product = lower * upper;
     //prod.print();
     //std::println();
 }
@@ -188,7 +188,7 @@ static void test_lu_decomposition_20()
         {  5.0, -3.0,  4.0,  1.0  },
         { -2.0,  4.0, -3.0, -5.0  }
     });
-    matrix.print();
+    std::println("{}", matrix);
     std::println();
 
     LU_Decomposition<double> lu{ matrix };
@@ -207,8 +207,8 @@ static void test_lu_decomposition_20()
     // verify result
     const Matrix<double> lower = lu.getLowerMatrix();
     const Matrix<double> upper = lu.getUpperMatrix();
-    Matrix<double> prod = lower * upper;
-    prod.print();
+    Matrix<double> product = lower * upper;
+    std::println("{}", product);
     std::println();
 }
 

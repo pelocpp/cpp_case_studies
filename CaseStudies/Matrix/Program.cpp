@@ -98,25 +98,33 @@
 // Ich hätte gerne ein Beispiel, dass die Lösung Schritt für Schritt aufzeigt.
 // Exemplarisch sind auch Anweisungen in C++ erwünscht.
 
+
+// To be Done:
+// Habe jetzt alle printer in den Includes nach dem Inclusion Modell
+// Hmm, müsste man das auch nicht rausziehen ................
+// Sollte ich eher am Ende machen, sonst wird es unübersichtlich ....
+
+
+
 #include <exception>
 #include <print>
 
 void test_vector();
 void test_matrix();
 void test_bad_matrix();
-void test_linear_equation();
+
+void test_linear_equation_solver_gauss();
+void test_linear_equation_solver_lu_decomposition();
+
 void test_determinant();
 void test_lu_decomposition();
 void test_invertable_matrix();
-void test_linear_equation_lu_decomposition();
 
 int main()
 {   
     try
     {
-      //  test_lu_decomposition();
-
-        test_linear_equation_lu_decomposition();
+        test_linear_equation_solver_lu_decomposition();
     }
     catch (std::invalid_argument const& ex)
     {

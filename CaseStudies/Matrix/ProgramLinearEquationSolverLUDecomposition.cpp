@@ -7,7 +7,7 @@
 
 #include <print>
 
-static void test_linear_equation_lu_decomposition_01()
+static void test_linear_equation_solver_lu_decomposition_01()
 {
     // aus https://www.mathebibel.de/gauss-algorithmus
 
@@ -24,9 +24,9 @@ static void test_linear_equation_lu_decomposition_01()
 
     Vector<double> rhs{ 1.0, 2.0, 3.0 };
     solver.setRightHandSide(rhs);
-    solver.print();
-    solver.solve();
+    std::println("{}", solver);
 
+    solver.solve();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 
@@ -41,7 +41,7 @@ static void test_linear_equation_lu_decomposition_01()
     //}
 }
 
-static void test_linear_equation_lu_decomposition_02()
+static void test_linear_equation_solver_lu_decomposition_02()
 {
     // aus Buch Ronald Mak
 
@@ -57,14 +57,15 @@ static void test_linear_equation_lu_decomposition_02()
     );
 
     solver.setRightHandSide({ -18.0, 19.0, 22.0, -14.0 });
-    solver.print();
+    std::println("{}", solver);
+
     solver.solve();
 
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
-static void test_linear_equation_lu_decomposition_03()
+static void test_linear_equation_solver_lu_decomposition_03()
 {
     // aus Internet // 10*10 Gleichung
 
@@ -86,19 +87,19 @@ static void test_linear_equation_lu_decomposition_03()
     );
 
     solver.setRightHandSide({ 84, -50, 14, -30, 71, -86, -38, 9, 32, -51 });
-    solver.print();
-    solver.solve();
+    std::println("{}", solver);
 
+    solver.solve();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
 
 
-void test_linear_equation_lu_decomposition()
+void test_linear_equation_solver_lu_decomposition()
 {
-    test_linear_equation_lu_decomposition_01();     // 
-    //test_linear_equation_lu_decomposition_02();       //  Ronald Mak // geht
-    // test_linear_equation_lu_decomposition_03();    // Geht  
+    test_linear_equation_solver_lu_decomposition_01();     // 
+    test_linear_equation_solver_lu_decomposition_02();     //  Ronald Mak // geht
+    test_linear_equation_solver_lu_decomposition_03();     // Geht  
 }
 
 // =====================================================================================

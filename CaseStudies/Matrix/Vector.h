@@ -61,7 +61,7 @@ public:
 
 namespace std
 {
-    // formatter for class Color
+    // formatter for class Vector<T>
     template<typename T>
     struct std::formatter<Vector<T>> : std::formatter<std::string_view>
     {

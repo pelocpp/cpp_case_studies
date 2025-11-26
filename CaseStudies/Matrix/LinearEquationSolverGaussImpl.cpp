@@ -42,6 +42,14 @@ void LinearEquationSolverGauss<T>::setEquation(
 
 template <typename T>
     requires FloatNumber<T>
+const Matrix<T>& LinearEquationSolverGauss<T>::getEquation() const
+{
+    return m_matrix;
+}
+
+
+template <typename T>
+    requires FloatNumber<T>
 const Vector<T>& LinearEquationSolverGauss<T>::solution() const
 {
     return m_solution; 
@@ -72,7 +80,7 @@ bool LinearEquationSolverGauss<T>::eliminateForward()
             m_matrix.subtractRow(factor, k, rowBelow);
 
             std::println("Transformed row {}:", rowBelow);
-            print();
+            std::println("{}", *this);
         }
     }
 
@@ -302,19 +310,19 @@ bool LinearEquationSolverGauss<T>::solve_03_permutation_vector()
     return true;
 }
 
-template <typename T>
-    requires FloatNumber<T>
-void LinearEquationSolverGauss<T>::print() const
-{
-    for (size_t row{}; row != m_dim; ++row) {
-        size_t col{};
-        for (; col != m_dim; ++col) {
-            std::print("{:10.4g}", m_matrix.at(row, col));
-        }
-        std::println(" | {:10.4g}", m_matrix.at(row, col));
-    }
-    std::println();
-}
+//template <typename T>
+//    requires FloatNumber<T>
+//void LinearEquationSolverGauss<T>::print() const
+//{
+//    for (size_t row{}; row != m_dim; ++row) {
+//        size_t col{};
+//        for (; col != m_dim; ++col) {
+//            std::print("{:10.4g}", m_matrix.at(row, col));
+//        }
+//        std::println(" | {:10.4g}", m_matrix.at(row, col));
+//    }
+//    std::println();
+//}
 
 // =====================================================================================
 

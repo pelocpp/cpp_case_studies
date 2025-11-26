@@ -15,7 +15,7 @@ template <typename T>
     requires FloatNumber<T>
 class Matrix
 {
-protected:
+private:
     std::size_t    m_rows;
     std::size_t    m_cols;
     std::vector<T> m_values;
@@ -59,9 +59,6 @@ public:
     Matrix    sub       (const Matrix& other) const;
     Matrix    mul       (const Matrix& other) const;
     Vector<T> mul       (const Vector<T>& other) const;
-    void      print     () const;
-
-    // Fehlt: Methode fill ... mit einem konstanten Wert vorbelegen ....
 
     // operators
     Matrix operator+    (const Matrix& other) const;
@@ -79,10 +76,7 @@ public:
     const_iterator begin() const noexcept;
     const_iterator end() const noexcept;
 
-private:
-   // void mulRow         (std::size_t row, T value);   // Hmmm, wozu habe ich diese Methode ....
-
-public:
+public:  // private or public
     // helper methods for forward elimination
     void swapRows(std::size_t row1, std::size_t row2);
     void subtractRow(T factor, std::size_t source, std::size_t target);
