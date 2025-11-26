@@ -1,10 +1,10 @@
 // =====================================================================================
-// MatrixInverterImpl.cpp
+// MatrixInversionImpl.cpp
 // =====================================================================================
 
 #include "Vector.h"
 #include "LU_Decomposition.h"
-#include "MatrixInverter.h"
+#include "MatrixInversion.h"
 
 #include <cstddef>
 #include <stdexcept>
@@ -13,7 +13,7 @@
 // getter/setter
 template <typename T>
     requires FloatNumber<T>
-void MatrixInverter<T>::set(const Matrix<T> matrix)
+void MatrixInversion<T>::set(const Matrix<T> matrix)
 {
     if (matrix.rows() != matrix.cols()) {
         throw std::invalid_argument("The matrix must be square!");
@@ -25,7 +25,7 @@ void MatrixInverter<T>::set(const Matrix<T> matrix)
 // public interface
 template <typename T>
     requires FloatNumber<T>
-void MatrixInverter<T>::invert()
+void MatrixInversion<T>::invert()
 {
     // need at first a LU decomposition of the matrix to invert
     LU_Decomposition<T> lu{ m_matrix };
@@ -58,7 +58,7 @@ void MatrixInverter<T>::invert()
 
 template <typename T>
     requires FloatNumber<T>
-Vector<T> MatrixInverter<T>::forwardSubstitution(const Matrix<T> lower, const Vector<T>& b) const
+Vector<T> MatrixInversion<T>::forwardSubstitution(const Matrix<T> lower, const Vector<T>& b) const
 {
     Vector<T> y(b.dimension());
 
@@ -76,7 +76,7 @@ Vector<T> MatrixInverter<T>::forwardSubstitution(const Matrix<T> lower, const Ve
 
 template <typename T>
     requires FloatNumber<T>
-Vector<T> MatrixInverter<T>::backwardSubstitution(const Matrix<T> upper, const Vector<T>& y) const
+Vector<T> MatrixInversion<T>::backwardSubstitution(const Matrix<T> upper, const Vector<T>& y) const
 {
     std::size_t dimension{ y.dimension() };
 
@@ -98,9 +98,9 @@ Vector<T> MatrixInverter<T>::backwardSubstitution(const Matrix<T> upper, const V
 // =====================================================================================
 
 // explicit template instantiations
-template class MatrixInverter<float>;
-template class MatrixInverter<double>;
-template class MatrixInverter<long double>;
+template class MatrixInversion<float>;
+template class MatrixInversion<double>;
+template class MatrixInversion<long double>;
 
 // =====================================================================================
 // End-of-File

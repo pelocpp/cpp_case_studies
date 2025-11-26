@@ -1,5 +1,5 @@
 // =====================================================================================
-// MatrixInverter.h
+// MatrixInversion.h
 // =====================================================================================
 
 #pragma once
@@ -11,11 +11,11 @@
 
 template <typename T>
     requires FloatNumber<T>
-class MatrixInverter
+class MatrixInversion
 {
 public:
     // c'tor(s)
-    MatrixInverter() = default;
+    MatrixInversion() = default;
 
 private:
     Matrix<T> m_matrix;            // matrix to invert
