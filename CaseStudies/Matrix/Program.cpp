@@ -38,30 +38,6 @@
 
 
 
-// Diesselbe Frage für Vektoren:
-
-// https://chatgpt.com/share/69143e18-d640-8007-8563-ac357f816ea1
-
-// Aber ich könnte / sollte einen Vektor kapseln:
-
-//class Vector {
-//    std::vector<double> data_;
-//public:
-//    // size known at runtime
-//    explicit Vector(std::size_t n) : data_(n) {}
-//    double& operator[](std::size_t i) { return data_[i]; }
-//    const double& operator[](std::size_t i) const { return data_[i]; }
-//    std::size_t size() const { return data_.size(); }
-//
-//    // math ops
-//    Vector& operator+=(const Vector& rhs);
-//    Vector& operator*=(double scalar);
-//    // etc.
-//};
-
-
-
-
 // TODO
 
 // Es fehlen bei den Vektor und Matrix-Klassen die Vergleichsoperatoren == und !=
@@ -104,7 +80,7 @@
 // Hmm, müsste man das auch nicht rausziehen ................
 // Sollte ich eher am Ende machen, sonst wird es unübersichtlich ....
 
-
+// =====================================================================================
 
 #include <exception>
 #include <print>
@@ -124,7 +100,7 @@ int main()
 {   
     try
     {
-        test_linear_equation_solver_lu_decomposition();
+        test_lu_decomposition();
     }
     catch (std::invalid_argument const& ex)
     {

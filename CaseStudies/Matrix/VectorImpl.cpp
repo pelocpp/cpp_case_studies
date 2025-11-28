@@ -6,10 +6,8 @@
 
 #include <algorithm>
 #include <cmath>
-//#include <format> 
 #include <print>
 #include <stdexcept>
-//#include <string_view>
 
 // =====================================================================================
 // c'tors
@@ -20,23 +18,6 @@ Vector<T>::Vector(std::size_t dimension)
 {
     m_values.resize(dimension);
 }
-
-//template <typename T>
-//    requires FloatNumber<T>
-//Vector<T>::Vector(std::size_t dimension, std::initializer_list<T> values)
-//{
-//    if (dimension != values.size()) {
-//        throw std::invalid_argument("Wrong number of values!");
-//    }
-//
-//    m_values.resize(dimension);
-//
-//    std::copy(
-//        values.begin(),
-//        values.end(),
-//        m_values.begin()
-//    );
-//}
 
 template <typename T>
     requires FloatNumber<T>
@@ -250,21 +231,6 @@ Vector<T> Vector<T>::mul(T scalar) const
 
     return result;
 }
-
-//template <typename T>
-//    requires FloatNumber<T>
-//void Vector<T>::print() const
-//{
-//    std::print("{{");
-//    for (int k{}; auto elem : m_values) {
-//        std::print("{:6.4g}", elem);
-//        if (k != dimension() - 1) {
-//            std::print(", ");
-//            ++k;
-//        }
-//    }
-//    std::println(" }}");
-//}
 
 // =====================================================================================
 

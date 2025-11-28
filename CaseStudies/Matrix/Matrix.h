@@ -22,18 +22,18 @@ private:
 
 public:
     // follow some of the conventions of a C++ container
-    using value_type = T;
-    using iterator = typename std::vector<T>::iterator;
+    using value_type     = T;
+    using iterator       = typename std::vector<T>::iterator;
     using const_iterator = typename std::vector<T>::const_iterator;
 
 public:
     // c'tors
-    Matrix();
-    Matrix(std::size_t rows, std::size_t cols);
+    Matrix               ();
+    Matrix               (std::size_t rows, std::size_t cols);
 
     // getter/setter   
-    std::size_t rows    () const noexcept;
-    std::size_t cols    () const noexcept;
+    std::size_t rows     () const noexcept;
+    std::size_t cols     () const noexcept;
 
     // TO BE DONE: Hier die Elemente vorne mit hin
     //void elements(std::size_t rows, std::size_t cols, std::initializer_list<T> values);
@@ -43,32 +43,37 @@ public:
     // Matrix mal Vector = Vector
     // Zum Beispiel zur Überprüfung von Lineren Gleichungssystemen: = Produkt von Matrix und Vektor
 
-    void elements       (std::initializer_list<T> values);
-    void elements       (std::initializer_list<std::initializer_list<T>> values);
+    void elements        (std::initializer_list<T> values);
+    void elements        (std::initializer_list<std::initializer_list<T>> values);
 
     // accessing matrix elements
-    T& operator()       (std::size_t row, std::size_t col);
-    const T& operator() (std::size_t row, std::size_t col) const;
-    T& at               (std::size_t row, std::size_t col);
-    const T& at         (std::size_t row, std::size_t col) const;
+    T& operator()        (std::size_t row, std::size_t col);
+    const T& operator()  (std::size_t row, std::size_t col) const;
+    T& at                (std::size_t row, std::size_t col);
+    const T& at          (std::size_t row, std::size_t col) const;
 
     // public interface
-    void      fill      (T value);
-    Matrix    transpose () const;
-    Matrix    add       (const Matrix& other) const;
-    Matrix    sub       (const Matrix& other) const;
-    Matrix    mul       (const Matrix& other) const;
-    Vector<T> mul       (const Vector<T>& other) const;
+    void      fill       (T value);
+    Matrix    transpose  () const;
+    Matrix    add        (const Matrix& other) const;
+    Matrix    sub        (const Matrix& other) const;
+    Matrix    mul        (const Matrix& other) const;
+    Vector<T> mul        (const Vector<T>& other) const;
 
-    // operators
-    Matrix operator+    (const Matrix& other) const;
-    Matrix operator-    (const Matrix& other) const;
-    Matrix operator*    (const Matrix& other) const;
-    Vector<T> operator* (const Vector<T>& other) const;
+    // arithmetic operators
+    Matrix operator+     (const Matrix& other) const;
+    Matrix operator-     (const Matrix& other) const;
+    Matrix operator*     (const Matrix& other) const;
+    Vector<T> operator*  (const Vector<T>& other) const;
 
-    Matrix& operator+=  (const Matrix& other);
-    Matrix& operator-=  (const Matrix& other);
-    Matrix& operator*=  (const Matrix& other);
+    // arithmetic assignment operators
+    Matrix& operator+=   (const Matrix& other);
+    Matrix& operator-=   (const Matrix& other);
+    Matrix& operator*=   (const Matrix& other);
+
+    // comparison operators
+    bool operator==      (const Matrix& other) const;
+    bool operator!=      (const Matrix& other) const;
 
     // iterator support
     iterator begin() noexcept;

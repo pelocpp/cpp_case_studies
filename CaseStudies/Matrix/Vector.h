@@ -23,7 +23,7 @@ protected:
 
 public:
     // c'tors
-    Vector() = default;
+    Vector                () = default;
     explicit Vector       (std::size_t dimension);
     explicit Vector       (std::initializer_list<T> values);
 
@@ -31,30 +31,32 @@ public:
     std::size_t dimension () const;
     T length              () const;
 
-    // accessing vector elements
-    T& operator[]         (std::size_t index);
-    const T& operator[]   (std::size_t index) const;
-    T& at                 (std::size_t index);
-    const T& at           (std::size_t index) const;
-
-    // operators
-    Vector  operator+     (const Vector& other) const;
-    Vector  operator-     (const Vector& other) const;
-    Vector& operator+=    (const Vector& other);
-    Vector& operator-=    (const Vector& other);
-
-    Vector  operator*     (T scalar) const;
-    T operator*           (const Vector& other) const;
-
-    bool operator==       (const Vector& other) const;
-    bool operator!=       (const Vector& other) const;
-    
     // public interface
     void   fill           (T value);
     Vector normalize      () const;
     Vector add            (const Vector& other) const;
     Vector sub            (const Vector& other) const;
     Vector mul            (T scalar) const;
+
+    // accessing vector elements
+    T& operator[]         (std::size_t index);
+    const T& operator[]   (std::size_t index) const;
+    T& at                 (std::size_t index);
+    const T& at           (std::size_t index) const;
+
+    // arithmetic operators
+    Vector  operator+     (const Vector& other) const;
+    Vector  operator-     (const Vector& other) const;
+    Vector  operator*     (T scalar) const;
+    T       operator*     (const Vector& other) const;
+
+    // arithmetic assignment operators
+    Vector& operator+=    (const Vector& other);
+    Vector& operator-=    (const Vector& other);
+
+    // comparison operators
+    bool operator==       (const Vector& other) const;
+    bool operator!=       (const Vector& other) const;
 };
 
 // =====================================================================================

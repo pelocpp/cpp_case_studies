@@ -94,6 +94,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="NotizzettelMatrix.txt.txt" />
+    <Text Include="NotizzettelMatrix.txt" />
   </ItemGroup>
 </Project>

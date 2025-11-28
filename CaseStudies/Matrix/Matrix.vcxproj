@@ -154,7 +154,7 @@
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="NotizzettelMatrix.txt.txt" />
+    <Text Include="NotizzettelMatrix.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

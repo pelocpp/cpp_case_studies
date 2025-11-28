@@ -212,6 +212,43 @@ static void test_lu_decomposition_20()
     std::println();
 }
 
+static void test_lu_decomposition_30()
+{
+    // gefunden in
+    // https://www.max-academy.de/contentPlayer/631a4c19593a5c00653096cc/5ecfa05611a83100658d0b25
+
+    Matrix<double> matrix{ 4, 4 };
+    matrix.elements(
+        {
+            { 1.0, 1.0, 3.0, 2.0 },
+            { 2.0, 2.0, 0.0, -1.0 },
+            { 4.0, 0.0, 3.0, 2.0 },
+            { 0.0, 1.0, 2.0, 0.0 }
+        }
+    );
+    std::println("{}", matrix);
+    std::println();
+
+    LU_Decomposition<double> lu{ matrix };
+
+    lu.decompose();
+
+    //lu.printMatrix();
+    //std::println();
+
+    lu.printLowerTriangularMatrix();
+    std::println();
+
+    lu.printUpperTriangularMatrix();
+    std::println();
+
+    // verify result
+    const Matrix<double> lower = lu.getLowerMatrix();
+    const Matrix<double> upper = lu.getUpperMatrix();
+    Matrix<double> product = lower * upper;
+    std::println("{}", product);
+    std::println();
+}
 
 void test_lu_decomposition()
 {
@@ -222,8 +259,11 @@ void test_lu_decomposition()
     //test_lu_decomposition_10();
     //test_lu_decomposition_11();
 
-    test_lu_decomposition_20();
+    //test_lu_decomposition_20();
+
+    test_lu_decomposition_30();
 }
+
 
 // =====================================================================================
 // End-of-File

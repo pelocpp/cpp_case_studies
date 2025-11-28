@@ -34,6 +34,11 @@ void MatrixInversion<T>::invert()
     const Matrix<T>& lower = lu.getLowerMatrix();
     const Matrix<T>& upper = lu.getUpperMatrix();
 
+    // ==========================================
+    std::println("Lower: {}", lower);
+    std::println("Upper: {}", upper);
+    // ==========================================
+
     std::size_t n = m_matrix.rows();  // count of rows (or cols)
     Matrix<T> result{ n , n };   
 

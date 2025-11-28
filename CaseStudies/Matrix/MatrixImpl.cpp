@@ -274,6 +274,21 @@ Matrix<T>& Matrix<T>::operator*= (const Matrix& other)
     return *this;
 }
 
+// comparison operators
+template <typename T>
+    requires FloatNumber<T>
+bool Matrix<T>::operator== (const Matrix& other) const
+{
+    return m_values == other.m_values;
+}
+
+template <typename T>
+    requires FloatNumber<T>
+bool Matrix<T>::operator!= (const Matrix& other) const
+{
+    return !(*this == other);
+}
+
 template <typename T>
     requires FloatNumber<T>
 void Matrix<T>::swapRows(std::size_t row1, std::size_t row2)
