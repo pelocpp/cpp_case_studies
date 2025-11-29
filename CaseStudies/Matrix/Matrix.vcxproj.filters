@@ -57,7 +57,7 @@
     <ClCompile Include="MatrixInversionImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LU_DecompositionImpl.cpp">
+    <ClCompile Include="LUDecompositionImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ProgramLUDecomposition.cpp">
@@ -89,7 +89,7 @@
     <ClInclude Include="Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LU_Decomposition.h">
+    <ClInclude Include="LUDecomposition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

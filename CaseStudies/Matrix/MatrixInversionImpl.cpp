@@ -3,7 +3,7 @@
 // =====================================================================================
 
 #include "Vector.h"
-#include "LU_Decomposition.h"
+#include "LUDecomposition.h"
 #include "MatrixInversion.h"
 
 #include <cstddef>

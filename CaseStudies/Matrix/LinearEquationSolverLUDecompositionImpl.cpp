@@ -2,15 +2,11 @@
 // LinearEquationSolverLUDecompositionImpl.cpp
 // =====================================================================================
 
-#include "LU_Decomposition.h"
+#include "LUDecomposition.h"
 #include "LinearEquationSolverLUDecomposition.h"
 
-//#include <cmath> 
-//#include <numeric>
 #include <print>
 #include <stdexcept>
-//#include <utility> 
-//#include <vector> 
 
 // =====================================================================================
 // c'tors

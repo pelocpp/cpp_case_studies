@@ -127,7 +127,7 @@
   <ItemGroup>
     <ClCompile Include="LinearEquationSolverLUDecomposition.h" />
     <ClCompile Include="LinearEquationSolverLUDecompositionImpl.cpp" />
-    <ClCompile Include="LU_DecompositionImpl.cpp" />
+    <ClCompile Include="LUDecompositionImpl.cpp" />
     <ClCompile Include="MatrixDeterminant.h" />
     <ClCompile Include="MatrixDeterminantImpl.cpp" />
     <ClCompile Include="FloatNumber.h" />
@@ -148,7 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BadApproachMatrix.h" />
-    <ClInclude Include="LU_Decomposition.h" />
+    <ClInclude Include="LUDecomposition.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="LinearEquationSolverGauss.h" />
     <ClInclude Include="Vector.h" />

@@ -1,8 +1,8 @@
 // =====================================================================================
-// LU_DecompositionImpl.cpp
+// LUDecompositionImpl.cpp
 // =====================================================================================
 
-#include "LU_Decomposition.h"
+#include "LUDecomposition.h"
 
 #include <print>
 

@@ -2,7 +2,7 @@
 // ProgramLUDecomposition.cpp
 // =====================================================================================
 
-#include "LU_Decomposition.h"
+#include "LUDecomposition.h"
 
 #include <print>
 
