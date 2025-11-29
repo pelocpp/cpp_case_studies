@@ -16,7 +16,7 @@ static void test_lu_decomposition_01()
 
     LU_Decomposition<double> lu{ matrix };
 
-    lu.decompose();
+    lu.decompose_simple();
 
     lu.printMatrix();
     std::println();
@@ -51,7 +51,7 @@ static void test_lu_decomposition_02()
 
     LU_Decomposition<double> lu{ matrix };
 
-    lu.decompose();
+    lu.decompose_simple();
 
     lu.printMatrix();
     std::println();
@@ -93,7 +93,7 @@ static void test_lu_decomposition_03()
 
     LU_Decomposition<double> lu{ matrix };
 
-    lu.decompose();
+    lu.decompose_simple();
 
     lu.printMatrix();
     std::println();
@@ -129,7 +129,7 @@ static void test_lu_decomposition_10()
 
     LU_Decomposition<double> lu{ matrix };
 
-    lu.decompose();
+    lu.decompose_simple();
 
     lu.printMatrix();
     std::println();
@@ -158,7 +158,7 @@ static void test_lu_decomposition_11()
 
     LU_Decomposition<double> lu{ matrix };
 
-    lu.decompose();
+    lu.decompose_simple();
 
     //lu.printMatrix();
     //std::println();
@@ -193,7 +193,7 @@ static void test_lu_decomposition_20()
 
     LU_Decomposition<double> lu{ matrix };
 
-    lu.decompose();
+    lu.decompose_simple();
 
     //lu.printMatrix();
     //std::println();
@@ -220,10 +220,10 @@ static void test_lu_decomposition_30()
     Matrix<double> matrix{ 4, 4 };
     matrix.elements(
         {
-            { 1.0, 1.0, 3.0, 2.0 },
-            { 2.0, 2.0, 0.0, -1.0 },
-            { 4.0, 0.0, 3.0, 2.0 },
-            { 0.0, 1.0, 2.0, 0.0 }
+            { 1.0,  1.0,  3.0,  2.0 },
+            { 2.0,  2.0,  0.0, -1.0 },
+            { 4.0,  0.0,  3.0,  2.0 },
+            { 0.0,  1.0,  2.0,  0.0 }
         }
     );
     std::println("{}", matrix);
@@ -231,7 +231,7 @@ static void test_lu_decomposition_30()
 
     LU_Decomposition<double> lu{ matrix };
 
-    lu.decompose();
+    lu.decompose_pivot();
 
     //lu.printMatrix();
     //std::println();

@@ -117,7 +117,7 @@ void LinearEquationSolverLUDecomposition<T>::solve()
 {
     // need at first a LU decomposition of the matrix to invert
     LU_Decomposition<T> lu{ m_matrix };
-    lu.decompose();
+    lu.decompose_simple();
 
     const Matrix<T>& lower = lu.getLowerMatrix();
     const Matrix<T>& upper = lu.getUpperMatrix();
