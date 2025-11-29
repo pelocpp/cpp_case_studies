@@ -12,20 +12,14 @@ template <typename T>
 LU_Decomposition<T>::LU_Decomposition(const Matrix<T> matrix) 
     : m_matrix{ matrix }
 {
-    //m_lower = { m_matrix.rows() * m_matrix.cols() };
-    //m_upper = { m_matrix.rows() * m_matrix.cols() };
-
-    // initialize lower triangular matrix with a unit matrix
-    m_lower = Matrix<T>{ m_matrix.rows(), m_matrix.cols() };
-    //for (std::size_t k{}; k != m_matrix.rows(); ++k) {
-    //    m_lower(k, k) = T{ 1.0 };
-    //}
-    m_lower.unit();
-
     // initialize upper triangular matrix with input matrix
     m_upper = m_matrix;
 
-    // initialize the permutation matrix with a unit matrix
+    // initialize lower triangular matrix with a unit matrix
+    m_lower = Matrix<T>{ m_matrix.rows(), m_matrix.cols() };
+    m_lower.unit();
+
+    // initialize permutation matrix with a unit matrix
     m_perm = Matrix<T>{ m_matrix.rows(), m_matrix.cols() };
     m_perm.unit();
 }
@@ -73,6 +67,7 @@ bool LU_Decomposition<T>::decompose_pivot()
 
         std::size_t pivot{ m_upper.getIndexOfLargestAbsoluteValueInColumn(k, k) };
         if (pivot != k) {
+
             m_upper.swapRows(k, pivot);
             m_perm.swapRows(k, pivot);
 

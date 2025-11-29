@@ -13,7 +13,9 @@
 
 template <typename T>
     requires FloatNumber<T>
-LinearEquationSolverLUDecomposition<T>::LinearEquationSolverLUDecomposition() : m_dimension{} {}
+LinearEquationSolverLUDecomposition<T>::LinearEquationSolverLUDecomposition() 
+    : m_dimension{} 
+{}
 
 template <typename T>
     requires FloatNumber<T>
@@ -35,14 +37,12 @@ template <typename T>
     requires FloatNumber<T>
 void LinearEquationSolverLUDecomposition<T>::setEquation(
     std::initializer_list<std::initializer_list<T>> values
-)
+) 
 {
     m_matrix = Matrix<T>{ m_dimension, m_dimension };
     m_matrix.elements(values);
 }
 
-
-// NEU
 template <typename T>
     requires FloatNumber<T>
 void LinearEquationSolverLUDecomposition<T>::setEquation(const Matrix<T> coefficients)   // Hmmmm , klären den besten Namen für die Koeefizioentenmatix
@@ -70,7 +70,6 @@ void LinearEquationSolverLUDecomposition<T>::setRightHandSide(std::initializer_l
     m_rhs = Vector<T>{ rhs };
 }
 
-// NEU
 template <typename T>
     requires FloatNumber<T>
 void LinearEquationSolverLUDecomposition<T>::setRightHandSide(const Vector<T>& rhs)
@@ -115,19 +114,19 @@ void LinearEquationSolverLUDecomposition<T>::solve_simple()
     LU_Decomposition<T> lu{ m_matrix };
     lu.decompose_simple();
 
-    const Matrix<T>& lower = lu.getLowerMatrix();
-    const Matrix<T>& upper = lu.getUpperMatrix();
+    const Matrix<T>& lower{ lu.getLowerMatrix() };
+    const Matrix<T>& upper{ lu.getUpperMatrix() };
 
-    std::println("TEST: Lower: ");
-    std::println("{}", lower);
+    //std::println("TEST: Lower: ");
+    //std::println("{}", lower);
 
-    std::println("TEST: Upper: ");
-    std::println("{}", upper);
+    //std::println("TEST: Upper: ");
+    //std::println("{}", upper);
 
     Vector<T> result(m_dimension);
 
-    Vector<T> y = forwardSubstitution(lower, m_rhs);   // L * y = b
-    m_solution = backwardSubstitution(upper, y);       // U * x = y
+    Vector<T> y{ forwardSubstitution(lower, m_rhs) };   // L * y = b
+    m_solution = backwardSubstitution(upper, y);        // U * x = y
 }
 
 template <typename T>
@@ -138,16 +137,16 @@ void LinearEquationSolverLUDecomposition<T>::solve_pivot()
     LU_Decomposition<T> lu{ m_matrix };
     lu.decompose_pivot();
 
-    const Matrix<T>& lower = lu.getLowerMatrix();
-    const Matrix<T>& upper = lu.getUpperMatrix();
-    const Matrix<T>& perm = lu.getPermMatrix();
+    const Matrix<T>& lower{ lu.getLowerMatrix() };
+    const Matrix<T>& upper{ lu.getUpperMatrix() };
+    const Matrix<T>& perm{ lu.getPermMatrix() };
 
     Vector<T> result(m_dimension);
 
     // need to apply permutation to right-hand side (Ax = b => PAx = Pb)
-    Vector<T> permutated_rhs = perm * m_rhs;
+    Vector<T> permutated_rhs{ perm * m_rhs };
 
-    Vector<T> y = forwardSubstitution(lower, permutated_rhs);   // L * y = Pb
+    Vector<T> y{ forwardSubstitution(lower, permutated_rhs) };  // L * y = Pb
     m_solution = backwardSubstitution(upper, y);                // U * x = y
 }
 
