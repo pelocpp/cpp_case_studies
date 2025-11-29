@@ -54,6 +54,7 @@ public:
 
     // public interface
     void      fill       (T value);
+    void      unit       ();
     Matrix    transpose  () const;
     Matrix    add        (const Matrix& other) const;
     Matrix    sub        (const Matrix& other) const;
@@ -108,7 +109,7 @@ namespace std
                 for (std::size_t col{}; col != m.cols(); ++col) {
 
                     auto elem = m(row, col);
-                    std::format_to(std::back_inserter(tmp), "{:6.4g}", elem);
+                    std::format_to(std::back_inserter(tmp), "{:8.4g}", elem);
                 }
                 std::format_to(std::back_inserter(tmp), "\n");
             }

@@ -35,6 +35,7 @@ private:
     Matrix<T> m_matrix;             // matrix to decompose
     Matrix<T> m_lower;              // lower triangular matrix
     Matrix<T> m_upper;              // upper triangular matrix
+    Matrix<T> m_perm;               // permutation matrix
 };
 
 // =====================================================================================

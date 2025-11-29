@@ -100,7 +100,7 @@ int main()
 {   
     try
     {
-        test_lu_decomposition();
+        test_matrix();
     }
     catch (std::invalid_argument const& ex)
     {

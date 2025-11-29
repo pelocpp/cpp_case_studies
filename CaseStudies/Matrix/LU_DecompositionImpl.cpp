@@ -17,12 +17,17 @@ LU_Decomposition<T>::LU_Decomposition(const Matrix<T> matrix)
 
     // initialize lower triangular matrix with a unit matrix
     m_lower = Matrix<T>{ m_matrix.rows(), m_matrix.cols() };
-    for (std::size_t k{}; k != m_matrix.rows(); ++k) {
-        m_lower(k, k) = T{ 1.0 };
-    }
+    //for (std::size_t k{}; k != m_matrix.rows(); ++k) {
+    //    m_lower(k, k) = T{ 1.0 };
+    //}
+    m_lower.unit();
 
     // initialize upper triangular matrix with input matrix
     m_upper = m_matrix;
+
+    // initialize the permutation matrix with a unit matrix
+    m_perm = Matrix<T>{ m_matrix.rows(), m_matrix.cols() };
+    m_perm.unit();
 }
 
 // public interface
@@ -33,7 +38,7 @@ bool LU_Decomposition<T>::decompose_simple()
     // create an upper and lower triangular matrix
     for (std::size_t k{}; k != m_matrix.rows() - 1; ++k) {
 
-      //  std::println("Pivot: {}", m_upper.at(k, k));
+        std::println("Pivot: {}", m_upper.at(k, k));
 
         if (m_upper.at(k, k) == 0.0) {
             return false;
@@ -60,104 +65,85 @@ bool LU_Decomposition<T>::decompose_pivot()
     // create an upper and lower triangular matrix
     for (std::size_t k{}; k != m_matrix.rows() - 1; ++k) {
 
-        // create a zero value in column 'k' in all rows beneath
-        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_matrix.rows(); ++rowBelow) {
+        // ==============================================
+        std::println("=================================");
+        std::println("{}", m_upper);
+        std::println("=================================");
+        // ==============================================
 
-            // ============================================
-            std::println("=================================");
-            std::println("{}", m_upper);
-            std::println("=================================");
-            // ============================================
+        T coefficient{ m_upper.at(k, k) };
 
-            T coefficient{ m_upper.at(k, k) };
+        std::println("Coefficient: {}", m_upper.at(k, k));
 
-            std::println("Coefficient: {}", m_upper.at(k, k));
+        if (m_upper.at(k, k) != 0.0) {
 
-            if (coefficient == 0.0) {
+            // create a zero value in column 'k' in all rows beneath
+            for (std::size_t rowBelow{ k + 1 }; rowBelow != m_matrix.rows(); ++rowBelow) {
 
-                // need coefficient unequal zero
-                bool foundCoefficient = false;
-                for (std::size_t below{ k + 1 }; below != m_matrix.rows(); ++rowBelow) {
+                T pivot{ m_upper.at(rowBelow, k) / m_upper.at(k, k) };
+                m_upper.subtractRow(pivot, k, rowBelow);
 
-                    coefficient = m_upper.at(below, k);
-                    if (coefficient != 0.0) {
+                // set pivot element in lower triangular matrix
+                m_lower(rowBelow, k) = pivot;
+            }
+        }
+        else {
 
-                        m_upper.swapRows(k, below);
-                        foundCoefficient = true;
+            // searching for a coefficient being unequal to zero
+            bool foundCoefficient = false;
+            for (std::size_t rowBelow{ k + 1 }; rowBelow != m_matrix.rows(); ++rowBelow) {
 
-                        // ============================================
-                        std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                        std::println("{}", m_upper);
-                        std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                        // ============================================
+                T coefficient{ m_upper.at(rowBelow, k) };
+                if (coefficient != 0.0) {
 
-                        break;
-                    }
-                }
-
-                if (!foundCoefficient) {
-                    return false;
+                    m_upper.swapRows(k, rowBelow);
+                    foundCoefficient = true;
+                    break;
                 }
             }
 
-            T pivot{ m_upper.at(rowBelow, k) / m_upper.at(k, k) };
-            m_upper.subtractRow(pivot, k, rowBelow);
+            if (!foundCoefficient) {
+                return false;
+            }
 
-            // set pivot element in lower triangular matrix
-            m_lower(rowBelow, k) = pivot;
+            // ============================================
+            std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            std::println("{}", m_upper);
+            std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            // ============================================
+
+            // create a zero value in column 'k' in all rows beneath
+            for (std::size_t rowBelow{ k + 1 }; rowBelow != m_matrix.rows(); ++rowBelow) {
+
+                // Neu
+                if (m_upper.at(rowBelow, k) == 0.0) {
+
+                    // set pivot element in lower triangular matrix
+                    m_lower(rowBelow, k) = 0.0;  // stimmt dieser Wert ???????????
+
+                    continue;
+                }
+
+                T pivot{ m_upper.at(rowBelow, k) / m_upper.at(k, k) };
+                m_upper.subtractRow(pivot, k, rowBelow);
+
+                // set pivot element in lower triangular matrix
+                m_lower(rowBelow, k) = pivot;
+            }
         }
-
-
-
-
-
-       
-
-        //if (m_upper.at(k, k) != 0.0) {
-
-        //    // create a zero value in column 'k' in all rows beneath
-        //    for (std::size_t rowBelow{ k + 1 }; rowBelow != m_matrix.rows(); ++rowBelow) {
-
-        //        T pivot{ m_upper.at(rowBelow, k) / m_upper.at(k, k) };
-        //        m_upper.subtractRow(pivot, k, rowBelow);
-
-        //        // set pivot element in lower triangular matrix
-        //        m_lower(rowBelow, k) = pivot;
-        //    }
-        //}
-        //else {
-
-        //    // need coefficient unequal zero
-        //    bool foundCoefficient = false;
-        //    std::size_t rowBelow{ k + 1 };
-        //    for (; rowBelow != m_matrix.rows(); ++rowBelow) {
-
-        //        T coefficient{ m_upper.at(rowBelow, k) };
-        //        if (coefficient != 0.0) {
-
-        //            m_upper.swapRows(k, rowBelow);
-        //            foundCoefficient = true;
-        //            break;
-        //        }
-        //    }
-
-        //    if (!foundCoefficient) {
-        //        return false;
-        //    }
-
-        //    // ============================================
-        //    std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        //    std::println("{}", m_upper);
-        //    std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        //    // ============================================
-
-        //    T pivot{ m_upper.at(rowBelow, k) / m_upper.at(k, k) };
-        //    m_upper.subtractRow(pivot, k, rowBelow);
-
-        //    // set pivot element in lower triangular matrix
-        //    m_lower(rowBelow, k) = pivot;
-        //}
     }
+
+    // ============================================
+    std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    std::println("Upper: {}", m_upper);
+    std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    // ============================================
+
+    // ============================================
+    std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    std::println("Lower: {}", m_lower);
+    std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    // ============================================
 
     return true;
 }

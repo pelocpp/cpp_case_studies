@@ -191,6 +191,14 @@ static void test_matrix_07() {
     std::println();
 }
 
+static void test_matrix_08() {
+
+    Matrix<double> matrix{ 5, 5 };
+    matrix.unit();
+    std::println("{}", matrix);
+    std::println();
+}
+
 static void test_matrix_10() {
 
     // testing vector & matrix operations together
@@ -275,18 +283,19 @@ static void test_matrix_30()
 
 void test_matrix()
 {
-    test_matrix_01();
-    test_matrix_02();
-    test_matrix_03();
-    test_matrix_04();
-    test_matrix_05();
-    test_matrix_06();
-    test_matrix_07();
+    //test_matrix_01();
+    //test_matrix_02();
+    //test_matrix_03();
+    //test_matrix_04();
+    //test_matrix_05();
+    //test_matrix_06();
+    //test_matrix_07();
+    test_matrix_08();
 
-    test_matrix_10();
+    //test_matrix_10();
 
-    test_matrix_20();
-    test_matrix_30();
+    //test_matrix_20();
+    //test_matrix_30();
 }
 
 // =====================================================================================

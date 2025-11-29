@@ -127,6 +127,17 @@ void Matrix<T>::fill(T value)
 
 template <typename T>
     requires FloatNumber<T>
+void Matrix<T>::unit()
+{
+    std::fill(m_values.begin(), m_values.end(), T{});
+
+    for (std::size_t k{}; k != rows(); ++k) {
+        (*this)(k, k) = T{ 1.0 };
+    }
+}
+
+template <typename T>
+    requires FloatNumber<T>
 Matrix<T> Matrix<T>::transpose() const
 {
     Matrix<T> result{ m_cols, m_rows };
