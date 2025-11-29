@@ -4,6 +4,7 @@
 
 #include "Matrix.h"
 
+#include <cmath>
 #include <print>
 #include <span>
 #include <stdexcept>    
@@ -117,6 +118,23 @@ const T& Matrix<T>::operator()(std::size_t row, std::size_t col) const
    return m_values[row * m_cols + col]; // no index check
 }
 
+template <typename T>
+    requires FloatNumber<T>
+std::size_t Matrix<T>::getIndexOfLargestAbsoluteValueInColumn(std::size_t col, std::size_t startRow) const
+{
+    T value{ std::abs(at(startRow, col)) };
+    std::size_t index{ startRow };
+
+    for (std::size_t k{ startRow + 1 }; k != rows(); ++k) {
+        if (std::abs(at(k, col)) > value) {
+            index = k;
+            value = std::abs(at(k, col));
+       }
+    }
+
+    return index;
+}
+
 // public interface
 template <typename T>
     requires FloatNumber<T>
@@ -132,7 +150,7 @@ void Matrix<T>::unit()
     std::fill(m_values.begin(), m_values.end(), T{});
 
     for (std::size_t k{}; k != rows(); ++k) {
-        (*this)(k, k) = T{ 1.0 };
+        at(k, k) = T{ 1.0 };
     }
 }
 

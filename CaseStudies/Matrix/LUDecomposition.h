@@ -22,14 +22,15 @@ public:
     const Matrix<T>& getMatrix      () const;
     const Matrix<T>& getLowerMatrix () const;
     const Matrix<T>& getUpperMatrix () const;
+    const Matrix<T>& getPermMatrix  () const;
 
     // public interface
     bool decompose_simple();
     bool decompose_pivot();
 
-    void printMatrix                () const;
-    void printLowerTriangularMatrix () const;
-    void printUpperTriangularMatrix () const;
+    //void printMatrix                () const;
+    //void printLowerTriangularMatrix () const;
+    //void printUpperTriangularMatrix () const;
 
 private:
     Matrix<T> m_matrix;             // matrix to decompose

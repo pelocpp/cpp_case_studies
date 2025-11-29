@@ -52,6 +52,8 @@ public:
     T& at                (std::size_t row, std::size_t col);
     const T& at          (std::size_t row, std::size_t col) const;
 
+    std::size_t          getIndexOfLargestAbsoluteValueInColumn (std::size_t col, std::size_t start) const;
+
     // public interface
     void      fill       (T value);
     void      unit       ();
@@ -60,6 +62,7 @@ public:
     Matrix    sub        (const Matrix& other) const;
     Matrix    mul        (const Matrix& other) const;
     Vector<T> mul        (const Vector<T>& other) const;
+
 
     // arithmetic operators
     Matrix operator+     (const Matrix& other) const;
