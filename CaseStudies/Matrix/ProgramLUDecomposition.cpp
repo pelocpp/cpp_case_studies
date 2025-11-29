@@ -162,7 +162,11 @@ static void test_lu_decomposition_11()
 {
     // aus ChatGPT - dieses Beispiel verwende ich bei der Lösung eines linearen Gleichungssystems
     Matrix<double> matrix{ 3, 3 };
-    matrix.elements({ { 2.0, 3.0, 1.0 } , { 4.0, 7.0, -1.0 } , { -2.0, 4.0, 5.0 } });
+    matrix.elements({ 
+        {  2.0, 3.0,  1.0 }, 
+        {  4.0, 7.0, -1.0 },
+        { -2.0, 4.0,  5.0 }
+        });
     std::println("{}", matrix);
     std::println();
 
@@ -399,7 +403,7 @@ void test_lu_decomposition()
     //test_lu_decomposition_02();
     //test_lu_decomposition_03();
     //test_lu_decomposition_10();
-    //test_lu_decomposition_11();
+    test_lu_decomposition_11();
     //test_lu_decomposition_20();
 
     //test_lu_decomposition_30();

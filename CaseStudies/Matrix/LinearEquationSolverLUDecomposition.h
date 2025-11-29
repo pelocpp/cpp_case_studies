@@ -39,7 +39,8 @@ public:
     const Vector<T>& solution         () const;
 
     // public interface
-    void solve                        ();
+    void solve_simple                 ();
+    void solve_pivot                  ();
 
 private:
     Vector<T> forwardSubstitution     (const Matrix<T> lower, const Vector<T>& v) const;

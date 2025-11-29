@@ -100,7 +100,7 @@ int main()
 {   
     try
     {
-        test_lu_decomposition();
+        test_linear_equation_solver_lu_decomposition();
     }
     catch (std::invalid_argument const& ex)
     {

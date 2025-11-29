@@ -26,19 +26,19 @@ static void test_linear_equation_solver_lu_decomposition_01()
     solver.setRightHandSide(rhs);
     std::println("{}", solver);
 
-    solver.solve();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 
     // verify solution
     Vector<double> vector = matrix * solution;
 
-    std::println("Right.hand Side: {}", rhs);
+    std::println("Right-Hand Side: {}", rhs);
     std::println("Solution:        {}", solution);
 
-    //if (vector == solution) {
-    //    std::println("Ok.");
-    //}
+    if (vector == rhs) {
+        std::println("Ok.");
+    }
 }
 
 static void test_linear_equation_solver_lu_decomposition_02()
@@ -59,10 +59,20 @@ static void test_linear_equation_solver_lu_decomposition_02()
     solver.setRightHandSide({ -18.0, 19.0, 22.0, -14.0 });
     std::println("{}", solver);
 
-    solver.solve();
+    solver.solve_simple();
 
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
+
+    // verify solution
+    Vector<double> vector = solver.getEquation() * solution;
+
+    std::println("Right-Hand Side: {}", solver.getRightHandSide());
+    std::println("Solution:        {}", solution);
+
+    if (vector == solver.getRightHandSide()) {
+        std::println("Ok.");
+    }
 }
 
 static void test_linear_equation_solver_lu_decomposition_03()
@@ -89,17 +99,135 @@ static void test_linear_equation_solver_lu_decomposition_03()
     solver.setRightHandSide({ 84, -50, 14, -30, 71, -86, -38, 9, 32, -51 });
     std::println("{}", solver);
 
-    solver.solve();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
+
+    // verify solution
+    Vector<double> vector = solver.getEquation() * solution;
+
+    std::println("Right-Hand Side: {}", solver.getRightHandSide());
+    std::println("Solution:        {}", solution);
+
+    if (vector == solver.getRightHandSide()) {
+        std::println("Ok.");
+    }
 }
 
+static void test_linear_equation_solver_lu_decomposition_10()
+{
+    // aus ChatGPT
+
+    LinearEquationSolverLUDecomposition<double> solver{ 3 };
+
+    Matrix<double> matrix{ 3, 3 };
+    matrix.elements
+    ({
+        { 0.0,  2.0, 1.0 },
+        { 1.0,  1.0, 0.0 },
+        { 2.0,  3.0, 4.0 }
+    });
+    solver.setEquation(matrix);
+
+    Vector<double> rhs{ 1.0, 2.0, 3.0 };
+    solver.setRightHandSide(rhs);
+    std::println("{}", solver);
+
+    solver.solve_pivot();
+    const Vector<double>& solution = solver.solution();
+    std::println("{}", solution);
+
+    // verify solution
+    Vector<double> vector = matrix * solution;
+
+    std::println("Right-Hand Side: {}", rhs);
+    std::println("Solution:        {}", solution);
+
+    if (vector == rhs) {
+        std::println("Ok.");
+    }
+}
+
+static void test_linear_equation_solver_lu_decomposition_11()
+{
+    // aus ChatGPT
+
+    LinearEquationSolverLUDecomposition<double> solver{ 3 };
+
+    Matrix<double> matrix{ 3, 3 };
+    matrix.elements
+    ({
+        { 0.0, 1.0, 2.0 },
+        { 0.0, 0.0, 3.0 },
+        { 1.0, 4.0, 5.0 }
+        });
+    solver.setEquation(matrix);
+
+    Vector<double> rhs{ 3.0, 4.0, 5.0 };
+    solver.setRightHandSide(rhs);
+    std::println("{}", solver);
+
+    solver.solve_pivot();
+    const Vector<double>& solution = solver.solution();
+    std::println("{}", solution);
+
+    // verify solution
+    Vector<double> vector = matrix * solution;
+
+    std::println("Right-Hand Side: {}", rhs);
+    std::println("Solution:        {}", solution);
+
+    if (vector == rhs) {
+        std::println("Ok.");
+    }
+}
+
+static void test_linear_equation_solver_lu_decomposition_12()
+{
+    // aus ChatGPT
+
+    LinearEquationSolverLUDecomposition<double> solver{ 4 };
+
+    Matrix<double> matrix{ 4, 4 };
+    matrix.elements
+    ({
+        { 0.0, 2.0, 1.0, 0.0 },
+        { 0.0, 0.0, 3.0, 1.0 },
+        { 1.0, 4.0, 5.0, 2.0 },
+        { 2.0, 0.0, 0.0, 3.0 }
+        });
+    solver.setEquation(matrix);
+
+    Vector<double> rhs{ 3.0, 4.0, 5.0, 6.0 };
+    solver.setRightHandSide(rhs);
+    std::println("{}", solver);
+
+    solver.solve_pivot();
+    const Vector<double>& solution = solver.solution();
+    std::println("Solution:        {}", solution);
+
+    // verify solution
+    Vector<double> vector = matrix * solution;
+
+    std::println("Right-Hand Side: {}", rhs);
+    std::println("Solution:        {}", solution);
+
+    if (vector == rhs) {
+        std::println("Ok.");
+    }
+}
 
 void test_linear_equation_solver_lu_decomposition()
 {
-    test_linear_equation_solver_lu_decomposition_01();     // 
-    test_linear_equation_solver_lu_decomposition_02();     //  Ronald Mak // geht
-    test_linear_equation_solver_lu_decomposition_03();     // Geht  
+    // keine Pivotierung
+    //test_linear_equation_solver_lu_decomposition_01();     // Geht
+    //test_linear_equation_solver_lu_decomposition_02();     // Ronald Mak // geht
+    //test_linear_equation_solver_lu_decomposition_03();     // Geht  
+
+    // mit Pivotierung
+   // test_linear_equation_solver_lu_decomposition_10();     // Geht  // kleine Rundungsfehler
+   // test_linear_equation_solver_lu_decomposition_11();     // Geht  // exaktes Ergebnis 
+    test_linear_equation_solver_lu_decomposition_12();       // Geht  // exaktes Ergebnis 
 }
 
 // =====================================================================================
