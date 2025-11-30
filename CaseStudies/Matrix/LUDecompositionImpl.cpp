@@ -74,11 +74,13 @@ bool LU_Decomposition<T>::decompose_pivot()
             // If we perform the row swap in m_upper, we must also swap the multipliers
             // already obtained in m_lower for the columns < k accordingly
 
-            for (std::size_t j{}; j != k; ++j) {
-                T tmp{ m_lower.at(k,j) };
-                m_lower.at(k,j) = m_lower.at(pivot,j);
-                m_lower.at(pivot,j) = tmp;
-            }
+            //for (std::size_t j{}; j != k; ++j) {
+            //    T tmp{ m_lower.at(k,j) };
+            //    m_lower.at(k,j) = m_lower.at(pivot,j);
+            //    m_lower.at(pivot,j) = tmp;
+            //}
+
+            m_lower.swapRowsBelowDiagonal(k, pivot);
         
             //// ============================================
             //std::println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");

@@ -18,7 +18,7 @@ template <typename T>
     requires FloatNumber<T>
 class Vector
 {
-protected:
+private:
     std::vector<T>        m_values;
 
 public:

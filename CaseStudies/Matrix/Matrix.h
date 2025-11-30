@@ -89,6 +89,8 @@ public:  // private or public
     // helper methods for forward elimination
     void swapRows(std::size_t row1, std::size_t row2);
     void subtractRow(T factor, std::size_t source, std::size_t target);
+
+    void swapRowsBelowDiagonal(std::size_t row1, std::size_t row2);
 };
 
 // =====================================================================================

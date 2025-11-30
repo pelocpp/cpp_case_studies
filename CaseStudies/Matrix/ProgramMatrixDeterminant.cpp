@@ -1,5 +1,5 @@
 // =====================================================================================
-// ProgramDeterminant.cpp
+// ProgramMatrixDeterminant.cpp
 // =====================================================================================
 
 #include "Matrix.h"
@@ -20,7 +20,7 @@ static void test_minor_01() {
 
             std::println("Minor ==> row={}, col={}", row, col);
 
-            Matrix<double> min = minor(matrix, row, col);
+            Matrix<double> min = MatrixDeterminant<double>::minor(matrix, row, col);
             std::println("{}", min);
             std::println();
         }
@@ -40,7 +40,7 @@ static void test_minor_02() {
 
             std::println("Minor ==> row={}, col={}", row, col);
 
-            Matrix<double> min = minor(matrix, row, col);
+            Matrix<double> min = MatrixDeterminant<double>::minor(matrix, row, col);
             std::println("{}", min);
             std::println();
         }
@@ -60,7 +60,7 @@ static void test_minor_03() {
 
             std::println("Minor ==> row={}, col={}", row, col);
 
-            Matrix<double> min = minor(matrix, row, col);
+            Matrix<double> min = MatrixDeterminant<double>::minor(matrix, row, col);
             std::println("{}", min);
             std::println();
         }
@@ -76,7 +76,8 @@ static void test_determinant_01() {
     std::println("{}", matrix);
     std::println();
 
-    double det{ determinant<double>(matrix) };
+    MatrixDeterminant<double> md{ matrix };
+    double det{ md.determinant() };
     std::println("Determinant: {}", det);
 
 
@@ -85,18 +86,19 @@ static void test_determinant_01() {
     std::println("{}", matrix1);
     std::println();
 
-    det = determinant<double>(matrix1);
+    MatrixDeterminant<double> md1{ matrix1 };
+    det = md1.determinant();
     std::println("Determinant: {}", det);
 }
 
 
 void test_determinant()
 {
-    //test_minor_01();
-    //test_minor_02();
+    test_minor_01();
+    test_minor_02();
     test_minor_03();
 
-  //  test_determinant_01();
+    test_determinant_01();
 }
 
 // =====================================================================================

@@ -12,11 +12,11 @@
 #include <vector> 
 
 // =====================================================================================
-// c'tors
+// c'tor(s)
 
 template <typename T>
     requires FloatNumber<T>
-LinearEquationSolverGauss<T>::LinearEquationSolverGauss() : m_dim{} {}
+LinearEquationSolverGauss<T>::LinearEquationSolverGauss() : m_dimension{} {}
 
 // =====================================================================================
 // getter/setter
@@ -25,26 +25,26 @@ template <typename T>
     requires FloatNumber<T>
 std::size_t LinearEquationSolverGauss<T>::dimension() const
 {
-    return m_dim;
+    return m_dimension;
 }
 
 template <typename T>
     requires FloatNumber<T>
 void LinearEquationSolverGauss<T>::setEquation(
-    std::size_t dim,
+    std::size_t dimension,
     std::initializer_list<std::initializer_list<T>> values
 )
 {
-    m_dim = dim;
-    m_matrix = Matrix<T>{ m_dim, m_dim + 1 };
-    m_matrix.elements(values);
+    m_dimension = dimension;
+    m_equation = Matrix<T>{ m_dimension, m_dimension + 1 };
+    m_equation.elements(values);
 }
 
 template <typename T>
     requires FloatNumber<T>
 const Matrix<T>& LinearEquationSolverGauss<T>::getEquation() const
 {
-    return m_matrix;
+    return m_equation;
 }
 
 
@@ -65,19 +65,19 @@ bool LinearEquationSolverGauss<T>::eliminateForward()
     std::println("Forward Elimination:");
 
     // forward elimination, create an upper triangular matrix
-    for (std::size_t k{}; k != m_dim - 1; ++k) {
+    for (std::size_t k{}; k != m_dimension - 1; ++k) {
 
         std::println("Eliminating column {}:", k);
 
-        if (m_matrix.at(k, k) == 0.0) {
+        if (m_equation.at(k, k) == 0.0) {
             return false;
         }
 
         // create a zero value in column 'k' in all rows beneath
-        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim; ++rowBelow) {
+        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dimension; ++rowBelow) {
 
-            T factor{ m_matrix.at(rowBelow, k) / m_matrix.at(k, k) };
-            m_matrix.subtractRow(factor, k, rowBelow);
+            T factor{ m_equation.at(rowBelow, k) / m_equation.at(k, k) };
+            m_equation.subtractRow(factor, k, rowBelow);
 
             std::println("Transformed row {}:", rowBelow);
             std::println("{}", *this);
@@ -94,45 +94,22 @@ template <typename T>
 void LinearEquationSolverGauss<T>::substituteBack()
 {
     // apply back substitution to solve the linear equation system
-    m_solution = Vector<T>(m_dim);
+    m_solution = Vector<T>(m_dimension);
 
-    for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
+    for (std::size_t i{ m_dimension }, j{ m_dimension }; i != 0; --i, --j)
     {
-        T result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
+        T result = m_equation.at(i - 1, m_dimension) / m_equation.at(i - 1, j - 1);
         m_solution[i - 1] = result;
 
         // substitute the value into all the equation lines above,
         // move the calculated values by subtraction to the right side
         for (std::size_t k{}; k != i - 1; ++k)
         {
-            m_matrix.at(k, m_dim) -= m_matrix.at(k, i - 1) * result;
-            m_matrix.at(k, i - 1) = 0.0;
+            m_equation.at(k, m_dimension) -= m_equation.at(k, i - 1) * result;
+            m_equation.at(k, i - 1) = 0.0;
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 template <typename T>
     requires FloatNumber<T>
@@ -150,36 +127,36 @@ bool LinearEquationSolverGauss<T>::eliminateForwardPivotPermutation()
 
 template <typename T>
     requires FloatNumber<T>
-bool LinearEquationSolverGauss<T>::solve_01_simple()
+bool LinearEquationSolverGauss<T>::solve_simple()
 {
     // forward elimination to create an upper triangular matrix
-    for (std::size_t k{}; k != m_dim - 1; ++k) {
+    for (std::size_t k{}; k != m_dimension - 1; ++k) {
 
-        if (m_matrix.at(k, k) == 0.0) {
+        if (m_equation.at(k, k) == 0.0) {
             return false;
         }
 
         // create a zero value in column 'k' in all rows beneath
-        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim; ++rowBelow) {
+        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dimension; ++rowBelow) {
 
-            T factor{ m_matrix.at(rowBelow, k) / m_matrix.at(k, k) };
-            m_matrix.subtractRow(factor, k, rowBelow);
+            T factor{ m_equation.at(rowBelow, k) / m_equation.at(k, k) };
+            m_equation.subtractRow(factor, k, rowBelow);
         }
     }
 
     // now apply back substitution to solve the linear equation system
-    m_solution = Vector<T>(m_dim);
-    for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
+    m_solution = Vector<T>(m_dimension);
+    for (std::size_t i{ m_dimension }, j{ m_dimension }; i != 0; --i, --j)
     {
-        T result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
+        T result = m_equation.at(i - 1, m_dimension) / m_equation.at(i - 1, j - 1);
         m_solution[i - 1] = result;
 
         // substitute the value into all the equation lines above,
         // and move the calculated values by subtraction to the right side
         for (std::size_t k{}; k != i - 1; ++k)
         {
-            m_matrix.at(k, m_dim) -= m_matrix.at(k, i - 1) * result;
-            m_matrix.at(k, i - 1) = 0.0;
+            m_equation.at(k, m_dimension) -= m_equation.at(k, i - 1) * result;
+            m_equation.at(k, i - 1) = 0.0;
         }
     }
 
@@ -188,43 +165,43 @@ bool LinearEquationSolverGauss<T>::solve_01_simple()
 
 template <typename T>
     requires FloatNumber<T>
-bool LinearEquationSolverGauss<T>::solve_02_pivot()
+bool LinearEquationSolverGauss<T>::solve_pivot()
 {
     // forward elimination to create an upper triangular matrix
-    for (std::size_t k{}; k != m_dim - 1; ++k) {
+    for (std::size_t k{}; k != m_dimension - 1; ++k) {
 
-        // search pivot element (largest coefficient in rows k,..., m_dim-1)
+        // search pivot element (largest coefficient in rows k,..., m_dimension-1)
         std::size_t pivot{ k };
-        for (std::size_t row{ k + 1  }; row != m_dim; ++row) {
+        for (std::size_t row{ k + 1  }; row != m_dimension; ++row) {
         
-            T elem = m_matrix.at(row, k);
+            T elem = m_equation.at(row, k);
             std::println("row {}: {}", row, elem);
 
-            if (std::fabs(elem) > std::fabs(m_matrix.at(pivot,k))) {
+            if (std::fabs(elem) > std::fabs(m_equation.at(pivot,k))) {
                 pivot = row;
             };
         }
 
         std::println("pivot: {}", pivot);
-        m_matrix.swapRows(k, pivot);
+        m_equation.swapRows(k, pivot);
 
-        if (m_matrix.at(k, k) == 0.0) {
+        if (m_equation.at(k, k) == 0.0) {
             return false;
         }
 
         // create a zero value in column 'k' in all rows beneath
-        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim; ++rowBelow) {
+        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dimension; ++rowBelow) {
 
-            T factor{ m_matrix.at(rowBelow, k) / m_matrix.at(k, k) };
-            m_matrix.subtractRow(factor, k, rowBelow);
+            T factor{ m_equation.at(rowBelow, k) / m_equation.at(k, k) };
+            m_equation.subtractRow(factor, k, rowBelow);
         }
     }
 
     // now apply back substitution to solve the linear equation system
-    m_solution = Vector<T>(m_dim);
-    for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
+    m_solution = Vector<T>(m_dimension);
+    for (std::size_t i{ m_dimension }, j{ m_dimension }; i != 0; --i, --j)
     {
-        T result = m_matrix.at(i - 1, m_dim) / m_matrix.at(i - 1, j - 1);
+        T result = m_equation.at(i - 1, m_dimension) / m_equation.at(i - 1, j - 1);
         m_solution[i - 1] = result;
 
         // substitute the value into all the equation lines above,
@@ -232,8 +209,8 @@ bool LinearEquationSolverGauss<T>::solve_02_pivot()
         for (std::size_t k{}; k != i - 1; ++k)
         {
             // original
-            m_matrix.at(k, m_dim) -= m_matrix.at(k, i - 1) * result;
-            m_matrix.at(k, i - 1) = 0.0;
+            m_equation.at(k, m_dimension) -= m_equation.at(k, i - 1) * result;
+            m_equation.at(k, i - 1) = 0.0;
         }
     }
 
@@ -242,23 +219,23 @@ bool LinearEquationSolverGauss<T>::solve_02_pivot()
 
 template <typename T>
     requires FloatNumber<T>
-bool LinearEquationSolverGauss<T>::solve_03_permutation_vector()
+bool LinearEquationSolverGauss<T>::solve_permutation_vector()
 {
     // create a permatations vector being intialized with 0, 1, 2, ...
-    std::vector<std::size_t> perms(m_matrix.rows());
+    std::vector<std::size_t> perms(m_equation.rows());
     std::iota(perms.begin(), perms.end(), 0);
 
     // forward elimination to create an upper triangular matrix
-    for (std::size_t k{}; k != m_dim - 1; ++k) {
+    for (std::size_t k{}; k != m_dimension - 1; ++k) {
 
-        // search pivot element (largest coefficient in rows k,..., m_dim-1)
+        // search pivot element (largest coefficient in rows k,..., m_dimension-1)
         std::size_t pivot{ k };
-        for (std::size_t row{ k + 1 }; row != m_dim; ++row) {
+        for (std::size_t row{ k + 1 }; row != m_dimension; ++row) {
 
-            T elem = m_matrix.at(row, k);
+            T elem = m_equation.at(row, k);
             std::println("row {}: {}", row, elem);
 
-            if (std::fabs(elem) > std::fabs(m_matrix.at(pivot, k))) {
+            if (std::fabs(elem) > std::fabs(m_equation.at(pivot, k))) {
                 pivot = row;
             };
         }
@@ -268,33 +245,33 @@ bool LinearEquationSolverGauss<T>::solve_03_permutation_vector()
         // just swap indices, not rows
         std::swap(perms[k], perms[pivot]);
 
-        if (m_matrix.at(perms[k], k) == 0.0) {
+        if (m_equation.at(perms[k], k) == 0.0) {
             return false;
         }
 
         // create a zero value in column 'k' in all rows beneath
-        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dim; ++rowBelow) {
+        for (std::size_t rowBelow{ k + 1 }; rowBelow != m_dimension; ++rowBelow) {
 
-            T factor{ m_matrix.at(perms[rowBelow], k) / m_matrix.at(perms[k], k) };
+            T factor{ m_equation.at(perms[rowBelow], k) / m_equation.at(perms[k], k) };
             std::println("factor: {}", factor);
 
-            //for (std::size_t j{ k }; j != m_matrix.cols(); ++j) {
-            //    m_matrix.at(perms[rowBelow], j) -= factor * m_matrix.at(perms[k], j);
+            //for (std::size_t j{ k }; j != m_equation.cols(); ++j) {
+            //    m_equation.at(perms[rowBelow], j) -= factor * m_equation.at(perms[k], j);
             //}
 
             // versus
 
-            m_matrix.subtractRow(factor, perms[k], perms[rowBelow]);
+            m_equation.subtractRow(factor, perms[k], perms[rowBelow]);
 
             // Beachte: Beide Version sind jetzt indentisch -- natürlich ist das mit 'subtractRow' eleganter ....
         }
     }
 
     // now apply back substitution to solve the linear equation system
-    m_solution = Vector<T>(m_dim);
-    for (std::size_t i{ m_dim }, j{ m_dim }; i != 0; --i, --j)
+    m_solution = Vector<T>(m_dimension);
+    for (std::size_t i{ m_dimension }, j{ m_dimension }; i != 0; --i, --j)
     {
-        T result = m_matrix.at(perms[i - 1], m_dim) / m_matrix.at(perms[i - 1], j - 1);
+        T result = m_equation.at(perms[i - 1], m_dimension) / m_equation.at(perms[i - 1], j - 1);
         m_solution[i - 1] = result;
 
         // substitute the value into all the equation lines above,
@@ -302,27 +279,13 @@ bool LinearEquationSolverGauss<T>::solve_03_permutation_vector()
         for (std::size_t k{}; k != i - 1; ++k)
         {
             // original
-            m_matrix.at(perms[k], m_dim) -= m_matrix.at(perms[k], i - 1) * result;
-            m_matrix.at(perms[k], i - 1) = 0.0;
+            m_equation.at(perms[k], m_dimension) -= m_equation.at(perms[k], i - 1) * result;
+            m_equation.at(perms[k], i - 1) = 0.0;
         }
     }
 
     return true;
 }
-
-//template <typename T>
-//    requires FloatNumber<T>
-//void LinearEquationSolverGauss<T>::print() const
-//{
-//    for (size_t row{}; row != m_dim; ++row) {
-//        size_t col{};
-//        for (; col != m_dim; ++col) {
-//            std::print("{:10.4g}", m_matrix.at(row, col));
-//        }
-//        std::println(" | {:10.4g}", m_matrix.at(row, col));
-//    }
-//    std::println();
-//}
 
 // =====================================================================================
 

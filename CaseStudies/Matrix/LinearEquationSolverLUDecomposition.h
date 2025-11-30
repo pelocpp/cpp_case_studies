@@ -20,7 +20,7 @@ public:
 
 private:
     std::size_t m_dimension;          // number of rows / columns
-    Matrix<T>   m_matrix;             // equation (left-hand side)
+    Matrix<T>   m_equation;           // equation (left-hand side)
     Vector<T>   m_rhs;                // right-hand side
     Vector<T>   m_solution;           // solution
 
@@ -68,15 +68,18 @@ namespace std
             std::size_t cols{ equation.cols() };
 
             std::string tmp{};
+            std::format_to(std::back_inserter(tmp), "{{\n");
+
             for (std::size_t row{}; row != rows; ++row) {
                 for (std::size_t col{}; col != cols; ++col) {
 
                     auto elem = equation(row, col);
-                    std::format_to(std::back_inserter(tmp), "{:6.4g}", elem);
+                    std::format_to(std::back_inserter(tmp), "{:8.4g}", elem);
                 }
-                std::format_to(std::back_inserter(tmp), " | {:10.4g}\n", rhs[row]);
+                std::format_to(std::back_inserter(tmp), " | {:6.4g}\n", rhs[row]);
             }
 
+            std::format_to(std::back_inserter(tmp), "}}");
             return std::formatter<string_view>::format(tmp, ctx);
         }
     };

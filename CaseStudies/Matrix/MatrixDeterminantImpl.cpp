@@ -7,13 +7,100 @@
 // ist hier beschrieben
 // https://www.youtube.com/watch?v=pyiKhRmvMF4
 
-template Matrix<float>       minor<float>(Matrix<float>, std::size_t row, std::size_t col);
-template Matrix<double>      minor<double>(Matrix<double>, std::size_t row, std::size_t col);
-template Matrix<long double> minor<long double>(Matrix<long double>, std::size_t row, std::size_t col);
+// =====================================================================================
 
-template float       determinant<float>       (Matrix<float>);
-template double      determinant<double>      (Matrix<double>);
-template long double determinant<long double> (Matrix<long double>);
+static auto constexpr powerOfMinusOne = [] (std::size_t exp) -> int {
+
+    auto result{ -1 };
+    for (size_t i{ 1 }; i != exp; ++i) {
+        result *= -1;
+    }
+    return result;
+};
+
+// =====================================================================================
+// c'tor(s)
+
+template <typename T>
+    requires FloatNumber<T>
+MatrixDeterminant<T>::MatrixDeterminant(const Matrix<T> matrix)
+    : m_matrix{ matrix }
+{}
+
+// =====================================================================================
+// public interface
+
+template <typename T>
+    requires FloatNumber<T>
+T MatrixDeterminant<T>::determinant() const
+{
+    if (m_matrix.cols() != m_matrix.rows()) {
+        throw std::invalid_argument("Different number of rows and columns!");
+    }
+    
+    std::size_t n{ m_matrix.rows() };
+    if (n == 1) {
+        return m_matrix.at(0,0);
+    }
+    else {
+        T det{};
+        for (std::size_t j{}; j != n; ++j) {
+
+            MatrixDeterminant<T> md{ MatrixDeterminant<T>::minor(m_matrix, 0, j) };
+
+          //  det += powerOfMinusOne(j) * m_matrix(0, j) * determinant(minor(m_matrix, 0, j));
+            det += powerOfMinusOne(j) * m_matrix(0, j) * md.determinant();
+        }
+        return det;
+    }
+    
+    return T{};
+}
+
+// Matrix<T> minor(Matrix<T> matrix, std::size_t row, std::size_t col)
+
+
+// Achtung so ist das eine Klassenmethode !!!
+
+template <typename T>
+    requires FloatNumber<T>
+Matrix<T> MatrixDeterminant<T>::minor(Matrix<T> matrix, std::size_t row, std::size_t col)
+{
+    Matrix<T> result{ matrix.rows() - 1, matrix.cols() - 1 };
+
+    std::size_t ri{};
+
+    for (std::size_t r{}; r != matrix.rows(); ++r) {
+
+        if (r == row) {
+            continue;
+        }
+
+        std::size_t ci{};
+
+        for (std::size_t c{}; c != matrix.cols(); ++c) {
+
+            if (c == col) {
+                continue;
+            }
+
+            T value = matrix(r, c);
+            result(ri, ci) = value;
+
+            ++ci;
+        }
+        ++ri;
+    }
+
+    return result;
+}
+
+// =====================================================================================
+
+// explicit template instantiations
+template class MatrixDeterminant<float>;
+template class MatrixDeterminant<double>;
+template class MatrixDeterminant<long double>;
 
 // =====================================================================================
 // End-of-File

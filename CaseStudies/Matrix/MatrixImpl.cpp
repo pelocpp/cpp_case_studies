@@ -334,6 +334,17 @@ void Matrix<T>::swapRows(std::size_t row1, std::size_t row2)
     }
 }
 
+template <typename T>
+    requires FloatNumber<T>
+void Matrix<T>::swapRowsBelowDiagonal(std::size_t row1, std::size_t row2)
+{
+    for (std::size_t j{}; j != row1; ++j) {
+        T tmp{ at(row1,j) };
+        at(row1, j) = at(row2, j);
+        at(row2, j) = tmp;
+    }
+}
+
 // iteration support
 template <typename T>
     requires FloatNumber<T>

@@ -39,8 +39,8 @@ void LinearEquationSolverLUDecomposition<T>::setEquation(
     std::initializer_list<std::initializer_list<T>> values
 ) 
 {
-    m_matrix = Matrix<T>{ m_dimension, m_dimension };
-    m_matrix.elements(values);
+    m_equation = Matrix<T>{ m_dimension, m_dimension };
+    m_equation.elements(values);
 }
 
 template <typename T>
@@ -55,7 +55,7 @@ void LinearEquationSolverLUDecomposition<T>::setEquation(const Matrix<T> coeffic
         throw std::invalid_argument("Wrong number of columns!");
     }
 
-    m_matrix = coefficients;
+    m_equation = coefficients;
 }
 
 
@@ -85,7 +85,7 @@ template <typename T>
     requires FloatNumber<T>
 const Matrix<T>& LinearEquationSolverLUDecomposition<T>::getEquation() const
 {
-    return m_matrix;
+    return m_equation;
 }
 
 template <typename T>
@@ -111,7 +111,7 @@ template <typename T>
 void LinearEquationSolverLUDecomposition<T>::solve_simple()
 {
     // need at first a LU decomposition of the matrix to invert
-    LU_Decomposition<T> lu{ m_matrix };
+    LU_Decomposition<T> lu{ m_equation };
     lu.decompose_simple();
 
     const Matrix<T>& lower{ lu.getLowerMatrix() };
@@ -134,7 +134,7 @@ template <typename T>
 void LinearEquationSolverLUDecomposition<T>::solve_pivot()
 {
     // need at first to decompose the matrix to invert
-    LU_Decomposition<T> lu{ m_matrix };
+    LU_Decomposition<T> lu{ m_equation };
     lu.decompose_pivot();
 
     const Matrix<T>& lower{ lu.getLowerMatrix() };

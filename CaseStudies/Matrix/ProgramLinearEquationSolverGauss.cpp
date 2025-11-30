@@ -25,7 +25,7 @@ static void test_linear_equation_solver_gauss_01() {
     );
     std::println("{}", solver);
 
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -44,7 +44,7 @@ static void test_linear_equation_solver_gauss_02() {
     );
     std::println("{}", solver);
 
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -66,7 +66,7 @@ static void test_linear_equation_solver_gauss_03() {
     );
     std::println("{}", solver);
 
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -87,7 +87,7 @@ static void test_linear_equation_solver_gauss_04() {
     );
     std::println("{}", solver);
 
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -115,7 +115,7 @@ static void test_linear_equation_solver_gauss_05() {
     );
     std::println("{}", solver);
 
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -136,7 +136,7 @@ static void test_linear_equation_solver_gauss_06() {
     );
     std::println("{}", solver);
 
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -157,7 +157,7 @@ static void test_linear_equation_solver_gauss_10() {
     );
     std::println("{}", solver);
 
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -178,7 +178,7 @@ static void test_linear_equation_solver_gauss_20() {
     );
     std::println("{}", solver);
 
-    solver.solve_03_permutation_vector();
+    solver.solve_permutation_vector();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -199,7 +199,7 @@ static void test_linear_equation_solver_gauss_21() {
     );
     std::println("{}", solver);
 
-    solver.solve_02_pivot();
+    solver.solve_pivot();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -220,7 +220,7 @@ static void test_linear_equation_solver_gauss_22() {
     );
     std::println("{}", solver);
 
-    solver.solve_03_permutation_vector();
+    solver.solve_permutation_vector();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -243,7 +243,7 @@ static void test_linear_equation_solver_gauss_24() {
     );
     std::println("{}", solver);
 
-    solver.solve_03_permutation_vector();
+    solver.solve_permutation_vector();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -264,7 +264,7 @@ static void test_linear_equation_solver_gauss_30() {
     );
     std::println("{}", solver);
 
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -287,7 +287,7 @@ static void test_linear_equation_solver_gauss_31() {
     );
     std::println("{}", solver);
 
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -310,7 +310,7 @@ static void test_linear_equation_solver_gauss_32() {
     );
     std::println("{}", solver);
 
-    solver.solve_02_pivot();
+    solver.solve_pivot();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -332,7 +332,7 @@ static void test_linear_equation_solver_gauss_33() {
     );
     std::println("{}", solver);
 
-    solver.solve_03_permutation_vector();
+    solver.solve_permutation_vector();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -362,7 +362,7 @@ static void test_linear_equation_solver_gauss_40() {
     );
     std::println("{}", solver);
 
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -390,7 +390,7 @@ static void test_linear_equation_solver_gauss_41() {
     );
     std::println("{}", solver);
 
-    solver.solve_02_pivot();
+    solver.solve_pivot();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -418,7 +418,7 @@ static void test_linear_equation_solver_gauss_42() {
     );
     std::println("{}", solver);
 
-    solver.solve_03_permutation_vector();
+    solver.solve_permutation_vector();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 }
@@ -575,7 +575,7 @@ static void test_linear_equation_solver_gauss_53() {
 
 
     solver.eliminateForward();
-    solver.solve_01_simple();
+    solver.solve_simple();
     const Vector<double>& solution = solver.solution();
     std::println("{}", solution);
 

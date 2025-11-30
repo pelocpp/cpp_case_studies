@@ -18,8 +18,8 @@ public:
     LinearEquationSolverGauss();
 
 private:
-    std::size_t  m_dim;                  // number of rows / columns
-    Matrix<T>    m_matrix;               // equation
+    std::size_t  m_dimension;            // number of rows / columns
+    Matrix<T>    m_equation;             // equation
     Vector<T>    m_solution;             // solution
 
 public:
@@ -35,9 +35,9 @@ public:
     const Vector<T>& solution            () const;
 
     // public interface
-    bool solve_01_simple                 ();
-    bool solve_02_pivot                  ();
-    bool solve_03_permutation_vector     ();
+    bool solve_simple                    ();
+    bool solve_pivot                     ();
+    bool solve_permutation_vector        ();
 
     bool eliminateForward                ();
     bool eliminateForwardPivot           ();

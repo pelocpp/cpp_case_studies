@@ -11,6 +11,12 @@ template <typename T>
     requires FloatNumber<T>
 class LU_Decomposition
 {
+private:
+    Matrix<T> m_matrix;             // matrix to decompose
+    Matrix<T> m_lower;              // lower triangular matrix
+    Matrix<T> m_upper;              // upper triangular matrix
+    Matrix<T> m_perm;               // permutation matrix
+
 public:
     // c'tors
     LU_Decomposition                () = delete;
@@ -27,16 +33,6 @@ public:
     // public interface
     bool decompose_simple();
     bool decompose_pivot();
-
-    //void printMatrix                () const;
-    //void printLowerTriangularMatrix () const;
-    //void printUpperTriangularMatrix () const;
-
-private:
-    Matrix<T> m_matrix;             // matrix to decompose
-    Matrix<T> m_lower;              // lower triangular matrix
-    Matrix<T> m_upper;              // upper triangular matrix
-    Matrix<T> m_perm;               // permutation matrix
 };
 
 // =====================================================================================

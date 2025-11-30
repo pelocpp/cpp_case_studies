@@ -13,14 +13,13 @@ template <typename T>
     requires FloatNumber<T>
 class MatrixInversion
 {
-public:
-    // c'tor(s)
-    MatrixInversion() = default;
-
 private:
     Matrix<T> m_matrix;            // matrix to invert
 
 public:
+    // c'tor(s)
+    MatrixInversion                () = default;
+
     // getter/setter
     void      set                  (const Matrix<T> matrix);
 
