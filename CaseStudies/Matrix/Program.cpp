@@ -80,6 +80,19 @@
 // Hmm, müsste man das auch nicht rausziehen ................
 // Sollte ich eher am Ende machen, sonst wird es unübersichtlich ....
 
+
+
+// Determinantenberechnung
+// Habe diese hier vorgefunden
+//// =====================================================================================
+//// Laplace Expansion Theorem
+//
+//// See here
+//// https://www.bigdev.de/2013/04/tutorial-determinant-in-java.html
+//
+
+
+
 // =====================================================================================
 
 #include <exception>
