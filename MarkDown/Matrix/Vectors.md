@@ -100,7 +100,7 @@ Beide Vektoren haben dann den gleichen Betrag und die gleiche Richtung.
 Ein Vektor, dessen Länge den Wert 1 besitzt, wird &bdquo;normierter&rdquo; Vektor $\vec{a}_0$ genannt.
 
 
-### Addition und Subtraktion von Vektoren
+### Addition von Vektoren
 
 Man erhält rechnerisch einen Summenvektor,
 indem man die einzelnen Komponenten beider Vektoren addiert:
@@ -134,7 +134,7 @@ $$
 Eine Addition von Vektoren mit unterschiedlicher Dimension ist nicht definiert.
 
 
-### Der Differenzvektor
+### Subtraktion von Vektoren: Der Differenzvektor
 
 Rechnerisch erhält man den Differenzvektor, indem man die einzelnen Komponenten beider Vektoren subtrahiert:
 
@@ -202,14 +202,18 @@ $$
 #### Das Skalarprodukt
 
 Bevor wir auf das Skalarprodukt näher eingehen, beachten Sie bitte:
-Es gibt hier möglicherweise etwas verwirrenden Namensgebungen für die 
-unterschiedliche Rechenoperationen im Umfeld der Multiplikationen von Vektoren
-Der Begriff &bdquo;Skalarprodukt&bdquo; kann zwei verschiedene Operationen bezeichnen:
-die Multiplikation von zwei Vektoren, was einen Skalar ergibt, und die Multiplikation eines Skalars mit einem Vektor, was das Ergebnis ein Vektor ist. Zur besseren Unterscheidung werden oft folgende Begriffe verwendet: 
+Es gibt hier möglicherweise etwas verwirrende Namensgebungen für die 
+unterschiedliche Rechenoperationen im Umfeld der Multiplikationen von Vektoren.
 
-Skalarprodukt (Vektor x Vektor): Das Ergebnis ist ein Skalar (eine Zahl). Alternativ kann man auch Punktprodukt sagen, um den Unterschied zu verdeutlichen.
+Der Begriff &bdquo;Skalarprodukt&rdquo; kann zwei verschiedene Operationen bezeichnen:
+die Multiplikation von zwei Vektoren, was einen Skalar ergibt,
+und die Multiplikation eines Skalars mit einem Vektor, was zum Ergebnis einen Vektor hat.
+Zur besseren Unterscheidung werden oft folgende Begriffe verwendet: 
 
-Skalare Multiplikation (Skalar x Vektor): Das Ergebnis ist ein Vektor.
+  * &bdquo;Skalarprodukt&rdquo;: Vektor x Vektor<br />Das Ergebnis ist ein Skalar (eine Zahl).
+    Alternativ kann man auch Punktprodukt sagen, um den Unterschied zu verdeutlichen.
+
+  * &bdquo;skalare Multiplikation&rdquo;: Skalar x Vektor<br />Das Ergebnis ist ein Vektor.
 
 | Operation | Begriff | Ergebnis |
 | :---- | :---- | :---- |
@@ -219,7 +223,31 @@ Skalare Multiplikation (Skalar x Vektor): Das Ergebnis ist ein Vektor.
 *Tabelle* 1: Unterscheidung Skalarprodukt versus skalare Multiplikation.
 
 
-WEITER: Definition des Skalarprodukt
+Schreibt man die beiden Vektoren $\vec{a}$ und $\vec{b}$ in Spaltenform,
+so kann das Skalarprodukt komponentenweise nach folgender Formel berechnet werden:
+
+
+$$
+\vec{a} * \vec{b} =
+\begin{pmatrix}
+a_{1} \\
+a_{2} \\
+&mldr; \\
+a_{n} \\
+\end{pmatrix}
+\*
+\begin{pmatrix}
+b_{1} \\
+b_{2} \\
+&mldr; \\
+b_{n} \\
+\end{pmatrix}
+\=
+a_{1}*b_{1} + a_{2}*b_{2} + &mldr; + a_{n}*b_{n}
+$$
+
+
+
 
 ## Vektoren
 
