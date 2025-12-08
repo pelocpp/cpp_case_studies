@@ -109,7 +109,7 @@ static void test_vector_04()
 
 static void test_vector_10()
 {
-    // testing std::prinln for template class Vector<>
+    // testing std::println for template class Vector<>
     Vector<double> vector{ 1.0, 2.0, 3.0 };
     std::println("Vector<double>: {}", vector);
 }

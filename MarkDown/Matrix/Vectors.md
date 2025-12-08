@@ -21,7 +21,7 @@ https://www.geeksforgeeks.org/google-docs/how-to-insert-matrix-in-google-docs/
 KI:  markdown math matrices examples
 
 
-// BEISPIELE FÜR MAthematik in Markdown
+// BEISPIELE FÜR Mathematik in Markdown
 
 https://damienbod.com/2022/06/06/using-math-expressions-in-github-markdown/
 
@@ -36,7 +36,12 @@ Der Text dieses Abschnitts stamm aus
 
 ## Einleitung zu Vektoren
 
-Bei Vektoren handelt es sich aus geometrischer Sicht um Strecken, die eine bestimmten Länge und Richtung haben.
+In der Mathematik und Physik spielen Skalare und Vektoren eine große Rolle.
+Während man unter einem Skalar eine Größe versteht, deren Wert sich eindeutig durch die Angabe einer Maßzahl beschreiben lässt,
+benötigt man zur vollständigen Charakterisierung eines Vektors noch die Angabe einer Richtung im Raum.
+So lassen sich beispielsweise Windgeschwindigkeiten, Beschleunigungen, elektrische oder magnetische Feldstärken durch Vektoren beschreiben.
+
+Aus geometrischer Sicht handelt es sich bei Vektoren um Strecken, die eine bestimmten Länge und Richtung haben.
 Betrachten wir Vektoren im zwei- oder dreidimensionalen Raum, so reicht ein geordnetes Paar aus zwei oder ein Tupel aus drei Koordinatenwerten aus,
 um den Vektor zu beschreiben &ndash; also etwa 
 $\vec{a}$ = (<i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>)
@@ -210,10 +215,10 @@ die Multiplikation von zwei Vektoren, was einen Skalar ergibt,
 und die Multiplikation eines Skalars mit einem Vektor, was zum Ergebnis einen Vektor hat.
 Zur besseren Unterscheidung werden oft folgende Begriffe verwendet: 
 
-  * &bdquo;Skalarprodukt&rdquo;: Vektor x Vektor<br />Das Ergebnis ist ein Skalar (eine Zahl).
+  * &bdquo;Skalarprodukt&rdquo; &ndash; Vektor &times; Vektor<br />Das Ergebnis ist ein Skalar (eine Zahl).
     Alternativ kann man auch Punktprodukt sagen, um den Unterschied zu verdeutlichen.
 
-  * &bdquo;skalare Multiplikation&rdquo;: Skalar x Vektor<br />Das Ergebnis ist ein Vektor.
+  * &bdquo;skalare Multiplikation&rdquo; &ndash; Skalar &times; Vektor<br />Das Ergebnis ist ein Vektor.
 
 | Operation | Begriff | Ergebnis |
 | :---- | :---- | :---- |
@@ -230,31 +235,23 @@ so kann das Skalarprodukt komponentenweise nach folgender Formel berechnet werde
 $$
 \vec{a} * \vec{b} =
 \begin{pmatrix}
-a_{1} \\
-a_{2} \\
+a_{1}  \\
+a_{2}  \\
 &mldr; \\
-a_{n} \\
+a_{n}  \\
 \end{pmatrix}
 \*
 \begin{pmatrix}
-b_{1} \\
-b_{2} \\
+b_{1}  \\
+b_{2}  \\
 &mldr; \\
-b_{n} \\
+b_{n}  \\
 \end{pmatrix}
 \=
 a_{1}*b_{1} + a_{2}*b_{2} + &mldr; + a_{n}*b_{n}
 $$
 
-
-
-
-## Vektoren
-
-In der Mathematik und Physik spielen Skalare und Vektoren eine große Rolle.
-Während man unter einem Skalar eine Größe versteht, deren Wert sich eindeutig durch die Angabe einer Maßzahl beschreiben lässt,
-benötigt man zur vollständigen Charakterisierung eines Vektors noch die Angabe einer Richtung im Raum.
-So lassen sich beispielsweise Windgeschwindigkeiten, Beschleunigungen, elektrische oder magnetische Feldstärken durch Vektoren beschreiben.
+Das Ergebnis ist ein skalarer Wert, also eine Zahl. 
 
 
 ## Darstellung eines Vektors in C++
