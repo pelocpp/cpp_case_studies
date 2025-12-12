@@ -1,7 +1,7 @@
 <!-- CopyOnWrite.md -->
 
 
-# Copy on Write 
+# &bdquo;Faules&bdquo; Kopieren: Copy on Write 
 
 ## Literatur
 
@@ -66,28 +66,46 @@ so wird nicht jedes Mal eine neue Kopie der internen Daten erstellt,
 sondern nur dann, wenn zwischendurch eine Kopie des Objektes erstellt wird.
 
 
-## Unterschiedliche  Möglichkeiten des Kopierens von Objekten
+## Unterschiedliche Möglichkeiten des Kopierens von Objekten
 
 Eine der häufigsten Operationen in einem Programm ist das Kopieren von Objekten.
 Ein Objekt steht in objektorientierten Programmiersprachen für einen zusammengesetzter Datentyp.
-Das Kopieren eines Objekts beschreibt daher den Vorgang, bei dem alle Attribute (Instanzvariablen) eines Objekts
-in ein anderes Objekt desselben Datentyps kopiert werden.
+Das Kopieren eines Objekts beschreibt den Vorgang, bei dem alle Attribute (Instanzvariablen) eines Objekts
+in ein anderes Objekt desselben Datentyps zu kopiert sind.
 
-Warum will man überhaupt ein Objekt kopieren? WEITER ......
+Warum will man überhaupt ein Objekt kopieren? Soweit es geht, sollte man dies vermeiden.
+In C++ tritt das Kopieren von Objekten bei Funktionen/Methoden auf, die einen Objekttyp als Rückgabetyp haben.
+Okay, man könnte das Objekt auch auf dem Heap anlegen und dann einen Zeiger zurückgeben.
 
-Eine gute Frage ... und zu
 
 
-Ein Objekt kann kopiert werden, um seine Daten ganz oder teilweise in einem neuen Kontext wiederzuverwenden.
 
 #### Flache Kopie 
 
-Eine flache Kopie eines Objekts kopiert alle Feldwerte. Dies funktioniert gut, wenn
-die Felder Werte sind, ist aber möglicherweise nicht das, was Sie für Felder wünschen, die auf
-dynamisch allokierten Speicher verweisen. Der Zeiger wird kopiert, aber der Speicher, auf den er verweist,
+Eine flache Kopie eines Objekts kopiert alle Instanzvariablen. Dies funktioniert problemlos,
+wenn die Variablen Werte elementaren Datentyps sind.
+
+Haben wir es mit Instanzvariablen zu tun, die auf
+dynamisch allokierten Speicher verweisen, funktiioniert das Prinzip einer flachen Kopie so nicht mehr.
+
+Der Zeiger wird kopiert, aber der Speicher, auf den er verweist,
 wird nicht kopiert – das Feld im Originalobjekt und in der Kopie verweist dann auf denselben
-dynamisch allokierten Speicher, was in der Regel nicht gewünscht ist. Der
-Standard-Kopierkonstruktor und der Standard-Zuweisungsoperator erstellen flache Kopien.
+dynamisch allokierten Speicher, was in der Regel nicht gewünscht ist.
+
+Die automtisch erzeugten Standard-Kopierkonstruktor und der Zuweisungsoperator erzeugen flache Kopien.
+
+
+WEITER : Tiefe Kopie ...........
+
+
+
+
+
+
+
+
+
+
 
 #### Tiefe Kopie
 
