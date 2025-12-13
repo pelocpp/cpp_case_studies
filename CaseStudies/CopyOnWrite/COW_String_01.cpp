@@ -1,19 +1,14 @@
-// COW_String_01
+// =====================================================================================
+// COW_String_01.cpp // Simple implementation of a COW string class
+// =====================================================================================
 
 #include <atomic>      // std::atomic
 #include <cstddef>     // std::std::size_t, offsetof
-#include <cstring>
-#include <iostream>
-
-//#include <string>
-
+#include <cstring>     // std::strlen
+#include <print>       // std::print
 
 namespace CowString01
 {
-
-    // TODO: 
-    // CHecken, ob die ganzen Destruktoren aufgerufen werden ?!?!?!
-
     class CowString
     {
     private:
@@ -44,6 +39,7 @@ namespace CowString01
         };
 
         StringData* m_ptr;
+        char*       m_str;
 
         // ensure we have a private (unshared) copy before writing
         void detach()
@@ -61,11 +57,13 @@ namespace CowString01
         CowString(const char* s = "")  // TODO; Für "" durchlaufen 
         {
             m_ptr = StringData::create(s);
+            m_str = reinterpret_cast<char*> (m_ptr) + sizeof(StringData);
         }
 
         CowString(const CowString& other)
         {
             m_ptr = other.m_ptr;
+            m_str = other.m_str;
             m_ptr->m_refCount++;
         }
 
@@ -78,11 +76,10 @@ namespace CowString01
                     ::operator delete(m_ptr);
                 }
 
-                //if (--m_ptr->m_refCount == 0) {
-                //    ::operator delete(m_ptr);
-                //}
+                // Ähmmm .. fehlt da ein else ??????????????????????????????
 
                 m_ptr = other.m_ptr;
+                m_str = other.m_str;
                 m_ptr->m_refCount++;
             }
 
@@ -101,14 +98,17 @@ namespace CowString01
 
         const char* c_str() const
         {
-            return reinterpret_cast<char*> (m_ptr) + sizeof(StringData);
+            // return reinterpret_cast<char*> (m_ptr) + sizeof(StringData);
+            return m_str;
         }
 
         // read-only access
         char operator[](std::size_t idx) const {
 
-            char* cp{ reinterpret_cast<char*> (m_ptr) + sizeof(StringData) };
-            return cp[idx];
+
+
+           // char* cp{ reinterpret_cast<char*> (m_ptr) + sizeof(StringData) };
+            return m_str[idx];
         }
 
         // write access - triggers COW
@@ -116,8 +116,10 @@ namespace CowString01
 
             detach();
 
-            char* cp{ reinterpret_cast<char*> (m_ptr) + sizeof(StringData) };
-            return cp[idx];
+            //char* cp{ reinterpret_cast<char*> (m_ptr) + sizeof(StringData) };
+            //return cp[idx];
+
+            return m_str[idx];
         }
     };
 
@@ -154,44 +156,39 @@ namespace CowString01
 
     static void test_cow_string_01_E()
     {
-        std::cout << "TEST 01" << std::endl;
-
         CowString a("Hello");
         CowString b = a;      // shares buffer
         CowString c = b;      // shares buffer
 
-        std::cout << "Before modification:\n";
-        std::cout << "a: " << a.c_str() << "\n";
-        std::cout << "b: " << b.c_str() << "\n";
-        std::cout << "c: " << c.c_str() << "\n";
+        std::println("Before modification:");
+        std::println("a: {}", a.c_str());
+        std::println("b: {}", b.c_str());
+        std::println("c: {}", c.c_str());
 
         b[0] = 'J'; // triggers copy-on-write only for 'b'
 
-        std::cout << "\nAfter modifying b:\n";
-        std::cout << "a: " << a.c_str() << "\n"; // unchanged
-        std::cout << "b: " << b.c_str() << "\n"; // modified
-        std::cout << "c: " << c.c_str() << "\n"; // unchanged
+        std::println("After modifying b:");
+        std::println("a: {}", a.c_str());  // unchanged
+        std::println("b: {}", b.c_str());  // modified
+        std::println("c: {}", c.c_str());  // unchanged
     }
-    //
-    //
-    //void test_cow_string_AA()
-    //{
-    //    std::string s = s;
-    //    auto length = s.length();
-    //}
-
 }
 
 void test_cow_string_01()
 {
     using namespace CowString01;
 
+    std::println("Test 01 Simple COW String");
 
-    std::cout << "TEST 01" << std::endl;
-
-    //test_cow_string_01_A();
-    //test_cow_string_01_B();
-    //test_cow_string_01_C();
+    test_cow_string_01_A();
+    test_cow_string_01_B();
+    test_cow_string_01_C();
     test_cow_string_01_D();
-   // test_cow_string_01_E();
+    test_cow_string_01_E();
 }
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================
+
+

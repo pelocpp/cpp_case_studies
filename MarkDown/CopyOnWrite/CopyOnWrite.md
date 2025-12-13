@@ -81,9 +81,8 @@ in den Speicherbereich eines anderen Objekts desselben Datentyps umkopiert werde
 
 #### Flache Kopie 
 
-Eine flache Kopie eines Objekts kopiert alle Instanzvariablen. Dies funktioniert problemlos,
-wenn die Variablen Werte elementaren Datentyps sind.
-
+Eine flache Kopie eines Objekts kopiert alle Instanzvariablen bitweise. Dies funktioniert problemlos,
+solange die Variablen Werte elementaren Datentyps sind.
 In *Abbildung* 1 finden Sie ein Objekt einer Klasse `Date` dargestellt vor:
 
 ```cpp
@@ -99,7 +98,7 @@ private:
 Um ein Objekt eines solchen Typs zu kopieren, genügt es, von allen Instanzvariablen eine bitweise
 Kopie zu erstellen.
 
-<img src="copy_on_write_01.svg" width="500">
+<img src="copy_on_write_01.svg" width="300">
 
 *Abbildung* 1: Zwei Objekte des Typs `Date`: Ein Original und eine Kopie.
 
@@ -112,51 +111,107 @@ auch Zeigervariablen enthalten, die auf dynamisch allokierten Speicher auf der H
 Das Prinzip einer flachen Kopie funktioniert nun nicht mehr.
 Die Zeigervariablen würden zwar korrekt kopiert werden, aber der Speicher, auf den sie verweisen,
 wäre derselbe, auf den der Zeiger im Ursprungsobjekt zeigt.
-Die Zeigervariable im Originalobjekt und in der Kopie verweisen dann auf denselben
-dynamisch allokierten Speicherbereich, was in den allermeisten Fällen so nicht gewünscht ist,
-siehe *Abbildung* 2:
+Die Zeigervariable im Originalobjekt und in der Kopie verweisen auf denselben
+dynamisch allokierten Speicherbereich.
+Dies ist in den allermeisten Fällen so nicht gewünscht, siehe auch *Abbildung* 2:
 
 <img src="copy_on_write_02.svg" width="600">
 
 *Abbildung* 2: Zwei Objekte des Typs `Date`: Ein Original und eine Kopie.
 
-Um zu korrekten Kopie zu gelangen, benötigen wir die Vorgehensweise der &bdquo;tiefen Kopie&rdquo;
+Um zu einer korrekten Kopie zu gelangen, benötigen wir die Vorgehensweise der &bdquo;tiefen Kopie&rdquo;
 Eine tiefe Kopie kopiert alle Felder und erstellt Kopien des dynamisch allokierten Speichers, auf den die Felder verweisen
 (*Abbildung* 3)
 
 <img src="copy_on_write_03.svg" width="600">
 
-*Abbildung* 3: Zwei Objekte des Typs `Date`: Ein Original und eine Kopie.
-
+*Abbildung* 3: Zwei Objekte des Typs `Date`: Ein Original und eine Kopie &ndash; mit Schwachstellen.
 
 Um eine tiefe Kopie zu erstellen, müssen Sie einen Kopierkonstruktor schreiben und den Zuweisungsoperator überladen
 und wie beschrieben implementieren.
-Die automtisch erzeugten Standard-Kopierkonstruktor und der Zuweisungsoperator erzeugen flache Kopien.
+Der automtisch erzeugten Standard-Kopierkonstruktor und der Zuweisungsoperator erzeugen flache Kopien.
 
 
 
 #### Lazy Copy
 
 Interessanterweise gibt es neben diesen beiden Kopierstrategien noch eine dritte Strategie,
-die so genannte Lazy Copy, auch also Copy-on-Write bezeichnet.
+die so genannte &bdquo;*Lazy Copy*&rdquo;-Strategie, oder auch also &bdquo;*Copy-on-Write*&rdquo; (*COW*) bezeichnet.
 
-Eine Lazy Copy kombiniert die beiden oben genannten Strategien.
-Beim ersten Kopieren eines Objekts wird eine (schnelle) flache Kopie erstellt.
+Die &bdquo;*Lazy Copy*&rdquo;-Strategie kombiniert die beiden oben zuvor beschriebenen Strategien.
 
-Wird dieses Objekt kopiert, wird *keine* tiefe Kopie angelegt. Es wird stattdessen nur die Zählervariable
-inkrementiert. Das kopierte Objekt greift auf dieselben Daten wie das Originalobjekt zu.
+Bei dieser Vorgehensweise benötigen wir zusätzlich zum eigentlichen Objekt ein Hüllenobjekt,
+häufig als `COW_Ptr` bezeichnet. Dieses verwaltet neben den Daten des eigentlichen Objekts
+eine (atomare) Zählervariable.
+
+Wird dieses Objekt zum ersten Mal kopiert, wird *keine* tiefe Kopie angelegt.
+Es wird stattdessen nur die Zählervariable inkrementiert.
+Das kopierte Objekt greift auf dieselben Daten wie das Originalobjekt zu.
 Solange an einem der beteiligten Objekte keine Änderung erfolgt, funktioniert dieser Ansatz.
 Eine Zählervariable verfolgt, wie viele Objekte die Daten gemeinsam nutzen.
 
 Wenn das Programm ein Objekt ändern möchte, kann es anhand des Zählers feststellen, ob die Daten gemeinsam genutzt werden.
 Wenn ja, dann ist &ndash; zu diesem Zeitpunkt, also *on demand* &ndash; eine tiefe Kopie zu erstellen.
 
-Zusammenfassend kann man sagen, dass die *Lazy Copy*-Strategie sich von außen wie eine tiefe Kopie darstellt,
-nutzt aber intern nach Möglichkeiten einer flachen Kopie.
+*Bemerkung*:<br />
+Die Klasse `std::shared_ptr` und eine &bdquo;*Copy-on-Write*&rdquo;-Klasse weisen gewisse Ähnlichkeiten auf.
+Beide Klassen verwenden Referenzzähler, die den geteilten Besitz zählen.
+
+Man kann sagen, dass die *Lazy Copy*-Strategie sich von außen wie eine tiefe Kopie darstellt,
+intern aber, soweit möglich, das Prinzip einer flachen Kopie anstrebt.
+Erst wenn es zu Änderungen (schreibender Zugriff) an einem der beteiligten Objekte kommt,
+ist eine echte (tiefe) Kopie zu erstellen.
+
+
+## Erster Entwurf einer einfachen &bdquo;*Copy-on-Write*&rdquo;-Klasse für Zeichenketten
 
 
 
 
+## &bdquo;*Copy-on-Write*&rdquo;-Klassen und die STL-Klasse `std::string`
+
+Häufig wird die Frage gestellt, warum die Klasse `std::string` aus der STL nicht das &bdquo;*Copy-on-Write*&rdquo;-Idiom
+umsetzt. Die Antwort ist vergleichsweise einfach: 
+Die `std::string`-Klasse besitzt ein historisch gewachsenenes API, das für das &bdquo;*Copy-on-Write*&rdquo;-Idiom 
+ungeeignet ist. Was ist damit konkret gemeint?
+
+Viele der `std::string`-Methoden oder Operator hantieren mit Referenzen auf Daten (Zeichen)
+innerhalb eines `std::string`-Objekts, zum Beispiel
+
+```cpp
+char& at(std::size_t_ pos);
+```
+oder auch 
+
+```cpp
+char& operator[](std::size_t_ pos);
+```
+
+oder auch
+
+```cpp
+char& front();
+```
+
+oder auch
+
+```cpp
+char& back(); 
+```
+
+Diese Konzeption war ein toller Schachzug beim Design der `std::string`-Klasse.
+Nur sind wir bei diesem Ansatz mit dem Problem konfrontiert, dass wir innerhalb der `std::string`-Klasse
+nicht erkennen können, ob diese Referenz nur lesend oder auch schreibend verwendet wird.
+
+Man könnte natürlich &ndash; aus Sicht des &bdquo;*Copy-on-Write*&rdquo;-Idioms den Worst-Case
+eines Schreibens zugrunde legen, nur wäre dies ein pessimistischer Ansatz,
+der nicht zu einer praktibalen Realisierung führt.
+
+Wenn wir eine Klasse für Zeichenketten inklusive des &bdquo;*Copy-on-Write*&rdquo;-Idioms realisieren wollen,
+dann müsste man die öffentliche Schnittstelle auch anpassen.
+Zum Beispiel, dass die Mehrzahl der Methoden einen lesenden Zugriff umsetzt.
+Und die wenigen schreibenden Zugriffe auch klar dokumentieren, dass es hier hinter den Kuluissen
+zu einer tiefen Objektkopie kommt.
 
 
 
