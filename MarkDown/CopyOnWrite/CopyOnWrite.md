@@ -23,8 +23,13 @@ https://stackoverflow.com/questions/1649028/how-to-implement-copy-on-write
 
 
 
+<img src="Schablone.svg" width="500">
 
-## Kopieren auf eine andere Weise
+*Abbildung* 1: XXX.
+
+
+
+## Kopieren auf eine andere Weise // ALTER TEXT
 
 Viele Objekte im täglichen &bdquo;C++&bdquo;-Alltag zeichnen sich dadurch aus,
 die ihre Daten über die beiden Speicherbereiche Stack und Heap verteilt sind.
@@ -68,16 +73,10 @@ sondern nur dann, wenn zwischendurch eine Kopie des Objektes erstellt wird.
 
 ## Unterschiedliche Möglichkeiten des Kopierens von Objekten
 
-Eine der häufigsten Operationen in einem Programm ist das Kopieren von Objekten.
+Eine häufige Operation in einem Programm ist das Kopieren von Objekten.
 Ein Objekt steht in objektorientierten Programmiersprachen für einen zusammengesetzter Datentyp.
 Das Kopieren eines Objekts beschreibt den Vorgang, bei dem alle Attribute (Instanzvariablen) eines Objekts
-in ein anderes Objekt desselben Datentyps zu kopiert sind.
-
-Warum will man überhaupt ein Objekt kopieren? Soweit es geht, sollte man dies vermeiden.
-In C++ tritt das Kopieren von Objekten bei Funktionen/Methoden auf, die einen Objekttyp als Rückgabetyp haben.
-Okay, man könnte das Objekt auch auf dem Heap anlegen und dann einen Zeiger zurückgeben.
-
-
+in den Speicherbereich eines anderen Objekts desselben Datentyps umkopiert werden.
 
 
 #### Flache Kopie 
@@ -85,44 +84,76 @@ Okay, man könnte das Objekt auch auf dem Heap anlegen und dann einen Zeiger zur
 Eine flache Kopie eines Objekts kopiert alle Instanzvariablen. Dies funktioniert problemlos,
 wenn die Variablen Werte elementaren Datentyps sind.
 
-Haben wir es mit Instanzvariablen zu tun, die auf
-dynamisch allokierten Speicher verweisen, funktiioniert das Prinzip einer flachen Kopie so nicht mehr.
+In *Abbildung* 1 finden Sie ein Objekt einer Klasse `Date` dargestellt vor:
 
-Der Zeiger wird kopiert, aber der Speicher, auf den er verweist,
-wird nicht kopiert – das Feld im Originalobjekt und in der Kopie verweist dann auf denselben
-dynamisch allokierten Speicher, was in der Regel nicht gewünscht ist.
+```cpp
+class Date
+{
+private:
+    int m_value_1;
+    int m_value_2;
+    int m_value_3;
+};
+```
 
-Die automtisch erzeugten Standard-Kopierkonstruktor und der Zuweisungsoperator erzeugen flache Kopien.
+Um ein Objekt eines solchen Typs zu kopieren, genügt es, von allen Instanzvariablen eine bitweise
+Kopie zu erstellen.
 
+<img src="copy_on_write_01.svg" width="500">
 
-WEITER : Tiefe Kopie ...........
-
-
-
-
-
-
-
-
-
+*Abbildung* 1: Zwei Objekte des Typs `Date`: Ein Original und eine Kopie.
 
 
 #### Tiefe Kopie
 
-Eine tiefe Kopie kopiert alle Felder und erstellt Kopien des dynamisch allokierten Speichers, auf den die Felder verweisen.
-Um eine tiefe Kopie zu erstellen, müssen Sie einen Kopierkonstruktor schreiben und den Zuweisungsoperator überladen, da die Kopie sonst auf das Original verweist, was katastrophale Folgen haben kann.
+Wir betrachten nun Objekte, die in den Instanzvariablen neben elementaren Variablen
+auch Zeigervariablen enthalten, die auf dynamisch allokierten Speicher auf der Halde zeigen.
+
+Das Prinzip einer flachen Kopie funktioniert nun nicht mehr.
+Die Zeigervariablen würden zwar korrekt kopiert werden, aber der Speicher, auf den sie verweisen,
+wäre derselbe, auf den der Zeiger im Ursprungsobjekt zeigt.
+Die Zeigervariable im Originalobjekt und in der Kopie verweisen dann auf denselben
+dynamisch allokierten Speicherbereich, was in den allermeisten Fällen so nicht gewünscht ist,
+siehe *Abbildung* 2:
+
+<img src="copy_on_write_02.svg" width="600">
+
+*Abbildung* 2: Zwei Objekte des Typs `Date`: Ein Original und eine Kopie.
+
+Um zu korrekten Kopie zu gelangen, benötigen wir die Vorgehensweise der &bdquo;tiefen Kopie&rdquo;
+Eine tiefe Kopie kopiert alle Felder und erstellt Kopien des dynamisch allokierten Speichers, auf den die Felder verweisen
+(*Abbildung* 3)
+
+<img src="copy_on_write_03.svg" width="600">
+
+*Abbildung* 3: Zwei Objekte des Typs `Date`: Ein Original und eine Kopie.
+
+
+Um eine tiefe Kopie zu erstellen, müssen Sie einen Kopierkonstruktor schreiben und den Zuweisungsoperator überladen
+und wie beschrieben implementieren.
+Die automtisch erzeugten Standard-Kopierkonstruktor und der Zuweisungsoperator erzeugen flache Kopien.
+
+
 
 #### Lazy Copy
 
+Interessanterweise gibt es neben diesen beiden Kopierstrategien noch eine dritte Strategie,
+die so genannte Lazy Copy, auch also Copy-on-Write bezeichnet.
+
 Eine Lazy Copy kombiniert die beiden oben genannten Strategien.
 Beim ersten Kopieren eines Objekts wird eine (schnelle) flache Kopie erstellt.
-Ein Zähler verfolgt, wie viele Objekte die Daten gemeinsam nutzen.
 
-Wenn das Programm ein Objekt ändern möchte, kann es anhand des Zählers feststellen, ob die Daten gemeinsam genutzt werden,
-und gegebenenfalls eine tiefe Kopie erstellen.
-Lazy Copy verhält sich von außen wie eine tiefe Kopie, nutzt aber nach Möglichkeit die Geschwindigkeit einer flachen Kopie.
+Wird dieses Objekt kopiert, wird *keine* tiefe Kopie angelegt. Es wird stattdessen nur die Zählervariable
+inkrementiert. Das kopierte Objekt greift auf dieselben Daten wie das Originalobjekt zu.
+Solange an einem der beteiligten Objekte keine Änderung erfolgt, funktioniert dieser Ansatz.
+Eine Zählervariable verfolgt, wie viele Objekte die Daten gemeinsam nutzen.
 
-Der Nachteil sind die relativ hohen, aber konstanten Basiskosten aufgrund des Zählers.
+Wenn das Programm ein Objekt ändern möchte, kann es anhand des Zählers feststellen, ob die Daten gemeinsam genutzt werden.
+Wenn ja, dann ist &ndash; zu diesem Zeitpunkt, also *on demand* &ndash; eine tiefe Kopie zu erstellen.
+
+Zusammenfassend kann man sagen, dass die *Lazy Copy*-Strategie sich von außen wie eine tiefe Kopie darstellt,
+nutzt aber intern nach Möglichkeiten einer flachen Kopie.
+
 
 
 

@@ -33,6 +33,9 @@
     <ClCompile Include="COW_String_03.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="COW_Ptr_01.h">

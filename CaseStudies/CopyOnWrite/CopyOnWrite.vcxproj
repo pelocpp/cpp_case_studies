@@ -129,6 +129,7 @@
     <ClCompile Include="COW_String_01.cpp" />
     <ClCompile Include="COW_String_02.cpp" />
     <ClCompile Include="COW_String_03.cpp" />
+    <ClCompile Include="Data.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>

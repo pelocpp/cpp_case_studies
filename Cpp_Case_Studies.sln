@@ -270,6 +270,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CopyOnWrite", "CopyOnWrite", "{75715AAF-0710-46C9-8B04-A929FF1C4D58}"
 	ProjectSection(SolutionItems) = preProject
 		MarkDown\CopyOnWrite\CopyOnWrite.md = MarkDown\CopyOnWrite\CopyOnWrite.md
+		MarkDown\CopyOnWrite\copy_on_write_01.svg = MarkDown\CopyOnWrite\copy_on_write_01.svg
+		MarkDown\CopyOnWrite\copy_on_write_02.svg = MarkDown\CopyOnWrite\copy_on_write_02.svg
+		MarkDown\CopyOnWrite\copy_on_write_03.svg = MarkDown\CopyOnWrite\copy_on_write_03.svg
 	EndProjectSection
 EndProject
 Global
