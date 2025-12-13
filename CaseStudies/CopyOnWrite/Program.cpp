@@ -3,13 +3,13 @@
 // https://github.com/pelocpp/cpp_case_studies    // https://peterloos.de
 // =====================================================================================
 
-void test_cow_string_01();
+void test_cow_string_simple();
 
 #include <print>
 
 int main()
 {
-    test_cow_string_01();
+    test_cow_string_simple();
 }
 
 // =====================================================================================

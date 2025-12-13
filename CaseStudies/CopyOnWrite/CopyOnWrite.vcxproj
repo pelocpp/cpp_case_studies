@@ -124,15 +124,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CowStringImpl.cpp" />
+    <ClCompile Include="CowStringProgram.cpp" />
     <ClCompile Include="COW_Ptr_01.cpp" />
     <ClCompile Include="COW_Ptr_02.cpp" />
-    <ClCompile Include="COW_String_01.cpp" />
     <ClCompile Include="COW_String_02.cpp" />
     <ClCompile Include="COW_String_03.cpp" />
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CowString.h" />
     <ClInclude Include="COW_Ptr_01.h" />
     <ClInclude Include="COW_Ptr_02.h" />
   </ItemGroup>
