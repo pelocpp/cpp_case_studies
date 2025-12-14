@@ -315,14 +315,13 @@ namespace CowString03
     };
 }
 
-void test_cow_string_02()
+void test_cow_string_improved()
 {
     using namespace CowString03;
 
+    std::cout << "Test Improved" << std::endl;
 
-    std::cout << "TEST 02" << std::endl;
-
-    cow_string a = "Hello";
+    cow_string a = "1234567890";
     cow_string b = a;     // shared buffer
     cow_string c = b;     // shared buffer
 
@@ -330,7 +329,7 @@ void test_cow_string_02()
     std::cout << "b=" << b << "\n";
     std::cout << "c=" << c << "\n";
 
-    b[0] = 'J';  // copy-on-write happens here
+    b[0] = 'A';  // copy-on-write happens here
 
     std::cout << "After modifying b:\n";
     std::cout << "a=" << a << "\n";

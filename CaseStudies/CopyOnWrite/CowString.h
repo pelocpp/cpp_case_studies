@@ -4,8 +4,9 @@
 
 #pragma once
 
-#include <atomic>      // std::atomic
-#include <cstddef>     // std::std::size_t, offsetof
+#include <atomic>       // std::atomic
+#include <cstddef>      // std::std::size_t, offsetof
+#include <string_view>  // std::string_view
 
 namespace CowStringSimple
 {
@@ -40,10 +41,14 @@ namespace CowStringSimple
         // getter
         std::size_t size() const;
         const char* c_str() const;
+     //   const char* c_str() const;
+        
+        // type-conversion operator
+        operator std::string_view();
 
         // read- and write-access
-        char operator[](std::size_t idx) const;
-        char& operator[](std::size_t idx);
+        char operator[](std::size_t idx) const;  // read-only access
+        char& operator[](std::size_t idx);       // possible write access - triggers COW
     };
 }
 

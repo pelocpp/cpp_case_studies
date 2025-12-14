@@ -18,15 +18,6 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="COW_Ptr_01.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="COW_Ptr_02.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="COW_String_02.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="COW_String_03.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -41,12 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="COW_Ptr_01.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="COW_Ptr_02.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CowString.h">
       <Filter>Header Files</Filter>
     </ClInclude>

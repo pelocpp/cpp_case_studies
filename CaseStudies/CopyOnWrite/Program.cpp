@@ -4,6 +4,7 @@
 // =====================================================================================
 
 void test_cow_string_simple();
+void test_cow_string_improved();
 
 #include <print>
 

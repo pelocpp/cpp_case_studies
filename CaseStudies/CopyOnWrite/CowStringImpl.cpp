@@ -81,11 +81,17 @@ namespace CowStringSimple
         return m_str[idx];
     }
 
-    // write access - triggers COW
+    // possible write access - triggers COW
     char& CowString::operator[](std::size_t idx) {
 
         detach();
         return m_str[idx];
+    }
+
+    // type-conversion operator
+    CowString::operator std::string_view()
+    {
+        return { m_str , m_ptr->m_length };
     }
 
     // ensure we have a private (unshared) copy before writing

@@ -160,6 +160,26 @@ Intern wird aber, soweit möglich, das Prinzip einer flachen Kopie anstrebt.
 Erst wenn es zu Änderungen (schreibender Zugriff) an einem der beteiligten Objekte kommt,
 ist eine echte (tiefe) Kopie zu erstellen.
 
+## Einfache Lazy Copy Theorie
+
+Wir wollen die bisherigen Betrachtungen zusammenfassen:
+
+  * Eine COW-Zeichenkette kann zwei Zustände annehmen: Sie besitzt den Puffer exklusiv (Zustand &bdquo;*owning*&rdquo;)
+oder teilt ihn mit anderen COW-Zeichenketten (Zustand &bdquo;*sharing*&rdquo;).
+
+  * Anfangs befindet sich ein COW-Zeichenkettenobjekt im &bdquo;*owning*&rdquo;-Zustand.
+Zuweisungen und Initialisierungen durch Kopieren können das Objekt in den &bdquo;*sharing*&rdquo;-Zustand versetzen.
+Vor dem Ausführen einer Schreiboperation muss sichergestellt sein, dass es sich im &bdquo;*owning*&rdquo;-Zustand befindet.
+
+  * Der Übergang vom &bdquo;*sharing*&rdquo;- zum &bdquo;*owning*&rdquo;-Zustand beinhaltet das Kopieren des Pufferinhalts in einen neuen,
+nun exklusiv genutzten Puffer.
+
+  * Bei einem für COW konzipierten Zeichenketten-Datentyp ist jede Operation entweder nicht-modifizierend (eine Leseoperation)
+oder modifizierend (eine Schreiboperation).
+Dadurch lässt sich leicht feststellen, ob die Zeichenkette vor der Ausführung der Operation den &bdquo;*owning*&rdquo;-Zustand sicherstellen muss
+oder im &bdquo;*sharing*&rdquo;-Zustand verbleiben kann.
+
+
 
 ## Erster Entwurf einer einfachen &bdquo;*Copy-on-Write*&rdquo;-Klasse für Zeichenketten
 
@@ -204,9 +224,16 @@ ist eine echte (tiefe) Kopie zu erstellen.
 ```
 
 In den Zeilen 4 bis 11 finden wir eine geschachtelte Klasse `Controlblock` vor.
-Diese hat Ähnlichkeiten mit einer *Controlblock*-Klasse, wie in Implementierungen der Smartpointer-Klasse `std::shared_ptr<T>` verwenden.
+Diese hat Ähnlichkeiten mit einer *Controlblock*-Klasse, wie sie in Implementierungen der Smartpointer-Klasse `std::shared_ptr<T>` verwendet wird.
 Der beschriebene Referenzzähler `m_refCount` wird in Zeile 6 definiert, es kommt die Klasse `std::atomic<std::size_t>` zum Zuge.
 Die Längenvariable `m_length` beschreibt die Länge der gekapselten Zeichenkette.
+
+Die `detach`-Methode aus Zeile 17 vollziegt einen Zustandswechsel eines `CowString`-Objekts 
+vom Zustand &bdquo;*sharing*&rdquo; in den Zustand &bdquo;*owning*&rdquo;.
+Diese Methode ist folglich in allen Methoden / Operatoren der `CowString`-Klasse zu rufen,
+wenn ein schreibender Vorgang angestoßen wird. Bei allen lesende Operationen ändert das `CowString`-Objekt
+seinen Zustand nicht.
+
 
 Betrachten wir die Realisierung der Methoden:
 
@@ -315,9 +342,9 @@ Wir könnten neben der `Controlblock`-Objekt auch die Zeichen in einem separaten
 Das würde bedeuten, dass für eine Zeichenkette zwei Anforderungen an die Freispeicherverwaltung gestellt werden.
 Dies ist nicht sehr performant, wir beschreiten einen andere Weg.
 
-## Entwurf der Controlblock-Klasse der `CowString`-Klasse
+## Entwurf des Controlblocks der `CowString`-Klasse
 
-Wir suchen die Definition einer Klasse (Struktur), die am Ende noch einen &bdquo;nachgelagertem Speicherbereich&rdquo; besitzt,
+Wir suchen die Definition einer Klasse (Struktur), die am Ende noch einen &bdquo;nachgelagerten&rdquo; Speicherbereich besitzt,
 der groß genug ist, um die Zeichenkette aufzunehmen.
 
 Nicht übersetzungsfähig sind Strukturen der Art
@@ -325,36 +352,42 @@ Nicht übersetzungsfähig sind Strukturen der Art
 ```cpp
 struct Controlblock
 {
-    size_t m;
-    size_t m1;
-    char trailing[];
+    std::size_t m_length;
+    ...
+    char        m_trailing[];
 }
 ```
 
 *Bemerkung*:<br />
-Der GCC-Compiler übersetzt eine derartige Struktor problemlos, der MSVC-Compiler hingegen nicht.
+Der GCC-Compiler übersetzt eine derartige Struktur problemlos, der MSVC-Compiler hingegen nicht.
 Wir kommen nicht umhin, festzustellen, dass diese Struktur nicht dem C++-Standard entspricht.
-GCC akzeptiert sie nur als Compiler-Erweiterung (GNU Flexible Array Extension).
+GCC akzeptiert sie nur als Compiler-Erweiterung (&bdquo;*GNU Flexible Array Extension*&rdquo;).
 MSVC lehnt sie gemäß dem C++-Standard korrekt ab.
 
-Man geht tyischerweise wie folgt vor:
+Wir gehen deshalb wie folgt vor:
 
 
 ```cpp
 struct Controlblock
 {
-    size_t m1;
-    size_t m2;
+    std::size_t m_length;
+    ...
     // no flexible sized array
 }
 ```
 
-Instanzen einer `Controlblock`-Struktur werden so angelegt:
+Die Struktur `Controlblock` soll alle Daten enthalten, die für die Verwaltung eines COW Controlblocks erforderlich sind.
+Das Anlegen einer `Controlblock`-Instanz führen wir etwas unorthodox durch.
+Da wir die Länge der Zeichenkette, die es zu verwalten gilt, kennen,
+reservieren wir den Speicher für die `Controlblock`-Instanz dynamisch &ndash; und belegen neben dem für die `Controlblock`-Struktur notwendigen Speicher
+noch zusätztlichen Speicher, der die Zeichenkette (inkl. terminierendes Null-Zeichen) aufnehmen kann.
+Eine Funktion `createControlblock`, die die Länge der Zeichenkette übergeben bekommt, könnte so aussehen:
+
 
 ```
-Controlblock* makeData(std::size_t payloadSize)
+Controlblock* createControlblock(std::size_t length)
 {
-    void* mem = ::operator new (sizeof(Controlblock) + payloadSize);
+    void* mem = ::operator new (sizeof(Controlblock) + length + 1);
     return new (mem) Controlblock{};
 }
 ```
@@ -362,14 +395,14 @@ Controlblock* makeData(std::size_t payloadSize)
 Mit dem Operator `::operator new` wird Speicher reserviert und sonst nichts weiter.
 Es erfolgt keine Iniialisierung bzw. Vorbelegung des reservierten Speichers.
 
-Diese erfolgt &ndash; im skizzierten Beispiel  &ndash; mit dem so genannten Placement new:
+Diese erfolgt &ndash; im skizzierten Beispiel  &ndash; mit dem so genannten *Placement new*:
 Der Aufruf des Standardkonstruktors (`Controlblock{}`) wird auf dem reservierten Speicher angewendet.
 
-Offen ist, wie auf den zusätzlich vorhandenen Speicher im Anschluss an das `struct Controlblock`-Objekts zugegriffen
+Offen ist, wie auf den zusätzlich vorhandenen Speicher im Anschluss an das `struct Controlblock`-Objekt zugegriffen
 werden kann. Dies erfolgt mit klassischen C/C++-Sprachmitteln wie `reinterpret_cast` und Zeigerarithmetik:
 
 ```cpp
-Controlblock* d = makeControlblock(10);
+Controlblock* d = createControlblock(10);
 char* payload = reinterpret_cast<char*>(data) + sizeof(Controlblock);
 // 10 bytes past 'payload' pointer available
 ```
@@ -425,4 +458,9 @@ Zum Beispiel, dass die Mehrzahl der Methoden einen lesenden Zugriff umsetzt.
 Und die wenigen schreibenden Zugriffe auch klar dokumentieren, dass es hier hinter den Kuluissen
 zu einer tiefen Objektkopie kommt.
 
+Es handelt sich lediglich um eine gravierende Diskrepanz zwischen dem Design von `std::string`
+und den idealen Anforderungen an die Zeichenkettenverarbeitung (COW).
+
+
+## Literatur
 
