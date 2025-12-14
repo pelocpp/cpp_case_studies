@@ -83,9 +83,45 @@ namespace CowStringSimple
 
     // possible write access - triggers COW
     char& CowString::operator[](std::size_t idx) {
-
         detach();
         return m_str[idx];
+    }
+
+    // read-only access
+    char CowString::at(std::size_t idx) const {
+        if (i >= ptr->size)
+            throw std::out_of_range("cow_string::at");
+        return ptr->data[i];
+    }
+
+    // possible write access - triggers COW
+    char& CowString::at(std::size_t idx) {
+        if (i >= ptr->size)
+            throw std::out_of_range("cow_string::at");
+        detach();
+        return ptr->data[i];
+    }
+
+    // comparison operators - global methods
+    bool operator==(const CowString& a, const CowString& b) {
+
+        if (a.m_ptr == b.m_ptr) {
+            return true;
+        }
+
+        if (a.size() != b.size()) {
+            return false;
+        }
+
+        return std::memcmp(a.c_str(), b.c_str(), a.size()) == 0;
+    }
+
+    bool operator!=(const CowString& a, const CowString& b) {
+        return !(a == b);
+    }
+
+    bool operator<(const CowString& a, const CowString& b) {
+        return std::strcmp(a.c_str(), b.c_str()) < 0;
     }
 
     // type-conversion operator

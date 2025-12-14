@@ -119,14 +119,14 @@ void test_cow_string_simple()
 
     std::println("Testing CowString:");
 
-    //test_cow_string_01();
-    //test_cow_string_02();
-    //test_cow_string_03();
-    //test_cow_string_04();
-    //test_cow_string_05();
-    //test_cow_string_06();
+    test_cow_string_01();
+    test_cow_string_02();
+    test_cow_string_03();
+    test_cow_string_04();
+    test_cow_string_05();
+    test_cow_string_06();
     test_cow_string_07();
-   // test_cow_string_08();
+    test_cow_string_08();
 }
 
 // =====================================================================================

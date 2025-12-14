@@ -4,12 +4,15 @@
 #include <atomic>
 #include <cstring>
 #include <iostream>
+#include <print>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 
 namespace CowString03
 {
-    class cow_string {
+    class CowStringEx 
+    {
     private:
         struct StringData
         {
@@ -20,6 +23,8 @@ namespace CowString03
 
             static StringData* create(std::size_t cap, const char* src = nullptr, std::size_t len = 0)  // TODO: Diese Default Params sind shit
             {
+                std::size_t ss{ sizeof(StringData) };
+
                 void* mem{ ::operator new(sizeof(StringData) + cap + 1) };
                 StringData* sd{ new (mem) StringData{ 1, len, cap } };
 
@@ -47,7 +52,7 @@ namespace CowString03
 
         // Idee: Kann man diese Adresse nicht als Membervariable aufheben ??
         // Wann wird diese wie initiliersiert :  cp = this + sizeof(StringData);
-        char* cp{ reinterpret_cast<char*> (m_ptr) + sizeof(StringData) };
+     //   char* cp{ reinterpret_cast<char*> (m_ptr) + sizeof(StringData) };
 
 
         // Ensure writable buffer (copy-on-write)
@@ -88,23 +93,23 @@ namespace CowString03
 
     public:
         // Constructors
-        cow_string() : m_ptr(StringData::create(15)) {}
+        CowStringEx() : m_ptr(StringData::create(15)) {}
 
-        cow_string(const char* s) {
-            std::size_t len = std::strlen(s);
+        CowStringEx(const char* s) {
+            std::size_t len{ std::strlen(s) };
             m_ptr = StringData::create(len, s, len);
         }
 
-        cow_string(const cow_string& other) : m_ptr(other.m_ptr) {
+        CowStringEx(const CowStringEx& other) : m_ptr(other.m_ptr) {
             m_ptr->m_refCount++;
         }
 
-        cow_string(cow_string&& other) noexcept : m_ptr(other.m_ptr) {
+        CowStringEx(CowStringEx&& other) noexcept : m_ptr(other.m_ptr) {
             other.m_ptr = StringData::create(15);
         }
 
         // Assignment
-        cow_string& operator=(const cow_string& other) {
+        CowStringEx& operator=(const CowStringEx& other) {
             if (this != &other) {
                 if (--m_ptr->m_refCount == 0)
                     ::operator delete(m_ptr);
@@ -114,7 +119,7 @@ namespace CowString03
             return *this;
         }
 
-        cow_string& operator=(cow_string&& other) noexcept {
+        CowStringEx& operator=(CowStringEx&& other) noexcept {
             if (this != &other) {
                 if (--m_ptr->m_refCount == 0)
                     ::operator delete(m_ptr);
@@ -125,7 +130,7 @@ namespace CowString03
         }
 
         // Destructor
-        ~cow_string() {
+        ~CowStringEx() {
             if (--m_ptr->m_refCount == 0)
                 ::operator delete(m_ptr);
         }
@@ -179,6 +184,12 @@ namespace CowString03
             return reinterpret_cast<char*> (m_ptr) + sizeof(StringData);
         }
 
+        // type-conversion operator
+        operator std::string_view()
+        {
+            char* cp{ reinterpret_cast<char*> (m_ptr) + sizeof(StringData) };
+            return { cp , m_ptr->m_size };
+        }
 
         // Element access
         char operator[](std::size_t i) const {
@@ -217,7 +228,7 @@ namespace CowString03
         }
 
         // Append
-        cow_string& append(const char* s)
+        CowStringEx& append(const char* s)
         {
             std::size_t len = std::strlen(s);
             detach();
@@ -233,19 +244,19 @@ namespace CowString03
             //return *this;
         }
 
-        cow_string& append(const cow_string& other) {
+        CowStringEx& append(const CowStringEx& other) {
             return append(other.c_str());
         }
 
-        cow_string& operator+=(const cow_string& other) {
+        CowStringEx& operator+=(const CowStringEx& other) {
             return append(other);
         }
 
-        cow_string& operator+=(const char* s) {
+        CowStringEx& operator+=(const char* s) {
             return append(s);
         }
 
-        //cow_string& operator+=(char c) {
+        //CowStringEx& operator+=(char c) {
         //    detach();
         //    ensure_capacity(m_ptr->m_size + 1);
         //    m_ptr->data[m_ptr->m_size++] = c;
@@ -254,8 +265,8 @@ namespace CowString03
         //}
 
         // Concatenation
-        //friend cow_string operator+(const cow_string& a, const cow_string& b) {
-        //    cow_string r;
+        //friend CowStringEx operator+(const CowStringEx& a, const CowStringEx& b) {
+        //    CowStringEx r;
         //    r.ensure_capacity(a.size() + b.size());
         //    r.m_ptr->m_size = a.size() + b.size();
         //    std::memcpy(r.m_ptr->data, a.m_ptr->data, a.size());
@@ -263,7 +274,7 @@ namespace CowString03
         //    return r;
         //}
 
-        cow_string& operator+=(char c) {
+        CowStringEx& operator+=(char c) {
             detach();
             ensure_capacity(m_ptr->m_size + 1);
             char* cp{ reinterpret_cast<char*> (m_ptr) + sizeof(StringData) };
@@ -273,8 +284,8 @@ namespace CowString03
         }
 
         //// Concatenation
-        //friend cow_string operator+(const cow_string& a, const cow_string& b) {
-        //    cow_string r;
+        //friend CowStringEx operator+(const CowStringEx& a, const CowStringEx& b) {
+        //    CowStringEx r;
         //    r.ensure_capacity(a.size() + b.size());
         //    r.m_ptr->m_size = a.size() + b.size();
 
@@ -288,17 +299,17 @@ namespace CowString03
 
 
         // Comparisons
-        friend bool operator==(const cow_string& a, const cow_string& b) {
+        friend bool operator==(const CowStringEx& a, const CowStringEx& b) {
             if (a.m_ptr == b.m_ptr) return true;
             if (a.size() != b.size()) return false;
             return std::memcmp(a.c_str(), b.c_str(), a.size()) == 0;
         }
 
-        friend bool operator!=(const cow_string& a, const cow_string& b) {
+        friend bool operator!=(const CowStringEx& a, const CowStringEx& b) {
             return !(a == b);
         }
 
-        friend bool operator<(const cow_string& a, const cow_string& b) {
+        friend bool operator<(const CowStringEx& a, const CowStringEx& b) {
             return std::strcmp(a.c_str(), b.c_str()) < 0;
         }
 
@@ -309,31 +320,181 @@ namespace CowString03
         //char* end() { detach(); return m_ptr->data + m_ptr->m_size; }
 
         // Stream output
-        friend std::ostream& operator<<(std::ostream& os, const cow_string& s) {
+        friend std::ostream& operator<<(std::ostream& os, const CowStringEx& s) {
             return os << s.c_str();
         }
     };
 }
 
-void test_cow_string_improved()
+static void test_cow_string_01()
 {
     using namespace CowString03;
 
-    std::cout << "Test Improved" << std::endl;
+    CowStringEx a;
+}
 
-    cow_string a = "1234567890";
-    cow_string b = a;     // shared buffer
-    cow_string c = b;     // shared buffer
+static void test_cow_string_02()
+{
+    using namespace CowString03;
 
-    std::cout << "a=" << a << "\n";
-    std::cout << "b=" << b << "\n";
-    std::cout << "c=" << c << "\n";
+    CowStringEx a{ "1234567890" };
+    std::println("String: {}", a.c_str());
+    std::println("Length: {}", a.size());
+}
 
-    b[0] = 'A';  // copy-on-write happens here
+static void test_cow_string_03()
+{
+    using namespace CowString03;
 
-    std::cout << "After modifying b:\n";
-    std::cout << "a=" << a << "\n";
-    std::cout << "b=" << b << "\n";  // modified
-    std::cout << "c=" << c << "\n";
+    CowStringEx a{ "1234567890" };
+    CowStringEx b{ a };
+}
+
+static void test_cow_string_04()
+{
+    using namespace CowString03;
+
+    CowStringEx a{ "1234567890" };
+    CowStringEx b{ a };
+    CowStringEx c{ a };
+
+    c[0] = '!';
+}
+
+static void test_cow_string_05()
+{
+    using namespace CowString03;
+
+    CowStringEx a{ "1234567890" };
+    CowStringEx b{ a };
+    CowStringEx c{ a };
+
+    CowStringEx x{ "ABC" };
+    CowStringEx y{ x };
+
+    a = x;
+}
+
+static void test_cow_string_06()
+{
+    using namespace CowString03;
+
+    CowStringEx a{ "Hello World" };
+    CowStringEx b{ a };  // shares buffer
+    CowStringEx c{ b };  // shares buffer
+
+    std::println("Before modification:");
+    std::println("a: {}", a.c_str());
+    std::println("b: {}", b.c_str());
+    std::println("c: {}", c.c_str());
+
+    b[0] = 'h'; // triggers copy-on-write only for 'b'
+    b[6] = 'w'; // triggers copy-on-write only for 'b'
+
+    std::println("After modification:");
+    std::println("a: {}", a.c_str());  // unchanged
+    std::println("b: {}", b.c_str());  // modified
+    std::println("c: {}", c.c_str());  // unchanged
+}
+
+static void test_cow_string_07()
+{
+    using namespace CowString03;
+
+    CowStringEx s{ "1234567890" };
+    const char* p{ s.c_str() };
+
+    {
+        // in this block the contents of `s` is not modified
+        CowStringEx other{ s };
+        char first_char{ s[0] };
+    }
+
+    std::println("After block:");
+    std::println("p: {}", p);      // p is no more valid!
+}
+
+static void test_cow_string_08()
+{
+    using namespace CowString03;
+
+    CowStringEx s{ "1234567890" };
+    const char* p{ s.c_str() };
+
+    //{
+        // in this block the contents of `s` is not modified
+    CowStringEx other{ s };
+    char first_char{ s[0] };
+    //}
+
+    std::println("After block:");
+    std::println("p: {}", p);      // p is no more valid!
+}
+
+static void test_cow_string_09()
+{
+    using namespace CowString03;
+
+    CowStringEx s{ "1234567890" };
+
+    std::string_view sv{ s };
+    std::println("sv:  {}", sv);
+
+    s[9] = '!';
+
+    std::string_view sv1 = s;
+    std::println("sv:  {}", sv);
+    std::println("sv1: {}", sv1);
+}
+
+
+static void test_cow_string_10()
+{
+    using namespace CowString03;
+
+    CowStringEx s{ };
+    
+    s.append("A");
+    s.append("B");
+    s.append("C");
+
+    std::string_view sv{ s };
+    std::println("sv1:  {}", sv);
+}
+
+
+static void test_cow_string_11()
+{
+    using namespace CowString03;
+
+    CowStringEx s1{ "1234567890" };
+    CowStringEx s2{ s1 };
+
+    s1.append("A");
+
+    std::string_view sv1{ s1 };
+    std::println("sv1:  {}", sv1);
+
+    std::string_view sv2{ s2 };
+    std::println("sv2:  {}", sv2);
+
+}
+
+
+
+void test_cow_string_improved()
+{
+    //test_cow_string_01();
+    //test_cow_string_02();
+    //test_cow_string_03();
+    //test_cow_string_04();
+    //test_cow_string_05();
+    //test_cow_string_06();
+    //test_cow_string_07();
+    //test_cow_string_08();
+    //test_cow_string_09();
+
+    test_cow_string_10();
+    //test_cow_string_11();
 }
 

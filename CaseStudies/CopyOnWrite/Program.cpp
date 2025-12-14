@@ -10,7 +10,7 @@ void test_cow_string_improved();
 
 int main()
 {
-    test_cow_string_simple();
+    test_cow_string_improved();
 }
 
 // =====================================================================================

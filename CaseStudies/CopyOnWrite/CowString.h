@@ -41,14 +41,21 @@ namespace CowStringSimple
         // getter
         std::size_t size() const;
         const char* c_str() const;
-     //   const char* c_str() const;
         
         // type-conversion operator
         operator std::string_view();
 
-        // read- and write-access
+        // comparison operators
+        friend bool operator==(const CowString& a, const CowString& b);
+        friend bool operator!=(const CowString& a, const CowString& b);
+        friend bool operator< (const CowString& a, const CowString& b);
+
+        // read- and write-access - no exception handling
         char operator[](std::size_t idx) const;  // read-only access
         char& operator[](std::size_t idx);       // possible write access - triggers COW
+    
+        char at(std::size_t idx) const;          // read-only access
+        char& at(std::size_t idx);               // possible write access - triggers COW
     };
 }
 
