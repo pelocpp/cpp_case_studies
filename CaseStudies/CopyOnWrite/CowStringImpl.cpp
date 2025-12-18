@@ -6,9 +6,11 @@
 
 #include <cstring>     // std::strlen
 #include <print>       // std::print
+#include <stdexcept>   // std::out_of_range
 
 namespace CowStringSimple
 {
+    // Controlblock
     CowString::Controlblock* CowString::Controlblock::create(const char* src)
     {
         std::size_t len{ std::strlen(src) };
@@ -28,6 +30,7 @@ namespace CowStringSimple
         return sd;
     }
 
+    // c'tor(s) / d'tor
     CowString::CowString()
     {
         m_ptr = Controlblock::createEmpty();
@@ -47,8 +50,24 @@ namespace CowStringSimple
         m_ptr->m_refCount++;
     }
 
-    CowString& CowString::operator=(const CowString& other)
+    CowString::~CowString()
     {
+        m_ptr->m_refCount--;
+        if (m_ptr->m_refCount == 0) {
+            ::operator delete(m_ptr);
+        }
+    }
+
+    // move semantics
+    CowString::CowString(CowString&& other) noexcept 
+        : m_ptr{ other.m_ptr }, m_str{ other.m_str } 
+    {
+        other.m_ptr = nullptr;
+        other.m_str = nullptr;    
+    }
+
+    CowString& CowString::operator=(CowString&& other) noexcept {
+
         if (this != &other) {
 
             m_ptr->m_refCount--;
@@ -58,20 +77,14 @@ namespace CowStringSimple
 
             m_ptr = other.m_ptr;
             m_str = other.m_str;
-            m_ptr->m_refCount++;
+            other.m_ptr = nullptr;
+            other.m_str = nullptr;
         }
-
+    
         return *this;
     }
 
-    CowString::~CowString()
-    {
-        m_ptr->m_refCount--;
-        if (m_ptr->m_refCount == 0) {
-            ::operator delete(m_ptr);
-        }
-    }
-
+    // getter
     std::size_t CowString::size() const { return m_ptr->m_length; }
 
     const char* CowString::c_str() const { return m_str; }
@@ -89,17 +102,37 @@ namespace CowStringSimple
 
     // read-only access
     char CowString::at(std::size_t idx) const {
-        if (i >= ptr->size)
-            throw std::out_of_range("cow_string::at");
-        return ptr->data[i];
+        if (idx >= m_ptr->m_length)
+            throw std::out_of_range("index out of range!");
+
+        return m_str[idx];
     }
 
     // possible write access - triggers COW
     char& CowString::at(std::size_t idx) {
-        if (i >= ptr->size)
-            throw std::out_of_range("cow_string::at");
+        if (idx >= m_ptr->m_length)
+            throw std::out_of_range("index out of range!");
+
         detach();
-        return ptr->data[i];
+        return m_str[idx];
+    }
+
+    // assignment operator
+    CowString& CowString::operator=(const CowString& other)
+    {
+        if (this != &other) {
+
+            m_ptr->m_refCount--;
+            if (m_ptr->m_refCount == 0) {
+                ::operator delete(m_ptr);
+            }
+
+            m_ptr = other.m_ptr;
+            m_str = other.m_str;
+            m_ptr->m_refCount++;
+        }
+
+        return *this;
     }
 
     // comparison operators - global methods
