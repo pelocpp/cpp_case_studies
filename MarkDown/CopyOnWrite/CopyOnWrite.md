@@ -31,23 +31,24 @@ https://stackoverflow.com/questions/1649028/how-to-implement-copy-on-write
 
 ## Kopieren auf eine andere Weise // ALTER TEXT
 
-Viele Objekte im täglichen &bdquo;C++&bdquo;-Alltag zeichnen sich dadurch aus,
+Viele Objekte im täglichen &bdquo;C++&rdquo;-Alltag zeichnen sich dadurch aus,
 die ihre Daten über die beiden Speicherbereiche Stack und Heap verteilt sind.
 Für das Kopieren derartiger Objekte bedeutet dies, dass es nicht genügt,
 die auf dem Stack liegenden Verwaltungsdaten zu kopieren. Auch die Daten auf dem Heap müssen kopiert werden,
-zumindest wenn man von einer echten Kopie reden möchte.
+zumindest wenn man von einer &bdquo;echten&rdquo; Kopie reden möchte.
 
 Thematisch sind wir sehr nah am Kopierkonstruktor als auch dem Wertzuweisungsoperator dran: 
 Sind in den Instanzvariablen eines Objekte Verweise vorhanden, die  auf Datenstrukturen auf dem Heap verweisen,
 muss der Kopierkonstruktor explizit vom Anwender bereitgestellt werden.
 
 Im Sprachjargon eines Informatikes könnte man Implementierungen des Kopierkonstruktors (und des Wertzuweisungsoperators) 
-bezeichnet man derartige Realisierungen als eifrig oder sogar als gierig.
-Etwas weniger emotional betrachtet tun die Realisierungen, das, was man von ihnen erwartet:
+als &bdquo;eifrig&rdquo; oder sogar als &bdquo;gierig&rdquo; bezeichnen.
+Etwas weniger emotional betrachtet tun die Realisierungen das, was man von ihnen erwartet:
 Eine Kopie eines vorhandenen Objekts erstellen.
 
-In der Tat könnte man "unter der Haube" etwas anderes vorgehen: Weniger eifrig, dafür mehr faul.
-Der Begriff "Lazy Copy" hat sich nicht wirklich durchgesetzt, wir sprechen hier meistens vom so genannten Copy-On-Write.
+In der Tat könnte man &bdquo;unter der Haube&rdquo; etwas anderes vorgehen: Weniger eifrig, dafür mehr faul.
+Der Begriff "Lazy Copy" hat sich nicht wirklich durchgesetzt,
+wir sprechen hier meistens von der so genannten &bdquo;Copy-On-Write&rdquo;-Strategie.
 
 Diese Kopier-Strategie bedeutet, dass beim Kopieren einer Datenstruktur X "unter der Haube" nur ein Pointer (oder eine Referenz)
 auf die internen Daten weitergereicht wird.
@@ -105,13 +106,13 @@ Kopie zu erstellen.
 
 #### Tiefe Kopie
 
-Wir betrachten nun Objekte, die in den Instanzvariablen neben elementaren Variablen
+Wir betrachten nun Objekte, die in den Instanzvariablen neben Variablen elementaren Datentyps
 auch Zeigervariablen enthalten, die auf dynamisch allokierten Speicher auf der Halde zeigen.
 
 Das Prinzip einer flachen Kopie funktioniert nun nicht mehr.
-Die Zeigervariablen würden zwar korrekt kopiert werden, aber der Speicher, auf den sie verweisen,
+Die Zeigervariablen würden zwar korrekt kopiert werden, aber der Speicher, auf den die Zeigervariablen verweisen,
 wäre derselbe, auf den der Zeiger im Ursprungsobjekt zeigt.
-Die Zeigervariable im Originalobjekt und in der Kopie verweisen auf denselben
+Also die Zeigervariable im Originalobjekt und die in der Kopie verweisen auf *denselben*
 dynamisch allokierten Speicherbereich.
 Dies ist in den allermeisten Fällen so nicht gewünscht, siehe auch *Abbildung* 2:
 
@@ -137,7 +138,7 @@ Der automtisch erzeugten Standard-Kopierkonstruktor und der Zuweisungsoperator e
 
 Interessanterweise gibt es neben diesen beiden Kopierstrategien auch noch eine dritte Strategie,
 die so genannte &bdquo;*Lazy Copy*&rdquo;-Strategie, oder auch also &bdquo;*Copy-on-Write*&rdquo; (*COW*) bezeichnet.
-Die &bdquo;*Lazy Copy*&rdquo;-Strategie kombiniert die beiden oben zuvor beschriebenen Strategien.
+Die &bdquo;*Lazy Copy*&rdquo;-Strategie kombiniert auf eine gewisse Weite die beiden zuvor beschriebenen Kopierstrategien.
 
 Bei dieser Vorgehensweise benötigen wir zusätzlich zum eigentlichen Objekt ein Hüllenobjekt,
 häufig als `COW_Ptr` bezeichnet. Dieses verwaltet neben den Daten des eigentlichen Objekts
@@ -146,6 +147,8 @@ eine (atomare) Zählervariable (so genannter *Referenzcounter*).
 Wird ein Objekt auf Basis der &bdquo;*Lazy Copy*&rdquo;-Strategie zum ersten Mal kopiert, wird nur die erwähnte Zählervariable inkrementiert.
 Das kopierte Objekt greift auf dieselben Daten wie das Originalobjekt zu.
 Solange an keinem der beteiligten Objekte eine Änderung erfolgt, funktioniert dieser Ansatz.
+Offensichtlich bedeutet diese Strategie, dass das Kopieren eines Objekts,
+bzw. das, was sich hinter den Kulissen abspielt, extrem performant ist.
 Eine Zählervariable verfolgt, wie viele Objekte die Daten gemeinsam nutzen.
 
 Wenn das Programm ein Objekt ändern möchte, kann es anhand des Zählers feststellen, ob die Daten gemeinsam genutzt werden.
