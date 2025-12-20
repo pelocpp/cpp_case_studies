@@ -128,6 +128,7 @@
     <ClCompile Include="CowStringProgram.cpp" />
     <ClCompile Include="COW_String_03.cpp" />
     <ClCompile Include="Data.cpp" />
+    <ClCompile Include="FrequencyCount.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>

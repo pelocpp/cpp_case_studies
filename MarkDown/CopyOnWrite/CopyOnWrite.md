@@ -109,7 +109,7 @@ Also die Zeigervariable im Originalobjekt und die in der Kopie verweisen auf *de
 dynamisch allokierten Speicherbereich.
 Dies ist in den allermeisten Fällen so nicht gewünscht, siehe auch *Abbildung* 2:
 
-<img src="copy_on_write_02.svg" width="600">
+<img src="copy_on_write_02.svg" width="650">
 
 *Abbildung* 2: Zwei Objekte des Typs `Data`: Ein Original und eine Kopie &ndash; mit Schwachstellen.
 
@@ -117,7 +117,7 @@ Um zu einer korrekten Kopie zu gelangen, benötigen wir die Vorgehensweise der &
 Diese kopiert alle Instanzvariablen und erstellt zusätzlich Kopien des dynamisch allokierten Speichers, auf den diese Instanzvariablen verweisen
 (*Abbildung* 3). Das bedeutet insbesonder, dass Instanzvariablen, die Zeiger enthalten, mit neuen Werten versorgt werden.
 
-<img src="copy_on_write_03.svg" width="600">
+<img src="copy_on_write_03.svg" width="650">
 
 *Abbildung* 3: Zwei Objekte des Typs `Data`: Ein Original und eine korrekte Kopie.
 
@@ -147,7 +147,7 @@ Weniger eifrig, dafür mehr &bdquo;faul&rdquo;, auch wenn das zunächst etwas ü
 Bei dieser Vorgehensweise benötigen wir zusätzlich zum eigentlichen Objekt ein Hüllenobjekt,
 häufig als `COW_Ptr` bezeichnet, in unserer Fallstudie `CowString`, da wir Zeichenketten betrachten (*Abbildung* 4):
 
-<img src="copy_on_write_04.svg" width="300">
+<img src="copy_on_write_04.svg" width="650">
 
 *Abbildung* 4: Ein `CowString`-Objekt &ndash; zunächst ohne Kopie.
 
@@ -161,7 +161,7 @@ Anders herum formuliert: Es gibt keine weiteren `CowString`-Objekte, die sich di
 Wird ein Objekt auf Basis der &bdquo;*Lazy Copy*&rdquo;-Strategie zum ersten Mal kopiert,
 wird nur die erwähnte Zählervariable inkrementiert (*Abbildung* 5).
 
-<img src="copy_on_write_05.svg" width="300">
+<img src="copy_on_write_05.svg" width="650">
 
 *Abbildung* 5: Ein `CowString`-Objekt &ndash; mit einer (abhängigen, *shared*) Kopie.
 
@@ -182,10 +182,9 @@ Sollen jetzt Änderungen am Objekt erfolgen, dann ist &ndash; zu diesem Zeitpunk
 (*Abbildung* 6):
 
 
-<img src="copy_on_write_06.svg" width="300">
+<img src="copy_on_write_06.svg" width="650">
 
 *Abbildung* 5: Ein `CowString`-Objekt &ndash; und eine (unabhängige, *owning*) Kopie.
-
 
 *Bemerkung*:<br />
 Die Klasse `std::shared_ptr` und eine &bdquo;*Copy-on-Write*&rdquo;-Klasse weisen gewisse Ähnlichkeiten auf.
