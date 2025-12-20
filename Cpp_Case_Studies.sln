@@ -273,6 +273,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CopyOnWrite", "CopyOnWrite"
 		MarkDown\CopyOnWrite\copy_on_write_01.svg = MarkDown\CopyOnWrite\copy_on_write_01.svg
 		MarkDown\CopyOnWrite\copy_on_write_02.svg = MarkDown\CopyOnWrite\copy_on_write_02.svg
 		MarkDown\CopyOnWrite\copy_on_write_03.svg = MarkDown\CopyOnWrite\copy_on_write_03.svg
+		MarkDown\CopyOnWrite\copy_on_write_04.svg = MarkDown\CopyOnWrite\copy_on_write_04.svg
+		MarkDown\CopyOnWrite\copy_on_write_05.svg = MarkDown\CopyOnWrite\copy_on_write_05.svg
+		MarkDown\CopyOnWrite\copy_on_write_06.svg = MarkDown\CopyOnWrite\copy_on_write_06.svg
 	EndProjectSection
 EndProject
 Global

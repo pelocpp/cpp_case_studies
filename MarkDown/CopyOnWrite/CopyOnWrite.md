@@ -29,31 +29,58 @@ https://stackoverflow.com/questions/1649028/how-to-implement-copy-on-write
 
 
 
-## Kopieren auf eine andere Weise // ALTER TEXT
+## Kopieren auf eine andere Weise // einführender Text
 
 Viele Objekte im täglichen &bdquo;C++&rdquo;-Alltag zeichnen sich dadurch aus,
-die ihre Daten über die beiden Speicherbereiche Stack und Heap verteilt sind.
+dass ihre Daten über die beiden Speicherbereiche Stack und Heap verteilt sind.
 Für das Kopieren derartiger Objekte bedeutet dies, dass es nicht genügt,
-die auf dem Stack liegenden Verwaltungsdaten zu kopieren. Auch die Daten auf dem Heap müssen kopiert werden,
-zumindest wenn man von einer &bdquo;echten&rdquo; Kopie reden möchte.
+die auf dem Stack liegenden Verwaltungsdaten  &bdquo;flach&rdquo; zu kopieren. Auch die Daten auf dem Heap müssen kopiert werden,
+zumindest wenn man von einer &bdquo;echten&rdquo; (&bdquo;tiefen&rdquo;) Kopie sprechen möchte
 
-Thematisch sind wir sehr nah am Kopierkonstruktor als auch dem Wertzuweisungsoperator dran: 
-Sind in den Instanzvariablen eines Objekte Verweise vorhanden, die  auf Datenstrukturen auf dem Heap verweisen,
-muss der Kopierkonstruktor explizit vom Anwender bereitgestellt werden.
+Interesanter Weise kann man sich eine dritte Art des Kopierens vorstellen,
+einen Mittelweg zwischen flacher und tiefer Kopie:
+Ist ein Objekt zu kopieren, dann wäre eine alternative Herangehensweise, dass der Benutzer von Objekt und Objekt-Kopie
+(hinter den Kulissen) zunächst einmal datentechnisch dasselbe Objekt in die Finger bekommt.
+Solange keines dieser beiden Objekte verändert wird, besteht ja kein zwingender Handlungsbedarf, eine neue unabhängige Kopie zu erstellen.
+Problematisch wird der &bdquo;faule&rdquo; Ansatz erst dann, wenn es an einem der beteiligten Objekte zu Änderungen kommt.
+Jetzt laufen Objekt und Objekt-Kopie inhaltlich auseinander, es ist &ndash; verspätet, aber auch nicht zu spät &ndash; eine echte Kopie 
+des Objekts zu erzeugen, das Änderungen erfährt.
 
-Im Sprachjargon eines Informatikes könnte man Implementierungen des Kopierkonstruktors (und des Wertzuweisungsoperators) 
+Diesen Ansatz des Kopierens könnte man als &bdquo;Lazy Copy&rdquo; bezeichnen, nur hat sich dieser Name so wirklich nicht durchgesetzt.
+Wir sprechen hier meistens von der so genannten &bdquo;Copy-On-Write&rdquo;-Strategie.
+
+Wir betrachten in dieser Fallstudie eine  &bdquo;Copy-On-Write&rdquo;-Realisierung für Zeichenketten.
+
+Neben einem Vergleich der Performanz zwischen der String-Klasse aus der STL und unserer selbstgeschriebenen Klasse
+kommt auch ein Anwendungsbeispiel zum Zuge.
+
+
+## Allgemeines
+
+
+
+Thematisch sind wir sehr nah am Kopierkonstruktor als auch dem Wertzuweisungsoperator von C++&ndash;Klassen dran: 
+Sind in den Instanzvariablen eines Objekts Adressen vorhanden, die auf Datenstrukturen auf dem Heap zeigen,
+müssen der Kopierkonstruktor und der Wertzuweisungsoperator explizit vom Anwender bereitgestellt werden.
+
+Im Sprachjargon eines Informatikers könnte man typische Realisierungen des Kopierkonstruktors (und des Wertzuweisungsoperators) 
 als &bdquo;eifrig&rdquo; oder sogar als &bdquo;gierig&rdquo; bezeichnen.
 Etwas weniger emotional betrachtet tun die Realisierungen das, was man von ihnen erwartet:
 Eine Kopie eines vorhandenen Objekts erstellen.
 
-In der Tat könnte man &bdquo;unter der Haube&rdquo; etwas anderes vorgehen: Weniger eifrig, dafür mehr faul.
-Der Begriff "Lazy Copy" hat sich nicht wirklich durchgesetzt,
-wir sprechen hier meistens von der so genannten &bdquo;Copy-On-Write&rdquo;-Strategie.
+Man könnte aber &bdquo;unter der Haube&rdquo; etwas anders vorgehen:
+Weniger eifrig, dafür mehr &bdquo;faul&rdquo;, auch wenn das zunächst etwas überraschend klingen mag.
 
-Diese Kopier-Strategie bedeutet, dass beim Kopieren einer Datenstruktur X "unter der Haube" nur ein Pointer (oder eine Referenz)
-auf die internen Daten weitergereicht wird.
+
+
+
+
+
+
+Diese Kopier-Strategie bedeutet, dass beim Kopieren eines Objekts &bdquo;unter der Haube&rdquo; nur eine Adresse
+auf die vorhandenen tatsächlichen Daten des Objekts weitergereicht wird.
 Eine echte und tiefe Kopie der eigentlichen Daten wird dabei erst dann durchgeführt,
-wenn eine Instanz von X ihre internen Daten verändert.
+wenn an einer Instanz die Daten geändert werden.
 
 Auf diese Weise entsteht für den Benutzer der Datenstruktur X die Illusion,
 dass es sich um zwei unabhängige Instanzen der Datenstruktur handelt (s.Abb.1).
@@ -84,7 +111,7 @@ in den Speicherbereich eines anderen Objekts desselben Datentyps umkopiert werde
 
 Eine flache Kopie eines Objekts kopiert alle Instanzvariablen bitweise. Dies funktioniert in C++ problemlos,
 solange die Variablen Werte elementaren Datentyps sind.
-In *Abbildung* 1 finden Sie ein Objekt einer Klasse `Data` dargestellt vor:
+In *Abbildung* 1 finden Sie ein Objekt einer Klasse `Data` dargestellt vor, das nur als Werten elementaren Datentyps  besteht.
 
 ```cpp
 class Data
@@ -111,7 +138,7 @@ auch Zeigervariablen enthalten, die auf dynamisch allokierten Speicher auf der H
 
 Das Prinzip einer flachen Kopie funktioniert nun nicht mehr.
 Die Zeigervariablen würden zwar korrekt kopiert werden, aber der Speicher, auf den die Zeigervariablen verweisen,
-wäre derselbe, auf den der Zeiger im Ursprungsobjekt zeigt.
+wäre derselbe.
 Also die Zeigervariable im Originalobjekt und die in der Kopie verweisen auf *denselben*
 dynamisch allokierten Speicherbereich.
 Dies ist in den allermeisten Fällen so nicht gewünscht, siehe auch *Abbildung* 2:
@@ -130,9 +157,7 @@ Diese kopiert alle Instanzvariablen und erstellt zusätzlich Kopien des dynamisc
 
 Um eine tiefe Kopie zu erstellen, müssen Sie einen Kopierkonstruktor schreiben und den Zuweisungsoperator überladen
 und wie beschrieben implementieren.
-Der automtisch erzeugten Standard-Kopierkonstruktor und der Zuweisungsoperator erzeugen flache Kopien.
-
-
+Der automtisch erzeugte Standard-Kopierkonstruktor und Zuweisungsoperator erzeugen flache Kopien.
 
 #### Lazy Copy
 
@@ -141,8 +166,8 @@ die so genannte &bdquo;*Lazy Copy*&rdquo;-Strategie, oder auch also &bdquo;*Copy
 Die &bdquo;*Lazy Copy*&rdquo;-Strategie kombiniert auf eine gewisse Weite die beiden zuvor beschriebenen Kopierstrategien.
 
 Bei dieser Vorgehensweise benötigen wir zusätzlich zum eigentlichen Objekt ein Hüllenobjekt,
-häufig als `COW_Ptr` bezeichnet. Dieses verwaltet neben den Daten des eigentlichen Objekts
-eine (atomare) Zählervariable (so genannter *Referenzcounter*).
+häufig als `COW_Ptr` bezeichnet. Dieses verwaltet neben den Daten des eigentlichen Objekts einen so genannten &bdquo;*Controlblock*&rdquo;.
+Dieser enthält unter anderem eine (atomare) Zählervariable, auch als *Referenzcounter* bezeichnet.
 
 Wird ein Objekt auf Basis der &bdquo;*Lazy Copy*&rdquo;-Strategie zum ersten Mal kopiert, wird nur die erwähnte Zählervariable inkrementiert.
 Das kopierte Objekt greift auf dieselben Daten wie das Originalobjekt zu.
@@ -152,18 +177,18 @@ bzw. das, was sich hinter den Kulissen abspielt, extrem performant ist.
 Eine Zählervariable verfolgt, wie viele Objekte die Daten gemeinsam nutzen.
 
 Wenn das Programm ein Objekt ändern möchte, kann es anhand des Zählers feststellen, ob die Daten gemeinsam genutzt werden.
-Wenn ja, dann ist &ndash; zu diesem Zeitpunkt, also *on demand* &ndash; eine tiefe Kopie zu erstellen.
+Wenn ja, dann ist &ndash; zu diesem Zeitpunkt, also verspätet bzw. *on demand* &ndash; eine tiefe Kopie zu erstellen.
 
 *Bemerkung*:<br />
 Die Klasse `std::shared_ptr` und eine &bdquo;*Copy-on-Write*&rdquo;-Klasse weisen gewisse Ähnlichkeiten auf.
 Beide Klassen verwenden Referenzzähler, die den geteilten Besitz zählen.
 
 Man kann sagen, dass die *Lazy Copy*-Strategie von außen betrachtet sich wie eine tiefe Kopie verhält.
-Intern wird aber, soweit möglich, das Prinzip einer flachen Kopie anstrebt.
+Intern wird aber, soweit möglich, das Prinzip einer flachen Kopie angestrebt.
 Erst wenn es zu Änderungen (schreibender Zugriff) an einem der beteiligten Objekte kommt,
-ist eine echte (tiefe) Kopie zu erstellen.
+ist eine echte (tiefe) Kopie des Objekts zu erstellen, an dem Änderungen erfolgt sind.
 
-## Einfache Lazy Copy Theorie
+## Etwas Lazy Copy Theorie
 
 Wir wollen die bisherigen Betrachtungen zusammenfassen:
 

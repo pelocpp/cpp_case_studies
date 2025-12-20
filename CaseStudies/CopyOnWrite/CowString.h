@@ -35,6 +35,8 @@ namespace CowStringSimple
         CowString    (const CowString& other);
         ~CowString   ();
 
+        // FEHLT: C'tor aus einem std::string_view heraus ...
+
         // move semantics
         CowString(CowString&& other) noexcept;
         CowString& operator= (CowString&& other) noexcept;
