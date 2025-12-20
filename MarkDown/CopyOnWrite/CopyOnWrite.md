@@ -1,7 +1,7 @@
 <!-- CopyOnWrite.md -->
 
 
-# &bdquo;Faules&bdquo; Kopieren: Copy on Write 
+# &bdquo;Faules&rdquo; Kopieren: Copy on Write 
 
 ## Literatur
 
