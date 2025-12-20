@@ -35,71 +35,37 @@ Viele Objekte im täglichen &bdquo;C++&rdquo;-Alltag zeichnen sich dadurch aus,
 dass ihre Daten über die beiden Speicherbereiche Stack und Heap verteilt sind.
 Für das Kopieren derartiger Objekte bedeutet dies, dass es nicht genügt,
 die auf dem Stack liegenden Verwaltungsdaten  &bdquo;flach&rdquo; zu kopieren. Auch die Daten auf dem Heap müssen kopiert werden,
-zumindest wenn man von einer &bdquo;echten&rdquo; (&bdquo;tiefen&rdquo;) Kopie sprechen möchte
+zumindest wenn man von einer &bdquo;echten&rdquo; (&bdquo;tiefen&rdquo;) Kopie sprechen möchte.
 
 Interesanter Weise kann man sich eine dritte Art des Kopierens vorstellen,
 einen Mittelweg zwischen flacher und tiefer Kopie:
-Ist ein Objekt zu kopieren, dann wäre eine alternative Herangehensweise, dass der Benutzer von Objekt und Objekt-Kopie
-(hinter den Kulissen) zunächst einmal datentechnisch dasselbe Objekt in die Finger bekommt.
+Ist ein Objekt zu kopieren, dann wäre es auch eine Überlegung wert, dem Benutzer von Objekt und Objekt-Kopie
+(hinter den Kulissen) zunächst einmal datentechnisch dasselbe Objekt in die Finger zu geben.
 Solange keines dieser beiden Objekte verändert wird, besteht ja kein zwingender Handlungsbedarf, eine neue unabhängige Kopie zu erstellen.
 Problematisch wird der &bdquo;faule&rdquo; Ansatz erst dann, wenn es an einem der beteiligten Objekte zu Änderungen kommt.
 Jetzt laufen Objekt und Objekt-Kopie inhaltlich auseinander, es ist &ndash; verspätet, aber auch nicht zu spät &ndash; eine echte Kopie 
 des Objekts zu erzeugen, das Änderungen erfährt.
 
-Diesen Ansatz des Kopierens könnte man als &bdquo;Lazy Copy&rdquo; bezeichnen, nur hat sich dieser Name so wirklich nicht durchgesetzt.
+Diesen Ansatz des Kopierens könnte man als &bdquo;Lazy Copy&rdquo; bezeichnen, nur hat sich dieser Begriff nicht so wirklich durchgesetzt.
 Wir sprechen hier meistens von der so genannten &bdquo;Copy-On-Write&rdquo;-Strategie.
 
 Wir betrachten in dieser Fallstudie eine  &bdquo;Copy-On-Write&rdquo;-Realisierung für Zeichenketten.
-
-Neben einem Vergleich der Performanz zwischen der String-Klasse aus der STL und unserer selbstgeschriebenen Klasse
+Neben einem Vergleich der Performanz zwischen der String-Klasse aus der STL und unserer selbstgeschriebenen `COWString`-Klasse
 kommt auch ein Anwendungsbeispiel zum Zuge.
 
 
-## Allgemeines
+## Allgemeines // Einleitung
 
 
 
-Thematisch sind wir sehr nah am Kopierkonstruktor als auch dem Wertzuweisungsoperator von C++&ndash;Klassen dran: 
-Sind in den Instanzvariablen eines Objekts Adressen vorhanden, die auf Datenstrukturen auf dem Heap zeigen,
-müssen der Kopierkonstruktor und der Wertzuweisungsoperator explizit vom Anwender bereitgestellt werden.
-
-Im Sprachjargon eines Informatikers könnte man typische Realisierungen des Kopierkonstruktors (und des Wertzuweisungsoperators) 
-als &bdquo;eifrig&rdquo; oder sogar als &bdquo;gierig&rdquo; bezeichnen.
-Etwas weniger emotional betrachtet tun die Realisierungen das, was man von ihnen erwartet:
-Eine Kopie eines vorhandenen Objekts erstellen.
-
-Man könnte aber &bdquo;unter der Haube&rdquo; etwas anders vorgehen:
-Weniger eifrig, dafür mehr &bdquo;faul&rdquo;, auch wenn das zunächst etwas überraschend klingen mag.
+Thematisch sind wir sehr nah am Kopierkonstruktor als auch dem Wertzuweisungsoperator von C++&ndash;Klassen dran.
+Wir wiederholen zunächst die Prinzipien der flachen und tiefen Kopie von C++&ndash;Objekten,
+bevor wir die dritte Alternative thematisieren.
 
 
 
 
-
-
-
-Diese Kopier-Strategie bedeutet, dass beim Kopieren eines Objekts &bdquo;unter der Haube&rdquo; nur eine Adresse
-auf die vorhandenen tatsächlichen Daten des Objekts weitergereicht wird.
-Eine echte und tiefe Kopie der eigentlichen Daten wird dabei erst dann durchgeführt,
-wenn an einer Instanz die Daten geändert werden.
-
-Auf diese Weise entsteht für den Benutzer der Datenstruktur X die Illusion,
-dass es sich um zwei unabhängige Instanzen der Datenstruktur handelt (s.Abb.1).
-
-
-
-
-Dabei wird die Anzahl der Referenzen auf die interne Datenstruktur mitgezählt,
-damit der letzte Besitzer die Struktur löscht.
-
-Das hat den Vorteil, dass beim Verändern von Daten, die nur einmal referenziert werden,
-keine gesonderte Kopie notwendig ist und so das Kopieren erspart werden kann.
-
-Wenn man also mehrmals hintereinander eine Instanz von X verändert,
-so wird nicht jedes Mal eine neue Kopie der internen Daten erstellt,
-sondern nur dann, wenn zwischendurch eine Kopie des Objektes erstellt wird.
-
-
-## Unterschiedliche Möglichkeiten des Kopierens von Objekten
+### Unterschiedliche Möglichkeiten des Kopierens von Objekten
 
 Eine häufige Operation in einem Programm ist das Kopieren von Objekten.
 Ein Objekt steht in objektorientierten Programmiersprachen für einen zusammengesetzter Datentyp.
@@ -165,19 +131,61 @@ Interessanterweise gibt es neben diesen beiden Kopierstrategien auch noch eine d
 die so genannte &bdquo;*Lazy Copy*&rdquo;-Strategie, oder auch also &bdquo;*Copy-on-Write*&rdquo; (*COW*) bezeichnet.
 Die &bdquo;*Lazy Copy*&rdquo;-Strategie kombiniert auf eine gewisse Weite die beiden zuvor beschriebenen Kopierstrategien.
 
-Bei dieser Vorgehensweise benötigen wir zusätzlich zum eigentlichen Objekt ein Hüllenobjekt,
-häufig als `COW_Ptr` bezeichnet. Dieses verwaltet neben den Daten des eigentlichen Objekts einen so genannten &bdquo;*Controlblock*&rdquo;.
-Dieser enthält unter anderem eine (atomare) Zählervariable, auch als *Referenzcounter* bezeichnet.
 
-Wird ein Objekt auf Basis der &bdquo;*Lazy Copy*&rdquo;-Strategie zum ersten Mal kopiert, wird nur die erwähnte Zählervariable inkrementiert.
-Das kopierte Objekt greift auf dieselben Daten wie das Originalobjekt zu.
+
+Sind in den Instanzvariablen eines Objekts Adressen vorhanden, die auf Datenstrukturen auf dem Heap zeigen,
+müssen der Kopierkonstruktor und der Wertzuweisungsoperator explizit vom Anwender bereitgestellt werden.
+
+Im Sprachjargon eines Informatikers könnte man typische Realisierungen des Kopierkonstruktors (und des Wertzuweisungsoperators) 
+als &bdquo;eifrig&rdquo; oder sogar als &bdquo;gierig&rdquo; bezeichnen.
+Etwas weniger emotional betrachtet tun die Realisierungen das, was man von ihnen erwartet:
+Eine Kopie eines vorhandenen Objekts erstellen.
+
+Man könnte aber &bdquo;unter der Haube&rdquo; etwas anders vorgehen:
+Weniger eifrig, dafür mehr &bdquo;faul&rdquo;, auch wenn das zunächst etwas überraschend klingen mag.
+
+Bei dieser Vorgehensweise benötigen wir zusätzlich zum eigentlichen Objekt ein Hüllenobjekt,
+häufig als `COW_Ptr` bezeichnet, in unserer Fallstudie `CowString`, da wir Zeichenketten betrachten (*Abbildung* 4):
+
+<img src="copy_on_write_04.svg" width="300">
+
+*Abbildung* 4: Ein `CowString`-Objekt &ndash; zunächst ohne Kopie.
+
+Wir erkennen in *Abbildung* 4, dass neben den eigentlichen Daten zur Verwaltung einer Zeichenkette
+ein so genannter &bdquo;*Controlblock*&rdquo; ins Spiel kommt.
+Dieser enthält unter anderem eine (atomare) Zählervariable, auch als *Referenzcounter* bezeichnet.
+Wird ein `CowString`-Objekt zum ersten Mal angelegt, hat der Referenzzähler den Wert 1.
+Anders herum formuliert: Es gibt keine weiteren `CowString`-Objekte, die sich die Daten des aktuellen
+`CowString`-Objekts teilen.
+
+Wird ein Objekt auf Basis der &bdquo;*Lazy Copy*&rdquo;-Strategie zum ersten Mal kopiert,
+wird nur die erwähnte Zählervariable inkrementiert (*Abbildung* 5).
+
+<img src="copy_on_write_05.svg" width="300">
+
+*Abbildung* 5: Ein `CowString`-Objekt &ndash; mit einer (abhängigen, *shared*) Kopie.
+
+Wir erkennen an *Abbildung* 5, dass eine Kopie sehr einfach und vor allem auch schnell zu erstellen ist.
+Es wird auf dem Stack ein minimales Hüllen-Objekt kopiert,
+und im Controlblock auf dem Heap wird der Referenzzähler inkrementiert.
+
+Und ja, das kopierte Objekt greift auf dieselben Daten wie das Originalobjekt zu.
 Solange an keinem der beteiligten Objekte eine Änderung erfolgt, funktioniert dieser Ansatz.
 Offensichtlich bedeutet diese Strategie, dass das Kopieren eines Objekts,
 bzw. das, was sich hinter den Kulissen abspielt, extrem performant ist.
 Eine Zählervariable verfolgt, wie viele Objekte die Daten gemeinsam nutzen.
 
 Wenn das Programm ein Objekt ändern möchte, kann es anhand des Zählers feststellen, ob die Daten gemeinsam genutzt werden.
-Wenn ja, dann ist &ndash; zu diesem Zeitpunkt, also verspätet bzw. *on demand* &ndash; eine tiefe Kopie zu erstellen.
+Also: Referenzzähler gleich 1 bedeutet, es gibt kein zweites Hüllenobjekt, dass Zugang zu diesem Objekt hat;
+Änderungen können problemlos am Objekt durchgeführt werden. Im Gegensatz dazu: der Referenzzähler hat einen Wert größer 1;
+Sollen jetzt Änderungen am Objekt erfolgen, dann ist &ndash; zu diesem Zeitpunkt, also verspätet bzw. *on demand* &ndash; eine tiefe Kopie zu erstellen
+(*Abbildung* 6):
+
+
+<img src="copy_on_write_06.svg" width="300">
+
+*Abbildung* 5: Ein `CowString`-Objekt &ndash; und eine (unabhängige, *owning*) Kopie.
+
 
 *Bemerkung*:<br />
 Die Klasse `std::shared_ptr` und eine &bdquo;*Copy-on-Write*&rdquo;-Klasse weisen gewisse Ähnlichkeiten auf.
@@ -185,6 +193,8 @@ Beide Klassen verwenden Referenzzähler, die den geteilten Besitz zählen.
 
 Man kann sagen, dass die *Lazy Copy*-Strategie von außen betrachtet sich wie eine tiefe Kopie verhält.
 Intern wird aber, soweit möglich, das Prinzip einer flachen Kopie angestrebt.
+Flach heißt hier, um es auf den Punkt zu bringen, dass die Adresse des Controlblocks kopiert wird.
+
 Erst wenn es zu Änderungen (schreibender Zugriff) an einem der beteiligten Objekte kommt,
 ist eine echte (tiefe) Kopie des Objekts zu erstellen, an dem Änderungen erfolgt sind.
 
@@ -206,6 +216,37 @@ nun exklusiv genutzten Puffer.
 oder modifizierend (eine Schreiboperation).
 Dadurch lässt sich leicht feststellen, ob die Zeichenkette vor der Ausführung der Operation den &bdquo;*owning*&rdquo;-Zustand sicherstellen muss
 oder im &bdquo;*sharing*&rdquo;-Zustand verbleiben kann.
+
+
+## ALTES ZEUGS
+
+
+
+
+
+Diese Kopier-Strategie bedeutet, dass beim Kopieren eines Objekts &bdquo;unter der Haube&rdquo; nur eine Adresse
+auf die vorhandenen tatsächlichen Daten des Objekts weitergereicht wird.
+Eine echte und tiefe Kopie der eigentlichen Daten wird dabei erst dann durchgeführt,
+wenn an einer Instanz die Daten geändert werden.
+
+Auf diese Weise entsteht für den Benutzer der Datenstruktur X die Illusion,
+dass es sich um zwei unabhängige Instanzen der Datenstruktur handelt (s.Abb.1).
+
+
+
+
+Dabei wird die Anzahl der Referenzen auf die interne Datenstruktur mitgezählt,
+damit der letzte Besitzer die Struktur löscht.
+
+Das hat den Vorteil, dass beim Verändern von Daten, die nur einmal referenziert werden,
+keine gesonderte Kopie notwendig ist und so das Kopieren erspart werden kann.
+
+Wenn man also mehrmals hintereinander eine Instanz von X verändert,
+so wird nicht jedes Mal eine neue Kopie der internen Daten erstellt,
+sondern nur dann, wenn zwischendurch eine Kopie des Objektes erstellt wird.
+
+
+
 
 
 
