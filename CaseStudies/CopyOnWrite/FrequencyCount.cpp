@@ -4,22 +4,6 @@
 #include <sstream>  // Für std::stringstream zum Zerlegen des Textes
 #include <algorithm> // Für std::sort
 
-// Oder auch:
-
-// string_view
-// https://www.modernescpp.com/index.php/c-17-avoid-copying-with-std-string-view/
-
-// Long Text Files:
-// https://www.gutenberg.org/ebooks/4300
-
-// Ulisses: 1,589,248 bytes
-
-// https://corpus.canterbury.ac.nz/descriptions/
-
-// https://www.lipsum.com/
-
-// DAS realisieren !!!!!!!! 
-// https://github.com/Nikkicodes2/lipsum-cpp/blob/master/src/lipsum.hpp
 
 
 int test() {

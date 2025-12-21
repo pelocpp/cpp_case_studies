@@ -129,10 +129,13 @@
     <ClCompile Include="COW_String_03.cpp" />
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="FrequencyCount.cpp" />
+    <ClCompile Include="LoremIpsum.cpp" />
+    <ClCompile Include="LoremIpsumWords.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CowString.h" />
+    <ClInclude Include="LoremIpsum.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
