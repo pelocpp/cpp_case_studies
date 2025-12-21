@@ -37,9 +37,18 @@ namespace CowStringSimple
         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
     }
 
-    CowString::CowString(const char* s = "")
+    CowString::CowString(const char* s)
     {
         m_ptr = Controlblock::create(s);
+        m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+    }
+
+    // not tested
+    // Geht das besser... die Länge habe ich schon
+    // ein Überladung von create .... mit Länge ...
+    CowString::CowString(std::string_view sv)
+    {
+        m_ptr = Controlblock::create(sv.data());
         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
     }
 

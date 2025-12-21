@@ -9,7 +9,20 @@
 // string_view
 // https://www.modernescpp.com/index.php/c-17-avoid-copying-with-std-string-view/
 
-int main() {
+// Long Text Files:
+// https://www.gutenberg.org/ebooks/4300
+
+// Ulisses: 1,589,248 bytes
+
+// https://corpus.canterbury.ac.nz/descriptions/
+
+// https://www.lipsum.com/
+
+// DAS realisieren !!!!!!!! 
+// https://github.com/Nikkicodes2/lipsum-cpp/blob/master/src/lipsum.hpp
+
+
+int test() {
     std::string text = "Dies ist ein Beispieltext, um Woerter nach Laenge zu sortieren";
     std::vector<std::string> woerter;
     std::stringstream ss(text); // Stringstream erstellen, um Text zu verarbeiten

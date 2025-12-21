@@ -32,6 +32,9 @@ namespace CowStringSimple
         // c'tor(s), d'tor
         CowString    ();
         CowString    (const char* s);
+        CowString    (std::string_view sv);
+
+
         CowString    (const CowString& other);
         ~CowString   ();
 
