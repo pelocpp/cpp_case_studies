@@ -26,8 +26,6 @@
 // https://github.com/Nikkicodes2/lipsum-cpp/blob/master/src/lipsum.hpp
 
 
-
-
 void test_cow_string_simple();
 void test_cow_string_improved();
 

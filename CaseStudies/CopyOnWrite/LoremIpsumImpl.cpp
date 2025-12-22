@@ -14,6 +14,11 @@
 #include <string_view>  // std::string_view
 #include <vector>       // std:.vector
 
+
+#include <ostream>  // std::ostream
+#include <iostream>  // std::cout
+#include <fstream>    // std::ofstream
+
 LoremIpsum::LoremIpsum()
     : m_originalWords {}, m_longWords{}
 {
@@ -133,6 +138,35 @@ std::string LoremIpsum::generateParagraphList(int numParagraphs, int minSent, in
         result += "\n";
     }
     return result;
+}
+
+void LoremIpsum::generateLoremIpsum(std::string_view fileName)
+{
+    Mode mode;
+    std::streambuf* buf;
+    std::ofstream of;
+    std::ostream out{nullptr};
+
+    if (! fileName.empty())
+    {
+        of.open(fileName.data());
+        buf = of.rdbuf();
+        mode = Mode::FILE;
+    }
+    else
+    {
+        buf = std::cout.rdbuf();
+        mode = Mode::STDOUT;
+    }
+
+    // attach to out
+    out.rdbuf(buf);
+
+    out << "sdfsdfsdfsdf";
+
+    if (mode == Mode::FILE) {
+        of.close();
+    }
 }
 
 // =====================================================================================
