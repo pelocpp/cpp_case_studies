@@ -39,6 +39,9 @@
     <ClCompile Include="LoremIpsumWords.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LoremIpsumImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CowString.h">
@@ -47,5 +50,10 @@
     <ClInclude Include="LoremIpsum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LoremIpsumOriginalWords.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

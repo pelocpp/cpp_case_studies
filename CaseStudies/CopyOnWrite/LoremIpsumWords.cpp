@@ -163,7 +163,7 @@ std::vector<std::string> lipsumVecOriginal =
     "montes",
     "nascetur",
     "ridiculus",
-    "mus",
+    "mus"
 };
 
 // =====================================================================================
