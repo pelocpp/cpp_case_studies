@@ -55,5 +55,8 @@
     <None Include="LoremIpsumOriginalWords.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="LoremIpsumLongWords.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

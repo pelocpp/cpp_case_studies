@@ -28,14 +28,15 @@
 
 void test_cow_string_simple();
 void test_cow_string_improved();
-
 void test_lorem_ipsum();
+
+int test_frequency_count();
 
 #include <print>
 
 int main()
 {
-    test_lorem_ipsum();
+    test_frequency_count();
 }
 
 // =====================================================================================

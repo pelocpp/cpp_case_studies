@@ -1,3 +1,8 @@
+// =====================================================================================
+// FrequencyCount.cpp // Copy-on-Write
+// https://github.com/pelocpp/cpp_case_studies    // https://peterloos.de
+// =====================================================================================
+
 #include <iostream> // Für Ein- und Ausgabe (cout)
 #include <string>   // Für std::string
 #include <vector>   // Für std::vector
@@ -5,8 +10,8 @@
 #include <algorithm> // Für std::sort
 
 
-
-int test() {
+static int test_frequency_count() 
+{
     std::string text = "Dies ist ein Beispieltext, um Woerter nach Laenge zu sortieren";
     std::vector<std::string> woerter;
     std::stringstream ss(text); // Stringstream erstellen, um Text zu verarbeiten
@@ -29,6 +34,13 @@ int test() {
     for (const std::string& w : woerter) {
         std::cout << w << " (Laenge: " << w.length() << ")" << std::endl;
     }
-
-    return 0;
 }
+
+int test_frequency_count()
+{
+}
+
+// =====================================================================================
+// End-of-File
+// =====================================================================================
+

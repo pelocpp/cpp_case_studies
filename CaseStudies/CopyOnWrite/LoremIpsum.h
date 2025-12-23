@@ -20,8 +20,7 @@ private:
     std::size_t                    m_maxNumSentences;
     std::size_t                    m_numParagraphs;
 
-    std::vector<std::string_view>  m_originalWords;
-    std::vector<std::string_view>  m_longWords;
+    std::vector<std::string_view>  m_words;
 
     std::random_device             m_device;
     std::mt19937                   m_engine;
@@ -41,9 +40,11 @@ public:
 
     // public interface
     void generateLoremIpsum        (std::string_view fileName);
+    void setOriginalWords();
+    void setLongWords();
 
 private:
-    // helper methods
+    // private helper methods
     void generateFirstWord         (std::ostream& os);
     void generateNextWord          (std::ostream& os);
     void generateSentence          (std::ostream& os);
