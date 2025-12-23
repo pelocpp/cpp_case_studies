@@ -33,12 +33,20 @@ static void test_lorem_ipsum_04()
     loremIpsum.generateLoremIpsum("LoremIpsum.txt");
 }
 
+static void test_lorem_ipsum_05()
+{
+    LoremIpsum loremIpsum{ 8, 12, 4, 8, 5000 };
+    loremIpsum.setLongWords();
+    loremIpsum.generateLoremIpsum("LoremIpsum.txt");
+}
+
 void test_lorem_ipsum()
 {
     //test_lorem_ipsum_01();
     //test_lorem_ipsum_02();
     //test_lorem_ipsum_03();
-    test_lorem_ipsum_04();
+    //test_lorem_ipsum_04();
+    test_lorem_ipsum_05();
 }
 
 // =====================================================================================

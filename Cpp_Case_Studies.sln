@@ -161,6 +161,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FB56910E-926C-46F0-82F1-F667A414C564}"
 	ProjectSection(SolutionItems) = preProject
 		Readme.md = Readme.md
+		CaseStudies\ScopedTimer.h = CaseStudies\ScopedTimer.h
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HouseOfSantaClaus", "CaseStudies\HouseOfSantaClaus\HouseOfSantaClaus.vcxproj", "{5349443E-94C8-4038-A58D-0633A567D024}"

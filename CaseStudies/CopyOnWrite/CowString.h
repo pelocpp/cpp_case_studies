@@ -19,7 +19,8 @@ namespace CowStringSimple
             std::size_t              m_length;
 
             static Controlblock*     create      (const char* src);
-            static Controlblock*     createEmpty ();
+            static Controlblock*     create      (const char* src, std::size_t length);
+            static Controlblock*     createEmpty (); 
         };
 
         Controlblock* m_ptr;
@@ -32,6 +33,7 @@ namespace CowStringSimple
         // c'tor(s), d'tor
         CowString    ();
         CowString    (const char* s);
+        CowString    (const char* s, std::size_t count);
         CowString    (std::string_view sv);
 
 
@@ -52,7 +54,7 @@ namespace CowStringSimple
         const char* c_str() const;
 
         // type-conversion operator
-        operator std::string_view();
+        operator std::string_view() const;
 
         // comparison operators
         friend bool operator== (const CowString& a, const CowString& b);
@@ -65,6 +67,28 @@ namespace CowStringSimple
     
         char at (std::size_t idx) const;          // read-only access
         char& at(std::size_t idx);                // possible write access - triggers COW
+    };
+}
+
+namespace std
+{
+    using namespace CowStringSimple;
+
+    // =======================================================================
+    // std::hash for class CowString
+
+    template <>
+    struct hash<CowString>
+    {
+        // Note: std::hash<const char*> hashes the pointer value, not the characters it points to
+        // Workaround: let's use std::string_view
+
+        std::size_t operator()(const CowString& cs) const {
+
+            std::string_view sv{ cs };
+            std::size_t h{ std::hash<std::string_view>{}(sv) };
+            return h;
+        }
     };
 }
 

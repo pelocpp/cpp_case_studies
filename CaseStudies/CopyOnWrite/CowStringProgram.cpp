@@ -23,11 +23,18 @@ namespace CowStringSimple
 
     static void test_cow_string_03()
     {
+        CowString a{ "1234567890", 5 };
+        std::println("String: {}", a.c_str());
+        std::println("Length: {}", a.size());
+    }
+
+    static void test_cow_string_04()
+    {
         CowString a{ "1234567890" };
         CowString b{ a };
     }
 
-    static void test_cow_string_04()
+    static void test_cow_string_05()
     {
         CowString a{ "1234567890" };
         CowString b{ a };
@@ -36,7 +43,7 @@ namespace CowStringSimple
         c[0] = '!';
     }
 
-    static void test_cow_string_05()
+    static void test_cow_string_06()
     {
         CowString a{ "1234567890" };
         CowString b{ a };
@@ -48,7 +55,7 @@ namespace CowStringSimple
         a = x;
     }
 
-    static void test_cow_string_06()
+    static void test_cow_string_07()
     {
         CowString a{ "Hello World" };
         CowString b{ a };  // shares buffer
@@ -68,7 +75,7 @@ namespace CowStringSimple
         std::println("c: {}", c.c_str());  // unchanged
     }
 
-    static void test_cow_string_07()
+    static void test_cow_string_08()
     {
         CowString s{ "1234567890" };
         const char* p{ s.c_str() };
@@ -83,7 +90,7 @@ namespace CowStringSimple
         std::println("p: {}", p);      // p is no more valid!
     }
 
-    static void test_cow_string_08()
+    static void test_cow_string_09()
     {
         CowString s{ "1234567890" };
         const char* p{ s.c_str() };
@@ -98,7 +105,7 @@ namespace CowStringSimple
         std::println("p: {}", p);      // p is no more valid!
     }
 
-    static void test_cow_string_09()
+    static void test_cow_string_10()
     {
         CowString s{ "1234567890" };
 
@@ -126,7 +133,9 @@ void test_cow_string_simple()
     test_cow_string_05();
     test_cow_string_06();
     test_cow_string_07();
-    test_cow_string_08();
+    test_cow_string_08();   // geht NICHT !!! Beschreiben !!!!!!!!!
+    test_cow_string_09();
+    test_cow_string_10();
 }
 
 // =====================================================================================

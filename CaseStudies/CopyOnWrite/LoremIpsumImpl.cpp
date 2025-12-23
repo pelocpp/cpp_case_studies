@@ -6,13 +6,14 @@
 #include "LoremIpsum.h"
 
 #include <algorithm>       // std::generate
+#include <cctype>          // std::toupper
 #include <cstddef>         // std::size_t
+#include <fstream>         // std::ofstream
+#include <iostream>        // std::cout
 #include <numeric>         // std::accumulate
 #include <string>          // std::string
 #include <string_view>     // std::string_view
 #include <vector>          // std:.vector
-#include <iostream>        // std::cout
-#include <fstream>         // std::ofstream
 
 // c'tor(s)
 LoremIpsum::LoremIpsum() : LoremIpsum{ 4, 12, 5, 8, 6 }
@@ -97,8 +98,8 @@ void LoremIpsum::generateFirstWord(std::ostream& os)
     // retrieve word from list of existing words
     auto word{ m_words.at(index) };
 
-    // word is first of current sentence, capitalize first character 
-    char upperCh{ word[0] - ('a' -  'A') };
+    // word is first of current sentence, capitalize first character
+    char upperCh{ static_cast<char>(std::toupper(word[0])) };
     auto rest{ word.substr (1)};
 
     os << upperCh;

@@ -21,6 +21,16 @@ namespace CowStringSimple
         return sd;
     }
 
+    CowString::Controlblock* CowString::Controlblock::create(const char* src, std::size_t len)
+    {
+        void* mem{ ::operator new(sizeof(Controlblock) + len + 1) };
+        Controlblock* sd{ new (mem) Controlblock{ 1, len } };
+        char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
+        std::memcpy(cp, src, len);
+        cp[len] = '\0';
+        return sd;
+    }
+
     CowString::Controlblock* CowString::Controlblock::createEmpty()
     {
         void* mem{ ::operator new(sizeof(Controlblock) + 1) };
@@ -42,6 +52,14 @@ namespace CowStringSimple
         m_ptr = Controlblock::create(s);
         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
     }
+
+    // Neu, noch nicht getestet
+    CowString::CowString(const char* s, std::size_t length)
+    {
+        m_ptr = Controlblock::create(s, length);
+        m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+    }
+
 
     // not tested
     // Geht das besser... die Länge habe ich schon
@@ -167,7 +185,7 @@ namespace CowStringSimple
     }
 
     // type-conversion operator
-    CowString::operator std::string_view()
+    CowString::operator std::string_view() const
     {
         return { m_str , m_ptr->m_length };
     }
