@@ -32,6 +32,7 @@ public:
     void countWordFrequencies();
     void countWordFrequenciesCOW();
     void computeMostFrequentWords();
+    void computeMostFrequentWordsCOW();
 };
 
 // =====================================================================================

@@ -16,16 +16,27 @@ constexpr std::string_view fileNameExtremeHuge { "LoremIpsumExtremeHuge.txt" };
 static void main_textfile_statistics_01()
 {
     TextfileStatistics stats;
-    stats.setFilename(fileNameExtremeHuge);
+    stats.setFilename(fileNameVeryHuge);
     stats.countWordFrequencies();
     std::println();
     stats.countWordFrequenciesCOW();
     std::println();
 }
 
+static void main_textfile_statistics_02()
+{
+    TextfileStatistics stats;
+    stats.setFilename(fileNameVeryHuge);
+    stats.computeMostFrequentWords();
+    std::println();
+    stats.computeMostFrequentWordsCOW();
+    std::println();
+}
+
 void main_textfile_statistics()
 {
-    main_textfile_statistics_01();
+   // main_textfile_statistics_01();
+    main_textfile_statistics_02();
 }
 
 // =====================================================================================
