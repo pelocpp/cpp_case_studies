@@ -5,10 +5,9 @@
 #include "CowString.h"
 
 #include <cstring>     // std::strlen
-#include <print>       // std::print
 #include <stdexcept>   // std::out_of_range
 
-namespace CowStringSimple
+namespace COWString
 {
     // Controlblock
     CowString::Controlblock* CowString::Controlblock::create(const char* src)
@@ -115,6 +114,8 @@ namespace CowStringSimple
     std::size_t CowString::size() const { return m_ptr->m_length; }
 
     const char* CowString::c_str() const { return m_str; }
+
+    bool CowString::empty() const { return m_ptr->m_length == 0; }
 
     // read-only access
     char CowString::operator[](std::size_t idx) const {

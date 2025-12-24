@@ -13,7 +13,7 @@
 #include <numeric>         // std::accumulate
 #include <string>          // std::string
 #include <string_view>     // std::string_view
-#include <vector>          // std:.vector
+#include <vector>          // std::vector
 
 // c'tor(s)
 LoremIpsum::LoremIpsum() : LoremIpsum{ 4, 12, 5, 8, 6 }

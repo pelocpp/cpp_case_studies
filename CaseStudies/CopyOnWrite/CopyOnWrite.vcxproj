@@ -125,22 +125,31 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CowStringImpl.cpp" />
-    <ClCompile Include="CowStringProgram.cpp" />
-    <ClCompile Include="COW_String_03.cpp" />
+    <ClCompile Include="CowString.cpp" />
     <ClCompile Include="Data.cpp" />
     <ClCompile Include="FrequencyCount.cpp" />
     <ClCompile Include="LoremIpsum.cpp" />
     <ClCompile Include="LoremIpsumImpl.cpp" />
     <ClCompile Include="LoremIpsumWords.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="TextfileStatistics.cpp" />
+    <ClCompile Include="TextfileStatisticsImpl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CowString.h" />
     <ClInclude Include="LoremIpsum.h" />
+    <ClInclude Include="TextfileStatistics.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LoremIpsumLongWords.inl" />
     <None Include="LoremIpsumOriginalWords.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="LoremIpsumExtremeHuge.txt" />
+    <Text Include="LoremIpsumHuge.txt" />
+    <Text Include="LoremIpsumLarge.txt" />
+    <Text Include="LoremIpsumSmall.txt" />
+    <Text Include="LoremIpsumVeryHuge.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

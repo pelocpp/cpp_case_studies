@@ -18,16 +18,13 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="COW_String_03.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CowStringImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CowStringProgram.cpp">
+    <ClCompile Include="CowString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FrequencyCount.cpp">
@@ -42,12 +39,21 @@
     <ClCompile Include="LoremIpsumImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TextfileStatisticsImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextfileStatistics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CowString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LoremIpsum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextfileStatistics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -58,5 +64,22 @@
     <None Include="LoremIpsumLongWords.inl">
       <Filter>Header Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="LoremIpsumHuge.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="LoremIpsumLarge.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="LoremIpsumSmall.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="LoremIpsumVeryHuge.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="LoremIpsumExtremeHuge.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

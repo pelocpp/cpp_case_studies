@@ -40,13 +40,21 @@ static void test_lorem_ipsum_05()
     loremIpsum.generateLoremIpsum("LoremIpsum.txt");
 }
 
-void test_lorem_ipsum()
+static void test_lorem_ipsum_06()
+{
+    LoremIpsum loremIpsum{ 10, 14, 4, 8, 15000 };
+    loremIpsum.setLongWords();
+    loremIpsum.generateLoremIpsum("LoremIpsum.txt");
+}
+
+void main_lorem_ipsum()
 {
     //test_lorem_ipsum_01();
     //test_lorem_ipsum_02();
     //test_lorem_ipsum_03();
     //test_lorem_ipsum_04();
-    test_lorem_ipsum_05();
+    //test_lorem_ipsum_05();
+    test_lorem_ipsum_06();
 }
 
 // =====================================================================================

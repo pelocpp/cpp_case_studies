@@ -8,7 +8,7 @@
 #include <cstddef>      // std::size_t
 #include <string_view>  // std::string_view
 
-namespace CowStringSimple
+namespace COWString
 {
     class CowString
     {
@@ -35,23 +35,20 @@ namespace CowStringSimple
         CowString    (const char* s);
         CowString    (const char* s, std::size_t count);
         CowString    (std::string_view sv);
+        ~CowString();
 
-
-        CowString    (const CowString& other);
-        ~CowString   ();
-
-        // FEHLT: C'tor aus einem std::string_view heraus ...
+        // copy semantics
+        CowString(const CowString& other);
+        CowString& operator= (const CowString& other);
 
         // move semantics
         CowString(CowString&& other) noexcept;
         CowString& operator= (CowString&& other) noexcept;
 
-        // assignment operator
-        CowString& operator= (const CowString& other);
-
         // getter
-        std::size_t size() const;
-        const char* c_str() const;
+        std::size_t  size() const;
+        const char*  c_str() const;
+        bool         empty() const;
 
         // type-conversion operator
         operator std::string_view() const;
@@ -72,7 +69,7 @@ namespace CowStringSimple
 
 namespace std
 {
-    using namespace CowStringSimple;
+    using namespace COWString;
 
     // =======================================================================
     // std::hash for class CowString
@@ -83,7 +80,7 @@ namespace std
         // Note: std::hash<const char*> hashes the pointer value, not the characters it points to
         // Workaround: let's use std::string_view
 
-        std::size_t operator()(const CowString& cs) const {
+        std::size_t operator() (const CowString& cs) const {
 
             std::string_view sv{ cs };
             std::size_t h{ std::hash<std::string_view>{}(sv) };

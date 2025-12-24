@@ -9,7 +9,7 @@
 #include <ostream>                 // std::ostream
 #include <random>                  // std::random_device, std::mt19937, std::uniform_int_distribution
 #include <string_view>             // std::string_view
-#include <vector>                  // std:.vector
+#include <vector>                  // std::vector
 
 class LoremIpsum
 {

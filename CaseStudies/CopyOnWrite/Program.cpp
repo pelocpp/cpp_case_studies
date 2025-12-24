@@ -25,18 +25,18 @@
 // DAS realisieren !!!!!!!! 
 // https://github.com/Nikkicodes2/lipsum-cpp/blob/master/src/lipsum.hpp
 
-
-void test_cow_string_simple();
-void test_cow_string_improved();
-void test_lorem_ipsum();
-void test_frequency_count();
+// =====================================================================================
 
 #include <print>
 
+void main_cow_string();
+void main_lorem_ipsum();
+void main_frequency_count();
+void main_textfile_statistics();
+
 int main()
 {
-    //test_lorem_ipsum();
-    test_frequency_count();
+    main_textfile_statistics();
 }
 
 // =====================================================================================
