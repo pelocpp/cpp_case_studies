@@ -26,7 +26,7 @@ static void main_textfile_statistics_01()
 static void main_textfile_statistics_02()
 {
     TextfileStatistics stats;
-    stats.setFilename(fileNameVeryHuge);
+    stats.setFilename(fileNameSmall);
     stats.computeMostFrequentWords();
     std::println();
     stats.computeMostFrequentWordsCOW();

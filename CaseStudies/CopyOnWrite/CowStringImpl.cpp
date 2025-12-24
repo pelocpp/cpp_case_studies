@@ -59,7 +59,6 @@ namespace COWString
         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
     }
 
-
     // not tested
     // Geht das besser... die Länge habe ich schon
     // ein Überladung von create .... mit Länge ...
@@ -78,9 +77,12 @@ namespace COWString
 
     CowString::~CowString()
     {
-        m_ptr->m_refCount--;
-        if (m_ptr->m_refCount == 0) {
-            ::operator delete(m_ptr);
+        if (m_ptr != nullptr) {
+
+            m_ptr->m_refCount--;
+            if (m_ptr->m_refCount == 0) {
+                ::operator delete(m_ptr);
+            }
         }
     }
 

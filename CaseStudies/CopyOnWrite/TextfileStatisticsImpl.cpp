@@ -226,39 +226,157 @@ void TextfileStatistics::computeMostFrequentWords() {
         }
     }
     std::println("Done Creating Dictionary");
+    std::println();
+
+    // Now inspect all elements,
+    // keep track of the top 10 values seen so far
 
     using Entry = std::pair<std::size_t, std::string>;
 
     auto cmp = [](const Entry& a, const Entry& b) {
-        return a.first > b.first; // min-heap
-        };
 
-    std::priority_queue<Entry, std::vector<Entry>, decltype(cmp)> top10(cmp);
+        const auto& [frequency1, word1] = a;
+        const auto& [frequency2, word2] = b;
+
+        return frequency1 < frequency2;
+    };
+
+    std::priority_queue<Entry, std::vector<Entry>, decltype(cmp)> topTen(cmp);
 
     for (const auto& [key, value] : frequenciesMap) {
 
-        if (top10.size() < 10) {
-            top10.emplace(value, key);
+        if (topTen.size() < 10) {
+            topTen.emplace(value, key);
         }
-        else if (value > top10.top().first) {
-            top10.pop();
-            top10.emplace(value, key);
+        else if (value > topTen.top().first) {
+            topTen.pop();
+            topTen.emplace(value, key);
         }
     }
 
-    // output results (largest last ==> reverse if needed)
-    while (!top10.empty()) {
-      //  std::cout << top10.top().second << ": " << top10.top().first << '\n';
+    // output results (largest first)
+    while (!topTen.empty()) {
 
-        std::println("{}: {}", top10.top().second, top10.top().first);
-
-        top10.pop();
+        const auto& [frequency, word] = topTen.top();
+        std::println("{:30}: {}", word, frequency);
+        topTen.pop();
     }
 
     std::println("Done.");
 }
 
 void TextfileStatistics::computeMostFrequentWordsCOW() {
+
+    using namespace COWString;
+
+    if (m_fileName.empty()) {
+        std::println("No Filename specified!");
+        return;
+    }
+
+    std::ifstream file{ m_fileName.data() };
+    if (!file.good()) {
+        std::println("File not found!");
+        return;
+    }
+
+    std::println("File {}", m_fileName);
+    std::println("[CowString] Starting ...");
+
+    ScopedTimer watch{};
+
+  //  std::unordered_map<std::string, std::size_t> frequenciesMap;
+
+    std::unordered_map<CowString, std::size_t> frequenciesMap;
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        // process single line
+        std::string_view sv{ line };
+
+        std::size_t begin{};
+        std::size_t end{};
+
+        while (end != sv.size()) {
+
+            while (std::isalpha(sv[end]))
+                ++end;
+
+            CowString cs{ &sv[begin], end - begin };
+
+            // std::println("hier");
+
+
+            // If it's an uppercase word, convert it
+            // Note: This CowString currently has the state 'owning',
+            // so a 'write' access does *not* copy the underling string
+            if (std::isupper(cs[0])) {
+                cs[0] = std::tolower(cs[0]);
+            }
+
+            frequenciesMap[cs]++;
+
+            while (end != sv.size() && (sv[end] == ' ' || sv[end] == '.' || sv[end] == ','))
+                ++end;
+
+            begin = end;
+        }
+    }
+    std::println("Done Creating Dictionary");
+    std::println();
+
+    // Now inspect all elements,
+    // keep track of the top 10 values seen so far
+
+    using Entry = std::pair<std::size_t, CowString>;
+
+    auto cmp = [](const Entry& a, const Entry& b) {
+
+        const auto& [frequency1, word1] = a;
+        const auto& [frequency2, word2] = b;
+
+        return frequency1 < frequency2;
+        };
+
+    std::priority_queue<Entry, std::vector<Entry>, decltype(cmp)> topTen(cmp);
+
+    for (const auto& [key, value] : frequenciesMap) {
+
+        if (topTen.size() < 10) {
+            topTen.emplace(value, key);
+        }
+        else if (value > topTen.top().first) {
+            topTen.pop();
+            topTen.emplace(value, key);
+        }
+    }
+
+    //for (const auto& entry : frequenciesMap) {
+
+    //    const auto& [key, value] = entry;
+
+    //    if (topTen.size() < 10) {
+    //        //   topTen.emplace(value, key);
+    //        topTen.push(entry);
+    //    }
+    //    else if (value > topTen.top().first) {
+    //        topTen.pop();
+    //        //   topTen.emplace(value, key);
+    //    }
+    //}
+
+    // output results (largest first)
+    while (!topTen.empty()) {
+
+    //    std::println("{:30}: {}", topTen.top().second, topTen.top().first);
+
+        const auto& [frequency, word] = topTen.top();
+        std::println("{:30}: {}", word.c_str(), frequency);
+        topTen.pop();
+    }
+
+    std::println("Done.");
 }
 
 // =====================================================================================

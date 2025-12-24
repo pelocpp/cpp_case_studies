@@ -2,6 +2,17 @@
 // CowStringProgram.cpp // Simple implementation of a COW string class
 // =====================================================================================
 
+#define _CRTDBG_MAP_ALLOC
+#include <cstdlib>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
+
 #include "CowString.h"
 
 #include <print>
@@ -118,24 +129,44 @@ namespace COWString
         std::println("sv: {}", sv);
         std::println("sv1: {}", sv1);
     }
+
+    static void test_cow_string_11()
+    {
+        // testing move semantics
+        CowString s1{ "1234567890" };
+        std::string_view sv1{ s1 };
+        std::println("sv: {}", sv1);
+
+        CowString s2{ std::move(s1) };
+        std::string_view sv2{ s2 };
+        std::println("sv: {}", sv2);
+
+        CowString s3{};
+        s3 = std::move(s2);
+        std::string_view sv3{ s3 };
+        std::println("sv: {}", sv3);
+    }
 }
 
 void main_cow_string()
 {
     using namespace COWString;
 
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    
     std::println("Testing CowString:");
 
-    test_cow_string_01();
-    test_cow_string_02();
-    test_cow_string_03();
-    test_cow_string_04();
-    test_cow_string_05();
-    test_cow_string_06();
-    test_cow_string_07();
-    test_cow_string_08();   // crashes - by design
-    test_cow_string_09();
-    test_cow_string_10();
+    //test_cow_string_01();
+    //test_cow_string_02();
+    //test_cow_string_03();
+    //test_cow_string_04();
+    //test_cow_string_05();
+    //test_cow_string_06();
+    //test_cow_string_07();
+    //// test_cow_string_08();   // crashes - by design
+    //test_cow_string_09();
+    //test_cow_string_10();
+    test_cow_string_11();
 }
 
 // =====================================================================================
