@@ -3,8 +3,8 @@
 // =====================================================================================
 
 #define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
 #include <crtdbg.h>
+#include <cstdlib>
 
 #ifdef _DEBUG
 #ifndef DBG_NEW
@@ -17,6 +17,7 @@
 
 #include <print>
 #include <string_view>
+#include <vector>
 
 namespace COWString
 {
@@ -28,14 +29,14 @@ namespace COWString
     static void test_cow_string_02()
     {
         CowString a{ "1234567890" };
-        std::println("String: {}", a.c_str());
+        std::println("String: {}", a);
         std::println("Length: {}", a.size());
     }
 
     static void test_cow_string_03()
     {
         CowString a{ "1234567890", 5 };
-        std::println("String: {}", a.c_str());
+        std::println("String: {}", a);
         std::println("Length: {}", a.size());
     }
 
@@ -73,17 +74,17 @@ namespace COWString
         CowString c{ b };  // shares buffer
 
         std::println("Before modification:");
-        std::println("a: {}", a.c_str());
-        std::println("b: {}", b.c_str());
-        std::println("c: {}", c.c_str());
+        std::println("a: {}", a);
+        std::println("b: {}", b);
+        std::println("c: {}", c);
 
         b[0] = 'h'; // triggers copy-on-write only for 'b'
         b[6] = 'w'; // triggers copy-on-write only for 'b'
 
         std::println("After modification:");
-        std::println("a: {}", a.c_str());  // unchanged
-        std::println("b: {}", b.c_str());  // modified
-        std::println("c: {}", c.c_str());  // unchanged
+        std::println("a: {}", a);  // unchanged
+        std::println("b: {}", b);  // modified
+        std::println("c: {}", c);  // unchanged
     }
 
     static void test_cow_string_08()
@@ -146,6 +147,37 @@ namespace COWString
         std::string_view sv3{ s3 };
         std::println("sv: {}", sv3);
     }
+
+    static void test_cow_string_12()
+    {
+        // testing move semantics
+        CowString s1{ "1234567890" };
+        std::string_view sv1{ s1 };
+        std::println("sv: {}", sv1);
+
+        CowString s2{ std::move(s1) };
+        std::string_view sv2{ s2 };
+        std::println("sv: {}", sv2);
+
+        CowString s3{};
+        s3 = std::move(s2);
+        std::string_view sv3{ s3 };
+        std::println("sv: {}", sv3);
+    }
+
+    static void test_cow_string_13()
+    {
+        std::vector<CowString> vec;
+
+        // testing move semantics
+        vec.push_back(CowString{ "ABC" });
+        vec.push_back(CowString{ "DEF" });
+        vec.push_back(CowString{ "GHI" });
+
+        for (const auto& cs : vec) {
+            std::println("{}", cs);
+        }
+    }
 }
 
 void main_cow_string()
@@ -156,17 +188,19 @@ void main_cow_string()
     
     std::println("Testing CowString:");
 
-    //test_cow_string_01();
-    //test_cow_string_02();
-    //test_cow_string_03();
-    //test_cow_string_04();
-    //test_cow_string_05();
-    //test_cow_string_06();
-    //test_cow_string_07();
-    //// test_cow_string_08();   // crashes - by design
-    //test_cow_string_09();
-    //test_cow_string_10();
+    test_cow_string_01();
+    test_cow_string_02();
+    test_cow_string_03();
+    test_cow_string_04();
+    test_cow_string_05();
+    test_cow_string_06();
+    test_cow_string_07();
+    // test_cow_string_08();   // crashes - by design
+    test_cow_string_09();
+    test_cow_string_10();
     test_cow_string_11();
+    test_cow_string_12();
+    test_cow_string_13();
 }
 
 // =====================================================================================

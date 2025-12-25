@@ -97,7 +97,7 @@ public:  // private or public
 
 namespace std
 {
-    // formatter for class Color
+    // formatter for class Matrix
     template<typename T>
     struct std::formatter<Matrix<T>> : std::formatter<std::string_view>
     {

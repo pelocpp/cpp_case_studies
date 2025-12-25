@@ -31,7 +31,6 @@
 
 void main_cow_string();
 void main_lorem_ipsum();
-void main_frequency_count();
 void main_textfile_statistics();
 
 int main()

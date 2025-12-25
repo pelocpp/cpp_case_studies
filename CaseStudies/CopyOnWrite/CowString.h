@@ -7,6 +7,7 @@
 #include <atomic>       // std::atomic
 #include <cstddef>      // std::size_t
 #include <string_view>  // std::string_view
+#include <format>       // std::std::formatter
 
 namespace COWString
 {
@@ -31,11 +32,11 @@ namespace COWString
 
     public:
         // c'tor(s), d'tor
-        CowString    ();
-        CowString    (const char* s);
-        CowString    (const char* s, std::size_t count);
-        CowString    (std::string_view sv);
-        ~CowString();
+        CowString             ();
+        explicit CowString    (const char* s);
+        CowString             (const char* s, std::size_t count);
+        explicit CowString    (std::string_view sv);
+        ~CowString            ();
 
         // copy semantics
         CowString(const CowString& other);
@@ -85,6 +86,23 @@ namespace std
             std::string_view sv{ cs };
             std::size_t h{ std::hash<std::string_view>{}(sv) };
             return h;
+        }
+    };
+
+    // =======================================================================
+    //  std::formatter for class CowString
+
+    template <>
+    struct formatter<CowString>
+    {
+        // parse the format string for this type
+        constexpr auto parse(std::format_parse_context & ctx) {
+            return ctx.begin(); // returns position of '}'
+        }
+
+        // format by always writing its 'char*' value
+        auto format(const CowString& obj, std::format_context & ctx) const {
+            return std::format_to(ctx.out(), "{}", obj.c_str());
         }
     };
 }

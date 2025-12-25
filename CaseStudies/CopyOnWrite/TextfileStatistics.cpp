@@ -5,7 +5,7 @@
 
 #include "TextfileStatistics.h"
 
-#include <print>           // std::println
+#include <print>   // std::println
 
 constexpr std::string_view fileNameSmall       { "LoremIpsumSmall.txt" };
 constexpr std::string_view fileNameLarge       { "LoremIpsumLarge.txt" };
@@ -16,7 +16,7 @@ constexpr std::string_view fileNameExtremeHuge { "LoremIpsumExtremeHuge.txt" };
 static void main_textfile_statistics_01()
 {
     TextfileStatistics stats;
-    stats.setFilename(fileNameVeryHuge);
+    stats.setFilename(fileNameExtremeHuge);
     stats.countWordFrequencies();
     std::println();
     stats.countWordFrequenciesCOW();
@@ -26,7 +26,7 @@ static void main_textfile_statistics_01()
 static void main_textfile_statistics_02()
 {
     TextfileStatistics stats;
-    stats.setFilename(fileNameSmall);
+    stats.setFilename(fileNameExtremeHuge);
     stats.computeMostFrequentWords();
     std::println();
     stats.computeMostFrequentWordsCOW();
@@ -35,7 +35,7 @@ static void main_textfile_statistics_02()
 
 void main_textfile_statistics()
 {
-   // main_textfile_statistics_01();
+    main_textfile_statistics_01();
     main_textfile_statistics_02();
 }
 

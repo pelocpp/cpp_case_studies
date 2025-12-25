@@ -96,7 +96,7 @@ void LoremIpsum::generateFirstWord(std::ostream& os)
     auto index{ m_wordDistribution(m_engine) };
     
     // retrieve word from list of existing words
-    auto word{ m_words.at(index) };
+    const auto& word{ m_words.at(index) };
 
     // word is first of current sentence, capitalize first character
     char upperCh{ static_cast<char>(std::toupper(word[0])) };
@@ -112,7 +112,7 @@ void LoremIpsum::generateNextWord(std::ostream& os)
     auto index{ m_wordDistribution(m_engine) };
 
     // retrieve word from list of existing words
-    auto word{ m_words.at(index) };
+    const auto& word{ m_words.at(index) };
     os << word;
 }
 

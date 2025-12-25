@@ -127,10 +127,8 @@
     <ClCompile Include="CowStringImpl.cpp" />
     <ClCompile Include="CowString.cpp" />
     <ClCompile Include="Data.cpp" />
-    <ClCompile Include="FrequencyCount.cpp" />
     <ClCompile Include="LoremIpsum.cpp" />
     <ClCompile Include="LoremIpsumImpl.cpp" />
-    <ClCompile Include="LoremIpsumWords.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="TextfileStatistics.cpp" />
     <ClCompile Include="TextfileStatisticsImpl.cpp" />

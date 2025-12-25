@@ -170,7 +170,7 @@ void TextfileStatistics::countWordFrequenciesCOW() {
     if (pos != frequenciesMap.end())
     {
         const auto& [word, frequency] = *pos;
-        std::println("Largest frequency: {} - Word: {}", frequency, word.c_str());
+        std::println("Largest frequency: {} - Word: {}", frequency, word);
     }
 
     std::println("Done.");
@@ -228,7 +228,7 @@ void TextfileStatistics::computeMostFrequentWords() {
     std::println("Done Creating Dictionary");
     std::println();
 
-    // Now inspect all elements,
+    // now inspect all elements,
     // keep track of the top 10 values seen so far
 
     using Entry = std::pair<std::size_t, std::string>;
@@ -246,11 +246,11 @@ void TextfileStatistics::computeMostFrequentWords() {
     for (const auto& [key, value] : frequenciesMap) {
 
         if (topTen.size() < 10) {
-            topTen.emplace(value, key);
+            topTen.push({ value, key });
         }
-        else if (value > topTen.top().first) {
+        else if (std::size_t firstValue = topTen.top().first; value > firstValue) {
             topTen.pop();
-            topTen.emplace(value, key);
+            topTen.push({ value, key });
         }
     }
 
@@ -258,7 +258,7 @@ void TextfileStatistics::computeMostFrequentWords() {
     while (!topTen.empty()) {
 
         const auto& [frequency, word] = topTen.top();
-        std::println("{:30}: {}", word, frequency);
+        std::println("{:<5}: {}", frequency, word);
         topTen.pop();
     }
 
@@ -285,8 +285,6 @@ void TextfileStatistics::computeMostFrequentWordsCOW() {
 
     ScopedTimer watch{};
 
-  //  std::unordered_map<std::string, std::size_t> frequenciesMap;
-
     std::unordered_map<CowString, std::size_t> frequenciesMap;
 
     std::string line;
@@ -304,9 +302,6 @@ void TextfileStatistics::computeMostFrequentWordsCOW() {
                 ++end;
 
             CowString cs{ &sv[begin], end - begin };
-
-            // std::println("hier");
-
 
             // If it's an uppercase word, convert it
             // Note: This CowString currently has the state 'owning',
@@ -326,7 +321,7 @@ void TextfileStatistics::computeMostFrequentWordsCOW() {
     std::println("Done Creating Dictionary");
     std::println();
 
-    // Now inspect all elements,
+    // now inspect all elements,
     // keep track of the top 10 values seen so far
 
     using Entry = std::pair<std::size_t, CowString>;
@@ -344,35 +339,19 @@ void TextfileStatistics::computeMostFrequentWordsCOW() {
     for (const auto& [key, value] : frequenciesMap) {
 
         if (topTen.size() < 10) {
-            topTen.emplace(value, key);
+            topTen.push({ value, key });
         }
-        else if (value > topTen.top().first) {
+        else if (std::size_t firstValue = topTen.top().first; value > firstValue) {
             topTen.pop();
-            topTen.emplace(value, key);
+            topTen.push({ value, key });
         }
     }
 
-    //for (const auto& entry : frequenciesMap) {
-
-    //    const auto& [key, value] = entry;
-
-    //    if (topTen.size() < 10) {
-    //        //   topTen.emplace(value, key);
-    //        topTen.push(entry);
-    //    }
-    //    else if (value > topTen.top().first) {
-    //        topTen.pop();
-    //        //   topTen.emplace(value, key);
-    //    }
-    //}
-
     // output results (largest first)
-    while (!topTen.empty()) {
-
-    //    std::println("{:30}: {}", topTen.top().second, topTen.top().first);
+    while (! topTen.empty()) {
 
         const auto& [frequency, word] = topTen.top();
-        std::println("{:30}: {}", word.c_str(), frequency);
+        std::println("{:<5}: {}", frequency, word );
         topTen.pop();
     }
 

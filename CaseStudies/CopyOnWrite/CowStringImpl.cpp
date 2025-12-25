@@ -4,11 +4,14 @@
 
 #include "CowString.h"
 
+#include <print>
+
 #include <cstring>     // std::strlen
 #include <stdexcept>   // std::out_of_range
 
 namespace COWString
 {
+    // =================================================================================
     // Controlblock
     CowString::Controlblock* CowString::Controlblock::create(const char* src)
     {
@@ -39,6 +42,7 @@ namespace COWString
         return sd;
     }
 
+    // =================================================================================
     // c'tor(s) / d'tor
     CowString::CowString()
     {
@@ -64,15 +68,10 @@ namespace COWString
     // ein Überladung von create .... mit Länge ...
     CowString::CowString(std::string_view sv)
     {
+        std::println("D");
+
         m_ptr = Controlblock::create(sv.data());
         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
-    }
-
-    CowString::CowString(const CowString& other)
-    {
-        m_ptr = other.m_ptr;
-        m_str = other.m_str;
-        m_ptr->m_refCount++;
     }
 
     CowString::~CowString()
@@ -86,16 +85,20 @@ namespace COWString
         }
     }
 
-    // move semantics
-    CowString::CowString(CowString&& other) noexcept 
-        : m_ptr{ other.m_ptr }, m_str{ other.m_str } 
+
+    // =================================================================================
+    // copy semantics
+
+    CowString::CowString(const CowString& other)
     {
-        other.m_ptr = nullptr;
-        other.m_str = nullptr;    
+        m_ptr = other.m_ptr;
+        m_str = other.m_str;
+        m_ptr->m_refCount++;
     }
 
-    CowString& CowString::operator=(CowString&& other) noexcept {
-
+    // assignment operator
+    CowString& CowString::operator=(const CowString& other)
+    {
         if (this != &other) {
 
             m_ptr->m_refCount--;
@@ -105,8 +108,74 @@ namespace COWString
 
             m_ptr = other.m_ptr;
             m_str = other.m_str;
-            other.m_ptr = nullptr;
-            other.m_str = nullptr;
+            m_ptr->m_refCount++;
+        }
+
+        return *this;
+    }
+
+    // =================================================================================
+    // move semantics
+
+
+    //CowString::CowString(CowString&& other) noexcept
+    //    : m_ptr{ other.m_ptr }, m_str{ other.m_str }
+    //{
+    //    other.m_ptr = nullptr;
+    //    other.m_str = nullptr;
+    //}
+
+    //CowString& CowString::operator=(CowString&& other) noexcept {
+
+    //    if (this != &other) {
+
+    //        m_ptr->m_refCount--;
+    //        if (m_ptr->m_refCount == 0) {
+    //            ::operator delete(m_ptr);
+    //        }
+
+    //        m_ptr = other.m_ptr;
+    //        m_str = other.m_str;
+    //        other.m_ptr = nullptr;
+    //        other.m_str = nullptr;
+    //    }
+
+    //    return *this;
+    //}
+
+
+
+    CowString::CowString(CowString&& other) noexcept 
+        : m_ptr{ other.m_ptr }, m_str{ other.m_str } 
+    {
+   //     std::println("CowString MOVE c'tor");
+
+        //other.m_ptr = nullptr;
+        //other.m_str = nullptr;
+
+        other.m_ptr = Controlblock::createEmpty();
+        other.m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+    }
+
+    CowString& CowString::operator=(CowString&& other) noexcept {
+
+        if (this != &other) {
+
+    //        std::println("CowString MOVE operator=");
+
+            m_ptr->m_refCount--;
+            if (m_ptr->m_refCount == 0) {
+                ::operator delete(m_ptr);
+            }
+
+            m_ptr = other.m_ptr;
+            m_str = other.m_str;
+
+            //other.m_ptr = nullptr;
+            //other.m_str = nullptr;
+
+            other.m_ptr = Controlblock::createEmpty();
+            other.m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
         }
     
         return *this;
@@ -145,24 +214,6 @@ namespace COWString
 
         detach();
         return m_str[idx];
-    }
-
-    // assignment operator
-    CowString& CowString::operator=(const CowString& other)
-    {
-        if (this != &other) {
-
-            m_ptr->m_refCount--;
-            if (m_ptr->m_refCount == 0) {
-                ::operator delete(m_ptr);
-            }
-
-            m_ptr = other.m_ptr;
-            m_str = other.m_str;
-            m_ptr->m_refCount++;
-        }
-
-        return *this;
     }
 
     // comparison operators - global methods

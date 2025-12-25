@@ -27,13 +27,7 @@
     <ClCompile Include="CowString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FrequencyCount.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LoremIpsum.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LoremIpsumWords.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LoremIpsumImpl.cpp">
