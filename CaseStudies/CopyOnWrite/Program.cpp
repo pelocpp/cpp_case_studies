@@ -35,7 +35,7 @@ void main_textfile_statistics();
 
 int main()
 {
-    main_textfile_statistics();
+    main_cow_string();
 }
 
 // =====================================================================================

@@ -133,19 +133,11 @@ namespace COWString
 
     static void test_cow_string_11()
     {
-        // testing move semantics
-        CowString s1{ "1234567890" };
-        std::string_view sv1{ s1 };
-        std::println("sv: {}", sv1);
+        std::string_view sv{  "1234567890" };
+        CowString cs{sv };
 
-        CowString s2{ std::move(s1) };
-        std::string_view sv2{ s2 };
-        std::println("sv: {}", sv2);
-
-        CowString s3{};
-        s3 = std::move(s2);
-        std::string_view sv3{ s3 };
-        std::println("sv: {}", sv3);
+        std::println("sv: {}", sv);
+        std::println("cs: {}", cs);
     }
 
     static void test_cow_string_12()
@@ -166,6 +158,23 @@ namespace COWString
     }
 
     static void test_cow_string_13()
+    {
+        // testing move semantics
+        CowString s1{ "1234567890" };
+        std::string_view sv1{ s1 };
+        std::println("sv: {}", sv1);
+
+        CowString s2{ std::move(s1) };
+        std::string_view sv2{ s2 };
+        std::println("sv: {}", sv2);
+
+        CowString s3{};
+        s3 = std::move(s2);
+        std::string_view sv3{ s3 };
+        std::println("sv: {}", sv3);
+    }
+
+    static void test_cow_string_14()
     {
         std::vector<CowString> vec;
 
@@ -188,19 +197,20 @@ void main_cow_string()
     
     std::println("Testing CowString:");
 
-    test_cow_string_01();
-    test_cow_string_02();
-    test_cow_string_03();
-    test_cow_string_04();
-    test_cow_string_05();
-    test_cow_string_06();
-    test_cow_string_07();
-    // test_cow_string_08();   // crashes - by design
-    test_cow_string_09();
-    test_cow_string_10();
+    //test_cow_string_01();
+    //test_cow_string_02();
+    //test_cow_string_03();
+    //test_cow_string_04();
+    //test_cow_string_05();
+    //test_cow_string_06();
+    //test_cow_string_07();
+    //// test_cow_string_08();   // crashes - by design
+    //test_cow_string_09();
+    //test_cow_string_10();
     test_cow_string_11();
-    test_cow_string_12();
-    test_cow_string_13();
+    //test_cow_string_12();
+    //test_cow_string_13();
+    //test_cow_string_14();
 }
 
 // =====================================================================================
