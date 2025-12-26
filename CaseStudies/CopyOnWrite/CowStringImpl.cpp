@@ -14,23 +14,23 @@ namespace COWString
     // =================================================================================
     // Controlblock
 
+    CowString::Controlblock* CowString::Controlblock::create()
+    {
+        void* mem{ ::operator new(sizeof(Controlblock) + 1) };
+        Controlblock* cb{ new (mem) Controlblock{ 1 } };
+        char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
+        cp[0] = '\0';
+        return cb;
+    }
+
     CowString::Controlblock* CowString::Controlblock::create(const char* src, std::size_t len)
     {
         void* mem{ ::operator new(sizeof(Controlblock) + len + 1) };
-        Controlblock* sd{ new (mem) Controlblock{ 1 } };
+        Controlblock* cb{ new (mem) Controlblock{ 1 } };
         char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
         std::memcpy(cp, src, len);
         cp[len] = '\0';
-        return sd;
-    }
-
-    CowString::Controlblock* CowString::Controlblock::createEmpty()
-    {
-        void* mem{ ::operator new(sizeof(Controlblock) + 1) };
-        Controlblock* sd{ new (mem) Controlblock{ 1 } };
-        char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
-        cp[0] = '\0';
-        return sd;
+        return cb;
     }
 
     // =================================================================================
@@ -38,7 +38,7 @@ namespace COWString
 
     CowString::CowString()
     {
-        m_ptr = Controlblock::createEmpty();
+        m_ptr = Controlblock::create();
         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
         m_len = 0;
     }
@@ -110,7 +110,7 @@ namespace COWString
     CowString::CowString(CowString&& other) noexcept 
         : m_ptr{ other.m_ptr }, m_str{ other.m_str }, m_len{ other.m_len }
     {
-        other.m_ptr = Controlblock::createEmpty();
+        other.m_ptr = Controlblock::create();
         other.m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
         other.m_len = 0;
     }
@@ -128,7 +128,7 @@ namespace COWString
             m_str = other.m_str;
             m_len = other.m_len;
 
-            other.m_ptr = Controlblock::createEmpty();
+            other.m_ptr = Controlblock::create();
             other.m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
             other.m_len = 0;
         }

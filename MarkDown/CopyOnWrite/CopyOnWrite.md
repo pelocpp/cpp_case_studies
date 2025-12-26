@@ -234,71 +234,74 @@ Es folgt die Klassendefinition im Ganzen:
 04:     struct Controlblock
 05:     {
 06:         std::atomic<std::size_t> m_refCount;
-07:         std::size_t              m_length;
-08: 
-09:         static Controlblock*     create      (const char* src);
-10:         static Controlblock*     create      (const char* src, std::size_t length);
-11:         static Controlblock*     createEmpty (); 
-12:     };
-13: 
-14:     Controlblock* m_ptr;
-15:     char*         m_str;
-16: 
-17:     // ensure we have a private (unshared) copy before writing
-18:     void detach  ();
-19: 
-20: public:
-21:     // c'tor(s), d'tor
-22:     CowString             ();
-23:     explicit CowString    (const char* s);
-24:     CowString             (const char* s, std::size_t count);
-25:     explicit CowString    (std::string_view sv);
-26:     ~CowString            ();
-27: 
-28:     // copy semantics
-29:     CowString(const CowString& other);
-30:     CowString& operator= (const CowString& other);
-31: 
-32:     // move semantics
-33:     CowString(CowString&& other) noexcept;
-34:     CowString& operator= (CowString&& other) noexcept;
-35: 
-36:     // getter
-37:     std::size_t  size() const;
-38:     const char*  c_str() const;
-39:     bool         empty() const;
-40: 
-41:     // type-conversion operator
-42:     operator std::string_view() const;
-43: 
-44:     // comparison operators
-45:     friend bool operator== (const CowString& a, const CowString& b);
-46:     friend bool operator!= (const CowString& a, const CowString& b);
-47:     friend bool operator<  (const CowString& a, const CowString& b);
-48: 
-49:     // read- and write-access - no exception handling
-50:     char operator[] (std::size_t idx) const;  // read-only access
-51:     char& operator[](std::size_t idx);        // possible write access - triggers COW
-52:     
-53:     char at (std::size_t idx) const;          // read-only access
-54:     char& at(std::size_t idx);                // possible write access - triggers COW
-55: };
+07: 
+08:         static Controlblock*  create      (const char* src, std::size_t length);
+09:         static Controlblock*  createEmpty (); 
+10:     };
+11: 
+12:     Controlblock*         m_ptr;
+13:     char*                 m_str;
+14:     std::size_t           m_len;
+15: 
+16:     // ensure we have a private (unshared) copy before writing
+17:     void detach  ();
+18: 
+19: public:
+20:     // c'tor(s), d'tor
+21:     CowString             ();
+22:     explicit CowString    (const char* s);
+23:     CowString             (const char* s, std::size_t count);
+24:     explicit CowString    (std::string_view sv);
+25:     ~CowString            ();
+26: 
+27:     // copy semantics
+28:     CowString(const CowString& other);
+29:     CowString& operator= (const CowString& other);
+30: 
+31:     // move semantics
+32:     CowString(CowString&& other) noexcept;
+33:     CowString& operator= (CowString&& other) noexcept;
+34: 
+35:     // getter
+36:     std::size_t  size() const;
+37:     const char*  c_str() const;
+38:     bool         empty() const;
+39: 
+40:     // type-conversion operator
+41:     operator std::string_view() const;
+42: 
+43:     // comparison operators
+44:     friend bool operator== (const CowString& a, const CowString& b);
+45:     friend bool operator!= (const CowString& a, const CowString& b);
+46:     friend bool operator<  (const CowString& a, const CowString& b);
+47: 
+48:     // read- and write-access - no exception handling
+49:     char operator[] (std::size_t idx) const;  // read-only access
+50:     char& operator[](std::size_t idx);        // possible write access - triggers COW
+51:     
+52:     char at (std::size_t idx) const;          // read-only access
+53:     char& at(std::size_t idx);                // possible write access - triggers COW
+54: };
 ```
 
-In den Zeilen 4 bis 12 finden wir eine geschachtelte Klasse `Controlblock` vor.
+In den Zeilen 4 bis 10 finden wir eine geschachtelte Klasse `Controlblock` vor.
 Sie hat Gemeinsamkeiten mit einer *Kontrollblock*-Klasse, wie sie in Implementierungen der Smart Pointer Klasse `std::shared_ptr<T>` verwendet wird.
 Der beschriebene Referenzzähler `m_refCount` wird in Zeile 6 definiert, es kommt die Klasse `std::atomic<std::size_t>` zum Zuge.
-Die Längenvariable `m_length` beschreibt die Länge der gekapselten Zeichenkette.
 
-Es folgen in den Zeilen 21 bis 34 die üblichen Zutaten in der Realisierung einer C++&ndash;Klasse.
+Neben dem Kontrollblock verwaltet die `CowString` die Daten einer Zeichenkette.
+Die Längenvariable `m_len` beschreibt die Länge der gekapselten Zeichenkette,
+die Zeigervariable `m_str` enthält die Anfangsadresse. Wie es zur Ablage der Zeichen in einem `CowString`-Objekt kommt,
+beschreiben wir weiter unten.
+
+Es folgen in den Zeilen 20 bis 34 die üblichen Zutaten in der Realisierung einer C++&ndash;Klasse.
 Neben mehreren Konstruktoren und einem Destruktor unterstützt die `CowString` sowohl
 die Kopier- als auch die Verschiebesemantik.
 
 Die öffentliche Schnittstelle der `CowString` ist absichtlich knapp gehalten.
 `CowString`-Objekte sollen schnelles Kopieren und schnelle Wertzuweisungen unterstützen.
-Funktionalitäten, die in die Kategorie der &bdquo;Zeichenkettenverarbeitung&rdquo; fallen,
+Funktionalitäten, die in die Kategorie der &bdquo;Zeichenkettenverarbeitung&rdquo; fallen würden,
 wurden weitestgehend weggelassen. Einzig und allein der Zugriff auf einzelne Zeichen
-wird unterstützt. In Analogie zur `std::string`-Klasse sind dies der Index-Operator und eine `at`-Methode.
+wird unterstützt. In Analogie zur `std::string`-Klasse sind dies der Index-Operator `operator[]` und eine `at`-Methode.
 Der Index-Operator nimmt keine Überprüfung des Indexwerts vor, dies ist der `at`-Methode vorbehalten.
 
 Da die Realisierung der `CowString`-Klasse gewisse Ähnlichkeiten zur `std::string_view`-Klasse besitzt
@@ -307,40 +310,48 @@ unterstützen wir eine Konvertierung von `CowString`- und `std::string_view`-Obj
 (Konvertierungskonstruktor und Typkonvertierungsoperator).
 
 
-Die `detach`-Methode aus Zeile 17 vollziegt einen Zustandswechsel eines `CowString`-Objekts 
+Die `detach`-Methode aus Zeile 17 vollzieht einen Zustandswechsel eines `CowString`-Objekts 
 vom Zustand &bdquo;*sharing*&rdquo; in den Zustand &bdquo;*owning*&rdquo;.
 Diese Methode ist folglich in allen Methoden / Operatoren der `CowString`-Klasse zu rufen,
 wenn ein schreibender Vorgang angestoßen wird. Bei allen lesende Operationen ändert das `CowString`-Objekt
 seinen Zustand nicht.
 
 Noch erkennen wir an Hand der Klassendefinition nicht, wo die Zeichen der Zeichenkette und der Kontrollblock
-im Speicher abgelegt werden. Zwei Adressvariablen sind in den Zeilen 14 und 15 zu diesem Zweck vorbereitet:
+im Speicher abgelegt werden. Zwei Adressvariablen sind in den Zeilen 12 und 13 zu diesem Zweck vorbereitet:
 
 ```cpp
 Controlblock* m_ptr;
 char*         m_str;
 ```
 
-Diese Fragen betrachten wir nun bei der Realisierung der einzelnen Methoden der `CowString`-Klasse.
+Diese Fragen beantworten wir nun bei der Realisierung der einzelnen Methoden der `CowString`-Klasse.
 Zuvor wenden wir uns dem Herzstück der `CowString`-Klasse zu, dem Kontrollblock.
 
 
 ## Entwurf des Kontrollblocks der `CowString`-Klasse
 
 Die Hauptaufgabe der Klasse `CowString` besteht darin,
-für eine Zeichenkette, deren Anfangsadresse bekannt ist, Speicher zu reservieren, diesen mit der Zeichenkette zu belegen
-und weitere Verwaltungsinformationen, zum Beispiel die Zeichenkettelänge, zu berechnen und abzulegen.
-Für all diese Verwaltungsinformationen gibt es in der Klasse `CowString` die innere Klasse `Controlblock`,
-den schon zitierten Kontrollblock.
+für eine Zeichenkette, deren Anfangsadresse bekannt ist, Speicher zu reservieren, diesen mit den Zeichen der Zeichenkette zu belegen
+und weitere Verwaltungsinformationen, zum Beispiel die Zeichenkettenlänge zu berechnen und aufzuheben.
 
-Bei der Festlegung der Instanzvariablen dieser Klasse stoßen wir auf ein kleines Problem:
-Wie bringen wir die Daten (Zeichen) der Zeichenkette in diesem Objekt unter?
+Nun wollen wir aber noch das Feature haben, dass bei Kopien und Zuweisungen keine tiefe Kopie des `CowString`-Objekts vollzogen wird.
+Dazu müssen wir zu jedem Zeitpunkt während der Lebensdauer eines `CowString`-Objekts wissen,
+ob dieses aktuell nur einen oder mehrere Besitzer hat.
+Gibt es nur einen Besitzer, stellen modifizierende Methodenaufrufe kein Problem dar. Es gibt ja nur einen einzigen Besitzer,
+der diese Änderungen intitiiert.
+Anders stellt sich die Sache dar, wenn es mehrere Besitzer gibt. Änderungsanforderungen eines Besitzers bedeuten nun,
+dass dieser ein exklusives Objekt haben möchte, alle anderen Besitzer hingegen möchten im Besitz des alten Objektzustands verbleiben.
+
+Damit benötigen wir eine Zählervariable für die Anzahl der Besitzer.
+Zu diesem Zweck gibt es in der Klasse `CowString` die innere Klasse `Controlblock`,
+den schon zitierten Kontrollblock. Dieser verwaltet die Variable `m_refCount` zum Zählen der Besitzer.
+
+Jetzt kommen wir auf die Fragestellung zu sprechen, wo wir die die Daten (Zeichen) der Zeichenkette in einem `CowString`-Objekt unterbringen?
 Wir könnten neben dem `Controlblock`-Objekt auch die Zeichen in einem separaten Speicherbereich auf dem Heap ablegen.
 Das würde bedeuten, dass für eine Zeichenkette zwei Anforderungen an die Freispeicherverwaltung zu stellen haben.
-Dies ist nicht sehr performant, wir beschreiten einen andere Weg.
+Dies ist nicht sehr performant, wir beschreiten deshalb einen andere Weg.
 
-
-Wir wollen eine Klasse (Struktur) *Controlblock* so definieren, dass sie in der Lage ist,
+Wir wollen die Klasse (Struktur) *Controlblock* so definieren, dass sie in der Lage ist,
 am Ende noch einen &bdquo;nachgelagerten&rdquo; Speicherbereich zu besitzen,
 der groß genug ist, um die Zeichenkette aufzunehmen.
 
@@ -349,7 +360,7 @@ Nicht übersetzungsfähig sind Strukturen der Art
 ```cpp
 01: struct Controlblock
 02: {
-03:     std::size_t m_length;
+03:     std::atomic<std::size_t> m_refCount;
 04:     ...
 05:     char        m_trailing[];
 06: }
@@ -367,7 +378,7 @@ Wir gehen deshalb wie folgt vor:
 ```cpp
 01: struct Controlblock
 02: {
-03:     std::size_t m_length;
+03:     std::atomic<std::size_t> m_refCount;
 04:     ...
 05:     // no flexible sized array
 06: }
@@ -377,7 +388,7 @@ Die Struktur `Controlblock` soll alle Daten enthalten, die für die Verwaltung e
 Das Anlegen einer `Controlblock`-Instanz führen wir etwas unorthodox durch.
 Da wir die Länge der Zeichenkette, die es zu verwalten gilt, kennen,
 reservieren wir den Speicher für die `Controlblock`-Instanz dynamisch &ndash; und belegen neben dem für die `Controlblock`-Struktur notwendigen Speicher
-noch zusätztlichen Speicher, der die Zeichenkette (inkl. terminierendes Null-Zeichen) aufnehmen kann.
+noch zusätzlichen Speicher, der die Zeichenkette (inkl. terminierendes Null-Zeichen) aufnehmen kann.
 Eine Funktion `createControlblock`, die die Länge der Zeichenkette übergeben bekommt, könnte so aussehen:
 
 
@@ -385,28 +396,34 @@ Eine Funktion `createControlblock`, die die Länge der Zeichenkette übergeben b
 01: Controlblock* createControlblock(std::size_t length)
 02: {
 03:     void* mem = ::operator new (sizeof(Controlblock) + length + 1);
-04:     return new (mem) Controlblock{};
+04:     return new (mem) Controlblock{ 1 };
 05: }
 ```
 
 Mit dem Operator `::operator new` wird Speicher reserviert und sonst nichts weiter.
 Es erfolgt keine Initialisierung bzw. Vorbelegung des reservierten Speichers.
 
-Diese erfolgt &ndash; im skizzierten Beispiel &ndash; mit dem so genannten *Placement new*:
-Der Aufruf des Standardkonstruktors (`Controlblock{}`) wird auf dem reservierten Speicher angewendet.
+Diese erfolgt &ndash; im skizzierten Beispiel &ndash; mit dem so genannten *Placement new* Sprachkonstrukt:
+Der `new`-Operator bekommt in diesem Fall den Speicherbereich als Parameter übergeben (hier: `mem`).
+Der Speicherbereich kann mit einer gewöhnlichen Initialisierungsliste vorbelegt werden,
+wir wenden das für Strukturen verfügbare Sprachmittel der &bdquo;Initialisierung eines Aggregats mit einer gewöhnlichen Initialisierungsliste&rdquo; an:
 
-Offen ist, wie auf den zusätzlich vorhandenen Speicher im Anschluss an das `struct Controlblock`-Objekt zugegriffen
+```cpp
+Controlblock{ 1 };
+```
+
+Offen ist, wie auf den zusätzlich vorhandenen Speicher im Anschluss an die `struct Controlblock`-Variable zugegriffen
 werden kann. Dies erfolgt mit klassischen C/C++-Sprachmitteln wie `reinterpret_cast` und Zeigerarithmetik:
 
 ```cpp
-Controlblock* d = createControlblock(10);
-char* payload = reinterpret_cast<char*>(data) + sizeof(Controlblock);
+Controlblock* cb = createControlblock(10);
+char* payload = reinterpret_cast<char*>(cb) + sizeof(struct Controlblock);
 // 10 bytes past 'payload' pointer available
 ```
 
 Dieser Ansatz mag etwas unorthodox und maschinennah erscheinen.
 Er ist aber sehr flexibell und vor allem performant, die Schnelligkeit ist eben das Kriterium,
-wenn wir eine `CowString`-Klasse einsetzen.
+wenn wir eine `CowString`-Klasse implementieren.
 
 
 
@@ -417,95 +434,186 @@ Wir gehen auf die zentralen Methoden der `CowString`-Klasse im Detail ein und be
 ### Kontrolblock
 
 Da es mehrere Konstruktoren der `CowString`-Klasse gibt, die unterschiedliche Anforderunen an den Kontrolblock stellen,
-finden wir in der Realisierung drei Varianten vor, ein `Controlblock`-Objekt zu erzeugen:
+finden wir in der Realisierung zwei Überladungen einer statischen `create`-Methode vor, um ein `Controlblock`-Objekt zu erzeugen:
 
 
 ```cpp
-01: CowString::Controlblock* CowString::Controlblock::create(const char* src)
+01: CowString::Controlblock* CowString::Controlblock::create()
 02: {
-03:     std::size_t len{ std::strlen(src) };
-04:     void* mem{ ::operator new(sizeof(Controlblock) + len + 1) };
-05:     Controlblock* sd{ new (mem) Controlblock{ 1, len } };
-06:     char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
-07:     std::memcpy(cp, src, len + 1);
-08:     return sd;
-09: }
-10: 
-11: CowString::Controlblock* CowString::Controlblock::create(const char* src, std::size_t len)
-12: {
-13:     void* mem{ ::operator new(sizeof(Controlblock) + len + 1) };
-14:     Controlblock* sd{ new (mem) Controlblock{ 1, len } };
-15:     char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
-16:     std::memcpy(cp, src, len);
-17:     cp[len] = '\0';
-18:     return sd;
-19: }
-20: 
-21: CowString::Controlblock* CowString::Controlblock::createEmpty()
-22: {
-23:     void* mem{ ::operator new(sizeof(Controlblock) + 1) };
-24:     Controlblock* sd{ new (mem) Controlblock{ 1, 0 } };
-25:     char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
-26:     cp[0] = '\0';
-27:     return sd;
-28: }
+03:     void* mem{ ::operator new(sizeof(Controlblock) + 1) };
+04:     Controlblock* cb{ new (mem) Controlblock{ 1 } };
+05:     char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
+06:     cp[0] = '\0';
+07:     return cb;
+08: }
+09: 
+10: CowString::Controlblock* CowString::Controlblock::create(const char* src, std::size_t len)
+11: {
+12:     void* mem{ ::operator new(sizeof(Controlblock) + len + 1) };
+13:     Controlblock* cb{ new (mem) Controlblock{ 1 } };
+14:     char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
+15:     std::memcpy(cp, src, len);
+16:     cp[len] = '\0';
+17:     return cb;
+18: }
 ```
 
-Mit dem globalen `new`-Operator wird Speicher allokiert (Zeilen 4, 13 oder 23), groß genug, um den Kontrollblock und die Zeichenkette
-(inkl. terminierendem Nullzeichen) auszunehmen.
-Der Kontrollblock wir mit der Aggregat-Initialisierung und dem &bdquo;*Placement new*&bdquo;&ndash;Verfahren 
+Mit dem globalen `new`-Operator wird Speicher allokiert (Zeilen 3 oder 13), groß genug, um den Kontrollblock und die Zeichenkette
+(inkl. terminierendem Nullzeichen) aufzunehmen.
+Der Kontrollblock wir mit der Aggregat-Initialisierung und der &bdquo;*Placement new*&rdquo;&ndash;Syntax 
 zu Beginn des Speicherblocks ausgebreitet.
 
 Dann wird noch die Anfangsadresse für die Zeichenkette berechnet.
 Dazu benötigen wir den `reinterpret_cast`-Operator, um die Anzahl Bytes des Kontrollblocks zur Anfangsadresse
 des Speicherblocks zu addieren.
 
-In den ersten beiden `create`-Funktionen wird eine Zeichenkette übergeben.
+In den zweiten Überladung der `create`-Methode wird eine Zeichenkette übergeben.
 Wir kopieren diese mit `std::memcpy` hinter den Kontrollblock und achten auf die Null-Terminierung.
-
-In allen drei Fällen liefern wir die Adresse des Heap-Speichers zurück, 
+In beiden Realisierungen liefern wir die Adresse des Heap-Speichers zurück, 
 der Kontrollblock und die Zeichenkette sind im Speicher ausgebreitet.
 
 ### Konstruktoren und Destruktor der `CowString`-Klasse
 
-
-WEITER !!!!!!!!!!!!!!!!!
+Die `CowString`-Klasse besitzt insgesamt vier Konstruktoren:
 
 ```cpp
+01: // c'tor(s), d'tor
+02: CowString             ();
+03: explicit CowString    (const char* s);
+04: CowString             (const char* s, std::size_t count);
+05: explicit CowString    (std::string_view sv);
+06: ~CowString            ();
+```
+
+Die Realisierung aller Konstruktoren ist vergleichsweise einfach, da die Hauptarbeit von den beiden `create`-Methoden erbracht wird:
+
+
+```cpp
+01: CowString::CowString()
+02: {
+03:     m_ptr = Controlblock::create();
+04:     m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+05:     m_len = 0;
+06: }
+07: 
+08: CowString::CowString(const char* s)
+09: {
+10:     m_len = std::strlen(s);
+11:     m_ptr = Controlblock::create(s, m_len);
+12:     m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+13: }
+14: 
+15: CowString::CowString(const char* s, std::size_t length)
+16: {
+17:     m_ptr = Controlblock::create(s, length);
+18:     m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+19:     m_len = length;
+20: }
+21: 
+22: CowString::CowString(std::string_view sv)
+23: {
+24:     m_ptr = Controlblock::create(sv.data(), sv.size());
+25:     m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+26:     m_len = sv.size();
+27: }
+28: 
+29: CowString::~CowString()
+30: {
+31:     if (m_ptr != nullptr) {
+32: 
+33:         m_ptr->m_refCount--;
+34:         if (m_ptr->m_refCount == 0) {
+35:             ::operator delete(m_ptr);
+36:         }
+37:     }
+38: }
+```
+
+## Kopier- und Verschiebesemantik
+
+Zeichenketten sollten in einem C++&ndash;Programm kopiert als auch verschoben werden können.
+Nicht nur das, in unserem Fall einer &bdquo;*Copy-on-Write*&rdquo;-Klasse soll das Kopieren
+ja  &bdquo;*faul*&rdquo;, also so gut wie gar nicht erfolgen.
+
+Vor diesem Hintergrund kommen wir nur auf die vier speziellen Methoden zum Kopieren und Verschieben zu sprechen.
+Wir starten mit dem &bdquo;Kopieren &rdquo;:
+
+```cpp
+01: CowString::CowString(const CowString& other)
+02:     : m_ptr{ other.m_ptr }, m_str{ other.m_str }, m_len{ other.m_len }
+03: {
+04:     m_ptr->m_refCount++;
+05: }
+06: 
+07: // assignment operator
+08: CowString& CowString::operator=(const CowString& other)
+09: {
+10:     if (this != &other) {
+11: 
+12:         m_ptr->m_refCount--;
+13:         if (m_ptr->m_refCount == 0) {
+14:             ::operator delete(m_ptr);
+15:         }
+16: 
+17:         m_ptr = other.m_ptr;
+18:         m_str = other.m_str;
+19:         m_len = other.m_len;
+20: 
+21:         m_ptr->m_refCount++;
+22:     }
+23: 
+24:     return *this;
+25: }
+```
+
+Den Kopier-Konstruktor der Klasse `CowString` finden wir in den Zeilen 1 bis 5 vor.
+Bei genauem Hinsehen erkennen wir in Zeile 2, dass alle Instanzvariablen der Klasse flach kopiert werden.
+Wir haben also gar keine echte Kopie erstellt, sondern nur dem Prinzip der &bdquo;*Faulheit*&rdquo;
+folgend das Nötigste getan. Vorsicht: In Zeile 4 inkrementieren wir den Zähler der Besitzer (*Owner*).
+Damit können wir zu späteren Zeitpunkten entscheiden (wenn Änderungen an diesem Objekt erfolgen),
+ob wir bei mehreren Besitzern verspätet eine tiefe Kopie erstellen müssen.
+
+Der Zuweisungsoperator ist ähnlich realisiert. Da wir bei seinem Aufruf bereits ein `CowString`-Objekt vorliegen haben,
+müssen wir die linke Seite der Zusweisung mit Vorsicht betrachten. Bevor wir die Zuweisungen tätigen, dekrementieren wir den Zähler der Besitzer.
+Danach kopieren wir flach das Argument (rechte Seite) um und inkrementieren für dieses Argument die Anzahl der Besitzer um Eins.
+Wir sind wieder &bdquo;*faul*&rdquo; vorgangen, und haben neben den Instantvariablen die Anzahl der Besitzer für beide Objekte aktualisiert.
+
+
+Damit sind wir beim Verschieben angelangt:
+
+```cpp
+01: CowString::CowString(CowString&& other) noexcept 
+02:     : m_ptr{ other.m_ptr }, m_str{ other.m_str }, m_len{ other.m_len }
+03: {
+04:     other.m_ptr = Controlblock::create();
+05:     other.m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+06:     other.m_len = 0;
+07: }
+08: 
+09: CowString& CowString::operator=(CowString&& other) noexcept {
+10: 
+11:     if (this != &other) {
+12: 
+13:         m_ptr->m_refCount--;
+14:         if (m_ptr->m_refCount == 0) {
+15:             ::operator delete(m_ptr);
+16:         }
+17: 
+18:         m_ptr = other.m_ptr;
+19:         m_str = other.m_str;
+20:         m_len = other.m_len;
+21: 
+22:         other.m_ptr = Controlblock::create();
+23:         other.m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+24:         other.m_len = 0;
+25:     }
+26:     
+27:     return *this;
+28: }
 ```
 
 
-
-```cpp
-```
-
-
-
-```cpp
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+WEITER !!!
 
 
 ## &bdquo;*Copy-on-Write*&rdquo;-Klassen und die STL-Klasse `std::string`

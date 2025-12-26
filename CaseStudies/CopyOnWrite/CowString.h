@@ -18,13 +18,13 @@ namespace COWString
         {
             std::atomic<std::size_t> m_refCount;
 
-            static Controlblock*     create      (const char* src, std::size_t length);
-            static Controlblock*     createEmpty (); 
+            static Controlblock* create();
+            static Controlblock* create(const char* src, std::size_t length);
         };
 
-        Controlblock*            m_ptr;
-        char*                    m_str;
-        std::size_t              m_len;
+        Controlblock*         m_ptr;
+        char*                 m_str;
+        std::size_t           m_len;
 
         // ensure we have a private (unshared) copy before writing
         void detach  ();
