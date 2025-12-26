@@ -161,17 +161,19 @@ namespace COWString
 
     // read-only access
     char CowString::at(std::size_t idx) const {
-        if (idx >= m_len)
+        if (idx >= m_len) {
             throw std::out_of_range("index out of range!");
-
+        }
+            
         return m_str[idx];
     }
 
     // possible write access - triggers COW
     char& CowString::at(std::size_t idx) {
-        if (idx >= m_len)
+        if (idx >= m_len) {
             throw std::out_of_range("index out of range!");
-
+        }
+            
         detach();
         return m_str[idx];
     }

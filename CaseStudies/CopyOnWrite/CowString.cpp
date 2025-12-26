@@ -201,6 +201,22 @@ namespace COWString
             std::println("{}", cs);
         }
     }
+
+    static void test_cow_string_15()
+    {
+        CowString a{ "Hello" };
+        std::println("a: {}", a);
+
+        char& ch = a[0];            // Non-const detachment does nothing here
+
+        CowString b{ a };           // Lazy-copy, shared state
+        std::println("b: {}", b);
+
+        ch = '!';                   // Arghh - Ohhh
+
+        std::println("a: {}", a);
+        std::println("b: {}", b);
+    }
 }
 
 void main_cow_string()
@@ -211,22 +227,27 @@ void main_cow_string()
     
     std::println("Testing CowString:");
 
-    test_cow_string_01();
-    test_cow_string_02();
-    test_cow_string_03();
-    test_cow_string_04();
-    test_cow_string_05();
-    test_cow_string_06();
-    test_cow_string_07();
-    test_cow_string_08();
-    test_cow_string_09();
-   // test_cow_string_10();   // crashes - by design
-    // test_cow_string_11();
-    test_cow_string_12();
-    test_cow_string_13();
-    test_cow_string_14();
+   // test_cow_string_01();
+   // test_cow_string_02();
+   // test_cow_string_03();
+   // test_cow_string_04();
+   // test_cow_string_05();
+   // test_cow_string_06();
+   // test_cow_string_07();
+   // test_cow_string_08();
+   // test_cow_string_09();
+   //// test_cow_string_10();   // crashes - by design
+   // // test_cow_string_11();
+   // test_cow_string_12();
+   // test_cow_string_13();
+   // test_cow_string_14();
+
+    test_cow_string_15();
 }
 
 // =====================================================================================
 // End-of-File
 // =====================================================================================
+
+
+

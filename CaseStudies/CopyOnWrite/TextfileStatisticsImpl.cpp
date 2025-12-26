@@ -90,7 +90,9 @@ void TextfileStatistics::countWordFrequencies() {
         frequenciesMap.begin(),
         frequenciesMap.end(),
         [](const auto& a, const auto& b) {
-            return a.second < b.second;
+            const auto& [word1, frequency1] = a;
+            const auto& [word2, frequency2] = b;
+            return frequency1 < frequency2;
         }
     );
 
@@ -163,7 +165,9 @@ void TextfileStatistics::countWordFrequenciesCOW() {
         frequenciesMap.begin(),
         frequenciesMap.end(),
         [](const auto& a, const auto& b) {
-            return a.second < b.second;
+            const auto& [word1, frequency1] = a;
+            const auto& [word2, frequency2] = b;
+            return frequency1 < frequency2;
         }
     );
 

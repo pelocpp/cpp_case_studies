@@ -612,8 +612,167 @@ Damit sind wir beim Verschieben angelangt:
 28: }
 ```
 
+Beim Verschieben müssen wir etwas behutsam vorgehen.
+Eine erste, naheliegende Realisierung der Verschiebe-Konstruktors könnte so aussehen:
 
-WEITER !!!
+```cpp
+01: CowString::CowString(CowString&& other) noexcept 
+02:     : m_ptr{ other.m_ptr }, m_str{ other.m_str }, m_len{ other.m_len }
+03: {
+04:     other.m_ptr = nullptr;
+05:     other.m_str = nullptr;
+06:     other.m_len = 0;
+07: }
+```
+
+Die Zeilen 4, 5 und 6 sind wichtig:
+Hier wird das Objekt other in den so genannten &bdquo;*Moved-From*&rdquo;-Zustand versetzt.
+
+An einem Objekt im &bdquo;*Moved-From*&rdquo;-Zustand wird erwartet, dass sich alle vorhandenen Methoden aufrufen lassen
+und es infolgedessen nicht zu einem Absturz kommt &ndash; aber möglicherweise auch nicht zu dem Verhalten, das man erwartet hätte.
+
+Die Null-Adressen in `other.m_ptr` und `other.m_str` stellen das Problem dar:
+Alle Methoden der `CowString`-Klasse erwarten hier gültige Zeiger, es findet keine Überprüfung auf `nullptr` statt.
+
+Aus diesem Grund müssen wir für ein `CowString`-Objekt im &bdquo;*Moved-From*&rdquo;-Zustand
+hier gültige Adressen vorhanden sein. Wir orientieren uns am Standard-Konstruktor und legen
+einen gültigen Kontrollblock mit einer leeren Zeichenkette an:
+
+
+```cpp
+01: CowString::CowString(CowString&& other) noexcept 
+02:     : m_ptr{ other.m_ptr }, m_str{ other.m_str }, m_len{ other.m_len }
+03: {
+04:     other.m_ptr = Controlblock::create();
+05:     other.m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+06:     other.m_len = 0;
+07: }
+08: 
+09: CowString& CowString::operator=(CowString&& other) noexcept {
+10: 
+11:     if (this != &other) {
+12: 
+13:         m_ptr->m_refCount--;
+14:         if (m_ptr->m_refCount == 0) {
+15:             ::operator delete(m_ptr);
+16:         }
+17: 
+18:         m_ptr = other.m_ptr;
+19:         m_str = other.m_str;
+20:         m_len = other.m_len;
+21: 
+22:         other.m_ptr = Controlblock::create();
+23:         other.m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+24:         other.m_len = 0;
+25:     }
+26:     
+27:     return *this;
+28: }
+```
+
+In beiden Methoden / Operatoren wird das Objekt `other` zuerst verschoben.
+Danach wird mit der `Controlblock::create()`-Methode ein valider Kontrollblock erzeugt, der eine leere Zeichenkette verwaltet.
+
+
+## getter-Methoden und zeichenweiser Zugriff
+
+Die drei getter-Methoden der `CowString`-Klasse sind schnell erzählt:
+
+```cpp
+01: std::size_t CowString::size() const { return m_len; }
+02: const char* CowString::c_str() const { return m_str; }
+03: bool CowString::empty() const { return m_len == 0; }
+```
+
+Die Zugriffsmethoden auf einzelne Zeichen der Zeichenkette sind nicht ganz trivial in ihrer Implementierung.
+Wir betrachten zunächst die entsprechenden Deklarationen:
+
+```cpp
+01: // read- and write-access - no exception handling
+02: char operator[](std::size_t idx) const;  // read-only access
+03: char& operator[](std::size_t idx);       // possible write access
+04:
+05: char at (std::size_t idx) const;         // read-only access
+05: char& at(std::size_t idx);               // possible write access
+```
+
+Wenn Sie die Deklarationen genau betrachten, werden Sie im Detail einige Unterschiede zur STL-Klasse `std::string` beobachten.
+Hier lauten die entsprechenden Deklarationen:
+
+```cpp
+01: char& operator[]( std::size_t pos );
+02: const char& operator[]( std::size_t pos ) const;
+03: 
+04: char& at( std::size_t pos );
+05: const char& at( std::size_t pos ) const;
+```
+
+Alle vier Varianten liefern, egal, ob es sich um die `const` oder non-`const` Variante handelt, eine Referenz eines Zeichens zurück.
+Das wäre in der `CowString`-Klasse prinzipiell ebenso umsetzbar, ist aber nicht wünschenswert,
+da man dann immer vom Wort-Case Fall ausgehen müsste, dass mit Hilfe der Referenz auch ein schreibender Zugriff erfolgt.
+Man müsste dann immer vom Shared zum Owning-Zustand im Objekt wechseln, was den bislang erzielten Performanzgewinn zunichte macht.
+
+In der `CowString`-Klassenrealisierung wird deshalb strikt beim lesenden Zugriff darauf geachtet, dass das Zeichen als Kopie und nicht mit einer Referenz
+transportiert wird:
+
+```cpp
+01: // read-only access
+02: char CowString::operator[](std::size_t idx) const {
+03:     return m_str[idx];
+04: }
+05: 
+06: // possible write access - triggers COW
+07: char& CowString::operator[](std::size_t idx) {
+08:     detach();
+09:     return m_str[idx];
+10: }
+11: 
+12: // read-only access
+13: char CowString::at(std::size_t idx) const {
+14:     if (idx >= m_len) {
+15:         throw std::out_of_range("index out of range!");
+16:     }
+17:             
+18:     return m_str[idx];
+19: }
+20: 
+21: // possible write access - triggers COW
+22: char& CowString::at(std::size_t idx) {
+23:     if (idx >= m_len) {
+24:         throw std::out_of_range("index out of range!");
+25:     }
+26:             
+27:     detach();
+28:     return m_str[idx];
+29: }
+```
+
+Beachten Sie die Zeilen 8 und 27:
+Die `at`-Methode / der Index-Operator `operator[]` könnten hier das gerufenen Objekt verändern.
+Deshalb kommt es nun hier zur Anwendung der &bdquo;*Copy-on-Write*&rdquo;-Strategie, also der naträglichen Erstellung einer tiefen Kopie des aktuell vorliegenden Objekts,
+die jetzt nicht mehr vermeidbar ist.
+
+Sehen wir uns die Realisierung der `detach`-Methode an:
+
+```cpp
+01: void CowString::detach()
+02: {
+03:     if (m_ptr->m_refCount.load() > 1) {
+04: 
+05:         Controlblock* old{ m_ptr };
+06:             
+07:         std::size_t len{ std::strlen(m_str) };
+08:         m_ptr = Controlblock::create(m_str, m_len);
+09:         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+10:         m_len = len;
+11: 
+12:         old->m_refCount--;
+13:     }
+14: }
+```
+
+Der Aufruf von `Controlblock::create` zieht das Erstellen einer tiefen Kopie der aktuellen Zeichenkette nach sich.
+Ihre Anfangsadresse ist in `m_str` abgelegt und die Länge in `m_len`.
 
 
 ## &bdquo;*Copy-on-Write*&rdquo;-Klassen und die STL-Klasse `std::string`
@@ -668,7 +827,252 @@ zu einer tiefen Objektkopie kommt.
 Es handelt sich lediglich um eine gravierende Diskrepanz zwischen dem Design von `std::string`
 und den idealen Anforderungen an die Zeichenkettenverarbeitung (COW).
 
+## Anwendungsbeispiel: Suche nach der am häufigsten auftretenden Zeichenkette in einer Textdatei
 
+Wir wollen die Klasse `CowString` an einem praxisnahen Beispiel testen:
+Gesucht ist die in einer Textdatei am häufigsten auftretenden Zeichenkette.
+
+Um die Sache beim Analysieren einer Textdatei etwas zu vereinfachen, zerlegen wir eine &bdquo;*Lorem Ipsum*&rdquo;-Datei.
+
+&bdquo;*Lorem Ipsum*&rdquo; ist ein sogenannter Blindtext oder Fülltext. Er wird als Platzhaltertext verwendet,
+um zum Beispiel Software testen zu können, die Textdateien verarbeitet, der geplante Text aber erst noch verfasst werden muss
+und daher nicht zur Verfügung steht. 
+
+Der Text selbst sieht aus wie lateinischer Text, ist es aber nicht. Schon das erste Wort „Lorem“ existiert nicht im Lateinischen.
+Die Verteilung der Buchstaben und der Wortlängen des Textes entsprechen in etwa der natürlichen lateinischen Sprache.
+Dennoch ist der Text absolut unverständlich, damit der Betrachter nicht durch den Inhalt abgelenkt wird.
+
+*Beispiel*:<br />
+
+```
+Eros parturient vulputate feugiat risus, porttitor quisque ridiculus in mauris.
+Pellentesque accumsan tempus cursus ligula proin lacus senectus.
+Porttitor enim pharetra varius purus mollis, felis nibh turpis elementum integer nisl.
+Penatibus ultrices augue netus sit, lacinia pellentesque aliquet sapien vulputate.
+Nibh nec aliquam dui pretium scelerisque, sollicitudin aliquet mus nisl bibendum leo. 
+```
+
+
+Wenn Sie dieses Beispiel genau ansehen, werden Sie entdecken, dass viele Wörter weniger als 15 Zeichen enthalten.
+Das stellt prinzipiell erst mal kein Problem dar, nur konterkatiert es etwas den von mir beabsichtigen Vergleich.
+Für Zeichenketten der Länge kleiner oder gleich 15 unterstützen C++-Zeichenketten der MSVC-Compilers die so genannte *SSO* (*Small String Optimization*) Technik.
+
+*Small String Optimization* ist eine Technik, die von `std::string`-Implementierungen verwendet wird,
+um kurze Zeichenketten direkt im String-Objekt selbst zu speichern, anstatt Speicher auf dem Heap zu reservieren.
+Diese Optimierung nutzt die Tatsache, dass viele Zeichenketten in typischen Anwendungen relativ kurz sind
+und daher im internen Puffer des `std::string`-Objekts gespeichert werden können, wodurch eine dynamische Speicherallokation vermieden wird.
+
+Es wäre überhaupt kein Problem gewesen, auch die `CowString`-Klasse mit einer entsprechenden Optimierung auszustatten.
+Nur hätte dies den Umfang eines einleitenden Beispiels überschritten, so dass ich darauf verzichten wollte.
+Lange Rede, kurzer Sinn:
+In unserem aktuellen Vergleichsbeispiel betrachten wir Textdateien mit vergleichsweise langen Zeichenketten.
+Auf diese Weise kommt bei Gebrauch der `std::string`-Klasse die *Small String Optimization* Technik **nicht** zum Tragen:
+
+```
+Magnaeusagittis egetliberointerdum afusceelit diamduisdonec commodomaecenascongue, hendreritnecsemper velfelisconvallis diamduisdonec velfelisconvallis elementumturpisarcu.
+Tinciduntfacilisisrutrum faucibusultricesdapibus turpisarcutellus rutrumauguefaucibus etinest egestasurnamorbi diamduisdonec ridiculusnasceturmontes.
+Quisqueornaredui elitadipiscingconsectetur velfelisconvallis ultricesdapibusviverra fringillapharetraleo elementumturpisarcu namfermentumaenean egetliberointerdum.
+Porttitoraliquamtortor ametsitdolor mivestibulummollis convallisfringillapharetra ultriciesvitaesollicitudin, arcutelluscommodo metusnullamassa seddictumlectus nasceturmontesparturient bibendumcursuslobortis duisdonectempus. 
+```
+
+Die meisten Zeichenketten in diesem Beispiel sind nun länger als 15 Zeichen, 
+damit kann ein fairer Vergleich stattfinden.
+
+Der Clou des Beispiels, und das soll nicht unerwähnt bleiben, liegt darin,
+dass viele Zeichenketten im Ablauf des Programms zweimal in Erscheinung treten:
+Zum ersten Mal beim Zerlegen einer Zeile der Textdatei und zum zweiten Mal,
+wenn sie in einem Container der STL aufbewahrt werden.
+Es bestehlt also die Notwendigkeit, Zeichenketten zu kopieren zu müssen,
+aber nicht verändern zu müssen.
+
+
+Sind wir auf der Suche nach dem häufigsten Auftreten einer Zeichenkette in einer Textdatei,
+so bietet sich als STL-Container eine Hash-Tabelle an:
+
+```cpp
+std::unordered_map<std::string, std::size_t> frequenciesMap;
+```
+
+oder eben auch
+
+```cpp
+std::unordered_map<CowString, std::size_t> frequenciesMap;
+```
+
+Einzelne Einträge des `std::unordered_map`-Containers beschreiben in einem `std::pair`-Objekt eine Zeichenkette
+und im zweiten Wert ihre Häufigkeit.
+
+Damit betrachten wir zwei Funktionen `countWordFrequencies` bzw. `countWordFrequenciesCOW`:
+
+```cpp
+01: void TextfileStatistics::countWordFrequencies() {
+02: 
+03:     if (m_fileName.empty()) {
+04:         std::println("No Filename specified!");
+05:         return;
+06:     }
+07: 
+08:     std::ifstream file{ m_fileName.data() };
+09:     if (!file.good()) {
+10:         std::println("File not found!");
+11:         return;
+12:     }
+13: 
+14:     std::println("File {}", m_fileName);
+15:     std::println("[std::string] Starting ...");
+16: 
+17:     ScopedTimer watch{};
+18: 
+19:     std::unordered_map<std::string, std::size_t> frequenciesMap;
+20: 
+21:     std::string line;
+22:     while (std::getline(file, line))
+23:     {
+24:         // process single line
+25:         std::string_view sv{ line };
+26: 
+27:         std::size_t begin{};
+28:         std::size_t end{};
+29: 
+30:         while (end != sv.size()) {
+31: 
+32:             while (std::isalpha(sv[end]))
+33:                 ++end;
+34: 
+35:             std::string_view word{ sv.substr(begin, end - begin) };
+36: 
+37:             std::string s{ word };
+38:             if (std::isupper(s[0])) {
+39:                 s[0] = std::tolower(s[0]);
+40:             }
+41: 
+42:             frequenciesMap[s]++;
+43: 
+44:             while (end != sv.size() && (sv[end] == ' ' || sv[end] == '.' || sv[end] == ','))
+45:                 ++end;
+46: 
+47:             begin = end;
+48:         }
+49:     }
+50: 
+51:     auto pos = std::max_element(
+52:         frequenciesMap.begin(),
+53:         frequenciesMap.end(),
+54:         [](const auto& a, const auto& b) {
+55:             const auto& [word1, frequency1] = a;
+56:             const auto& [word2, frequency2] = b;
+57:             return frequency1 < frequency2;
+58:         }
+59:     );
+60: 
+61:     if (pos != frequenciesMap.end())
+62:     {
+63:         const auto& [word, frequency] = *pos;
+64:         std::println("Largest frequency: {} - Word: {}", frequency, word);
+65:     }
+66: 
+67:     std::println("Done.");
+68: }
+```
+
+In dieser Funktion treten `std::string`-Objekte in den Zeilen 19 und 37 auf,
+das heißt sowohl beim Zerlegen einer Zeile in die einzelnen Wörter als auch bei der Ablage in einem `std::unordered_map<std::string, std::size_t>`-Objekt.
+
+Hier können wir auch unsere `CowString`-Klasse ins Spiel bringen, am Aufbau der Funktion ändert sich sonst sehr wenig:
+
+```cpp
+01: void TextfileStatistics::countWordFrequenciesCOW() {
+02: 
+03:     using namespace COWString;
+04: 
+05:     if (m_fileName.empty()) {
+06:         std::println("No Filename specified!");
+07:         return;
+08:     }
+09: 
+10:     std::ifstream file{ m_fileName.data() };
+11:     if (!file.good()) {
+12:         std::println("File not found!");
+13:         return;
+14:     }
+15: 
+16:     std::println("File {}", m_fileName);
+17:     std::println("[CowString] Starting ...");
+18: 
+19:     ScopedTimer watch{};
+20: 
+21:     std::unordered_map<CowString, std::size_t> frequenciesMap;
+22: 
+23:     std::string line;
+24:     while (std::getline(file, line))
+25:     {
+26:         // process single line
+27:         std::string_view sv{ line };
+28: 
+29:         std::size_t begin{};
+30:         std::size_t end{};
+31: 
+32:         while (end != sv.size()) {
+33: 
+34:             while (std::isalpha(sv[end]))
+35:                 ++end;
+36: 
+37:             CowString cs{ &sv[begin], end - begin };
+38: 
+39:             // If it's an uppercase word, convert it
+40:             // Note: This CowString currently has the state 'owning',
+41:             // so a 'write' access does *not* copy the underling string
+42:             if (std::isupper(cs[0])) {
+43:                 cs[0] = std::tolower(cs[0]);
+44:             }
+45: 
+46:             frequenciesMap[cs]++;
+47: 
+48:             while (end != sv.size() && (sv[end] == ' ' || sv[end] == '.' || sv[end] == ','))
+49:                 ++end;
+50: 
+51:             begin = end;
+52:         }
+53:     }
+54: 
+55:     auto pos = std::max_element(
+56:         frequenciesMap.begin(),
+57:         frequenciesMap.end(),
+58:         [](const auto& a, const auto& b) {
+59:             const auto& [word1, frequency1] = a;
+60:             const auto& [word2, frequency2] = b;
+61:             return frequency1 < frequency2;
+62:         }
+63:     );
+64: 
+65:     if (pos != frequenciesMap.end())
+66:     {
+67:         const auto& [word, frequency] = *pos;
+68:         std::println("Largest frequency: {} - Word: {}", frequency, word);
+69:     }
+70: 
+71:     std::println("Done.");
+72: }
+```
+
+
+Wie sieht es mit einem Vergleich der Laufzeiten aus?
+
+```
+File LoremIpsumVeryHuge.txt
+[std::string] Starting ...
+Largest frequency: 2053 - Word: famesnetussenectus
+Done.
+Elapsed time: 827 milliseconds.
+
+File LoremIpsumVeryHuge.txt
+[CowString] Starting ...
+Largest frequency: 2053 - Word: famesnetussenectus
+Done.
+Elapsed time: 679 milliseconds.
+```
+
+Das sieht doch sehr interessant aus: 827 Millisekunden im Vergleich zu 679 Millisekunden.
 
 
 ## Fazit / Zusammenfassung
@@ -687,6 +1091,23 @@ so dass der letzte Besitzer die Struktur löschen kann.
 
 Das hat den Vorteil, dass beim Verändern von Daten, die nur einmal referenziert werden,
 keine gesonderte Kopie notwendig ist und so das Kopieren erspart werden kann.
+
+Abschließende Gedanken
+
+COW-Strings eignen sich hervorragend, wenn:
+
+  * viele Kopien erstellt werden
+  * wenige Änderungen vorgenommen werden
+  * eine kompakte Speichernutzung gewünscht ist
+  * lazy Textverarbeitung implementiert wird
+
+COW-Strings sind weniger geeignet, wenn:
+
+  * häufige Änderungen vorgenommen werden
+  * Multithreading im Spiel ist (shared_ptr ist atomar)
+  * aufeinanderfolgende, schreibintensive Operationen erforderlich sind
+
+
 
 ## Literatur
 
