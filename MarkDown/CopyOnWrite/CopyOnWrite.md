@@ -286,7 +286,7 @@ Es folgt die Klassendefinition im Ganzen:
 ```
 
 In den Zeilen 4 bis 12 finden wir eine geschachtelte Klasse `Controlblock` vor.
-Diese hat Ähnlichkeiten mit einer *Kontrollblock*-Klasse, wie sie in Implementierungen der Smart Pointer Klasse `std::shared_ptr<T>` verwendet wird.
+Sie hat Gemeinsamkeiten mit einer *Kontrollblock*-Klasse, wie sie in Implementierungen der Smart Pointer Klasse `std::shared_ptr<T>` verwendet wird.
 Der beschriebene Referenzzähler `m_refCount` wird in Zeile 6 definiert, es kommt die Klasse `std::atomic<std::size_t>` zum Zuge.
 Die Längenvariable `m_length` beschreibt die Länge der gekapselten Zeichenkette.
 

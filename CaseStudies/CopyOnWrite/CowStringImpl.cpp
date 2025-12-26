@@ -14,20 +14,10 @@ namespace COWString
     // =================================================================================
     // Controlblock
 
-    CowString::Controlblock* CowString::Controlblock::create(const char* src)
-    {
-        std::size_t len{ std::strlen(src) };
-        void* mem{ ::operator new(sizeof(Controlblock) + len + 1) };
-        Controlblock* sd{ new (mem) Controlblock{ 1, len } };
-        char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
-        std::memcpy(cp, src, len + 1);
-        return sd;
-    }
-
     CowString::Controlblock* CowString::Controlblock::create(const char* src, std::size_t len)
     {
         void* mem{ ::operator new(sizeof(Controlblock) + len + 1) };
-        Controlblock* sd{ new (mem) Controlblock{ 1, len } };
+        Controlblock* sd{ new (mem) Controlblock{ 1 } };
         char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
         std::memcpy(cp, src, len);
         cp[len] = '\0';
@@ -37,7 +27,7 @@ namespace COWString
     CowString::Controlblock* CowString::Controlblock::createEmpty()
     {
         void* mem{ ::operator new(sizeof(Controlblock) + 1) };
-        Controlblock* sd{ new (mem) Controlblock{ 1, 0 } };
+        Controlblock* sd{ new (mem) Controlblock{ 1 } };
         char* cp{ reinterpret_cast<char*> (mem) + sizeof(Controlblock) };
         cp[0] = '\0';
         return sd;
@@ -50,11 +40,13 @@ namespace COWString
     {
         m_ptr = Controlblock::createEmpty();
         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+        m_len = 0;
     }
 
     CowString::CowString(const char* s)
     {
-        m_ptr = Controlblock::create(s);
+        m_len = std::strlen(s);
+        m_ptr = Controlblock::create(s, m_len);
         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
     }
 
@@ -62,12 +54,14 @@ namespace COWString
     {
         m_ptr = Controlblock::create(s, length);
         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+        m_len = length;
     }
 
     CowString::CowString(std::string_view sv)
     {
         m_ptr = Controlblock::create(sv.data(), sv.size());
         m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+        m_len = sv.size();
     }
 
     CowString::~CowString()
@@ -85,9 +79,8 @@ namespace COWString
     // copy semantics
 
     CowString::CowString(const CowString& other)
+        : m_ptr{ other.m_ptr }, m_str{ other.m_str }, m_len{ other.m_len }
     {
-        m_ptr = other.m_ptr;
-        m_str = other.m_str;
         m_ptr->m_refCount++;
     }
 
@@ -103,6 +96,8 @@ namespace COWString
 
             m_ptr = other.m_ptr;
             m_str = other.m_str;
+            m_len = other.m_len;
+
             m_ptr->m_refCount++;
         }
 
@@ -113,10 +108,11 @@ namespace COWString
     // move semantics
 
     CowString::CowString(CowString&& other) noexcept 
-        : m_ptr{ other.m_ptr }, m_str{ other.m_str } 
+        : m_ptr{ other.m_ptr }, m_str{ other.m_str }, m_len{ other.m_len }
     {
         other.m_ptr = Controlblock::createEmpty();
         other.m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+        other.m_len = 0;
     }
 
     CowString& CowString::operator=(CowString&& other) noexcept {
@@ -130,9 +126,11 @@ namespace COWString
 
             m_ptr = other.m_ptr;
             m_str = other.m_str;
+            m_len = other.m_len;
 
             other.m_ptr = Controlblock::createEmpty();
             other.m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+            other.m_len = 0;
         }
     
         return *this;
@@ -141,11 +139,11 @@ namespace COWString
     // =================================================================================
     // getter
 
-    std::size_t CowString::size() const { return m_ptr->m_length; }
+    std::size_t CowString::size() const { return m_len; }
 
     const char* CowString::c_str() const { return m_str; }
 
-    bool CowString::empty() const { return m_ptr->m_length == 0; }
+    bool CowString::empty() const { return m_len == 0; }
 
     // =================================================================================
     // read-only access / write access (triggers COW)
@@ -163,7 +161,7 @@ namespace COWString
 
     // read-only access
     char CowString::at(std::size_t idx) const {
-        if (idx >= m_ptr->m_length)
+        if (idx >= m_len)
             throw std::out_of_range("index out of range!");
 
         return m_str[idx];
@@ -171,7 +169,7 @@ namespace COWString
 
     // possible write access - triggers COW
     char& CowString::at(std::size_t idx) {
-        if (idx >= m_ptr->m_length)
+        if (idx >= m_len)
             throw std::out_of_range("index out of range!");
 
         detach();
@@ -207,20 +205,24 @@ namespace COWString
 
     CowString::operator std::string_view() const
     {
-        return { m_str , m_ptr->m_length };
+        return { m_str , m_len };
     }
 
     // =================================================================================
     // ensure we have a private (unshared) copy before writing
-    // (switching from state 'shared' into the state 'owning')
+    // (switching from state 'shared' into state 'owning')
 
     void CowString::detach()
     {
         if (m_ptr->m_refCount.load() > 1) {
 
             Controlblock* old{ m_ptr };
-            m_ptr = Controlblock::create(m_str);
+            
+            std::size_t len{ std::strlen(m_str) };
+            m_ptr = Controlblock::create(m_str, m_len);
             m_str = reinterpret_cast<char*> (m_ptr) + sizeof(Controlblock);
+            m_len = len;
+
             old->m_refCount--;
         }
     }

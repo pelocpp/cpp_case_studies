@@ -17,15 +17,14 @@ namespace COWString
         struct Controlblock
         {
             std::atomic<std::size_t> m_refCount;
-            std::size_t              m_length;
 
-            static Controlblock*     create      (const char* src);
             static Controlblock*     create      (const char* src, std::size_t length);
             static Controlblock*     createEmpty (); 
         };
 
-        Controlblock* m_ptr;
-        char*         m_str;
+        Controlblock*            m_ptr;
+        char*                    m_str;
+        std::size_t              m_len;
 
         // ensure we have a private (unshared) copy before writing
         void detach  ();

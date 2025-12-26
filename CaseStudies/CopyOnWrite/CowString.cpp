@@ -24,6 +24,10 @@ namespace COWString
     static void test_cow_string_01()
     {
         CowString a;
+        std::println("String: {}", a);
+        std::println("Length: {}", a.size());
+        std::println("Data:   {}", a.c_str());
+        std::println();
     }
 
     static void test_cow_string_02()
@@ -31,22 +35,41 @@ namespace COWString
         CowString a{ "1234567890" };
         std::println("String: {}", a);
         std::println("Length: {}", a.size());
+        std::println("Data:   {}", a.c_str());
+        std::println();
     }
 
     static void test_cow_string_03()
     {
-        CowString a{ "1234567890", 5 };
+        const char* s = "1234567890";
+        CowString a{ s, std::strlen(s) };
+
         std::println("String: {}", a);
         std::println("Length: {}", a.size());
+        std::println("Data:   {}", a.c_str());
+        std::println();
     }
 
     static void test_cow_string_04()
+    {
+        std::string_view sv{ "1234567890" };
+        std::println("sv: {}", sv);
+        
+        CowString a{ sv };
+
+        std::println("String: {}", a);
+        std::println("Length: {}", a.size());
+        std::println("Data:   {}", a.c_str());
+        std::println();
+    }
+
+    static void test_cow_string_05()
     {
         CowString a{ "1234567890" };
         CowString b{ a };
     }
 
-    static void test_cow_string_05()
+    static void test_cow_string_06()
     {
         CowString a{ "1234567890" };
         CowString b{ a };
@@ -55,7 +78,7 @@ namespace COWString
         c[0] = '!';
     }
 
-    static void test_cow_string_06()
+    static void test_cow_string_07()
     {
         CowString a{ "1234567890" };
         CowString b{ a };
@@ -67,7 +90,7 @@ namespace COWString
         a = x;
     }
 
-    static void test_cow_string_07()
+    static void test_cow_string_08()
     {
         CowString a{ "Hello World" };
         CowString b{ a };  // shares buffer
@@ -87,7 +110,7 @@ namespace COWString
         std::println("c: {}", c);  // unchanged
     }
 
-    static void test_cow_string_08()
+    static void test_cow_string_09()
     {
         CowString s{ "1234567890" };
         const char* p{ s.c_str() };
@@ -102,7 +125,7 @@ namespace COWString
         std::println("p: {}", p);      // p is no more valid!
     }
 
-    static void test_cow_string_09()
+    static void test_cow_string_10()
     {
         CowString s{ "1234567890" };
         const char* p{ s.c_str() };
@@ -117,7 +140,7 @@ namespace COWString
         std::println("p: {}", p);      // p is no more valid!
     }
 
-    static void test_cow_string_10()
+    static void test_cow_string_11()
     {
         CowString s{ "1234567890" };
 
@@ -129,15 +152,6 @@ namespace COWString
         std::string_view sv1 = s;
         std::println("sv: {}", sv);
         std::println("sv1: {}", sv1);
-    }
-
-    static void test_cow_string_11()
-    {
-        std::string_view sv{  "1234567890" };
-        CowString cs{sv };
-
-        std::println("sv: {}", sv);
-        std::println("cs: {}", cs);
     }
 
     static void test_cow_string_12()
@@ -197,20 +211,20 @@ void main_cow_string()
     
     std::println("Testing CowString:");
 
-    //test_cow_string_01();
-    //test_cow_string_02();
-    //test_cow_string_03();
-    //test_cow_string_04();
-    //test_cow_string_05();
-    //test_cow_string_06();
-    //test_cow_string_07();
-    //// test_cow_string_08();   // crashes - by design
-    //test_cow_string_09();
-    //test_cow_string_10();
-    test_cow_string_11();
-    //test_cow_string_12();
-    //test_cow_string_13();
-    //test_cow_string_14();
+    test_cow_string_01();
+    test_cow_string_02();
+    test_cow_string_03();
+    test_cow_string_04();
+    test_cow_string_05();
+    test_cow_string_06();
+    test_cow_string_07();
+    test_cow_string_08();
+    test_cow_string_09();
+   // test_cow_string_10();   // crashes - by design
+    // test_cow_string_11();
+    test_cow_string_12();
+    test_cow_string_13();
+    test_cow_string_14();
 }
 
 // =====================================================================================
