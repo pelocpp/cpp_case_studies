@@ -149,33 +149,33 @@ namespace COWString
     // read-only access / write access (triggers COW)
 
     // read-only access
-    char CowString::operator[](std::size_t idx) const {
-        return m_str[idx];
+    char CowString::operator[](std::size_t pos) const {
+        return m_str[pos];
     }
 
     // possible write access - triggers COW
-    char& CowString::operator[](std::size_t idx) {
+    char& CowString::operator[](std::size_t pos) {
         detach();
-        return m_str[idx];
+        return m_str[pos];
     }
 
     // read-only access
-    char CowString::at(std::size_t idx) const {
-        if (idx >= m_len) {
+    char CowString::at(std::size_t pos) const {
+        if (pos >= m_len) {
             throw std::out_of_range("index out of range!");
         }
             
-        return m_str[idx];
+        return m_str[pos];
     }
 
     // possible write access - triggers COW
-    char& CowString::at(std::size_t idx) {
-        if (idx >= m_len) {
+    char& CowString::at(std::size_t pos) {
+        if (pos >= m_len) {
             throw std::out_of_range("index out of range!");
         }
             
         detach();
-        return m_str[idx];
+        return m_str[pos];
     }
 
     // =================================================================================
@@ -216,7 +216,7 @@ namespace COWString
 
     void CowString::detach()
     {
-        if (m_ptr->m_refCount.load() > 1) {
+        if (m_ptr->m_refCount > 1) {
 
             Controlblock* old{ m_ptr };
             

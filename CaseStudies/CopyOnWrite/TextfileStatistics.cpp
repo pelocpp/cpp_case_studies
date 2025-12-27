@@ -35,7 +35,7 @@ static void main_textfile_statistics_02()
 
 void main_textfile_statistics()
 {
-    main_textfile_statistics_01();
+     main_textfile_statistics_01();
     //main_textfile_statistics_02();
 }
 

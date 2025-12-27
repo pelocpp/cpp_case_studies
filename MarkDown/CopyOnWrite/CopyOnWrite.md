@@ -23,7 +23,7 @@ https://stackoverflow.com/questions/1649028/how-to-implement-copy-on-write
 
 ## &bdquo;Faules&rdquo; Kopieren: Eine Alternative?
 
-Viele Objekte im täglichen &bdquo;C++&rdquo; Alltag zeichnen sich dadurch aus,
+Viele Objekte im täglichen &bdquo;C++&rdquo;&ndash;Alltag zeichnen sich dadurch aus,
 dass ihre Daten über die beiden Speicherbereiche Stack und Heap verteilt sind.
 Für das Kopieren derartiger Objekte bedeutet dies, dass es nicht genügt,
 die auf dem Stack liegenden Verwaltungsdaten &bdquo;flach&rdquo; zu kopieren. Auch die Daten auf dem Heap wollen kopiert werden,
@@ -337,40 +337,48 @@ und weitere Verwaltungsinformationen, zum Beispiel die Zeichenkettenlänge zu be
 Nun wollen wir aber noch das Feature haben, dass bei Kopien und Zuweisungen keine tiefe Kopie des `CowString`-Objekts vollzogen wird.
 Dazu müssen wir zu jedem Zeitpunkt während der Lebensdauer eines `CowString`-Objekts wissen,
 ob dieses aktuell nur einen oder mehrere Besitzer hat.
-Gibt es nur einen Besitzer, stellen modifizierende Methodenaufrufe kein Problem dar. Es gibt ja nur einen einzigen Besitzer,
-der diese Änderungen intitiiert.
+Gibt es nur einen Besitzer, stellen modifizierende Methodenaufrufe kein Problem dar.
+Es gibt ja nur einen einzigen Besitzer, der diese Änderungen intitiiert.
 Anders stellt sich die Sache dar, wenn es mehrere Besitzer gibt. Änderungsanforderungen eines Besitzers bedeuten nun,
-dass dieser ein exklusives Objekt haben möchte, alle anderen Besitzer hingegen möchten im Besitz des alten Objektzustands verbleiben.
+dass dieser ein exklusives Objekt benötigt, alle anderen Besitzer hingegen wollen im Besitz des alten Objektzustands verbleiben.
 
 Damit benötigen wir eine Zählervariable für die Anzahl der Besitzer.
 Zu diesem Zweck gibt es in der Klasse `CowString` die innere Klasse `Controlblock`,
 den schon zitierten Kontrollblock. Dieser verwaltet die Variable `m_refCount` zum Zählen der Besitzer.
 
 Jetzt kommen wir auf die Fragestellung zu sprechen, wo wir die die Daten (Zeichen) der Zeichenkette in einem `CowString`-Objekt unterbringen?
-Wir könnten neben dem `Controlblock`-Objekt auch die Zeichen in einem separaten Speicherbereich auf dem Heap ablegen.
-Das würde bedeuten, dass für eine Zeichenkette zwei Anforderungen an die Freispeicherverwaltung zu stellen haben.
-Dies ist nicht sehr performant, wir beschreiten deshalb einen andere Weg.
+In einer ersten Überlegung gibt es hier zwei Optionen: Im `CowString`-Objekt oder im Kontrollblock.
+Der Kontrollblock wäre vielleicht die naheliegendere Wahl, da dann alle Daten an einem Ort abgelegt sind.
+Negativ würde sich diese Vorgehensweise auf die Performanz auswirken, da dann jeder Zugriff auf die Zeichen
+eine zusätzliche Indirektionsstufe hätte (Zugriff auf den Kontrollblock).
+Ich habe mich für eine Ablage der Daten im `CowString`-Objekt direkt entschieden.
 
-Wir wollen die Klasse (Struktur) *Controlblock* so definieren, dass sie in der Lage ist,
+Und gleich zur nächsten Detailfrage: Wo legen wir die Zeichen der Zeichenkette ab?
+
+Wir könnten neben dem `Controlblock`-Objekt die Zeichen in einem zweiten, separaten Speicherbereich auf dem Heap ablegen.
+Das würde aber bedeuten, dass für jede `CowString`-Instanz zwei Anforderungen an die Freispeicherverwaltung zu stellen sind.
+Auch diese ist wiederum nicht sehr performant, wir beschreiten deshalb einen andere Weg, der mit nur einer Heap-Allokation auskommt.
+Wir definieren die Klasse (Struktur) *Controlblock* so, dass sie in der Lage ist,
 am Ende noch einen &bdquo;nachgelagerten&rdquo; Speicherbereich zu besitzen,
 der groß genug ist, um die Zeichenkette aufzunehmen.
 
+Wie sieht dieser Ansatz aus?
 Nicht übersetzungsfähig sind Strukturen der Art
 
 ```cpp
 01: struct Controlblock
 02: {
-03:     std::atomic<std::size_t> m_refCount;
+03:     std::size_t m_refCount;
 04:     ...
 05:     char        m_trailing[];
 06: }
 ```
 
 *Bemerkung*:<br />
-Der GCC-Compiler übersetzt eine derartige Struktur problemlos, der MSVC-Compiler hingegen nicht.
+Interessanterweise übersetzt der GCC-Compiler eine derartige Struktur problemlos, der MSVC-Compiler hingegen nicht.
 Wir kommen nicht umhin, festzustellen, dass diese Struktur nicht dem C++-Standard entspricht.
-GCC akzeptiert sie nur als Compiler-Erweiterung (&bdquo;*GNU Flexible Array Extension*&rdquo;).
-MSVC lehnt sie gemäß dem C++-Standard korrekt ab.
+GCC akzeptiert sie nur auf Grund einer Compiler-Erweiterung (&bdquo;*GNU Flexible Array Extension*&rdquo;).
+MSVC lehnt sie gemäß dem C++-Standard korrekterweise ab.
 
 Wir gehen deshalb wie folgt vor:
 
@@ -378,17 +386,20 @@ Wir gehen deshalb wie folgt vor:
 ```cpp
 01: struct Controlblock
 02: {
-03:     std::atomic<std::size_t> m_refCount;
+03:     std::size_t m_refCount;
 04:     ...
 05:     // no flexible sized array
 06: }
 ```
 
-Die Struktur `Controlblock` soll alle Daten enthalten, die für die Verwaltung eines COW Kontrollblocks erforderlich sind.
-Das Anlegen einer `Controlblock`-Instanz führen wir etwas unorthodox durch.
+Die Struktur `Controlblock` soll also nur die Daten enthalten, die für die Verwaltung eines COW Kontrollblocks erforderlich sind.
+Dafür führen wir das Anlegen einer `Controlblock`-Instanz etwas unorthodox durch.
 Da wir die Länge der Zeichenkette, die es zu verwalten gilt, kennen,
 reservieren wir den Speicher für die `Controlblock`-Instanz dynamisch &ndash; und belegen neben dem für die `Controlblock`-Struktur notwendigen Speicher
 noch zusätzlichen Speicher, der die Zeichenkette (inkl. terminierendes Null-Zeichen) aufnehmen kann.
+
+Das kann nur funktionieren, wenn Kontrollblöcke ausschließlich durch eine Hilfsfunktion erzeugt werden,
+die mit diesem Wissen ausgestattet ist.
 Eine Funktion `createControlblock`, die die Länge der Zeichenkette übergeben bekommt, könnte so aussehen:
 
 
@@ -404,16 +415,16 @@ Mit dem Operator `::operator new` wird Speicher reserviert und sonst nichts weit
 Es erfolgt keine Initialisierung bzw. Vorbelegung des reservierten Speichers.
 
 Diese erfolgt &ndash; im skizzierten Beispiel &ndash; mit dem so genannten *Placement new* Sprachkonstrukt:
-Der `new`-Operator bekommt in diesem Fall den Speicherbereich als Parameter übergeben (hier: `mem`).
-Der Speicherbereich kann mit einer gewöhnlichen Initialisierungsliste vorbelegt werden,
-wir wenden das für Strukturen verfügbare Sprachmittel der &bdquo;Initialisierung eines Aggregats mit einer gewöhnlichen Initialisierungsliste&rdquo; an:
+Der `new`-Operator bekommt in dieser Variante den Speicherbereich als Parameter übergeben (hier: `mem`).
+Der Speicherbereich selbst kann jetzt mit einer gewöhnlichen Initialisierungsliste vorbelegt werden.
+Wir wenden das für Strukturen verfügbare Sprachmittel der &bdquo;Initialisierung eines Aggregats mit einer Initialisierungsliste&rdquo; an:
 
 ```cpp
 Controlblock{ 1 };
 ```
 
 Offen ist, wie auf den zusätzlich vorhandenen Speicher im Anschluss an die `struct Controlblock`-Variable zugegriffen
-werden kann. Dies erfolgt mit klassischen C/C++-Sprachmitteln wie `reinterpret_cast` und Zeigerarithmetik:
+werden kann. Dies erfolgt mit klassischen C/C++-Sprachmitteln mit `reinterpret_cast` und etwas Zeigerarithmetik:
 
 ```cpp
 Controlblock* cb = createControlblock(10);
@@ -429,7 +440,7 @@ wenn wir eine `CowString`-Klasse implementieren.
 
 ## Methoden der `CowString`-Klasse
 
-Wir gehen auf die zentralen Methoden der `CowString`-Klasse im Detail ein und beginnen mit dem Kontrolblock.
+Wir gehen jetzt auf die zentralen Methoden der `CowString`-Klasse im Detail ein und beginnen mit dem Kontrolblock.
 
 ### Kontrolblock
 
@@ -460,15 +471,15 @@ finden wir in der Realisierung zwei Überladungen einer statischen `create`-Meth
 
 Mit dem globalen `new`-Operator wird Speicher allokiert (Zeilen 3 oder 13), groß genug, um den Kontrollblock und die Zeichenkette
 (inkl. terminierendem Nullzeichen) aufzunehmen.
-Der Kontrollblock wir mit der Aggregat-Initialisierung und der &bdquo;*Placement new*&rdquo;&ndash;Syntax 
+Der Kontrollblock wird mit der Aggregat-Initialisierung und der &bdquo;*Placement new*&rdquo;&ndash;Syntax 
 zu Beginn des Speicherblocks ausgebreitet.
 
 Dann wird noch die Anfangsadresse für die Zeichenkette berechnet.
 Dazu benötigen wir den `reinterpret_cast`-Operator, um die Anzahl Bytes des Kontrollblocks zur Anfangsadresse
 des Speicherblocks zu addieren.
-
-In den zweiten Überladung der `create`-Methode wird eine Zeichenkette übergeben.
+In der zweiten Überladung der `create`-Methode wird eine Zeichenkette übergeben.
 Wir kopieren diese mit `std::memcpy` hinter den Kontrollblock und achten auf die Null-Terminierung.
+
 In beiden Realisierungen liefern wir die Adresse des Heap-Speichers zurück, 
 der Kontrollblock und die Zeichenkette sind im Speicher ausgebreitet.
 
@@ -529,14 +540,17 @@ Die Realisierung aller Konstruktoren ist vergleichsweise einfach, da die Hauptar
 38: }
 ```
 
+Allen Konstruktoren ist gemeinsam, dass sie nach der Erzeugung des Kontrollblocks die beiden `CowString`-Instanzvariablen `m_str` und `m_len`
+orbelegen. Erstere ist die Anfangsadresse der Zeichenkette, zweitere deren Länge.
+Der Kontrollblock schließlich ist durch die Instanzvariable `m_ptr` erreichbar.
+
 ## Kopier- und Verschiebesemantik
 
 Zeichenketten sollten in einem C++&ndash;Programm kopiert als auch verschoben werden können.
-Nicht nur das, in unserem Fall einer &bdquo;*Copy-on-Write*&rdquo;-Klasse soll das Kopieren
-ja  &bdquo;*faul*&rdquo;, also so gut wie gar nicht erfolgen.
-
-Vor diesem Hintergrund kommen wir nur auf die vier speziellen Methoden zum Kopieren und Verschieben zu sprechen.
-Wir starten mit dem &bdquo;Kopieren &rdquo;:
+Nicht nur das, in unserem Fall einer Klasse mit &bdquo;*Copy-on-Write*&rdquo;-Semantik sogar auf eine möglichst
+&bdquo;*faule*&rdquo; Weise.
+Vor diesem Hintergrund kommen wir nun auf die vier speziellen Methoden zum Kopieren und Verschieben von `CowString`-Objekten zu sprechen.
+Wir starten mit dem &bdquo;Kopieren&rdquo;:
 
 ```cpp
 01: CowString::CowString(const CowString& other)
@@ -568,15 +582,15 @@ Wir starten mit dem &bdquo;Kopieren &rdquo;:
 
 Den Kopier-Konstruktor der Klasse `CowString` finden wir in den Zeilen 1 bis 5 vor.
 Bei genauem Hinsehen erkennen wir in Zeile 2, dass alle Instanzvariablen der Klasse flach kopiert werden.
-Wir haben also gar keine echte Kopie erstellt, sondern nur dem Prinzip der &bdquo;*Faulheit*&rdquo;
-folgend das Nötigste getan. Vorsicht: In Zeile 4 inkrementieren wir den Zähler der Besitzer (*Owner*).
-Damit können wir zu späteren Zeitpunkten entscheiden (wenn Änderungen an diesem Objekt erfolgen),
+Wir haben also gar keine echte Kopie erstellt, sondern haben nur dem Prinzip der &bdquo;*Faulheit*&rdquo; folgend
+das Nötigste getan. Vorsicht: In Zeile 4 inkrementieren wir den Zähler der Besitzer (*Owner*).
+Damit können wir zu einem späteren Zeitpunkt stets entscheiden &ndash; wenn Änderungen an diesem Objekt erfolgen &ndash;,
 ob wir bei mehreren Besitzern verspätet eine tiefe Kopie erstellen müssen.
 
 Der Zuweisungsoperator ist ähnlich realisiert. Da wir bei seinem Aufruf bereits ein `CowString`-Objekt vorliegen haben,
-müssen wir die linke Seite der Zusweisung mit Vorsicht betrachten. Bevor wir die Zuweisungen tätigen, dekrementieren wir den Zähler der Besitzer.
-Danach kopieren wir flach das Argument (rechte Seite) um und inkrementieren für dieses Argument die Anzahl der Besitzer um Eins.
-Wir sind wieder &bdquo;*faul*&rdquo; vorgangen, und haben neben den Instantvariablen die Anzahl der Besitzer für beide Objekte aktualisiert.
+müssen wir die linke Seite der Zuweisung mit Vorsicht betrachten. Für das Objekt auf der linken Seite der Zuweisung dekrementieren wir den Zähler der Besitzer.
+Danach kopieren wir flach das Argument (rechte Seite) um und inkrementieren für dieses Objekt die Anzahl der Besitzer um Eins.
+Wir sind wieder &bdquo;*faul*&rdquo; vorgangen, und haben neben den Instantvariablen die Anzahl der Besitzer für beide Objekte angepasst.
 
 
 Damit sind wir beim Verschieben angelangt:
@@ -612,8 +626,8 @@ Damit sind wir beim Verschieben angelangt:
 28: }
 ```
 
-Beim Verschieben müssen wir etwas behutsam vorgehen.
-Eine erste, naheliegende Realisierung der Verschiebe-Konstruktors könnte so aussehen:
+Beim Verschieben müssen wir etwas behutsamer vorgehen.
+Eine erste, naheliegende Realisierung des Verschiebe-Konstruktors könnte so aussehen:
 
 ```cpp
 01: CowString::CowString(CowString&& other) noexcept 
@@ -626,17 +640,15 @@ Eine erste, naheliegende Realisierung der Verschiebe-Konstruktors könnte so aus
 ```
 
 Die Zeilen 4, 5 und 6 sind wichtig:
-Hier wird das Objekt other in den so genannten &bdquo;*Moved-From*&rdquo;-Zustand versetzt.
-
+Hier wird das Objekt `other` in den so genannten &bdquo;*Moved-From*&rdquo;-Zustand versetzt.
 An einem Objekt im &bdquo;*Moved-From*&rdquo;-Zustand wird erwartet, dass sich alle vorhandenen Methoden aufrufen lassen
 und es infolgedessen nicht zu einem Absturz kommt &ndash; aber möglicherweise auch nicht zu dem Verhalten, das man erwartet hätte.
 
 Die Null-Adressen in `other.m_ptr` und `other.m_str` stellen das Problem dar:
 Alle Methoden der `CowString`-Klasse erwarten hier gültige Zeiger, es findet keine Überprüfung auf `nullptr` statt.
 
-Aus diesem Grund müssen wir für ein `CowString`-Objekt im &bdquo;*Moved-From*&rdquo;-Zustand
-hier gültige Adressen vorhanden sein. Wir orientieren uns am Standard-Konstruktor und legen
-einen gültigen Kontrollblock mit einer leeren Zeichenkette an:
+Aus diesem Grund müssen für ein `CowString`-Objekt im &bdquo;*Moved-From*&rdquo;-Zustand hier gültige Adressen vorhanden sein.
+Wir orientieren uns am Standard-Konstruktor und legen einen gültigen Kontrollblock mit einer leeren Zeichenkette an:
 
 
 ```cpp
@@ -674,9 +686,9 @@ In beiden Methoden / Operatoren wird das Objekt `other` zuerst verschoben.
 Danach wird mit der `Controlblock::create()`-Methode ein valider Kontrollblock erzeugt, der eine leere Zeichenkette verwaltet.
 
 
-## getter-Methoden und zeichenweiser Zugriff
+## *getter*-Methoden und zeichenweiser Zugriff
 
-Die drei getter-Methoden der `CowString`-Klasse sind schnell erzählt:
+Die drei *getter*-Methoden der `CowString`-Klasse sind schnell vorgestellt:
 
 ```cpp
 01: std::size_t CowString::size() const { return m_len; }
@@ -707,13 +719,13 @@ Hier lauten die entsprechenden Deklarationen:
 05: const char& at( std::size_t pos ) const;
 ```
 
-Alle vier Varianten liefern, egal, ob es sich um die `const` oder non-`const` Variante handelt, eine Referenz eines Zeichens zurück.
+Alle vier Varianten der `std::string`-Klasse liefern, egal, ob es sich um die `const` oder non-`const` Variante handelt, eine *Referenz* eines Zeichens zurück.
 Das wäre in der `CowString`-Klasse prinzipiell ebenso umsetzbar, ist aber nicht wünschenswert,
-da man dann immer vom Wort-Case Fall ausgehen müsste, dass mit Hilfe der Referenz auch ein schreibender Zugriff erfolgt.
-Man müsste dann immer vom Shared zum Owning-Zustand im Objekt wechseln, was den bislang erzielten Performanzgewinn zunichte macht.
+da man dann immer vom Worst-Case Fall ausgehen müsste, dass mit Hilfe der Referenz auch ein schreibender Zugriff erfolgt.
+Man müsste dann immer vom *Shared*- zum *Owning*-Zustand im Objekt wechseln, was den bislang erzielten Performanzgewinn zunichte macht.
 
-In der `CowString`-Klassenrealisierung wird deshalb strikt beim lesenden Zugriff darauf geachtet, dass das Zeichen als Kopie und nicht mit einer Referenz
-transportiert wird:
+In der `CowString`-Realisierung wird deshalb strikt beim lesenden Zugriff darauf geachtet, dass Zeichen als Kopie und nicht mit einer Referenz
+transportiert werden:
 
 ```cpp
 01: // read-only access
@@ -748,9 +760,8 @@ transportiert wird:
 ```
 
 Beachten Sie die Zeilen 8 und 27:
-Die `at`-Methode / der Index-Operator `operator[]` könnten hier das gerufenen Objekt verändern.
-Deshalb kommt es nun hier zur Anwendung der &bdquo;*Copy-on-Write*&rdquo;-Strategie, also der naträglichen Erstellung einer tiefen Kopie des aktuell vorliegenden Objekts,
-die jetzt nicht mehr vermeidbar ist.
+Die `at`-Methode / der Index-Operator `operator[]` könnten hier das gerufene Objekt verändern.
+Deshalb kommt es jetzt zur Anwendung der &bdquo;*Copy-on-Write*&rdquo;-Strategie, also der nachträglichen Erstellung einer tiefen Kopie des aktuell vorliegenden Objekts.
 
 Sehen wir uns die Realisierung der `detach`-Methode an:
 
@@ -774,6 +785,9 @@ Sehen wir uns die Realisierung der `detach`-Methode an:
 Der Aufruf von `Controlblock::create` zieht das Erstellen einer tiefen Kopie der aktuellen Zeichenkette nach sich.
 Ihre Anfangsadresse ist in `m_str` abgelegt und die Länge in `m_len`.
 
+Wir haben soeben das Kernstück der &bdquo;*Copy-on-Write*&rdquo;-Strategie betreten:
+Wenn eine Objektkopie nicht mehr vermeidbar ist, wird diese zu einem späteren Zeitpunkt durchgeführt.
+
 
 ## &bdquo;*Copy-on-Write*&rdquo;-Klassen und die STL-Klasse `std::string`
 
@@ -782,7 +796,7 @@ umsetzt. Die Antwort ist vergleichsweise einfach:
 Die `std::string`-Klasse besitzt ein historisch gewachsenenes API, für das das &bdquo;*Copy-on-Write*&rdquo;-Idiom 
 ungeeignet ist. Was ist damit konkret gemeint?
 
-Viele der `std::string`-Methoden oder Operator hantieren mit Referenzen auf Daten (Zeichen)
+Viele der `std::string`-Methoden oder Operatoren hantieren mit Referenzen auf Daten (Zeichen)
 innerhalb eines `std::string`-Objekts, zum Beispiel
 
 ```cpp
@@ -809,38 +823,38 @@ char& back();
 
 Diese Konzeption war ein toller Schachzug beim Design der `std::string`-Klasse.
 Es lassen sich sehr intuitive Anweisungen &ndash; mit Referenzen im Hintergrund &ndash; schreiben,
-so dass lesende und schreibende Zugriffe über dieselben Methoden der `std::string`-Klasse angebildet werden können.
+so dass lesende und schreibende Zugriffe über dieselben Methoden der `std::string`-Klasse abgebildet werden können.
 
 Nur sind wir bei diesem Ansatz mit dem Problem konfrontiert, dass wir innerhalb der `std::string`-Klasse
-nicht erkennen können, ob diese Referenz außerhalb der Klasse nur lesend oder auch schreibend verwendet wird.
+nicht erkennen können, ob diese Referenz außerhalb der Klasse lesend oder schreibend verwendet wird.
+Wir beobachten eine gravierende Diskrepanz zwischen dem Design von der Klasse `std::string` einerseits
+und idealen Anforderungen an einer Klasse `CowString`, die für Zeichenketten *und* die &bdquo;*Copy-on-Write*&rdquo;-Strategie geeignet ist.
 
-Man könnte natürlich &ndash; aus Sicht des &bdquo;*Copy-on-Write*&rdquo;-Idioms den Worst-Case
-eines Schreibens zugrunde legen, nur wäre dies ein pessimistischer Ansatz,
-der nicht zu einer praktikablen Realisierung führt.
 
+Man könnte natürlich &ndash; aus Sicht des &bdquo;*Copy-on-Write*&rdquo;-Idioms &ndash; den Worst-Case
+des Schreibens zugrunde legen, nur wäre dies ein pessimistischer Ansatz,
+der nicht zu einer praktikablen Realisierung für COW-Klassen führt.
 Wenn wir eine Klasse für Zeichenketten inklusive des &bdquo;*Copy-on-Write*&rdquo;-Idioms realisieren wollen,
-dann müsste man die öffentliche Schnittstelle auch anpassen.
-Zum Beispiel, dass die Mehrzahl der Methoden einen lesenden Zugriff umsetzt.
-Und die wenigen schreibenden Zugriffe auch klar dokumentieren, dass es hier hinter den Kuluissen
-zu einer tiefen Objektkopie kommt.
+dann muss man die öffentliche Schnittstelle auch entsprechend anpassen.
+Zum Beispiel so, dass die Mehrzahl der Methoden einen lesenden Zugriff besitzt.
 
-Es handelt sich lediglich um eine gravierende Diskrepanz zwischen dem Design von `std::string`
-und den idealen Anforderungen an die Zeichenkettenverarbeitung (COW).
+Schreibende Zugriffe hingegen müssen klar dokumentiert sein, so dass dem Benutzer klar ist,
+dass es hier hinter den Kulissen zu einer tiefen Objektkopie kommt.
 
-## Anwendungsbeispiel: Suche nach der am häufigsten auftretenden Zeichenkette in einer Textdatei
+
+## Anwendungsbeispiel: Häufigste in einer Textdatei auftretende Zeichenkette
 
 Wir wollen die Klasse `CowString` an einem praxisnahen Beispiel testen:
-Gesucht ist die in einer Textdatei am häufigsten auftretenden Zeichenkette.
+Gesucht ist die Suche nach der in einer Textdatei am häufigsten auftretenden Zeichenkette.
 
-Um die Sache beim Analysieren einer Textdatei etwas zu vereinfachen, zerlegen wir eine &bdquo;*Lorem Ipsum*&rdquo;-Datei.
-
-&bdquo;*Lorem Ipsum*&rdquo; ist ein sogenannter Blindtext oder Fülltext. Er wird als Platzhaltertext verwendet,
+Um die Sache beim Analysieren einer Textdatei etwas zu vereinfachen, legen wir &bdquo;*Lorem Ipsum*&rdquo;-Dateien zu Grunde.
+Unter &bdquo;*Lorem Ipsum*&rdquo; verstehen wir so genannten Blindtext oder Fülltext. Er wird als Platzhaltertext verwendet,
 um zum Beispiel Software testen zu können, die Textdateien verarbeitet, der geplante Text aber erst noch verfasst werden muss
-und daher nicht zur Verfügung steht. 
+und einfach noch nicht zur Verfügung steht. 
 
-Der Text selbst sieht aus wie lateinischer Text, ist es aber nicht. Schon das erste Wort „Lorem“ existiert nicht im Lateinischen.
+Der Text selbst sieht aus wie lateinischer Text, ist es aber nicht. Schon das erste Wort &bdquo;Lorem&rdquo; existiert nicht im Lateinischen.
 Die Verteilung der Buchstaben und der Wortlängen des Textes entsprechen in etwa der natürlichen lateinischen Sprache.
-Dennoch ist der Text absolut unverständlich, damit der Betrachter nicht durch den Inhalt abgelenkt wird.
+Dennoch ist der Text absolut unverständlich, der Betrachter soll durch den Inhalt nicht abgelenkt werden.
 
 *Beispiel*:<br />
 
@@ -854,25 +868,30 @@ Nibh nec aliquam dui pretium scelerisque, sollicitudin aliquet mus nisl bibendum
 
 
 Wenn Sie dieses Beispiel genau ansehen, werden Sie entdecken, dass viele Wörter weniger als 15 Zeichen enthalten.
-Das stellt prinzipiell erst mal kein Problem dar, nur konterkatiert es etwas den von mir beabsichtigen Vergleich.
-Für Zeichenketten der Länge kleiner oder gleich 15 unterstützen C++-Zeichenketten der MSVC-Compilers die so genannte *SSO* (*Small String Optimization*) Technik.
+Das stellt prinzipiell erst mal kein Problem dar, nur konterkatiert es etwas den von mir beabsichtigen Performanzvergleich.
+Für Zeichenketten der Länge kleiner oder gleich 15 unterstützen C++-Zeichenketten der gängigen Compilerhersteller
+die so genannte *SSO* (*Small String Optimization*) Technik.
 
 *Small String Optimization* ist eine Technik, die von `std::string`-Implementierungen verwendet wird,
-um kurze Zeichenketten direkt im String-Objekt selbst zu speichern, anstatt Speicher auf dem Heap zu reservieren.
+um kurze Zeichenketten direkt im String-Objekt zu speichern, anstatt für sie Speicher auf dem Heap zu reservieren.
 Diese Optimierung nutzt die Tatsache, dass viele Zeichenketten in typischen Anwendungen relativ kurz sind
 und daher im internen Puffer des `std::string`-Objekts gespeichert werden können, wodurch eine dynamische Speicherallokation vermieden wird.
 
-Es wäre überhaupt kein Problem gewesen, auch die `CowString`-Klasse mit einer entsprechenden Optimierung auszustatten.
+Es wäre überhaupt kein Problem, auch die `CowString`-Klasse mit einer entsprechenden Optimierung auszustatten.
 Nur hätte dies den Umfang eines einleitenden Beispiels überschritten, so dass ich darauf verzichten wollte.
 Lange Rede, kurzer Sinn:
 In unserem aktuellen Vergleichsbeispiel betrachten wir Textdateien mit vergleichsweise langen Zeichenketten.
-Auf diese Weise kommt bei Gebrauch der `std::string`-Klasse die *Small String Optimization* Technik **nicht** zum Tragen:
+Auf diese Weise kommt bei Gebrauch der `std::string`-Klasse die *Small String Optimization* **nicht** zum Tragen:
 
 ```
-Magnaeusagittis egetliberointerdum afusceelit diamduisdonec commodomaecenascongue, hendreritnecsemper velfelisconvallis diamduisdonec velfelisconvallis elementumturpisarcu.
-Tinciduntfacilisisrutrum faucibusultricesdapibus turpisarcutellus rutrumauguefaucibus etinest egestasurnamorbi diamduisdonec ridiculusnasceturmontes.
-Quisqueornaredui elitadipiscingconsectetur velfelisconvallis ultricesdapibusviverra fringillapharetraleo elementumturpisarcu namfermentumaenean egetliberointerdum.
-Porttitoraliquamtortor ametsitdolor mivestibulummollis convallisfringillapharetra ultriciesvitaesollicitudin, arcutelluscommodo metusnullamassa seddictumlectus nasceturmontesparturient bibendumcursuslobortis duisdonectempus. 
+Magnaeusagittis egetliberointerdum afusceelit diamduisdonec commodomaecenascongue,
+hendreritnecsemper velfelisconvallis diamduisdonec velfelisconvallis elementumturpisarcu.
+Tinciduntfacilisisrutrum faucibusultricesdapibus turpisarcutellus rutrumauguefaucibus
+etinest egestasurnamorbi diamduisdonec ridiculusnasceturmontes.
+Quisqueornaredui elitadipiscingconsectetur velfelisconvallis ultricesdapibusviverra fringillapharetraleo
+elementumturpisarcu namfermentumaenean egetliberointerdum.
+Porttitoraliquamtortor ametsitdolor mivestibulummollis convallisfringillapharetra ultriciesvitaesollicitudin,
+arcutelluscommodo metusnullamassa seddictumlectus nasceturmontesparturient bibendumcursuslobortis duisdonectempus. 
 ```
 
 Die meisten Zeichenketten in diesem Beispiel sind nun länger als 15 Zeichen, 
@@ -881,10 +900,9 @@ damit kann ein fairer Vergleich stattfinden.
 Der Clou des Beispiels, und das soll nicht unerwähnt bleiben, liegt darin,
 dass viele Zeichenketten im Ablauf des Programms zweimal in Erscheinung treten:
 Zum ersten Mal beim Zerlegen einer Zeile der Textdatei und zum zweiten Mal,
-wenn sie in einem Container der STL aufbewahrt werden.
-Es bestehlt also die Notwendigkeit, Zeichenketten zu kopieren zu müssen,
-aber nicht verändern zu müssen.
-
+wenn sie in einem Container der STL aufbewahrt werden muss.
+Wie haben es also mit einem Anwendungsfall zu tun, in dem Zeichenketten mehrfach auftreten,
+aber nicht verändert werden müssen.
 
 Sind wir auf der Suche nach dem häufigsten Auftreten einer Zeichenkette in einer Textdatei,
 so bietet sich als STL-Container eine Hash-Tabelle an:
@@ -901,7 +919,6 @@ std::unordered_map<CowString, std::size_t> frequenciesMap;
 
 Einzelne Einträge des `std::unordered_map`-Containers beschreiben in einem `std::pair`-Objekt eine Zeichenkette
 und im zweiten Wert ihre Häufigkeit.
-
 Damit betrachten wir zwei Funktionen `countWordFrequencies` bzw. `countWordFrequenciesCOW`:
 
 ```cpp
@@ -976,9 +993,9 @@ Damit betrachten wir zwei Funktionen `countWordFrequencies` bzw. `countWordFrequ
 ```
 
 In dieser Funktion treten `std::string`-Objekte in den Zeilen 19 und 37 auf,
-das heißt sowohl beim Zerlegen einer Zeile in die einzelnen Wörter als auch bei der Ablage in einem `std::unordered_map<std::string, std::size_t>`-Objekt.
+das heißt sowohl beim Zerlegen einer Zeile in einzelne Wörter als auch bei der Ablage in einem `std::unordered_map<std::string, std::size_t>`-Objekt.
 
-Hier können wir auch unsere `CowString`-Klasse ins Spiel bringen, am Aufbau der Funktion ändert sich sonst sehr wenig:
+Nun bringen wir unsere `CowString`-Klasse ins Spiel, am Aufbau der `countWordFrequenciesCOW`-Funktion ändert sich sonst recht wenig:
 
 ```cpp
 01: void TextfileStatistics::countWordFrequenciesCOW() {
@@ -1063,50 +1080,46 @@ File LoremIpsumVeryHuge.txt
 [std::string] Starting ...
 Largest frequency: 2053 - Word: famesnetussenectus
 Done.
-Elapsed time: 827 milliseconds.
+Elapsed time: 851 milliseconds.
 
 File LoremIpsumVeryHuge.txt
 [CowString] Starting ...
 Largest frequency: 2053 - Word: famesnetussenectus
 Done.
-Elapsed time: 679 milliseconds.
+Elapsed time: 638 milliseconds.
 ```
 
-Das sieht doch sehr interessant aus: 827 Millisekunden im Vergleich zu 679 Millisekunden.
+
+
+Das sieht doch sehr interessant aus: 851 Millisekunden im Vergleich zu 638 Millisekunden.
+Das Ergebnis ermutigt uns, die &bdquo;*Copy-On-Write*&rdquo;-Kopierstrategie in adäquaten Anwendungen
+stärker zu berücksichtigen.
 
 
 ## Fazit / Zusammenfassung
 
-Die &bdquo;*Lazy Copy*&rdquo; / &bdquo;*Copy-On-Write*&rdquo;-Kopierstrategie bedeutet,
+Die &bdquo;*Lazy Copy*&rdquo;- / &bdquo;*Copy-On-Write*&rdquo;-Kopierstrategie bedeutet,
 dass beim Kopieren eines Objekts &bdquo;unter der Haube&rdquo; nur eine Adresse
-auf die vorhandenen tatsächlichen Daten des Objekts weitergereicht wird.
-Eine echte und tiefe Kopie der eigentlichen Daten wird erst dann durchgeführt,
-wenn an einer Instanz Werte geändert werden.
+auf die schon vorhandenen Daten des Objekts weitergereicht wird.
+Eine echte und tiefe Kopie der eigentlichen Daten wird erst dann durchgeführt, wenn es sich nicht mehr vermeiden lässt,
+zum Beispiel dann, wenn an einer Instanz Werte geändert werden.
 
 Auf diese Weise entsteht für den Benutzer eines Objekts die Illusion,
 dass es sich um zwei unabhängige Instanzen des Objekts handelt.
 
-Hinter den Kulissen wird die Anzahl der Referenzen auf die interne Datenstruktur mitgezählt,
-so dass der letzte Besitzer die Struktur löschen kann.
+Hinter den Kulissen wird die Anzahl der Referenzen auf interne Datenstrukturen mitgezählt.
+Das hat zur Folge, dass beim Verändern von Daten, die nur einmal referenziert werden,
+keine separate Kopie notwendig ist und so Laufzeit eingespart werden kann.
 
-Das hat den Vorteil, dass beim Verändern von Daten, die nur einmal referenziert werden,
-keine gesonderte Kopie notwendig ist und so das Kopieren erspart werden kann.
+COW-Zeichenketten eignen sich hervorragend, wenn
 
-Abschließende Gedanken
+  * viele Kopien erstellt werden,
+  * wenige Änderungen vorgenommen werden oder
+  * eine effiziente Speichernutzung gewünscht ist
 
-COW-Strings eignen sich hervorragend, wenn:
-
-  * viele Kopien erstellt werden
-  * wenige Änderungen vorgenommen werden
-  * eine kompakte Speichernutzung gewünscht ist
-  * lazy Textverarbeitung implementiert wird
-
-COW-Strings sind weniger geeignet, wenn:
+COW-Zeichenketten sind weniger geeignet, wenn
 
   * häufige Änderungen vorgenommen werden
-  * Multithreading im Spiel ist (shared_ptr ist atomar)
-  * aufeinanderfolgende, schreibintensive Operationen erforderlich sind
-
 
 
 ## Literatur

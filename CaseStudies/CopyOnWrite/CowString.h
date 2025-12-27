@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <atomic>       // std::atomic
 #include <cstddef>      // std::size_t
 #include <string_view>  // std::string_view
 #include <format>       // std::std::formatter
@@ -16,7 +15,7 @@ namespace COWString
     private:
         struct Controlblock
         {
-            std::atomic<std::size_t> m_refCount;
+            std::size_t       m_refCount;
 
             static Controlblock* create();
             static Controlblock* create(const char* src, std::size_t length);
@@ -38,17 +37,17 @@ namespace COWString
         ~CowString            ();
 
         // copy semantics
-        CowString(const CowString& other);
-        CowString& operator= (const CowString& other);
+        CowString             (const CowString& other);
+        CowString& operator=  (const CowString& other);
 
         // move semantics
-        CowString(CowString&& other) noexcept;
-        CowString& operator= (CowString&& other) noexcept;
+        CowString             (CowString&& other) noexcept;
+        CowString& operator=  (CowString&& other) noexcept;
 
         // getter
-        std::size_t  size() const;
-        const char*  c_str() const;
-        bool         empty() const;
+        std::size_t  size     () const;
+        const char*  c_str    () const;
+        bool         empty    () const;
 
         // type-conversion operator
         operator std::string_view() const;
@@ -59,11 +58,11 @@ namespace COWString
         friend bool operator<  (const CowString& a, const CowString& b);
 
         // read- and write-access - no exception handling
-        char operator[] (std::size_t idx) const;  // read-only access
-        char& operator[](std::size_t idx);        // possible write access - triggers COW
+        char operator[] (std::size_t pos) const;  // read-only access
+        char& operator[](std::size_t pos);        // possible write access - triggers COW
     
-        char at (std::size_t idx) const;          // read-only access
-        char& at(std::size_t idx);                // possible write access - triggers COW
+        char at (std::size_t pos) const;          // read-only access
+        char& at(std::size_t pos);                // possible write access - triggers COW
     };
 }
 
