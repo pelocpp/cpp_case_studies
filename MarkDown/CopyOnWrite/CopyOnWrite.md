@@ -13,7 +13,7 @@ Viele Objekte im täglichen &bdquo;C++&rdquo;&ndash;Alltag zeichnen sich dadurch
 dass ihre Daten über die beiden Speicherbereiche Stack und Heap verteilt sind.
 Für das Kopieren derartiger Objekte bedeutet dies, dass es nicht genügt,
 die auf dem Stack liegenden Verwaltungsdaten &bdquo;flach&rdquo; zu kopieren. Auch die Daten auf dem Heap wollen kopiert werden,
-zumindest wenn man von einer &bdquo;echten&rdquo; (&bdquo;tiefen&rdquo;) Kopie sprechen möchte.
+zumindest wenn man von einer echten (&bdquo;tiefen&rdquo;) Kopie sprechen möchte.
 
 Interessanter Weise kann man sich eine dritte Art des Kopierens vorstellen,
 einen Mittelweg zwischen flacher und tiefer Kopie:
@@ -40,7 +40,7 @@ Ein Objekt steht in objektorientierten Programmiersprachen für einen zusammenge
 Das Kopieren eines Objekts beschreibt den Vorgang, bei dem alle Attribute (Instanzvariablen) eines Objekts
 in den Speicherbereich eines anderen Objekts desselben Datentyps umkopiert werden.
 
-Thematisch sind wir sehr nah am Kopierkonstruktor als auch dem Wertzuweisungsoperator von C++&ndash;Klassen dran.
+Thematisch sind wir sehr nah am Kopierkonstruktor als auch dem Zuweisungsoperator von C++&ndash;Klassen dran.
 Wir wiederholen zunächst die Prinzipien der flachen und tiefen Kopie von C++&ndash;Objekten,
 bevor wir die dritte Alternative thematisieren.
 
@@ -106,9 +106,9 @@ Die &bdquo;*Lazy Copy*&rdquo;-Strategie kombiniert auf eine gewisse Weite
 die beiden zuvor beschriebenen Kopierstrategien miteinander.
 
 Sind in den Instanzvariablen eines Objekts Adressen vorhanden, die auf Datenstrukturen auf dem Heap zeigen,
-müssen der Kopierkonstruktor und der Wertzuweisungsoperator explizit vom Anwender bereitgestellt werden,
+müssen der Kopierkonstruktor und der Zuweisungsoperator explizit vom Anwender bereitgestellt werden,
 so wie wir das soeben studiert haben.
-Im Sprachjargon eines Informatikers werden derartige Realisierungen des Kopierkonstruktors und des Wertzuweisungsoperators 
+Im Sprachjargon eines Informatikers werden derartige Realisierungen des Kopierkonstruktors und des Zuweisungsoperators 
 als &bdquo;eifrig&rdquo; oder sogar als &bdquo;gierig&rdquo; tituliert.
 Etwas weniger emotional formuliert tun die Realisierungen aber nur das, was man von ihnen erwartet:
 Eine Kopie eines vorhandenen Objekts erstellen.
@@ -129,7 +129,7 @@ die wir in Gestalt eines so genannten &bdquo;*Kontrollblocks*&rdquo; (*Controlbl
 
 Wir erkennen in *Abbildung* 4, dass neben den eigentlichen Daten zur Verwaltung einer Zeichenkette
 ein so genannter &bdquo;*Kontrollblock*&rdquo; ins Spiel gekommen ist.
-Dieser enthält im Minimalausbau eine Zählervariable, auch als *Referenzcounter* bezeichnet.
+Dieser enthält im Minimalausbau eine Zählervariable, auch als *Referenz Counter* bezeichnet.
 Wird ein `CowString`-Objekt zum ersten Mal angelegt, hat dieser Referenzzähler den Wert 1.
 Anders herum formuliert: Es gibt keine weiteren `CowString`-Objekte, die sich die Daten des aktuellen
 `CowString`-Objekts teilen.
@@ -142,7 +142,7 @@ der Bestandteil aller unterschiedlichen COW-Realisierungen ist.
 
 *Bemerkung*:<br />
 Wir legen die Realisierung unserer `CowString`-Klasse ausschließlich für eine Single-Threaded Umgebung aus.
-Damit muss sich der Referenzzähler nicht mit den Problemen des atomaren Zugriffs auseinander setzen.
+Damit muss sich der Referenzzähler nicht mit den Problemen des atomaren Zugriffs auseinandersetzen.
 In einer Multi-Threaded Umgebung muss der Referenzzähler vom Typ `std::atomic<std::size_t>` sein.
 
 
@@ -156,7 +156,7 @@ bei der &bdquo;*Lazy Copy*&rdquo;-Vorgehensweise ist nicht mehr zu tun!
 
 *Abbildung* 5: Ein `CowString`-Objekt &ndash; mit einer (abhängigen) Kopie.
 
-Wir erkennen an *Abbildung* 5, dass eine Kopie äußerst einfach und vor allem sehr schnell erstellt werden kann.
+Wir erkennen in *Abbildung* 5, dass eine Kopie äußerst einfach und vor allem sehr schnell erstellt werden kann.
 Es wird auf dem Stack ein minimales Stellvertreter-Objekt kopiert,
 und im Kontrollblock auf dem Heap wird der Referenzzähler inkrementiert.
 
@@ -173,7 +173,7 @@ dass die benötigten Zeichenkettenobjekte in der Mehrzahl ohne Änderungen im Pr
 dann ist die COW-Strategie ein Ansatz, um Rechenzeit einzusparen.
 
 Wenn das Programm ein Objekt ändern möchte, kann es anhand des Zählers feststellen, ob die Daten gemeinsam genutzt werden oder nicht.
-Also: Referenzzähler gleich 1 bedeutet, es gibt kein zweites Hüllenobjekt, dass Zugang zu diesem Objekt hat.
+Also: Referenzzähler gleich 1 bedeutet, es gibt kein zweites Hüllenobjekt, das Zugang zu diesem Objekt hat.
 Etwaige Änderungen können problemlos am vorhandenen Objekt durchgeführt werden. Im Gegensatz dazu hat der Referenzzähler einen Wert größer 1.
 Sollen jetzt Änderungen am Objekt erfolgen, dann ist &ndash; zu diesem Zeitpunkt, also verspätet bzw. *on demand* &ndash; eine tiefe Kopie zu erstellen
 (*Abbildung* 6):
@@ -189,7 +189,7 @@ Man kann beobachten, wie der Wert 2 gewissermaßen aufgeteilt wurde.
 
 *Bemerkung*:<br />
 Die Klasse `std::shared_ptr` und eine &bdquo;*Copy-on-Write*&rdquo;-Klasse weisen in ihrer Realisierung gewisse Ähnlichkeiten auf.
-Beide Klassen verwenden Referenzzähler, um den geteilten Besitz zählen.
+Beide Klassen verwenden Referenzzähler, um den geteilten Besitz zu zählen.
 
 Man kann sagen, dass die *Lazy Copy*-Strategie von außen gesehen sich wie eine tiefe Kopie verhält.
 Intern wird aber, soweit möglich, das Prinzip einer flachen Kopie angestrebt.
@@ -204,20 +204,20 @@ ist eine echte (tiefe) Kopie des Objekts zu erstellen, an dem Änderungen erfolg
 
 Wir wollen die bisherigen Überlegungen zusammenfassen und dazu einige neue Begrifflichkeiten ins Spiel bringen:
 
-  * Eine COW-Zeichenkette kann zwei Zustände annehmen: Sie besitzt den Puffer exklusiv (Zustand &bdquo;*owning*&rdquo;)
-oder teilt ihn mit anderen COW-Zeichenkettenobjekten (Zustand &bdquo;*sharing*&rdquo;).
+  * Eine COW-Zeichenkette kann zwei Zustände annehmen: Sie besitzt den Puffer exklusiv (Zustand &bdquo;*Owning*&rdquo;)
+oder teilt ihn mit anderen COW-Zeichenkettenobjekten (Zustand &bdquo;*Sharing*&rdquo;).
 
-  * Zu Beginn der Existenz eines COW-Zeichenkettenobjekts befindet sich dieses im &bdquo;*owning*&rdquo;-Zustand.
-Zuweisungen und Initialisierungen durch Kopieren können das Objekt in den &bdquo;*sharing*&rdquo;-Zustand versetzen.
-Vor dem tatsächlichen Ausführen einer Schreiboperation muss sichergestellt sein, dass dieses sich im &bdquo;*owning*&rdquo;-Zustand befindet.
+  * Zu Beginn der Existenz eines COW-Zeichenkettenobjekts befindet sich dieses im &bdquo;*Owning*&rdquo;-Zustand.
+Zuweisungen und Initialisierungen durch Kopieren können das Objekt in den &bdquo;*Sharing*&rdquo;-Zustand versetzen.
+Vor dem tatsächlichen Ausführen einer Schreiboperation muss sichergestellt sein, dass dieses sich im &bdquo;*Owning*&rdquo;-Zustand befindet.
 
-* Der Übergang vom &bdquo;*sharing*&rdquo;- zum &bdquo;*owning*&rdquo;-Zustand beinhaltet sowohl das Kopieren des Kontrollblocks
+* Der Übergang vom &bdquo;*Sharing*&rdquo;- zum &bdquo;*Owning*&rdquo;-Zustand beinhaltet sowohl das Kopieren des Kontrollblocks
   als auch das Anlegen einer neuen Zeichenkette. Diese Daten residieren nun in neuen, exklusiv zugeteilten Speicherbereichen.
 
 * Bei einem für &bdquo;*Copy-On-Write*&rdquo; konzipierten Zeichenketten-Datentyp ist jede Operation entweder nicht-modifizierend (lesende Operation)
   oder modifizierend (schreibende Operation).
-  Dadurch lässt sich leicht feststellen, ob die Zeichenkette vor der Ausführung der Operation den &bdquo;*owning*&rdquo;-Zustand sicherstellen muss
-  oder den &bdquo;*sharing*&rdquo;-Zustand beibehalten kann.
+  Dadurch lässt sich leicht feststellen, ob die Zeichenkette vor der Ausführung der Operation den &bdquo;*Owning*&rdquo;-Zustand sicherstellen muss
+  oder den &bdquo;*Sharing*&rdquo;-Zustand beibehalten kann.
 
 
 ## Entwurf einer einfachen &bdquo;*Copy-on-Write*&rdquo;-Klasse für Zeichenketten
@@ -311,9 +311,9 @@ unterstützen wir eine Konvertierung von `CowString`- und `std::string_view`-Obj
 
 
 Die `detach`-Methode aus Zeile 17 vollzieht einen Zustandswechsel eines `CowString`-Objekts 
-vom Zustand &bdquo;*sharing*&rdquo; in den Zustand &bdquo;*owning*&rdquo;.
+vom Zustand &bdquo;*Sharing*&rdquo; in den Zustand &bdquo;*Owning*&rdquo;.
 Diese Methode ist folglich in allen Methoden / Operatoren der `CowString`-Klasse zu rufen,
-wenn ein schreibender Vorgang angestoßen wird. Bei allen lesende Operationen ändert das `CowString`-Objekt
+wenn ein schreibender Vorgang angestoßen wird. Bei allen lesenden Operationen ändert das `CowString`-Objekt
 seinen Zustand nicht.
 
 Noch erkennen wir an Hand der Klassendefinition nicht, wo die Zeichen der Zeichenkette und der Kontrollblock
@@ -338,7 +338,7 @@ Nun wollen wir aber noch das Feature haben, dass bei Kopien und Zuweisungen kein
 Dazu müssen wir zu jedem Zeitpunkt während der Lebensdauer eines `CowString`-Objekts wissen,
 ob dieses aktuell nur einen oder mehrere Besitzer hat.
 Gibt es nur einen Besitzer, stellen modifizierende Methodenaufrufe überhaupt kein Problem dar.
-Es gibt ja nur einen einzigen Besitzer, der diese Änderungen intitiiert.
+Es gibt ja nur einen einzigen Besitzer, der diese Änderungen initiiert.
 Anders stellt sich die Sache dar, wenn es mehrere Besitzer gibt. Änderungsanforderungen eines Besitzers bedeuten nun,
 dass dieser ein exklusives Objekt benötigt, alle anderen Besitzer hingegen wollen im Besitz des alten Objektzustands verbleiben.
 
@@ -357,7 +357,7 @@ Ich habe mich deshalb für eine Ablage der Daten im `CowString`-Objekt entschied
 Und gleich zur nächsten Detailfrage: Wo legen wir die Zeichen der Zeichenkette ab?
 Wir könnten neben dem `Controlblock`-Objekt die Zeichen in einem zweiten, separaten Speicherbereich auf dem Heap ablegen.
 Das würde aber bedeuten, dass für jede `CowString`-Instanz zwei Anforderungen an die Freispeicherverwaltung zu stellen sind.
-Auch dies ist wiederum nicht sehr performant, wir beschreiten deshalb einen andere Weg, der mit nur einer Heap-Allokation auskommt.
+Auch dies ist wiederum nicht sehr performant, wir beschreiten deshalb einen anderen Weg, der mit nur einer Heap-Allokation auskommt.
 Wir definieren die Klasse (Struktur) `Controlblock` so, dass sie in der Lage ist,
 am Ende noch einen &bdquo;nachgelagerten&rdquo; Speicherbereich zu besitzen,
 der groß genug ist, um die Zeichenkette aufzunehmen.
@@ -590,7 +590,7 @@ Der Zuweisungsoperator ist ähnlich realisiert. Da wir bei seinem Aufruf bereits
 müssen wir die linke Seite der Zuweisung mit Vorsicht betrachten.
 Für das Objekt auf der linken Seite der Zuweisung dekrementieren wir zunächst den Zähler der Besitzer.
 Danach kopieren wir flach das Argument (rechte Seite) um und inkrementieren für dieses Objekt die Anzahl der Besitzer um Eins.
-Wir sind wieder &bdquo;*faul*&rdquo; vorgangen, und haben neben den Instantvariablen die Anzahl der Besitzer für beide Objekte angepasst.
+Wir sind wieder &bdquo;*faul*&rdquo; vorgegangen, und haben neben den Instanzvariablen auch die Anzahl der Besitzer für beide Objekte angepasst.
 
 
 Damit sind wir beim Verschieben angelangt:
@@ -722,7 +722,7 @@ Hier lauten die entsprechenden Deklarationen:
 Alle vier Varianten der `std::string`-Klasse liefern, egal, ob es sich um die `const` oder non-`const` Variante handelt, eine *Referenz* eines Zeichens zurück.
 Das wäre in der `CowString`-Klasse prinzipiell ebenso umsetzbar, ist aber nicht wünschenswert,
 da man dann immer vom Worst-Case Fall ausgehen müsste, dass mit Hilfe der Referenz auch ein schreibender Zugriff erfolgen könnte.
-Man müsste dann immer vom *Shared*- zum *Owning*-Zustand im Objekt wechseln, was den bislang erzielten Performanzgewinn zunichte macht.
+Man müsste dann immer vom *Sharing*- zum *Owning*-Zustand im Objekt wechseln, was den bislang erzielten Performance Gewinn zunichte macht.
 
 In der `CowString`-Realisierung wird deshalb strikt beim lesenden Zugriff darauf geachtet, dass Zeichen als Kopie und nicht mit einer Referenz
 transportiert werden:
@@ -793,7 +793,7 @@ Wenn eine Objektkopie nicht mehr vermeidbar ist, wird diese zu einem späteren Z
 
 Häufig wird die Frage gestellt, warum die Klasse `std::string` aus der STL nicht das &bdquo;*Copy-on-Write*&rdquo;-Idiom
 umsetzt. Die Antwort ist vergleichsweise einfach: 
-Die `std::string`-Klasse besitzt ein historisch gewachsenenes API, für das das &bdquo;*Copy-on-Write*&rdquo;-Idiom 
+Die `std::string`-Klasse besitzt ein historisch gewachsenes API, für das das &bdquo;*Copy-on-Write*&rdquo;-Idiom 
 ungeeignet ist. Was ist damit konkret gemeint?
 
 Viele der `std::string`-Methoden oder Operatoren hantieren mit Referenzen auf Daten (Zeichen)
@@ -852,8 +852,8 @@ Unter &bdquo;*Lorem Ipsum*&rdquo; verstehen wir so genannten Blindtext oder Fül
 um zum Beispiel Software testen zu können, die Textdateien verarbeitet, der geplante Text aber erst noch verfasst werden muss
 und einfach noch nicht zur Verfügung steht. 
 
-Der Text selbst sieht aus wie lateinischer Text, ist es aber nicht. Schon das erste Wort &bdquo;Lorem&rdquo; existiert nicht im Lateinischen.
-Die Verteilung der Buchstaben und der Wortlängen des Textes entsprechen in etwa der natürlichen lateinischen Sprache.
+Der Text selbst sieht aus wie ein lateinischer Text, ist es aber nicht. Schon das erste Wort &bdquo;Lorem&rdquo; existiert nicht im Lateinischen.
+Die Verteilung der Buchstaben und der Wortlänge im Text entsprechen in etwa der natürlichen lateinischen Sprache.
 Dennoch ist der Text absolut unverständlich, der Betrachter soll durch den Inhalt nicht abgelenkt werden.
 
 *Beispiel*:<br />
@@ -866,10 +866,9 @@ Penatibus ultrices augue netus sit, lacinia pellentesque aliquet sapien vulputat
 Nibh nec aliquam dui pretium scelerisque, sollicitudin aliquet mus nisl bibendum leo. 
 ```
 
-
 Wenn Sie dieses Beispiel genau ansehen, werden Sie entdecken, dass viele Wörter weniger als 15 Zeichen enthalten.
-Das stellt prinzipiell erst mal kein Problem dar, nur konterkariert es den von mir beabsichtigen Performanzvergleich.
-Für Zeichenketten der Länge kleiner oder gleich 15 unterstützen C++-Zeichenketten der gängigen Compilerhersteller
+Das stellt prinzipiell erstmal kein Problem dar, nur konterkariert es den von mir beabsichtigen Performanzvergleich.
+Für Zeichenketten der Länge kleiner oder gleich 15 unterstützen C++-Zeichenketten der gängigen Compiler Hersteller
 die so genannte *SSO* (*Small String Optimization*).
 
 *Small String Optimization* ist eine Technik, die von `std::string`-Implementierungen verwendet wird,
@@ -1090,7 +1089,7 @@ Anders hingegen sieht es mit der Klasse `std::unordered_map<CowString, std::size
 Schlüssel vom Typ `CowString` sind machbar, aber die STL ist nicht in der Lage, ohne unser Zutun Hash-Werte von `CowString`-Objekten
 zu berechnen.
 
-Damit müssen wir kurz in der Namensraum `std` verzweigen und hier eine Spezialisierung für das Klassentemplate `hash`
+Damit müssen wir kurz in den Namensraum `std` verzweigen und hier eine Spezialisierung für das Klassentemplate `hash`
 ergänzen. Bei der Spezialisierung &bdquo;spezialisieren&rdquo; wir den Aufrufoperator `operator()`:
 
 ```cpp
@@ -1121,7 +1120,7 @@ aber bei der Anfangsadresse der Zeichenkette vom Typ `const char*` stoßen wir a
 Note: std::hash<const char*> hashes the pointer value, not the characters it points to
 ```
 
-Die Adresse selbst kann also nicht zur Berechnung eines Hashwerts herangezogen werden.
+Die Adresse selbst kann also nicht zur Berechnung des Hashwerts herangezogen werden.
 Dafür werden wir bei der Klasse `std::string_view` fündig: Für sie gibt es eine Spezialisierung des `struct hash`-Klassentemplates,
 wir bilden unser `CowString`-Objekt daher auf ein `std::string_view`-Objekt ab (Zeile 14) und verwenden diesen Wert.
 
@@ -1180,12 +1179,12 @@ COW-Zeichenketten sind weniger geeignet, wenn
 
 Eine umfassende Einführung in das Thema &bdquo;*Copy-On-Write*&rdquo; findet man
 in dem Artikel [`cow_ptr` &ndash; Der Smartpointer für Copy-On-Write](https://www.informatik-aktuell.de/entwicklung/programmiersprachen/cow-ptr-der-smartpointer-fuer-copy-on-write.html)
-von Ralph Tandetzky. Die Quellen zu den Beispiel sind auf [GitHub](https://github.com/ralphtandetzky/cpp_utils) vorhanden.
+von Ralph Tandetzky. Die Quellen zu den Beispielen sind auf [GitHub](https://github.com/ralphtandetzky/cpp_utils) vorhanden.
 
 In den WikiBooks findet man [hier](https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Copy-on-write) einen kurzen Überblick.
 
 Die Realisierung der öffentlichen Schnittstelle der `CowString`-Klasse ist in dieser Fallstudie recht knapp ausgefallen.
-Eine umfangreichere Realisierung einer &bdquo;*Copy-On-Write*&rdquo;-kompatiblen Klasse für Zeichenketten findet man
+Eine umfangreichere Realisierung einer &bdquo;*Copy-On-Write*&rdquo;-kompatiblen Klasse für Zeichenketten findet sich
 [hier](https://github.com/allenvox/string-cow).
 
 <!-- End-of-File -->
