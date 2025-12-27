@@ -26,7 +26,7 @@ namespace COWString
         std::size_t           m_len;
 
         // ensure we have a private (unshared) copy before writing
-        void detach  ();
+        void detach           ();
 
     public:
         // c'tor(s), d'tor

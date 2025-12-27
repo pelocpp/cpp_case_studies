@@ -126,7 +126,6 @@
   <ItemGroup>
     <ClCompile Include="CowStringImpl.cpp" />
     <ClCompile Include="CowString.cpp" />
-    <ClCompile Include="Data.cpp" />
     <ClCompile Include="LoremIpsum.cpp" />
     <ClCompile Include="LoremIpsumImpl.cpp" />
     <ClCompile Include="Program.cpp" />
