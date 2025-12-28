@@ -1146,10 +1146,10 @@ stärker zu Buche schlagen also wenn wir auf die `CowString` zurückgreifen.
 Das Ergebnis ermutigt uns, die &bdquo;*Copy-On-Write*&rdquo;-Kopierstrategie in adäquaten Anwendungen
 stärker zu berücksichtigen.
 
-## Stolperfallen
+## Nebeneffekte oder Stolperfallen
 
 Die Strategie des &bdquo;*verspäteten Kopierens*&rdquo; zieht Nebeneffekte nach sich.
-Manche dieser Effekte sind offensichtlich, manch andere sind es weniger.
+Manche dieser Effekte sind offensichtlich, manche andere sind es weniger.
 Beginnen wir mit einem ersten Beispiel:
 
 ```cpp
@@ -1182,10 +1182,10 @@ a: !ello
 b: !ello
 ```
 
-Hmmm, das kommt etwas überraschend. Erkennen Sie das Problem oder den Grund für diese möglicherweise unerwartete Ausgabe?
+Hmm, das kommt etwas überraschend. Erkennen Sie das Problem oder den Grund für diese möglicherweise unerwartete Ausgabe?
 In Zeile 8 wird eine Kopie des `CowString`-Objekts angelegt, erreichbar über die Variable `b`.
 Es handelt sich um eine *Lazy Copy*! Die Referenzvariable `ch` bezieht sich folglich auf beide Objekte!
-Hmm, die Begrifflichleit &bdquo;Nebeneffekt&rdquo; trifft es vielleicht am besten.
+Hmm, die Begrifflichkeit &bdquo;Nebeneffekt&rdquo; trifft es vielleicht am besten.
 
 Das folgende Beispiel ist etwas komplexer:
 
@@ -1256,7 +1256,7 @@ das heißt, sie kann zu einem unbestimmten Zeitpunkt im Ablauf des Programms ung
 
 *Bemerkung*:<br />
 Welche Änderung müsste man an dem letzten Beispiel vornehmen, so dass es fehlerfrei läuft?
-(Anwort: Qualifizieren Sie das Objekt `s` mit `const`).
+(Antwort: Qualifizieren Sie das Objekt `s` mit `const`).
 
 Dies alles sind keine neuen Erkenntnisse, sondern Beobachtungen, die wir auch in der STL machen können.
 Sehen Sie hierzu das folgende Beispiel mit einem `std::string`- und einem `std::string_view` Objekt:
@@ -1291,7 +1291,7 @@ der Speicher im `std::string`-Objekt neu organisiert wird!
 Wir haben wieder &ndash; dieses Mal sicherlich etwas zufälliger &ndash; Gemeinsamkeiten im Verhalten
 der beiden Klassen `string_view` und `CowString` entdeckt.
 
-Dies erklärt nebenbei bemerkt, warum ich in dem Beispiel längere Zeichenketten verwenden musste.
+Dies erklärt nebenbei bemerkt, warum ich in diesem Beispiel längere Zeichenketten verwenden musste.
 Zu kurze Zeichenketten werden im `string_view`-Objekt selbst aufbewahrt (SSO),
 und beim Anhängen von einer zweiten Zeichenkette musste ich das Ursprungsobjekt dazu bewegen (zwingen),
 intern einen neuen Datenpuffer anzulegen. 
@@ -1302,13 +1302,13 @@ intern einen neuen Datenpuffer anzulegen.
 Die &bdquo;*Lazy Copy*&rdquo;- / &bdquo;*Copy-On-Write*&rdquo;-Kopierstrategie bedeutet,
 dass beim Kopieren eines Objekts &bdquo;unter der Haube&rdquo; nur eine Adresse
 auf die schon vorhandenen Daten des Objekts weitergereicht wird.
-Eine echte und tiefe Kopie der eigentlichen Daten wird erst dann durchgeführt, wenn es sich nicht mehr vermeiden lässt,
-zum Beispiel dann, wenn an einer Instanz Werte geändert werden.
-
 Auf diese Weise entsteht für den Benutzer eines Objekts die Illusion,
 dass es sich um zwei unabhängige Instanzen des Objekts handelt.
 
-Hinter den Kulissen wird die Anzahl der Referenzen auf interne Datenstrukturen mitgezählt.
+Eine echte und tiefe Kopie der eigentlichen Daten wird erst dann durchgeführt, wenn es sich nicht mehr vermeiden lässt,
+zum Beispiel dann, wenn an einer Instanz Werte geändert werden.
+
+Hinter den Kulissen wird die Anzahl der Benutzer (Referenzen) auf die internen Datenstrukturen mitgezählt.
 Das hat zur Folge, dass beim Verändern von Daten, die nur einmal referenziert werden,
 keine separate Kopie notwendig ist und so Laufzeit eingespart werden kann.
 
@@ -1316,11 +1316,11 @@ COW-Zeichenketten eignen sich hervorragend, wenn
 
   * viele Kopien erstellt werden,
   * wenige Änderungen vorgenommen werden oder
-  * eine effiziente Speichernutzung gewünscht ist
+  * eine effiziente Speichernutzung gewünscht ist.
 
 COW-Zeichenketten sind weniger geeignet, wenn
 
-  * häufige Änderungen vorgenommen werden
+  * häufige Änderungen an den Zeichenketten vorgenommen werden müssen.
 
 
 ## Literatur
@@ -1335,13 +1335,9 @@ Die Realisierung der öffentlichen Schnittstelle der `CowString`-Klasse ist in d
 Eine umfangreichere Realisierung einer &bdquo;*Copy-On-Write*&rdquo;-kompatiblen Klasse für Zeichenketten findet sich
 [hier](https://github.com/allenvox/string-cow).
 
-
-Wir auf die &bdquo;*Lorem Ipsum*&rdquo; generieren möchte,
+Wer &bdquo;*Lorem Ipsum*&rdquo; Texte generieren möchte,
 findet [hier](https://www.lipsum.com) einen Online Generator.
 Man muss nur die Anzahl der gewünschten Wörter eingeben, und schon kann
-man den Text herunterladen.
-
-
-
+man den generierten Text herunterladen.
 
 <!-- End-of-File -->
