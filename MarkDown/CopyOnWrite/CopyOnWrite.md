@@ -839,150 +839,6 @@ Zum Beispiel so, dass sich die Mehrzahl der Methoden einen lesenden Zugriff zu e
 Schreibende Zugriffe hingegen müssen klar dokumentiert sein, so dass dem Benutzer klar ist,
 dass es hier hinter den Kulissen zu einer tiefen Objektkopie kommt.
 
-## Stolperfallen
-
-Die Strategie des &bdquo;*verspäteten Kopierens*&rdquo; zieht Nebeneffekte nach sich.
-Manche dieser Effekte sind offensichtlich, manch andere weniger.
-Beginnen wir mit einem ersten Beispiel:
-
-```cpp
-01: void pitfall_01()
-02: {
-03:     CowString a{ "Hello" };
-04:     std::println("a: {}", a);
-05: 
-06:     char& ch = a[0];
-07: 
-08:     CowString b{ a };
-09:     std::println("b: {}", b);
-10: 
-11:     ch = '!';
-12: 
-13:     std::println("a: {}", a);
-14:     std::println("b: {}", b);
-15: }
-```
-
-In Zeile 6 erhalten wir in Variable `ch` eine Referenz des ersten Zeichens im `CowString`-Objekt `a`.
-Mit Hilfe der Referenz verändern wir dieses Zeichen im `a`-Objekt.
-Auf das `b` Objekt sollte diese Zuweisung keinen Einfluss haben.
-Wie lautet die Ausgabe des Programms?
-
-```
-a: Hello
-b: Hello
-a: !ello
-b: !ello
-```
-
-Hmmm, das kommt etwas überraschen. Erkennen Sie das Problem oder den Grund für diese möglicherweise unerwartete Ausgabe?
-In Zeile 8 wird eine Kopie des `CowString`-Objekts angelegt, erreichbar über die Variable `b`.
-Es handelt sich um eine *Lazy Copy*! Die Referenzvariable `ch` bezieht sich folglich auf beide Objekte!
-
-Das folgende Beispiel ist etwas komplexer:
-
-```cpp
-01: void pitfall_02()
-02: {
-03:     CowString s{ "1234567890" };
-04:     const char* p{ s.c_str() };
-05: 
-06:     {
-07:         CowString other{ s };
-08:         char firstChar{ s[0] };
-09:     }
-10: 
-11:     std::println("After block:");
-12:     std::println("p: {}", p);
-13: }
-```
-
-In Zeile 3 legen wir ein `CowString`-Objekt an.
-In Zeile 4 holen wir die Anfangsadresse der Zeichenkette ab und heben diese in der Variablen `p` auf.
-In Zeile 12 verwenden wir diese Adresse, um die Zeichen in der Konsole auszugeben.
-Das heißt, wir erwarten in etwa die Ausgabe `1234567890` in der Konsole.
-
-Dem ist leider nicht so:
-
-```
-After block:
-p: ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
-```
-
-Damit stellt sich die Frage, welchen Einfluss der innere Block auf das Programm hat?
-Das Anlegen einer Objektkopie sollte kein Problem sein, auch wenn die Strategie des &bdquo;*faulen*&rdquo; Kopierens
-angewendet wird. Was passiert in Zeile 8?
-
-```
-char first_char{ s[0] };
-```
-
-Das erste Zeichen des Objekts `s` wird gelesen &ndash; mit dem Index-Operator `operator[]`.
-Dieser Operator existiert in zwei Überladungen in der Klasse `CowString`:
-
-```cpp
-01: char operator[] (std::size_t pos) const;  // read-only access
-02: char& operator[](std::size_t pos);        // possible write access
-```
-
-Damit ist fie Frage zu klären, welche Überladung in Zeile 8 zur Anwendung gelangt?
-Da die Variable `firstChar` vom Typ `char` ist, könnte man geneigt sein, es ist die erste Überladung.
-Nein, diese Vermutung ist falsch. Entscheidend zur Beantwortung der Frage ist,
-von welchem Typ das Objekt ist, auf das der Index-Operator angewendet wird.
-Damit sind wir beim Objekt `s` angekommen. Okay, offensichtlich ist dies eine Instant der Klasse `CowString`,
-aber: Es ist *kein* Modifizierer `const` vorhanden. Damit wird die zweite Überladung aufgerufen!
-Und ja, hier ist auf Grund der Referenz eine Indirektion mit im Spiel, aber die erste Überladung scheidet eben aus,
-da diese in der Signatur `const` hat.
-
-Die zweite Überladung des Index-Operators `operator[]` ruft implizit `detach()` auf,
-damit wird für das Objekt `s` verspätet intern eine Kopie der Zeichenkette angelegt,
-das Original der Zeichenkette verbleibt im Objekt `other`.
-Dies alles wäre immer noch kein Problem, wenn nicht in Zeile 9 das Objekt `other` aus dem Scope fallen würde.
-Damit verliert die in der Variablen `p` gespeicherte Adresse ihre Gültigkeit,
-und das Programm arbeitet fehlerhaft weiter.
-
-Was ist die Moral dieser Geschichte?
-Wir wollen die Klasse `CowString` auf Grund dieser Nebeneffekte / Stolperfallen nicht einsetzen?
-Falsch geraten! Wir sollten lernen, dass es nicht schicklich ist, Adressen oder Referenzen von `CowString`-Objekte für einen längeren Zeitraum aufzuheben.
-Die intere Adresse der Zeichenkette eines `CowString`-Objekts hat einen  &bdquo;*non-owning*&rdquo; Charakter,
-dass heißt, sie kann ungültig werden.
-
-*Bemerkung*:<br />
-Welche Änderung müsste man an dem letzten Beispiel vornehmen, so dass es fehlerfrei läuft?
-(Anwort: Qualifizieren Sie das Objekt `s` mit `const`!)
-
-Das sind keine neuen Erkenntnisse, sondern Beobachtungen, die wir auch in der STL machen können.
-Sehen Sie hierzu das folgende Beispiel mit einem `std::string`- und einem `std::string_view` Objekt an:
-
-```cpp
-01: void pitfall_03()
-02: {
-03:     std::string s{ "Eros parturient vulputate feugiat risus" };
-04:     const char* p{ s.c_str() };
-05: 
-06:     std::string_view sv{ s };
-07:     std::println("sv: {}", sv);
-08: 
-09:     s.append(" ex facilisis molestie tristique fermentum.");
-10: 
-11:     std::println("sv: {}", sv);
-12: }
-```
-
-*Ausgabe*:<br />
-
-```
-sv: Eros parturient vulputate feugiat risus
-sv: ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
-```
-
-Das `string_view`-Objekt `sv` speichert &ndash; wir unsere `CowString` Objekte &ndash;
-die Anfangsadresse einer Zeichenkette ab. In unserem Beispiel eine Adresse,
-die in den Instanzvariablen eines `std::string`-Objekts lebt.
-Diese Adresse kann sich allerdings verändern, zum Beispiel dann, wenn in Folge des `append`-Aufrufs an `s`
-der Speicher im `std::string`-Objekt neu organisiert wird!
-
-
 
 ## Anwendungsbeispiel: Häufigste in einer Textdatei auftretende Zeichenkette
 
@@ -1289,6 +1145,156 @@ Wir können tatsächlich die Beobachtung machen, dass die vielen Objektkopien be
 stärker zu Buche schlagen also wenn wir auf die `CowString` zurückgreifen.
 Das Ergebnis ermutigt uns, die &bdquo;*Copy-On-Write*&rdquo;-Kopierstrategie in adäquaten Anwendungen
 stärker zu berücksichtigen.
+
+## Stolperfallen
+
+Die Strategie des &bdquo;*verspäteten Kopierens*&rdquo; zieht Nebeneffekte nach sich.
+Manche dieser Effekte sind offensichtlich, manch andere sind es weniger.
+Beginnen wir mit einem ersten Beispiel:
+
+```cpp
+01: void pitfall_01()
+02: {
+03:     CowString a{ "Hello" };
+04:     std::println("a: {}", a);
+05: 
+06:     char& ch = a[0];
+07: 
+08:     CowString b{ a };
+09:     std::println("b: {}", b);
+10: 
+11:     ch = '!';
+12: 
+13:     std::println("a: {}", a);
+14:     std::println("b: {}", b);
+15: }
+```
+
+In Zeile 6 verschaffen wir uns in Variable `ch` eine Referenz des ersten Zeichens des `CowString`-Objekts `a`.
+Mit Hilfe der Referenz verändern wir dieses Zeichen im Objekt `a`.
+Auf das `b` Objekt sollte diese Zuweisung keinen Einfluss haben, oder?
+Sehen wir uns die Ausgabe des Programms an:
+
+```
+a: Hello
+b: Hello
+a: !ello
+b: !ello
+```
+
+Hmmm, das kommt etwas überraschend. Erkennen Sie das Problem oder den Grund für diese möglicherweise unerwartete Ausgabe?
+In Zeile 8 wird eine Kopie des `CowString`-Objekts angelegt, erreichbar über die Variable `b`.
+Es handelt sich um eine *Lazy Copy*! Die Referenzvariable `ch` bezieht sich folglich auf beide Objekte!
+Hmm, die Begrifflichleit &bdquo;Nebeneffekt&rdquo; trifft es vielleicht am besten.
+
+Das folgende Beispiel ist etwas komplexer:
+
+```cpp
+01: void pitfall_02()
+02: {
+03:     CowString s{ "1234567890" };
+04:     const char* p{ s.c_str() };
+05: 
+06:     {
+07:         CowString other{ s };
+08:         char firstChar{ s[0] };
+09:     }
+10: 
+11:     std::println("After block:");
+12:     std::println("p: {}", p);
+13: }
+```
+
+In Zeile 3 legen wir ein `CowString`-Objekt an.
+In Zeile 4 holen wir die Anfangsadresse der Zeichenkette ab und heben diese in der Variablen `p` auf.
+In Zeile 12 verwenden wir diese Adresse, um die Zeichen in der Konsole auszugeben.
+Das heißt, wir erwarten in etwa die Ausgabe `1234567890` in der Konsole.
+Dem ist leider nicht so:
+
+```
+After block:
+p: ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+```
+
+Damit stellt sich die Frage, welchen Einfluss der innere Block auf das Programm hat?
+Das Anlegen einer Objektkopie sollte kein Problem sein, auch wenn die Strategie des &bdquo;*faulen*&rdquo; Kopierens
+angewendet wird. Was passiert in Zeile 8?
+
+```
+char first_char{ s[0] };
+```
+
+Das erste Zeichen des Objekts `s` wird gelesen &ndash; mit dem Index-Operator `operator[]`.
+Dieser Operator existiert in zwei Überladungen in der Klasse `CowString`:
+
+```cpp
+01: char operator[] (std::size_t pos) const;  // read-only access
+02: char& operator[](std::size_t pos);        // possible write access
+```
+
+Damit ist die Frage zu klären, welche Überladung in Zeile 8 zur Anwendung gelangt?
+Da die Variable `firstChar` vom Typ `char` ist, könnte man geneigt sein zu vermuten, es ist die erste Überladung.
+Nein, diese Annahme ist falsch. Entscheidend zur Beantwortung der Frage ist,
+von welchem Typ das Objekt ist, auf das der Index-Operator angewendet wird.
+Damit sind wir beim Objekt `s` angekommen. Okay, offensichtlich ist dies eine Instanz der Klasse `CowString`,
+aber: Es ist *kein* Modifizierer `const` vorhanden. Damit wird die zweite Überladung aufgerufen!
+Und ja, hier ist auf Grund der Referenz eine Indirektion mit im Spiel, aber die erste Überladung scheidet halt aus,
+da diese in der Signatur den Modifizierer `const` hat.
+
+Die zweite Überladung des Index-Operators `operator[]` ruft implizit `detach()` auf,
+damit wird für das Objekt `s` verspätet intern eine Kopie der Zeichenkette angelegt,
+das Original der Zeichenkette verbleibt im Objekt `other`.
+Dies alles wäre immer noch kein Problem, wenn nicht in Zeile 9 das Objekt `other` aus dem Scope fallen würde.
+Damit verliert die in der Variablen `p` gespeicherte Adresse ihre Gültigkeit,
+und das Programm arbeitet fehlerhaft weiter.
+
+Was ist die Moral dieser Geschichte?
+Wir sollten die Klasse `CowString` auf Grund dieser Nebeneffekte / Stolperfallen nicht in Betracht ziehen?
+Falsch geraten! Wir sollten lernen, dass es nicht schicklich ist, Adressen oder Referenzen von `CowString`-Objekte für einen längeren Zeitraum aufzuheben.
+Die interne Adresse der Zeichenkette eines `CowString`-Objekts hat einen  &bdquo;*non-owning*&rdquo; Charakter,
+das heißt, sie kann zu einem unbestimmten Zeitpunkt im Ablauf des Programms ungültig werden.
+
+*Bemerkung*:<br />
+Welche Änderung müsste man an dem letzten Beispiel vornehmen, so dass es fehlerfrei läuft?
+(Anwort: Qualifizieren Sie das Objekt `s` mit `const`).
+
+Dies alles sind keine neuen Erkenntnisse, sondern Beobachtungen, die wir auch in der STL machen können.
+Sehen Sie hierzu das folgende Beispiel mit einem `std::string`- und einem `std::string_view` Objekt:
+
+```cpp
+01: void pitfall_03()
+02: {
+03:     std::string s{ "Eros parturient vulputate feugiat risus" };
+04:     const char* p{ s.c_str() };
+05: 
+06:     std::string_view sv{ s };
+07:     std::println("sv: {}", sv);
+08: 
+09:     s.append(" ex facilisis molestie tristique fermentum.");
+10: 
+11:     std::println("sv: {}", sv);
+12: }
+```
+
+*Ausgabe*:<br />
+
+```
+sv: Eros parturient vulputate feugiat risus
+sv: ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+```
+
+Das `string_view`-Objekt `sv` speichert &ndash; wie unsere `CowString` Objekte &ndash;
+die Anfangsadresse einer Zeichenkette ab. In unserem Beispiel eine Adresse,
+die in den Instanzvariablen eines `std::string`-Objekts lebt.
+Diese Adresse kann sich allerdings verändern, zum Beispiel dann, wenn in Folge des `append`-Aufrufs an `s`
+der Speicher im `std::string`-Objekt neu organisiert wird!
+Wir haben wieder &ndash; dieses Mal sicherlich etwas zufälliger &ndash; Gemeinsamkeiten im Verhalten
+der beiden Klassen `string_view` und `CowString` entdeckt.
+
+Dies erklärt nebenbei bemerkt, warum ich in dem Beispiel längere Zeichenketten verwenden musste.
+Zu kurze Zeichenketten werden im `string_view`-Objekt selbst aufbewahrt (SSO),
+und beim Anhängen von einer zweiten Zeichenkette musste ich das Ursprungsobjekt dazu bewegen (zwingen),
+intern einen neuen Datenpuffer anzulegen. 
 
 
 ## Fazit / Zusammenfassung
