@@ -6,7 +6,6 @@ https://stackoverflow.com/questions/1649028/how-to-implement-copy-on-write
 
 -->
 
-
 ## &bdquo;Faules&rdquo; Kopieren: Eine Alternative?
 
 Viele Objekte im täglichen &bdquo;C++&rdquo;&ndash;Alltag zeichnen sich dadurch aus,
@@ -33,7 +32,7 @@ Neben einem Vergleich der Performanz zwischen der `std::string`-Klasse aus der S
 kommt auch ein Anwendungsbeispiel zum Zuge.
 
 
-## Allgemeines // Einleitung
+## Einführung
 
 Eine häufige Operation in einem Programm ist das Kopieren von Objekten.
 Ein Objekt steht in objektorientierten Programmiersprachen für einen zusammengesetzten Datentyp.
@@ -154,7 +153,7 @@ bei der &bdquo;*Lazy Copy*&rdquo;-Vorgehensweise ist nicht mehr zu tun!
 
 <img src="copy_on_write_05.svg" width="650">
 
-*Abbildung* 5: Ein `CowString`-Objekt &ndash; mit einer (abhängigen) Kopie.
+*Abbildung* 5: Ein `CowString`-Objekt &ndash; mit einer &ndash; abhängigen &ndash; Kopie.
 
 Wir erkennen in *Abbildung* 5, dass eine Kopie äußerst einfach und vor allem sehr schnell erstellt werden kann.
 Es wird auf dem Stack ein minimales Stellvertreter-Objekt kopiert,
@@ -181,7 +180,7 @@ Sollen jetzt Änderungen am Objekt erfolgen, dann ist &ndash; zu diesem Zeitpunk
 
 <img src="copy_on_write_06.svg" width="650">
 
-*Abbildung* 6: Ein `CowString`-Objekt &ndash; und eine (unabhängige) Kopie.
+*Abbildung* 6: Ein `CowString`-Objekt &ndash; und eine &ndash; unabhängige &ndash; Kopie.
 
 In *Abbildung* 6 sieht man, wie in den beiden `CowString`-Objekten der Referenzzähler angepasst wurde.
 Hatten wir in *Abbildung* 5 noch den Wert 2, so gibt es nun zwei Kontrollblöcke, deren Referenzzähler jeweils den Wert 1 haben.
@@ -438,7 +437,7 @@ wenn wir eine `CowString`-Klasse implementieren.
 
 
 
-## Methoden der `CowString`-Klasse
+## Realisierung der `CowString`-Klasse
 
 Wir gehen jetzt auf die zentralen Methoden der `CowString`-Klasse im Detail ein und beginnen mit dem Kontrolblock.
 
@@ -544,7 +543,7 @@ Allen Konstruktoren ist gemeinsam, dass sie nach der Erzeugung des Kontrollblock
 initialisiert haben. Erstere ist die Anfangsadresse der Zeichenkette, zweitere deren Länge.
 Der Kontrollblock schließlich ist durch die Instanzvariable `m_ptr` erreichbar.
 
-## Kopier- und Verschiebesemantik
+### Kopier- und Verschiebesemantik
 
 Zeichenketten sollten in einem C++&ndash;Programm kopiert als auch verschoben werden können.
 Nicht nur das, in unserem Fall einer Klasse mit &bdquo;*Copy-on-Write*&rdquo;-Semantik sogar auf eine möglichst
@@ -686,7 +685,7 @@ In beiden Methoden wird das Objekt `other` zuerst verschoben.
 Danach wird mit der `Controlblock::create()`-Methode ein valider Kontrollblock erzeugt, der eine leere Zeichenkette verwaltet.
 
 
-## *getter*-Methoden und zeichenweiser Zugriff
+### *getter*-Methoden und zeichenweiser Zugriff
 
 Die drei *getter*-Methoden der `CowString`-Klasse sind schnell vorgestellt:
 
@@ -830,7 +829,6 @@ nicht erkennen können, ob diese Referenz außerhalb der Klasse lesend oder schr
 Wir beobachten eine gravierende Diskrepanz zwischen dem Design von der Klasse `std::string` einerseits
 und Anforderungen an eine Klasse `CowString`, die für Zeichenketten *und* die &bdquo;*Copy-on-Write*&rdquo;-Strategie geeignet ist.
 
-
 Man könnte natürlich &ndash; aus Sicht des &bdquo;*Copy-on-Write*&rdquo;-Idioms &ndash; das Worst-Case Szenario
 des Schreibens zugrunde legen, nur wäre dies ein pessimistischer Ansatz,
 der nicht zu einer praktikablen Realisierung für COW-Klassen führt.
@@ -840,6 +838,150 @@ Zum Beispiel so, dass sich die Mehrzahl der Methoden einen lesenden Zugriff zu e
 
 Schreibende Zugriffe hingegen müssen klar dokumentiert sein, so dass dem Benutzer klar ist,
 dass es hier hinter den Kulissen zu einer tiefen Objektkopie kommt.
+
+## Stolperfallen
+
+Die Strategie des &bdquo;*verspäteten Kopierens*&rdquo; zieht Nebeneffekte nach sich.
+Manche dieser Effekte sind offensichtlich, manch andere weniger.
+Beginnen wir mit einem ersten Beispiel:
+
+```cpp
+01: void pitfall_01()
+02: {
+03:     CowString a{ "Hello" };
+04:     std::println("a: {}", a);
+05: 
+06:     char& ch = a[0];
+07: 
+08:     CowString b{ a };
+09:     std::println("b: {}", b);
+10: 
+11:     ch = '!';
+12: 
+13:     std::println("a: {}", a);
+14:     std::println("b: {}", b);
+15: }
+```
+
+In Zeile 6 erhalten wir in Variable `ch` eine Referenz des ersten Zeichens im `CowString`-Objekt `a`.
+Mit Hilfe der Referenz verändern wir dieses Zeichen im `a`-Objekt.
+Auf das `b` Objekt sollte diese Zuweisung keinen Einfluss haben.
+Wie lautet die Ausgabe des Programms?
+
+```
+a: Hello
+b: Hello
+a: !ello
+b: !ello
+```
+
+Hmmm, das kommt etwas überraschen. Erkennen Sie das Problem oder den Grund für diese möglicherweise unerwartete Ausgabe?
+In Zeile 8 wird eine Kopie des `CowString`-Objekts angelegt, erreichbar über die Variable `b`.
+Es handelt sich um eine *Lazy Copy*! Die Referenzvariable `ch` bezieht sich folglich auf beide Objekte!
+
+Das folgende Beispiel ist etwas komplexer:
+
+```cpp
+01: void pitfall_02()
+02: {
+03:     CowString s{ "1234567890" };
+04:     const char* p{ s.c_str() };
+05: 
+06:     {
+07:         CowString other{ s };
+08:         char firstChar{ s[0] };
+09:     }
+10: 
+11:     std::println("After block:");
+12:     std::println("p: {}", p);
+13: }
+```
+
+In Zeile 3 legen wir ein `CowString`-Objekt an.
+In Zeile 4 holen wir die Anfangsadresse der Zeichenkette ab und heben diese in der Variablen `p` auf.
+In Zeile 12 verwenden wir diese Adresse, um die Zeichen in der Konsole auszugeben.
+Das heißt, wir erwarten in etwa die Ausgabe `1234567890` in der Konsole.
+
+Dem ist leider nicht so:
+
+```
+After block:
+p: ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+```
+
+Damit stellt sich die Frage, welchen Einfluss der innere Block auf das Programm hat?
+Das Anlegen einer Objektkopie sollte kein Problem sein, auch wenn die Strategie des &bdquo;*faulen*&rdquo; Kopierens
+angewendet wird. Was passiert in Zeile 8?
+
+```
+char first_char{ s[0] };
+```
+
+Das erste Zeichen des Objekts `s` wird gelesen &ndash; mit dem Index-Operator `operator[]`.
+Dieser Operator existiert in zwei Überladungen in der Klasse `CowString`:
+
+```cpp
+01: char operator[] (std::size_t pos) const;  // read-only access
+02: char& operator[](std::size_t pos);        // possible write access
+```
+
+Damit ist fie Frage zu klären, welche Überladung in Zeile 8 zur Anwendung gelangt?
+Da die Variable `firstChar` vom Typ `char` ist, könnte man geneigt sein, es ist die erste Überladung.
+Nein, diese Vermutung ist falsch. Entscheidend zur Beantwortung der Frage ist,
+von welchem Typ das Objekt ist, auf das der Index-Operator angewendet wird.
+Damit sind wir beim Objekt `s` angekommen. Okay, offensichtlich ist dies eine Instant der Klasse `CowString`,
+aber: Es ist *kein* Modifizierer `const` vorhanden. Damit wird die zweite Überladung aufgerufen!
+Und ja, hier ist auf Grund der Referenz eine Indirektion mit im Spiel, aber die erste Überladung scheidet eben aus,
+da diese in der Signatur `const` hat.
+
+Die zweite Überladung des Index-Operators `operator[]` ruft implizit `detach()` auf,
+damit wird für das Objekt `s` verspätet intern eine Kopie der Zeichenkette angelegt,
+das Original der Zeichenkette verbleibt im Objekt `other`.
+Dies alles wäre immer noch kein Problem, wenn nicht in Zeile 9 das Objekt `other` aus dem Scope fallen würde.
+Damit verliert die in der Variablen `p` gespeicherte Adresse ihre Gültigkeit,
+und das Programm arbeitet fehlerhaft weiter.
+
+Was ist die Moral dieser Geschichte?
+Wir wollen die Klasse `CowString` auf Grund dieser Nebeneffekte / Stolperfallen nicht einsetzen?
+Falsch geraten! Wir sollten lernen, dass es nicht schicklich ist, Adressen oder Referenzen von `CowString`-Objekte für einen längeren Zeitraum aufzuheben.
+Die intere Adresse der Zeichenkette eines `CowString`-Objekts hat einen  &bdquo;*non-owning*&rdquo; Charakter,
+dass heißt, sie kann ungültig werden.
+
+*Bemerkung*:<br />
+Welche Änderung müsste man an dem letzten Beispiel vornehmen, so dass es fehlerfrei läuft?
+(Anwort: Qualifizieren Sie das Objekt `s` mit `const`!)
+
+Das sind keine neuen Erkenntnisse, sondern Beobachtungen, die wir auch in der STL machen können.
+Sehen Sie hierzu das folgende Beispiel mit einem `std::string`- und einem `std::string_view` Objekt an:
+
+```cpp
+01: void pitfall_03()
+02: {
+03:     std::string s{ "Eros parturient vulputate feugiat risus" };
+04:     const char* p{ s.c_str() };
+05: 
+06:     std::string_view sv{ s };
+07:     std::println("sv: {}", sv);
+08: 
+09:     s.append(" ex facilisis molestie tristique fermentum.");
+10: 
+11:     std::println("sv: {}", sv);
+12: }
+```
+
+*Ausgabe*:<br />
+
+```
+sv: Eros parturient vulputate feugiat risus
+sv: ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+```
+
+Das `string_view`-Objekt `sv` speichert &ndash; wir unsere `CowString` Objekte &ndash;
+die Anfangsadresse einer Zeichenkette ab. In unserem Beispiel eine Adresse,
+die in den Instanzvariablen eines `std::string`-Objekts lebt.
+Diese Adresse kann sich allerdings verändern, zum Beispiel dann, wenn in Folge des `append`-Aufrufs an `s`
+der Speicher im `std::string`-Objekt neu organisiert wird!
+
 
 
 ## Anwendungsbeispiel: Häufigste in einer Textdatei auftretende Zeichenkette
@@ -1186,5 +1328,14 @@ In den WikiBooks findet man [hier](https://en.wikibooks.org/wiki/More_C%2B%2B_Id
 Die Realisierung der öffentlichen Schnittstelle der `CowString`-Klasse ist in dieser Fallstudie recht knapp ausgefallen.
 Eine umfangreichere Realisierung einer &bdquo;*Copy-On-Write*&rdquo;-kompatiblen Klasse für Zeichenketten findet sich
 [hier](https://github.com/allenvox/string-cow).
+
+
+Wir auf die &bdquo;*Lorem Ipsum*&rdquo; generieren möchte,
+findet [hier](https://www.lipsum.com) einen Online Generator.
+Man muss nur die Anzahl der gewünschten Wörter eingeben, und schon kann
+man den Text herunterladen.
+
+
+
 
 <!-- End-of-File -->

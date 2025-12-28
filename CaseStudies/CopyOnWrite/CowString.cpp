@@ -113,36 +113,6 @@ namespace COWString
     static void test_cow_string_09()
     {
         CowString s{ "1234567890" };
-        const char* p{ s.c_str() };
-
-        {
-            // in this block the contents of `s` is not modified
-            CowString other{ s };
-            char first_char{ s[0] };
-        }
-
-        std::println("After block:");
-        std::println("p: {}", p);      // p is no more valid!
-    }
-
-    static void test_cow_string_10()
-    {
-        CowString s{ "1234567890" };
-        const char* p{ s.c_str() };
-
-        //{
-            // in this block the contents of `s` is not modified
-            CowString other{ s };
-            char first_char{ s[0] };
-        //}
-
-        std::println("After block:");
-        std::println("p: {}", p);      // p is no more valid!
-    }
-
-    static void test_cow_string_11()
-    {
-        CowString s{ "1234567890" };
 
         std::string_view sv{ s };
         std::println("sv: {}", sv);
@@ -154,41 +124,41 @@ namespace COWString
         std::println("sv1: {}", sv1);
     }
 
+    static void test_cow_string_10()
+    {
+        // testing move semantics
+        CowString s1{ "1234567890" };
+        std::string_view sv1{ s1 };
+        std::println("sv: {}", sv1);
+
+        CowString s2{ std::move(s1) };
+        std::string_view sv2{ s2 };
+        std::println("sv: {}", sv2);
+
+        CowString s3{};
+        s3 = std::move(s2);
+        std::string_view sv3{ s3 };
+        std::println("sv: {}", sv3);
+    }
+
+    static void test_cow_string_11()
+    {
+        // testing move semantics
+        CowString s1{ "1234567890" };
+        std::string_view sv1{ s1 };
+        std::println("sv: {}", sv1);
+
+        CowString s2{ std::move(s1) };
+        std::string_view sv2{ s2 };
+        std::println("sv: {}", sv2);
+
+        CowString s3{};
+        s3 = std::move(s2);
+        std::string_view sv3{ s3 };
+        std::println("sv: {}", sv3);
+    }
+
     static void test_cow_string_12()
-    {
-        // testing move semantics
-        CowString s1{ "1234567890" };
-        std::string_view sv1{ s1 };
-        std::println("sv: {}", sv1);
-
-        CowString s2{ std::move(s1) };
-        std::string_view sv2{ s2 };
-        std::println("sv: {}", sv2);
-
-        CowString s3{};
-        s3 = std::move(s2);
-        std::string_view sv3{ s3 };
-        std::println("sv: {}", sv3);
-    }
-
-    static void test_cow_string_13()
-    {
-        // testing move semantics
-        CowString s1{ "1234567890" };
-        std::string_view sv1{ s1 };
-        std::println("sv: {}", sv1);
-
-        CowString s2{ std::move(s1) };
-        std::string_view sv2{ s2 };
-        std::println("sv: {}", sv2);
-
-        CowString s3{};
-        s3 = std::move(s2);
-        std::string_view sv3{ s3 };
-        std::println("sv: {}", sv3);
-    }
-
-    static void test_cow_string_14()
     {
         std::vector<CowString> vec;
 
@@ -202,7 +172,8 @@ namespace COWString
         }
     }
 
-    static void test_cow_string_15()
+    // pitfalls
+    static void test_cow_string_20()
     {
         CowString a{ "Hello" };
         std::println("a: {}", a);
@@ -217,6 +188,46 @@ namespace COWString
         std::println("a: {}", a);
         std::println("b: {}", b);
     }
+
+    static void test_cow_string_21()
+    {
+        /*const*/ CowString s{ "1234567890" };
+        const char* p{ s.c_str() };
+
+        {
+            // in this block the contents of `s` is not modified
+            CowString other{ s };
+            char firstChar{ s[0] };
+        }
+
+        std::println("After block:");
+        std::println("p: {}", p);      // p is no more valid!
+    }
+
+    static void test_cow_string_22()
+    {
+        CowString s{ "1234567890" };
+        const char* p{ s.c_str() };
+
+        CowString other{ s };
+        char first_char{ s[0] };
+
+        std::println("After block:");
+        std::println("p: {}", p);
+    }
+
+    static void test_cow_string_23()
+    {
+        std::string s{ "Eros parturient vulputate feugiat risus" };
+        const char* p{ s.c_str() };
+
+        std::string_view sv{ s };
+        std::println("sv: {}", sv);
+
+        s.append(" ex facilisis molestie tristique fermentum.");
+
+        std::println("sv: {}", sv);
+    }
 }
 
 void main_cow_string()
@@ -225,29 +236,26 @@ void main_cow_string()
 
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     
-    std::println("Testing CowString:");
+    //test_cow_string_01();
+    //test_cow_string_02();
+    //test_cow_string_03();
+    //test_cow_string_04();
+    //test_cow_string_05();
+    //test_cow_string_06();
+    //test_cow_string_07();
+    //test_cow_string_08();
+    //test_cow_string_09();
+    //test_cow_string_10(); 
+    //test_cow_string_11();
+    //test_cow_string_12();
 
-   // test_cow_string_01();
-   // test_cow_string_02();
-   // test_cow_string_03();
-   // test_cow_string_04();
-   // test_cow_string_05();
-   // test_cow_string_06();
-   // test_cow_string_07();
-   // test_cow_string_08();
-   // test_cow_string_09();
-   //// test_cow_string_10();   // crashes - by design
-   // // test_cow_string_11();
-   // test_cow_string_12();
-   // test_cow_string_13();
-   // test_cow_string_14();
+    //test_cow_string_20();    
+    //test_cow_string_21();     // fails - by design
+    //test_cow_string_22();
 
-    test_cow_string_15();
+    test_cow_string_23();
 }
 
 // =====================================================================================
 // End-of-File
 // =====================================================================================
-
-
-
