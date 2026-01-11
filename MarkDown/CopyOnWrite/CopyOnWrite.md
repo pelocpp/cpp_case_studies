@@ -75,7 +75,7 @@ Kopie zu erstellen.
 
 ###### {#abbildung_1_two_data_objects}
 
-{{< figure src="/img/copyonwrite/copy_on_write_01.svg" width="80%" >}}
+{{< figure src="/img/cowstring/copy_on_write_01.svg" width="80%" >}}
 
 *Abbildung* 1: Zwei Objekte des Typs `Data`: Ein Original und seine Kopie.
 
@@ -95,7 +95,7 @@ Dies ist in den allermeisten Fällen so nicht gewünscht, siehe auch [Abbildung 
 
 ###### {#abbildung_2_two_data_objects_with_weaknesses}
 
-{{< figure src="/img/copyonwrite/copy_on_write_02.svg" width="80%" >}}
+{{< figure src="/img/cowstring/copy_on_write_02.svg" width="80%" >}}
 
 *Abbildung* 2: Zwei Objekte des Typs `Data`: Ein Original und eine Kopie &ndash; mit Schwachstellen.
 
@@ -106,7 +106,7 @@ Diese kopiert alle Instanzvariablen und erstellt zusätzlich Kopien des dynamisc
 
 ###### {#abbildung_3_two_data_objects_correct_copy}
 
-{{< figure src="/img/copyonwrite/copy_on_write_03.svg" width="80%" >}}
+{{< figure src="/img/cowstring/copy_on_write_03.svg" width="80%" >}}
 
 *Abbildung* 3: Zwei Objekte des Typs `Data`: Ein Original und eine korrekte Kopie.
 
@@ -143,7 +143,7 @@ die wir in Gestalt eines so genannten &bdquo;*Kontrollblocks*&rdquo; (*Controlbl
 
 ###### {#abbildung_4_cow_string_with_controlblock}
 
-{{< figure src="/img/copyonwrite/copy_on_write_04.svg" width="80%" >}}
+{{< figure src="/img/cowstring/copy_on_write_04.svg" width="80%" >}}
 
 *Abbildung* 4: Ein `CowString`-Objekt mit einem *Kontrollblock*.
 
@@ -174,7 +174,7 @@ bei der &bdquo;*Lazy Copy*&rdquo;-Vorgehensweise ist nicht mehr zu tun!
 
 ###### {#abbildung_5_cowstring_object_with_dependent_copy}
 
-{{< figure src="/img/copyonwrite/copy_on_write_05.svg" width="80%" >}}
+{{< figure src="/img/cowstring/copy_on_write_05.svg" width="80%" >}}
 
 *Abbildung* 5: Ein `CowString`-Objekt &ndash; mit einer &ndash; abhängigen &ndash; Kopie.
 
@@ -202,7 +202,7 @@ Sollen jetzt Änderungen am Objekt erfolgen, dann ist &ndash; zu diesem Zeitpunk
 
 ###### {#abbildung_6_cowstring_object_with_independent_copy}
 
-{{< figure src="/img/copyonwrite/copy_on_write_06.svg" width="80%" >}}
+{{< figure src="/img/cowstring/copy_on_write_06.svg" width="80%" >}}
 
 *Abbildung* 6: Ein `CowString`-Objekt &ndash; und eine &ndash; unabhängige &ndash; Kopie.
 
@@ -1329,12 +1329,11 @@ intern einen neuen Datenpuffer anzulegen.
 
 ## Zusammenfassung
 
-Die &bdquo;*Lazy Copy*&rdquo;- / &bdquo;*Copy-On-Write*&rdquo;-Kopierstrategie bedeutet,
+Die &bdquo;*Lazy Copy*&rdquo;-/&bdquo;*Copy-On-Write*&rdquo;-Kopierstrategie bedeutet,
 dass beim Kopieren eines Objekts &bdquo;unter der Haube&rdquo; nur eine Adresse
 auf die schon vorhandenen Daten des Objekts weitergereicht wird.
 Auf diese Weise entsteht für den Benutzer eines Objekts die Illusion,
 dass es sich um zwei unabhängige Instanzen des Objekts handelt.
-
 Eine echte und tiefe Kopie der eigentlichen Daten wird erst dann durchgeführt, wenn es sich nicht mehr vermeiden lässt,
 zum Beispiel dann, wenn an einer Instanz Werte geändert werden.
 
@@ -1344,14 +1343,14 @@ keine separate Kopie notwendig ist und so Laufzeit eingespart werden kann.
 
 Wir sollten zum Abschluss die Fragestellung aus dem Titel
 &bdquo;*Faules* Kopieren: Eine Alternative?&rdquo; beantworten:
-Ja, sie sind sehr wohl eine Überlegung wert! Natürlich kommt es auf den Charakter der Anwendung an,
+Ja, sie ist sehr wohl eine Überlegung wert! Natürlich kommt es auf den Charakter der Anwendung an,
 die Zeichenketten verarbeitet. COW-Zeichenketten eignen sich hervorragend, wenn
 
   * viele Kopien erstellt werden,
   * wenige Änderungen vorgenommen werden oder
   * eine effiziente Speichernutzung gewünscht ist.
 
-Im Umkehrschluss kann man nun folgern, dass COW-Zeichenketten weniger geeignet sind, wenn
+Im Umkehrschluss kann man folgern, dass COW-Zeichenketten weniger geeignet sind, wenn
 häufige Änderungen an den Zeichenketten vorgenommen werden müssen.
 Aber dies ist eine Frage, die jeder Entwickler vorab beantworten kann, wenn es um den Entwurf eines Programms geht.
 
@@ -1360,12 +1359,12 @@ Aber dies ist eine Frage, die jeder Entwickler vorab beantworten kann, wenn es u
 
 Zum Testen unserer `CowString`-Klasse haben wir die Häufigkeit von
 in einer Textdatei auftretenden Zeichenketten ermittelt.
-
 Eine ähnlich gelagerte Fragestellung ist die Suche nach den 10 am häufigsten auftretenden Zeichenketten.
+
 Hierzu könnte man die Klasse `std::priority_queue` ins Spiel bringen, die Klasse `std::unordered_map` wurde ja aus dem Grunde gewählt,
 einen STL Container zu verwenden, dessen Einträge in nicht sortierter Form vorliegen.
 
-Ergänzen Sie die Klasse `TextfileStatistics` um eine zweite Funktion `computeMostFrequentWords`,
+Ergänzen Sie die Klasse `TextfileStatistics` um eine zweite Methode `computeMostFrequentWords`,
 die die 10 am häufigsten auftretenden Zeichenketten in einer Textdatei bestimmt.
 
 <br/>
