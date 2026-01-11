@@ -4,10 +4,12 @@
 
 #pragma once
 
+#include "framework.h"
+
 #include <vector>
 #include <array>
 
-#include "framework.h"
+// =====================================================================================
 
 class MandelbrotPalette
 {

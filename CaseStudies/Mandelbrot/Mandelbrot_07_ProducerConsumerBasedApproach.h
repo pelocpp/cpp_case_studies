@@ -8,14 +8,15 @@
 #include "MandelbrotBase.h"
 #include "Pixel.h"
 
-#include <mutex>
-//#include <atomic>
-#include <latch>
+#include <chrono>
+#include <condition_variable>
+#include <cstddef>                 // std::size_t
 #include <deque>
+#include <future>
+#include <latch>
+#include <mutex>
 #include <queue>
 #include <stack>
-#include <future>
-#include <condition_variable>
 #include <stop_token>
 
 // TO BE DONE: Welcher Container hat die schnellsten insert am Begin // entfernen am Ende
@@ -28,13 +29,13 @@ private:
     HWND                                           m_hWnd;
 
     // handling of miscellaneous packaged tasks (computation and drawing)
-    using ComputationTaskSignature = std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>;
-    using DrawingTaskSignature = std::packaged_task<size_t(std::stop_token)>;
+    using ComputationTaskSignature = std::packaged_task<std::size_t(std::stop_token, struct Rectangle, std::size_t, std::size_t)>;
+    using DrawingTaskSignature = std::packaged_task<std::size_t(std::stop_token)>;
 
     std::deque<ComputationTaskSignature>           m_calculationTasks;
     DrawingTaskSignature                           m_drawingTask;
-    std::deque<std::future<size_t>>                m_calculationFutures;
-    std::future<size_t>                            m_drawingFuture;
+    std::deque<std::future<std::size_t>>           m_calculationFutures;
+    std::future<std::size_t>                       m_drawingFuture;
 
     // concurrency data to secure "Producer-Consumer" implementation
     mutable std::mutex                             m_mutexPixelsQueue;
@@ -48,7 +49,7 @@ private:
 
     // count number of rectangles being calculated
     mutable std::mutex                             m_mutexRectanglesCalculated;
-    size_t                                         m_numRectanglesCalculated;
+    std::size_t                                         m_numRectanglesCalculated;
     bool                                           m_calculationsDone;
 
     // watching a single thread drawing pixels
@@ -81,12 +82,12 @@ private:
     void waitAllThreadsDone();
 
     void addPixel(const Pixel& pixel);
-    size_t computePixelsOfRectangle(std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight);
-    size_t drawQueuedPixels(std::stop_token token);
+    std::size_t computePixelsOfRectangle(std::stop_token token, struct Rectangle rect, std::size_t maxWidth, std::size_t maxHeight);
+    std::size_t drawQueuedPixels(std::stop_token token);
     // void notify();
 
 private:
-   virtual void drawPixel(HDC, size_t, size_t, COLORREF) const override;
+   virtual void drawPixel(HDC, std::size_t, std::size_t, COLORREF) const override;
 };
 
 // =====================================================================================

@@ -26,11 +26,10 @@ void MandelbrotRectanglesSequential::paintRectangles(HDC hDC) const {
     }
 }
 
-void MandelbrotRectanglesSequential::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
+void MandelbrotRectanglesSequential::drawPixel(HDC hdc, std::size_t x, std::size_t y, COLORREF color) const
 {
     ::SetPixelV(hdc, (int) x, (int) y, color);
 }
-
 
 // =====================================================================================
 // End-of-File

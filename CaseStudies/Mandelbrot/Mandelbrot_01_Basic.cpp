@@ -15,7 +15,7 @@ extern MandelbrotPalette g_palette;
 // c'tor(s)
 MandelbrotBasic::MandelbrotBasic() {}
 
-void MandelbrotBasic::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
+void MandelbrotBasic::drawPixel(HDC hdc, std::size_t x, std::size_t y, COLORREF color) const
 {
     ::SetPixelV(hdc, (int) x, (int) y, color);
 }

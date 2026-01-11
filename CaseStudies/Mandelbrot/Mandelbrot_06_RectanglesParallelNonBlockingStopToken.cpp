@@ -37,7 +37,7 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::startPaintingRectanglesAs
         m_tasks.begin(),
         m_tasks.end(),
         [this] () {
-            return std::packaged_task<size_t(std::stop_token, HWND, HDC, struct Rectangle)> {
+            return std::packaged_task<std::size_t(std::stop_token, HWND, HDC, struct Rectangle)> {
                 [this](std::stop_token token, HWND hWnd, HDC hDC, struct Rectangle rect) {
                     return paintRectangle(token, hWnd, hDC, rect);
                 }
@@ -52,7 +52,7 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::startPaintingRectanglesAs
         m_tasks.begin(),
         m_tasks.end(),
         m_futures.begin(),
-        [](std::packaged_task<size_t(std::stop_token, HWND, HDC, struct Rectangle)>& task) {
+        [](std::packaged_task<std::size_t(std::stop_token, HWND, HDC, struct Rectangle)>& task) {
             return task.get_future();
         }
     );
@@ -81,9 +81,9 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::waitRectanglesDone() {
 
     while (!m_futures.empty()) {
 
-        std::future<size_t> future{ std::move(m_futures.front()) };
+        std::future<std::size_t> future{ std::move(m_futures.front()) };
         m_futures.pop_front();
-        size_t numPixels = future.get();
+        std::size_t numPixels = future.get();
 
         // print some statistics
         WCHAR szText[64];
@@ -93,14 +93,14 @@ void MandelbrotRectanglesParallelNonBlockingStopToken::waitRectanglesDone() {
 }
 
 // private helper functions
-size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::stop_token token, HWND hWnd, HDC hDC, struct Rectangle rect) {
+std::size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::stop_token token, HWND hWnd, HDC hDC, struct Rectangle rect) {
 
-    size_t numPixels{};
+    std::size_t numPixels{};
     bool prematureEndOfPainting{ false };
 
-    for (size_t y{ rect.m_top }; y != rect.m_bottom; y++)
+    for (std::size_t y{ rect.m_top }; y != rect.m_bottom; y++)
     {
-        for (size_t x{ rect.m_left }; x != rect.m_right; x++)
+        for (std::size_t x{ rect.m_left }; x != rect.m_right; x++)
         {
             // premature end of drawing
             if (token.stop_requested()) {
@@ -112,7 +112,7 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::sto
                 getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight)
             };
 
-            size_t iterations{ computeSequence(number) };
+            std::size_t iterations{ computeSequence(number) };
             COLORREF color{ g_palette[iterations - 1] };
             ++numPixels;
 
@@ -138,7 +138,7 @@ size_t MandelbrotRectanglesParallelNonBlockingStopToken::paintRectangle(std::sto
     return numPixels;
 }
 
-void MandelbrotRectanglesParallelNonBlockingStopToken::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
+void MandelbrotRectanglesParallelNonBlockingStopToken::drawPixel(HDC hdc, std::size_t x, std::size_t y, COLORREF color) const
 {
     // RAII lock
     std::lock_guard<std::mutex> guard{ m_mutex };

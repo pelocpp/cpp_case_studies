@@ -33,7 +33,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingClassic(HWND hWnd
         ::ValidateRect(hWnd, NULL);
 
         // cancel all drawing threads, if existing
-        size_t doneRectangles{ mandelbrot.getDoneRectangles() };
+        std::size_t doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
             ::OutputDebugString(L"> Requesting Abort ...\n");
@@ -60,7 +60,7 @@ LRESULT CALLBACK MandelbrotWndProcRectanglesParallelNonBlockingClassic(HWND hWnd
         ::OutputDebugString(L"> WM_DESTROY\n");
 
         // cancel all drawing threads, if existing
-        size_t doneRectangles{ mandelbrot.getDoneRectangles() };
+        std::size_t doneRectangles{ mandelbrot.getDoneRectangles() };
         if (doneRectangles < MandelbrotRectangles::NUM_RECTS) {
 
             mandelbrot.setAbort(true);

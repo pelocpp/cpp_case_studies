@@ -22,14 +22,14 @@ MandelbrotRectanglesParallelBlocking::MandelbrotRectanglesParallelBlocking() {}
 void MandelbrotRectanglesParallelBlocking::paintRectanglesAsync (HDC hDC) const {
 
     // setup tasks
-    std::deque<std::packaged_task<std::pair<std::wstring, size_t>(HDC, struct Rectangle)>> tasks;
+    std::deque<std::packaged_task<std::pair<std::wstring, std::size_t>(HDC, struct Rectangle)>> tasks;
     tasks.resize(MandelbrotRectangles::NUM_RECTS);
 
     std::generate(
         tasks.begin(),
         tasks.end(),
         [this] () {
-            return std::packaged_task<std::pair<std::wstring, size_t>(HDC, struct Rectangle)> {
+            return std::packaged_task<std::pair<std::wstring, std::size_t>(HDC, struct Rectangle)> {
                 [this](HDC hDC, struct Rectangle rect) {
                     return paintRectangle(hDC, rect);
                 }
@@ -38,14 +38,14 @@ void MandelbrotRectanglesParallelBlocking::paintRectanglesAsync (HDC hDC) const 
     );
 
     // retrieve futures from these tasks
-    std::deque<std::future<std::pair<std::wstring, size_t>>> futures;
+    std::deque<std::future<std::pair<std::wstring, std::size_t>>> futures;
     futures.resize(MandelbrotRectangles::NUM_RECTS);
 
     std::transform(
         tasks.begin(),
         tasks.end(),
         futures.begin(),
-        [](std::packaged_task<std::pair<std::wstring, size_t>(HDC, struct Rectangle)>& task) {
+        [](std::packaged_task<std::pair<std::wstring, std::size_t>(HDC, struct Rectangle)>& task) {
             return task.get_future();
         }
     );
@@ -78,7 +78,7 @@ void MandelbrotRectanglesParallelBlocking::paintRectanglesAsync (HDC hDC) const 
 }
 
 
-void MandelbrotRectanglesParallelBlocking::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
+void MandelbrotRectanglesParallelBlocking::drawPixel(HDC hdc, std::size_t x, std::size_t y, COLORREF color) const
 {
     // RAII lock
     std::lock_guard<std::mutex> guard{ m_mutex };

@@ -10,6 +10,8 @@
 #include "MandelbrotCommon.h"
 #include "MandelbrotPalette.h"
 
+// =====================================================================================
+
 class MandelbrotBase
 {
 public:

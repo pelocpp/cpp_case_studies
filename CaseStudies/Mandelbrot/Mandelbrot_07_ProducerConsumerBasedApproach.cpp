@@ -38,7 +38,7 @@ void MandelbrotProducerConsumerBasedApproach::setHWND(HWND hWnd)
 
 void MandelbrotProducerConsumerBasedApproach::addPixel(const Pixel& pixel)
 {
-    size_t currentSize{};
+    std::size_t currentSize{};
 
     {
         std::lock_guard<std::mutex> guard{ m_mutexPixelsQueue };
@@ -51,15 +51,15 @@ void MandelbrotProducerConsumerBasedApproach::addPixel(const Pixel& pixel)
     }
 }
 
-size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle (std::stop_token token, struct Rectangle rect, size_t maxWidth, size_t maxHeight) {
+std::size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle (std::stop_token token, struct Rectangle rect, std::size_t maxWidth, std::size_t maxHeight) {
 
     ::OutputDebugString(L"> computePixelsOfRectangle\n");
 
-    size_t numPixels{};
+    std::size_t numPixels{};
 
-    for (size_t y{ rect.m_top }; y != rect.m_bottom; y++)
+    for (std::size_t y{ rect.m_top }; y != rect.m_bottom; y++)
     {
-        for (size_t x{ rect.m_left }; x != rect.m_right; x++)
+        for (std::size_t x{ rect.m_left }; x != rect.m_right; x++)
         {
             // premature end of drawing
             if (token.stop_requested()) {
@@ -70,7 +70,7 @@ size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle (std::s
                 getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight) 
             };
 
-            size_t iterations{ computeSequence(comp) };
+            std::size_t iterations{ computeSequence(comp) };
             COLORREF color{ g_palette[iterations - 1] };
 
             // enter pixel into queue (queue is thread safe)
@@ -110,12 +110,12 @@ loopEnd:
     return numPixels;
 }
 
-size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token token) {
+std::size_t MandelbrotProducerConsumerBasedApproach::drawQueuedPixels(std::stop_token token) {
 
     ::OutputDebugString(L"> drawQueuedPixels\n");
 
     WCHAR szText[128];
-    size_t numPixels{};
+    std::size_t numPixels{};
     std::deque<Pixel> pixels;
 
     // retrieve a handle to a device context for the client area of a specified window 
@@ -191,7 +191,7 @@ loopEnd:
     return numPixels;
 }
 
-void MandelbrotProducerConsumerBasedApproach::drawPixel(HDC hdc, size_t x, size_t y, COLORREF color) const
+void MandelbrotProducerConsumerBasedApproach::drawPixel(HDC hdc, std::size_t x, std::size_t y, COLORREF color) const
 {
     ::SetPixelV(hdc, (int) x, (int) y, color);
 }
@@ -212,8 +212,8 @@ void MandelbrotProducerConsumerBasedApproach::prepareCalculationThreads(int rows
         m_calculationTasks.begin(),
         m_calculationTasks.end(),
         [this] () {
-            return std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)> {
-                [this](std::stop_token token, struct Rectangle rect, size_t width, size_t height) {
+            return std::packaged_task<std::size_t(std::stop_token, struct Rectangle, std::size_t, std::size_t)> {
+                [this](std::stop_token token, struct Rectangle rect, std::size_t width, std::size_t height) {
                     return computePixelsOfRectangle(token, rect, width, height);
                 }
             };
@@ -228,7 +228,7 @@ void MandelbrotProducerConsumerBasedApproach::prepareCalculationThreads(int rows
         m_calculationTasks.begin(),
         m_calculationTasks.end(),
         m_calculationFutures.begin(),
-        [](std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)>& task) {
+        [](std::packaged_task<std::size_t(std::stop_token, struct Rectangle, std::size_t, std::size_t)>& task) {
             return task.get_future();
         }
     );
@@ -236,7 +236,7 @@ void MandelbrotProducerConsumerBasedApproach::prepareCalculationThreads(int rows
 
 void MandelbrotProducerConsumerBasedApproach::prepareDrawingThread() {
 
-    std::packaged_task <size_t(std::stop_token)> task{
+    std::packaged_task <std::size_t(std::stop_token)> task{
         [this] (std::stop_token token) { return drawQueuedPixels(token); }
     };
 
@@ -285,7 +285,7 @@ void MandelbrotProducerConsumerBasedApproach::launchCalculationThreads(std::stop
     {
         for (const auto& rect : row) {
 
-            std::packaged_task<size_t(std::stop_token, struct Rectangle, size_t, size_t)> task {
+            std::packaged_task<std::size_t(std::stop_token, struct Rectangle, std::size_t, std::size_t)> task {
                 std::move(m_calculationTasks.front())
             };
 
@@ -332,7 +332,7 @@ void MandelbrotProducerConsumerBasedApproach::requestStop()
 void MandelbrotProducerConsumerBasedApproach::waitAllThreadsDone()
 {
     WCHAR szText[64];
-    size_t numPixels{};
+    std::size_t numPixels{};
 
     // print some statistics
     ::OutputDebugString(L"> waitAllThreadsDone\n");
@@ -344,7 +344,7 @@ void MandelbrotProducerConsumerBasedApproach::waitAllThreadsDone()
 
         ::OutputDebugString(L"| waiting end of calculation thread ...\n");
 
-        std::future<size_t> future{ std::move(m_calculationFutures.front()) };
+        std::future<std::size_t> future{ std::move(m_calculationFutures.front()) };
         m_calculationFutures.pop_front();
 
         // wait for end of a calculation thread

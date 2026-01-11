@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <cstddef>                               // std::size_t
+
 // =====================================================================================
 
 enum class MandelbrotVersion
@@ -71,24 +73,24 @@ struct MandelbrotParams
 
 struct Rectangle
 {
-    size_t m_left;
-    size_t m_top;
-    size_t m_right;
-    size_t m_bottom;
+    std::size_t m_left;
+    std::size_t m_top;
+    std::size_t m_right;
+    std::size_t m_bottom;
 };
 
 struct MandelbrotRectangles
 {
-    static constexpr size_t NUM_ROWS { 6 };
-    static constexpr size_t NUM_COLS { 6 };
+    static constexpr std::size_t NUM_ROWS { 6 };
+    static constexpr std::size_t NUM_COLS { 6 };
 
-    static constexpr size_t NUM_RECTS{ (NUM_ROWS * NUM_COLS) };
+    static constexpr std::size_t NUM_RECTS{ (NUM_ROWS * NUM_COLS) };
 };
 
 struct MandelbrotWindowDimension
 {
-    static constexpr size_t WindowHeight{ 2 * 200 };
-    static constexpr size_t WindowWidth{ 2 * 250 };
+    static constexpr std::size_t WindowHeight{ 2 * 200 };
+    static constexpr std::size_t WindowWidth{ 2 * 250 };
 };
 
 // =====================================================================================
