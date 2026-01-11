@@ -9,9 +9,6 @@
 
 #include <complex>
 
-// TODO: Hmmm, das muss global irgendwo anders hin ....
-extern MandelbrotPalette g_palette;
-
 // c'tor(s)
 MandelbrotRectanglesSequential::MandelbrotRectanglesSequential() {}
 

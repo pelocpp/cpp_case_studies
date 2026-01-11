@@ -13,9 +13,6 @@
 #include <algorithm>
 #include <latch>
 
-// TODO: Hmmm, das muss global irgendwo anders hin ....
-extern MandelbrotPalette g_palette;
-
 // c'tor(s)
 MandelbrotRectanglesParallelBlockingUsingLatch::MandelbrotRectanglesParallelBlockingUsingLatch() {}
 

@@ -71,19 +71,19 @@ protected:
         };
     }
 
-    template <typename T>
-    size_t computeSequence(std::complex<T> point) const
-    {
-        std::complex<T> number{};
-        size_t count{};
+    //template <typename T>
+    //size_t computeSequence(std::complex<T> point) const
+    //{
+    //    std::complex<T> number{};
+    //    size_t count{};
 
-        while (count != MandelbrotPalette::NumColors && (T) std::abs(number) < MandelbrotPalette::Limit) {
-            number = number * number + point;
-            ++count;
-        }
+    //    while (count != MandelbrotPalette::NumColors && (T) std::abs(number) < MandelbrotPalette::Limit) {
+    //        number = number * number + point;
+    //        ++count;
+    //    }
 
-        return count;
-    }
+    //    return count;
+    //}
 };
 
 // =====================================================================================

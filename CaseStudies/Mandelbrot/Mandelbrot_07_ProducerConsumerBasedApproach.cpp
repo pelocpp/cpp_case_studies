@@ -70,7 +70,7 @@ std::size_t MandelbrotProducerConsumerBasedApproach::computePixelsOfRectangle (s
                 getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight) 
             };
 
-            std::size_t iterations{ computeSequence(comp) };
+            std::size_t iterations{ g_palette.computeSequence(comp) };
             COLORREF color{ g_palette[iterations - 1] };
 
             // enter pixel into queue (queue is thread safe)

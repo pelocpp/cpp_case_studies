@@ -10,10 +10,6 @@
 #include <thread>
 #include <mutex>
 
-// TODO: Hmmm, das muss global irgendwo anders hin ....
-extern MandelbrotPalette g_palette;
-
-
 MandelbrotBase::MandelbrotBase() :
     m_clientWidth{}, m_clientHeight{}, m_rects{}
 {}
@@ -50,7 +46,7 @@ std::pair<std::wstring, std::size_t> MandelbrotBase::paintRectangle(HDC hDC) con
 
 std::pair<std::wstring, std::size_t> MandelbrotBase::paintRectangle(HDC hdc, struct Rectangle rect) const
 {
-    std::jthread::id tid{ std::this_thread::get_id() };
+    std::thread::id tid{ std::this_thread::get_id() };
 
     std::size_t numPixels{};
 
@@ -62,7 +58,7 @@ std::pair<std::wstring, std::size_t> MandelbrotBase::paintRectangle(HDC hdc, str
                 getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight)
             };
 
-            std::size_t iterations{ computeSequence(comp) };
+            std::size_t iterations{ g_palette.computeSequence(comp) };
             COLORREF color{ g_palette[iterations - 1] };
 
             // draw pixel - either directly or thread safe

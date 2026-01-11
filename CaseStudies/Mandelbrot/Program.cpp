@@ -102,16 +102,16 @@ constexpr MandelbrotVersion version{ getVersion() };
 
 // =====================================================================================
 
-
-// TODO: Hmmm, das muss global irgendwo anders hin ....
+// global Variables
 MandelbrotPalette g_palette{};
-// MandelbrotPalette100 g_palette{};
+MandelbrotPalette100 g_palette100{};
 
 // =====================================================================================
 
-#define MAX_LOADSTRING 256
+// global Windows specific Variables:
+//#define MAX_LOADSTRING 256
+constexpr auto MAX_LOADSTRING{ 256 };
 
-// global Variables:
 HINSTANCE hInst;                        // current instance
 WCHAR szTitle[MAX_LOADSTRING];          // title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];    // the main window class name
@@ -160,7 +160,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    WNDCLASSEXW wcex;
+    WNDCLASSEXW wcex{};
 
     wcex.cbSize = sizeof(WNDCLASSEX);
 

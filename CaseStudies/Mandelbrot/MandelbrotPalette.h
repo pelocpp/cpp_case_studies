@@ -6,8 +6,9 @@
 
 #include "framework.h"
 
-#include <vector>
 #include <array>
+#include <complex>
+#include <vector>
 
 // =====================================================================================
 
@@ -30,6 +31,20 @@ public:
 //private:
 public:
     void init();
+
+    template <typename T>
+    size_t computeSequence(std::complex<T> point) const
+    {
+        std::complex<T> number{};
+        std::size_t count{};
+
+        while (count != NumColors && static_cast<T>(std::abs(number)) < Limit) {
+            number = number * number + point;
+            ++count;
+        }
+
+        return count;
+    }
 };
 
 // =====================================================================================
@@ -250,8 +265,117 @@ private:
     //    RGB(255, 0, 8)
     //};
 
+    std::array<COLORREF, NumColors> m_palette;
 
-    std::array<COLORREF, NumColors> m_palette =
+
+    //std::array<COLORREF, NumColors> m_palette =
+    //{
+    //    RGB(255, 0, 0),
+    //    RGB(255, 15, 0),
+    //    RGB(255, 31, 0),
+    //    RGB(255, 46, 0),
+    //    RGB(255, 61, 0),
+    //    RGB(255, 77, 0),
+    //    RGB(255, 92, 0),
+    //    RGB(255, 107, 0),
+    //    RGB(255, 122, 0),
+    //    RGB(255, 138, 0),
+    //    RGB(255, 153, 0),
+    //    RGB(255, 168, 0),
+    //    RGB(255, 184, 0),
+    //    RGB(255, 199, 0),
+    //    RGB(255, 214, 0),
+    //    RGB(255, 230, 0),
+    //    RGB(255, 245, 0),
+    //    RGB(250, 255, 0),
+    //    RGB(235, 255, 0),
+    //    RGB(219, 255, 0),
+    //    RGB(204, 255, 0),
+    //    RGB(189, 255, 0),
+    //    RGB(173, 255, 0),
+    //    RGB(158, 255, 0),
+    //    RGB(143, 255, 0),
+    //    RGB(128, 255, 0),
+    //    RGB(112, 255, 0),
+    //    RGB(97, 255, 0),
+    //    RGB(82, 255, 0),
+    //    RGB(66, 255, 0),
+    //    RGB(51, 255, 0),
+    //    RGB(36, 255, 0),
+    //    RGB(20, 255, 0),
+    //    RGB(5, 255, 0),
+    //    RGB(0, 255, 10),
+    //    RGB(0, 255, 25),
+    //    RGB(0, 255, 41),
+    //    RGB(0, 255, 56),
+    //    RGB(0, 255, 71),
+    //    RGB(0, 255, 87),
+    //    RGB(0, 255, 102),
+    //    RGB(0, 255, 117),
+    //    RGB(0, 255, 133),
+    //    RGB(0, 255, 148),
+    //    RGB(0, 255, 163),
+    //    RGB(0, 255, 178),
+    //    RGB(0, 255, 194),
+    //    RGB(0, 255, 209),
+    //    RGB(0, 255, 224),
+    //    RGB(0, 255, 240),
+    //    RGB(0, 255, 255),
+    //    RGB(0, 240, 255),
+    //    RGB(0, 224, 255),
+    //    RGB(0, 209, 255),
+    //    RGB(0, 194, 255),
+    //    RGB(0, 178, 255),
+    //    RGB(0, 163, 255),
+    //    RGB(0, 148, 255),
+    //    RGB(0, 133, 255),
+    //    RGB(0, 117, 255),
+    //    RGB(0, 102, 255),
+    //    RGB(0, 87, 255),
+    //    RGB(0, 71, 255),
+    //    RGB(0, 56, 255),
+    //    RGB(0, 41, 255),
+    //    RGB(0, 26, 255),
+    //    RGB(0, 10, 255),
+    //    RGB(5, 0, 255),
+    //    RGB(20, 0, 255),
+    //    RGB(36, 0, 255),
+    //    RGB(51, 0, 255),
+    //    RGB(66, 0, 255),
+    //    RGB(82, 0, 255),
+    //    RGB(97, 0, 255),
+    //    RGB(112, 0, 255),
+    //    RGB(128, 0, 255),
+    //    RGB(143, 0, 255),
+    //    RGB(158, 0, 255),
+    //    RGB(173, 0, 255),
+    //    RGB(189, 0, 255),
+    //    RGB(204, 0, 255),
+    //    RGB(219, 0, 255),
+    //    RGB(235, 0, 255),
+    //    RGB(250, 0, 255),
+    //    RGB(255, 0, 245),
+    //    RGB(255, 0, 229),
+    //    RGB(255, 0, 214),
+    //    RGB(255, 0, 199),
+    //    RGB(255, 0, 184),
+    //    RGB(255, 0, 168),
+    //    RGB(255, 0, 153),
+    //    RGB(255, 0, 138),
+    //    RGB(255, 0, 122),
+    //    RGB(255, 0, 107),
+    //    RGB(255, 0, 92),
+    //    RGB(255, 0, 77),
+    //    RGB(255, 0, 61),
+    //    RGB(255, 0, 46),
+    //    RGB(255, 0, 31),
+    //    RGB(255, 0, 15)
+    //};
+
+public:
+    // c'tor
+    constexpr MandelbrotPalette100() 
+        : m_palette
     {
         RGB(255, 0, 0),
         RGB(255, 15, 0),
@@ -353,20 +477,81 @@ private:
         RGB(255, 0, 46),
         RGB(255, 0, 31),
         RGB(255, 0, 15)
-    };
-
-public:
-    // c'tor
-    constexpr MandelbrotPalette100() = default;
+    } {};
 
     // operators
-    COLORREF operator[] (size_t index) const
+    constexpr COLORREF operator[] (size_t index) const
     {
         return m_palette[index];
     }
 };
 
+// =====================================================================================
+
+extern MandelbrotPalette    g_palette;
+extern MandelbrotPalette100 g_palette100;
 
 // =====================================================================================
 // End-of-File
 // =====================================================================================
+
+
+// 2. Versuch: Irgendwie eine constexpr Palette ..............
+
+template <std::size_t NumColors, std::size_t Limit>
+class MandelbrotPaletteEx
+{
+public:
+    //static const int NumColors{ 256 };
+    //static const int Limit{ 4 };
+
+private:
+    std::array<COLORREF, NumColors> m_palette;
+
+public:
+    // c'tor
+    constexpr MandelbrotPaletteEx() = default; // falsch, nur damit es übersetzt
+
+    // operators
+    constexpr COLORREF operator[] (size_t index) const
+    {
+        return m_palette[index];
+    }
+
+public:
+    template <typename T>
+    size_t computeSequence(std::complex<T> point) const
+    {
+        std::complex<T> number{};
+        std::size_t count{};
+
+        while (count != NumColors && static_cast<T>(std::abs(number)) < Limit) {
+            number = number * number + point;
+            ++count;
+        }
+
+        return count;
+    }
+};
+
+//
+//MandelbrotPaletteEx::MandelbrotPaletteEx<256, 4> ()
+//{
+//    m_palette = {
+//
+//    };
+//}
+//
+//
+//
+//MandelbrotPaletteEx<256, 4>  g_palette
+//{
+//    m_palette = {
+//
+//    };
+//}
+//
+//MandelbrotPaletteEx<100, 4> g_palette100
+//{
+//
+//}

@@ -12,9 +12,6 @@
 #include <future>
 #include <mutex>
 
-// TODO: Hmmm, das muss global irgendwo anders hin ....
-extern MandelbrotPalette g_palette;
-
 // c'tor(s)
 MandelbrotRectanglesParallelNonBlockingClassic::MandelbrotRectanglesParallelNonBlockingClassic() 
     : m_doneRectangles{ MandelbrotRectangles::NUM_RECTS }
@@ -103,7 +100,7 @@ std::size_t MandelbrotRectanglesParallelNonBlockingClassic::paintRectangle(HWND 
                 getComplex<TFloatingPoint>(x, y, m_clientWidth, m_clientHeight)
             };
 
-            std::size_t iterations{ computeSequence(number) };
+            std::size_t iterations{ g_palette.computeSequence(number) };
             COLORREF color{ g_palette[iterations - 1] };
             ++numPixels;
 
