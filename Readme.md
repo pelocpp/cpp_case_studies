@@ -11,6 +11,10 @@ vor.
 ### Aktueller Stand:
 
 
+### Januar 2026
+
+  * [&bdquo;Faules&rdquo; Kopieren: Eine Alternative?](/CaseStudies/CopyOnWrite)
+
 ### Januar 2024
 
   * [Rechtwinklige Dreiecke und `parallel_for`](/CaseStudies/PythagoreanTriangles)
