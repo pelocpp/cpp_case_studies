@@ -75,7 +75,7 @@ Kopie zu erstellen.
 
 ###### {#abbildung_1_two_data_objects}
 
-{{< figure src="/img/cowstring/copy_on_write_01.svg" width="80%" >}}
+{{< figure src="/img/cowstring/copy_on_write_01.svg" width="50%" >}}
 
 *Abbildung* 1: Zwei Objekte des Typs `Data`: Ein Original und seine Kopie.
 
