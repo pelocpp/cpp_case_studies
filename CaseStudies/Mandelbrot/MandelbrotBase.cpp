@@ -3,9 +3,8 @@
 // =====================================================================================
 
 #include "MandelbrotCommon.h"
-#include "MandelbrotBase.h"
-
 #include "MandelbrotPalette.h"
+#include "MandelbrotBase.h"
 
 #include <thread>
 #include <mutex>

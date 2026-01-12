@@ -4,8 +4,8 @@
 // =====================================================================================
 
 #include "MandelbrotCommon.h"
-#include "Mandelbrot_07_ProducerConsumerBasedApproach.h"
 #include "MandelbrotPalette.h"
+#include "Mandelbrot_07_ProducerConsumerBasedApproach.h"
 
 #include <complex>
 #include <deque>
@@ -15,9 +15,6 @@
 #include <algorithm>
 #include <chrono>
 #include <cassert>
-
-// TODO: Hmmm, das muss global irgendwo anders hin ....
-extern MandelbrotPalette g_palette;
 
 // c'tor(s)
 

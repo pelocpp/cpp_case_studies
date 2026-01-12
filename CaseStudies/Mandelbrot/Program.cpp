@@ -103,8 +103,10 @@ constexpr MandelbrotVersion version{ getVersion() };
 // =====================================================================================
 
 // global Variables
-MandelbrotPalette g_palette{};
-MandelbrotPalette100 g_palette100{};
+//MandelbrotPalette g_palette{};
+//MandelbrotPalette100 g_palette100{};
+
+MandelbrotPaletteExEx<256, 4> g_palette{};
 
 // =====================================================================================
 

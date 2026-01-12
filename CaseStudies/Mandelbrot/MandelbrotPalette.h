@@ -9,6 +9,8 @@
 #include <array>
 #include <complex>
 #include <vector>
+#include <cmath>
+
 
 // =====================================================================================
 
@@ -488,8 +490,8 @@ public:
 
 // =====================================================================================
 
-extern MandelbrotPalette    g_palette;
-extern MandelbrotPalette100 g_palette100;
+//extern MandelbrotPalette    g_palette;
+//extern MandelbrotPalette100 g_palette100;
 
 // =====================================================================================
 // End-of-File
@@ -555,3 +557,96 @@ public:
 //{
 //
 //}
+
+// =====================================================================================
+
+
+template <std::size_t NumColors = 256, std::size_t Limit = 4>
+class MandelbrotPaletteExEx
+{
+public:
+
+
+private:
+   // std::vector<COLORREF, NumColors> m_palette;
+    std::vector<COLORREF> m_palette;
+
+public:
+    // c'tor
+    /*constexpr*/ MandelbrotPaletteExEx() {
+
+        make_hsv_palette(NumColors);
+    }
+
+    // operators
+    /*constexpr*/ COLORREF operator[] (size_t index) const
+    {
+        if (index >= NumColors) {
+            throw std::out_of_range("illegal palette index");
+        }
+
+        return m_palette[index];
+    }
+
+public:
+    template <typename T>
+    size_t computeSequence(std::complex<T> point) const
+    {
+        std::complex<T> number{};
+        std::size_t count{};
+
+        while (count != NumColors && static_cast<T>(std::abs(number)) < Limit) {
+            number = number * number + point;
+            ++count;
+        }
+
+        return count;
+    }
+
+private:
+
+    //struct RGB {
+    //    unsigned char r, g, b;
+    //};
+
+    COLORREF hsv_to_rgb(double h, double s, double v)
+    {
+        double c = v * s;
+        double x = c * (1.0 - std::fabs(fmod(h / 60.0, 2) - 1.0));
+        double m = v - c;
+
+        double r, g, b;
+
+        if (h < 60) { r = c; g = x; b = 0; }
+        else if (h < 120) { r = x; g = c; b = 0; }
+        else if (h < 180) { r = 0; g = c; b = x; }
+        else if (h < 240) { r = 0; g = x; b = c; }
+        else if (h < 300) { r = x; g = 0; b = c; }
+        else { r = c; g = 0; b = x; }
+
+        return RGB(r, g, b);
+
+        //return {
+        //    (unsigned char)((r + m) * 255),
+        //    (unsigned char)((g + m) * 255),
+        //    (unsigned char)((b + m) * 255)
+        //};
+    }
+
+    // std::vector<RGB> make_hsv_palette(int size)
+    void make_hsv_palette(int size)
+    {
+       // std::vector<RGB> palette(size);
+
+        m_palette.resize(size);
+
+        for (int i = 0; i < size; ++i) {
+            double t = (double)i / size;
+            double hue = 360.0 * t;   // cycle through all colors
+            m_palette[i] = hsv_to_rgb(hue, 1.0, 1.0);
+        }
+      //  return palette;
+    }
+};
+
+extern MandelbrotPaletteExEx<256, 4> g_palette;

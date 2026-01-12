@@ -4,13 +4,10 @@
 // =====================================================================================
 
 #include "MandelbrotCommon.h"
-#include "Mandelbrot_01_Basic.h"
 #include "MandelbrotPalette.h"
+#include "Mandelbrot_01_Basic.h"
 
 #include <complex>
-
-// TODO : Das muss anders werden
-extern MandelbrotPalette g_palette;
 
 // c'tor(s)
 MandelbrotBasic::MandelbrotBasic() {}
