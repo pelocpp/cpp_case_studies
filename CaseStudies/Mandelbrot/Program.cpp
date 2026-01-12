@@ -78,13 +78,11 @@ https://stackoverflow.com/questions/42028838/drawing-to-window-from-child-thread
 
 
 #include "framework.h"
-
 #include "Mandelbrot.h"
 
 #include "MandelbrotCommon.h"
-#include "Mandelbrot_01_Basic.h"
-
 #include "MandelbrotPalette.h"
+#include "Mandelbrot_01_Basic.h"
 
 // =====================================================================================
 
@@ -103,10 +101,9 @@ constexpr MandelbrotVersion version{ getVersion() };
 // =====================================================================================
 
 // global Variables
-//MandelbrotPalette g_palette{};
+MandelbrotPalette g_palette{};
 //MandelbrotPalette100 g_palette100{};
-
-MandelbrotPaletteExEx<256, 4> g_palette{};
+//MandelbrotPaletteExEx g_palette{};
 
 // =====================================================================================
 

@@ -8,6 +8,12 @@
 
 // =====================================================================================
 
+// Palette 
+inline constexpr std::size_t NumColors = 256;
+inline constexpr std::size_t Limit = 4;
+
+// =====================================================================================
+
 enum class MandelbrotVersion
 {
     BasicVersion = 1,                            // single rectangle, nonresponsive

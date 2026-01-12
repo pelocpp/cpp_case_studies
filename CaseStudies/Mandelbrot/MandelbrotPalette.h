@@ -6,6 +6,8 @@
 
 #include "framework.h"
 
+#include "MandelbrotCommon.h"
+
 #include <array>
 #include <complex>
 #include <vector>
@@ -561,14 +563,12 @@ public:
 // =====================================================================================
 
 
-template <std::size_t NumColors = 256, std::size_t Limit = 4>
 class MandelbrotPaletteExEx
 {
 public:
 
 
 private:
-   // std::vector<COLORREF, NumColors> m_palette;
     std::vector<COLORREF> m_palette;
 
 public:
@@ -576,6 +576,7 @@ public:
     /*constexpr*/ MandelbrotPaletteExEx() {
 
         make_hsv_palette(NumColors);
+      //  make_fire_palette(NumColors);
     }
 
     // operators
@@ -605,11 +606,11 @@ public:
 
 private:
 
-    //struct RGB {
-    //    unsigned char r, g, b;
-    //};
+    struct RGB_Intern {
+        unsigned char r, g, b;
+    };
 
-    COLORREF hsv_to_rgb(double h, double s, double v)
+    RGB_Intern hsv_to_rgb(double h, double s, double v)
     {
         double c = v * s;
         double x = c * (1.0 - std::fabs(fmod(h / 60.0, 2) - 1.0));
@@ -624,29 +625,55 @@ private:
         else if (h < 300) { r = x; g = 0; b = c; }
         else { r = c; g = 0; b = x; }
 
-        return RGB(r, g, b);
+        //BYTE rr = reinterpret_cast <BYTE>(r);
+        //BYTE rg = reinterpret_cast <BYTE>(g);
+        //BYTE rb = reinterpret_cast <BYTE>(b);
+      // return RGB(rr, rg, rb);
 
-        //return {
-        //    (unsigned char)((r + m) * 255),
-        //    (unsigned char)((g + m) * 255),
-        //    (unsigned char)((b + m) * 255)
-        //};
+        return {
+            (unsigned char)((r + m) * 255),
+            (unsigned char)((g + m) * 255),
+            (unsigned char)((b + m) * 255)
+        };
     }
 
     // std::vector<RGB> make_hsv_palette(int size)
     void make_hsv_palette(int size)
     {
        // std::vector<RGB> palette(size);
-
         m_palette.resize(size);
 
         for (int i = 0; i < size; ++i) {
             double t = (double)i / size;
             double hue = 360.0 * t;   // cycle through all colors
-            m_palette[i] = hsv_to_rgb(hue, 1.0, 1.0);
+
+            RGB_Intern tmp = hsv_to_rgb(hue, 1.0, 1.0);
+            m_palette[i] = RGB(tmp.r, tmp.g, tmp.b);
         }
       //  return palette;
     }
+
+    void make_fire_palette(int size)
+    {
+        //std::vector<RGB> palette(size);
+        m_palette.resize(size);
+
+        for (int i = 0; i < size; ++i) {
+            double t = (double)i / (size - 1);
+
+            unsigned char r = (unsigned char)(9 * (1 - t) * t * t * t * 255);
+            unsigned char g = (unsigned char)(15 * (1 - t) * (1 - t) * t * t * 255);
+            unsigned char b = (unsigned char)(8 * (1 - t) * (1 - t) * (1 - t) * t * 255);
+
+      //      palette[i] = { r, g, b };
+            m_palette[i] = RGB(r,g,b);
+        }
+       // return palette;
+    }
+
+
 };
 
-extern MandelbrotPaletteExEx<256, 4> g_palette;
+// extern MandelbrotPaletteExEx g_palette;
+
+extern MandelbrotPalette g_palette;
