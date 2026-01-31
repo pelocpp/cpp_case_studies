@@ -11,6 +11,10 @@ vor.
 ### Aktueller Stand:
 
 
+### Februar 2026
+
+  * [Glückliche Zahlen, Schildkröten und Hasen](/CaseStudies/HappNumber)
+
 ### Januar 2026
 
   * [&bdquo;Faules&rdquo; Kopieren: Eine Alternative?](/CaseStudies/CopyOnWrite)
