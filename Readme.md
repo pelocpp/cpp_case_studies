@@ -13,7 +13,7 @@ vor.
 
 ### Februar 2026
 
-  * [Glückliche Zahlen, Schildkröten und Hasen](/CaseStudies/HappNumber)
+  * [Glückliche Zahlen, Schildkröten und Hasen](/CaseStudies/HappyNumbers)
 
 ### Januar 2026
 

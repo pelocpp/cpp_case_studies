@@ -120,7 +120,7 @@ Eine Umsetzung des Algorithmus zur Berechnung der Zahlenfolge könnte so erfolgen
 
 *Listing* 1: Erster Versuch einer Realisierung einer `isHappy`-Funktion.
 
-Der Quellcode ist nicht ganz vollständig, es fehlt die Routine `sumOfSquares` aus Zeile 12:
+Der Quellcode ist nicht ganz vollständig, es fehlt die Routine `sumOfSquares` aus Zeile 12 von [Listing 1]:
 
 ###### {#listing_02_sumOfSquares_function}
 
@@ -337,36 +337,22 @@ In [Abbildung 1] stellt das Element &bdquo;1&rdquo; den Kopf einer einfach verke
 Ein Zyklus liegt vor, wenn beim Durchlaufen der Liste über die Zeiger auf den nächsten Knoten ein bereits besuchter Knoten erreicht wird,
 anstatt schlussendlich den Nullzeiger zu erreichen.
 
-<img src="happy_number_tortoise_hare_01.svg" width="450">
-
-*Abbildung* 1: Eine einfach verkettete Liste mit Zyklus.
-
-
 ###### {#abbildung_1_linked_list_with_cycle}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01.svg" width="50%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01.svg" width="60%" >}}
 
 *Abbildung* 1: Eine einfach verkettete Liste mit Zyklus..
-
-
 
 Der letzte Knoten der verketteten Liste aus [Abbildung 1] zeigt nicht auf `NULL`,
 sondern auf einen früheren Knoten in der Liste, wodurch ein Zyklus entsteht.
 Überhaupt gibt es gar kein Element, das einen `NULL`-Zeiger als Folgeelement besitzt.
 Zur Abgrenzung betrachten wir noch eine zweite verkettete Liste in [Abbildung 2]:
 
-<img src="happy_number_tortoise_hare_02.svg" width="400">
-
-*Abbildung* 2: Eine einfach verkettete Liste ohne Zyklus.
-
-
 ###### {#abbildung_2_linked_list_without_cycle}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_02.svg" width="50%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_02.svg" width="60%" >}}
 
 *Abbildung* 2: Eine einfach verkettete Liste ohne Zyklus.
-
-
 
 
 Der letzte Knoten der verketteten Liste zeigt auf `NULL` und signalisiert damit das Ende der Liste.
@@ -447,26 +433,16 @@ Beim Durchlaufen der verketteten Liste kann Folgendes passieren:
 
 Wir betrachten den Algorithmus an einem Beispiel:
 
-<img src="happy_number_tortoise_hare_01_01.svg" width="400">
-
-*Abbildung* 3: Anfangs zeigen beide Zeiger (Hase und Schildkröte) auf den Startknoten.
-
 ###### {#abbildung_3_floyd_algorithm}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_01.svg" width="70%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_01.svg" width="50%" >}}
 
 *Abbildung* 3: Anfangs zeigen beide Zeiger (Hase und Schildkröte) auf den Startknoten..
 
 
-
-
-<img src="happy_number_tortoise_hare_01_02.svg" width="400">
-
-*Abbildung* 4: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
-
 ###### {#abbildung_4_floyd_algorithm}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_02.svg" width="70%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_02.svg" width="50%" >}}
 
 *Abbildung* 4: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
 
@@ -475,109 +451,59 @@ Da aktuell die beiden Zeigerpositionen verschieden sind,
 können wir noch keine Aussage treffen, ob wir in der Liste einen Zyklus haben.
 Wir setzen die Bewegungen der beiden Zeiger fort.
 
-<img src="happy_number_tortoise_hare_01_03.svg" width="400">
-
-*Abbildung* 5: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
-
-
 ###### {#abbildung_5_floyd_algorithm}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_03.svg" width="70%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_03.svg" width="50%" >}}
 
 *Abbildung* 5: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
 
-
 Noch ist der Algorithmus nicht zu Ende, wir müssen die Schildkröte und den Hasen weiter um die Wette laufen lassen.
-
-<img src="happy_number_tortoise_hare_01_04.svg" width="400">
-
-*Abbildung* 6: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
-
 
 ###### {#abbildung_6_floyd_algorithm}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_04.svg" width="70%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_04.svg" width="50%" >}}
 
 *Abbildung* 6: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
 
-
 Same Procedure: Der Algorithmus ist noch nicht zu Ende.
-
-<img src="happy_number_tortoise_hare_01_05.svg" width="400">
-
-*Abbildung* 7: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
 
 ###### {#abbildung_7_floyd_algorithm}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_05.svg" width="70%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_05.svg" width="50%" >}}
 
 *Abbildung* 7: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
 
-
 Und auch in diesem Zustand bleibt es &ndash; zunächst &ndash; beim Unentschieden.
-
-<img src="happy_number_tortoise_hare_01_06.svg" width="400">
-
-*Abbildung* 8: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
 
 ###### {#abbildung_8_floyd_algorithm}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_06.svg" width="70%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_06.svg" width="50%" >}}
 
 *Abbildung* 8: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
 
-
-
-
 &bdquo;Und täglich grüßt das Murmeltier&rdquo;: Noch immer wissen wir nicht, wie dieses Wettrennen ausgeht.
-
-<img src="happy_number_tortoise_hare_01_07.svg" width="400">
-
-*Abbildung* 9: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
 
 ###### {#abbildung_9_floyd_algorithm}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_07.svg" width="70%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_07.svg" width="50%" >}}
 
 *Abbildung* 9: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
 
-
-
-
-
-
 Der schnellere Zeiger hat langsam Sicht auf den langsameren Zeiger:
-
-<img src="happy_number_tortoise_hare_01_08.svg" width="400">
-
-*Abbildung* 10: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
 
 ###### {#abbildung_10_floyd_algorithm}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_08.svg" width="70%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_08.svg" width="50%" >}}
 
 *Abbildung* 10: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
 
-
-
-
-
 Der langsamere Zeiger spürt nun den Atem des schnelleren Zeigers in seinem Rücken, kommt es zu einer Begegnung?
-
-<img src="happy_number_tortoise_hare_01_09.svg" width="400">
-
-*Abbildung* 11: Beide Zeiger verweisen auf denselben Knoten.
-
 
 ###### {#abbildung_11_floyd_algorithm}
 
-{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_09.svg" width="70%" >}}
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_09.svg" width="50%" >}}
 
 *Abbildung* 11: Beide Zeiger verweisen auf denselben Knoten.
-
-
-
-
 
 Der schnellere Zeiger hat den langsameren Zeiger eingeholt:
 In [Abbildung 11] erkennen wir, dass beide Zeiger auf denselben Knoten verweisen.
@@ -955,23 +881,14 @@ Zu diesem Zweck zählen wir beispielsweise alle glücklichen Zahlen bis zu einem m
 
 *Listing* 12: `constexpr`-Funktion `countHappyNumbersLessThan`.
 
-
 Wenn wir das Programm tatsächlich nicht ausführen wollen, sondern nur dem Übersetzer bei seiner Arbeit zuschauen wollen,
 dann können wir das ganz simpel mit einem Tooltip versuchen:
 
-<img src="Happy_Numbers_constexpr_01.png" width="600">
-
-*Abbildung* 12: Anzahl glücklicher Zahlen im Bereich von 1 bis 1000.
-
 ###### {#abbildung_12_count_happy_numbers}
 
-{{< figure src="/img/happynumbers/Happy_Numbers_constexpr_01.png" width="70%" >}}
+{{< figure src="/img/happynumbers/Happy_Numbers_constexpr_01.png" width="80%" >}}
 
 *Abbildung* 12: Anzahl glücklicher Zahlen im Bereich von 1 bis 1000.
-
-
-
-
 
 Wir erkennen in [Abbildung 12], das es im Bereich von 1 bis 1000 genau 142 glückliche Zahlen gibt.
 Auch können wir die Zahlen explizit berechnen bzw. in einem Container abspeichern.
@@ -1012,20 +929,11 @@ Da wir nun wissen, dass es sich im genau 142 Zahlen handelt, können wir ein ents
 
 Der Tooltip funktioniert auch in diesem Beispiel, wenngleich er uns dieses Mal nicht den Gefallen tut, das Ergebnis komplett anzuzeigen:
 
-<img src="Happy_Numbers_constexpr_02.png" width="600">
-
-*Abbildung* 13: Teilweise Darstellung glücklicher Zahlen im Bereich von 1 bis 1000.
-
 ###### {#abbildung_13_table_happy_numbers}
 
-{{< figure src="/img/happynumbers/Happy_Numbers_constexpr_02.png" width="70%" >}}
+{{< figure src="/img/happynumbers/Happy_Numbers_constexpr_02.png" width="80%" >}}
 
 *Abbildung* 13: Teilweise Darstellung glücklicher Zahlen im Bereich von 1 bis 1000.
-
-
-
-
-
 
 Natürlich können wir die vom Übersetzer berechneten Zahlen auch in einer Konsole ausgeben,
 damit kommen wir zum Ende unserer Fallstudie:
@@ -1081,23 +989,23 @@ Das muss so nicht sein, aber damit kann die `printTable`-Funktion etwas vielfält
 
 # There&lsquo;s more
 
-Das erste Paar aufeinanderfolgender glücklicher Zahlen ist das Paar 
+Das erste Paar aufeinanderfolgender glücklicher Zahlen lautet
 n<sub>1</sub> = 31 und n<sub>2</sub> = 32.
 
 Die folgende Liste gibt Aufschluss über die kleinsten weiteren Paare aufeinanderfolgender glücklicher Zahlen,
-welche kleiner als 1000 sind (es wird immer nur die kleinere der beiden Zahlen):
+welche kleiner als 1000 sind (es wird immer nur die kleinere der beiden Zahlen wiedergegeben):
 
 31, 129, 192, 262, 301, 319, 367, 391, 565, 622, 637, 655, 912, 931, ...
 
 Erweitern Sie Ihr Programm um die Berechnung aller aufeinanderfolgenden glücklichen Zahlen kleiner 1000.
-Schaffen Sie die Berechnung auf mit dem Übersetzer, also mit `constexpr`?
+Schaffen Sie die Berechnung auch mit dem Übersetzer, also mit `constexpr`?
 
-Sollten Sie Spaß an derlei Berechnungen gefunden haben: Es gibt auch Tripel aufeinanderfolgender glücklicher Zahlen,
+Haben Sie Spaß an derlei Berechnungen gefunden? Es gibt auch Tripel aufeinanderfolgender glücklicher Zahlen,
 zum Beispiel die drei Zahlen n<sub>1</sub> = 1880, n<sub>2</sub> = 1881 und n<sub>3</sub> = 1882.
 Wir erkennen, dass unterhalb von 1000 derartige Zahlen nicht vorhanden sind.
 
 Berechnen Sie alle Tripel aufeinanderfolgender glücklicher Zahlen, welche kleiner als 10000 sind.
-Weitere Beispiele sind z. B. die Zahlen 4780, 4870 und 7480.
+Beispiele hierfür sind z. B. die Zahlen 4780, 4870 und 7480.
 Es ist wiederum nur die kleinste der drei Zahlen angegeben.
 
 <br/>
@@ -1107,17 +1015,17 @@ Es ist wiederum nur die kleinste der drei Zahlen angegeben.
 Im Folgenden habe ich einige interessante Artikel zum Thema &bdquo;Happy Numbers&rdquo;
 zusammengestellt:
 
-[Fröhliche Zahl](https://de.wikipedia.org/wiki/Fr%C3%B6hliche_Zahl)
+*Wikipedia*: [Fröhliche Zahl](https://de.wikipedia.org/wiki/Fr%C3%B6hliche_Zahl)
 
-[Solving the Happy Number Algorithm](https://medium.com/@alisabajramovic/solving-the-happy-number-algorithm-334afa34599)
+*Medium*: [Solving the Happy Number Algorithm](https://medium.com/@alisabajramovic/solving-the-happy-number-algorithm-334afa34599)
 
 Zum Problem von Zyklen kann man hier einiges nachlesen:
 
-[Floyd's Linked List Cycle Finding Algorithm](https://cp-algorithms.com/others/tortoise_and_hare.html)
+*Algorithms for Competitive Programming*: [Floyd's Linked List Cycle Finding Algorithm](https://cp-algorithms.com/others/tortoise_and_hare.html)
 
 Zu glücklichen Zahlen und `constexpr` findet sich hier ein Artikel:
 
-[constexpr All the Things! (but gently)](https://levelup.gitconnected.com/constexpr-all-the-things-but-gently-f567a8b93603)
+*Medium*: [constexpr All the Things! (but gently)](https://levelup.gitconnected.com/constexpr-all-the-things-but-gently-f567a8b93603)
 
 <br/>
 
