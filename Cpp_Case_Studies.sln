@@ -281,8 +281,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CopyOnWrite", "CopyOnWrite"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HappyNumbers", "HappyNumbers", "{E06D120A-772A-4E2A-A7D5-46F48FF1CDD2}"
 	ProjectSection(SolutionItems) = preProject
-		MarkDown\HappyNumbers\HappyNumber.md = MarkDown\HappyNumbers\HappyNumber.md
 		MarkDown\HappyNumbers\Happy_Numbers_constexpr_01.png = MarkDown\HappyNumbers\Happy_Numbers_constexpr_01.png
+		MarkDown\HappyNumbers\HappyNumbers.md = MarkDown\HappyNumbers\HappyNumbers.md
 		MarkDown\HappyNumbers\Happy_Numbers_constexpr_02.png = MarkDown\HappyNumbers\Happy_Numbers_constexpr_02.png
 		MarkDown\HappyNumbers\happy_number_tortoise_hare_01.svg = MarkDown\HappyNumbers\happy_number_tortoise_hare_01.svg
 		MarkDown\HappyNumbers\happy_number_tortoise_hare_01_01.svg = MarkDown\HappyNumbers\happy_number_tortoise_hare_01_01.svg

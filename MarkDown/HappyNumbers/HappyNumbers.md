@@ -16,16 +16,18 @@ In einem Nebenschauplatz gehen wir auf Zyklen in verketteten Listen ein.
 Hashtabellen und die schon zitierten Hasen und Schildkröten helfen uns dabei,
 die Zyklen zu entdecken und damit das Traversieren von unendlichen Zahlenfolgen zu vermeiden.
 
+<!--more-->
+
 ## Lernziele
 
-STL Container `std::unordered_set`, `std::array` und `std::vector`<br />
-STL Algorithmen `std::find` und `std::copy_n`<br />
-`if`-Anweisung mit Initializer<br />
-Hilfsklasse `std::span`<br />
-Einfach verkettete Listen<br />
+  * STL Container `std::unordered_set`, `std::array` und `std::vector`<br />
+  * STL Algorithmen `std::find` und `std::copy_n`<br />
+  * `if`-Anweisung mit Initializer<br />
+  * &bdquo;*Brace*&rdquo;-Initialisierung
+  * Hilfsklasse `std::span`<br />
+  * Einfach verkettete Listen<br />
 
-
-## Definition
+## Aufgabe
 
 Unter einer Zahlenfolge (auch Zahlenreihe) verstehen wir in der Mathematik eine Auflistung von endlich (oder auch unendlich) vielen fortlaufend nummerierten Zahlen.
 Die Zahl mit der Nummer *i* – man sagt auch: mit dem Index *i* – wird *i*-tes Glied der Folge genannt.
@@ -78,7 +80,15 @@ Da diese unendlich sein können, müssen wir uns zusätzlich mit dem Problem von Zy
 Der naive Ansatz lässt den zuvor geschilderten Aspekt von unendlich vielen Folgengliedern zunächst einmal außer Acht.
 Damit erhalten wir zwar keine wirklich funktionsfähige Realisierung, wir nähern uns dafür 
 dem Problem in einfachen Schritten.
+
+#### Lösung
+
+> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
+
 Eine Umsetzung des Algorithmus zur Berechnung der Zahlenfolge könnte so erfolgen:
+
+###### {#listing_01_isHappy_naive_version}
+
 
 ```cpp
 01: bool isHappy(std::size_t number)
@@ -108,7 +118,12 @@ Eine Umsetzung des Algorithmus zur Berechnung der Zahlenfolge könnte so erfolgen
 25: }
 ```
 
+*Listing* 1: Erster Versuch einer Realisierung einer `isHappy`-Funktion.
+
 Der Quellcode ist nicht ganz vollständig, es fehlt die Routine `sumOfSquares` aus Zeile 12:
+
+###### {#listing_02_sumOfSquares_function}
+
 
 ```cpp
 01: std::size_t sumOfSquares(std::size_t n)
@@ -122,6 +137,8 @@ Der Quellcode ist nicht ganz vollständig, es fehlt die Routine `sumOfSquares` au
 09:     return squareSum;
 10: }
 ```
+
+*Listing* 2: Funktion `sumOfSquares`.
 
 Rufen wir die Funktion `isHappy` mit dem Wert 19, so erhalten wir die folgende Ausgabe:
 
@@ -255,6 +272,8 @@ wollen wir wieder den Algorithmus zur Berechnung des nächsten Folgenglieds ansto
 also die Ziffern der Zahl aufteilen, quadrieren und addieren.
 Wir rufen folglich die Funktion `isHappy` erneut auf, dieses Mal aber mit der Variablen `sum` als Argument:
 
+###### {#listing_03_isHappy_recursive_variant}
+
 ```cpp
 01: bool isHappy(std::size_t number)
 02: {
@@ -271,6 +290,9 @@ Wir rufen folglich die Funktion `isHappy` erneut auf, dieses Mal aber mit der Va
 13:     }
 14: }
 ```
+
+*Listing* 3: Rekursive Version der `isHappy`-Funktion.
+
 
 Wichtig ist auch, vor dem Funktionsaufruf von `isHappy` in Zeile 12 ein `return` einzufügen,
 um den vom rekursiven Funktionsaufruf berechneten Wert zurückzugeben.
@@ -298,7 +320,7 @@ Die Zahlenfolge zur Bestimmung glücklicher Zahlen kann potentiell unendlich lang
 sie enthält in solchen Fällen einen Zyklus.
 Damit wenden wir uns zunächst diesem Detailproblem zu:
 
-## Zyklen in verketteten Listen mit einer Hashtabelle erkennen
+## Zyklen in verketteten Listen erkennen
 
 Wie kann man Zyklen in verketteten Listen erkennen?
 Warum wechseln wir jetzt das Thema und wenden uns verketteten Listen zu?
@@ -311,7 +333,7 @@ Damit sind wir zunächst mit dem Problem konfrontiert, wie sich derartige Zyklen 
 
 
 Wir wollen das Problem zunächst an einem Beispiel betrachten:
-In *Abbildung* 1 stellt das Element &bdquo;1&rdquo; den Kopf einer einfach verketteten Liste dar.
+In [Abbildung 1] stellt das Element &bdquo;1&rdquo; den Kopf einer einfach verketteten Liste dar.
 Ein Zyklus liegt vor, wenn beim Durchlaufen der Liste über die Zeiger auf den nächsten Knoten ein bereits besuchter Knoten erreicht wird,
 anstatt schlussendlich den Nullzeiger zu erreichen.
 
@@ -319,14 +341,33 @@ anstatt schlussendlich den Nullzeiger zu erreichen.
 
 *Abbildung* 1: Eine einfach verkettete Liste mit Zyklus.
 
-Der letzte Knoten der verketteten Liste aus *Abbildung* 1 zeigt nicht auf `NULL`,
+
+###### {#abbildung_1_linked_list_with_cycle}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01.svg" width="50%" >}}
+
+*Abbildung* 1: Eine einfach verkettete Liste mit Zyklus..
+
+
+
+Der letzte Knoten der verketteten Liste aus [Abbildung 1] zeigt nicht auf `NULL`,
 sondern auf einen früheren Knoten in der Liste, wodurch ein Zyklus entsteht.
 Überhaupt gibt es gar kein Element, das einen `NULL`-Zeiger als Folgeelement besitzt.
-Zur Abgrenzung betrachten wir noch eine zweite verkettete Liste in *Abbildung* 2:
+Zur Abgrenzung betrachten wir noch eine zweite verkettete Liste in [Abbildung 2]:
 
 <img src="happy_number_tortoise_hare_02.svg" width="400">
 
 *Abbildung* 2: Eine einfach verkettete Liste ohne Zyklus.
+
+
+###### {#abbildung_2_linked_list_without_cycle}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_02.svg" width="50%" >}}
+
+*Abbildung* 2: Eine einfach verkettete Liste ohne Zyklus.
+
+
+
 
 Der letzte Knoten der verketteten Liste zeigt auf `NULL` und signalisiert damit das Ende der Liste.
 Wie lassen sich nun Zyklen in verketteten Listen erkennen?
@@ -340,6 +381,8 @@ Wir konzipieren nun eine Funktion `detectCycle`, die den Anfangsknoten der Liste
 die Frage nach dem Vorhandensein eines Zyklus beantwortet.
 Immer wenn ein Knoten gefunden wird, der bereits in der Hashtabelle vorhanden ist (was auf einen Zyklus in der Liste hinweist), wird `true` zurückgegeben.
 Wird ein Folgeknoten mit dem Wert `NULL` gefunden, was das Ende der verketteten Liste darstellt, wird `false` zurückgegeben, da kein Zyklus vorhanden ist.
+
+###### {#listing_04_detectCycle_variant_hashtable}
 
 ```cpp
 01: bool detectCycle(Node* head)
@@ -363,6 +406,9 @@ Wird ein Folgeknoten mit dem Wert `NULL` gefunden, was das Ende der verketteten 
 19:     return false;
 20: }
 ```
+
+*Listing* 4: `detectCycle`-Funktion, unterstützt mit einer Hashtabelle.
+
 
 Den soeben beschriebenen Lösungsansatz ordnet man in der Informatik auch unter dem Fachwort *Memoization* ein: Was versteht man darunter?
 *Memoization* ist eine Optimierungstechnik, die die Leistung von Programmen steigert,
@@ -405,9 +451,25 @@ Wir betrachten den Algorithmus an einem Beispiel:
 
 *Abbildung* 3: Anfangs zeigen beide Zeiger (Hase und Schildkröte) auf den Startknoten.
 
+###### {#abbildung_3_floyd_algorithm}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_01.svg" width="70%" >}}
+
+*Abbildung* 3: Anfangs zeigen beide Zeiger (Hase und Schildkröte) auf den Startknoten..
+
+
+
+
 <img src="happy_number_tortoise_hare_01_02.svg" width="400">
 
 *Abbildung* 4: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
+
+###### {#abbildung_4_floyd_algorithm}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_02.svg" width="70%" >}}
+
+*Abbildung* 4: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
+
 
 Da aktuell die beiden Zeigerpositionen verschieden sind,
 können wir noch keine Aussage treffen, ob wir in der Liste einen Zyklus haben.
@@ -417,11 +479,27 @@ Wir setzen die Bewegungen der beiden Zeiger fort.
 
 *Abbildung* 5: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
 
+
+###### {#abbildung_5_floyd_algorithm}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_03.svg" width="70%" >}}
+
+*Abbildung* 5: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
+
+
 Noch ist der Algorithmus nicht zu Ende, wir müssen die Schildkröte und den Hasen weiter um die Wette laufen lassen.
 
 <img src="happy_number_tortoise_hare_01_04.svg" width="400">
 
 *Abbildung* 6: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
+
+
+###### {#abbildung_6_floyd_algorithm}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_04.svg" width="70%" >}}
+
+*Abbildung* 6: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
+
 
 Same Procedure: Der Algorithmus ist noch nicht zu Ende.
 
@@ -429,11 +507,27 @@ Same Procedure: Der Algorithmus ist noch nicht zu Ende.
 
 *Abbildung* 7: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
 
+###### {#abbildung_7_floyd_algorithm}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_05.svg" width="70%" >}}
+
+*Abbildung* 7: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
+
+
 Und auch in diesem Zustand bleibt es &ndash; zunächst &ndash; beim Unentschieden.
 
 <img src="happy_number_tortoise_hare_01_06.svg" width="400">
 
 *Abbildung* 8: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
+
+###### {#abbildung_8_floyd_algorithm}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_06.svg" width="70%" >}}
+
+*Abbildung* 8: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
+
+
+
 
 &bdquo;Und täglich grüßt das Murmeltier&rdquo;: Noch immer wissen wir nicht, wie dieses Wettrennen ausgeht.
 
@@ -441,11 +535,32 @@ Und auch in diesem Zustand bleibt es &ndash; zunächst &ndash; beim Unentschieden
 
 *Abbildung* 9: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
 
+###### {#abbildung_9_floyd_algorithm}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_07.svg" width="70%" >}}
+
+*Abbildung* 9: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
+
+
+
+
+
+
 Der schnellere Zeiger hat langsam Sicht auf den langsameren Zeiger:
 
 <img src="happy_number_tortoise_hare_01_08.svg" width="400">
 
 *Abbildung* 10: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnellere um zwei Schritte.
+
+###### {#abbildung_10_floyd_algorithm}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_08.svg" width="70%" >}}
+
+*Abbildung* 10: Der langsame Zeiger bewegt sich um einen Schritt vorwärts, der schnelle um zwei Schritte.
+
+
+
+
 
 Der langsamere Zeiger spürt nun den Atem des schnelleren Zeigers in seinem Rücken, kommt es zu einer Begegnung?
 
@@ -454,11 +569,23 @@ Der langsamere Zeiger spürt nun den Atem des schnelleren Zeigers in seinem Rücke
 *Abbildung* 11: Beide Zeiger verweisen auf denselben Knoten.
 
 
+###### {#abbildung_11_floyd_algorithm}
+
+{{< figure src="/img/happynumbers/happy_number_tortoise_hare_01_09.svg" width="70%" >}}
+
+*Abbildung* 11: Beide Zeiger verweisen auf denselben Knoten.
+
+
+
+
+
 Der schnellere Zeiger hat den langsameren Zeiger eingeholt:
-In *Abbildung* 11 erkennen wir, dass beide Zeiger auf denselben Knoten verweisen.
+In [Abbildung 11] erkennen wir, dass beide Zeiger auf denselben Knoten verweisen.
 Damit können wir die Aussage treffen, dass wir einen Zyklus in der verketteten Liste lokalisiert haben.
 
 Wir betrachten nun die zweite Variante unserer `detectCycle`-Funktion:
+
+###### {#listing_05_detectCycle_variant_floyd_algorithm}
 
 ```cpp
 01: bool detectCycle(Node* root)
@@ -480,11 +607,17 @@ Wir betrachten nun die zweite Variante unserer `detectCycle`-Funktion:
 17: }
 ```
 
+*Listing* 5: `detectCycle`-Funktion unter Verwendung des Floyd-Algorithmus.
+
+
 Beachten Sie in der Realisierung, dass wir beim schnelleren Zeiger vorsichtig sein müssen, wenn es um das Vorhandensein von `NULL`-Zeigern geht!
 Aus diesem Grund muss in der Zeile 6 neben dem Inhalt des `fast`-Zeigers auch der Nachfolger `fast->m_next` mit überprüft werden,
 ob dieser eine gültige Adresse darstellt.
 
 Für beide Varianten der `detectCycle`-Funktion entwerfen wir nun einen Testrahmen.
+
+###### {#listing_06_linked_list_with_nodes}
+
 
 ```cpp
 01: struct Node
@@ -546,8 +679,11 @@ Für beide Varianten der `detectCycle`-Funktion entwerfen wir nun einen Testrahme
 57: }
 ```
 
+*Listing* 6: Testrahmen für eine verkettete Liste mit `Node`-Objekten.
+
+
 *Bemerkung*:<br />
-In Listing XXX habe ich als Knoten eine Struktur `Node` verwendet.
+In [Listing 6] habe ich als Knoten eine Struktur `Node` verwendet.
 Warum kommt die Klasse `std::forward_list` aus der STL nicht zum Zuge, dann müsste man das Rad an dieser Stelle doch nicht neu erfinden?
 Die Antwort ist vergleichsweise einfach, und vielleicht auch ein wenig überraschend:
 Mit der STL Klasse `std::forward_list` lassen sich keine Zyklen erzeugen, bzw. nur dann, wenn man die vorgesehene Verwendung ihrer Methoden missachtet.
@@ -561,8 +697,10 @@ Die Methoden eines `std::forward_list`-Objekts lassen nur die Operationen
 zu. Keine dieser Operationen erlaubt es, den Zeiger auf das nächste Element eines Knotens auf einen vorherigen Knoten zeigen zu lassen.
 Daher ist ein `std::forward_list`-Objekt bei Verwendung des öffentlichen APIs ausschließlich azyklisch.
 
-Die beiden Funktionen `createLinkedListWithCycle` und `createLinkedListWithoutCycle` aus Listing XXX erzeugen die verketten Listen
-aus *Abbildung* 1 und 2. Wir wollen diese nun an Hand der beiden Realisierungen von `detectCycle` testen:
+Die beiden Funktionen `createLinkedListWithCycle` und `createLinkedListWithoutCycle` aus [Listing 7] erzeugen die verketten Listen
+aus [Abbildung 1] und [Abbildung 2]. Wir wollen diese nun an Hand der beiden Realisierungen von `detectCycle` testen:
+
+###### {#listing_07_test_functions}
 
 ```cpp
 01: void test_cycle_detection_using_hash_table()
@@ -588,6 +726,8 @@ aus *Abbildung* 1 und 2. Wir wollen diese nun an Hand der beiden Realisierungen 
 21: }
 ```
 
+*Listing* 7: Testfunktionen `test_cycle_detection_using_hash_table` und `test_cycle_detection_using_floyd`.
+
 Die Ausgabe entspricht unseren Erwartungen:
 
 ```
@@ -606,6 +746,9 @@ Die Klasse `std::unordered_map` verwaltet in klassischer Manier Schlüssel-Wert P
 Spielt &ndash; wie in unserem Fall &ndash; der Wert keine Rolle, dann genügt auch ein `std::unordered_set`-Objekt.
 Ein solches Objekt verwaltet einzelne Elemente einer &bdquo;*Happy Number*&rdquo; Zahlenfolge,
 es können aber keine Elemente doppelt eingefügt werden. Das ist genau die Datenstruktur, die wir für unsere Zwecke benötigen.
+
+###### {#listing_08_isHappy_hashtable_variant}
+
 
 ```cpp
 01: bool isHappy(std::size_t number)
@@ -628,7 +771,9 @@ es können aber keine Elemente doppelt eingefügt werden. Das ist genau die Datens
 18: }
 ```
 
-In Zeile 16 von Listing YYY fügen wir pro Schleifendurchlauf das aktuell berechnete Folgenelement in die Hashtabelle ein.
+*Listing* 8: `isHappy`-Funktion, unterstützt mit einer Hashtabelle.
+
+In Zeile 16 von [Listing 8] fügen wir pro Schleifendurchlauf das aktuell berechnete Folgenelement in die Hashtabelle ein.
 In Zeile 12 fragen wir vor dem Einfügen ab, ob das Element schon in der Tabelle vorhanden ist.
 Wenn ja, dann haben wir einen Zyklus gefunden; die Folge hat potentiell unendlich viele Folgenglieder,
 es kann sich nicht um eine glückliche Zahlenfolge handeln.
@@ -636,13 +781,15 @@ Erreichen wir jedoch (in Zeile 9) den Wert 1, dann terminiert die Folge nach end
 die Startzahl ist glücklich.
 
 
-##  Ansatz unter Verwendung des Floyd-Algorithmus erkennen
+##  Ansatz unter Verwendung des Floyd-Algorithmus
 
 Wir stellen die Funktion `isHappy` aus dem letzten Abschnitt noch einaml vor, 
 dieses Mal ohne Hashtabelle.
 In den Zeilen 3 und 4 definieren wir die beiden Indizes `slow` und `fast`, besser als Schildkröte und Hase bekannt.
 Der Igel bewegt sich in Zeile Element für Element durch die Zahlenfolge.
 Das Hase überspringt (Zeile 11) pro Fortbewegung immer ein Folgenelement.
+
+###### {#listing_09_isHappy_floyd_variant}
 
 
 ```cpp
@@ -664,6 +811,9 @@ Das Hase überspringt (Zeile 11) pro Fortbewegung immer ein Folgenelement.
 16: }
 ```
 
+*Listing* 9: `isHappy`-Funktion unter Verwendung des Floyd-Algorithmus.
+
+
 Damit haben wir drei Möglichkeiten zur Berechnung glücklicher (und trauriger) Zahlen gefunden.
 
 
@@ -680,6 +830,8 @@ in die `constexpr`-Welt übertragen.
 
 Zu den Details: Die beiden Varianten des rekursiven Ansatzes und der Einsatz des Floyd-Algorithmus lassen sich nahezu eins zu eins
 in `constexpr` umsetzen. Einzig und allein die `std::println`-Anweisungen sind zu entfernen, aber das ist ja keine Überraschung:
+
+###### {#listing_10_isHappy_two_variants_constexpr}
 
 
 ```cpp
@@ -730,6 +882,9 @@ in `constexpr` umsetzen. Einzig und allein die `std::println`-Anweisungen sind z
 45: }
 ```
 
+*Listing* 10: `isHappy`-Funktion in zwei `constexpr`-Varianten.
+
+
 Wie sieht es mit der Variante mit der Hashtabelle aus? Hier stellt sich zunächst die Frage,
 inwieweit STL Container `constexpr`-fähig sind? Einfache Antwort: Sie sind es &bdquo;teilweise&rdquo;.
 Die Klasse `std::unordered_set` ist es nicht (zumindest bis einschließlich C++ 23), aber mit der Klasse `std::vector` können wir es versuchen.
@@ -745,6 +900,9 @@ Dadurch kann der Compiler alle Speicherbelegungen auf einfache Weise nachverfolg
 Auf diese Weise sind (einige der) STL Container in einem `constexpr`-Kontext einsetzbar.
 
 Die dritte Variante unserer Suche nach glücklichen Zahlen sieht nun so aus:
+
+###### {#listing_11_isHappy_using_std_vector}
+
 
 ```cpp
 01: constexpr bool isHappy(std::size_t number)
@@ -765,12 +923,16 @@ Die dritte Variante unserer Suche nach glücklichen Zahlen sieht nun so aus:
 16: }
 ```
 
-Zu beachten sind die Definition eines `std::vector`-Objekts in Zeile 3.
+*Listing* 11: `isHappy`-Funktion mit STL Container `std::vector`.
+
+Zu beachten ist die Definition eines `std::vector`-Objekts in Zeile 3 von [Listing 11].
 Auch Algorithmen der STL sind `constexpr`-fähig, wir bemühen `std::find`, um das Vorhandensein eines Folgenelements zu überprüfen.
 Das `std::vector`-Objekt fällt am Ende der `isHappy`-Funktion aus dem Scope, der von ihm reservierte Speicher auf dem Heap wird wieder freigegeben.
 
 Wir wollen das `constexpr`-Feature noch ein wenig strapazieren.
 Zu diesem Zweck zählen wir beispielsweise alle glücklichen Zahlen bis zu einem maximalen Wert auf:
+
+###### {#listing_12_countHappyNumbersLessThan_constexpr}
 
 ```cpp
 01: constexpr auto countHappyNumbersLessThan(std::size_t max)
@@ -791,6 +953,9 @@ Zu diesem Zweck zählen wir beispielsweise alle glücklichen Zahlen bis zu einem m
 16: constexpr auto countHappyNumbersLessThan1000{ countHappyNumbersLessThan(1000) };
 ```
 
+*Listing* 12: `constexpr`-Funktion `countHappyNumbersLessThan`.
+
+
 Wenn wir das Programm tatsächlich nicht ausführen wollen, sondern nur dem Übersetzer bei seiner Arbeit zuschauen wollen,
 dann können wir das ganz simpel mit einem Tooltip versuchen:
 
@@ -798,7 +963,17 @@ dann können wir das ganz simpel mit einem Tooltip versuchen:
 
 *Abbildung* 12: Anzahl glücklicher Zahlen im Bereich von 1 bis 1000.
 
-Wir erkennen in *Abbildung* 12, das es im Bereich von 1 bis 1000 genau 142 glückliche Zahlen gibt.
+###### {#abbildung_12_count_happy_numbers}
+
+{{< figure src="/img/happynumbers/Happy_Numbers_constexpr_01.png" width="70%" >}}
+
+*Abbildung* 12: Anzahl glücklicher Zahlen im Bereich von 1 bis 1000.
+
+
+
+
+
+Wir erkennen in [Abbildung 12], das es im Bereich von 1 bis 1000 genau 142 glückliche Zahlen gibt.
 Auch können wir die Zahlen explizit berechnen bzw. in einem Container abspeichern.
 Hier wird es zur Übersetzungszeit ein wenig komplizierter, da sich `std::vector`-Objekte nicht so einfach
 als Parameter oder Rückgabewerte zwischen Funktionsaufrufen transportieren lassen.
@@ -806,6 +981,8 @@ als Parameter oder Rückgabewerte zwischen Funktionsaufrufen transportieren lasse
 Mit einem Feld fester Größe kann man das Problem umgehen, auch wenn der Charme eines flexibel langen Datencontainers damit verloren geht.
 Wir führen das Ganze am Beispiel aller glücklichen Zahlen im Bereich von 1 bis 1000 vor.
 Da wir nun wissen, dass es sich im genau 142 Zahlen handelt, können wir ein entsprechendes Feld in einer Funktion vorhalten:
+
+###### {#listing_13_calcHappyNumbersTableLessThan_constexpr}
 
 ```cpp
 01: constexpr auto calcHappyNumbersTableLessThan(std::size_t max)
@@ -831,14 +1008,30 @@ Da wir nun wissen, dass es sich im genau 142 Zahlen handelt, können wir ein ents
 21: constexpr auto tableLessThan1000{ calcHappyNumbersTableLessThan(1000) };
 ```
 
+*Listing* 13: `constexpr`-Funktion `calcHappyNumbersTableLessThan`.
+
 Der Tooltip funktioniert auch in diesem Beispiel, wenngleich er uns dieses Mal nicht den Gefallen tut, das Ergebnis komplett anzuzeigen:
 
 <img src="Happy_Numbers_constexpr_02.png" width="600">
 
 *Abbildung* 13: Teilweise Darstellung glücklicher Zahlen im Bereich von 1 bis 1000.
 
+###### {#abbildung_13_table_happy_numbers}
+
+{{< figure src="/img/happynumbers/Happy_Numbers_constexpr_02.png" width="70%" >}}
+
+*Abbildung* 13: Teilweise Darstellung glücklicher Zahlen im Bereich von 1 bis 1000.
+
+
+
+
+
+
 Natürlich können wir die vom Übersetzer berechneten Zahlen auch in einer Konsole ausgeben,
 damit kommen wir zum Ende unserer Fallstudie:
+
+###### {#listing_14_printTable_function}
+
 
 ```cpp
 01: void printTable(std::span<const std::size_t> table)
@@ -863,7 +1056,10 @@ damit kommen wir zum Ende unserer Fallstudie:
 20: }
 ```
 
-Beachten Sie im letzten Listing XXX, auf welche Weise wir das `std::array`-Objekt, das von der Funktion `tableLessThan1000` zurückgegeben wird,
+*Listing* 14: `printTable`-Funktion.
+
+
+Beachten Sie im letzten [Listing 14], auf welche Weise wir das `std::array`-Objekt, das von der Funktion `tableLessThan1000` zurückgegeben wird,
 an die nächste Funktion weiterreichen (hier: `printTable`): In einem `std::span`-Objekt.
 Das muss so nicht sein, aber damit kann die `printTable`-Funktion etwas vielfältiger verwendet werden.
 `std::span`-Objekte lassen sich von Arrays im C-Stil, von `std::array`-Objekten und sogar von `std::vector`-Objekten bilden.
@@ -884,17 +1080,61 @@ Das muss so nicht sein, aber damit kann die `printTable`-Funktion etwas vielfält
 ```
 
 
-## There's more
+# There&lsquo;s more
 
 
 
-
-===================
-
-Literatur
-
-BEMERKUNG:
-
-In der Vorstellen (Blog Peter) die Hinweise auf den alten Blog entfernen !!!
+<br/>
 
 
+## Literatur
+
+Im Folgenden habe ich einige interessante Artikel zum Thema &bdquo;Happy Numbers&rdquo;
+zusammengestellt:
+
+[Fröhliche Zahl](https://de.wikipedia.org/wiki/Fr%C3%B6hliche_Zahl)
+
+[Solving the Happy Number Algorithm](https://medium.com/@alisabajramovic/solving-the-happy-number-algorithm-334afa34599)
+
+Zum Problem von Zyklen kann man hier einiges nachlesen:
+
+[Floyd's Linked List Cycle Finding Algorithm](https://cp-algorithms.com/others/tortoise_and_hare.html)
+
+Zu glücklichen Zahlen und `constexpr` findet sich hier ein Artikel:
+
+[constexpr All the Things! (but gently)](https://levelup.gitconnected.com/constexpr-all-the-things-but-gently-f567a8b93603)
+
+<br/>
+
+
+<!-- Links Definitions -->
+[Listing 1]:    #listing_01_isHappy_naive_version
+[Listing 2]:    #listing_02_sumOfSquares_function
+[Listing 3]:    #listing_03_isHappy_recursive_variant
+[Listing 4]:    #listing_04_detectCycle_variant_hashtable
+[Listing 5]:    #listing_05_detectCycle_variant_floyd_algorithm
+[Listing 6]:    #listing_06_linked_list_with_nodes
+[Listing 7]:    #listing_07_test_functions
+[Listing 8]:    #listing_08_isHappy_hashtable_variant
+[Listing 9]:    #listing_09_isHappy_floyd_variant
+[Listing 10]:   #listing_10_isHappy_two_variants_constexpr
+[Listing 11]:   #listing_11_isHappy_using_std_vector
+[Listing 12]:   #listing_12_countHappyNumbersLessThan_constexpr
+[Listing 13]:   #listing_13_calcHappyNumbersTableLessThan_constexpr
+[Listing 14]:   #listing_14_printTable_function
+
+[Abbildung 1]:  #abbildung_1_linked_list_with_cycle
+[Abbildung 2]:  #abbildung_2_linked_list_without_cycle
+[Abbildung 3]:  #abbildung_3_floyd_algorithm
+[Abbildung 4]:  #abbildung_4_floyd_algorithm
+[Abbildung 5]:  #abbildung_5_floyd_algorithm
+[Abbildung 6]:  #abbildung_6_floyd_algorithm
+[Abbildung 7]:  #abbildung_7_floyd_algorithm
+[Abbildung 8]:  #abbildung_8_floyd_algorithm
+[Abbildung 9]:  #abbildung_9_floyd_algorithm
+[Abbildung 10]: #abbildung_10_floyd_algorithm
+[Abbildung 11]: #abbildung_11_floyd_algorithm
+[Abbildung 12]: #abbildung_12_count_happy_numbers
+[Abbildung 13]: #abbildung_13_table_happy_numbers
+
+<!-- End-of-File -->

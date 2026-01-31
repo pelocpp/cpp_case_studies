@@ -130,6 +130,9 @@
     <ClCompile Include="Happy_Number_constexpr.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Readme.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

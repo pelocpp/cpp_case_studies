@@ -246,6 +246,10 @@ Vor dem tatsächlichen Ausführen einer Schreiboperation muss sichergestellt sei
 
 # Entwurf einer einfachen &bdquo;*Copy-on-Write*&rdquo;-Klasse für Zeichenketten
 
+#### Lösung
+
+> Quellcode: Siehe auch [Github](https://github.com/pelocpp/cpp_case_studies.git).
+
 Wir stellen nun Stück für Stück eine Klasse `CowString` vor.
 Es folgt in [Listing 1] die Klassendefinition im Ganzen:
 

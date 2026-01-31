@@ -419,7 +419,7 @@ Damit ist das vorliegende Beispiel auch unter dem GCC übersetzbar!
 ## Literatur
 
 Im Folgenden habe ich einige interessante Artikel zum Thema &bdquo;Expression Templates&rdquo;
-zusammengestellt &ndash; darunter auch einige, die sie kritisch mit diesem Thema
+zusammengestellt &ndash; darunter auch einige, die sich kritisch mit diesem Thema
 auseinandersetzen:
  
 [Expression Templates](https://www.modernescpp.com/index.php/expression-templates)
