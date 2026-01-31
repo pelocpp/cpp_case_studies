@@ -1,6 +1,6 @@
-# Glückliche Zahlen, Schildkröten und Hasen
+<!-- HappyNumbers.md  -->
 
-## Einführung
+## Glückliche Zahlen, Schildkröten und Hasen
 
 Unter der sehr ironischen Überschrift ist zunächst die Suche nach so genannten  &bdquo;*Happy Numbers*&rdquo;, also glücklichen Zahlen, zu verstehen.
 Damit sind, ausgehend von einer natürlichen Zahl als Startwert, solche Zahlen gemeint, für die
@@ -18,7 +18,7 @@ die Zyklen zu entdecken und damit das Traversieren von unendlichen Zahlenfolgen 
 
 <!--more-->
 
-## Lernziele
+# Lernziele
 
   * STL Container `std::unordered_set`, `std::array` und `std::vector`<br />
   * STL Algorithmen `std::find` und `std::copy_n`<br />
@@ -27,7 +27,7 @@ die Zyklen zu entdecken und damit das Traversieren von unendlichen Zahlenfolgen 
   * Hilfsklasse `std::span`<br />
   * Einfach verkettete Listen<br />
 
-## Aufgabe
+# Einführung
 
 Unter einer Zahlenfolge (auch Zahlenreihe) verstehen wir in der Mathematik eine Auflistung von endlich (oder auch unendlich) vielen fortlaufend nummerierten Zahlen.
 Die Zahl mit der Nummer *i* – man sagt auch: mit dem Index *i* – wird *i*-tes Glied der Folge genannt.
@@ -75,7 +75,7 @@ damit ist 20 eine traurige Zahl.
 Es gibt verschiedene Lösungsansätze für die Berechnung von &bdquo;*Happy Number*&rdquo; Zahlenfolgen.
 Da diese unendlich sein können, müssen wir uns zusätzlich mit dem Problem von Zyklen in Zahlenfolgen beschäftigen.
 
-## Der naive Ansatz
+# Der naive Ansatz
 
 Der naive Ansatz lässt den zuvor geschilderten Aspekt von unendlich vielen Folgengliedern zunächst einmal außer Acht.
 Damit erhalten wir zwar keine wirklich funktionsfähige Realisierung, wir nähern uns dafür 
@@ -175,7 +175,7 @@ Nach acht Iterationen wird das Folgenelement 42 erreicht, dessen nachfolgendes E
 Das war doch der Startwert der Zahlenfolge. Wir erkennen, 20 ist eine traurige Zahl,
 und wir müssen das Problem der Wiederholungen genauer betrachten.
 
-## Ansatz mit Rekursion
+# Ein Ansatz mit Rekursion
 
 Der rekursive Ansatz berechnet das Ergebnis für die ersten vier natürlichen Zahlen gewissermaßen &bdquo;von Hand&rdquo;.
 Der Wert 1 als Startwert ist trivial bzw. kennzeichnet sogleich das Ende der Zahlenfolge,
@@ -305,7 +305,7 @@ Dies mathematisch zu beweisen, steht auf einem anderen Blatt Papier &ndash; und 
 Gegenstand der Überlegungen sein. Wir können in jedem Fall davon ausgehen, dass wir nach endlich
 vielen Schritten ein Resultat von der `isHappy`-Realisierung erhalten.
 
-## Ein iterativer Lösungsansatz
+# Ein iterativer Lösungsansatz
 
 Die rekursive Lösung hat das Problem zur Bestimmung glücklicher Zahlen gelöst,
 dennoch sind rekursive Lösungen nicht jedermanns Geschmack. Das Problem einer solchen Lösung besteht darin,
@@ -320,7 +320,7 @@ Die Zahlenfolge zur Bestimmung glücklicher Zahlen kann potentiell unendlich lang
 sie enthält in solchen Fällen einen Zyklus.
 Damit wenden wir uns zunächst diesem Detailproblem zu:
 
-## Zyklen in verketteten Listen erkennen
+# Zyklen in verketteten Listen erkennen
 
 Wie kann man Zyklen in verketteten Listen erkennen?
 Warum wechseln wir jetzt das Thema und wenden uns verketteten Listen zu?
@@ -373,7 +373,7 @@ Der letzte Knoten der verketteten Liste zeigt auf `NULL` und signalisiert damit 
 Wie lassen sich nun Zyklen in verketteten Listen erkennen?
 Hierzu gibt es gleich zwei Verfahren, die wir nun betrachten.
 
-### Zyklen in verketteten Listen mit einer Hashtabelle erkennen
+## Zyklen in verketteten Listen mit einer Hashtabelle erkennen
 
 Das erste Verfahren bedient sich zur Lösung des Problems einer zusätzlichen Datenstruktur, einer Hashtabelle.
 Die Idee liegt nun darin, die Knoten beim Durchlaufen der Liste in so eine Tabelle einzutragen.
@@ -422,7 +422,7 @@ bereits besuchte Adressen von Knoten in einer Datenstruktur aufzuheben. Bei sehr
 dennoch ist diese Idee sehr effizient.
 
 
-### Zyklen in verketteten Listen unter Verwendung des Floyd-Algorithmus erkennen
+## Zyklen in verketteten Listen unter Verwendung des Floyd-Algorithmus erkennen
 
 Der iterative Lösungsansatz mit einer Hashtabelle birgt einen kleinen Nachteil in sich:
 Die Verwaltung der Cache-Datenstruktur nimmt zusätzlichen Speicherplatz in Anspruch. Dieses Manko haben wir bereits thematisiert.
@@ -738,7 +738,7 @@ false
 ```
 
 
-## Ansatz mit Hashtabelle
+# Ein Ansatz mit Hashtabelle
 
 Wir kehren zurück zu unserem Ausgangspunkt, der Suche nach glücklichen Zahlen. 
 Für Hashtabellen gibt es in der STL mehrere Container, vorzugsweise sind dies die Klassen `std::unordered_set` oder `std::unordered_map`.
@@ -781,7 +781,7 @@ Erreichen wir jedoch (in Zeile 9) den Wert 1, dann terminiert die Folge nach end
 die Startzahl ist glücklich.
 
 
-##  Ansatz unter Verwendung des Floyd-Algorithmus
+# Ein Ansatz unter Verwendung des Floyd-Algorithmus
 
 Wir stellen die Funktion `isHappy` aus dem letzten Abschnitt noch einaml vor, 
 dieses Mal ohne Hashtabelle.
@@ -817,7 +817,7 @@ Das Hase überspringt (Zeile 11) pro Fortbewegung immer ein Folgenelement.
 Damit haben wir drei Möglichkeiten zur Berechnung glücklicher (und trauriger) Zahlen gefunden.
 
 
-## Noch eine Variante mit `constexpr` 
+# Noch eine Variante mit `constexpr` 
 
 Vielleicht haben Sie sich auch dieselbe Frage gestellt: Das Problem der glücklichen Zahlenfolgen ist ja recht amüsant,
 aber können wir es uns tatsächlich leisten, die Rechenzeit unseres Rechners für solche Spielereien zu vergeuden?
@@ -1079,13 +1079,28 @@ Das muss so nicht sein, aber damit kann die `printTable`-Funktion etwas vielfält
   940  946  964  970  973  989  998
 ```
 
-
 # There&lsquo;s more
 
+Das erste Paar aufeinanderfolgender glücklicher Zahlen ist das Paar 
+n<sub>1</sub> = 31 und n<sub>2</sub> = 32.
 
+Die folgende Liste gibt Aufschluss über die kleinsten weiteren Paare aufeinanderfolgender glücklicher Zahlen,
+welche kleiner als 1000 sind (es wird immer nur die kleinere der beiden Zahlen):
+
+31, 129, 192, 262, 301, 319, 367, 391, 565, 622, 637, 655, 912, 931, ...
+
+Erweitern Sie Ihr Programm um die Berechnung aller aufeinanderfolgenden glücklichen Zahlen kleiner 1000.
+Schaffen Sie die Berechnung auf mit dem Übersetzer, also mit `constexpr`?
+
+Sollten Sie Spaß an derlei Berechnungen gefunden haben: Es gibt auch Tripel aufeinanderfolgender glücklicher Zahlen,
+zum Beispiel die drei Zahlen n<sub>1</sub> = 1880, n<sub>2</sub> = 1881 und n<sub>3</sub> = 1882.
+Wir erkennen, dass unterhalb von 1000 derartige Zahlen nicht vorhanden sind.
+
+Berechnen Sie alle Tripel aufeinanderfolgender glücklicher Zahlen, welche kleiner als 10000 sind.
+Weitere Beispiele sind z. B. die Zahlen 4780, 4870 und 7480.
+Es ist wiederum nur die kleinste der drei Zahlen angegeben.
 
 <br/>
-
 
 ## Literatur
 
@@ -1105,7 +1120,6 @@ Zu glücklichen Zahlen und `constexpr` findet sich hier ein Artikel:
 [constexpr All the Things! (but gently)](https://levelup.gitconnected.com/constexpr-all-the-things-but-gently-f567a8b93603)
 
 <br/>
-
 
 <!-- Links Definitions -->
 [Listing 1]:    #listing_01_isHappy_naive_version
