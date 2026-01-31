@@ -2,7 +2,7 @@
 
 In diesem Repository finden Sie die Quellen zu meinem **Blog**
 
-### [Selected Programming Assignments – Ausgewählte Programmieraufgaben](https://peterloos.de/)
+### [Modern C++ &ndash; Ausgewählte Fallstudien](https://peterloos.de/)
 
 vor.
 

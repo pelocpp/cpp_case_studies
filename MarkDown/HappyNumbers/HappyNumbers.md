@@ -25,6 +25,8 @@ die Zyklen zu entdecken und damit das Traversieren von unendlichen Zahlenfolgen 
   * `if`-Anweisung mit Initializer<br />
   * &bdquo;*Brace*&rdquo;-Initialisierung
   * Hilfsklasse `std::span`<br />
+  * `constexpr`<br />
+  * Rekursive Funktionen
   * Einfach verkettete Listen<br />
 
 # Einführung
@@ -886,7 +888,7 @@ dann können wir das ganz simpel mit einem Tooltip versuchen:
 
 ###### {#abbildung_12_count_happy_numbers}
 
-{{< figure src="/img/happynumbers/Happy_Numbers_constexpr_01.png" width="80%" >}}
+{{< figure src="/img/happynumbers/Happy_Numbers_constexpr_01.png" width="95%" >}}
 
 *Abbildung* 12: Anzahl glücklicher Zahlen im Bereich von 1 bis 1000.
 
@@ -931,7 +933,7 @@ Der Tooltip funktioniert auch in diesem Beispiel, wenngleich er uns dieses Mal n
 
 ###### {#abbildung_13_table_happy_numbers}
 
-{{< figure src="/img/happynumbers/Happy_Numbers_constexpr_02.png" width="80%" >}}
+{{< figure src="/img/happynumbers/Happy_Numbers_constexpr_02.png" width="95%" >}}
 
 *Abbildung* 13: Teilweise Darstellung glücklicher Zahlen im Bereich von 1 bis 1000.
 
