@@ -2,6 +2,31 @@
 // Matrix.h
 // =====================================================================================
 
+/*******
+
+Hinweis aus ChatGPT:
+
+4. Empfehlung für die Umsetzung
+Wenn du die Logik selbst implementieren möchtest (zu Lernzwecken),
+empfehle ich dir, eine kleine Matrix-Klasse zu schreiben, die das flache Array kapselt:
+
+class Matrix {
+public:
+    int rows, cols;
+    std::vector<double> data;
+
+    Matrix(int r, int c) : rows(r), cols(c), data(r * c, 0.0) {}
+
+    // Operator Overloading für bequemen Zugriff
+    double& operator()(int r, int c) {
+        return data[r * cols + c];
+    }
+};
+
+Das als Basisroutine einsetzen (public oder vielleicht auch privat), den Rest darauf aufsetzen ........
+
+********/
+
 #pragma once
 
 #include "FloatNumber.h"
