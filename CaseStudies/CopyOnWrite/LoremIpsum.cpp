@@ -49,11 +49,11 @@ static void test_lorem_ipsum_06()
 
 void main_lorem_ipsum()
 {
-    //test_lorem_ipsum_01();
-    //test_lorem_ipsum_02();
-    //test_lorem_ipsum_03();
-    //test_lorem_ipsum_04();
-    //test_lorem_ipsum_05();
+    test_lorem_ipsum_01();
+    test_lorem_ipsum_02();
+    test_lorem_ipsum_03();
+    test_lorem_ipsum_04();
+    test_lorem_ipsum_05();
     test_lorem_ipsum_06();
 }
 
