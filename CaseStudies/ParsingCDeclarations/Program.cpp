@@ -2,6 +2,12 @@
 // Program.cpp
 // =====================================================================================
 
+// https://eli.thegreenplace.net/2008/07/18/reading-c-type-declarations
+
+// Buch: Expert C Programming, Deep C Secrets // Siehe Syno
+
+// Siehe Markdown Folder in diesem Projekt ...
+
 int main()
 {
     return 0;
