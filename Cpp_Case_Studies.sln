@@ -281,8 +281,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CopyOnWrite", "CopyOnWrite"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HappyNumbers", "HappyNumbers", "{E06D120A-772A-4E2A-A7D5-46F48FF1CDD2}"
 	ProjectSection(SolutionItems) = preProject
-		MarkDown\HappyNumbers\Happy_Numbers_constexpr_01.png = MarkDown\HappyNumbers\Happy_Numbers_constexpr_01.png
 		MarkDown\HappyNumbers\HappyNumbers.md = MarkDown\HappyNumbers\HappyNumbers.md
+		MarkDown\HappyNumbers\Happy_Numbers_constexpr_01.png = MarkDown\HappyNumbers\Happy_Numbers_constexpr_01.png
 		MarkDown\HappyNumbers\Happy_Numbers_constexpr_02.png = MarkDown\HappyNumbers\Happy_Numbers_constexpr_02.png
 		MarkDown\HappyNumbers\happy_number_tortoise_hare_01.svg = MarkDown\HappyNumbers\happy_number_tortoise_hare_01.svg
 		MarkDown\HappyNumbers\happy_number_tortoise_hare_01_01.svg = MarkDown\HappyNumbers\happy_number_tortoise_hare_01_01.svg
@@ -308,6 +308,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HappyNumbers", "CaseStudies\HappyNumbers\HappyNumbers.vcxproj", "{4FC185F2-C57F-4F4D-9F49-DFE50C3FD8AC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParsingCDeclarations", "CaseStudies\ParsingCDeclarations\ParsingCDeclarations.vcxproj", "{6D70221F-A2F1-4A5A-BFA7-1276BDC04DBA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NeuralNetwork", "CaseStudies\NeuralNetwork\NeuralNetwork.vcxproj", "{84F2E6D0-7B8E-4827-8B7D-6159F7991D12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -549,6 +551,14 @@ Global
 		{6D70221F-A2F1-4A5A-BFA7-1276BDC04DBA}.Release|x64.Build.0 = Release|x64
 		{6D70221F-A2F1-4A5A-BFA7-1276BDC04DBA}.Release|x86.ActiveCfg = Release|Win32
 		{6D70221F-A2F1-4A5A-BFA7-1276BDC04DBA}.Release|x86.Build.0 = Release|Win32
+		{84F2E6D0-7B8E-4827-8B7D-6159F7991D12}.Debug|x64.ActiveCfg = Debug|x64
+		{84F2E6D0-7B8E-4827-8B7D-6159F7991D12}.Debug|x64.Build.0 = Debug|x64
+		{84F2E6D0-7B8E-4827-8B7D-6159F7991D12}.Debug|x86.ActiveCfg = Debug|Win32
+		{84F2E6D0-7B8E-4827-8B7D-6159F7991D12}.Debug|x86.Build.0 = Debug|Win32
+		{84F2E6D0-7B8E-4827-8B7D-6159F7991D12}.Release|x64.ActiveCfg = Release|x64
+		{84F2E6D0-7B8E-4827-8B7D-6159F7991D12}.Release|x64.Build.0 = Release|x64
+		{84F2E6D0-7B8E-4827-8B7D-6159F7991D12}.Release|x86.ActiveCfg = Release|Win32
+		{84F2E6D0-7B8E-4827-8B7D-6159F7991D12}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
