@@ -40,10 +40,10 @@ static void main_neural_network_mnist_simulation_01_prepare_data()
     // t10k-labels-idx1-ubyte:   10.000 correct digits according to the testing images.
 
     g_dataset.setFilenames(
-        "..\\Resources\\train-images-idx3-ubyte",
-        "..\\Resources\\train-labels-idx1-ubyte",
-        "..\\Resources\\t10k-images-idx3-ubyte",
-        "..\\Resources\\t10k-labels-idx1-ubyte"
+        "..\\..\\..\\Resources\\train-images-idx3-ubyte",
+        "..\\..\\..\\Resources\\train-labels-idx1-ubyte",
+        "..\\..\\..\\Resources\\t10k-images-idx3-ubyte",
+        "..\\..\\..\\Resources\\t10k-labels-idx1-ubyte"
     );
 
     g_dataset.loadData();

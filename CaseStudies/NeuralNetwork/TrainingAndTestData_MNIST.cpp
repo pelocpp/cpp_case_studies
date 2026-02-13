@@ -52,7 +52,7 @@ void TrainingAndTestData_MNIST::loadTrainingData()
 {
     std::println("Loading Training Data ...");
 
-    std::ifstream imagesTrainingFile;
+        std::ifstream imagesTrainingFile;
     imagesTrainingFile.open(m_imagesTrainingFilename.c_str(), std::ios::binary);
     if (!imagesTrainingFile.is_open()) {
         throw std::invalid_argument("Wrong images training filename");
