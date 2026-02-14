@@ -5,8 +5,8 @@
 #include "../ScopedTimer.h"
 
 #include "Common.h"
-#include "NeuralNetwork.h"
 #include "Neuron.h"
+#include "NeuralNetwork.h"
 #include "TrainingAndTestData_XOR_Switch.h"
 
 #include <algorithm>
@@ -25,8 +25,8 @@ static void main_neural_network_xor_simulation_01_prepare_data()
     ScopedTimer guard{};
 
     g_dataset.setFilenames(
-        "..\\Resources\\XOR_Training_Data.txt",
-        "..\\Resources\\XOR_Test_Data.txt"
+        "XOR_Training_Data.txt",
+        "XOR_Test_Data.txt"
     );
 
     g_dataset.loadData();
@@ -121,7 +121,7 @@ static void main_neural_network_xor_simulation_03_test()
     std::println("Test Passes:     {}", testPasses);
 
     double testAccuracy = 100.0 * correct / testPasses;
-    std::println("Test accuracy: {}", testAccuracy);
+    std::println("Test accuracy: {}%", testAccuracy);
 
     std::println("Test Done.");
 }

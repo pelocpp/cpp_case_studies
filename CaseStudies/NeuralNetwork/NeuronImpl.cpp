@@ -21,8 +21,6 @@ Neuron::Neuron(std::size_t numOutputs, std::size_t index)
     for (std::size_t i{}; i != numOutputs; ++i)
     {
         Connection conn{ .weight = random.nextRandomNumber(), .deltaWeight = 0.0 };
-        //conn.weight = random.nextRandomNumber();
-        //conn.deltaWeight = 0.0;
         m_outputWeights.push_back(conn);
     }
 }
@@ -64,13 +62,8 @@ void Neuron::updateInputWeights(Layer& prevLayer) const
         double oldDeltaWeight { neuron.m_outputWeights[m_index].deltaWeight };
         double newDeltaWeight{ eta * neuron.getOutputValue() * m_gradient + alpha * oldDeltaWeight };
 
-        //std::println("oldDeltaWeight: {:08f}", oldDeltaWeight);
-        //std::println("newDeltaWeight: {:08f}", newDeltaWeight);
-
         neuron.m_outputWeights[m_index].deltaWeight = newDeltaWeight;
         neuron.m_outputWeights[m_index].weight += newDeltaWeight;
-
-      //  std::println("  Output Weight: {}", neuron.m_outputWeights[m_index].weight);
     }
 }
 
@@ -102,12 +95,9 @@ void Neuron::feedForward(const Layer& prevLayer)
 
     for (std::size_t n{}; n != prevLayer.size(); ++n) {
         sum += prevLayer[n].getOutputValue() * prevLayer[n].m_outputWeights[m_index].weight;
-       // std::println("    SUM: {}", sum);
     }
 
     m_outputValue = Neuron::transferFunction(sum);
-
-   // std::println("INDEX: {} -- m_outputValue: {}", m_index, m_outputValue);
 }
 
 // =====================================================================================

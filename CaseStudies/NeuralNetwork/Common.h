@@ -6,10 +6,7 @@
 
 #include <cstddef>
 #include <vector>
-#include <iostream>
 
-// Hmm, hier oder wo anders ...
-// Hmmm, std::pair oder so ...
 struct Connection
 {
     double weight;
@@ -19,6 +16,7 @@ struct Connection
 using Topology = std::vector<std::size_t>;
 
 class Neuron;
+
 using Layer = std::vector<Neuron>;
 
 // =====================================================================================

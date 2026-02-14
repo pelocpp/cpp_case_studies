@@ -5,9 +5,10 @@
 #include "Common.h"
 #include "TrainingAndTestData_XOR_Switch.h"
 
-#include <sstream>
+#include <filesystem>
 #include <fstream>
 #include <print>
+#include <sstream>
 
 TrainingAndTestData_XOR_Switch::TrainingAndTestData_XOR_Switch()
     : m_topology{ 2, 4, 1 }, m_xorTrainingIndex{}, m_xorTestIndex{}
@@ -55,6 +56,8 @@ void TrainingAndTestData_XOR_Switch::loadTrainingData()
 {
     std::println("Loading Training Data ...");
 
+    std::filesystem::path path{ std::filesystem::current_path() };
+    m_trainingFilename = path.string() + "\\Resources\\" + m_trainingFilename;
     std::ifstream xorTrainingFile;
     xorTrainingFile.open(m_trainingFilename.c_str());
     if (!xorTrainingFile.is_open()) {
@@ -107,10 +110,12 @@ void TrainingAndTestData_XOR_Switch::loadTestData()
 {
     std::println("Loading Test Data ...");
 
+    std::filesystem::path path{ std::filesystem::current_path() };
+    m_testFilename = path.string() + "\\Resources\\" + m_testFilename;
     std::ifstream xorTestFile;
     xorTestFile.open(m_testFilename.c_str());
     if (!xorTestFile.is_open()) {
-        throw std::invalid_argument("Wrong XOR test filename");
+        throw std::invalid_argument("Wrong XOR training filename");
     }
 
     while (!xorTestFile.eof()) {

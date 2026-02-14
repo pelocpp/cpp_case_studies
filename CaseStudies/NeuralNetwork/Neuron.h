@@ -12,10 +12,10 @@
 class Neuron
 {
 private:
-    double                     m_outputValue;
-    std::vector<Connection>    m_outputWeights;
-    std::size_t                m_index;
-    double                     m_gradient;
+    double                    m_outputValue;
+    std::vector<Connection>   m_outputWeights;
+    std::size_t               m_index;
+    double                    m_gradient;
 
 public:
     // c'tor(s)
@@ -33,8 +33,8 @@ public:
     void  updateInputWeights  (Layer& prevLayer) const;
 
 private:
-    static double eta;       // Lernrate [0..1] 
-    static double alpha;     // Momentum [0..n]
+    static double eta;                       // Lernrate [0..1] 
+    static double alpha;                     // Momentum [0..n]
 
     double sumDerivativeOfWeights            (const Layer& nextLayer) const;
     static double transferFunction           (double x);

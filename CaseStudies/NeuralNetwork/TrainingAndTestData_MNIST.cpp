@@ -5,11 +5,10 @@
 #include "Common.h"
 #include "TrainingAndTestData_MNIST.h"
 
+#include <filesystem>
 #include <fstream>
 #include <print>
 #include <sstream>
-
-constexpr std::size_t MaxIterations = 1000;
 
 TrainingAndTestData_MNIST::TrainingAndTestData_MNIST()
     : m_topology{ 28 * 28, 100, 10 }, m_imagesTrainingIndex{}, m_imagesTestIndex{}
@@ -52,14 +51,18 @@ void TrainingAndTestData_MNIST::loadTrainingData()
 {
     std::println("Loading Training Data ...");
 
-        std::ifstream imagesTrainingFile;
-    imagesTrainingFile.open(m_imagesTrainingFilename.c_str(), std::ios::binary);
+    std::filesystem::path path{ std::filesystem::current_path() };
+
+    m_imagesTrainingFilename = path.string() + "\\Resources\\" + m_imagesTrainingFilename;
+    std::ifstream imagesTrainingFile;
+    imagesTrainingFile.open(m_imagesTrainingFilename.c_str());
     if (!imagesTrainingFile.is_open()) {
         throw std::invalid_argument("Wrong images training filename");
     }
 
+    m_labelsTrainingFilename = path.string() + "\\Resources\\" + m_labelsTrainingFilename;
     std::ifstream labelsTrainingFile;
-    labelsTrainingFile.open(m_labelsTrainingFilename.c_str(), std::ios::binary);
+    labelsTrainingFile.open(m_labelsTrainingFilename.c_str());
     if (!labelsTrainingFile.is_open()) {
         throw std::invalid_argument("Wrong images test filename");
     }
@@ -129,18 +132,22 @@ void TrainingAndTestData_MNIST::loadTestData()
 {
     std::println("Loading Test Data ...");
 
+    std::filesystem::path path{ std::filesystem::current_path() };
+
+    m_imagesTestFilename = path.string() + "\\Resources\\" + m_imagesTestFilename;
     std::ifstream imagesTestFile;
-    imagesTestFile.open(m_imagesTestFilename.c_str(), std::ios::binary);
+    imagesTestFile.open(m_imagesTestFilename.c_str());
     if (!imagesTestFile.is_open()) {
-        throw std::invalid_argument("Wrong labels training filename");
+        throw std::invalid_argument("Wrong images training filename");
     }
 
+    m_labelsTestFilename = path.string() + "\\Resources\\" + m_labelsTestFilename;
     std::ifstream labelsTestFile;
-    labelsTestFile.open(m_labelsTestFilename.c_str(), std::ios::binary);
+    labelsTestFile.open(m_labelsTestFilename.c_str());
     if (!labelsTestFile.is_open()) {
-        throw std::invalid_argument("Wrong labels test filename");
+        throw std::invalid_argument("Wrong images test filename");
     }
-
+    
     std::uint32_t magicNumberImages {readInt(imagesTestFile) };
     std::uint32_t numImages{ readInt(imagesTestFile) };
     std::uint32_t rows{ readInt(imagesTestFile) };
@@ -204,9 +211,6 @@ void TrainingAndTestData_MNIST::loadTestData()
 bool TrainingAndTestData_MNIST::isEndOfTrainingData() const 
 {
      return m_imagesTrainingIndex >= m_imagesTraining.size();
-
-    // TBD: ÄNDERN !!!
-  // return m_imagesTrainingIndex >= MaxIterations;
 }
 
 void TrainingAndTestData_MNIST::advanceTraining()
@@ -216,9 +220,7 @@ void TrainingAndTestData_MNIST::advanceTraining()
 
 bool TrainingAndTestData_MNIST::isEndOfTestData() const
 {
-    // TBD: ÄNDERN !!!
    return m_imagesTestIndex >= m_imagesTest.size();
-   // return m_imagesTestIndex >= MaxIterations;
 }
 
 void TrainingAndTestData_MNIST::advanceTest()

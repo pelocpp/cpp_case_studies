@@ -50,7 +50,6 @@ void NeuralNetwork::setTopology(const Topology& topology)
     }
 }
 
-
 // public interface
 void NeuralNetwork::feedForward(const std::vector<double>& inputValues)
 {

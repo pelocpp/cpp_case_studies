@@ -311,6 +311,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParsingCDeclarations", "Cas
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NeuralNetwork", "CaseStudies\NeuralNetwork\NeuralNetwork.vcxproj", "{84F2E6D0-7B8E-4827-8B7D-6159F7991D12}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NeuralNetwork", "NeuralNetwork", "{50BAFB07-0384-4578-8993-7C9A89ADCEBF}"
+	ProjectSection(SolutionItems) = preProject
+		MarkDown\NeuralNetwork\NeuralNetwork.md = MarkDown\NeuralNetwork\NeuralNetwork.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -591,6 +596,7 @@ Global
 		{75715AAF-0710-46C9-8B04-A929FF1C4D58} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{E06D120A-772A-4E2A-A7D5-46F48FF1CDD2} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 		{F2A37E09-42EE-4371-9D6E-F8D9A440DB7F} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
+		{50BAFB07-0384-4578-8993-7C9A89ADCEBF} = {0C9A9D81-4CA6-466B-B647-022ACE8E79C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E1F79F7-0302-48B7-B2E0-D613B35952BF}

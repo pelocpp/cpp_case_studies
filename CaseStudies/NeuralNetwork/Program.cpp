@@ -3,9 +3,9 @@
 // =====================================================================================
 
 #include "Common.h"
-#include "Random.h"
-#include "Neuron.h"
 #include "NeuralNetwork.h"
+#include "Neuron.h"
+#include "Random.h"
 
 #include <print>
 
@@ -21,7 +21,6 @@ static void main_neural_net_01()
         auto number{ random.nextRandomNumber() };
         std::println("{}: {}", i, number);
     }
-    std::cout << std::endl;
     std::println();
 }
 
@@ -35,11 +34,10 @@ static void main_neural_net_02()
 
 int main()
 {
-    //main_neural_net_01();
-    //main_neural_net_02();
-
+    main_neural_net_01();
+    main_neural_net_02();
+    main_neural_network_xor_switch_simulation();
     main_neural_network_mnist_simulation();
-    //main_neural_network_xor_switch_simulation();
 
     return 0;
 }
