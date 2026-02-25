@@ -21,3 +21,9 @@ oder über Reddit:
 https://www.reddit.com/r/MachineLearning/comments/3mdvxv/neural_net_in_c_for_absolute_beginners_super_easy
 
 Weiter Infos siehe derzeit auf Google Drive "Cpp Weiterarbeit KI"
+
+Weitere Link:
+
+http://www.ccom.ucsd.edu/~cdeotte/programs/MNIST.html
+
+
