@@ -252,17 +252,18 @@ namespace VariadicGenericFolding_05 {
     // };
 
 
-    // but:
-    auto sum3 = [](auto first, auto ... args) {
 
-        if constexpr (sizeof... (args) == 0) {
-            return first;
-        }
-        else {
-            return first + sum3(args ...);
-        }
-    };
+    // but: 
+    //auto sum3 = [](auto first, auto ... args) {
 
+    //    if constexpr (sizeof... (args) == 0) {
+    //        return first;
+    //    }
+    //    else {
+    //        return first + sum3(args ...);
+    //    }
+    //};
+	// does not compile with Visual Studio 2026
 
     void test_variadic_generic_folding_01()
     {
@@ -272,8 +273,8 @@ namespace VariadicGenericFolding_05 {
         result = sum2(6, 7, 8, 9, 10);
         std::cout << "Summe: " << result << std::endl;
 
-        auto result2 = sum3(3.3, 4.4, 5.5);
-        std::cout << "Summe: " << result2 << std::endl;
+        //auto result2 = sum3(3.3, 4.4, 5.5);
+        //std::cout << "Summe: " << result2 << std::endl;
     }
 }
 

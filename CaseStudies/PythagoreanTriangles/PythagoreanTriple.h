@@ -4,10 +4,11 @@
 
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <stack>
+#include <array>
 #include <format>
+#include <iostream>
+#include <stack>
+#include <string>
 
 class PythagoreanTriple
 {
